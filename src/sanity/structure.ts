@@ -1,0 +1,345 @@
+// Studio Desk structure. Pins Site Settings at the top, then ALL page singletons
+// (one document each) under "Pages", then the reusable content collections under
+// "Content", then "Journal". Every document type is placed explicitly so nothing
+// floats loose at the desk root. The trailing default-list filter is a safety net
+// for any future type that hasn't been placed (and hides sanity-plugin-media's
+// media.tag type, which would otherwise show at the root).
+//
+// "Pages" is one list (so the rule for editors is simple: every page lives here).
+//
+// Orderable lists: service / philosophyPoint use the orderable-document-list plugin.
+// Editors drag rows to reorder; the plugin writes an `orderRank` string. GROQ
+// queries order by orderRank (with displayOrder fallback) so the site mirrors Studio.
+//
+// Preview: 2026-08-28 the per-document iframe tab (sanity-plugin-iframe-pane)
+// was retired in favour of the Presentation tool, which renders the SSR
+// /preview/* routes with click-to-edit and in-canvas section controls. The
+// singleton list items below therefore carry the plain form view, and
+// "see it on the page" is the Presentation tool in the navbar.
+
+import type { StructureBuilder, StructureResolverContext } from 'sanity/structure';
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
+import {
+  BellIcon,
+  BlockElementIcon,
+  CogIcon,
+  HomeIcon,
+  UserIcon,
+  PackageIcon,
+  HelpCircleIcon,
+  InfoOutlineIcon,
+  EnvelopeIcon,
+  DocumentTextIcon,
+  DocumentsIcon,
+  StarIcon,
+  HeartIcon,
+  ThListIcon,
+  EditIcon,
+  TagIcon,
+  BookIcon,
+  LockIcon,
+  PinIcon,
+  PresentationIcon,
+  ThumbsUpIcon,
+  ColorWheelIcon,
+  OlistIcon, // scaffold: process
+  ArrowRightIcon,
+} from '@sanity/icons';
+import { makeGuideView } from './components/GuideView';
+import { guides, GUIDE_CATEGORIES } from './guides/content';
+import StudioGuide from './components/StudioGuide';
+import BusinessOverview from './components/BusinessOverview';
+import BrandKit from './components/BrandKit';
+
+const SINGLETON_TYPES = [
+  'siteSettings',
+  'businessInfo',
+  // Core pages
+  'homePage',
+  'aboutPage', // scaffold: about
+  'servicesPage', // scaffold: services
+  'processPage', // scaffold: process
+  'faqPage', // scaffold: faq
+  'contactPage',
+  'journalPage', // scaffold: journal
+  'notFoundPage',
+  'privacyPage',
+  'studioGuide',
+  'studioNotes',
+] as const;
+
+const ORDERABLE_TYPES = [
+  'service', // scaffold: services
+  'philosophyPoint', // scaffold: philosophy
+  'processStep', // scaffold: process
+] as const;
+
+const HIDDEN_FROM_DEFAULT = new Set<string>([
+  ...SINGLETON_TYPES,
+  ...ORDERABLE_TYPES,
+  'announcement', // placed explicitly under Content → Announcements
+  'testimonial', // scaffold: testimonials
+  'faqItem', // scaffold: faq
+  'faqCategory', // scaffold: faq
+  'journalEntry', // scaffold: journal
+  'journalCategory', // scaffold: journal
+  'page', // custom pages, placed explicitly under "Pages"
+  'sectionPreset', // saved sections, placed explicitly under "Pages"
+  'redirect', // placed explicitly under "Pages" -> Redirects
+  // sanity-plugin-media registers this tag type; keep it out of the desk root
+  // (the "Media" tool in the top sidebar is where tags belong).
+  'media.tag',
+  // processStep is placed explicitly under Content → Process Steps
+  'processStep', // scaffold: process
+]);
+
+/**
+ * Build a singleton list item pinned to one document id.
+ *
+ * The name is historical: it used to attach an iframe preview view alongside
+ * the form. Since 2026-08-28 the live draft preview is the Presentation tool
+ * (src/sanity/resolve.ts maps every one of these types to a /preview path), so
+ * the editor pane is the form. Views are still set explicitly because
+ * S.document().views([...]) bypasses defaultDocumentNode in sanity.config.ts,
+ * and that is where the per-type extra tabs are added.
+ */
+function singletonWithPreview(S: StructureBuilder, schemaType: string, title: string, icon: any) {
+  return S.listItem()
+    .title(title)
+    .icon(icon)
+    .child(S.document().schemaType(schemaType).documentId(schemaType).views([S.view.form()]));
+}
+
+export const deskStructure = (S: StructureBuilder, context: StructureResolverContext) =>
+  S.list()
+    .title('Studio Starter')
+    .items([
+      // HELP & GUIDE — the handbook, first so it is always in reach.
+      //
+      // PORTS.md card 41. The guides are DATA in src/sanity/guides/content.ts,
+      // held in the repo rather than in Sanity, so they cannot be deleted by
+      // the person who most needs them and every fork inherits them with the
+      // code. THE SHIPPED SET IS GENERIC ON PURPOSE and is meant to be
+      // rewritten per project; see that file's header.
+      //
+      // It sits ABOVE "Start Here" rather than replacing it. Start Here is
+      // three editable singletons and works well when a project seeds them,
+      // but a fork that skips `npm run seed` gets four panes that open EMPTY,
+      // which is what happened in stonesteps-50k. A repo-data handbook cannot
+      // do that. A project that wants only one of the two should delete the
+      // other rather than ship both.
+      S.listItem()
+        .id('help-and-guide')
+        .title('Help & Guide')
+        .icon(InfoOutlineIcon)
+        .child(
+          S.list()
+            .id('help-and-guide-list')
+            .title('Help & Guide')
+            .items(
+              GUIDE_CATEGORIES.flatMap((category) => {
+                const mine = guides.filter((g) => g.category === category);
+                return mine.length === 0
+                  ? []
+                  : [
+                      S.divider().title(category),
+                      ...mine.map((g) =>
+                        S.listItem()
+                          .id(`guide-${g.slug}`)
+                          .title(g.title)
+                          .icon(() => g.icon)
+                          .child(
+                            S.component(makeGuideView(g.slug) as never)
+                              .id(`guide-view-${g.slug}`)
+                              .title(g.title),
+                          ),
+                      ),
+                    ];
+              }),
+            ),
+        ),
+
+      S.divider(),
+
+      // Start Here — three-panel handbook for the editor.
+      // Panel 1: how the Studio works and step-by-step how-tos (static).
+      // Panel 2: live business overview (services + site settings fetched from Sanity).
+      // Panel 3: brand kit — colors + fonts for Canva (static).
+      S.listItem()
+        .title('Start Here')
+        .icon(InfoOutlineIcon)
+        .child(
+          S.list()
+            .title('Start Here')
+            .items([
+              S.listItem()
+                .title('How the website works')
+                .icon(PresentationIcon)
+                .child(
+                  S.document()
+                    .schemaType('studioGuide')
+                    .documentId('studioGuide')
+                    .views([
+                      S.view.component(StudioGuide).title('Guide'),
+                      S.view.form().title('Edit'),
+                    ]),
+                ),
+              S.listItem()
+                .title('Your business at a glance')
+                .icon(ThumbsUpIcon)
+                .child(
+                  S.document()
+                    .schemaType('studioNotes')
+                    .documentId('studioNotes')
+                    .views([
+                      S.view.component(BusinessOverview).title('Overview'),
+                      S.view.form().title('Edit notes'),
+                    ]),
+                ),
+              S.listItem()
+                .title('Brand kit')
+                .icon(ColorWheelIcon)
+                .child(S.component(BrandKit).title('Brand kit')),
+            ]),
+        ),
+
+      S.divider(),
+
+      // Site Settings — pinned singleton (no preview; not a page)
+      singletonWithPreview(S, 'siteSettings', 'Site Settings', CogIcon),
+
+      S.divider(),
+
+      // Pages — every page singleton lives here.
+      S.listItem()
+        .title('Pages')
+        .icon(DocumentTextIcon)
+        .child(
+          S.list()
+            .title('Pages')
+            .items([
+              singletonWithPreview(S, 'homePage', 'Home', HomeIcon),
+              singletonWithPreview(S, 'aboutPage', 'About', UserIcon), // scaffold: about
+              singletonWithPreview(S, 'servicesPage', 'Services', PackageIcon), // scaffold: services
+              singletonWithPreview(S, 'processPage', 'Process', OlistIcon), // scaffold: process
+              singletonWithPreview(S, 'faqPage', 'FAQ', HelpCircleIcon), // scaffold: faq
+              singletonWithPreview(S, 'contactPage', 'Contact', EnvelopeIcon),
+              singletonWithPreview(S, 'journalPage', 'Journal (index page)', BookIcon), // scaffold: journal
+              singletonWithPreview(S, 'notFoundPage', '404 Page', DocumentTextIcon),
+
+              S.divider(),
+
+              singletonWithPreview(S, 'privacyPage', 'Privacy Policy Page', LockIcon),
+
+              S.divider(),
+
+              // Custom pages: editors build these themselves from the section library.
+              // Multi-instance (not a singleton), so it is a normal document list.
+              S.documentTypeListItem('page')
+                .title('Custom pages (build your own)')
+                .icon(DocumentsIcon),
+
+              S.divider(),
+
+              // Saved sections: one band of a page, kept for reuse. Made from a
+              // page's publish menu ("Save a section as preset..."), added to a
+              // page from the Saved sections group in the Presentation
+              // navigator. Ordered by name, because the name is the only way
+              // you find one again.
+              S.documentTypeListItem('sectionPreset')
+                .title('Saved sections')
+                .icon(BlockElementIcon),
+
+              S.divider(),
+
+              // Redirects: old address -> new address. Most entries are filed
+              // automatically when a page's web address changes on publish
+              // (src/sanity/components/slugRedirect.tsx); the editor adds one by
+              // hand for an address that never existed on this site.
+              S.documentTypeListItem('redirect')
+                .title('Redirects (old links)')
+                .icon(ArrowRightIcon),
+            ]),
+        ),
+
+      S.divider(),
+
+      // Content — reusable collections. Orderable types get drag-and-drop;
+      // non-orderable use standard lists.
+      S.listItem()
+        .title('Content')
+        .icon(ThListIcon)
+        .child(
+          S.list()
+            .title('Content')
+            .items([
+              // Business info: service areas, travel fees, availability, geo.
+              // Moved here from Site Settings so Settings is identity + infrastructure only.
+              singletonWithPreview(S, 'businessInfo', 'Business info', PinIcon),
+
+              S.divider(),
+
+              // scaffold: services
+              orderableDocumentListDeskItem({
+                type: 'service',
+                title: 'Services',
+                icon: PackageIcon,
+                S,
+                context,
+              }),
+              // scaffold:end
+              // scaffold: philosophy
+              orderableDocumentListDeskItem({
+                type: 'philosophyPoint',
+                title: 'Philosophy Values',
+                icon: HeartIcon,
+                S,
+                context,
+              }),
+              // scaffold:end
+              // scaffold: process
+              orderableDocumentListDeskItem({
+                type: 'processStep',
+                title: 'Process Steps',
+                icon: OlistIcon,
+                S,
+                context,
+              }),
+              // scaffold:end
+              S.documentTypeListItem('testimonial').title('Testimonials').icon(StarIcon), // scaffold: testimonials
+              S.documentTypeListItem('faqCategory').title('FAQ Categories').icon(TagIcon), // scaffold: faq
+              S.documentTypeListItem('faqItem').title('FAQ Items').icon(HelpCircleIcon), // scaffold: faq
+
+              S.divider(),
+
+              // Announcement banners: queued notices that appear above the header.
+              // Each one has a date window (startDate / endDate) and an on/off toggle.
+              // The active announcement is picked at build time; a rebuild is required
+              // for the banner to appear or disappear on the live site.
+              S.documentTypeListItem('announcement').title('Announcements').icon(BellIcon),
+            ]),
+        ),
+
+      S.divider(),
+
+      // scaffold: journal
+      // Journal — its own section so the editor can find posts + categories at a glance
+      S.listItem()
+        .title('Journal')
+        .icon(BookIcon)
+        .child(
+          S.list()
+            .title('Journal')
+            .items([
+              S.documentTypeListItem('journalEntry').title('Posts').icon(EditIcon),
+              S.documentTypeListItem('journalCategory').title('Categories').icon(TagIcon),
+            ]),
+        ),
+      // scaffold:end
+
+      // Safety net: surface any document type we have NOT explicitly placed above
+      // (and keep the hidden set, including media.tag, out of the desk root).
+      ...S.documentTypeListItems().filter(
+        (item) => !HIDDEN_FROM_DEFAULT.has(item.getId() as string),
+      ),
+    ]);

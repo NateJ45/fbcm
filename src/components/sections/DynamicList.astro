@@ -1,0 +1,324 @@
+---
+// Safe to edit by hand
+// Dynamic list section: auto-pulls the latest items from a core collection and
+// renders them as a card grid. No manual curation required -- the editor picks
+// the source (journal, services, testimonials, or FAQs) and a limit.
+//
+// Sources and their card shape:
+//   journal      - Cover image + title + excerpt + publish date. Links to the
+//                  journal entry at /journal/<slug>.
+//   services     - Name + short description + price. Links to /services#<slug>.
+//   testimonials - Attribution + detail + quote. No link (no detail page).
+//   faqs         - Question + answer (collapsed accordion style). No link.
+//
+// SELF_CONTAINED: manages its own surface. Never receives a surface prop.
+// Empty state: renders nothing when items is empty or absent (graceful absence).
+import SectionHeading from '@/components/SectionHeading.astro';
+import SanityImage from '@/components/SanityImage.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import type { ProjectedDynamicListSection } from '@/lib/pageBuilder.types';
+import { columnsClass } from '@/lib/layout-variants';
+
+type Props = {
+  eyebrow?: string;
+  headline?: string;
+  subhead?: string;
+  /** Optional rich twin of `subhead` (bold / italic). See src/lib/inline-rich.ts. */
+  subheadRich?: unknown;
+  /**
+   * Which collection to pull from. Every value this can take belongs to a
+   * scaffold capability (journal, services, testimonials, faq), so this is a
+   * plain string rather than a union: a fork that removes all four would
+   * otherwise be left with an empty union, which does not parse. The dropdown
+   * in `sections.ts` is what actually limits an editor's choice, and each of
+   * its options carries its own scaffold marker.
+   */
+  source?: string;
+  items?: ProjectedDynamicListSection['items'];
+  cta?: ProjectedDynamicListSection['cta'];
+  /** How many cards across on a desktop. Three is what this grid always was. */
+  columns?: number;
+  headingId?: string;
+};
+
+const {
+  eyebrow,
+  headline = 'Latest updates',
+  subhead,
+  subheadRich,
+  source = 'journal',
+  items = [],
+  cta,
+  columns,
+  headingId = 'dynamic-list-heading',
+} = Astro.props as Props;
+
+const hasItems = Array.isArray(items) && items.length > 0;
+
+// Unset, this emits `sm:grid-cols-2 lg:grid-cols-3`, which is the string that
+// was inline on all three card grids below before src/lib/layout-variants.ts
+// existed (2026-08-28). One value drives all three, because they are three
+// renderings of one grid, not three grids.
+const colClass = columnsClass('dynamicListSection', columns);
+
+// The sources that have a card layout of their own below. Anything else falls
+// through to the generic grid at the end, which is also what happens once a
+// fork has scaffold-removed the capabilities these belong to. Each entry is
+// marked, so this list shrinks with them.
+const KNOWN_SOURCES: string[] = [
+  'journal', // scaffold: journal
+  'services', // scaffold: services
+  'testimonials', // scaffold: testimonials
+  'faqs', // scaffold: faq
+];
+
+// Format a datetime string to a short readable date.
+function formatDate(d?: string | null): string {
+  if (!d) return '';
+  const date = new Date(d);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// Source-specific fallback CTA link if no cta prop provided.
+const fallbackHref: Record<string, string> = {
+  journal: '/journal', // scaffold: journal
+  services: '/services', // scaffold: services
+  testimonials: '/', // scaffold: testimonials
+  faqs: '/faq', // scaffold: faq
+};
+const fallbackLabel: Record<string, string> = {
+  journal: 'Read all posts', // scaffold: journal
+  services: 'See all services', // scaffold: services
+  testimonials: 'See all reviews', // scaffold: testimonials
+  faqs: 'Browse all FAQs', // scaffold: faq
+};
+---
+
+{
+  hasItems && (
+    <section class="bg-muted" aria-labelledby={headingId}>
+      <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+        <SectionHeading
+          eyebrow={eyebrow}
+          headline={headline}
+          subhead={subhead}
+          subheadRich={subheadRich}
+          headingId={headingId}
+          align="center"
+          class="mx-auto"
+        />
+
+        {/* scaffold: journal */}
+        {/* ── Journal cards ────────────────────────────────────────────── */}
+        {source === 'journal' && (
+          <ul
+            class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}
+            data-stagger-grid
+          >
+            {items.map((item) => (
+              <li>
+                {item.href ? (
+                  <a
+                    href={item.href}
+                    class="card-lift group block h-full overflow-hidden rounded-md border border-border-soft bg-card no-underline transition-colors hover:border-primary/40"
+                  >
+                    {item.coverImage?.asset && (
+                      <div class="aspect-[16/9] overflow-hidden bg-muted">
+                        <SanityImage
+                          source={item.coverImage}
+                          width={800}
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        />
+                      </div>
+                    )}
+                    <div class="p-m">
+                      {item.meta && (
+                        <p class="mb-xs text-xs tracking-eyebrow text-foreground/70 uppercase">
+                          {formatDate(item.meta)}
+                        </p>
+                      )}
+                      <h3 class="line-clamp-2 font-display text-h4 leading-tight text-foreground transition-colors group-hover:text-primary-dark">
+                        {item.title}
+                      </h3>
+                      {item.summary && (
+                        <p class="mt-xs line-clamp-3 text-sm leading-relaxed text-foreground/80">
+                          {item.summary}
+                        </p>
+                      )}
+                    </div>
+                  </a>
+                ) : (
+                  <div class="h-full rounded-md border border-border-soft bg-card p-m">
+                    <h3 class="font-display text-h4 text-foreground">{item.title}</h3>
+                    {item.summary && (
+                      <p class="mt-xs text-sm leading-relaxed text-foreground/80">{item.summary}</p>
+                    )}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+        {/* scaffold:end */}
+
+        {/* scaffold: services */}
+        {/* ── Service cards ────────────────────────────────────────────── */}
+        {source === 'services' && (
+          <ul
+            class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}
+            data-stagger-grid
+          >
+            {items.map((item) => (
+              <li>
+                {item.href ? (
+                  <a
+                    href={item.href}
+                    class="card-lift group block h-full rounded-md border border-border-soft bg-card p-m no-underline transition-colors hover:border-primary/40"
+                  >
+                    <h3 class="font-display text-h4 text-foreground transition-colors group-hover:text-primary-dark">
+                      {item.title}
+                    </h3>
+                    {item.meta && (
+                      <p class="mt-xs text-xs font-semibold tracking-eyebrow text-link uppercase">
+                        {item.meta}
+                      </p>
+                    )}
+                    {item.summary && (
+                      <p class="mt-s line-clamp-3 text-sm leading-relaxed text-foreground/80">
+                        {item.summary}
+                      </p>
+                    )}
+                  </a>
+                ) : (
+                  <div class="h-full rounded-md border border-border-soft bg-card p-m">
+                    <h3 class="font-display text-h4 text-foreground">{item.title}</h3>
+                    {item.meta && (
+                      <p class="mt-xs text-xs font-semibold tracking-eyebrow text-link uppercase">
+                        {item.meta}
+                      </p>
+                    )}
+                    {item.summary && (
+                      <p class="mt-s line-clamp-3 text-sm leading-relaxed text-foreground/80">
+                        {item.summary}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+        {/* scaffold:end */}
+
+        {/* scaffold: testimonials */}
+        {/* ── Testimonial cards ────────────────────────────────────────── */}
+        {source === 'testimonials' && (
+          <ul
+            class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}
+            data-stagger-grid
+          >
+            {items.map((item) => (
+              <li class="flex">
+                <blockquote class="flex flex-1 flex-col rounded-md border border-border-soft bg-card p-m">
+                  {item.summary && (
+                    <p class="flex-1 leading-relaxed text-foreground/90 italic before:content-['“'] after:content-['”']">
+                      {item.summary}
+                    </p>
+                  )}
+                  <footer class="mt-m">
+                    <cite class="not-italic">
+                      <p class="text-sm font-semibold text-foreground">{item.title}</p>
+                      {item.meta && <p class="text-xs text-foreground/70">{item.meta}</p>}
+                    </cite>
+                  </footer>
+                </blockquote>
+              </li>
+            ))}
+          </ul>
+        )}
+        {/* scaffold:end */}
+
+        {/* scaffold: faq */}
+        {/* ── FAQ items (mini accordion) ───────────────────────────────── */}
+        {source === 'faqs' && (
+          <dl class="mx-auto mt-section-lg max-w-3xl divide-y divide-border-soft">
+            {items.map((item) => (
+              <div class="py-m">
+                <dt class="leading-snug font-semibold text-foreground">{item.title}</dt>
+                {item.summary && (
+                  <dd class="mt-xs text-sm leading-relaxed text-foreground/80">{item.summary}</dd>
+                )}
+                {/* answer is a Portable Text array -- render plain text fallback for
+                  the inline block. For full rich text the FaqAccordion island is the
+                  right component (see /faq page). */}
+                {!item.summary &&
+                  Array.isArray((item as any).answer) &&
+                  (item as any).answer.length > 0 && (
+                    <dd class="mt-xs text-sm leading-relaxed text-foreground/80">
+                      {(item as any).answer
+                        .filter((b: any) => b._type === 'block')
+                        .map((b: any) => b.children?.map((c: any) => c.text).join(''))
+                        .filter(Boolean)
+                        .join(' ')}
+                    </dd>
+                  )}
+              </div>
+            ))}
+          </dl>
+        )}
+        {/* scaffold:end */}
+
+        {/* ── Any other source ──────────────────────────────────────────────
+            Every branch above belongs to a scaffold capability and can be
+            removed; this one belongs to none and is what is left when they
+            have been. It renders the flat shape the GROQ projection normalises
+            every source into (title, meta, summary, optional href), so a new
+            source works the day it is added and before anyone writes cards for
+            it, and the block keeps a real grid to lay out however many of its
+            sources a fork has kept. Added 2026-09-18.
+
+            It is also what keeps `colClass` interpolated somewhere in this
+            file, which layout-variants.test.ts reads off disk to confirm the
+            registry's `baseColumns` has not gone stale. Remove every marked
+            branch without this one and that gate fails on a component that was
+            doing exactly what it was asked to. */}
+        {!KNOWN_SOURCES.includes(source) && (
+          <ul
+            class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}
+            data-stagger-grid
+          >
+            {items.map((item) => (
+              <li>
+                <div class="h-full rounded-md border border-border-soft bg-card p-m">
+                  <h3 class="font-display text-h4 text-foreground">{item.title}</h3>
+                  {item.meta && (
+                    <p class="mt-xs text-xs font-semibold tracking-eyebrow text-link uppercase">
+                      {item.meta}
+                    </p>
+                  )}
+                  {item.summary && (
+                    <p class="mt-s line-clamp-3 text-sm leading-relaxed text-foreground/80">
+                      {item.summary}
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* CTA button */}
+        <div class="mt-section-lg flex justify-center">
+          <CtaLink
+            cta={cta}
+            variant="secondary"
+            fallbackHref={fallbackHref[source]}
+            fallbackLabel={fallbackLabel[source]}
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
