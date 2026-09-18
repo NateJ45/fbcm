@@ -615,44 +615,9 @@ docs.push({
     {
       _type: 'mapRow',
       _key: key(),
-      area: 'About Page',
-      description:
-        'Your story, philosophy, personal section, and stats. Replace the placeholder text with your real content.',
-    },
-    {
-      _type: 'mapRow',
-      _key: key(),
-      area: 'Services + Service docs',
-      description:
-        'The Services page controls the hero and section copy. Individual Service documents control each service card: name, price, features, and description.',
-    },
-    {
-      _type: 'mapRow',
-      _key: key(),
-      area: 'FAQ Page + FAQ Items',
-      description:
-        'The FAQ page controls the hero. Individual FAQ Item documents hold each question and answer, organized by category.',
-    },
-    {
-      _type: 'mapRow',
-      _key: key(),
       area: 'Journal Page + Journal Entries',
       description:
         'The Journal page controls the index hero. Individual Journal Entry documents are your blog posts.',
-    },
-    {
-      _type: 'mapRow',
-      _key: key(),
-      area: 'Testimonials',
-      description:
-        'Individual Testimonial documents. Add them here, then reference them from the Home Page to control which ones appear and in what order.',
-    },
-    {
-      _type: 'mapRow',
-      _key: key(),
-      area: 'Philosophy Points',
-      description:
-        'The three values shown on the About page. Edit the title and description for each.',
     },
   ],
   howTos: [
@@ -739,7 +704,7 @@ docs.push({
       _key: key(),
       heading: 'Photos are optional but worth it',
       tone: 'positive',
-      body: 'Every page works without photos -- the layouts fall back gracefully. But a real hero photo on the home page and About page will make the site feel finished faster than any other single change.',
+      body: 'Every page works without photos -- the layouts fall back gracefully. But a real hero photo on the home page will make the site feel finished faster than any other single change.',
     },
   ],
 });
