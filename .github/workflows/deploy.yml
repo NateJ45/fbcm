@@ -177,7 +177,22 @@ jobs:
           esac
           echo "Smoking $BASE"
           FAIL=0
-          for path in / /about /services /process /faq /contact /blog /privacy; do
+          # Corrected 2026-09-18 (task 7 blocker fix): about/services/process/faq
+          # were scaffolded out of this repo and 404 -- confirmed against a real
+          # `dist/client` build, which has only /, /blog, /contact, /privacy,
+          # /studio, /404 (plus /post/<slug> once posts exist). Two routes are
+          # deliberately still not smoked:
+          #   /studio is left out on purpose. It answers 200 with real HTML
+          #   while being completely broken at React client mount (CLAUDE.md
+          #   rule 8: "curling a page is not verifying it"), so a 200 here would
+          #   look like a passing check while proving nothing about whether the
+          #   editor's Studio actually works.
+          #   /post/<slug> is left out for now too, not added with a guessed
+          #   slug. The Sanity project is configured but has zero journalEntry
+          #   documents until task 9/10 imports the 142 posts, and a smoke
+          #   check against a path that cannot 200 yet is worse than no check.
+          #   Add a real slug here in the same commit that imports the posts.
+          for path in / /blog /contact /privacy; do
             CODE=$(curl -sL -o /dev/null -w '%{http_code}' "$BASE$path")
             echo "$CODE $path"
             [ "$CODE" = "200" ] || FAIL=1
