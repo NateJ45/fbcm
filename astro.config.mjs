@@ -86,7 +86,7 @@ const hiddenPagePaths = new Set(
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://www.fbcmuncie.org',
   output: 'static',
   // 2026-08-28: no sessions anywhere in this template (there is no gated area
   // or login), so opt out. Left on, @astrojs/cloudflare v14 auto-declares a

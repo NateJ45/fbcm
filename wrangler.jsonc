@@ -7,7 +7,7 @@
   // client, the embedded Studio shell) and without the flag those reads throw at
   // request time. global_fetch_strictly_public predates it.
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-  "name": "ncs-astro-sanity-starter",
+  "name": "fbcm-site",
 
   // ── The contact endpoint's bindings (src/pages/api/contact.ts) ────────────
   // COMMENTED OUT ON PURPOSE, and they stay that way in the template. A fresh

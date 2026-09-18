@@ -3,31 +3,27 @@
 // Content editors update their fields through Sanity instead — see studio/ and src/lib/queries.ts.
 // Replace these placeholders with your project's real values before launch.
 
-/** Slugify a display name for use in localStorage key prefixes.
- *  "Studio Starter" -> "studio-starter"
- *  "My Client & Co." -> "my-client-co"
- *  Keeps apply-brand from ever needing to rewrite these fields — they stay
- *  in sync automatically whenever `name` is updated.
- */
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-}
+// apply-brand rewrites the two quoted strings on `name:` and `domain:` below
+// (see scripts/apply-brand.mjs rewriteSiteTs — it targets the `_name` and
+// `_domain` declarations plus the nine `brandColors` sub-keys and nothing
+// else in this file). Everything below this comment is therefore hand-owned:
+// apply-brand has no substitution pattern that reaches it.
+const _name = 'First Baptist Church Muncie';
+const _domain = 'fbcmuncie.org';
 
-// apply-brand rewrites the two quoted strings on `name:` and `domain:` below.
-// All derived fields (studio, storageKeyPrefix, themeStorageKey) are computed
-// from `name` at module load time — they are never rewritten by the script and
-// can never go stale across reskins.
-const _name = 'Studio Starter';
-const _domain = 'example.com';
-const _slug = slugify(_name);
+// FBCM-specific: `_domain` is the apex, used for email addresses
+// (noreply@fbcmuncie.org) and the brand config. The production site itself
+// is served from the `www` subdomain, so `url` is derived from `_domain`
+// with `www.` prepended rather than copied verbatim -- this keeps canonical
+// tags, the sitemap (astro.config.mjs `site:`) and this value in agreement
+// even though apply-brand's astro.config.mjs rewrite writes the bare apex
+// (see PENDING note: verify astro.config.mjs site: after every apply-brand run).
+const _storageKeyPrefix = 'fbcm';
 
 export const site = {
   name: _name,
   domain: _domain,
-  url: `https://${_domain}`,
+  url: `https://www.${_domain}`,
   // BCP 47 language tag for the <html lang> attribute. Change if the site is not in English.
   lang: 'en',
 
@@ -35,13 +31,13 @@ export const site = {
    *  accessed the old `site.studio` property. */
   studio: _name,
 
-  /** localStorage key prefix derived from name — e.g. "studio-starter".
-   *  Never needs to be touched by apply-brand; updates automatically. */
-  storageKeyPrefix: _slug,
+  /** localStorage key prefix. Hand-set to a short `fbcm` prefix rather than
+   *  slugifying the full church name (which would produce the unwieldy
+   *  "first-baptist-church-muncie"). apply-brand never touches this. */
+  storageKeyPrefix: _storageKeyPrefix,
 
-  /** localStorage key for theme preference — e.g. "studio-starter-theme".
-   *  Never needs to be touched by apply-brand; updates automatically. */
-  themeStorageKey: _slug + '-theme',
+  /** localStorage key for theme preference. apply-brand never touches this. */
+  themeStorageKey: _storageKeyPrefix + '-theme',
 
   // Brand colors are also declared in src/styles/globals.css.
   // Mirrored here for any script that needs them outside CSS (OG generator, structured data, etc.).
