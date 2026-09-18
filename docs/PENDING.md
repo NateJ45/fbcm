@@ -265,3 +265,18 @@ Flagged in CLAUDE.md's topic index since the fork. The 2026-08-28 pass corrected
 stale `studio/` path and every `studio:deploy` instruction in the live docs, but the
 examples inside them were not retoned. Trust the patterns; fix nouns when you touch a
 file.
+
+### 12. `package.json` carries an `allowScripts` block, added by the fork
+
+Added 2026-09-18 (Task 1). npm 12's install-scripts allowlist blocks postinstall/install
+scripts by default, and three already-pinned packages need theirs to run because each
+ships a native binary the build needs: `esbuild` (bundling), `workerd` (the Cloudflare
+runtime `wrangler`/`miniflare` shell out to), and `sharp` (Astro's image pipeline).
+Without the block, `npm install` leaves a tree that cannot build, on this machine or in
+CI. No pinned dependency version was changed to add it; `npm ls esbuild workerd sharp`
+and a `package-lock.json` grep both confirm every version named in the block
+(`esbuild@0.28.1`/`0.28.2`, `workerd@1.20260826.1`/`1.20260708.1`,
+`sharp@0.35.2`/`0.35.4`/`0.34.5`) is one the committed lockfile actually resolves, not a
+leftover from an unrelated install. The consequence worth remembering: every future
+clone and every CI run now executes those three packages' scripts unattended. Re-check
+this list against `npm ls` when the lockfile bumps any of the three.
