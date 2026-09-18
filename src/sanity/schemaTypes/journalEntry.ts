@@ -98,6 +98,15 @@ export const journalEntry = defineType({
       of: [defineArrayMember({ type: 'reference', to: [{ type: 'journalCategory' }] })],
     }),
     defineField({
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: { layout: 'tags' },
+      description: 'Short labels like "Advent" or "Mark". Press Enter after each one.',
+      group: 'meta',
+    }),
+    defineField({
       name: 'author',
       title: 'Author',
       type: 'string',

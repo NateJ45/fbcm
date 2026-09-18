@@ -948,6 +948,7 @@ export type JournalEntry = {
       _key: string;
     } & JournalCategoryReference
   >;
+  tags?: Array<string>;
   author?: string;
   publishedAt?: string;
   updatedAt?: string;
