@@ -1,0 +1,64 @@
+{
+  "capturedAt": "2026-09-18",
+  "why": "Wix retains analytics for 62 days only and the data dies with the subscription. Google Search Console data was reached through the Wix connection, so it is captured here too rather than assumed to survive. Together these are the before-number the rebuild gets measured against.",
+  "howToRefetch": {
+    "wixSessions": "GET https://www.wixapis.com/analytics/v2/site-analytics/data?dateRange.startDate=&dateRange.endDate=&measurementTypes=TOTAL_SESSIONS&measurementTypes=TOTAL_UNIQUE_VISITORS (62-day retention limit)",
+    "searchConsole": "GET https://www.wixapis.com/gsc/v1/search-analytics?startDate=&endDate=&dimensions=page&rowLimit=100 (16 months)",
+    "siteId": "561b096d-3460-4ac4-8625-dc536b7ad348"
+  },
+  "wixTraffic": {
+    "range": "2026-07-20 to 2026-09-17 (60 days)",
+    "totalSessions": 745,
+    "totalUniqueVisitors": 557,
+    "sessionsPerDayMean": 12.4,
+    "dailySessions": [8,11,5,6,1,10,10,17,7,30,9,15,6,20,10,10,9,8,10,6,28,15,8,38,28,13,15,15,12,8,11,9,7,13,20,11,14,11,11,5,8,17,7,17,8,23,10,5,14,9,10,9,15,5,12,20,15,13,6,22],
+    "dailyUniqueVisitors": [8,11,5,6,1,10,10,16,7,22,7,14,6,18,10,10,9,8,10,5,24,15,8,34,26,9,6,11,9,6,11,8,6,13,20,10,13,11,8,5,8,16,7,16,8,22,9,5,14,8,10,9,15,5,12,20,13,12,6,18]
+  },
+  "searchConsoleByPage": {
+    "range": "2025-09-18 to 2026-09-17 (12 months)",
+    "note": "clicks, impressions, average position. Sorted by clicks. Pages absent from this list had no search impressions in the period.",
+    "rows": [
+      { "url": "/",                         "clicks": 512, "impressions": 7655, "position": 8.9 },
+      { "url": "/ministers",                "clicks": 102, "impressions": 3543, "position": 7.1 },
+      { "url": "/wedding",                  "clicks": 61,  "impressions": 4644, "position": 12.9 },
+      { "url": "/post/important-documents", "clicks": 43,  "impressions": 3050, "position": 10.1 },
+      { "url": "/worship",                  "clicks": 34,  "impressions": 3472, "position": 5.4 },
+      { "url": "/history",                  "clicks": 30,  "impressions": 6165, "position": 6.7 },
+      { "url": "/adult",                    "clicks": 25,  "impressions": 876,  "position": 12.6 },
+      { "url": "/team/jonathan-balmer",     "clicks": 24,  "impressions": 795,  "position": 7.2 },
+      { "url": "/team/kendall-ellis",       "clicks": 20,  "impressions": 409,  "position": 12.0 },
+      { "url": "/baptists",                 "clicks": 11,  "impressions": 2820, "position": 12.8 },
+      { "url": "/team",                     "clicks": 11,  "impressions": 320,  "position": 7.3 },
+      { "url": "/who-we-are",               "clicks": 10,  "impressions": 2945, "position": 6.3 },
+      { "url": "/contact",                  "clicks": 9,   "impressions": 3186, "position": 5.2 },
+      { "url": "/youth",                    "clicks": 7,   "impressions": 321,  "position": 10.1 },
+      { "url": "/publications",             "clicks": 5,   "impressions": 380,  "position": 6.2 },
+      { "url": "/team/emily-anderson",      "clicks": 5,   "impressions": 128,  "position": 19.9, "formerStaff": true },
+      { "url": "/team/janis-wright",        "clicks": 5,   "impressions": 206,  "position": 7.9,  "formerStaff": true },
+      { "url": "/accessibility",            "clicks": 4,   "impressions": 1102, "position": 6.0 },
+      { "url": "/architecture",             "clicks": 4,   "impressions": 1151, "position": 7.7 },
+      { "url": "/church-app",               "clicks": 4,   "impressions": 542,  "position": 6.4 },
+      { "url": "/reservation",              "clicks": 4,   "impressions": 237,  "position": 10.5 },
+      { "url": "/team/cynthia-smith",       "clicks": 3,   "impressions": 22,   "position": 5.1 },
+      { "url": "/team/deena-green",         "clicks": 3,   "impressions": 366,  "position": 7.0,  "formerStaff": true },
+      { "url": "/children",                 "clicks": 2,   "impressions": 597,  "position": 8.7 },
+      { "url": "/membership",               "clicks": 2,   "impressions": 241,  "position": 11.7 },
+      { "url": "/outreach",                 "clicks": 2,   "impressions": 76,   "position": 18.2 },
+      { "url": "/team/joe-songer",          "clicks": 2,   "impressions": 34,   "position": 14.2 },
+      { "url": "/blog",                     "clicks": 1,   "impressions": 256,  "position": 11.4 },
+      { "url": "/team/ella-mae-lemen",      "clicks": 1,   "impressions": 87,   "position": 14.3 },
+      { "url": "/team/jennifer-durke",      "clicks": 1,   "impressions": 21,   "position": 4.9,  "formerStaff": true },
+      { "url": "/team/molly-flodder",       "clicks": 1,   "impressions": 79,   "position": 17.8 },
+      { "url": "/beliefs",                  "clicks": 0,   "impressions": 1215, "position": 8.1 },
+      { "url": "/post/bearing-good-news",   "clicks": 0,   "impressions": 4497, "position": 7.6 }
+    ]
+  },
+  "findings": [
+    "Staff is the second most valuable subject on the site: /ministers alone takes 102 clicks, and individual team pages take about 65 more between them.",
+    "Four team URLs that still earn clicks belong to FORMER staff and no longer exist on the live site: emily-anderson, janis-wright, deena-green, jennifer-durke. A fifth, leslie-pannell, was found in the Internet Archive. All five need redirects.",
+    "Weddings drive real search demand: /wedding is third by clicks and second by impressions among pages.",
+    "/beliefs has 1,215 impressions and ZERO clicks across twelve months. It ranks and nobody chooses it, which is a title and snippet problem, not a content problem.",
+    "/post/bearing-good-news has 4,497 impressions and zero clicks, the second-highest impression count on the whole site.",
+    "The pages proposed for merging are all low-click: accessibility 4, architecture 4, church-app 4, membership 2, outreach 2, children 2. Merging them is safe as long as the redirects preserve the impressions."
+  ]
+}

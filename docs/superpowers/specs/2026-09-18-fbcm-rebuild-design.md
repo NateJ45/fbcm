@@ -56,6 +56,14 @@ link hits) and Church Center (giving, another calendar, four form IDs, 97 link
 hits). The current nav links to both, including two Calendar entries pointing at
 different systems.
 
+**Traffic is small and concentrated.** 745 sessions and 557 unique visitors over 60
+days, about 12 sessions a day. Twelve months of Google Search Console data shows
+where the value sits: Home takes 512 clicks, `/ministers` takes 102, `/wedding`
+takes 61. The pages this design merges away are all low-click (accessibility 4,
+architecture 4, church-app 4, membership 2, outreach 2, children 2), so the
+reduction is validated by evidence rather than inferred from word counts. Captured
+in `scripts/data/analytics-baseline.json`, because Wix keeps only 62 days of it.
+
 **Nothing substantial has been lost.** The Internet Archive holds 1.72 million
 captures since 2001. Of 6,809 URLs it has seen that are not in the current
 sitemaps, almost all are noise: Wix build artifacts, blog tag and pagination
@@ -128,10 +136,33 @@ support (PORTS.md card 22).
 | `/worship`, `/children`, `/youth`, `/adult`, `/outreach` | `/ministries#<area>` |
 | `/ministers`, `/team` | `/staff` |
 | `/team/<16 slugs>` | `/staff` (the five with bios to `/staff#<name>`) |
+| `/team/emily-anderson`, `/team/janis-wright`, `/team/deena-green`, `/team/jennifer-durke`, `/team/leslie-pannell` | `/staff` (former staff, see below) |
 | `/reservation` | `/wedding` |
 | `/publications` | `/blog#publications` |
 | `/church-app` | `/contact` |
 | 6 blog category URLs | `/blog?category=<slug>` |
+
+**Five former-staff URLs need redirects that the live site cannot tell you about.**
+`emily-anderson`, `janis-wright`, `deena-green` and `jennifer-durke` still earn 14
+search clicks a year between them and exist on no current page; `leslie-pannell`
+turned up only in the Internet Archive. They are already broken on Wix today.
+Redirecting them to `/staff` is free and recovers traffic the old site was losing.
+Neither the crawl nor the sitemap could have found these: the crawl sees only what
+is published, and it took Search Console and the Archive together to surface them.
+
+**Staff is the second most valuable subject on the site**, not a footnote. Between
+`/ministers` (102 clicks) and the individual profiles (about 65 more), it is worth
+more search traffic than everything except Home. `/staff` belongs in the primary
+nav, not nested under an About group the way the Wix nav had it. The traffic also
+concentrates on the people who have real bios, which is exactly the five getting
+detail sections, so folding the eleven thin profiles into cards costs about four
+clicks a year.
+
+**`/beliefs` earns 1,215 impressions and zero clicks in twelve months.** It ranks
+and nobody chooses it. That is a title and snippet problem, not a content problem,
+and it is the clearest single argument for the meta-description work in section 8.
+`/post/bearing-good-news` has the same shape more extremely: 4,497 impressions,
+the second-highest on the site, and zero clicks.
 
 **Blog URLs are preserved exactly, not redirected.** The starter's journal
 capability routes at `/journal` and `/journal/[slug]`. Those routes are renamed to
@@ -265,9 +296,17 @@ The live site carries defects that will not be reproduced:
 
 ## 9. Risks and open items
 
-**Analytics do not survive a rebuild** (PORTS.md card 54). If the church has a
-Google Analytics property on the Wix site, `PUBLIC_GA_ID` must be set **before**
-the domain moves. The loss is invisible for weeks. Only Nathan can retrieve it.
+**There is no Google Analytics to inherit.** The church appears to have only Wix's
+built-in analytics, which transfers nowhere and is deleted with the subscription.
+PORTS.md card 54 is therefore satisfied not by carrying a tag across but by
+accepting a clean break: the new site uses **Cloudflare Web Analytics**, which the
+starter already ships, is cookieless, and needs no consent banner. That last point
+matters for a church site with no one to maintain a banner.
+
+The 60-day traffic baseline and twelve months of Search Console data are captured
+in `scripts/data/analytics-baseline.json` so the rebuild can be measured against
+the old site rather than guessed at. Search Console is the more durable of the two
+and should be re-pointed at the new site after cutover, and its sitemap resubmitted.
 
 **The archive is two copies, one of which is going away.** `../fbcm-archive/` and
 the Wix site. A third copy off this machine is wanted before cutover.
@@ -281,7 +320,8 @@ which one they keep current.
 - Confirm the church approves moving off Wix, and who signs that off.
 - Decide who cancels the Wix subscription after cutover.
 - Confirm Church Center form 159198 reaches an inbox somebody reads.
-- Retrieve the existing Google Analytics property id, if there is one.
+- Confirm whether the church has any analytics other than Wix's built-in one. If they do not, nothing needs retrieving and the new site starts clean on Cloudflare Web Analytics.
+- Get access to the Google Search Console property (it is connected through Wix today), so it can be re-pointed after cutover rather than lost with the subscription.
 - The DNS cutover itself.
 - The remote D1 migration and secret puts, if either is ever needed (card 45 notes
   both trip a permission gate for an agent).
