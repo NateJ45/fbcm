@@ -165,3 +165,35 @@ for (const bg of WHITE_ON_DARK) {
     );
   });
 }
+
+// ---------------------------------------------------------------------------
+// Gold. --color-gold (#D59B29) is a FILL and an on-dark ink, never a paper
+// ink — see the comment beside its declaration in globals.css for the two
+// pairings that FAIL (gold on paper, white on gold) and their ratios. It is
+// deliberately NOT in TEXT_ON_SURFACE above and must never be added there:
+// that list is the paper-ink contract, and gold cannot meet it.
+//
+// These are the two pairings the site actually paints gold in, so they get
+// the same protection every other rendered pair gets above. Losing this test
+// is exactly how the last darkening happened unnoticed: gold was moved into
+// an ink role nothing here was watching.
+// ---------------------------------------------------------------------------
+
+const GOLD_PAIRS: Array<[string, string]> = [
+  // Navy body text on the gold "★ Featured" badge fill (JournalCard.astro).
+  ['color-primary', 'color-gold'],
+  // The heading-accent word (src/lib/surfaces.ts HEADING_ACCENT.onDarkBand),
+  // pinned to gold on the fixed ink band via `.bg-accent-dark` in globals.css
+  // rather than on a paper-ink token.
+  ['color-gold', 'color-accent-dark'],
+];
+
+for (const [fg, bg] of GOLD_PAIRS) {
+  test(`--${fg} on --${bg} meets AA body text`, () => {
+    const ratio = contrastRatio(token(fg), token(bg));
+    assert.ok(
+      ratio >= AA_BODY_TEXT,
+      `--${fg} (${token(fg)}) on --${bg} (${token(bg)}) is ${ratio}:1, needs ${AA_BODY_TEXT}:1`,
+    );
+  });
+}

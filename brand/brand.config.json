@@ -11,14 +11,15 @@
     "theme": {
       "--color-primary": "#292854",
       "--color-primary-dark": "#1C1B3A",
-      "--color-accent": "#875F0F",
-      "--color-accent-dark": "#6B4C0C",
+      "--color-accent": "#292854",
+      "--color-accent-dark": "#1C1B3A",
       "--color-secondary": "#AAB0B8",
       "--color-tertiary": "#9DB0A6",
       "--color-bg": "#FBFBFA",
       "--color-bg-soft": "#F3F4F2",
       "--color-border-soft": "#E6E7E5",
-      "--color-white-pure": "#FFFFFF"
+      "--color-white-pure": "#FFFFFF",
+      "--color-gold": "#D59B29"
     },
     "light": {
       "--background": "#FBFBFA",

@@ -51,7 +51,7 @@ const DEFAULTS = {
   bg: '#FBFBFA', // Paper
   primary: '#292854', // Slate
   primaryDark: '#1C1B3A', // Slate Dark
-  accent: '#875F0F', // Ink
+  accent: '#292854', // Ink
   taupe: '#AAB0B8', // Cool Gray
   fontDisplay: 'Libre Baskerville, Georgia, Cambria, Times New Roman, serif',
 };

@@ -106,8 +106,8 @@ export const SECTION_SURFACES: SurfacePair[] = [
     title: 'Ink',
     hint: 'The closing CTA band. The same near-black on a light or a dark page.',
     className: 'bg-accent-dark text-bg',
-    dot: '#6B4C0C',
-    dotDark: '#6B4C0C',
+    dot: '#1C1B3A',
+    dotDark: '#1C1B3A',
     dotInk: '#FBFBFA',
     themeStatic: true,
     tokens: {
@@ -148,9 +148,12 @@ export const HEADING_ACCENT = {
   light: '#586577',
   dark: '#8A96A6',
   /** Pinned colour on the fixed ink band, where a theme-aware token would flip.
-   *  FBCM: the church's own live-site gold (#D59B29) clears AA large-text
-   *  (3:1) against the darkened --color-accent-dark ink band even though it
-   *  fails AA body-text against paper, so it lives here rather than as the
-   *  --color-accent token itself. See docs note on the theme-tokens gate. */
+   *  FBCM: the church's own live-site gold (#D59B29) clears AA body text
+   *  (6.75:1, since --color-accent-dark is real navy again as of 2026-09-18)
+   *  against the ink band, even though it still fails AA body-text against
+   *  paper. It lives here — and as --color-gold in globals.css — rather than
+   *  as the --color-accent token itself, because --color-accent is an ink-on-
+   *  PAPER role and this pairing only works on the dark band. See the
+   *  --color-gold comment in globals.css and src/lib/theme-tokens.test.ts. */
   onDarkBand: '#D59B29',
 } as const;

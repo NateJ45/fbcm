@@ -17,17 +17,41 @@
    font-display, text-h1, p-l, max-w-content. */
 
 @theme {
-  /* Brand palette — neutral Slate default. Swap per project. */
-  --color-primary: #292854; /* Slate */
-  --color-primary-dark: #1c1b3a; /* Slate Dark — body anchor text */
-  --color-accent: #875f0f; /* Ink — headings + body */
-  --color-accent-dark: #6b4c0c; /* Ink Dark — dark surfaces */
+  /* Brand palette — FBCM navy + gold. */
+  --color-primary: #292854; /* Navy */
+  --color-primary-dark: #1c1b3a; /* Navy Dark — body anchor text */
+  /* --color-accent / --color-accent-dark are INK ROLES (headings + body text,
+     and the ink on dark surfaces) — see theme-tokens.test.ts, which asserts
+     both against the paper surfaces at AA body text. That is a text-on-paper
+     contract gold cannot meet (see --color-gold below), so these stay in the
+     navy family rather than pointing at the brand's second colour. Corrected
+     2026-09-18: a previous pass darkened gold into these two slots (two
+     off-brand hex values, since removed everywhere) to force the same gate
+     green instead of moving gold out of a role it was never suited for. The
+     church did not choose those colours. */
+  --color-accent: #292854; /* Navy — headings + body ink */
+  --color-accent-dark: #1c1b3a; /* Navy Dark — ink on dark surfaces, incl. the closing CTA band */
   --color-secondary: #aab0b8; /* Cool Gray — borders, eyebrows */
   --color-tertiary: #9db0a6; /* Muted Sage — sparingly */
   --color-bg: #fbfbfa; /* Paper — primary surface */
   --color-bg-soft: #f3f4f2; /* Soft Paper — alternating surface */
   --color-border-soft: #e6e7e5; /* Faint dividers */
   --color-white-pure: #ffffff;
+  /* Gold — the church's second brand colour, a FILL and an on-dark ink, never
+     a paper ink. Measured with src/lib/contrast.ts against the surfaces it
+     would need to work on as text:
+       gold on cream (--color-bg, #FBFBFA) ........ 2.37:1  FAILS AA body text
+       white on gold ............................... 2.46:1  FAILS AA body text
+     So it never carries body text on a light surface, and white never sits on
+     it. What DOES clear AA body text, and is what this token is actually used
+     for — the "★ Featured" badge fill in JournalCard.astro (navy text) and the
+     heading-accent word pinned on the fixed ink band in this file (gold text):
+       navy (--color-primary) on gold .............. 5.60:1  PASSES
+       gold on navy dark (--color-accent-dark) ...... 6.75:1  PASSES
+     Both pairs are asserted in src/lib/theme-tokens.test.ts. Do not repoint
+     --color-accent or --color-accent-dark at this value — those are ink-on-
+     paper roles and gold cannot serve them. */
+  --color-gold: #d59b29;
 
   /* Fonts */
   --font-display: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
@@ -551,9 +575,15 @@
 
 /* On the fixed ink band (the closing CTA panel) a theme-aware token would flip
    with the READER's page theme rather than with the band it is sitting on, so
-   pin it to the lifted slate that reads on near-black in either theme. */
+   pin it instead. Pinned to the brand gold (6.75:1 on this band, measured in
+   the --color-gold comment above) rather than a neutral slate: this is
+   gold's other real role, text on the dark navy surface. Corrected
+   2026-09-18 — it used to be #8a96a6 (a slate) because the ink band was
+   still gold-tinted (a darkened, since-removed hex) at the time and real
+   gold-on-gold failed; now that the band is real navy, gold reads clearly
+   on it. */
 .bg-accent-dark {
-  --section-accent: #8a96a6;
+  --section-accent: var(--color-gold);
 }
 
 /* Tactile press on primary CTAs. Tap/click depresses ~1px so the press

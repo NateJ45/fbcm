@@ -42,10 +42,10 @@ export const site = {
   // Brand colors are also declared in src/styles/globals.css.
   // Mirrored here for any script that needs them outside CSS (OG generator, structured data, etc.).
   brandColors: {
-    primary: '#292854', // Slate
-    primaryDark: '#1C1B3A', // Slate Dark
-    accent: '#875F0F', // Ink
-    accentDark: '#6B4C0C', // Ink Dark
+    primary: '#292854', // Navy
+    primaryDark: '#1C1B3A', // Navy Dark
+    accent: '#292854', // Navy ink (headings/body) — same navy family as primary, see globals.css
+    accentDark: '#1C1B3A', // Navy Dark ink (dark surfaces)
     secondary: '#AAB0B8', // Cool Gray
     tertiary: '#9DB0A6', // Muted Sage
     bg: '#FBFBFA', // Paper

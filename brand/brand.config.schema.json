@@ -43,7 +43,8 @@
             "--color-bg",
             "--color-bg-soft",
             "--color-border-soft",
-            "--color-white-pure"
+            "--color-white-pure",
+            "--color-gold"
           ],
           "properties": {
             "--color-primary": { "$ref": "#/definitions/hex" },
@@ -55,7 +56,11 @@
             "--color-bg": { "$ref": "#/definitions/hex" },
             "--color-bg-soft": { "$ref": "#/definitions/hex" },
             "--color-border-soft": { "$ref": "#/definitions/hex" },
-            "--color-white-pure": { "$ref": "#/definitions/hex" }
+            "--color-white-pure": { "$ref": "#/definitions/hex" },
+            "--color-gold": {
+              "$ref": "#/definitions/hex",
+              "description": "A FILL and an on-dark ink (badges, rules, text on the dark band) — never a paper ink. --color-accent / --color-accent-dark carry that role and must stay in the primary/navy family; this schema cannot itself forbid pointing them at --color-gold's value, so that constraint is enforced by src/lib/theme-tokens.test.ts instead (it asserts --color-accent and --color-accent-dark at AA body text against the paper surfaces, which gold fails)."
+            }
           }
         },
         "light": {

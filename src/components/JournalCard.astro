@@ -71,7 +71,10 @@ const titleClass = featured
     <div class="img-tint img-tint-light" aria-hidden="true"></div>
     {
       entry.featured && (
-        <span class="absolute top-m left-m inline-flex items-center rounded-full bg-primary-dark px-s py-1 text-[0.65rem] font-semibold tracking-[0.2em] text-white uppercase">
+        // Gold fill + navy text, not a navy fill: gold is a badge/fill colour
+        // in this design system, never text-on-paper (see the --color-gold
+        // comment in globals.css). 5.60:1, asserted in theme-tokens.test.ts.
+        <span class="absolute top-m left-m inline-flex items-center rounded-full bg-gold px-s py-1 text-[0.65rem] font-semibold tracking-[0.2em] text-primary uppercase">
           ★ Featured
         </span>
       )
