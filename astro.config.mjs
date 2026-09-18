@@ -11,12 +11,6 @@ import sanity from '@sanity/astro';
 
 import { buildRedirectMap } from './src/lib/redirects.ts';
 
-// The Sanity project id is PUBLIC by design: it ships in every client bundle.
-// A fresh clone with no .env still builds; the Studio then shows a project-not-
-// found screen until PUBLIC_SANITY_PROJECT_ID is set (see .env.example).
-const SANITY_PROJECT_ID = process.env.PUBLIC_SANITY_PROJECT_ID || 'placeholder-project-id';
-const SANITY_DATASET = process.env.PUBLIC_SANITY_DATASET || 'production';
-
 // -----------------------------------------------------------------------------
 // Build-time reads from Sanity (redirects + pages kept out of search)
 // -----------------------------------------------------------------------------
@@ -27,7 +21,27 @@ const SANITY_DATASET = process.env.PUBLIC_SANITY_DATASET || 'production';
 // This runs in the Astro CONFIG, before any integration, so it cannot use
 // src/lib/sanity.ts (that module reads import.meta.env, which is not populated
 // yet). loadEnv is Vite's own .env reader and is already a dependency of Astro.
+//
+// It has to be computed BEFORE the Sanity project id below, and that id has to
+// fall back to it. Astro/Vite only ever expose .env values through
+// import.meta.env for application code; they are never copied onto
+// process.env. A real `npm run build` from a shell that hasn't separately
+// exported these as OS environment variables therefore saw process.env.
+// PUBLIC_SANITY_PROJECT_ID as undefined even with a correct .env, which made
+// SANITY_CONFIGURED false and silently zeroed out both queries below - found
+// while proving Task 11's redirects actually produce a 301 (they didn't; the
+// dataset had 42 redirect documents and the build still emitted none).
 const configEnv = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), '');
+
+// The Sanity project id is PUBLIC by design: it ships in every client bundle.
+// A fresh clone with no .env still builds; the Studio then shows a project-not-
+// found screen until PUBLIC_SANITY_PROJECT_ID is set (see .env.example).
+const SANITY_PROJECT_ID =
+  process.env.PUBLIC_SANITY_PROJECT_ID ||
+  configEnv.PUBLIC_SANITY_PROJECT_ID ||
+  'placeholder-project-id';
+const SANITY_DATASET =
+  process.env.PUBLIC_SANITY_DATASET || configEnv.PUBLIC_SANITY_DATASET || 'production';
 const SANITY_API_VERSION =
   process.env.PUBLIC_SANITY_API_VERSION || configEnv.PUBLIC_SANITY_API_VERSION || '2026-05-01';
 const SANITY_READ_TOKEN = process.env.SANITY_API_READ_TOKEN || configEnv.SANITY_API_READ_TOKEN;
