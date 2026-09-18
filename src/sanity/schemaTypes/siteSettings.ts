@@ -568,7 +568,7 @@ export const siteSettings = defineType({
       title: 'Google Business Profile URL',
       type: 'url',
       description:
-        'Link to the studio\'s Google Business listing. When set, a "Read more on Google" link appears in the testimonials section.',
+        'Link to the studio\'s Google Business listing. When set, a "Read more on Google" link appears near the reviews note below.',
     }),
     defineField({
       name: 'reviewsNote',

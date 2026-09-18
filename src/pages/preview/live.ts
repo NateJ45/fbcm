@@ -15,9 +15,9 @@
 // interval poll here; that is what burned the WCP Sanity quota.
 //
 // The GROQ filter: signal when THIS page's doc changes (draft or published id),
-// or when any shared / non-`page` doc changes (services, testimonials, process
-// steps, settings... all can appear on any page through the auto-populating
-// section blocks), but stay silent for edits to some OTHER custom page.
+// or when any shared / non-`page` doc changes (journal entries, settings...
+// all can appear on any page through the auto-populating section blocks), but
+// stay silent for edits to some OTHER custom page.
 //
 // Connection lifecycle: Sanity ends listen connections periodically and the
 // Worker can be recycled; either just closes our stream, and the browser's

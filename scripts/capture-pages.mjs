@@ -93,7 +93,7 @@ async function fetchBuffer(url) {
 
 function slugFor(url) {
   const u = new URL(url);
-  let p = u.pathname.replace(/^\/+|\/+$/g, '');
+  const p = u.pathname.replace(/^\/+|\/+$/g, '');
   if (!p) return 'home';
   return p.replace(/[^A-Za-z0-9._-]+/g, '-').toLowerCase();
 }
@@ -207,9 +207,7 @@ function collectImages(scope, region, out) {
 // ---------------------------------------------------------------------------
 
 const BLOCK_SELECTOR = 'p,h1,h2,h3,h4,h5,h6,li,blockquote,figcaption,dt,dd,td,th,pre';
-const BLOCK_TAGS = new Set(
-  BLOCK_SELECTOR.split(',').map((s) => s.toUpperCase())
-);
+const BLOCK_TAGS = new Set(BLOCK_SELECTOR.split(',').map((s) => s.toUpperCase()));
 
 function extractBodyText(main) {
   const lines = [];
@@ -312,7 +310,11 @@ function collectEmbeds(doc, html) {
   };
 
   for (const f of doc.querySelectorAll('iframe')) {
-    add('iframe', f.getAttribute('src') || f.getAttribute('data-src'), f.getAttribute('title') || undefined);
+    add(
+      'iframe',
+      f.getAttribute('src') || f.getAttribute('data-src'),
+      f.getAttribute('title') || undefined,
+    );
   }
   for (const s of doc.querySelectorAll('script[src]')) {
     const src = s.getAttribute('src');
@@ -322,7 +324,9 @@ function collectEmbeds(doc, html) {
     add('script', src);
   }
   // Wix HTML-embed widgets are served from <site>.filesusr.com/html/<hash>.html
-  for (const m of html.matchAll(/https?:\\?\/\\?\/[a-z0-9-]+\.filesusr\.com\\?\/html\\?\/[^"'\s\\]+/gi)) {
+  for (const m of html.matchAll(
+    /https?:\\?\/\\?\/[a-z0-9-]+\.filesusr\.com\\?\/html\\?\/[^"'\s\\]+/gi,
+  )) {
     add('wix-html-embed', m[0].replace(/\\\//g, '/'));
   }
   // video / map / form providers referenced anywhere in the served markup
@@ -354,7 +358,8 @@ function extractNav(header, pageUrl) {
   for (const li of topUl.childNodes.filter((n) => n.tagName === 'LI')) {
     // the label is either an <a> (direct link) or a role=button div
     const directLink =
-      li.childNodes.find((n) => n.tagName === 'A' && n.getAttribute && n.getAttribute('href')) || null;
+      li.childNodes.find((n) => n.tagName === 'A' && n.getAttribute && n.getAttribute('href')) ||
+      null;
     let label = '';
     let href = null;
 
@@ -415,7 +420,7 @@ async function loadSitemaps() {
       continue;
     }
     const urls = [...r.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) =>
-      m[1].trim().replace(/&amp;/g, '&')
+      m[1].trim().replace(/&amp;/g, '&'),
     );
     groups.push({ name: sm.name, url: sm.url, urls });
     await sleep(DELAY_MS);
@@ -545,7 +550,7 @@ async function main() {
   }
   const sitemapCounts = groups.map((g) => ({ name: g.name, url: g.url, count: g.urls.length }));
   console.log(
-    `Sitemaps: ${sitemapCounts.map((s) => `${s.name}=${s.count}`).join(', ')}; ${targets.length} unique URLs`
+    `Sitemaps: ${sitemapCounts.map((s) => `${s.name}=${s.count}`).join(', ')}; ${targets.length} unique URLs`,
   );
 
   const records = [];
@@ -557,12 +562,14 @@ async function main() {
     const { url, category } = targets[i];
     process.stdout.write(`[${i + 1}/${targets.length}] ${url} ... `);
     const { record, header, footer } = await capturePage(url, category);
-    console.log(`${record.httpStatus} (${record.bodyText.split(/\s+/).filter(Boolean).length} words)`);
+    console.log(
+      `${record.httpStatus} (${record.bodyText.split(/\s+/).filter(Boolean).length} words)`,
+    );
 
     fs.writeFileSync(
       path.join(PAGES_DIR, `${record.slug}.json`),
       JSON.stringify(record, null, 2),
-      'utf8'
+      'utf8',
     );
     fs.writeFileSync(path.join(PAGES_DIR, `${record.slug}.txt`), record.bodyText, 'utf8');
     records.push(record);
@@ -589,15 +596,14 @@ async function main() {
       {
         extractedFrom: navSource,
         extractedAt: new Date().toISOString(),
-        note:
-          'Header nav tree as rendered server-side by Wix into #SITE_HEADER. Footer links captured separately from #SITE_FOOTER. The trailing "More..." item is Wix\'s responsive overflow container - it holds no items of its own in the served HTML; at narrow viewports the browser moves overflowing top-level items into it.',
+        note: 'Header nav tree as rendered server-side by Wix into #SITE_HEADER. Footer links captured separately from #SITE_FOOTER. The trailing "More..." item is Wix\'s responsive overflow container - it holds no items of its own in the served HTML; at narrow viewports the browser moves overflowing top-level items into it.',
         nav: navResult || [],
         footerLinks: footerResult || [],
       },
       null,
-      2
+      2,
     ),
-    'utf8'
+    'utf8',
   );
 
   // ---- outbound-links.json ----
@@ -616,7 +622,7 @@ async function main() {
     }
   }
   const outboundArr = [...outbound.values()].sort(
-    (a, b) => b.foundOn.length - a.foundOn.length || a.href.localeCompare(b.href)
+    (a, b) => b.foundOn.length - a.foundOn.length || a.href.localeCompare(b.href),
   );
   const hostCounts = new Map();
   for (const e of outboundArr) {
@@ -626,12 +632,16 @@ async function main() {
     hostCounts.set(e.host, c);
   }
   const hostsArr = [...hostCounts.values()].sort(
-    (a, b) => b.pageHits - a.pageHits || b.urlCount - a.urlCount
+    (a, b) => b.pageHits - a.pageHits || b.urlCount - a.urlCount,
   );
   fs.writeFileSync(
     path.join(ROOT, 'outbound-links.json'),
-    JSON.stringify({ generatedAt: new Date().toISOString(), hosts: hostsArr, links: outboundArr }, null, 2),
-    'utf8'
+    JSON.stringify(
+      { generatedAt: new Date().toISOString(), hosts: hostsArr, links: outboundArr },
+      null,
+      2,
+    ),
+    'utf8',
   );
 
   // ---- images ----
@@ -649,10 +659,16 @@ async function main() {
     idx++;
     const dest = path.join(IMAGES_DIR, im.localFile);
     if (fs.existsSync(dest) && fs.statSync(dest).size > 0) {
-      imageResults.push({ ...im, status: 'cached', bytes: fs.statSync(dest).size, source: 'original' });
+      imageResults.push({
+        ...im,
+        status: 'cached',
+        bytes: fs.statSync(dest).size,
+        source: 'original',
+      });
       continue;
     }
-    let { status, buf } = await fetchBuffer(im.originalUrl);
+    const { status, buf: initialBuf } = await fetchBuffer(im.originalUrl);
+    let buf = initialBuf;
     let source = 'original';
     if (!buf && /\.svg$/i.test(im.originalUrl)) {
       // Wix serves SVG originals from /shapes/, not /media/
@@ -681,7 +697,9 @@ async function main() {
     if (buf) {
       fs.writeFileSync(dest, buf);
       imageResults.push({ ...im, status: 'ok', bytes: buf.length, source });
-      process.stdout.write(`  [${idx}/${allImages.size}] ${im.localFile} ${buf.length}B ${source === 'original' ? '' : '(' + source + ')'}\n`);
+      process.stdout.write(
+        `  [${idx}/${allImages.size}] ${im.localFile} ${buf.length}B ${source === 'original' ? '' : '(' + source + ')'}\n`,
+      );
     } else {
       imageResults.push({ ...im, status: 'failed', httpStatus: status, bytes: 0, source: 'none' });
       process.stdout.write(`  [${idx}/${allImages.size}] FAILED ${im.originalUrl} (${status})\n`);
@@ -691,7 +709,7 @@ async function main() {
   fs.writeFileSync(
     path.join(ROOT, 'images-manifest.json'),
     JSON.stringify({ generatedAt: new Date().toISOString(), images: imageResults }, null, 2),
-    'utf8'
+    'utf8',
   );
 
   // ---- downloadable documents (Wix serves uploads from /_files/ugd/...) ----
@@ -731,7 +749,7 @@ async function main() {
   fs.writeFileSync(
     path.join(ROOT, 'files-manifest.json'),
     JSON.stringify({ generatedAt: new Date().toISOString(), files: docResults }, null, 2),
-    'utf8'
+    'utf8',
   );
 
   // ---- report ----
@@ -743,7 +761,9 @@ async function main() {
   const failedPages = records.filter((r) => r.httpStatus !== 200);
   const emptyPages = withWords.filter((w) => w.words < 40);
   const failedImages = imageResults.filter((i) => i.status === 'failed');
-  const fallbackImages = imageResults.filter((i) => i.source && i.source !== 'original' && i.status === 'ok');
+  const fallbackImages = imageResults.filter(
+    (i) => i.source && i.source !== 'original' && i.status === 'ok',
+  );
 
   const lines = [];
   lines.push('# FBC Muncie Wix capture report');
@@ -751,7 +771,9 @@ async function main() {
   lines.push(`Generated: ${new Date().toISOString()}`);
   lines.push(`Target: ${ORIGIN}`);
   lines.push(`Method: plain HTTP GET (Wix server-renders its HTML; verified before crawling).`);
-  lines.push('Scope: pages, team profiles, blog categories. Blog posts (/post/*) excluded by design.');
+  lines.push(
+    'Scope: pages, team profiles, blog categories. Blog posts (/post/*) excluded by design.',
+  );
   lines.push('');
   lines.push('## Counts');
   lines.push('');
@@ -760,16 +782,24 @@ async function main() {
   for (const g of sitemapCounts) {
     const recs = records.filter((r) => r.category === g.name);
     lines.push(
-      `| ${g.name} | ${g.count} | ${recs.filter((r) => r.httpStatus === 200).length} | ${recs.filter((r) => r.httpStatus !== 200).length} |`
+      `| ${g.name} | ${g.count} | ${recs.filter((r) => r.httpStatus === 200).length} | ${recs.filter((r) => r.httpStatus !== 200).length} |`,
     );
   }
-  lines.push(`| **unique attempted** | ${targets.length} | ${records.filter((r) => r.httpStatus === 200).length} | ${failedPages.length} |`);
-  lines.push('');
-  lines.push(`- Images downloaded/cached: **${imageResults.filter((i) => i.status !== 'failed').length}** of ${allImages.size} unique`);
-  lines.push(`- Total image bytes: **${totalBytes.toLocaleString()}** (${(totalBytes / 1048576).toFixed(2)} MB)`);
-  lines.push(`- Outbound (non-fbcmuncie.org) URLs: **${outboundArr.length}** across **${hostsArr.length}** hosts`);
   lines.push(
-    `- Linked documents (PDF etc. under /_files/ugd/) downloaded: **${docResults.filter((d) => d.status !== 'failed').length}** of ${docResults.length}, ${docResults.reduce((n, d) => n + (d.bytes || 0), 0).toLocaleString()} bytes -> data/files/`
+    `| **unique attempted** | ${targets.length} | ${records.filter((r) => r.httpStatus === 200).length} | ${failedPages.length} |`,
+  );
+  lines.push('');
+  lines.push(
+    `- Images downloaded/cached: **${imageResults.filter((i) => i.status !== 'failed').length}** of ${allImages.size} unique`,
+  );
+  lines.push(
+    `- Total image bytes: **${totalBytes.toLocaleString()}** (${(totalBytes / 1048576).toFixed(2)} MB)`,
+  );
+  lines.push(
+    `- Outbound (non-fbcmuncie.org) URLs: **${outboundArr.length}** across **${hostsArr.length}** hosts`,
+  );
+  lines.push(
+    `- Linked documents (PDF etc. under /_files/ugd/) downloaded: **${docResults.filter((d) => d.status !== 'failed').length}** of ${docResults.length}, ${docResults.reduce((n, d) => n + (d.bytes || 0), 0).toLocaleString()} bytes -> data/files/`,
   );
   lines.push('');
   lines.push('## Outbound hosts (by page hits)');
@@ -784,7 +814,8 @@ async function main() {
     lines.push('None.');
   } else {
     for (const f of failures) lines.push(`- SITEMAP ${f.url} -> ${f.status} (${f.note})`);
-    for (const f of failedPages) lines.push(`- PAGE ${f.url} -> HTTP ${f.httpStatus}${f.error ? ' ' + f.error : ''}`);
+    for (const f of failedPages)
+      lines.push(`- PAGE ${f.url} -> HTTP ${f.httpStatus}${f.error ? ' ' + f.error : ''}`);
     for (const f of failedImages) lines.push(`- IMAGE ${f.originalUrl} -> HTTP ${f.httpStatus}`);
     for (const f of docResults.filter((d) => d.status === 'failed'))
       lines.push(`- FILE ${f.href} -> HTTP ${f.httpStatus}`);
@@ -805,7 +836,9 @@ async function main() {
   lines.push('## Thin / suspicious pages (<40 words)');
   lines.push('');
   if (!emptyPages.length) lines.push('None.');
-  else for (const e of emptyPages) lines.push(`- ${e.url} (${e.words} words) - check whether content is JS-rendered`);
+  else
+    for (const e of emptyPages)
+      lines.push(`- ${e.url} (${e.words} words) - check whether content is JS-rendered`);
   lines.push('');
   // blog listing pages: how many post links actually server-rendered
   const blogListing = records
@@ -818,7 +851,7 @@ async function main() {
   lines.push('## Blog listing / category pages (JS-rendered feed)');
   lines.push('');
   lines.push(
-    'Wix Blog renders only the first few cards into the server HTML; the rest of the paginated feed is fetched by JavaScript. Post links found in the served markup of each listing page:'
+    'Wix Blog renders only the first few cards into the server HTML; the rest of the paginated feed is fetched by JavaScript. Post links found in the served markup of each listing page:',
   );
   lines.push('');
   lines.push('| Listing page | /post/ links in served HTML |');
@@ -826,48 +859,83 @@ async function main() {
   for (const b of blogListing) lines.push(`| ${b.url} | ${b.posts} |`);
   lines.push('');
   lines.push(
-    '**Consequence for a rebuild:** category -> post membership CANNOT be recovered from these pages. It has to come from each individual post page (captured separately) or from a Wix data export.'
+    '**Consequence for a rebuild:** category -> post membership CANNOT be recovered from these pages. It has to come from each individual post page (captured separately) or from a Wix data export.',
   );
   lines.push('');
   lines.push('## Notes for a rebuild');
   lines.push('');
-  lines.push('- Wix UI chrome images were skipped: media ids prefixed `11062b_` (Wix stock social icons) and blank.gif.');
-  lines.push('- Every image was requested at its ORIGINAL upload URL (everything before `/v1/`). Wix serves SVG originals from `/shapes/` rather than `/media/`; the crawler falls back to that path automatically.');
-  lines.push('- `links` in each page JSON carry a `region` field (main/header/footer) so nav boilerplate can be told apart from in-content links.');
-  lines.push('- Body text de-duplicates repeated strings because Wix renders separate desktop/mobile copies of some sections.');
-  lines.push('- `https://www.fbcmuncie.org/blog` appears in both the pages sitemap and the blog-categories sitemap; it is captured once (counted under `pages`), which is why the blog-categories row shows 6 of 7.');
-  lines.push('- Team/staff profile pages are genuinely short by design (name, role, e-mail, headshot, back-link). The short word counts are real content, not a failed JS render - verified against the raw HTML.');
-  lines.push('- Several e-mail addresses are obfuscated on the live site as `name[at]fbcmuncie.org`; they are captured verbatim.');
-  lines.push('- `/post/important-documents` is linked from the main header nav (Ministry > Important Documents) even though it is a blog post, not a page. A rebuild needs it to exist at a stable URL.');
-  lines.push('- No `<iframe>` embeds are present in the served HTML: every third-party integration on this site is a plain outbound link (Church Trac, Church Center, YouTube, social, app stores). The `embeds` array therefore lists detected third-party URLs and scripts rather than true iframe embeds.');
-  lines.push('- Downloadable PDFs are large (newsletters and annual reports run to tens of MB each) and are mirrored to `data/files/` with the manifest in `files-manifest.json`.');
+  lines.push(
+    '- Wix UI chrome images were skipped: media ids prefixed `11062b_` (Wix stock social icons) and blank.gif.',
+  );
+  lines.push(
+    '- Every image was requested at its ORIGINAL upload URL (everything before `/v1/`). Wix serves SVG originals from `/shapes/` rather than `/media/`; the crawler falls back to that path automatically.',
+  );
+  lines.push(
+    '- `links` in each page JSON carry a `region` field (main/header/footer) so nav boilerplate can be told apart from in-content links.',
+  );
+  lines.push(
+    '- Body text de-duplicates repeated strings because Wix renders separate desktop/mobile copies of some sections.',
+  );
+  lines.push(
+    '- `https://www.fbcmuncie.org/blog` appears in both the pages sitemap and the blog-categories sitemap; it is captured once (counted under `pages`), which is why the blog-categories row shows 6 of 7.',
+  );
+  lines.push(
+    '- Team/staff profile pages are genuinely short by design (name, role, e-mail, headshot, back-link). The short word counts are real content, not a failed JS render - verified against the raw HTML.',
+  );
+  lines.push(
+    '- Several e-mail addresses are obfuscated on the live site as `name[at]fbcmuncie.org`; they are captured verbatim.',
+  );
+  lines.push(
+    '- `/post/important-documents` is linked from the main header nav (Ministry > Important Documents) even though it is a blog post, not a page. A rebuild needs it to exist at a stable URL.',
+  );
+  lines.push(
+    '- No `<iframe>` embeds are present in the served HTML: every third-party integration on this site is a plain outbound link (Church Trac, Church Center, YouTube, social, app stores). The `embeds` array therefore lists detected third-party URLs and scripts rather than true iframe embeds.',
+  );
+  lines.push(
+    '- Downloadable PDFs are large (newsletters and annual reports run to tens of MB each) and are mirrored to `data/files/` with the manifest in `files-manifest.json`.',
+  );
   lines.push('');
   lines.push('### SEO state of the existing site');
   lines.push('');
   lines.push(
-    `- ${records.filter((r) => !r.metaDescription).length} of ${records.length} pages have **no meta description**.`
+    `- ${records.filter((r) => !r.metaDescription).length} of ${records.length} pages have **no meta description**.`,
   );
   lines.push(
-    `- ${records.filter((r) => !r.h1).length} pages have **no h1**: ${records.filter((r) => !r.h1).map((r) => r.slug).join(', ') || 'none'}.`
+    `- ${records.filter((r) => !r.h1).length} pages have **no h1**: ${
+      records
+        .filter((r) => !r.h1)
+        .map((r) => r.slug)
+        .join(', ') || 'none'
+    }.`,
   );
   lines.push(
-    `- Only ${new Set(records.map((r) => r.ogImage)).size} distinct og:image values across ${records.length} pages; many pages fall back to the site logo SVG.`
+    `- Only ${new Set(records.map((r) => r.ogImage)).size} distinct og:image values across ${records.length} pages; many pages fall back to the site logo SVG.`,
   );
   lines.push(
-    `- Totals captured: ${records.reduce((n, r) => n + r.headings.length, 0)} headings, ${records.reduce((n, r) => n + r.bodyText.split(/\s+/).filter(Boolean).length, 0).toLocaleString()} words of body text, ${records.reduce((n, r) => n + r.links.length, 0)} link instances, ${records.reduce((n, r) => n + r.images.length, 0)} image references.`
+    `- Totals captured: ${records.reduce((n, r) => n + r.headings.length, 0)} headings, ${records.reduce((n, r) => n + r.bodyText.split(/\s+/).filter(Boolean).length, 0).toLocaleString()} words of body text, ${records.reduce((n, r) => n + r.links.length, 0)} link instances, ${records.reduce((n, r) => n + r.images.length, 0)} image references.`,
   );
   lines.push('');
   lines.push('### Broken or mislabelled links found on the live site');
   lines.push('');
-  lines.push('- The social icon labelled **"Linktree"** in the header and footer points to `https://podcasters.spotify.com/pod/show/first-baptist-church-munc` - a truncated-looking Spotify-for-Podcasters URL, on a domain Spotify has since retired. A second icon with the same "Linktree" label points to `https://linktr.ee/fbcmuncie`. One of the two is wrong; confirm with the church which they want.');
-  lines.push('- On `/team/cynthia-smith` a link labelled **"LinkedIn"** actually points to `https://www.cynthialucilesmith.com/`.');
-  lines.push('- The site has two social-icon bars (header and footer) whose URLs disagree slightly: `http://threads.net/fbcmuncie` vs `https://www.threads.net/@fbcmuncie`, and `https://facebook.com/...` vs `https://www.facebook.com/...`. Normalise on rebuild.');
-  lines.push('- `/team/nina-oisten` lists the e-mail as `clerk@fbcmuncieorg` (missing the dot before `org`).');
+  lines.push(
+    '- The social icon labelled **"Linktree"** in the header and footer points to `https://podcasters.spotify.com/pod/show/first-baptist-church-munc` - a truncated-looking Spotify-for-Podcasters URL, on a domain Spotify has since retired. A second icon with the same "Linktree" label points to `https://linktr.ee/fbcmuncie`. One of the two is wrong; confirm with the church which they want.',
+  );
+  lines.push(
+    '- On `/team/cynthia-smith` a link labelled **"LinkedIn"** actually points to `https://www.cynthialucilesmith.com/`.',
+  );
+  lines.push(
+    '- The site has two social-icon bars (header and footer) whose URLs disagree slightly: `http://threads.net/fbcmuncie` vs `https://www.threads.net/@fbcmuncie`, and `https://facebook.com/...` vs `https://www.facebook.com/...`. Normalise on rebuild.',
+  );
+  lines.push(
+    '- `/team/nina-oisten` lists the e-mail as `clerk@fbcmuncieorg` (missing the dot before `org`).',
+  );
   fs.writeFileSync(path.join(ROOT, 'capture-report.md'), lines.join('\n'), 'utf8');
 
   console.log('\nDone.');
   console.log(`Pages: ${records.length} (${failedPages.length} failed)`);
-  console.log(`Images: ${imageResults.filter((i) => i.status !== 'failed').length}/${allImages.size}, ${totalBytes} bytes`);
+  console.log(
+    `Images: ${imageResults.filter((i) => i.status !== 'failed').length}/${allImages.size}, ${totalBytes} bytes`,
+  );
   console.log(`Outbound hosts: ${hostsArr.length}`);
 }
 

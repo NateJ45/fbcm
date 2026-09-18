@@ -364,9 +364,9 @@ export default function VisualEditingOverlay({ pageId }: Props) {
       // The "Refresh" button in Presentation.
       if (payload.source === 'manual') return softRefresh();
       // A document was edited and autosaved. Refetch when THIS page changed, or
-      // when a shared or referenced doc changed (services, testimonials,
-      // process steps, settings: anything that is not some OTHER custom page),
-      // since those can appear on this page through the auto-populating blocks.
+      // when a shared or referenced doc changed (journal entries, settings:
+      // anything that is not some OTHER custom page), since those can appear
+      // on this page through the auto-populating blocks.
       const id = payload.document._id.replace(/^drafts\./, '');
       const isThisPage = id === pageId;
       const isSharedDoc = payload.document._type !== 'page';

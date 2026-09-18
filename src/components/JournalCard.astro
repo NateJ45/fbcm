@@ -36,8 +36,8 @@ function formatDate(d?: string): string {
 const dateLabel = formatDate(entry.publishedAt);
 
 // Featured card spans 2 columns on lg and uses a wider hero aspect.
-// Resting shadow matches the rest of the card grammar (ServiceCard,
-// ProjectCard, TestimonialCard) — soft warm 4px ambient depth.
+// Resting shadow matches the rest of the card grammar (ProjectCard) —
+// soft warm 4px ambient depth.
 const wrapperClass = featured
   ? 'card-lift card-lift-slow group block bg-card border border-border-soft rounded-md overflow-hidden hover:border-primary/40 transition-colors lg:col-span-2 shadow-[0_4px_18px_-14px_rgba(61,61,61,0.18)]'
   : 'card-lift card-lift-slow group block bg-card border border-border-soft rounded-md overflow-hidden hover:border-primary/40 transition-colors shadow-[0_4px_18px_-14px_rgba(61,61,61,0.18)]';

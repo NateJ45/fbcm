@@ -44,12 +44,6 @@ interface Service {
   price?: string;
 }
 
-// scaffold: faq
-interface FaqItem {
-  question?: string;
-  answer?: any;
-}
-// scaffold:end
 
 interface Breadcrumb {
   name: string;
@@ -131,39 +125,6 @@ export function serviceListSchema(services: Service[] | null | undefined): strin
   });
 }
 
-// scaffold: faq
-// ---------- FAQPage (for /faq) --------------------------------------------
-
-/**
- * Flattens Portable Text answer blocks into a plain-text string for the
- * acceptedAnswer.text field. Schema.org does not accept HTML in this field.
- */
-function ptToPlainText(blocks: any): string {
-  if (!Array.isArray(blocks)) return '';
-  return blocks
-    .filter((b) => b._type === 'block' && Array.isArray(b.children))
-    .map((b) => b.children.map((c: any) => c.text ?? '').join(''))
-    .join('\n\n')
-    .trim();
-}
-
-export function faqPageSchema(faqs: FaqItem[] | null | undefined): string {
-  const list = (faqs ?? []).filter((f) => f.question);
-  if (list.length === 0) return JSON.stringify({});
-  return JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: list.map((f) => ({
-      '@type': 'Question',
-      name: f.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: ptToPlainText(f.answer),
-      },
-    })),
-  });
-}
-// scaffold:end
 
 // ---------- BreadcrumbList (every internal page) --------------------------
 

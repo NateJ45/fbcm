@@ -283,9 +283,10 @@ export function useInstantText(pageId: string, onDocument?: () => void): void {
     const subscriptions = ACTOR_EVENTS.map((type) =>
       actor.on(type, (event: ActorEvent) => {
         // The actor carries every document the page mentions - site settings,
-        // services, testimonials. Only this page's own document is diffed; a
-        // change to a shared document reaches the page through the soft refresh,
-        // because its stega names ITS id, not this one.
+        // journal entries, and anything else the page auto-populates. Only
+        // this page's own document is diffed; a change to a shared document
+        // reaches the page through the soft refresh, because its stega names
+        // ITS id, not this one.
         if (event.id && event.id !== pageId && event.id !== draftId) return;
         void sweep();
       }),

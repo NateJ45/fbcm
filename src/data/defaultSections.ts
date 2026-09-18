@@ -6,9 +6,9 @@
 // IMPORTANT: only use blocks that render fully from INLINE data:
 //   heroSection, richTextSection, imageTextSection (no image), statSection,
 //   ctaBandSection, quoteSection, spacerSection.
-// Collection-dependent rich sections (servicesGridSection, testimonialsSection,
-// processSection, valuesSection) are NOT used here â€” they'd render empty without
-// Sanity collections and would defeat the purpose of a no-data safety net.
+// Collection-dependent rich sections (dynamicListSection and any rich section
+// tied to a removable capability) are NOT used here -- they'd render empty
+// without Sanity collections and would defeat the purpose of a no-data safety net.
 //
 // Each block carries a _key for parity with Sanity-seeded pageBuilder arrays.
 // The seed script (scripts/seed-core.mjs) imports from this file so these
@@ -120,95 +120,6 @@ export const DEFAULT_HOME_SECTIONS: PageBuilderBlock[] = [
 ];
 
 // â”€â”€ About page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-// scaffold: about
-export const DEFAULT_ABOUT_SECTIONS: PageBuilderBlock[] = [
-  {
-    _type: 'heroSection',
-    _key: 'default-about-hero',
-    eyebrow: 'The Designer.',
-    headline: 'People Hire People.',
-    subhead: "Here's who you'd be working with.",
-    size: 'short',
-  },
-  {
-    _type: 'richTextSection',
-    _key: 'default-about-story',
-    eyebrow: 'My Story.',
-    headline: 'Why I Started This Studio.',
-    body: [
-      {
-        _type: 'block',
-        _key: 'default-about-story-p1',
-        style: 'normal',
-        children: [
-          {
-            _type: 'span',
-            _key: 'default-about-story-p1-s1',
-            text: `Replace this with your real origin story. Tell visitors what led you to design, what you noticed was missing in your market, and what you set out to do differently. Edit this in Sanity Studio under the About Page document.`,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    _type: 'statSection',
-    _key: 'default-about-stats',
-    stats: [
-      {
-        _type: 'statItem',
-        _key: 'default-about-stat-1',
-        number: 5,
-        suffix: '+',
-        label: 'Years in Business',
-      },
-      {
-        _type: 'statItem',
-        _key: 'default-about-stat-2',
-        number: 50,
-        suffix: '+',
-        label: 'Projects Completed',
-      },
-      {
-        _type: 'statItem',
-        _key: 'default-about-stat-3',
-        number: 100,
-        suffix: '%',
-        label: 'Client Satisfaction',
-      },
-    ],
-  },
-  {
-    _type: 'imageTextSection',
-    _key: 'default-about-philosophy',
-    eyebrow: 'How We Work.',
-    headline: 'Principles that guide every project.',
-    body: [
-      {
-        _type: 'block',
-        _key: 'default-about-philosophy-p1',
-        style: 'normal',
-        children: [
-          {
-            _type: 'span',
-            _key: 'default-about-philosophy-p1-s1',
-            text: 'Add your philosophy points in Sanity Studio under Philosophy Points. Once seeded, this will display your numbered values cards.',
-          },
-        ],
-      },
-    ],
-    imageSide: 'left',
-  },
-  {
-    _type: 'ctaBandSection',
-    _key: 'default-about-cta',
-    eyebrow: "Let's Work Together.",
-    headline: 'Ready to Start?',
-    subhead: 'Send a message and we will be back in touch within two business days.',
-    cta: { _type: 'ctaBlock', label: 'Get in Touch', href: '/contact' },
-  },
-];
-// scaffold:end
 
 // â”€â”€ Services page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 

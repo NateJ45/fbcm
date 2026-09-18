@@ -106,11 +106,6 @@ test('unknown _type gets null surface (treated as unknown, not content)', () => 
 
 test('rich SELF_CONTAINED types get null surface', () => {
   const richSelf: string[] = [
-    'founderSection', // scaffold: about
-    'servicesGridSection', // scaffold: services
-    'testimonialsSection', // scaffold: testimonials
-    'valuesSection', // scaffold: philosophy
-    'processSection', // scaffold: process
   ];
   for (const type of richSelf) {
     const rows = classifySections([block(type)]);
@@ -120,7 +115,6 @@ test('rich SELF_CONTAINED types get null surface', () => {
 
 test('rich CONTENT types get alternating surface', () => {
   const richContent: string[] = [
-    'storySection', // scaffold: about
     'serviceAreaSection',
     'guaranteeSection',
   ];
@@ -150,12 +144,6 @@ test('rich self-contained types do not advance the cadence counter', () => {
 
 test('every new rich type appears in SELF_CONTAINED_TYPES or CONTENT_TYPES', () => {
   const all8: string[] = [
-    'founderSection', // scaffold: about
-    'servicesGridSection', // scaffold: services
-    'testimonialsSection', // scaffold: testimonials
-    'storySection', // scaffold: about
-    'valuesSection', // scaffold: philosophy
-    'processSection', // scaffold: process
     'serviceAreaSection',
     'guaranteeSection',
   ];
@@ -180,12 +168,6 @@ test('divider inserted between richTextSection and serviceAreaSection (different
 
 // ── U7: new page-builder blocks — all SELF_CONTAINED ─────────────────────
 
-// scaffold: faq
-test('faqSection is SELF_CONTAINED (null surface)', () => {
-  const rows = classifySections([block('faqSection')]);
-  assert.equal(rows[0].surface, null, 'faqSection should have null surface');
-});
-// scaffold:end
 
 test('logoStripSection is SELF_CONTAINED (null surface)', () => {
   const rows = classifySections([block('logoStripSection')]);
@@ -216,7 +198,6 @@ test('U7 blocks do not advance the content cadence counter', () => {
 
 test('every U7 type appears in SELF_CONTAINED_TYPES and not CONTENT_TYPES', () => {
   const u7: string[] = [
-    'faqSection', // scaffold: faq
     'logoStripSection',
     'teamSection',
     'embedSection',

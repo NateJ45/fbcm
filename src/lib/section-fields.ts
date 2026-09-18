@@ -66,9 +66,6 @@ export const SECTION_ARRAY_FIELDS: readonly string[] = ['pageBuilder', 'addition
 export const HEADING_ACCENT_FIELDS: Readonly<Record<string, string>> = {
   richTextSection: 'heading',
   ctaBandSection: 'headline',
-  servicesGridSection: 'headline', // scaffold: services
-  testimonialsSection: 'headline', // scaffold: testimonials
-  faqSection: 'headline', // scaffold: faq
 };
 
 /** The section types that offer an accent word. */
@@ -94,9 +91,6 @@ export interface RichTwin {
  */
 export const RICH_TWINS: Readonly<Record<string, RichTwin>> = {
   ctaBandSection: { plain: 'subhead', rich: 'subheadRich' },
-  servicesGridSection: { plain: 'subhead', rich: 'subheadRich' }, // scaffold: services
-  testimonialsSection: { plain: 'subhead', rich: 'subheadRich' }, // scaffold: testimonials
-  faqSection: { plain: 'subhead', rich: 'subheadRich' }, // scaffold: faq
   teamSection: { plain: 'subhead', rich: 'subheadRich' },
   dynamicListSection: { plain: 'subhead', rich: 'subheadRich' },
 };
@@ -138,8 +132,8 @@ export function hasHeadingAccent(type?: string | null): boolean {
 /**
  * The heading field an accent word is matched against on this section type, or
  * null when the type has no accent word at all. Pass `field` to also require
- * that the clicked field IS that heading, so a click on some other string on a
- * testimonials block does not open the word picker.
+ * that the clicked field IS that heading, so a click on some other string on
+ * the block does not open the word picker.
  */
 export function headingAccentFieldFor(type?: string | null, field?: string | null): string | null {
   const name = HEADING_ACCENT_FIELDS[String(type ?? '')];

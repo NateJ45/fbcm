@@ -59,10 +59,6 @@ const slug = (Astro.params.slug as string | undefined) || '';
 // Fixed preview path -> singleton type. Mirror of src/sanity/resolve.ts.
 const SINGLETON_BY_PATH: Record<string, string> = {
   '': 'homePage',
-  about: 'aboutPage', // scaffold: about
-  services: 'servicesPage', // scaffold: services
-  process: 'processPage', // scaffold: process
-  faq: 'faqPage', // scaffold: faq
   contact: 'contactPage',
   journal: 'journalPage', // scaffold: journal
   privacy: 'privacyPage',
@@ -72,21 +68,13 @@ const SINGLETON_BY_PATH: Record<string, string> = {
 // The types whose whole body is the pageBuilder array. Everything else previews
 // as its editable surface only. `page` (custom pages) is a builder type too and
 // is handled by the slug branch below.
-const BUILDER_SINGLETONS = new Set([
-  'homePage',
-  'aboutPage', // scaffold: about
-  'servicesPage', // scaffold: services
-  'processPage', // scaffold: process
-]);
+const BUILDER_SINGLETONS = new Set(['homePage']);
 
 // The heading-id prefix each live page passes to SectionRenderer. Matching it
 // here keeps generated ids identical to the live page, so an in-page anchor an
 // editor is checking behaves the same in the preview.
 const ID_PREFIX: Record<string, string> = {
   homePage: 'home',
-  aboutPage: 'about',
-  servicesPage: 'services', // scaffold: services
-  processPage: 'process', // scaffold: process
 };
 
 // Every hero / builder / CTA field any of the page types may carry. Absent

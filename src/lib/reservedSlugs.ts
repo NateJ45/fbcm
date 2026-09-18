@@ -26,10 +26,6 @@
 //    exists.
 
 export const RESERVED_SLUGS = new Set([
-  'about', // scaffold: about
-  'services', // scaffold: services
-  'process', // scaffold: process
-  'faq', // scaffold: faq
   'journal', // scaffold: journal
   'contact',
   'privacy',

@@ -104,11 +104,6 @@ const FIELD_HELPERS = {
  * its collection with it, so an entry left behind here is itself a finding.
  */
 const RENDERED_BY = {
-  service: ['servicesGridSection'], // scaffold: services
-  processStep: ['processSection'], // scaffold: process
-  philosophyPoint: ['valuesSection'], // scaffold: philosophy
-  testimonial: ['testimonialsSection'], // scaffold: testimonials
-  faqItem: ['faqSection'], // scaffold: faq
 };
 
 /** Sanity's own object types, whose keys we do not police. */

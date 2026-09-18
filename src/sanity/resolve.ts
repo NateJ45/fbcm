@@ -13,9 +13,9 @@
 //
 //  - `locations` (document -> URL): the reverse, so opening a document from the
 //    desk points the preview at the right page. Singletons map to their fixed
-//    preview path; `page` docs resolve from the slug. Collection docs (service,
-//    testimonial, faqItem, journalEntry, ...) have no dedicated draft-preview
-//    route, so they land on the page they appear on.
+//    preview path; `page` docs resolve from the slug. Collection docs
+//    (journalEntry, ...) have no dedicated draft-preview route, so they land
+//    on the page they appear on.
 //
 // The preview routes themselves live in the site app: src/pages/preview/.
 // SINGLETON_PREVIEW_PATHS is the SAME map as SINGLETON_BY_PATH in
@@ -32,10 +32,6 @@ import {
 /** Preview path per singleton type. */
 export const SINGLETON_PREVIEW_PATHS: Record<string, string> = {
   homePage: '/preview',
-  aboutPage: '/preview/about', // scaffold: about
-  servicesPage: '/preview/services', // scaffold: services
-  processPage: '/preview/process', // scaffold: process
-  faqPage: '/preview/faq', // scaffold: faq
   contactPage: '/preview/contact',
   journalPage: '/preview/journal', // scaffold: journal
   privacyPage: '/preview/privacy',
@@ -79,12 +75,6 @@ export const resolve: PresentationPluginOptions['resolve'] = {
       message: 'Journal entry pages preview on the live site after publish.',
     },
     // scaffold:end
-    service: { locations: [{ title: 'Services', href: '/preview/services' }] }, // scaffold: services
-    processStep: { locations: [{ title: 'Process', href: '/preview/process' }] }, // scaffold: process
-    philosophyPoint: { locations: [{ title: 'About', href: '/preview/about' }] }, // scaffold: philosophy
-    testimonial: { locations: [{ title: 'Home', href: '/preview' }] }, // scaffold: testimonials
-    faqItem: { locations: [{ title: 'FAQ', href: '/preview/faq' }] }, // scaffold: faq
-    faqCategory: { locations: [{ title: 'FAQ', href: '/preview/faq' }] }, // scaffold: faq
     journalCategory: { locations: [{ title: 'Journal', href: '/preview/journal' }] }, // scaffold: journal
     announcement: { locations: [{ title: 'Home', href: '/preview' }] },
     siteSettings: { locations: [{ title: 'Home', href: '/preview' }] },

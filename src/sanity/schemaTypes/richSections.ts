@@ -95,288 +95,6 @@ const proseBody = (name = 'body', title = 'Text') =>
     ],
   });
 
-// scaffold: about
-// ── 1. founderSection ────────────────────────────────────────────────────────
-// Two-column bio block: portrait + prose intro. Use once per site (home page).
-// Manages its own bg-background surface (SELF_CONTAINED).
-export const founderSection = defineType({
-  name: 'founderSection',
-  title: 'Founder bio',
-  type: 'object',
-  icon: UserIcon,
-  fields: [
-    imageWithAlt('portrait', 'Portrait photo'),
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
-    defineField({
-      name: 'headline',
-      title: 'Headline',
-      type: 'string',
-      validation: (R) => R.required(),
-    }),
-    proseBody('content', 'Bio text'),
-    defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
-  ],
-  preview: {
-    select: { title: 'headline', media: 'portrait' },
-    prepare: ({ title, media }) => ({
-      title: title || 'Founder bio',
-      subtitle: 'Founder bio',
-      media,
-    }),
-  },
-});
-// scaffold:end
-
-// scaffold: services
-// ── 2. servicesGridSection ───────────────────────────────────────────────────
-// Services grid. Auto-populates from the service collection at query time.
-// Editor controls heading copy; service cards come from the service docs.
-// Manages its own surface-warm bg-background (SELF_CONTAINED).
-export const servicesGridSection = defineType({
-  name: 'servicesGridSection',
-  title: 'Services grid',
-  type: 'object',
-  icon: ThLargeIcon,
-  fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
-    defineField({
-      name: 'headline',
-      title: 'Headline',
-      type: 'string',
-      validation: (R) => R.required(),
-    }),
-    defineField({
-      name: 'scriptAccent',
-      title: 'Handwritten accent word (optional)',
-      type: 'string',
-      description:
-        'One word from the headline to render in the script font. Must match exactly. Leave blank to skip.',
-    }),
-    headingAccentField(),
-    defineField({
-      name: 'subhead',
-      title: 'Subhead (optional)',
-      type: 'text',
-      rows: 2,
-      hidden: hideWhenRich('subheadRich'),
-    }),
-    richTwin('subheadRich', 'Subhead'),
-    defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
-    defineField({
-      name: 'footnote',
-      title: 'Footnote (optional)',
-      type: 'string',
-      description:
-        'Small-print line under the grid. Example: "Final pricing is always discussed before any work begins."',
-    }),
-    defineField({
-      name: 'variant',
-      title: 'Layout variant',
-      type: 'string',
-      initialValue: 'grid',
-      options: {
-        list: [
-          { title: 'Compact grid (home page, up to 4)', value: 'grid' },
-          { title: 'Full list with anchors (services page)', value: 'list' },
-        ],
-        layout: 'radio',
-      },
-    }),
-  ],
-  preview: {
-    select: { title: 'headline' },
-    prepare: ({ title }) => ({ title: title || 'Services grid', subtitle: 'Services grid' }),
-  },
-});
-// scaffold:end
-
-// scaffold: testimonials
-// ── 3. testimonialsSection ───────────────────────────────────────────────────
-// Testimonial grid with an optional featured pull-quote above.
-// References service testimonial docs (resolved at query time via sectionsProjection).
-// Manages its own surface-warm bg-background (SELF_CONTAINED).
-export const testimonialsSection = defineType({
-  name: 'testimonialsSection',
-  title: 'Testimonials',
-  type: 'object',
-  icon: StarIcon,
-  fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
-    defineField({
-      name: 'headline',
-      title: 'Headline',
-      type: 'string',
-      validation: (R) => R.required(),
-    }),
-    defineField({
-      name: 'scriptAccent',
-      title: 'Handwritten accent word (optional)',
-      type: 'string',
-      description: 'One word from the headline to render in the script font. Must match exactly.',
-    }),
-    headingAccentField(),
-    defineField({
-      name: 'subhead',
-      title: 'Subhead (optional)',
-      type: 'text',
-      rows: 2,
-      hidden: hideWhenRich('subheadRich'),
-    }),
-    richTwin('subheadRich', 'Subhead'),
-    defineField({
-      name: 'featuredQuote',
-      title: 'Featured testimonial (large pull-quote)',
-      type: 'reference',
-      to: [{ type: 'testimonial' }],
-      description: 'Optional. The large pull-quote above the grid.',
-    }),
-    defineField({
-      name: 'testimonialsToShow',
-      title: 'Testimonials in grid (in order)',
-      type: 'array',
-      of: [defineArrayMember({ type: 'reference', to: [{ type: 'testimonial' }] })],
-    }),
-    defineField({
-      name: 'attribution',
-      title: 'Attribution line (optional)',
-      type: 'string',
-      description: 'Example: "From the studio\'s Google reviews."',
-    }),
-  ],
-  preview: {
-    select: { title: 'headline' },
-    prepare: ({ title }) => ({ title: title || 'Testimonials', subtitle: 'Testimonials' }),
-  },
-});
-// scaffold:end
-
-// scaffold: about
-// ── 4. storySection ──────────────────────────────────────────────────────────
-// Long-form narrative block: sticky portrait, story prose, attribution + credential lines.
-// Participates in alternating surface cadence (CONTENT) — receives surface prop.
-export const storySection = defineType({
-  name: 'storySection',
-  title: 'Story / narrative',
-  type: 'object',
-  icon: DocumentTextIcon,
-  fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
-    defineField({
-      name: 'headline',
-      title: 'Headline',
-      type: 'string',
-      validation: (R) => R.required(),
-    }),
-    proseBody('content', 'Story text'),
-    imageWithAlt('portrait', 'Portrait photo (optional)'),
-    defineField({
-      name: 'attribution',
-      title: 'Attribution line (optional)',
-      type: 'string',
-      description: 'Example: "Your Name, Founder"',
-    }),
-    defineField({
-      name: 'credentialLine',
-      title: 'Credentials line (optional)',
-      type: 'text',
-      rows: 2,
-      description: 'One plain sentence with real credentials. Must be accurate, not aspirational.',
-    }),
-    defineField({
-      name: 'serviceAreaLine',
-      title: 'Service area mention (optional)',
-      type: 'string',
-      description: 'Single line mentioning where you work.',
-    }),
-  ],
-  preview: {
-    select: { title: 'headline', media: 'portrait' },
-    prepare: ({ title, media }) => ({
-      title: title || 'Story',
-      subtitle: 'Story / narrative',
-      media,
-    }),
-  },
-});
-// scaffold:end
-
-// scaffold: philosophy
-// ── 5. valuesSection ─────────────────────────────────────────────────────────
-// Numbered card grid of values or philosophy points.
-// Auto-populates from the philosophyPoint collection at query time.
-// Manages its own bg-muted surface (SELF_CONTAINED).
-export const valuesSection = defineType({
-  name: 'valuesSection',
-  title: 'Values / philosophy',
-  type: 'object',
-  icon: BulbOutlineIcon,
-  fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
-    defineField({
-      name: 'headline',
-      title: 'Headline',
-      type: 'string',
-      validation: (R) => R.required(),
-    }),
-    columnsField('valuesSection'),
-  ],
-  preview: {
-    select: { title: 'headline' },
-    prepare: ({ title }) => ({ title: title || 'Values', subtitle: 'Values / philosophy' }),
-  },
-});
-// scaffold:end
-
-// scaffold: process
-// ── 6. processSection ────────────────────────────────────────────────────────
-// Ordered process steps. Auto-populates from the processStep collection.
-// Two variants: 'full' (all steps, large cards) and 'preview' (first 4, compact grid).
-// Manages its own surface (SELF_CONTAINED) — 'full' on bg-background, 'preview' on bg-muted.
-export const processSection = defineType({
-  name: 'processSection',
-  title: 'Process steps',
-  type: 'object',
-  icon: OlistIcon,
-  fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
-    defineField({ name: 'headline', title: 'Headline (optional)', type: 'string' }),
-    defineField({ name: 'subhead', title: 'Subhead (optional)', type: 'text', rows: 2 }),
-    defineField({
-      name: 'variant',
-      title: 'Variant',
-      type: 'string',
-      initialValue: 'preview',
-      options: {
-        list: [
-          {
-            title: 'Preview (first 4 steps, compact grid with a link)',
-            value: 'preview',
-          },
-          {
-            title: 'Full (all steps, large detail cards)',
-            value: 'full',
-          },
-        ],
-        layout: 'radio',
-      },
-    }),
-    defineField({
-      name: 'cta',
-      title: 'Link button (preview variant only)',
-      type: 'ctaBlock',
-      description: 'Only shown in the "preview" variant. Leave blank to hide.',
-    }),
-  ],
-  preview: {
-    select: { title: 'headline', variant: 'variant' },
-    prepare: ({ title, variant }) => ({
-      title: title || 'Process steps',
-      subtitle: variant === 'full' ? 'Process steps (full)' : 'Process steps (preview)',
-    }),
-  },
-});
-// scaffold:end
-
 // ── 7. serviceAreaSection ────────────────────────────────────────────────────
 // Two-column service area info + optional travel fee table (from businessInfo).
 // Participates in alternating surface cadence (CONTENT) — receives surface prop.
@@ -443,57 +161,6 @@ export const guaranteeSection = defineType({
     }),
   },
 });
-
-// scaffold: faq
-// ── 9. faqSection ─────────────────────────────────────────────────────────--
-// Inline FAQ accordion. References existing faqItem documents so editors pick
-// from the curated collection rather than entering duplicate copy.
-// SELF_CONTAINED — manages its own bg-background surface.
-//
-// NOTE: the dedicated /faq page emits FAQPage JSON-LD for Google rich results.
-// This inline block deliberately does NOT re-emit that schema — Google penalises
-// duplicate FAQPage markup on the same domain. The accordion renders without it.
-export const faqSection = defineType({
-  name: 'faqSection',
-  title: 'FAQ accordion (inline)',
-  type: 'object',
-  icon: HelpCircleIcon,
-  fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
-    defineField({
-      name: 'headline',
-      title: 'Headline',
-      type: 'string',
-      validation: (R) => R.required(),
-    }),
-    headingAccentField(),
-    defineField({
-      name: 'subhead',
-      title: 'Subhead (optional)',
-      type: 'text',
-      rows: 2,
-      hidden: hideWhenRich('subheadRich'),
-    }),
-    richTwin('subheadRich', 'Subhead'),
-    defineField({
-      name: 'items',
-      title: 'Questions to show',
-      type: 'array',
-      description: 'Pick 3 to 6 questions. Fewer is better for inline blocks.',
-      validation: (R) => R.max(8),
-      of: [defineArrayMember({ type: 'reference', to: [{ type: 'faqItem' }] })],
-    }),
-    defineField({ name: 'cta', title: 'Link button (optional)', type: 'ctaBlock' }),
-  ],
-  preview: {
-    select: { title: 'headline', items: 'items' },
-    prepare: ({ title, items }) => ({
-      title: title || 'FAQ accordion',
-      subtitle: `FAQ${Array.isArray(items) ? ` (${items.length} items)` : ''}`,
-    }),
-  },
-});
-// scaffold:end
 
 // ── 10. teamSection ─────────────────────────────────────────────────────────
 // Inline team member grid. Members are stored as inline objects rather than
@@ -594,17 +261,20 @@ export const teamSection = defineType({
 // ── 11. dynamicListSection ────────────────────────────────────────────────────
 // Pulls the latest items from a core collection automatically. No manual
 // curation required: the editor picks the source and a limit, and the section
-// self-fills at build time. Great for keeping a home page or about page fresh
-// without touching code.
+// self-fills at build time. Great for keeping a home page fresh without
+// touching code.
 //
 // Supported sources and what they surface:
 //   journal      - Latest journal entries (newest first, up to `limit`).
-//   services     - All services (ordered by orderRank). Good for a compact
-//                  "what we do" overview block on a secondary page.
-//   testimonials - Recent testimonials (newest first). Renders as a card row.
-//   faqs         - FAQ items ordered by displayOrder. Renders as a mini
-//                  accordion (no duplicate FAQPage JSON-LD — the /faq page owns
-//                  that schema; this block deliberately omits it).
+//
+// This "source" option list is scaffold-marked per entry (unlike most fields,
+// which are marked at the section-file level): each option belongs to a
+// removable capability, and removing that capability should remove its option
+// here too, the same way it removes that source's arm from the GROQ select()
+// in queries.ts and its card branch from DynamicList.astro's KNOWN_SOURCES.
+// `journal` is the only source this fork keeps; the other three sources this
+// block originally shipped with were removed along with their capabilities
+// (see PENDING.md item 11 for the case where the last option goes too).
 //
 // IMPORTANT: This section is SELF_CONTAINED (manages its own surface via
 // sectionCadence.ts). Blocks carry NO backgroundColor field — that rule is
@@ -642,10 +312,7 @@ export const dynamicListSection = defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Journal (latest posts)', value: 'journal' },
-          { title: 'Services (all services)', value: 'services' },
-          { title: 'Testimonials (latest)', value: 'testimonials' },
-          { title: 'FAQs (by display order)', value: 'faqs' },
+          { title: 'Journal (latest posts)', value: 'journal' }, // scaffold: journal
         ],
         layout: 'radio',
       },
@@ -674,15 +341,8 @@ export const dynamicListSection = defineType({
 // ── Exports ──────────────────────────────────────────────────────────────────
 
 export const richSectionSchemas = [
-  founderSection, // scaffold: about
-  servicesGridSection, // scaffold: services
-  testimonialsSection, // scaffold: testimonials
-  storySection, // scaffold: about
-  valuesSection, // scaffold: philosophy
-  processSection, // scaffold: process
   serviceAreaSection,
   guaranteeSection,
-  faqSection, // scaffold: faq
   teamSection,
   dynamicListSection,
 ];
@@ -700,34 +360,20 @@ export const RICH_SECTION_TYPES = richSectionSchemas.map((s) => ({ type: s.name 
 //   dynamicListSection -> HOME, ABOUT (auto-pull latest content; generic small-biz sources)
 export const HOME_SECTION_TYPES = [
   ...SECTION_TYPES,
-  { type: 'founderSection' }, // scaffold: about
-  { type: 'servicesGridSection' }, // scaffold: services
-  { type: 'testimonialsSection' }, // scaffold: testimonials
-  { type: 'processSection' }, // scaffold: process
-  { type: 'faqSection' }, // scaffold: faq
   { type: 'teamSection' },
   { type: 'dynamicListSection' },
 ];
 
 export const ABOUT_SECTION_TYPES = [
   ...SECTION_TYPES,
-  { type: 'storySection' }, // scaffold: about
-  { type: 'valuesSection' }, // scaffold: philosophy
-  { type: 'faqSection' }, // scaffold: faq
   { type: 'teamSection' },
   { type: 'dynamicListSection' },
 ];
 
 export const SERVICES_SECTION_TYPES = [
   ...SECTION_TYPES,
-  { type: 'servicesGridSection' }, // scaffold: services
   { type: 'serviceAreaSection' },
   { type: 'guaranteeSection' },
-  { type: 'faqSection' }, // scaffold: faq
 ];
 
-export const PROCESS_SECTION_TYPES = [
-  ...SECTION_TYPES,
-  { type: 'processSection' }, // scaffold: process
-  { type: 'faqSection' }, // scaffold: faq
-];
+export const PROCESS_SECTION_TYPES = [...SECTION_TYPES];

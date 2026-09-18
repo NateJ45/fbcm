@@ -1,7 +1,7 @@
 // Foundation, edit with care
 // Renders Sanity Portable Text into on-brand HTML. Used for any rich-text
-// content from Sanity: faqItem.answer, service.longDescription, processStep.fullDescription,
-// philosophyPoint.description, page singleton story/intro blocks, project.introStory.
+// content from Sanity: journalEntry.body, page singleton story/intro blocks,
+// project.introStory.
 //
 // Style discipline: this component picks the right semantic + brand tokens so
 // Portable Text content inherits theme-aware colors automatically. Body text

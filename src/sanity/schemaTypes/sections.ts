@@ -263,7 +263,7 @@ export const gallerySection = defineType({
 // ── 5. Quote ─────────────────────────────────────────────────────────────────
 export const quoteSection = defineType({
   name: 'quoteSection',
-  title: 'Quote / testimonial',
+  title: 'Quote / pull-quote',
   type: 'object',
   icon: StarIcon,
   fields: [
@@ -611,14 +611,7 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
     {
       name: 'proof',
       title: 'Proof and trust',
-      of: [
-        'quoteSection',
-        'testimonialsSection', // scaffold: testimonials
-        'statSection',
-        'logoStripSection',
-        'guaranteeSection',
-        'faqSection', // scaffold: faq
-      ],
+      of: ['quoteSection', 'statSection', 'logoStripSection', 'guaranteeSection'],
     },
     {
       name: 'media',
@@ -628,17 +621,7 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
     {
       name: 'business',
       title: 'About the business',
-      of: [
-        'servicesGridSection', // scaffold: services
-        'processSection', // scaffold: process
-        'storySection', // scaffold: about
-        'valuesSection', // scaffold: philosophy
-        'founderSection', // scaffold: about
-        'teamSection',
-        'serviceAreaSection',
-        'dynamicListSection',
-        'ctaBandSection',
-      ],
+      of: ['teamSection', 'serviceAreaSection', 'dynamicListSection', 'ctaBandSection'],
     },
   ],
 };

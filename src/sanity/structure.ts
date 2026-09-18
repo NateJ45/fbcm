@@ -7,9 +7,11 @@
 //
 // "Pages" is one list (so the rule for editors is simple: every page lives here).
 //
-// Orderable lists: service / philosophyPoint use the orderable-document-list plugin.
-// Editors drag rows to reorder; the plugin writes an `orderRank` string. GROQ
-// queries order by orderRank (with displayOrder fallback) so the site mirrors Studio.
+// Orderable lists: ORDERABLE_TYPES below lists any collection using the
+// orderable-document-list plugin (currently none -- the two that did were
+// removed with their capabilities). Editors drag rows to reorder; the plugin
+// writes an `orderRank` string. GROQ queries order by orderRank (with
+// displayOrder fallback) so the site mirrors Studio.
 //
 // Preview: 2026-08-28 the per-document iframe tab (sanity-plugin-iframe-pane)
 // was retired in favour of the Presentation tool, which renders the SSR
@@ -18,21 +20,15 @@
 // "see it on the page" is the Presentation tool in the navbar.
 
 import type { StructureBuilder, StructureResolverContext } from 'sanity/structure';
-import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
   BellIcon,
   BlockElementIcon,
   CogIcon,
   HomeIcon,
-  UserIcon,
-  PackageIcon,
-  HelpCircleIcon,
   InfoOutlineIcon,
   EnvelopeIcon,
   DocumentTextIcon,
   DocumentsIcon,
-  StarIcon,
-  HeartIcon,
   ThListIcon,
   EditIcon,
   TagIcon,
@@ -42,7 +38,6 @@ import {
   PresentationIcon,
   ThumbsUpIcon,
   ColorWheelIcon,
-  OlistIcon, // scaffold: process
   ArrowRightIcon,
 } from '@sanity/icons';
 import { makeGuideView } from './components/GuideView';
@@ -56,10 +51,6 @@ const SINGLETON_TYPES = [
   'businessInfo',
   // Core pages
   'homePage',
-  'aboutPage', // scaffold: about
-  'servicesPage', // scaffold: services
-  'processPage', // scaffold: process
-  'faqPage', // scaffold: faq
   'contactPage',
   'journalPage', // scaffold: journal
   'notFoundPage',
@@ -68,19 +59,12 @@ const SINGLETON_TYPES = [
   'studioNotes',
 ] as const;
 
-const ORDERABLE_TYPES = [
-  'service', // scaffold: services
-  'philosophyPoint', // scaffold: philosophy
-  'processStep', // scaffold: process
-] as const;
+const ORDERABLE_TYPES = [] as const;
 
 const HIDDEN_FROM_DEFAULT = new Set<string>([
   ...SINGLETON_TYPES,
   ...ORDERABLE_TYPES,
   'announcement', // placed explicitly under Content → Announcements
-  'testimonial', // scaffold: testimonials
-  'faqItem', // scaffold: faq
-  'faqCategory', // scaffold: faq
   'journalEntry', // scaffold: journal
   'journalCategory', // scaffold: journal
   'page', // custom pages, placed explicitly under "Pages"
@@ -89,8 +73,6 @@ const HIDDEN_FROM_DEFAULT = new Set<string>([
   // sanity-plugin-media registers this tag type; keep it out of the desk root
   // (the "Media" tool in the top sidebar is where tags belong).
   'media.tag',
-  // processStep is placed explicitly under Content → Process Steps
-  'processStep', // scaffold: process
 ]);
 
 /**
@@ -219,10 +201,6 @@ export const deskStructure = (S: StructureBuilder, context: StructureResolverCon
             .title('Pages')
             .items([
               singletonWithPreview(S, 'homePage', 'Home', HomeIcon),
-              singletonWithPreview(S, 'aboutPage', 'About', UserIcon), // scaffold: about
-              singletonWithPreview(S, 'servicesPage', 'Services', PackageIcon), // scaffold: services
-              singletonWithPreview(S, 'processPage', 'Process', OlistIcon), // scaffold: process
-              singletonWithPreview(S, 'faqPage', 'FAQ', HelpCircleIcon), // scaffold: faq
               singletonWithPreview(S, 'contactPage', 'Contact', EnvelopeIcon),
               singletonWithPreview(S, 'journalPage', 'Journal (index page)', BookIcon), // scaffold: journal
               singletonWithPreview(S, 'notFoundPage', '404 Page', DocumentTextIcon),
@@ -278,37 +256,6 @@ export const deskStructure = (S: StructureBuilder, context: StructureResolverCon
               singletonWithPreview(S, 'businessInfo', 'Business info', PinIcon),
 
               S.divider(),
-
-              // scaffold: services
-              orderableDocumentListDeskItem({
-                type: 'service',
-                title: 'Services',
-                icon: PackageIcon,
-                S,
-                context,
-              }),
-              // scaffold:end
-              // scaffold: philosophy
-              orderableDocumentListDeskItem({
-                type: 'philosophyPoint',
-                title: 'Philosophy Values',
-                icon: HeartIcon,
-                S,
-                context,
-              }),
-              // scaffold:end
-              // scaffold: process
-              orderableDocumentListDeskItem({
-                type: 'processStep',
-                title: 'Process Steps',
-                icon: OlistIcon,
-                S,
-                context,
-              }),
-              // scaffold:end
-              S.documentTypeListItem('testimonial').title('Testimonials').icon(StarIcon), // scaffold: testimonials
-              S.documentTypeListItem('faqCategory').title('FAQ Categories').icon(TagIcon), // scaffold: faq
-              S.documentTypeListItem('faqItem').title('FAQ Items').icon(HelpCircleIcon), // scaffold: faq
 
               S.divider(),
 

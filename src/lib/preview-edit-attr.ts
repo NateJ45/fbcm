@@ -32,7 +32,7 @@ import { createDataAttribute } from '@sanity/visual-editing/create-data-attribut
 export interface EditDoc {
   /** The PUBLISHED document id (no `drafts.` prefix). */
   id: string;
-  /** The document _type, e.g. "page" or "aboutPage". */
+  /** The document _type, e.g. "page" or "contactPage". */
   type: string;
   /** The array field holding the sections. One name in this template. */
   field?: 'pageBuilder';

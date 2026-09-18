@@ -62,9 +62,9 @@ if (import.meta.env.SSR) {
 
   if (!isSanityUnconfigured && !readToken) {
     // Soft warning — pages still render via fallback copy when the token is missing,
-    // but collections (services, testimonials, etc.) won't populate.
+    // but auto-populating collections (journal, projects) won't populate.
     console.warn(
-      '[sanity] SANITY_API_READ_TOKEN is not set. Build-time reads will use the anonymous API; collection content (services, testimonials, processSteps, faqs, projects) may render empty. Set it in .env locally and in Cloudflare → Workers → Variables (as Secret) for production builds.',
+      '[sanity] SANITY_API_READ_TOKEN is not set. Build-time reads will use the anonymous API; collection content (journal, projects) may render empty. Set it in .env locally and in Cloudflare → Workers → Variables (as Secret) for production builds.',
     );
   }
 }

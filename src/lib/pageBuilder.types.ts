@@ -25,12 +25,6 @@ import type {
   CtaBandSection as _CtaBandSection,
   VideoSection as _VideoSection,
   SpacerSection as _SpacerSection,
-  FounderSection as _FounderSection, // scaffold: about
-  ServicesGridSection as _ServicesGridSection, // scaffold: services
-  TestimonialsSection as _TestimonialsSection, // scaffold: testimonials
-  StorySection as _StorySection, // scaffold: about
-  ValuesSection as _ValuesSection, // scaffold: philosophy
-  ProcessSection as _ProcessSection, // scaffold: process
   ServiceAreaSection as _ServiceAreaSection,
   GuaranteeSection as _GuaranteeSection,
   // U7 new blocks — hand-authored below since typegen has not run yet
@@ -162,91 +156,6 @@ export type ProjectedSpacerSection = { _key: string } & _SpacerSection & {
     [key: string]: unknown;
   };
 
-// scaffold: about
-export type ProjectedFounderSection = { _key: string } & Omit<
-  _FounderSection,
-  'portrait' | 'cta'
-> & {
-    portrait?: ProjectedImage | null;
-    cta?: ProjectedCtaBlock | null;
-  };
-// scaffold:end
-
-// scaffold: services
-/** servicesGridSection adds a `services` array resolved from the collection. */
-export type ProjectedServicesGridSection = { _key: string } & Omit<_ServicesGridSection, 'cta'> & {
-    cta?: ProjectedCtaBlock | null;
-    /** Resolved service documents from `*[_type == "service"]`. */
-    services?: Array<{
-      _id?: string;
-      _type?: string;
-      name?: string;
-      slug?: { current?: string };
-      price?: string;
-      priceNumeric?: number;
-      shortDescription?: string;
-      features?: string[];
-      bestFor?: string;
-      featuredImage?: ProjectedImage;
-      ctaLabel?: string;
-      [key: string]: unknown;
-    }>;
-  };
-// scaffold:end
-
-// scaffold: testimonials
-/** Testimonial shape after dereffing in the projection. */
-interface ProjectedTestimonial {
-  _id?: string;
-  _type?: string;
-  quote?: string;
-  attribution?: string;
-  detail?: string;
-  relatedProject?: { title?: string; slug?: string } | null;
-  [key: string]: unknown;
-}
-
-export type ProjectedTestimonialsSection = { _key: string } & Omit<
-  _TestimonialsSection,
-  'featuredQuote' | 'testimonialsToShow'
-> & {
-    featuredQuote?: ProjectedTestimonial | null;
-    testimonialsToShow?: ProjectedTestimonial[];
-  };
-// scaffold:end
-
-// scaffold: about
-export type ProjectedStorySection = { _key: string } & Omit<_StorySection, 'portrait'> & {
-    portrait?: ProjectedImage | null;
-  };
-// scaffold:end
-
-// scaffold: philosophy
-/** valuesSection adds a `points` array resolved from the collection. */
-export type ProjectedValuesSection = { _key: string } & _ValuesSection & {
-    points?: Array<{
-      title?: string;
-      description?: string;
-      displayOrder?: number;
-    }>;
-  };
-// scaffold:end
-
-// scaffold: process
-/** processSection adds a `steps` array resolved from the collection + cta projection. */
-export type ProjectedProcessSection = { _key: string } & Omit<_ProcessSection, 'cta'> & {
-    cta?: ProjectedCtaBlock | null;
-    steps?: Array<{
-      stepNumber?: number;
-      title?: string;
-      timeEstimate?: string;
-      shortDescription?: string;
-      features?: string[];
-      tierNote?: string;
-    }>;
-  };
-// scaffold:end
-
 /** serviceAreaSection adds `travelFees` resolved from businessInfo. */
 export type ProjectedServiceAreaSection = { _key: string } & _ServiceAreaSection & {
     travelFees?: Array<{ distanceLabel?: string; fee?: string }>;
@@ -262,38 +171,6 @@ export type ProjectedGuaranteeSection = { _key: string } & _GuaranteeSection & {
 // sanity.types.ts after this unit lands; at that point the orchestrator should
 // verify these align with the generated shapes and update the imports above).
 // ---------------------------------------------------------------------------
-
-// scaffold: faq
-/** A dereffed faqItem projected inside faqSection.items. */
-export interface ProjectedFaqItem {
-  _id?: string;
-  _type?: string;
-  question?: string;
-  answer?: any;
-  category?: string;
-  displayOrder?: number;
-}
-
-/**
- * faqSection — references faqItem documents, dereffed at query time.
- * SELF_CONTAINED (no surface prop).
- * NOTE: does not emit FAQPage JSON-LD (Google penalises duplicate markup).
- */
-export interface ProjectedFaqSection {
-  _type: 'faqSection';
-  _key: string;
-  eyebrow?: string;
-  headline?: string;
-  /** Word in `headline` rendered in the script accent face. */
-  headingAccent?: string;
-  subhead?: string;
-  /** Portable Text twin of `subhead` (bold / italic only). */
-  subheadRich?: unknown;
-  /** faqItem refs resolved to { question, answer, category, displayOrder }. */
-  items?: ProjectedFaqItem[];
-  cta?: ProjectedCtaBlock | null;
-}
-// scaffold:end
 
 /** A single logo image inside logoStripSection, after asset-> projection. */
 export type ProjectedLogoStripLogo = ProjectedImage;
@@ -359,8 +236,7 @@ export interface ProjectedEmbedSection {
 /**
  * A single item inside dynamicListSection.items after the per-source GROQ
  * subquery. All sources normalise to the same shape so the component is
- * source-agnostic. `href` is null for sources that have no detail page
- * (testimonials, faqs).
+ * source-agnostic. `href` is null for sources that have no detail page.
  */
 export interface ProjectedDynamicListItem {
   _id?: string;
@@ -369,7 +245,7 @@ export interface ProjectedDynamicListItem {
   summary?: string | null;
   href?: string | null;
   coverImage?: ProjectedImage | null;
-  /** FAQ answer (present only when source == "faqs"). */
+  /** Reserved for a future source whose items carry a body/answer field. */
   answer?: any;
 }
 
@@ -377,10 +253,7 @@ export interface ProjectedDynamicListItem {
  * dynamicListSection — auto-pulls the latest items from a core collection.
  * SELF_CONTAINED (no surface prop).
  * Source-specific behaviour:
- *   journal      -> latest journalEntry cards (title, excerpt, publishedAt, coverImage)
- *   services     -> all services ordered by orderRank (name, price, shortDescription)
- *   testimonials -> latest testimonials (attribution, detail, quote)
- *   faqs         -> faqItems ordered by displayOrder (question, answer, category)
+ *   journal -> latest journalEntry cards (title, excerpt, publishedAt, coverImage)
  */
 export interface ProjectedDynamicListSection {
   _type: 'dynamicListSection';
@@ -393,11 +266,11 @@ export interface ProjectedDynamicListSection {
   columns?: 2 | 3;
   /**
    * Which collection to pull from. Every value this can take belongs to a
-   * scaffold capability (journal, services, testimonials, faq), so this is a
-   * plain string rather than a union: a fork that removes all four would
-   * otherwise be left with an empty union, which does not parse. The dropdown
-   * in `sections.ts` is what actually limits an editor's choice, and each of
-   * its options carries its own scaffold marker.
+   * scaffold capability, so this is a plain string rather than a union: a fork
+   * that removes the last one would otherwise be left with an empty union,
+   * which does not parse. The dropdown in `richSections.ts` (dynamicListSection)
+   * is what actually limits an editor's choice, and each of its options
+   * carries its own scaffold marker.
    */
   source?: string;
   limit?: number;
@@ -419,16 +292,9 @@ export type PageBuilderBlock =
   | ProjectedCtaBandSection
   | ProjectedVideoSection
   | ProjectedSpacerSection
-  | ProjectedFounderSection // scaffold: about
-  | ProjectedServicesGridSection // scaffold: services
-  | ProjectedTestimonialsSection // scaffold: testimonials
-  | ProjectedStorySection // scaffold: about
-  | ProjectedValuesSection // scaffold: philosophy
-  | ProjectedProcessSection // scaffold: process
   | ProjectedServiceAreaSection
   | ProjectedGuaranteeSection
   // U7 new blocks
-  | ProjectedFaqSection // scaffold: faq
   | ProjectedLogoStripSection
   | ProjectedTeamSection
   | ProjectedEmbedSection

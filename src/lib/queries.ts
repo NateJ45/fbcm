@@ -1,7 +1,7 @@
 // Foundation, edit with care
 // GROQ queries per page. Each function returns the page singleton plus any
-// auto-populated collections that page needs (testimonials grid, services
-// where showOnHomepage, process steps in order, etc.).
+// auto-populated collections that page needs (journal entries for a
+// dynamicListSection, etc.).
 //
 // Types: until `sanity typegen generate` runs, return types are `any`.
 // Run `npm run typegen` after schema changes to regenerate src/lib/sanity.types.ts.
@@ -50,56 +50,6 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       ...,
       images[]${IMAGE_PROJECTION}
     },
-    // scaffold: about
-    _type == "founderSection" => {
-      ...,
-      portrait${IMAGE_PROJECTION},
-      cta${CTA_PROJECTION}
-    },
-    // scaffold:end
-    // scaffold: about
-    _type == "storySection" => {
-      ...,
-      portrait${IMAGE_PROJECTION}
-    },
-    // scaffold:end
-    // scaffold: services
-    _type == "servicesGridSection" => {
-      ...,
-      cta${CTA_PROJECTION},
-      "services": *[_type == "service"] | order(orderRank asc, displayOrder asc)
-    },
-    // scaffold:end
-    // scaffold: testimonials
-    _type == "testimonialsSection" => {
-      ...,
-      "featuredQuote": featuredQuote->{
-        ...,
-        "relatedProject": relatedProject->{ title, "slug": slug.current }
-      },
-      "testimonialsToShow": testimonialsToShow[]->{
-        ...,
-        "relatedProject": relatedProject->{ title, "slug": slug.current }
-      }
-    },
-    // scaffold:end
-    // scaffold: philosophy
-    _type == "valuesSection" => {
-      ...,
-      "points": *[_type == "philosophyPoint"] | order(orderRank asc, displayOrder asc){
-        title, description, displayOrder
-      }
-    },
-    // scaffold:end
-    // scaffold: process
-    _type == "processSection" => {
-      ...,
-      cta${CTA_PROJECTION},
-      "steps": *[_type == "processStep"] | order(orderRank asc, stepNumber asc){
-        stepNumber, title, timeEstimate, shortDescription, features, tierNote
-      }
-    },
-    // scaffold:end
     _type == "serviceAreaSection" => {
       ...,
       "travelFees": *[_type == "businessInfo"][0].travelFees
@@ -108,17 +58,6 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       ...,
       "siteSettingsText": *[_type == "siteSettings"][0].satisfactionGuarantee
     },
-    // scaffold: faq
-    _type == "faqSection" => {
-      ...,
-      cta${CTA_PROJECTION},
-      "items": items[]->{
-        _id, _type, question, answer,
-        "category": coalesce(categoryRef->title, category),
-        displayOrder
-      }
-    },
-    // scaffold:end
     _type == "logoStripSection" => {
       ...,
       logos[]${IMAGE_PROJECTION}
@@ -141,23 +80,6 @@ export function sectionsProjection(field = 'pageBuilder'): string {
           _id, "title": title, "meta": publishedAt, "summary": excerpt,
           "href": "/journal/" + slug.current,
           "coverImage": coverImage${IMAGE_PROJECTION}
-        },
-        // scaffold:end
-        // scaffold: services
-        source == "services" => *[_type == "service"] | order(orderRank asc, displayOrder asc)[0...limit]{
-          _id, "title": name, "meta": price, "summary": shortDescription,
-          "href": "/services#" + slug.current
-        },
-        // scaffold:end
-        // scaffold: testimonials
-        source == "testimonials" => *[_type == "testimonial"] | order(_createdAt desc)[0...limit]{
-          _id, "title": attribution, "meta": detail, "summary": quote, "href": null
-        },
-        // scaffold:end
-        // scaffold: faq
-        source == "faqs" => *[_type == "faqItem"] | order(displayOrder asc, _createdAt asc)[0...limit]{
-          _id, "title": question, "summary": null, "meta": coalesce(categoryRef->title, category), "href": null,
-          "answer": answer
         },
         // scaffold:end
         // 2026-09-18: the trailing [] is the select's DEFAULT arm, and it is
@@ -332,98 +254,9 @@ export async function getHomePage() {
   );
 }
 
-// scaffold: about
-// ---- About page -----------------------------------------------------------
-
-export async function getAboutPage() {
-  return sanityFetch(
-    `*[_type == "aboutPage"][0]{
-    seoTitle,
-    seoDescription,
-    seoImage${IMAGE_PROJECTION},
-    ${sectionsProjection('pageBuilder')}
-  }`,
-    {},
-    null,
-  );
-}
-// scaffold:end
-
 // ---- Services page --------------------------------------------------------
 
-// scaffold: services
-export async function getServicesPage() {
-  return sanityFetch(
-    `*[_type == "servicesPage"][0]{
-    seoTitle,
-    seoDescription,
-    seoImage${IMAGE_PROJECTION},
-    ${sectionsProjection('pageBuilder')}
-  }`,
-    {},
-    null,
-  );
-}
-// scaffold:end
-
 // Minimal service list for JSON-LD on the services page.
-// scaffold: services
-export async function getServiceListForSchema() {
-  return sanityFetch(
-    `*[_type == "service"] | order(orderRank asc, displayOrder asc){
-    _id, name, slug, shortDescription, price, priceNumeric
-  }`,
-    {},
-    [],
-  );
-}
-// scaffold:end
-
-// scaffold: process
-// ---- Process page -----------------------------------------------------------
-
-export async function getProcessPage() {
-  return sanityFetch(
-    `*[_type == "processPage"][0]{
-    seoTitle,
-    seoDescription,
-    seoImage${IMAGE_PROJECTION},
-    ${sectionsProjection('pageBuilder')}
-  }`,
-    {},
-    null,
-  );
-}
-// scaffold:end
-
-// scaffold: faq
-// ---- FAQ page -------------------------------------------------------------
-
-export async function getFaqPage() {
-  return sanityFetch(
-    `*[_type == "faqPage"][0]{
-    seoTitle,
-    seoDescription,
-    seoImage${IMAGE_PROJECTION},
-    heroEyebrow, heroHeadline, heroSubhead,
-    heroImage${IMAGE_PROJECTION},
-    heroScriptAccent,
-    categoryOrder,
-    "faqs": *[_type == "faqItem"] | order(category asc, displayOrder asc){
-      question, answer,
-      "category": coalesce(categoryRef->title, category),
-      displayOrder
-    },
-    finalCtaEyebrow, finalCtaHeadline, finalCtaScriptAccent, finalCtaSubhead,
-    finalCtaBackgroundImage${IMAGE_PROJECTION},
-    finalCta${CTA_PROJECTION},
-    secondaryCta${CTA_PROJECTION}
-  }`,
-    {},
-    null,
-  );
-}
-// scaffold:end
 
 // ---- Contact page ---------------------------------------------------------
 

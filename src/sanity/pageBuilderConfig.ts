@@ -27,9 +27,6 @@ import { RESERVED_SLUGS } from '../lib/reservedSlugs';
 export const SECTION_HOST_TYPES: Readonly<Record<string, string>> = {
   page: 'pageBuilder',
   homePage: 'pageBuilder',
-  aboutPage: 'pageBuilder', // scaffold: about
-  servicesPage: 'pageBuilder', // scaffold: services
-  processPage: 'pageBuilder', // scaffold: process
 };
 
 /** The same list as a set, for the document-actions resolver. */
@@ -46,15 +43,10 @@ export const PAGE_BUILDER_TYPES = new Set<string>(Object.keys(SECTION_HOST_TYPES
  */
 const SELF_FILLING_SECTIONS = [
   'dynamicListSection',
-  'faqSection', // scaffold: faq
   'guaranteeSection',
   'logoStripSection',
-  'processSection', // scaffold: process
   'serviceAreaSection',
-  'servicesGridSection', // scaffold: services
   'spacerSection',
-  'testimonialsSection', // scaffold: testimonials
-  'valuesSection', // scaffold: philosophy
 ];
 
 export const PAGE_CHECK_CONFIG: PageCheckConfig = {

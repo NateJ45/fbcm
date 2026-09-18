@@ -91,8 +91,7 @@ export function previewUnconfiguredResponse(missing: string[]): Response {
 const NON_STEGA_FIELDS = new Set([
   // Present in this template's schemas today (sections.ts, richSections.ts,
   // ctaBlock.ts, journalEntry.ts, announcement.ts, siteSettings.ts,
-  // businessInfo.ts, testimonial.ts, faqItem.ts, page.ts, studioGuide.ts,
-  // studioPlaybook.ts).
+  // businessInfo.ts, page.ts, studioGuide.ts, studioPlaybook.ts).
   'align',
   'businessModel',
   'businessType',
