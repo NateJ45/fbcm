@@ -1,18 +1,18 @@
 {
-  "name": "Studio Starter",
-  "domain": "example.com",
+  "name": "First Baptist Church Muncie",
+  "domain": "fbcmuncie.org",
   "tagline": "Your tagline goes here.",
   "contact": {
     "email": "",
     "phone": "",
-    "address": ""
+    "address": "309 East Adams Street, Muncie, IN 47305"
   },
   "palette": {
     "theme": {
-      "--color-primary": "#586577",
-      "--color-primary-dark": "#434E5C",
-      "--color-accent": "#2A2D31",
-      "--color-accent-dark": "#1E2024",
+      "--color-primary": "#292854",
+      "--color-primary-dark": "#1C1B3A",
+      "--color-accent": "#875F0F",
+      "--color-accent-dark": "#6B4C0C",
       "--color-secondary": "#AAB0B8",
       "--color-tertiary": "#9DB0A6",
       "--color-bg": "#FBFBFA",

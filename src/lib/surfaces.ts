@@ -106,8 +106,8 @@ export const SECTION_SURFACES: SurfacePair[] = [
     title: 'Ink',
     hint: 'The closing CTA band. The same near-black on a light or a dark page.',
     className: 'bg-accent-dark text-bg',
-    dot: '#1E2024',
-    dotDark: '#1E2024',
+    dot: '#6B4C0C',
+    dotDark: '#6B4C0C',
     dotInk: '#FBFBFA',
     themeStatic: true,
     tokens: {
@@ -147,6 +147,10 @@ export const HEADING_ACCENT = {
   /** Literal light/dark values of `token`, asserted against globals.css. */
   light: '#586577',
   dark: '#8A96A6',
-  /** Pinned colour on the fixed ink band, where a theme-aware token would flip. */
-  onDarkBand: '#8A96A6',
+  /** Pinned colour on the fixed ink band, where a theme-aware token would flip.
+   *  FBCM: the church's own live-site gold (#D59B29) clears AA large-text
+   *  (3:1) against the darkened --color-accent-dark ink band even though it
+   *  fails AA body-text against paper, so it lives here rather than as the
+   *  --color-accent token itself. See docs note on the theme-tokens gate. */
+  onDarkBand: '#D59B29',
 } as const;

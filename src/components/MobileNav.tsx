@@ -41,6 +41,7 @@ import { IconBrandInstagram, IconBrandFacebook } from '@tabler/icons-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import ThemeToggle from './ThemeToggle';
 import { telHref } from '@/lib/phone';
+import { site } from '@/data/site';
 
 // ---- Types ------------------------------------------------------------------
 
@@ -257,7 +258,7 @@ export default function MobileNav({
             <div className="flex justify-center border-t border-border-soft px-l py-l">
               <img
                 src={logoLightUrl}
-                alt="Studio Starter"
+                alt={site.name}
                 width={280}
                 height={60}
                 className="block h-10 w-auto dark:hidden"

@@ -4,6 +4,7 @@
 // Safe to edit by hand.
 
 import React from 'react';
+import { site } from '../../data/site';
 
 export default function StudioLogo() {
   return (
@@ -17,7 +18,7 @@ export default function StudioLogo() {
         whiteSpace: 'nowrap',
       }}
     >
-      Studio Starter
+      {site.name}
     </span>
   );
 }

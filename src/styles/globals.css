@@ -1,4 +1,4 @@
-/* Studio Starter — global stylesheet. Foundation, edit with care.
+/* First Baptist Church Muncie — global stylesheet. Foundation, edit with care.
    Brand tokens declared here (Tailwind 4 @theme block) and mapped
    onto shadcn's semantic tokens (:root / .dark) so brand identity
    carries everywhere the design system is referenced. */
@@ -18,10 +18,10 @@
 
 @theme {
   /* Brand palette — neutral Slate default. Swap per project. */
-  --color-primary: #586577; /* Slate */
-  --color-primary-dark: #434e5c; /* Slate Dark — body anchor text */
-  --color-accent: #2a2d31; /* Ink — headings + body */
-  --color-accent-dark: #1e2024; /* Ink Dark — dark surfaces */
+  --color-primary: #292854; /* Slate */
+  --color-primary-dark: #1c1b3a; /* Slate Dark — body anchor text */
+  --color-accent: #875f0f; /* Ink — headings + body */
+  --color-accent-dark: #6b4c0c; /* Ink Dark — dark surfaces */
   --color-secondary: #aab0b8; /* Cool Gray — borders, eyebrows */
   --color-tertiary: #9db0a6; /* Muted Sage — sparingly */
   --color-bg: #fbfbfa; /* Paper — primary surface */
@@ -1065,7 +1065,7 @@ body::before {
 
   /* Print-only header + footer injected into every page. */
   body::after {
-    content: 'Studio Starter · example.com';
+    content: 'First Baptist Church Muncie · fbcmuncie.org';
     display: block;
     margin-top: 0.5in;
     padding-top: 0.25in;

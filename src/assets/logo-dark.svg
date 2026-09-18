@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60" fill="none" role="img" aria-label="Studio Starter">
-  <!-- Slate disc mark (lighter on dark backgrounds) -->
-  <circle cx="30" cy="30" r="26" fill="#6B7A8D"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60" fill="none" role="img" aria-label="First Baptist Church Muncie">
+  <!-- Navy disc mark (lighter on dark backgrounds) -->
+  <circle cx="30" cy="30" r="26" fill="#4A4880"/>
   <text
     x="30"
     y="30"
@@ -10,7 +10,7 @@
     fill="#FBFBFA"
     text-anchor="middle"
     dominant-baseline="central"
-  >S</text>
+  >F</text>
   <!-- Wordmark — light text for dark backgrounds -->
   <text
     x="68"
@@ -21,15 +21,15 @@
     fill="#FBFBFA"
     dominant-baseline="auto"
     letter-spacing="0.5"
-  >Studio Starter</text>
+  >First Baptist Church</text>
   <text
     x="69"
     y="42"
     font-family="'Inter', system-ui, sans-serif"
     font-size="9.5"
     font-weight="400"
-    fill="#8E9DAD"
+    fill="#D9A94A"
     dominant-baseline="auto"
     letter-spacing="2.5"
-  >YOUR STUDIO</text>
+  >MUNCIE, INDIANA</text>
 </svg>

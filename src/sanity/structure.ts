@@ -45,6 +45,7 @@ import { guides, GUIDE_CATEGORIES } from './guides/content';
 import StudioGuide from './components/StudioGuide';
 import BusinessOverview from './components/BusinessOverview';
 import BrandKit from './components/BrandKit';
+import { site } from '../data/site';
 
 const SINGLETON_TYPES = [
   'siteSettings',
@@ -94,7 +95,7 @@ function singletonWithPreview(S: StructureBuilder, schemaType: string, title: st
 
 export const deskStructure = (S: StructureBuilder, context: StructureResolverContext) =>
   S.list()
-    .title('Studio Starter')
+    .title(site.name)
     .items([
       // HELP & GUIDE — the handbook, first so it is always in reach.
       //
