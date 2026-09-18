@@ -7,6 +7,7 @@
 // Run `npm run typegen` after schema changes to regenerate src/lib/sanity.types.ts.
 
 import { sanityFetch } from './sanity';
+import { DYNAMIC_LIST_MAX } from './dynamicListLimits';
 
 // Common Portable Text + image projection shorthand
 export const IMAGE_PROJECTION = `{
@@ -76,7 +77,17 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       cta${CTA_PROJECTION},
       "items": select(
         // scaffold: journal
-        source == "journal" => *[_type == "journalEntry"] | order(publishedAt desc)[0...limit]{
+        // 2026-09-18: this used to read "[0...limit]" with "limit" as the
+        // editor's own field on this section. GROQ slice bounds cannot be
+        // field references -- that form throws a query PARSE error, which
+        // sanityFetch's catch turns into the empty fallback for the WHOLE
+        // home-page query, not just this arm, so the entire page silently
+        // fell back to code-defined defaults. The fix: fetch a fixed batch of
+        // DYNAMIC_LIST_MAX candidates here (imported from dynamicListLimits.ts,
+        // the same constant the schema's max() validates against) and let
+        // DynamicList.astro trim that batch down to the editor's real 'limit',
+        // which is already present on this section via the leading "...".
+        source == "journal" => *[_type == "journalEntry"] | order(publishedAt desc)[0...${DYNAMIC_LIST_MAX}]{
           _id, "title": title, "meta": publishedAt, "summary": excerpt,
           "href": "/post/" + slug.current,
           "coverImage": coverImage${IMAGE_PROJECTION}

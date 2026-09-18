@@ -30,6 +30,7 @@ import {
 } from '@sanity/icons';
 import { SECTION_TYPES } from './sections';
 import { columnsField, headingAccentField, hideWhenRich, richTwin } from './_appearanceFields';
+import { DYNAMIC_LIST_MAX } from '../../lib/dynamicListLimits';
 
 // ── Shared helpers (mirrors sections.ts helpers — keep in sync if you change
 //    the main helpers, or extract to a shared file in a future refactor) ──────
@@ -324,8 +325,12 @@ export const dynamicListSection = defineType({
       title: 'How many to show',
       type: 'number',
       initialValue: 6,
-      validation: (R) => R.required().min(3).max(12),
-      description: 'Between 3 and 12 items. The section shows this many in a card grid.',
+      // DYNAMIC_LIST_MAX also sizes the GROQ query's slice bound in queries.ts:
+      // GROQ slice bounds cannot be field references, so the query fetches a
+      // fixed batch of this many candidates and the component trims to this
+      // field's actual value. The two must share one constant or they drift.
+      validation: (R) => R.required().min(3).max(DYNAMIC_LIST_MAX),
+      description: `Between 3 and ${DYNAMIC_LIST_MAX} items. The section shows this many in a card grid.`,
     }),
     defineField({ name: 'cta', title: 'Link button (optional)', type: 'ctaBlock' }),
   ],
