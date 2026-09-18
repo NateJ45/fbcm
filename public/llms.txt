@@ -17,7 +17,7 @@
 - [Budget calculator](https://example.com/calculator/): A rough budget range for a project
 - [Free guides](https://example.com/guides/): Downloadable guides
 - [Resources](https://example.com/resources/): Tools and recommendations
-- [Journal](https://example.com/journal/): Articles and project notes
+- [Journal](https://example.com/blog/): Articles and project notes
 - [Shop my favorites](https://example.com/shop/): Recommended pieces and sources
 - [Press](https://example.com/press/): Where the studio has been featured
 

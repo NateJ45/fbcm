@@ -70,7 +70,7 @@ async function render(slug, tagline) {
 const SINGLETONS = [
   { type: 'homePage', slug: 'home', defaultTitle: 'Welcome' },
   { type: 'contactPage', slug: 'contact', defaultTitle: 'Get in touch' },
-  { type: 'journalPage', slug: 'journal', defaultTitle: 'Journal' },
+  { type: 'journalPage', slug: 'blog', defaultTitle: 'Journal' },
   { type: 'privacyPage', slug: 'privacy', defaultTitle: 'Privacy policy' },
 ];
 
@@ -83,14 +83,14 @@ for (const page of SINGLETONS) {
 }
 
 // ---- Dynamic collections → /og/<prefix>-<slug>.png ----------------------
-// Mirrors BaseLayout: /journal/my-post → journal-my-post.png, etc.
+// Mirrors BaseLayout: /post/my-post → post-my-post.png, etc.
 // Each module that defines a dynamic collection should add its own entry here.
 // Field names are verified against studio/schemaTypes/<type>.ts before enabling.
 // journalEntry: slug (slug type, value at slug.current), seoTitle and title (both string).
 
 const COLLECTIONS = [
   {
-    prefix: 'journal',
+    prefix: 'post',
     query: `*[_type=="journalEntry" && defined(slug.current)]{ "slug": slug.current, seoTitle, title }`,
     pick: (d) => d.seoTitle || d.title,
   },

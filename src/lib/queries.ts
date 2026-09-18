@@ -78,7 +78,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
         // scaffold: journal
         source == "journal" => *[_type == "journalEntry"] | order(publishedAt desc)[0...limit]{
           _id, "title": title, "meta": publishedAt, "summary": excerpt,
-          "href": "/journal/" + slug.current,
+          "href": "/post/" + slug.current,
           "coverImage": coverImage${IMAGE_PROJECTION}
         },
         // scaffold:end
@@ -441,7 +441,7 @@ export async function getJournalEntryBySlug(slug: string) {
 }
 // scaffold:end
 
-// Static path generation for /journal/[slug]. Returns just the slugs.
+// Static path generation for /post/[slug]. Returns just the slugs.
 // scaffold: journal
 export async function getAllJournalSlugs(): Promise<string[]> {
   const list: Array<{ slug: { current: string } }> = await sanityFetch(

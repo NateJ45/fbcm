@@ -117,7 +117,7 @@ We have accounts with vendors not open to the public. These lines offer more dis
 
 ## Journal
 
-- [Example Journal Post](https://example.com/journal/example-post/): Replace with your own journal entry description.
+- [Example Journal Post](https://example.com/post/example-post/): Replace with your own journal entry description.
 
 ## Free guides
 

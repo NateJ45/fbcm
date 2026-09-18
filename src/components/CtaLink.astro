@@ -53,11 +53,11 @@ const {
 
 // Map Sanity document _type to its route. Mirrors the routes in src/pages/.
 // Singletons go to a fixed path; journalEntry uses {slug} for the dynamic
-// /journal/[slug] route.
+// /post/[slug] route.
 const TYPE_TO_PATH: Record<string, string> = {
   homePage: '/',
   contactPage: '/contact',
-  journalPage: '/journal', // scaffold: journal
+  journalPage: '/blog', // scaffold: journal
 };
 
 function resolveHref(c?: CtaBlock | null): string {
@@ -69,7 +69,7 @@ function resolveHref(c?: CtaBlock | null): string {
       // Slug-based types need the slug appended. Singletons use a fixed path.
       // scaffold: journal
       if (t === 'journalEntry' && c.internalLink?.slug) {
-        return `/journal/${c.internalLink.slug}`;
+        return `/post/${c.internalLink.slug}`;
       }
       // scaffold:end
       // Custom pages (type 'page') route via /[slug].astro.

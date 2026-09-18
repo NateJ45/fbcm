@@ -26,7 +26,8 @@
 //    exists.
 
 export const RESERVED_SLUGS = new Set([
-  'journal', // scaffold: journal
+  'blog', // scaffold: journal
+  'post', // scaffold: journal
   'contact',
   'privacy',
   // The fixed-data wall the visual-regression suite shoots (PORTS.md card 37).

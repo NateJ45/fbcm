@@ -7,7 +7,7 @@
 //
 // Sources and their card shape:
 //   journal      - Cover image + title + excerpt + publish date. Links to the
-//                  journal entry at /journal/<slug>.
+//                  journal entry at /post/<slug>.
 //
 // SELF_CONTAINED: manages its own surface. Never receives a surface prop.
 // Empty state: renders nothing when items is empty or absent (graceful absence).
@@ -77,7 +77,7 @@ function formatDate(d?: string | null): string {
 
 // Source-specific fallback CTA link if no cta prop provided.
 const fallbackHref: Record<string, string> = {
-  journal: '/journal', // scaffold: journal
+  journal: '/blog', // scaffold: journal
 };
 const fallbackLabel: Record<string, string> = {
   journal: 'Read all posts', // scaffold: journal

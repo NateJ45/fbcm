@@ -56,7 +56,7 @@ If the starter is extended with a case-study or portfolio detail page, apply the
 
 ### Hero/cover image cap
 
-The journal (`/journal/[slug]`) detail page caps its hero image at `max-w-4xl` (~896 px), with `<SanityImage width={1800}>` and `sizes="(min-width: 920px) 896px, 100vw"`. Reads as an editorial feature, not a billboard. The Sanity request stops at 1800 so the site isn't pulling a 1920 px file for a slot that maxes around 900 px even at 2x retina.
+The journal (`/post/[slug]`) detail page caps its hero image at `max-w-4xl` (~896 px), with `<SanityImage width={1800}>` and `sizes="(min-width: 920px) 896px, 100vw"`. Reads as an editorial feature, not a billboard. The Sanity request stops at 1800 so the site isn't pulling a 1920 px file for a slot that maxes around 900 px even at 2x retina.
 
 ### Image guidelines for editors
 

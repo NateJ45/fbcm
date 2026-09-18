@@ -44,7 +44,7 @@ export const journalEntry = defineType({
       title: 'Slug',
       type: 'slug',
       description:
-        'URL-friendly version (auto-generated from title). The post lives at /journal/{slug}.',
+        'URL-friendly version (auto-generated from title). The post lives at /post/{slug}.',
       options: { source: 'title', maxLength: 96 },
       group: 'meta',
       validation: (Rule) => Rule.required(),

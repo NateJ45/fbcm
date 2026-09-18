@@ -237,7 +237,7 @@ docs.push({
   featuredJournalHeadline: 'Replace this headline.',
   featuredJournalSubhead:
     'Replace this with a line saying what gets written about here and how often.',
-  featuredJournalCta: cta('Read the Journal', '/journal'),
+  featuredJournalCta: cta('Read the Journal', '/blog'),
 
   processPreviewEyebrow: 'How It Works.',
   processPreviewHeadline: 'Replace this headline.',

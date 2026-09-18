@@ -65,7 +65,7 @@ export interface PageCheckConfig {
   extraSettingKeys?: readonly string[];
   /**
    * First path segments the SITE CODE owns, not the page builder: a link to
-   * /journal or /events is fine even though no `page` document has that slug.
+   * /blog or /events is fine even though no `page` document has that slug.
    * Include the built asset folders too.
    */
   codeOwnedPaths: readonly string[];
@@ -371,7 +371,7 @@ export function internalPaths(value: unknown): string[] {
 }
 
 /**
- * Compare by FIRST SEGMENT, on purpose. `/journal/spring-refresh` and
+ * Compare by FIRST SEGMENT, on purpose. `/post/spring-refresh` and
  * `/events/harvest-supper` are real addresses built by code from a collection,
  * and no `page` document owns them, so matching the whole path would flag half
  * the site. First-segment matching under-reports and never cries wolf.

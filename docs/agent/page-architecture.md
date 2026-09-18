@@ -8,19 +8,19 @@
 
 The starter ships these routes (always on, not toggleable):
 
-| Path              | Source                           | Notes                                                                                   |
-| ----------------- | -------------------------------- | --------------------------------------------------------------------------------------- |
-| `/`               | `src/pages/index.astro`          | Home — section-driven via `pageBuilder` + `SectionRenderer`                             |
-| `/about`          | `src/pages/about.astro`          | About — section-driven                                                                  |
-| `/services`       | `src/pages/services.astro`       | Services — section-driven                                                               |
-| `/process`        | `src/pages/process.astro`        | Process — section-driven                                                                |
-| `/[slug]`         | `src/pages/[slug].astro`         | Custom pages created in the Studio; reserved slugs are filtered inside `getStaticPaths` |
-| `/faq`            | `src/pages/faq.astro`            | FAQ page + faqItem collection grouped by category                                       |
-| `/contact`        | `src/pages/contact.astro`        | Contact page + Web3Forms form + Calendly embed                                          |
-| `/journal`        | `src/pages/journal/index.astro`  | Post grid with category chips                                                           |
-| `/journal/[slug]` | `src/pages/journal/[slug].astro` | Post detail: reading progress + header + cover + body + related                         |
-| `/privacy`        | `src/pages/privacy.astro`        | Privacy policy from singleton                                                           |
-| `/404`            | `src/pages/404.astro`            | Custom 404                                                                              |
+| Path           | Source                        | Notes                                                                                                       |
+| -------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `/`            | `src/pages/index.astro`       | Home — section-driven via `pageBuilder` + `SectionRenderer`                                                 |
+| `/about`       | `src/pages/about.astro`       | About — section-driven                                                                                      |
+| `/services`    | `src/pages/services.astro`    | Services — section-driven                                                                                   |
+| `/process`     | `src/pages/process.astro`     | Process — section-driven                                                                                    |
+| `/[slug]`      | `src/pages/[slug].astro`      | Custom pages created in the Studio; reserved slugs are filtered inside `getStaticPaths`                     |
+| `/faq`         | `src/pages/faq.astro`         | FAQ page + faqItem collection grouped by category                                                           |
+| `/contact`     | `src/pages/contact.astro`     | Contact page + Web3Forms form + Calendly embed                                                              |
+| `/blog`        | `src/pages/blog/index.astro`  | Post grid with category chips. Matches the live Wix site's URL (Task 6, 2026-09-18)                         |
+| `/post/[slug]` | `src/pages/post/[slug].astro` | Post detail: reading progress + header + cover + body + related. Matches the live Wix site's `/post/<slug>` |
+| `/privacy`     | `src/pages/privacy.astro`     | Privacy policy from singleton                                                                               |
+| `/404`         | `src/pages/404.astro`         | Custom 404                                                                                                  |
 
 Additional routes come from opt-in modules staged under `modules/` (off by default). Each module is documented under `docs/modules/`. There are 13 opt-in modules: `portfolio`, `shop`, `virtual-services`, `gift-certificates`, `press`, `resources`, `lead-magnets`, `newsletter`, `style-quiz`, `budget-calculator`, `events`, `donations`, `team`. Key routes they add: `/virtual-services` (was `/e-design`), `/events`, `/donate`, `/team`. (The `process` route is always-on core, not a module.)
 

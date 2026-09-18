@@ -1450,7 +1450,7 @@ editors learn to click past it.
 
 **Every check is a heuristic that UNDER-REPORTS on purpose.** The link check
 compares by FIRST PATH SEGMENT only, because `/events/harvest-supper` and
-`/journal/spring-refresh` are real addresses built by code from a collection and
+`/post/spring-refresh` are real addresses built by code from a collection and
 no `page` document owns them; matching whole paths would flag half the site and
 the feature would be ignored inside a week. Alt text is accepted in any of the
 three shapes the family models it in (`alt` on the image, `alt` beside it,

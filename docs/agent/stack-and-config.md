@@ -15,7 +15,7 @@ Pinned versions reflect what's known to work together as of May 2026. Bump delib
 - Motion (formerly Framer Motion), Astro View Transitions, Lenis smooth scroll (respecting `prefers-reduced-motion`).
 - sharp for image processing. Sanity handles its own image transformation pipeline for content images; sharp is for any locally-bundled assets (logo, OG image generator).
 - opentype.js (dev-only) for the OG image generator at `scripts/generate-og-default.mjs`.
-- `@astrojs/rss` wired at `/journal/rss.xml` via `src/pages/journal/rss.xml.ts`.
+- `@astrojs/rss` wired at `/blog/rss.xml` via `src/pages/blog/rss.xml.ts`.
 - `@astrojs/sitemap` for `sitemap-index.xml` (production sitemap).
 - Three-state dark/light/system theme system: `ThemeToggle.tsx` React island plus an anti-FOUC bootstrap script in BaseLayout, persisted to `localStorage["theme"]`. The site is light-primary; dark mode is supported for visitor preference but not the primary read of the brand.
 - `src/data/site.ts` as the single source of truth for hardcoded site identity (brand name, domain, asset paths, social URL strings the build needs at compile time). Editor-controlled content goes through Sanity.

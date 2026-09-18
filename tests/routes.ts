@@ -6,7 +6,7 @@
 // Every path below was verified against dist/client after `npm run build`.
 //
 // Deliberately absent:
-//   /[slug] and /journal/[slug]   dynamic, and build zero paths with no
+//   /[slug] and /post/[slug]      dynamic, and build zero paths with no
 //                                 Sanity project configured (which is how the
 //                                 starter builds by default)
 //   /studio, /preview/**,
@@ -21,7 +21,7 @@
 export const routes: string[] = [
   '/',
   '/contact',
-  '/journal', // scaffold: journal
+  '/blog', // scaffold: journal
   '/privacy',
 ];
 

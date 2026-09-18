@@ -44,7 +44,6 @@ interface Service {
   price?: string;
 }
 
-
 interface Breadcrumb {
   name: string;
   url: string;
@@ -125,7 +124,6 @@ export function serviceListSchema(services: Service[] | null | undefined): strin
   });
 }
 
-
 // ---------- BreadcrumbList (every internal page) --------------------------
 
 export function breadcrumbSchema(crumbs: Breadcrumb[]): string {
@@ -169,7 +167,7 @@ export function projectSchema(project: Project, heroImageUrl: string | null): st
 }
 
 // scaffold: journal
-// ---------- BlogPosting (for /journal/[slug]) -----------------------------
+// ---------- BlogPosting (for /post/[slug]) --------------------------------
 
 interface JournalEntryForSchema {
   title?: string;
@@ -186,9 +184,7 @@ export function blogPostingSchema(
   entry: JournalEntryForSchema,
   coverImageUrl: string | null,
 ): string {
-  const url = entry.slug?.current
-    ? `${site.url}/journal/${entry.slug.current}`
-    : `${site.url}/journal`;
+  const url = entry.slug?.current ? `${site.url}/post/${entry.slug.current}` : `${site.url}/blog`;
   return JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',

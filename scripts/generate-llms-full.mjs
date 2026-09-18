@@ -177,7 +177,7 @@ if (Array.isArray(journal) && journal.length) {
   p('');
   for (const j of journal) {
     if (!j?.title) continue;
-    p(`- [${j.title}](${SITE}/journal/${j.slug}/)${j.excerpt ? `: ${j.excerpt}` : ''}`);
+    p(`- [${j.title}](${SITE}/post/${j.slug}/)${j.excerpt ? `: ${j.excerpt}` : ''}`);
   }
   p('');
 }

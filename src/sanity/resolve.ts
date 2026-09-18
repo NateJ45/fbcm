@@ -33,7 +33,7 @@ import {
 export const SINGLETON_PREVIEW_PATHS: Record<string, string> = {
   homePage: '/preview',
   contactPage: '/preview/contact',
-  journalPage: '/preview/journal', // scaffold: journal
+  journalPage: '/preview/blog', // scaffold: journal
   privacyPage: '/preview/privacy',
   notFoundPage: '/preview/404',
 };
@@ -71,11 +71,11 @@ export const resolve: PresentationPluginOptions['resolve'] = {
     // the page it renders on, with a note when a detail page exists live.
     // scaffold: journal
     journalEntry: {
-      locations: [{ title: 'Journal', href: '/preview/journal' }],
-      message: 'Journal entry pages preview on the live site after publish.',
+      locations: [{ title: 'Blog', href: '/preview/blog' }],
+      message: 'Post pages preview on the live site after publish.',
     },
     // scaffold:end
-    journalCategory: { locations: [{ title: 'Journal', href: '/preview/journal' }] }, // scaffold: journal
+    journalCategory: { locations: [{ title: 'Blog', href: '/preview/blog' }] }, // scaffold: journal
     announcement: { locations: [{ title: 'Home', href: '/preview' }] },
     siteSettings: { locations: [{ title: 'Home', href: '/preview' }] },
     businessInfo: { locations: [{ title: 'Contact', href: '/preview/contact' }] },

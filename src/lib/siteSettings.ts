@@ -112,7 +112,7 @@ export interface ResolvedChromeSettings {
  */
 export function fallbackNavItems(visible: SectionVisibility): NavItem[] {
   return [
-    ...(visible.journal ? [{ kind: 'flat' as const, label: 'Journal', href: '/journal' }] : []), // scaffold: journal
+    ...(visible.journal ? [{ kind: 'flat' as const, label: 'Journal', href: '/blog' }] : []), // scaffold: journal
   ];
 }
 

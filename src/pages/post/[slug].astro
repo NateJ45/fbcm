@@ -10,6 +10,9 @@
 // build time. The query is duplicated (once for paths, once for the full doc)
 // — Astro caches each call per slug, so the perf hit is just the static map.
 
+// This file lives at /post/[slug] on purpose (Task 6, 2026-09-18): it matches
+// the live Wix site's post URLs exactly so all 142 existing post addresses
+// survive the migration with no redirects. The listing lives at /blog.
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import {
   getAllJournalEntries,
@@ -112,8 +115,8 @@ const updatedLabel =
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Journal', url: `${site.url}/journal` },
-    { name: entry.title ?? slug, url: `${site.url}/journal/${slug}` },
+    { name: 'Journal', url: `${site.url}/blog` },
+    { name: entry.title ?? slug, url: `${site.url}/post/${slug}` },
   ]),
   blogPostingSchema(entry, coverOg ?? null),
 ];
@@ -136,7 +139,7 @@ const schemas = [
     <header class="bg-background">
       <div class="mx-auto max-w-3xl px-m pt-section-lg pb-l">
         <p class="mb-s text-xs tracking-widest text-foreground/80 uppercase">
-          <a href="/journal" class="transition-colors hover:text-primary-dark">Journal</a>
+          <a href="/blog" class="transition-colors hover:text-primary-dark">Journal</a>
           {dateLabel && <span class="mx-xs">·</span>}
           {dateLabel && <time datetime={entry.publishedAt}>{dateLabel}</time>}
           {readMinutes > 0 && <span class="mx-xs">·</span>}
@@ -285,7 +288,7 @@ const schemas = [
       <nav class="border-t border-border-soft bg-background" aria-label="More journal posts">
         <div class="mx-auto grid max-w-content grid-cols-1 gap-m px-m py-l md:grid-cols-2">
           {prev ? (
-            <a href={`/journal/${prev.slug}`} class="group">
+            <a href={`/post/${prev.slug}`} class="group">
               <p class="mb-xs text-xs tracking-widest text-foreground/80 uppercase">Newer post</p>
               <p class="font-display text-h4 text-foreground transition-colors group-hover:text-primary-dark">
                 ← {prev.title}
@@ -295,7 +298,7 @@ const schemas = [
             <div />
           )}
           {next ? (
-            <a href={`/journal/${next.slug}`} class="group md:text-right">
+            <a href={`/post/${next.slug}`} class="group md:text-right">
               <p class="mb-xs text-xs tracking-widest text-foreground/80 uppercase">Older post</p>
               <p class="font-display text-h4 text-foreground transition-colors group-hover:text-primary-dark">
                 {next.title} →

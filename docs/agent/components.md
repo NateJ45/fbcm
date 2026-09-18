@@ -62,7 +62,7 @@ The core component set, by role. All in `src/components/` unless noted.
 
 ### Long-read layout (journal detail)
 
-`/journal/[slug]` uses a long-read structure suitable for editorial content:
+`/post/[slug]` uses a long-read structure suitable for editorial content:
 
 1. **Article header** -- eyebrow line, h1, excerpt/subtitle, meta (date, reading time, categories). Lives in a `max-w-3xl mx-auto` block.
 2. **Cover image** -- `max-w-4xl mx-auto px-m` (~896 px), `<SanityImage width={1800} loading="eager" sizes="(min-width: 920px) 896px, 100vw">`. Reads as an editorial feature, not a billboard.

@@ -48,7 +48,7 @@ export function pathForDoc(schemaType: string, doc: any): string | null {
       return '/contact';
     // scaffold: journal
     case 'journalPage':
-      return '/journal';
+      return '/blog';
     // scaffold:end
     case 'privacyPage':
       return '/privacy';
@@ -57,12 +57,12 @@ export function pathForDoc(schemaType: string, doc: any): string | null {
     // Collections with their own detail route
     // scaffold: journal
     case 'journalEntry':
-      return slug ? `/journal/${slug}` : '/journal';
+      return slug ? `/post/${slug}` : '/blog';
     // scaffold:end
     // Collections that render inside a parent page
     // scaffold: journal
     case 'journalCategory':
-      return '/journal';
+      return '/blog';
     // scaffold:end
     // Generic custom pages live at /<slug>.
     case 'page':

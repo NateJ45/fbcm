@@ -102,7 +102,7 @@ const resourcesPage = {
       _key: 'seed-card-journal',
       title: 'Journal',
       blurb: 'Behind-the-scenes project notes, sourcing decisions, and design thinking.',
-      link: '/journal',
+      link: '/blog',
     },
   ],
 };

@@ -109,7 +109,7 @@ node modules/resources/seed.mjs
 The seeder is idempotent -- running it twice does not create duplicates.
 It creates one `resourcesPage` singleton with a hero, intro copy, and five
 starter cards pointing at `/quiz`, `/calculator`, `/guides`, `/faq`, and
-`/journal`.
+`/blog`.
 
 ### Step 7 -- Verify the build
 

@@ -1,6 +1,6 @@
 // scaffold-file: journal
 // Journal index page singleton. Drives the hero copy and final-CTA section on
-// /journal. The posts grid itself is auto-populated from journalEntry documents.
+// /blog. The posts grid itself is auto-populated from journalEntry documents.
 
 import { defineType, defineField } from 'sanity';
 

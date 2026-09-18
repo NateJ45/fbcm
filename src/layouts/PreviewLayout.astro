@@ -198,7 +198,7 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
       // /preview/* (the visual-editing history adapter then reports the new
       // location, and Presentation resolves the document, so the navigator and
       // the edit panel follow the click). Links with NO preview route (detail
-      // pages like /journal/<slug>, /api, /studio, external origins) split by
+      // pages like /post/<slug>, /api, /studio, external origins) split by
       // context:
       //  - EMBEDDED in the Studio: the navigation is SUPPRESSED entirely. A
       //    click on a card there is an EDIT gesture (the stega overlay already
@@ -213,7 +213,8 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
       // renders). Keep the two in sync.
       const FIRST_SEGMENT_PREVIEWABLE = new Set([
         'contact',
-        'journal', // scaffold: journal
+        'blog', // scaffold: journal
+        'post', // scaffold: journal (no preview route of its own; kept here so this set agrees with SINGLETON_BY_PATH and SINGLETON_PREVIEW_PATHS)
         'privacy',
       ]);
       const NEVER_REMAP = new Set(['api', 'studio', 'preview', '404']);

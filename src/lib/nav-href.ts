@@ -23,7 +23,7 @@
 export const SINGLETON_LIVE_PATHS: Record<string, string> = {
   homePage: '/',
   contactPage: '/contact',
-  journalPage: '/journal', // scaffold: journal
+  journalPage: '/blog', // scaffold: journal
   privacyPage: '/privacy',
   notFoundPage: '/404',
 };
