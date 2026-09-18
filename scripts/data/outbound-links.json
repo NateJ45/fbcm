@@ -1,0 +1,1057 @@
+{
+  "generatedAt": "2026-09-18T18:27:34.840Z",
+  "hosts": [
+    {
+      "host": "fbcmuncie.churchtrac.com",
+      "urlCount": 3,
+      "pageHits": 132
+    },
+    {
+      "host": "fbcmuncie.churchcenter.com",
+      "urlCount": 10,
+      "pageHits": 97
+    },
+    {
+      "host": "www.facebook.com",
+      "urlCount": 3,
+      "pageHits": 48
+    },
+    {
+      "host": "www.youtube.com",
+      "urlCount": 3,
+      "pageHits": 47
+    },
+    {
+      "host": "www.instagram.com",
+      "urlCount": 3,
+      "pageHits": 46
+    },
+    {
+      "host": "www.threads.net",
+      "urlCount": 2,
+      "pageHits": 46
+    },
+    {
+      "host": "threads.net",
+      "urlCount": 1,
+      "pageHits": 44
+    },
+    {
+      "host": "linktr.ee",
+      "urlCount": 1,
+      "pageHits": 44
+    },
+    {
+      "host": "podcasters.spotify.com",
+      "urlCount": 1,
+      "pageHits": 44
+    },
+    {
+      "host": "www.biblegateway.com",
+      "urlCount": 3,
+      "pageHits": 3
+    },
+    {
+      "host": "calendar.app.google",
+      "urlCount": 2,
+      "pageHits": 2
+    },
+    {
+      "host": "abc-indiana.org",
+      "urlCount": 1,
+      "pageHits": 1
+    },
+    {
+      "host": "apps.apple.com",
+      "urlCount": 1,
+      "pageHits": 1
+    },
+    {
+      "host": "bibleproject.com",
+      "urlCount": 1,
+      "pageHits": 1
+    },
+    {
+      "host": "facebook.com",
+      "urlCount": 1,
+      "pageHits": 1
+    },
+    {
+      "host": "instagram.com",
+      "urlCount": 1,
+      "pageHits": 1
+    },
+    {
+      "host": "play.google.com",
+      "urlCount": 1,
+      "pageHits": 1
+    },
+    {
+      "host": "www.abc-usa.org",
+      "urlCount": 1,
+      "pageHits": 1
+    },
+    {
+      "host": "www.amazon.com",
+      "urlCount": 1,
+      "pageHits": 1
+    },
+    {
+      "host": "www.churchtrac.com",
+      "urlCount": 1,
+      "pageHits": 1
+    },
+    {
+      "host": "www.cynthialucilesmith.com",
+      "urlCount": 1,
+      "pageHits": 1
+    }
+  ],
+  "links": [
+    {
+      "href": "http://threads.net/fbcmuncie",
+      "host": "threads.net",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Threads"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/calendar",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Calendar",
+        "Our Calendar"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/giving",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Giving"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchtrac.com/",
+      "host": "fbcmuncie.churchtrac.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Connect via Church Trac"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchtrac.com/children",
+      "host": "fbcmuncie.churchtrac.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Children's Newsletter"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchtrac.com/youth",
+      "host": "fbcmuncie.churchtrac.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Youth Newsletter"
+      ]
+    },
+    {
+      "href": "https://linktr.ee/fbcmuncie",
+      "host": "linktr.ee",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Linktree"
+      ]
+    },
+    {
+      "href": "https://podcasters.spotify.com/pod/show/first-baptist-church-munc",
+      "host": "podcasters.spotify.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Linktree"
+      ]
+    },
+    {
+      "href": "https://www.facebook.com/firstbaptistmuncie",
+      "host": "www.facebook.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Facebook"
+      ]
+    },
+    {
+      "href": "https://www.instagram.com/fbcmuncie/",
+      "host": "www.instagram.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Instagram"
+      ]
+    },
+    {
+      "href": "https://www.threads.net/@fbcmuncie",
+      "host": "www.threads.net",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Threads"
+      ]
+    },
+    {
+      "href": "https://www.youtube.com/c/FbcmuncieOrg",
+      "host": "www.youtube.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/reservation",
+        "https://www.fbcmuncie.org/adult",
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/youth",
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/children",
+        "https://www.fbcmuncie.org/wedding",
+        "https://www.fbcmuncie.org/accessibility",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/outreach",
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/who-we-are",
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/publications",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/worship",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/church-app",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/architecture",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/nina-oisten",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/church-resources",
+        "https://www.fbcmuncie.org/blog/categories/pianist",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview",
+        "https://www.fbcmuncie.org/blog/categories/series-resources",
+        "https://www.fbcmuncie.org/blog/categories/ruminations"
+      ],
+      "linkText": [
+        "Youtube"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/people/forms/159198",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/contact",
+        "https://www.fbcmuncie.org/who-we-are"
+      ],
+      "linkText": [
+        "I’m new and want to learn more",
+        "Contact"
+      ]
+    },
+    {
+      "href": "https://www.facebook.com/jonathan.balmer",
+      "host": "www.facebook.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/team/jonathan-balmer"
+      ],
+      "linkText": [
+        "Facebook",
+        "https://www.facebook.com/jonathan.balmer"
+      ]
+    },
+    {
+      "href": "https://www.facebook.com/kendall.ellis.758",
+      "host": "www.facebook.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/team/kendall-ellis"
+      ],
+      "linkText": [
+        "Facebook",
+        "https://www.facebook.com/kendall.ellis.758"
+      ]
+    },
+    {
+      "href": "https://www.threads.net/@jonathancbalmer",
+      "host": "www.threads.net",
+      "foundOn": [
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/team/jonathan-balmer"
+      ],
+      "linkText": [
+        "Threads",
+        "https://www.threads.net/@jonathancbalmer"
+      ]
+    },
+    {
+      "href": "https://www.youtube.com/@FbcmuncieOrg/streams",
+      "host": "www.youtube.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org",
+        "https://www.fbcmuncie.org/worship"
+      ],
+      "linkText": [
+        "Services & Sermons",
+        "View Sunday Livestream"
+      ]
+    },
+    {
+      "href": "https://abc-indiana.org/",
+      "host": "abc-indiana.org",
+      "foundOn": [
+        "https://www.fbcmuncie.org/baptists"
+      ],
+      "linkText": [
+        "American Baptist Churches of Indiana and Kentucky."
+      ]
+    },
+    {
+      "href": "https://apps.apple.com/us/app/churchtrac-connect-app/id6737914083",
+      "host": "apps.apple.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/church-app"
+      ],
+      "linkText": []
+    },
+    {
+      "href": "https://bibleproject.com/videos/exile/",
+      "host": "bibleproject.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/who-we-are"
+      ],
+      "linkText": [
+        "were in exile"
+      ]
+    },
+    {
+      "href": "https://calendar.app.google/oAVyoHDFut24sJtTA",
+      "host": "calendar.app.google",
+      "foundOn": [
+        "https://www.fbcmuncie.org/contact"
+      ],
+      "linkText": [
+        "Schedule"
+      ]
+    },
+    {
+      "href": "https://calendar.app.google/yfMeekvgCxY7x2mU6",
+      "host": "calendar.app.google",
+      "foundOn": [
+        "https://www.fbcmuncie.org/contact"
+      ],
+      "linkText": [
+        "Schedule"
+      ]
+    },
+    {
+      "href": "https://facebook.com/firstbaptistmuncie",
+      "host": "facebook.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/children"
+      ],
+      "linkText": [
+        "Our Facebook Page"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/home",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ],
+      "linkText": [
+        "See what’s happening this Sunday"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/pages/childrens-ministry-news",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/children"
+      ],
+      "linkText": [
+        "Children’s Newsletter",
+        "Read our Children's Newsletter"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/pages/fbcs-wednesday-weekly",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/adult"
+      ],
+      "linkText": [
+        "Wednesday Weekly"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/pages/youth-the-mooses-message",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/youth"
+      ],
+      "linkText": [
+        "“The Moose’s Message”",
+        "newsletter"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/people/forms/159897",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/contact"
+      ],
+      "linkText": [
+        "Notify the church"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/people/forms/243785",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/wedding"
+      ],
+      "linkText": [
+        "Fill Out Informational Form"
+      ]
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/people/forms/520312",
+      "host": "fbcmuncie.churchcenter.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/reservation"
+      ],
+      "linkText": [
+        "Online Building Use Request Form"
+      ]
+    },
+    {
+      "href": "https://instagram.com/fbc_muncie",
+      "host": "instagram.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/children"
+      ],
+      "linkText": [
+        "our Instagram"
+      ]
+    },
+    {
+      "href": "https://play.google.com/store/apps/details?id=com.churchtrac.churchconnect",
+      "host": "play.google.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/church-app"
+      ],
+      "linkText": []
+    },
+    {
+      "href": "https://www.abc-usa.org/",
+      "host": "www.abc-usa.org",
+      "foundOn": [
+        "https://www.fbcmuncie.org/baptists"
+      ],
+      "linkText": [
+        "American Baptist Churches - USA"
+      ]
+    },
+    {
+      "href": "https://www.amazon.com/We-Are-Clay-Molding-Baptist/dp/1087276802",
+      "host": "www.amazon.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ],
+      "linkText": [
+        "can be purchased online."
+      ]
+    },
+    {
+      "href": "https://www.biblegateway.com/passage/?search=1+Corinthians+12%3A12-30&version=NIV",
+      "host": "www.biblegateway.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/who-we-are"
+      ],
+      "linkText": [
+        "1 Corinthians 12:12-30"
+      ]
+    },
+    {
+      "href": "https://www.biblegateway.com/passage/?search=Acts+18%3A26%3B+1+Corinthians+16%3A19%3B+Romans+16%3A3&version=NIV",
+      "host": "www.biblegateway.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/ministers"
+      ],
+      "linkText": [
+        "Acts 18:26; 1 Corinthians 16:19; Romans 16:3"
+      ]
+    },
+    {
+      "href": "https://www.biblegateway.com/passage/?search=John+17%3A20-22&version=NIV",
+      "host": "www.biblegateway.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/who-we-are"
+      ],
+      "linkText": [
+        "(John 17:20-22)"
+      ]
+    },
+    {
+      "href": "https://www.churchtrac.com/public_calendar?ui=0C7B1090",
+      "host": "www.churchtrac.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org"
+      ],
+      "linkText": [
+        "see our calendar."
+      ]
+    },
+    {
+      "href": "https://www.cynthialucilesmith.com/",
+      "host": "www.cynthialucilesmith.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/ministers"
+      ],
+      "linkText": [
+        "LinkedIn"
+      ]
+    },
+    {
+      "href": "https://www.instagram.com/jonathancbalmer",
+      "host": "www.instagram.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/team/jonathan-balmer"
+      ],
+      "linkText": [
+        "https://www.instagram.com/jonathancbalmer"
+      ]
+    },
+    {
+      "href": "https://www.instagram.com/mrjbalm/",
+      "host": "www.instagram.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org/ministers"
+      ],
+      "linkText": [
+        "Instagram"
+      ]
+    },
+    {
+      "href": "https://www.youtube.com/c/fbcmuncieorg",
+      "host": "www.youtube.com",
+      "foundOn": [
+        "https://www.fbcmuncie.org"
+      ],
+      "linkText": [
+        "YouTube channel"
+      ]
+    }
+  ]
+}

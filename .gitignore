@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.dev.vars
+*.log
+
+# The captured binaries live in ../fbcm-archive/, not in git history. See that
+# folder's README and scripts/data/binary-manifest.json, which records every one
+# of them with a checksum.
+scripts/data/images/
+scripts/data/files/
+scripts/data/video/

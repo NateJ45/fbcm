@@ -1,0 +1,59 @@
+---
+title: "Spiritual Fathers"
+date: "2024-06-11T20:04:32.437Z"
+author: "Jonathan Balmer"
+categories: ["Sermon Preview"]
+url: "https://www.fbcmuncie.org/post/spiritual-fathers"
+---
+
+# Spiritual Fathers
+
+![cover](../images/81f7ac_94a7213522f84eaaa12ca66c825882c8~mv2.png)
+
+*This is a sermon preview for the fourth week of our Kingdom Family Values series.*[*Visit FBCM’s website to listen to our livestream*](https://fbcmuncie.churchcenter.com/channels/4999)[.](https://fbcmuncie.churchcenter.com/channels/4999)
+
+"Even if you had ten thousand guardians in Christ, you do not have many fathers, for in Christ Jesus I became your father through the gospel. Therefore I urge you to imitate me.*”*
+
+*– from 1 Corinthians 4:6-16 (NIV)*
+
+*"Men are Lost. Here's a map out of the wilderness"*
+
+*"Boys Get Everything, Except the Thing That’s Most Worth Having"*
+
+*"America's men are in crisis, and it's rooted in one big lie"*
+
+*"The Trouble With Boys And Men"*
+
+It seems like headlines about men and boys being in trouble proliferate. These are just the articles I remember reading, from various sources across the ideological spectrum.  [Loneliness seems to be a general societal epidemic](https://www.fbcmuncie.org/post/a-church-for-a-lonely-world), but there is also evidence teenage boys and men are especially susceptible to loneliness. As one commentator noted, [recent surveys show a quarter of men report having no close friends](https://www.americansurveycenter.org/why-mens-social-circles-are-shrinking/), and in [general boys spend two hours less per day](https://www.pewresearch.org/short-reads/2019/02/20/the-way-u-s-teens-spend-their-time-is-changing-but-differences-between-boys-and-girls-persist/)socializing than girls their age.
+
+###### How do we respond to such concerning trends in the lives of so many?
+
+One response has been a series of self-proclaimed gurus, from mundane life coaches to intentionally provocative (if not unhinged) media personalities, have presented themselves as a solution to this crisis of male loneliness. They contend that they have the answer to make men "real men," and to solve the problems so many men and boys face. They come with rules for life, with exercise programs, and self-help solutions for the emptiness so many, including many boys and men, face.
+
+But there is another way. Perhaps what so many men and boys need more than a guru or a program of masculinity is a mentor. Perhaps some roles all men can play in one another's lives (in different times, contexts, and situations) is to be mentored, to mentor, or to be encourager in the faith. In other words, perhaps men need to learn to be a Spiritual Father, a Spiritual Son, a Brother in Christ to others.
+
+Paul writes a stern, but loving, letter to the church at Corinth because they have gone astray. They fight, favoring one leader (we might say guru) over another. They celebrate their gifts of wisdom. They flaunt their wealth, influence, or power. And to all this Paul says:
+
+> We are fools for Christ, but you are so wise in Christ! We are weak, but you are strong! You are honored, we are dishonored! To this very hour we go hungry and thirsty, we are in rags, we are brutally treated, we are homeless. We work hard with our own hands. When we are cursed, we bless; when we are persecuted, we endure it; when we are slandered, we answer kindly. We have become the scum of the earth, the garbage of the world—right up to this moment.
+>
+> I am writing this not to shame you but to warn you as my dear children. Even if you had ten thousand guardians in Christ, you do not have many fathers, for in Christ Jesus I became your father through the gospel. Therefore I urge you to imitate me.
+>
+> - 1 Corinthians 4:10-15
+
+Paul knows better than most that being a Christian will upset your priorities. To be a Christian man, is to find honor in dishonor, greatness in meekness, and to bless those who persecute you. Paul even says he and the other Apostles are "fools for Christ" who "have become scum of the earth, the garbage of the world!" for the sake of Christ. Paul urges the Corinthians church to take a hard look at their priorities.
+
+None of this is to shame them or to make a game out of making fun of those in the church at Corinth, men included. It is to guide them, to father them in the faith. That selfless guidance is what they lack.
+
+Even if the Corinthians had ten thousand "guardians" — perhaps the champions the Corinthians are dividing themselves over in defense of their camp or their team (perhaps not unlike our gurus who stick up for the cause of men as they see it) cf. [1 Corinthians 1:10-15](https://www.biblegateway.com/passage/?search=1+Corinthians+1%3A10-15&version=NIV)— they do not have many fathers.
+
+Paul's instruction, therefore, is to imitate him. That is what a good Spiritual mentoring relationship includes. As a mentor imitates Christ, and we imitate them (1 Corinthians 11:1), we become more like Christ. We need mentors in the faith, and (as we mature in the faith) to mentor others in turn. Christian living needs to be taught, passed on, even as it is caught by example.
+
+Paul has no biological or adopted children of his own, but he is a spiritual father to many. As we'll see as we continue our Kingdom Family Vacation, learning and teaching, being spiritual fathers, spiritual sons, and brothers in Christ is an important way we live as the family of God.
+
+Next week, we'll discuss Spiritual Motherhood.
+
+**Reflection Questions**:
+
+1. Who have been your spiritual mentors? Who have you spiritually mentored? What good came from this?
+2. How is spiritual mentoring different from a guru who provides advice, largely, to people they do not know?
+3. All people are called to imitate Christ. In what ways does Jesus re-shape what it means to be a man that might counter our expectations?

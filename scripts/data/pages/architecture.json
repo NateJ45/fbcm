@@ -1,0 +1,349 @@
+{
+  "url": "https://www.fbcmuncie.org/architecture",
+  "slug": "architecture",
+  "category": "pages",
+  "httpStatus": 200,
+  "fetchedAt": "2026-09-18T18:27:23.723Z",
+  "title": "Architecture | First Baptist Muncie",
+  "metaDescription": null,
+  "ogImage": "https://static.wixstatic.com/media/08181c_4782c7bea5ed425282267b3281a8ab91.svg/v1/fit/w_2500,h_1330,al_c/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+  "canonical": "https://www.fbcmuncie.org/architecture",
+  "h1": null,
+  "headings": [
+    {
+      "level": 2,
+      "text": "Our building\nOriginal Rendering 1927"
+    },
+    {
+      "level": 2,
+      "text": "Gothic Revival"
+    },
+    {
+      "level": 2,
+      "text": "Completed in 1929"
+    },
+    {
+      "level": 2,
+      "text": "English Influence"
+    },
+    {
+      "level": 2,
+      "text": "Our building today"
+    }
+  ],
+  "bodyText": "Our building\nOriginal Rendering 1927\n\nFirst Baptist’s third, and most recent, building was completed in 1929. It has been on the National Register of Historic Places since 1988. For students and lovers of architecture it’s a striking work.\n\nGothic Revival\n\nThe Late Gothic Revival building was designed by Samuel Hannaford and Sons and was constructed by Morrow and Morrow. It is constructed of Indiana limestone and has a cruciform plan.\n\nThe Gothic style dictated the use of structural members in compression, leading to tall, buttressed buildings with interior columns of load-bearing masonry and tall, narrow windows.\n\nCompleted in 1929\n\nThe number of new Gothic Revival buildings declined sharply after the 1930s.\n\nEnglish Influence\n\nGothic Revival (also referred to as Victorian Gothic or neo-Gothic) is an architectural movement that began in the late 1740s in England.\n\nOur building today\n\nYou can find us at 309 East Adams Streeet in Muncie, Indiana. Feel free to stop by!",
+  "images": [
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_9a2e10a5752e4aea861c7b31482850a2~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_9a2e10a5752e4aea861c7b31482850a2~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_9a2e10a5752e4aea861c7b31482850a2~mv2.jpg/v1/fill/w_123,h_74,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_9a2e10a5752e4aea861c7b31482850a2~mv2.jpg",
+      "alt": "archit.jpg",
+      "region": "main",
+      "localFile": "08181c_9a2e10a5752e4aea861c7b31482850a2_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_0cca29ae552e41aa89ed565a689a288f~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_0cca29ae552e41aa89ed565a689a288f~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_0cca29ae552e41aa89ed565a689a288f~mv2.jpg/v1/fill/w_123,h_90,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_0cca29ae552e41aa89ed565a689a288f~mv2.jpg",
+      "alt": "church exterior 1.jpg",
+      "region": "main",
+      "localFile": "08181c_0cca29ae552e41aa89ed565a689a288f_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_0f7fd9a1236b44e5b5458a4620b2da54~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_0f7fd9a1236b44e5b5458a4620b2da54~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_0f7fd9a1236b44e5b5458a4620b2da54~mv2.jpg/v1/fill/w_84,h_177,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_0f7fd9a1236b44e5b5458a4620b2da54~mv2.jpg",
+      "alt": "20230309_110513.jpg",
+      "region": "main",
+      "localFile": "08181c_0f7fd9a1236b44e5b5458a4620b2da54_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_3114c8ac1732453291237483b2aad9ec~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_3114c8ac1732453291237483b2aad9ec~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_3114c8ac1732453291237483b2aad9ec~mv2.jpg/v1/crop/x_207,y_0,w_490,h_331,q_80,blur_2,enc_avif,quality_auto/08181c_3114c8ac1732453291237483b2aad9ec~mv2.jpg",
+      "alt": "arch3.jpg",
+      "region": "main",
+      "localFile": "08181c_3114c8ac1732453291237483b2aad9ec_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_be2602489e0d4b63929aa41445a72ff6~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_be2602489e0d4b63929aa41445a72ff6~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_be2602489e0d4b63929aa41445a72ff6~mv2.jpg/v1/fill/w_122,h_81,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_be2602489e0d4b63929aa41445a72ff6~mv2.jpg",
+      "alt": "Exterior of building 2.jpg",
+      "region": "main",
+      "localFile": "08181c_be2602489e0d4b63929aa41445a72ff6_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_02dfa8c532a2453489f302fd65d89ba5~mv2.png",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_02dfa8c532a2453489f302fd65d89ba5~mv2.png",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_02dfa8c532a2453489f302fd65d89ba5~mv2.png/v1/fill/w_187,h_187,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/fbc_podcast_logo.png",
+      "alt": "fbc_podcast_logo.png",
+      "region": "footer",
+      "localFile": "08181c_02dfa8c532a2453489f302fd65d89ba5_tilde_mv2.png"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_4782c7bea5ed425282267b3281a8ab91.svg/v1/fit/w_2500,h_1330,al_c/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+      "alt": "og:image",
+      "region": "og",
+      "localFile": "08181c_4782c7bea5ed425282267b3281a8ab91.svg"
+    }
+  ],
+  "links": [
+    {
+      "href": "https://www.fbcmuncie.org/who-we-are",
+      "text": "Who We Are",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/what-to-expect",
+      "text": "What To Expect",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/ministers",
+      "text": "Ministers",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/beliefs",
+      "text": "Beliefs",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/baptists",
+      "text": "Baptists",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/membership",
+      "text": "Membership",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/history",
+      "text": "History",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchtrac.com/",
+      "text": "Connect via Church Trac",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/calendar",
+      "text": "Calendar",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/church-app",
+      "text": "Church App",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/publications",
+      "text": "Publications",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/blog",
+      "text": "Blog",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchtrac.com/children",
+      "text": "Children's Newsletter",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchtrac.com/youth",
+      "text": "Youth Newsletter",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/worship",
+      "text": "Worship",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/children",
+      "text": "Children",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/youth",
+      "text": "Youth",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/adult",
+      "text": "Adult",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/outreach",
+      "text": "Outreach",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/post/important-documents",
+      "text": "Important Documents",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/accessibility",
+      "text": "Accessibility",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/architecture",
+      "text": "Architecture",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/wedding",
+      "text": "Weddings",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/reservation",
+      "text": "Building Reservation",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/giving",
+      "text": "Giving",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/contact",
+      "text": "Contact",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/",
+      "text": "",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.facebook.com/firstbaptistmuncie",
+      "text": "Facebook",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.threads.net/@fbcmuncie",
+      "text": "Threads",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.instagram.com/fbcmuncie/",
+      "text": "Instagram",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.youtube.com/c/FbcmuncieOrg",
+      "text": "Youtube",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://linktr.ee/fbcmuncie",
+      "text": "Linktree",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/",
+      "text": "",
+      "internal": true,
+      "region": "footer"
+    },
+    {
+      "href": "https://www.facebook.com/firstbaptistmuncie",
+      "text": "Facebook",
+      "internal": false,
+      "region": "footer"
+    },
+    {
+      "href": "https://www.instagram.com/fbcmuncie/",
+      "text": "Instagram",
+      "internal": false,
+      "region": "footer"
+    },
+    {
+      "href": "https://www.youtube.com/c/FbcmuncieOrg",
+      "text": "Youtube",
+      "internal": false,
+      "region": "footer"
+    },
+    {
+      "href": "http://threads.net/fbcmuncie",
+      "text": "Threads",
+      "internal": false,
+      "region": "footer"
+    },
+    {
+      "href": "https://podcasters.spotify.com/pod/show/first-baptist-church-munc",
+      "text": "Linktree",
+      "internal": false,
+      "region": "footer"
+    }
+  ],
+  "embeds": [
+    {
+      "type": "script",
+      "src": "https://browser.sentry-cdn.com/7.120.3/modulemetadata.es5.min.js"
+    },
+    {
+      "type": "church-center",
+      "src": "https://fbcmuncie.churchcenter.com/calendar"
+    },
+    {
+      "type": "church-center",
+      "src": "https://fbcmuncie.churchcenter.com/giving"
+    },
+    {
+      "type": "church-trac",
+      "src": "https://fbcmuncie.churchtrac.com/"
+    },
+    {
+      "type": "church-trac",
+      "src": "https://fbcmuncie.churchtrac.com/children"
+    },
+    {
+      "type": "church-trac",
+      "src": "https://fbcmuncie.churchtrac.com/youth"
+    }
+  ]
+}

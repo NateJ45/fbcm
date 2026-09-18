@@ -1,0 +1,3512 @@
+{
+  "generatedAt": "2026-09-18T18:28:23.388Z",
+  "source": "https://www.fbcmuncie.org/ (Wix), captured before the Astro/Sanity rebuild",
+  "totals": {
+    "files": 424,
+    "bytes": 1622399508
+  },
+  "byDirectory": {
+    "images": {
+      "files": 376,
+      "bytes": 879432999
+    },
+    "files": {
+      "files": 47,
+      "bytes": 631868746
+    },
+    "video": {
+      "files": 1,
+      "bytes": 111097763
+    }
+  },
+  "withoutSourceUrl": 0,
+  "files": [
+    {
+      "path": "images/08181c_00a6e9e5dca9468696032ebf59fc7eef_tilde_mv2.jpg",
+      "bytes": 13082255,
+      "sha256": "6487d6ecdb54f37c675da84a95eae30819f79a46021ec40f550e1ab8a7dede7a",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_00a6e9e5dca9468696032ebf59fc7eef~mv2.jpg",
+      "label": "00 Header_ General .jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_02dfa8c532a2453489f302fd65d89ba5_tilde_mv2.png",
+      "bytes": 123270,
+      "sha256": "d96ae791bbbdb0c61f994f75320a58ca81e0dc3d5e10ac2ddc5d3f3f3b1026a6",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_02dfa8c532a2453489f302fd65d89ba5~mv2.png",
+      "label": "fbc_podcast_logo.png",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_087c222f4750499ba5c0a6c514267c35_tilde_mv2.jpg",
+      "bytes": 11071083,
+      "sha256": "b544641d84a3c47e6d5dea4a59f241f853b991ca66c823327d4d6b46076d144c",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_087c222f4750499ba5c0a6c514267c35~mv2.jpg",
+      "label": "tower_DSC_0002.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_0cca29ae552e41aa89ed565a689a288f_tilde_mv2.jpg",
+      "bytes": 551635,
+      "sha256": "542d45204850f0a0c26c7050ab3f090af96b6ad434fea46879c10b27775e4d25",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_0cca29ae552e41aa89ed565a689a288f~mv2.jpg",
+      "label": "church exterior 1.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_0f7fd9a1236b44e5b5458a4620b2da54_tilde_mv2.jpg",
+      "bytes": 5414360,
+      "sha256": "e62f58ed9e6d7e81a10589e5d0d59759d233da82c9931b783f6cea3d1e1e7712",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_0f7fd9a1236b44e5b5458a4620b2da54~mv2.jpg",
+      "label": "20230309_110513.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_1a04d55674d4409dbc6a8c8840694374_tilde_mv2.jpeg",
+      "bytes": 94128,
+      "sha256": "9c15ac9cfe994d5d6ad385c671882b4767ed80766e88ea2510e8f5cb1ba1e917",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_1a04d55674d4409dbc6a8c8840694374~mv2.jpeg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_1c05a295546247c2acfe971dd8b9bc4d_tilde_mv2.jpg",
+      "bytes": 8386105,
+      "sha256": "af89040802930792e5f199fd16bde73bdba8cb4cadcbef0287dcd1c4546c5b3c",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_1c05a295546247c2acfe971dd8b9bc4d~mv2.jpg",
+      "label": "Church Building.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_1c05a295546247c2acfe971dd8b9bc4d~mv2.jpg",
+      "bytes": 8386105,
+      "sha256": "af89040802930792e5f199fd16bde73bdba8cb4cadcbef0287dcd1c4546c5b3c",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_1c05a295546247c2acfe971dd8b9bc4d~mv2.jpg",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/the-missing-piece"
+    },
+    {
+      "path": "images/08181c_1efc7b5f13bf45b3b1ea6639bf426b49_tilde_mv2.jpg",
+      "bytes": 5049700,
+      "sha256": "5bb7f28ae7ff30108e6c977b7226e0684237a9731bcfe71f9dd6f4372ec72212",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_1efc7b5f13bf45b3b1ea6639bf426b49~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_1f9b399e288b420b8408f9b61759250f_tilde_mv2.png",
+      "bytes": 225270,
+      "sha256": "003be54864c896f96ca7c72589a6c9606c7c57503be01839031785fe66d596ab",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_1f9b399e288b420b8408f9b61759250f~mv2.png",
+      "label": "american-baptist-churches-usa-logo-png-transparent.png",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_2013fff2ee3c42d5a115641e5c5a81e4_tilde_mv2.jpg",
+      "bytes": 1021007,
+      "sha256": "081d4608cc9f62a23fe141c8f63275b86c698d187d618ae6147d6d6a1a162dfc",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_2013fff2ee3c42d5a115641e5c5a81e4~mv2.jpg",
+      "label": "Cassius M. Carter.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_24fe645244944345a5dc782d0f5d2680_tilde_mv2.png",
+      "bytes": 149164,
+      "sha256": "51237b41e716fb87bc63185fae2b21c8366ca5473e6eecf37a572fa39b6b615c",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_24fe645244944345a5dc782d0f5d2680~mv2.png",
+      "label": "fbc_podcast_logo_edited.png",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_253b5a21fbcd44c0ba87606282d639b8_tilde_mv2.jpg",
+      "bytes": 6213509,
+      "sha256": "099eecff0aac624c9453b299ee97a954a03b805d5b5a4ffead83ce4565e4ac67",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_253b5a21fbcd44c0ba87606282d639b8~mv2.jpg",
+      "label": "2010s.JPG",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_30a02cce2e404f6b871a92ff7113ad45_tilde_mv2.jpg",
+      "bytes": 4182519,
+      "sha256": "77a326cc7feb2b0b3800e92d2d9bd2a6d7eecda4a5114de0ef5a80b4967cdabd",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_30a02cce2e404f6b871a92ff7113ad45~mv2.jpg",
+      "label": "Congregation.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_3114c8ac1732453291237483b2aad9ec_tilde_mv2.jpg",
+      "bytes": 69773,
+      "sha256": "e3325a992d2fffdb7e17b3a890dff195fb5bb64bf30722ca01f3a47feb246b79",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_3114c8ac1732453291237483b2aad9ec~mv2.jpg",
+      "label": "arch3.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_336f8453f032452da530655a493c3c9f_tilde_mv2.jpg",
+      "bytes": 2310411,
+      "sha256": "b92cec73d081f521d6c22f0b2c9ed7cd29b2c64d16bd3a23989d941ddfdffe1b",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_336f8453f032452da530655a493c3c9f~mv2.jpg",
+      "label": "Changing Station.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_360b7e1579244dbc95697ca78172c167_tilde_mv2.jpg",
+      "bytes": 10430680,
+      "sha256": "682947c55e09e57359816980a261ce89ab1204c5dd2a4e6b88795180ef702313",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_360b7e1579244dbc95697ca78172c167~mv2.jpg",
+      "label": "PraiseTeamA.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_37d562a315d04a83afc879ec7ee9a460_tilde_mv2.jpg",
+      "bytes": 14222108,
+      "sha256": "4613abc5d31956501bdfd7c03aacfeeb4aa48299a93acb3f0878c74925211074",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_37d562a315d04a83afc879ec7ee9a460~mv2.jpg",
+      "label": "001_DSC_0683.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_3e2afec0937f4b6c806a67100998a000_tilde_mv2.jpg",
+      "bytes": 7202888,
+      "sha256": "0afb9338bd01394c22ad387b0969279bb56372a493b77e3b6b7de70cc33dad72",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_3e2afec0937f4b6c806a67100998a000~mv2.jpg",
+      "label": "005A_bible_DSC_0804.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_4765aa0a82724570ad7e94e194f992c2_tilde_mv2.jpg",
+      "bytes": 740524,
+      "sha256": "99dd617da1740d682580e21f5e6e5b1cfa4d842f6fc8aa599bcf5cc6d0fb19bb",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_4765aa0a82724570ad7e94e194f992c2~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+      "bytes": 7196,
+      "sha256": "7528d4dc0c7eeadc32bad69983fa2128d90c1d39af073c551f4c8d8520fc01ee",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+      "label": "og:image",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_48ba80a7454a4d42a300e61c2603a301_tilde_mv2.jpg",
+      "bytes": 1731480,
+      "sha256": "bd684990ced6a4e5eaa692accc4e438f4f0660052fb2f5872d72ba6b600b03db",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_48ba80a7454a4d42a300e61c2603a301~mv2.jpg",
+      "label": "012_puzzleIMG_9440.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_496101713a394635b5bb1c3f0cd91db4_tilde_mv2.jpg",
+      "bytes": 8864863,
+      "sha256": "94699ef25e158439babe8b6b6b31f0ddb916d188c3f48d2652a9d031e410ebea",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_496101713a394635b5bb1c3f0cd91db4~mv2.jpg",
+      "label": "Kendall Ellis",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_4d5376a99e1e4e63b8f8c2a7f471891f_tilde_mv2.jpg",
+      "bytes": 9746471,
+      "sha256": "b2e6e5f4bdb309a30309ec80ea5960e56f48ab142aa576c2879ebaa424bad171",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_4d5376a99e1e4e63b8f8c2a7f471891f~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_4d5376a99e1e4e63b8f8c2a7f471891f~mv2.jpg",
+      "bytes": 9746471,
+      "sha256": "b2e6e5f4bdb309a30309ec80ea5960e56f48ab142aa576c2879ebaa424bad171",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_4d5376a99e1e4e63b8f8c2a7f471891f~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-the-church-is-the-body-of-christ"
+    },
+    {
+      "path": "images/08181c_51599a87bcd74bbcb934352c94b6694b_tilde_mv2.jpg",
+      "bytes": 1517844,
+      "sha256": "ce75de363f840a54a264d138503d2612789ea402905161f0467440f6ed391c19",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_51599a87bcd74bbcb934352c94b6694b~mv2.jpg",
+      "label": "First Building 1862.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_53375198f53f46c89659211385ba4bbd_tilde_mv2.png",
+      "bytes": 4904,
+      "sha256": "f72611e2df8e88204009fd896d05d5e8e83c77009c63943bbffa169559934849",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_53375198f53f46c89659211385ba4bbd~mv2.png",
+      "label": "google-play-badge.png",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_5719fcbdf34948458c96b97cfc8f27f9_tilde_mv2.jpg",
+      "bytes": 820985,
+      "sha256": "26fa1fd02e1cec3fa98e1338b5e3920b7eb5779cc6947e8152ac3c914ffced6f",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_5719fcbdf34948458c96b97cfc8f27f9~mv2.jpg",
+      "label": "ABC-Historic-Logo.bw_.2.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_59662d549c1740c09d1e0ab31e2183f5_tilde_mv2.jpg",
+      "bytes": 238995,
+      "sha256": "0351a7539d501e3e88017f53884f525095db4720b420389386490e0895dd0f9e",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_59662d549c1740c09d1e0ab31e2183f5~mv2.jpg",
+      "label": "334112503_925509371907627_1013891692457554894_n.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_5990e1bfb2df439a9a678cd46159bf52_tilde_mv2.jpg",
+      "bytes": 10364331,
+      "sha256": "6906f609cec232ee03ecd8a52a267fa94a8082b9c4aad139e164d6d0ebdb1ce5",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_5990e1bfb2df439a9a678cd46159bf52~mv2.jpg",
+      "label": "Julie_DSC_0606.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_5a4270727fb647c89dd5f59532a1601a_tilde_mv2.jpg",
+      "bytes": 5009489,
+      "sha256": "d192ba60e17f7e2f0290ffc149417dee94d97e98810d966d4ecacbf4612eff75",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_5a4270727fb647c89dd5f59532a1601a~mv2.jpg",
+      "label": "youth center.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_5ac16c8ca21c4edc86071a0cf49bd857_tilde_mv2.jpg",
+      "bytes": 1177778,
+      "sha256": "6b1eb0594c1ed6ebf3befd7e52b446173f5bef79bfee40a3116ef8c9b4802cf4",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_5ac16c8ca21c4edc86071a0cf49bd857~mv2.jpg",
+      "label": "Debt is Paid 1913.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_5d24ca0140994eb3957782aec035415f_tilde_mv2.jpg",
+      "bytes": 5349635,
+      "sha256": "7bc5c9f221bb1e1af3d683ecfdeb155885671f3ba66684dd3f14431323b43518",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_5d24ca0140994eb3957782aec035415f~mv2.jpg",
+      "label": "Listening Device.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_60b24878ae9740c8b37634e80b3c70ef~mv2.jpg",
+      "bytes": 222679,
+      "sha256": "8e78e5e914ddac5e06591138dfcc0cb7e5e9549464f07b28a152b6631ea9431c",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_60b24878ae9740c8b37634e80b3c70ef~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-the-church-is-the-body-of-christ"
+    },
+    {
+      "path": "images/08181c_633ffb6bfcba46a68fedafb38cc0f027_tilde_mv2.jpg",
+      "bytes": 8751875,
+      "sha256": "59f2853a70b37330adcbd670a9843c991dfea333785c3b77f530046b34fffbaf",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_633ffb6bfcba46a68fedafb38cc0f027~mv2.jpg",
+      "label": "002-Sanctuary.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_6341de0f55564140b0ae57eb696c453f_tilde_mv2.png",
+      "bytes": 120159,
+      "sha256": "022c45be732cf302acdcdbed6d688f69e3ae592a62f19eb6980227c6cd3cb346",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_6341de0f55564140b0ae57eb696c453f~mv2.png",
+      "label": "fbc_podcast_logo_edited_edited.png",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_66894fbd27d04769b9ead311d3967d8c_tilde_mv2.png",
+      "bytes": 19058,
+      "sha256": "4dd05b087c87ed521161c510831001b19e2380a5f1e737abfb17ac7d3cea1641",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_66894fbd27d04769b9ead311d3967d8c~mv2.png",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_6714073c050b4ac28ea695fd3288b4aa_tilde_mv2.jpg",
+      "bytes": 6703424,
+      "sha256": "ef87f1f7fc04a4fed0b03f7bdb9584fedca17dce7755dac2d9611257c3383a9b",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_6714073c050b4ac28ea695fd3288b4aa~mv2.jpg",
+      "label": "Wheelchair accessible entrance.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_712bd91d3c274528ab89f065886b5eeb_tilde_mv2.jpg",
+      "bytes": 3575798,
+      "sha256": "0fe99950c99895c910de6fbf1ed6af80c26fd22367700792084587725c614c44",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_712bd91d3c274528ab89f065886b5eeb~mv2.jpg",
+      "label": "012_Vbs_IMG_20220627_192033643.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_759e0f9912c24d6f90ada4a47a4d8535_tilde_mv2.jpg",
+      "bytes": 5229239,
+      "sha256": "db6b38b91cd6ea8031e54b0ce283d8f8fdf5e2de7e3254ab8ee529e74f662734",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_759e0f9912c24d6f90ada4a47a4d8535~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_7c6725ab4c834861a3d717a3f278f636_tilde_mv2.png",
+      "bytes": 112513,
+      "sha256": "555a56df05074ac70f05fdeea91176f57f411162f44acb7a28cd50d4508349a2",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_7c6725ab4c834861a3d717a3f278f636~mv2.png",
+      "label": "fbc_podcast_logo_edited_edited_edited.png",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_7d804c4f4e164f0eba97d0fb7d23fbd8_tilde_mv2.jpg",
+      "bytes": 7158962,
+      "sha256": "13fac2f51a2052962178b21cda88888cb2e9ee568a5f6b931e541ca8acb01796",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_7d804c4f4e164f0eba97d0fb7d23fbd8~mv2.jpg",
+      "label": "HannaNathanWed1184 copy.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_851d0b0b47db43b4a79dce2c3a219f2d_tilde_mv2.jpg",
+      "bytes": 9717675,
+      "sha256": "cdfd8f5e3979b089c5e955c5dbbc801df58f9f5674abf01eaf6cf7681b493dd2",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_851d0b0b47db43b4a79dce2c3a219f2d~mv2.jpg",
+      "label": "DSC_0060.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_853ff1b18bca44a3aa5d9c7a39389d96_tilde_mv2.jpg",
+      "bytes": 7405970,
+      "sha256": "ede38c28594505b2a2b7800fe2399802c5f2e26624a629856d2613e50608f36a",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_853ff1b18bca44a3aa5d9c7a39389d96~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_85e57ed38e8542679c46cebf54d15e36_tilde_mv2.jpg",
+      "bytes": 11264459,
+      "sha256": "5f72cf834acdc5b93f36705150440f108b199db6b1baa678ebc37528315668b1",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_85e57ed38e8542679c46cebf54d15e36~mv2.jpg",
+      "label": "Jonathan Balmer",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_8656f37b410845e39ee4e723cf094a32_tilde_mv2.jpg",
+      "bytes": 420901,
+      "sha256": "5a0bae1bcf9601df325e649fd9712343efcdd2c86d94b1d9b6966cdc146806a4",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_8656f37b410845e39ee4e723cf094a32~mv2.jpg",
+      "label": "1990s.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_88fa93aff6f14b358d1ee43721b7e189_tilde_mv2.jpg",
+      "bytes": 12011261,
+      "sha256": "0a6d53cc5fadf7c577c2888e49bee7b0b4b7a0475a883ecca7a912a3895e78c8",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_88fa93aff6f14b358d1ee43721b7e189~mv2.jpg",
+      "label": "HandBells1.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_8a3de1c55df544a49b041c05bdade510_tilde_mv2.jpg",
+      "bytes": 8146197,
+      "sha256": "14d08a2862de899882a11150773b5cda5ec24f6004ea77c1bbfd9531be92c10d",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_8a3de1c55df544a49b041c05bdade510~mv2.jpg",
+      "label": "ZCommunion(1).jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_8b3a93125f314c31abd6dd3e4b10a57f_tilde_mv2.jpg",
+      "bytes": 6877712,
+      "sha256": "5c72c63d837b8730be336dec8928e5d7a90edc967e816bf0169b4750c7d4d1e5",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_8b3a93125f314c31abd6dd3e4b10a57f~mv2.jpg",
+      "label": "adams circular drive.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_92d54e00258342659633af3add05c364_tilde_mv2.jpg",
+      "bytes": 6831848,
+      "sha256": "10e3c493c87b028edad68b79bb6e7bd7453cd5e2dba242a44168329b7d8012f3",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_92d54e00258342659633af3add05c364~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_9663d13b5b4c47588862cfc8068ec5e4_tilde_mv2.jpg",
+      "bytes": 2760561,
+      "sha256": "c0b72d03ba7633564d365444093765f4780c0f227019a6ede899354e7073b76c",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_9663d13b5b4c47588862cfc8068ec5e4~mv2.jpg",
+      "label": "DSC_0361 Gabrielle-2.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_980bb1003ef94f809e5bb5d71bfd73a6_tilde_mv2.jpg",
+      "bytes": 1466292,
+      "sha256": "641ef54411a540cd0e9f7b06f985656572271fe82a2f3433a3926a7507d584b7",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_980bb1003ef94f809e5bb5d71bfd73a6~mv2.jpg",
+      "label": "1950s.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_9a2e10a5752e4aea861c7b31482850a2_tilde_mv2.jpg",
+      "bytes": 112832,
+      "sha256": "654d4e1af11813b6515482b2d259a79f5a9559b721fd69189d3b12455af8e374",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_9a2e10a5752e4aea861c7b31482850a2~mv2.jpg",
+      "label": "archit.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_a2717a81ad3e430f968c0e7cea71152a_tilde_mv2.jpg",
+      "bytes": 1810327,
+      "sha256": "a1203dcfaff2827488983cd5585184d231d3d0328f2028d91ed17811011800f9",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_a2717a81ad3e430f968c0e7cea71152a~mv2.jpg",
+      "label": "2000s.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_a4ed0e977b1a4b76965635f7287ce55e_tilde_mv2.jpg",
+      "bytes": 256071,
+      "sha256": "e2c010a9ad572ac935e3ae2f006c12c1d86e3b7a2e738051a09a7f45721802bc",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_a4ed0e977b1a4b76965635f7287ce55e~mv2.jpg",
+      "label": "sanctuary.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_a81993cf53604a57a9bd455ab62013c7_tilde_mv2.jpeg",
+      "bytes": 210487,
+      "sha256": "91f5024cf17c509b3407fb02ece50f8f454ce69385b57af42c1750ca0fd83783",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_a81993cf53604a57a9bd455ab62013c7~mv2.jpeg",
+      "label": "013_fall party18989.jpeg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_a8a6c7097769466788687b51bfd61f4b_tilde_mv2.jpg",
+      "bytes": 1004596,
+      "sha256": "4d2d0d01552132ea4fa4b54b04ac19a8695a62a488cf4f871df77206318186ca",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_a8a6c7097769466788687b51bfd61f4b~mv2.jpg",
+      "label": "2000s (2).jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_a8b6f48571d9460284a33c95968cb92e_tilde_mv2.jpeg",
+      "bytes": 134672,
+      "sha256": "4b94adf606d0773eda48cfb607bf6987b832e30dad4af326d99b0ebd19218731",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_a8b6f48571d9460284a33c95968cb92e~mv2.jpeg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_ac4bdf55910a4bf08971622eadbe31f6_tilde_mv2.jpg",
+      "bytes": 19313514,
+      "sha256": "27612beab48f439c444631a25745fa392e017c81bb4a0c79711b171020c7a0eb",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_ac4bdf55910a4bf08971622eadbe31f6~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_ade1eba285174c41b831cd0c86705665_tilde_mv2.jpg",
+      "bytes": 5831662,
+      "sha256": "4033e1815b0667ee4a2d677dfd008c7a9eb3bac9af31c98e9eb3f6da14b4d8ba",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_ade1eba285174c41b831cd0c86705665~mv2.jpg",
+      "label": "alpha and omega stained glass.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_adf6e61623244a4f9813865beb809edd_tilde_mv2.jpg",
+      "bytes": 219181,
+      "sha256": "7997efe1688b38a8f27286cc30b0f7e5a21bc7dad7edcd37f7a11a200557faef",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_adf6e61623244a4f9813865beb809edd~mv2.jpg",
+      "label": "wade allen HIGHER RES.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_ae634c5828aa4df499d03f5ae09104d7_tilde_mv2.jpg",
+      "bytes": 3980076,
+      "sha256": "1668285aba42425f851dd49e0714282526bfcdd9259cee27abbde4ab09244e8b",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_ae634c5828aa4df499d03f5ae09104d7~mv2.jpg",
+      "label": "VBS Singing.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_af52fc4d3aa54018960967999e30e617_tilde_mv2.jpg",
+      "bytes": 2311903,
+      "sha256": "e5d41ebfb80603845060ed31ab4b66642b4757cdae39cec1051683bf763e66c3",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_af52fc4d3aa54018960967999e30e617~mv2.jpg",
+      "label": "Mailbox Motorized Door Button.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_b0ea7034fb294342847320368a763de5_tilde_mv2.jpg",
+      "bytes": 12119743,
+      "sha256": "c9a8641304a8991ce86a6949a70ad3fd610aa5a98b24dc1a6bcb694109ce5be3",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_b0ea7034fb294342847320368a763de5~mv2.jpg",
+      "label": "Fellowship Hall.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_b178e014f570469ba249e1dd6f8c4122_tilde_mv2.jpg",
+      "bytes": 7567269,
+      "sha256": "0f4a1521b83f3a1a7d2b2ec23c401e54368a67649b0fa37c43e8ca53094ac51b",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_b178e014f570469ba249e1dd6f8c4122~mv2.jpg",
+      "label": "DSC_0232.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_b2711ed0a2e14cb3b639aa33cdea8f86_tilde_mv2.jpg",
+      "bytes": 11733751,
+      "sha256": "5edc92d9db6dfb906c9d194ea0e12ab9be75b99ac069d7ed2e1ae2ebd53425c9",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_b2711ed0a2e14cb3b639aa33cdea8f86~mv2.jpg",
+      "label": "013A_Loraine_DSC_0592.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_b28793cc782d419988d19bc0af9eb4ff_tilde_mv2.jpg",
+      "bytes": 214407,
+      "sha256": "9a8861b220a94a04cdd91ff391c937c075f63c1541ee84a1b630f648681b19ac",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_b28793cc782d419988d19bc0af9eb4ff~mv2.jpg",
+      "label": "jonathan-balmer HIGHER RES.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_b2e7d164951e46ee95054de78c73071c_tilde_mv2.jpg",
+      "bytes": 484918,
+      "sha256": "af4d8c02e7424eb5d6d9b23d66a0aabaf3fe4bd504e9a643b7542d03afb49947",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_b2e7d164951e46ee95054de78c73071c~mv2.jpg",
+      "label": "Slopes Perfect North.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_b6ac1999bb064682bef3f470cf324751_tilde_mv2.jpg",
+      "bytes": 11474795,
+      "sha256": "13958cc8afa5297ad1944b67034055e937a8e83b321673028daf7f92d95c1df4",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_b6ac1999bb064682bef3f470cf324751~mv2.jpg",
+      "label": "013A_Loraine_DSC_0592.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_bad64852343d4a44b54059234fb0a947_tilde_mv2.jpg",
+      "bytes": 551635,
+      "sha256": "542d45204850f0a0c26c7050ab3f090af96b6ad434fea46879c10b27775e4d25",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_bad64852343d4a44b54059234fb0a947~mv2.jpg",
+      "label": "Important Documents",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_bad64852343d4a44b54059234fb0a947~mv2.jpg",
+      "bytes": 551635,
+      "sha256": "542d45204850f0a0c26c7050ab3f090af96b6ad434fea46879c10b27775e4d25",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_bad64852343d4a44b54059234fb0a947~mv2.jpg",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/important-documents"
+    },
+    {
+      "path": "images/08181c_bd26ffeb7cc14d029caf2663a0452bf3_tilde_mv2.jpg",
+      "bytes": 11893534,
+      "sha256": "39c3998f1d519c46570738a4c89ac164a9a0cd106c051aca8982e07221329722",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_bd26ffeb7cc14d029caf2663a0452bf3~mv2.jpg",
+      "label": "004_interns_DSC_0131.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_bd84e59bfef54197913ce668c2d84726_tilde_mv2.jpg",
+      "bytes": 87825,
+      "sha256": "9a47a4b2ebec241c2b71d41688196e754296b743487ff24cc40f8b5b2c7b9c0b",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_bd84e59bfef54197913ce668c2d84726~mv2.jpg",
+      "label": "Outreach.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_be2602489e0d4b63929aa41445a72ff6_tilde_mv2.jpg",
+      "bytes": 8285489,
+      "sha256": "4b6e79d4a0cac33c05f068e174cb8a327709aef2a5092d10ff6458be50e64e6e",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_be2602489e0d4b63929aa41445a72ff6~mv2.jpg",
+      "label": "Exterior of building 2.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_c2bb509034894c6ea2c5d6cde38eee77_tilde_mv2.jpg",
+      "bytes": 1541485,
+      "sha256": "406fab7232e7c828b6bbd173449b2bf379d6d28f1e5071a3a344a1f7c75162bf",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_c2bb509034894c6ea2c5d6cde38eee77~mv2.jpg",
+      "label": "Second Church 1890.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_c4e55503f8aa47bf8347723c1482d812_tilde_mv2.jpg",
+      "bytes": 2665143,
+      "sha256": "8444cf29f315cf5ab3dc499abb1357dec49ae70eae4d0eabdf09f47aada5decb",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_c4e55503f8aa47bf8347723c1482d812~mv2.jpg",
+      "label": "Dan Mattox.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_cb74be6da795403791604886a27141a3_tilde_mv2.jpg",
+      "bytes": 10750535,
+      "sha256": "713c825c64f095cdd9bd74dd2a76639932daa2401a9944940b0077965551980d",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_cb74be6da795403791604886a27141a3~mv2.jpg",
+      "label": "DSC_0465.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_d0d77494846b470181e3f78de4af289d_tilde_mv2.jpg",
+      "bytes": 9986,
+      "sha256": "6826b57a452bf8547493313436956308aa7c60d3f8e6cca487611b1babf88503",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_d0d77494846b470181e3f78de4af289d~mv2.jpg",
+      "label": "2022-Present.jfif",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_d295dfa7f3f042959b35e60e01abaf11_tilde_mv2.png",
+      "bytes": 19395,
+      "sha256": "bc491a7db9b7acd3d194e051c933feaad7ff3520611ab8b386176aad0a92db6b",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_d295dfa7f3f042959b35e60e01abaf11~mv2.png",
+      "label": "americanbaptistskentucky.png",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_d3895914beb9430abd4699efa520970f_tilde_mv2.jpg",
+      "bytes": 868800,
+      "sha256": "c095509bcb8e3080cda71182ee54c76e8cb7a3f13cab74a0846228b8c5f3e9df",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_d3895914beb9430abd4699efa520970f~mv2.jpg",
+      "label": "Beginnings 1859.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_d882428b314542fb92ec0437134eb6ac_tilde_mv2.jpg",
+      "bytes": 19313514,
+      "sha256": "27612beab48f439c444631a25745fa392e017c81bb4a0c79711b171020c7a0eb",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_d882428b314542fb92ec0437134eb6ac~mv2.jpg",
+      "label": "001A_DSC_0084 copy.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_e622e239e8bf4399806aedd92cbf1d70_tilde_mv2.jpg",
+      "bytes": 19313514,
+      "sha256": "27612beab48f439c444631a25745fa392e017c81bb4a0c79711b171020c7a0eb",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_e622e239e8bf4399806aedd92cbf1d70~mv2.jpg",
+      "label": "Sanctuary.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_e940a3d613a2417c91b007d3fed911b6_tilde_mv2.jpg",
+      "bytes": 9576058,
+      "sha256": "7b2d8a713ba02d5a857435e77732336e0eee65947e88b1022d6229f2bbece87d",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_e940a3d613a2417c91b007d3fed911b6~mv2.jpg",
+      "label": "Wedding Coordinator Ella Mae Lemen.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_ea565de6ebd54eb492cc0160af1b3853_tilde_mv2.jpg",
+      "bytes": 9201460,
+      "sha256": "dd72bd4f573a0249021a09484d2aa2235d62d37cc06890f1584568c04c01cdb3",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_ea565de6ebd54eb492cc0160af1b3853~mv2.jpg",
+      "label": "014_womansbreakfast_DSC_0256.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_ed1c39cb6e50457b81df74f62f0fa843_tilde_mv2.jpg",
+      "bytes": 5175420,
+      "sha256": "15844f1229163c586cbea5f97a198647ad7e5d7876c10ff6f4f46db04c98cfaf",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_ed1c39cb6e50457b81df74f62f0fa843~mv2.jpg",
+      "label": "kitchen.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_ed7ae39367d7491696f8780379b06595_tilde_mv2.png",
+      "bytes": 123270,
+      "sha256": "d96ae791bbbdb0c61f994f75320a58ca81e0dc3d5e10ac2ddc5d3f3f3b1026a6",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_ed7ae39367d7491696f8780379b06595~mv2.png",
+      "label": "fbc_podcast_logo.png",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_edf48e7402e7487598cdeaafd16d5fa9_tilde_mv2.jpg",
+      "bytes": 340944,
+      "sha256": "029c9b7b02549a1cc72c9dae5ffb6727b376a1373bd1024bbb44efdaa44c3baf",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_edf48e7402e7487598cdeaafd16d5fa9~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_efdc41f361ba4c548a0e521d0bdf2aa6_tilde_mv2.jpg",
+      "bytes": 659832,
+      "sha256": "d0b6a3f01ed01f235e623bb065b42c7a425d972571e3f104f645832087e5f799",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_efdc41f361ba4c548a0e521d0bdf2aa6~mv2.jpg",
+      "label": "Life Group Julie Davis photo.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_f0bbfdccafa34e00b7f42470a9353cff_tilde_mv2.jpg",
+      "bytes": 6309976,
+      "sha256": "bcd68747867278cdffadfa2cf9fda234a024df9c9de9535746f718424ee8fd3c",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_f0bbfdccafa34e00b7f42470a9353cff~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_f0c685ba2a9a4230a89046a68ea6cbe6_tilde_mv2.jpg",
+      "bytes": 641164,
+      "sha256": "e45e15d97abb01e676f259a13383e7b05114a134f167acaebe5ee158dbda7a97",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_f0c685ba2a9a4230a89046a68ea6cbe6~mv2.jpg",
+      "label": "Fighting Parson.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_f475a65492c942ae8d35135e75128328_tilde_mv2.jpg",
+      "bytes": 1436824,
+      "sha256": "e3a2105fae34fe102eec8f70b0e314a766c49363171fa74b5bc76d63f67b3442",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_f475a65492c942ae8d35135e75128328~mv2.jpg",
+      "label": "The Church is Sold.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_f5992b74151f4993b9be083f52c3f675_tilde_mv2.jpg",
+      "bytes": 136646,
+      "sha256": "4e4e34ffbbe35aae3525a19c4eb8f299c2e1bff8c4c1edc3d9a7fc771e1e9a86",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_f5992b74151f4993b9be083f52c3f675~mv2.jpg",
+      "label": "Youth Fall Party (note bottom weird).jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_f60ba39d5298474da0355c41f039aa36_tilde_mv2.jpg",
+      "bytes": 1079524,
+      "sha256": "e8ce7e9d229489dfb1cfd57054ee0f9f1f34bfbd62c93bd389a2b2fea2eb881b",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_f60ba39d5298474da0355c41f039aa36~mv2.jpg",
+      "label": "State Convention.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_f83b21b96b31446d90314b2c0782c706_tilde_mv2.jpg",
+      "bytes": 5001675,
+      "sha256": "150fc6494b883440b5ef850ef369a633b2855937c67546fcb357b9d737ddc82b",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_f83b21b96b31446d90314b2c0782c706~mv2.jpg",
+      "label": "Accessible Restroom.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_f9a6eaf8176d4d69ab3ab685165a7952_tilde_mv2.jpg",
+      "bytes": 8113,
+      "sha256": "717fd4f53991d5d7bddc9d717ffd2eee855541febba620ff8db3b0dd2a73c94c",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_f9a6eaf8176d4d69ab3ab685165a7952~mv2.jpg",
+      "label": "2022-Present 2.jfif",
+      "foundOn": null
+    },
+    {
+      "path": "images/08181c_ff83101f12a94fe48c8618e84825faaa_tilde_mv2.jpg",
+      "bytes": 13486119,
+      "sha256": "c5af803634b71089e5c34d94921be482b65079db77df90f1de747f595d029ded",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_ff83101f12a94fe48c8618e84825faaa~mv2.jpg",
+      "label": "JonathanAndKendall.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/0fdef751204647a3bbd7eaa2827ed4f9.png",
+      "bytes": 833,
+      "sha256": "e8141d92078bba8a5d432c009a829c7acf6cc959869d4a81a4d949704d2ac0f4",
+      "sourceUrl": "https://static.wixstatic.com/media/0fdef751204647a3bbd7eaa2827ed4f9.png",
+      "label": "Facebook",
+      "foundOn": null
+    },
+    {
+      "path": "images/11062b_af696d782cfb46acb33b26b8f4feee34~mv2.jpg",
+      "bytes": 2855759,
+      "sha256": "d918d7f41fdbbb6f253e7c96f402644ddc6fdfbaa833230922d01008d9d379a9",
+      "sourceUrl": "https://static.wixstatic.com/media/11062b_af696d782cfb46acb33b26b8f4feee34~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/joy-in-the-god-of-peace"
+    },
+    {
+      "path": "images/11062b_e6c08a9eb8fb4bc28210a4ff39466df3~mv2.jpeg",
+      "bytes": 6473960,
+      "sha256": "814acf4f0989a36157873182cc8aefe6853da642ada5956ad9daccf6569c020d",
+      "sourceUrl": "https://static.wixstatic.com/media/11062b_e6c08a9eb8fb4bc28210a4ff39466df3~mv2.jpeg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/hearing-the-word"
+    },
+    {
+      "path": "images/51b820_1e3c844362d8413b88b032f81ff698b2~mv2.png",
+      "bytes": 362081,
+      "sha256": "705f0f16da4092b125e2e12076842154554f928e1ace9fb76a465c927ed0f12d",
+      "sourceUrl": "https://static.wixstatic.com/media/51b820_1e3c844362d8413b88b032f81ff698b2~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/sing-hosanna"
+    },
+    {
+      "path": "images/51b820_5aa2572137084e6eab3173a186a1412d~mv2.png",
+      "bytes": 3110698,
+      "sha256": "7b93b439fea47653c7521f115659d96c9a74f8d80b3440ad1c881c643aff7978",
+      "sourceUrl": "https://static.wixstatic.com/media/51b820_5aa2572137084e6eab3173a186a1412d~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/holy-week-2023-schedule"
+    },
+    {
+      "path": "images/51b820_72412cbf08074cf5ae4795371fb24a83~mv2.png",
+      "bytes": 1957675,
+      "sha256": "c5c86ec946188436f2372f5c962dfa3d0b1a234cfba9912a8b60fed9e2202b97",
+      "sourceUrl": "https://static.wixstatic.com/media/51b820_72412cbf08074cf5ae4795371fb24a83~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/holy-week-2023-schedule"
+    },
+    {
+      "path": "images/51b820_81c8b58a361d4405ad3f3f52dbe3f0b4~mv2.jpg",
+      "bytes": 407981,
+      "sha256": "cb108701803fd910934d782b85ce1d8c4e96f79941816cea1e0b31bcbfb39804",
+      "sourceUrl": "https://static.wixstatic.com/media/51b820_81c8b58a361d4405ad3f3f52dbe3f0b4~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/old-age-strangers"
+    },
+    {
+      "path": "images/51b820_830c12fff111444aabe7a3e52ef71313~mv2.png",
+      "bytes": 3205588,
+      "sha256": "141e1d7bcdd1ce3ab133b3f84af7884e7c167fe684909234869cb5f87d4f105d",
+      "sourceUrl": "https://static.wixstatic.com/media/51b820_830c12fff111444aabe7a3e52ef71313~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/holy-week-2023-schedule"
+    },
+    {
+      "path": "images/51b820_833e8bfc56b848e38421dbada0d7cdbb~mv2.png",
+      "bytes": 139419,
+      "sha256": "5af17659a88594d13181a6b97366a11e119f1d6ffdbe501637912b3e4fd9c2c5",
+      "sourceUrl": "https://static.wixstatic.com/media/51b820_833e8bfc56b848e38421dbada0d7cdbb~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/holy-week-2023-schedule"
+    },
+    {
+      "path": "images/51b820_d980eb869f4048fb8a1d906718566eb1~mv2.png",
+      "bytes": 2141865,
+      "sha256": "fb520ecfc81b9888b38251d72c1e12f97c18b7b4ae6fc440bdeeb9bc363d6771",
+      "sourceUrl": "https://static.wixstatic.com/media/51b820_d980eb869f4048fb8a1d906718566eb1~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-the-beginning-is-near"
+    },
+    {
+      "path": "images/51b820_e57893db18c64f26a49896ab70f298aa~mv2.jpg",
+      "bytes": 99982,
+      "sha256": "99a4faf6f7c8a4e336d7b063effbf39954841d4b9b585ff2f290ebed00a3ab88",
+      "sourceUrl": "https://static.wixstatic.com/media/51b820_e57893db18c64f26a49896ab70f298aa~mv2.jpg",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/sing-to-our-redeemer"
+    },
+    {
+      "path": "images/5a286c314dea4e8cb59fa14007a64b1a.jpg",
+      "bytes": 932408,
+      "sha256": "a5fae844d37be7cd2e6a88dccda734b9b2105794b191cd4b6d3cb4a45e1fbaf3",
+      "sourceUrl": "https://static.wixstatic.com/media/5a286c314dea4e8cb59fa14007a64b1a.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/a-church-for-a-lonely-world"
+    },
+    {
+      "path": "images/81f7ac_022628bf9b89409581a9e3e09ad939cd_tilde_mv2.jpg",
+      "bytes": 9239509,
+      "sha256": "d4ee7ff4005c18a18f1f4c6734a0272c5dfa016028e3647960fcc55a7a2489a3",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_022628bf9b89409581a9e3e09ad939cd~mv2.jpg",
+      "label": "Molly Flodder",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_04574767cfe94cb7b65096ad9c94bb1e~mv2.png",
+      "bytes": 1279147,
+      "sha256": "15f19c21e7b60cba3a3d0539649dcea37ff2f285c45aca978965c7d40ab2fed1",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_04574767cfe94cb7b65096ad9c94bb1e~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/there-s-no-sin-in-single"
+    },
+    {
+      "path": "images/81f7ac_054aa5273f664a66898880865a63a107~mv2.png",
+      "bytes": 990564,
+      "sha256": "80ca4587a34f63ed99a175bc3215064258bddf3f741d743b7a38dfae8182bf18",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_054aa5273f664a66898880865a63a107~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/proclaiming-one-greater"
+    },
+    {
+      "path": "images/81f7ac_071a09a276eb49fd96fe2bd390b61ab1~mv2.jpg",
+      "bytes": 1293924,
+      "sha256": "ae8fc379a831c6818ee9f7079d7f0410a19774dd5dbb8ad9dfc4ffd74abd8b27",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_071a09a276eb49fd96fe2bd390b61ab1~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/will-god-take-away-his-promise"
+    },
+    {
+      "path": "images/81f7ac_07435efc381e4428ad6d2d0a664aca6a~mv2.png",
+      "bytes": 1197203,
+      "sha256": "fefccef6428a4f0401790d423494f460d2240d5301a684052c51a86cd4a84e3c",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_07435efc381e4428ad6d2d0a664aca6a~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/peacemakers"
+    },
+    {
+      "path": "images/81f7ac_07f56a86b16f412ba80a8a9a381e409a~mv2.png",
+      "bytes": 1370895,
+      "sha256": "957235a462a35ee9df51e3aee3628e369d3c56cb9ff423da1b0e12f4f588516b",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_07f56a86b16f412ba80a8a9a381e409a~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-in-faith-repentance"
+    },
+    {
+      "path": "images/81f7ac_08258592955c4388a664e4c2b7686a20~mv2.png",
+      "bytes": 904602,
+      "sha256": "f31ded4ca6e94958d4712aec8efb7e5309f0081cd9efda8f0c4c0bd94b7f1478",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_08258592955c4388a664e4c2b7686a20~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/walking-together"
+    },
+    {
+      "path": "images/81f7ac_09032d2be2804010b09c564dc6e5ceba~mv2.jpg",
+      "bytes": 258794,
+      "sha256": "0912119ef3c2a55fd757d4923a9a187a4509b3ce8c6016a4317be63a944dd7ac",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_09032d2be2804010b09c564dc6e5ceba~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/god-will-not-leave"
+    },
+    {
+      "path": "images/81f7ac_0946f511ff5b41b8aad61ed4eec05627_tilde_mv2.png",
+      "bytes": 1109415,
+      "sha256": "43482e84ec7182e76e0abef065f3a245617092a5f17cf15586866362e9deef18",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0946f511ff5b41b8aad61ed4eec05627~mv2.png",
+      "label": "Mentoring, Discipleship & Women in Ministry",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_0946f511ff5b41b8aad61ed4eec05627~mv2.png",
+      "bytes": 1109415,
+      "sha256": "43482e84ec7182e76e0abef065f3a245617092a5f17cf15586866362e9deef18",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0946f511ff5b41b8aad61ed4eec05627~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/spiritual-fathers-spiritual-mothers"
+    },
+    {
+      "path": "images/81f7ac_0a05c515a84e4b059008314242d2c26f~mv2.jpg",
+      "bytes": 19558,
+      "sha256": "21089279498d0f7c3d8c86388702eb10520b65cbdf2a0f8a8377ba0be1e870fc",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0a05c515a84e4b059008314242d2c26f~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-god-in-prayer-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_0cce3bcaee42422a8dc4ccc89fe1d69b_tilde_mv2.jpg",
+      "bytes": 7423062,
+      "sha256": "8f40707a4d6476eccc47da4b865f1f735f5af252711c9e6f46b264bba82f9cc1",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0cce3bcaee42422a8dc4ccc89fe1d69b~mv2.jpg",
+      "label": "Ed Brzak",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_0d2d5720c7d046c88380d6912d259765_tilde_mv2.jpg",
+      "bytes": 1816186,
+      "sha256": "087d1408c23457d9185c35579432f14ac87bcf6000660eed36b7572d79c60720",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0d2d5720c7d046c88380d6912d259765~mv2.jpg",
+      "label": "Kendall and kids blessing of backpacks 2025.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_0e45be52fb384ced881d6e5c96ef5cae~mv2.jpeg",
+      "bytes": 46652,
+      "sha256": "8c8d9dc3dbfb58a1e5f06c03ad6c1110ff11c9c5a08d3ee06b00bb7a3d2e5011",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0e45be52fb384ced881d6e5c96ef5cae~mv2.jpeg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-god-in-prayer-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_0edb186c3fd34cfcaed0a952793895ce~mv2.png",
+      "bytes": 577988,
+      "sha256": "ffad2cc0d967ef5c2769e35fcda7253006c76417ac21ac9915d7bae54177fdd8",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0edb186c3fd34cfcaed0a952793895ce~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/global-servants-bonilla-giovanettis-bgs-to-visit-fbcm-sunday-april-28th"
+    },
+    {
+      "path": "images/81f7ac_0f15095668b14141a21bf739df36af94~mv2.png",
+      "bytes": 946313,
+      "sha256": "73db189b328fbb5f73439b3e3a3354f6062718f77881ee049d84c08c53d585c7",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0f15095668b14141a21bf739df36af94~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/pacing-our-steps"
+    },
+    {
+      "path": "images/81f7ac_0f57a015a2b74932847d812faf260833~mv2.png",
+      "bytes": 773037,
+      "sha256": "b450e02e2217f21480231d35f5bc88eabb42ea1a40d5f1ade7ada65d9e90f324",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0f57a015a2b74932847d812faf260833~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/proclaim-the-way-discipleship-goal-2025-2026"
+    },
+    {
+      "path": "images/81f7ac_11ac2a76a5ad4ffbaaa4670c60d07fd9_tilde_mv2.jpg",
+      "bytes": 6034568,
+      "sha256": "6c63b2ae8a50938ecd84f402d8be812fc9adc624c7e00ef1f3d26fec6c694a43",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_11ac2a76a5ad4ffbaaa4670c60d07fd9~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_128d1222a1d14661987cc46e04a8fec6~mv2.jpg",
+      "bytes": 1359431,
+      "sha256": "ea80cbac4445826b65800a4acf3182456956bb951fd0be75301f6b0244fc8878",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_128d1222a1d14661987cc46e04a8fec6~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/walking-in-the-light-together"
+    },
+    {
+      "path": "images/81f7ac_146d98b08f564b8d9d3beff047ef2ab3~mv2.jpg",
+      "bytes": 47460,
+      "sha256": "540a7b3f4740ac23dc0d6fa929d4106c8d5838532478dc15d30eb602b2214df4",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_146d98b08f564b8d9d3beff047ef2ab3~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/spiritual-fathers-spiritual-mothers"
+    },
+    {
+      "path": "images/81f7ac_16c67bdb4fb64ee4932a0f60b91099bf_tilde_mv2.jpeg",
+      "bytes": 118748,
+      "sha256": "aeb2d61dc3d355886e1bf08a192de2637cad00b27ea931e8392b5f6f2bfd5b43",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_16c67bdb4fb64ee4932a0f60b91099bf~mv2.jpeg",
+      "label": "Jaden Johnson",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_18808313aa1d41a59682c0062b2a266d~mv2.png",
+      "bytes": 847950,
+      "sha256": "16dfd90794ce59a8b7600950dbbd40bb23d5ad2e9385fc594389d55176f42fd5",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_18808313aa1d41a59682c0062b2a266d~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/bearing-good-news"
+    },
+    {
+      "path": "images/81f7ac_1a01612c3d0e49c2b28ef0665922f854~mv2.png",
+      "bytes": 680791,
+      "sha256": "b55db7532f210f45b0f7697ac16819ec0e393dd5b65d2e43cefd6a8b1ad1c2f7",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_1a01612c3d0e49c2b28ef0665922f854~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/from-the-wilderness-with-love"
+    },
+    {
+      "path": "images/81f7ac_1b7a505fa8334e49b5cd4db99a7b13a2~mv2.png",
+      "bytes": 77511,
+      "sha256": "aa0adc901102eb23bece23aea228f325fdc80a8723d5fa63eff3aeac77913346",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_1b7a505fa8334e49b5cd4db99a7b13a2~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/elect-goodness"
+    },
+    {
+      "path": "images/81f7ac_1bc06b28c41f4315a61b239597dc532b~mv2.png",
+      "bytes": 3030983,
+      "sha256": "4fee086acc0fcab2efa5c1a51ac286189d3ca2964ccc858a3ee5e708f456e526",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_1bc06b28c41f4315a61b239597dc532b~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/christmas-new-years-2023"
+    },
+    {
+      "path": "images/81f7ac_1cb43f8f9bf54463988a28de2f3d3f17~mv2.png",
+      "bytes": 1276090,
+      "sha256": "bcf3c3fc1b54f08763ee9e308ea1e1c499127be149e4d8b8097672e88a122749",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_1cb43f8f9bf54463988a28de2f3d3f17~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/turning-headship-on-its-head"
+    },
+    {
+      "path": "images/81f7ac_1efc45ad5617495c9c10608e0e1ca80b~mv2.jpg",
+      "bytes": 68222,
+      "sha256": "cca60688c3217d19dbf18b8eb3448de3259aacc02dc217a1ececa688e9d44c72",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_1efc45ad5617495c9c10608e0e1ca80b~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-god-in-prayer-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_1f385af021084d109f30bf3f7e4f3c9a~mv2.png",
+      "bytes": 4050935,
+      "sha256": "e20700be48c1b665b87fd9165a7e3b2a2236b1167150b7a3944c6443cdaed868",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_1f385af021084d109f30bf3f7e4f3c9a~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/christmas-new-years-2023"
+    },
+    {
+      "path": "images/81f7ac_2146c425e0e04141b8286c64d61e872b~mv2.png",
+      "bytes": 1198664,
+      "sha256": "592b99d5952930da77dd6949b4f301fe1c9c792172234d688d48a8ee837e80c4",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2146c425e0e04141b8286c64d61e872b~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/the-hopeful"
+    },
+    {
+      "path": "images/81f7ac_28b1ec735e7a4e91bc60b2501565750c_tilde_mv2.jpg",
+      "bytes": 9041363,
+      "sha256": "cb82ff99dc4fbc86869f492e89d2be9e355342a405a12fdf5544e300fbb41bab",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_28b1ec735e7a4e91bc60b2501565750c~mv2.jpg",
+      "label": "Dana Davis",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_2b91e0aa188c4e6492740bb5ed7fcdfb~mv2.jpg",
+      "bytes": 44383,
+      "sha256": "bca9a97c4e0e1d4f6a69650b0bb7b4cd36d5580ce15b43a92a4d8c3605585500",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2b91e0aa188c4e6492740bb5ed7fcdfb~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/kingdom-family-vacation-anti-family-values-jesus-resources"
+    },
+    {
+      "path": "images/81f7ac_2c69c065726c493081194ac02be18514~mv2.png",
+      "bytes": 716496,
+      "sha256": "7676b81e5aef340b81fc2c791c935c8c1ddb890999515b3cd4b15822e8c6449e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2c69c065726c493081194ac02be18514~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/hearing-the-word-1"
+    },
+    {
+      "path": "images/81f7ac_2ca8ac4b6967488a97b1dd9902580f66_tilde_mv2.jpg",
+      "bytes": 1096225,
+      "sha256": "e4d76f4164c0c2f858b000de112638b8bc928a93994ee132d420c17b7a04f1f6",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2ca8ac4b6967488a97b1dd9902580f66~mv2.jpg",
+      "label": "Händel's Messiah Sing-In & Carols in Muncie - December 11th, 2026",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_2ca8ac4b6967488a97b1dd9902580f66~mv2.jpg",
+      "bytes": 1096225,
+      "sha256": "e4d76f4164c0c2f858b000de112638b8bc928a93994ee132d420c17b7a04f1f6",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2ca8ac4b6967488a97b1dd9902580f66~mv2.jpg",
+      "label": "Join us at First Baptist Church Muncie for Messiah Sing-In & Carols.",
+      "foundOn": "https://www.fbcmuncie.org/post/händel-s-messiah-sing-in-carols"
+    },
+    {
+      "path": "images/81f7ac_2e4aa3ffc18d4ccbb52c4569b979bd2a~mv2.jpg",
+      "bytes": 107755,
+      "sha256": "b17df483c7347d4f4ae9112409fb8b3a50945988f4958322779424df17e15d1e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2e4aa3ffc18d4ccbb52c4569b979bd2a~mv2.jpg",
+      "label": "A stunning picture of the moon in front of the Sun during the April 8th, 2024, total eclipse. Rays of light can be seen in a corona shape beaming from behind the moon which has blotted out the sun.",
+      "foundOn": "https://www.fbcmuncie.org/post/being-and-seeing-like-children-of-god"
+    },
+    {
+      "path": "images/81f7ac_2ead68b2ead04ecabaaf013c1fac1fcf~mv2.png",
+      "bytes": 934649,
+      "sha256": "8ef22a31a5563af58aab7a659672144ea48369d15fa97e505052fc94c6509385",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2ead68b2ead04ecabaaf013c1fac1fcf~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/the-road-not-taken"
+    },
+    {
+      "path": "images/81f7ac_2fee3ccd1a7546538199c6e282538013~mv2.png",
+      "bytes": 836353,
+      "sha256": "503dfa944694598434b297de55b147787c868d3d2b8b3948477a30a58a1b9b7b",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2fee3ccd1a7546538199c6e282538013~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/family-division"
+    },
+    {
+      "path": "images/81f7ac_36b72df7c8b34014bf49ae67251289f4~mv2.jpg",
+      "bytes": 332952,
+      "sha256": "f1504053999626e127c4a55352e75732660adf8130871a2d9b6f8efd14d548af",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_36b72df7c8b34014bf49ae67251289f4~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-sanctification-perseverance-of-the-saints"
+    },
+    {
+      "path": "images/81f7ac_399fffae4e3246c5bb1fae51e57bd33d~mv2.png",
+      "bytes": 1344830,
+      "sha256": "eff68bbe0e5e9077a53ef74e703a735b35f72ec2d5cd509c7c161738907532fa",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_399fffae4e3246c5bb1fae51e57bd33d~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/lent-easter-2025"
+    },
+    {
+      "path": "images/81f7ac_3c26c237e5d749189f9d29912a106f7a~mv2.png",
+      "bytes": 834349,
+      "sha256": "8ff3ea39056ebc1c4fd89bfec8712ad479f88bb8b826eb22e0419065b72fe903",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_3c26c237e5d749189f9d29912a106f7a~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/wrestling-with-god"
+    },
+    {
+      "path": "images/81f7ac_42e3d9d713cd4ce2ba5736e886d9d805_tilde_mv2.jpg",
+      "bytes": 3954943,
+      "sha256": "29ef60bb4594639b63fb6881b343bf7e53d25d95cde68d53b9c93910e472e8f1",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_42e3d9d713cd4ce2ba5736e886d9d805~mv2.jpg",
+      "label": "outreach 2.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_498d2832c9db463f9a11714e38c82e4c_tilde_mv2.png",
+      "bytes": 18810,
+      "sha256": "2e76e547db14a898a106b9a5fb400c39666f08d3eaca64b06317dcb338dd1750",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_498d2832c9db463f9a11714e38c82e4c~mv2.png",
+      "label": "churchtrac logo .png",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_49a2d30813e542a58cbfc8836f798ca2_tilde_mv2.jpg",
+      "bytes": 13943010,
+      "sha256": "242f18dfde115a9661edb333387620eca02c953106a8040162d1ade1987f7a44",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_49a2d30813e542a58cbfc8836f798ca2~mv2.jpg",
+      "label": "Cheryl.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_49f66a4a7f294e9ba3e767cbc83df48e_tilde_mv2.png",
+      "bytes": 947818,
+      "sha256": "105562a6d9426a15734e6069152758f1aca71a789a5dbb8016199101a75928e2",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_49f66a4a7f294e9ba3e767cbc83df48e~mv2.png",
+      "label": "Understanding Holy Scripture (\"We Believe\" Resources)",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_49f66a4a7f294e9ba3e767cbc83df48e~mv2.png",
+      "bytes": 947818,
+      "sha256": "105562a6d9426a15734e6069152758f1aca71a789a5dbb8016199101a75928e2",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_49f66a4a7f294e9ba3e767cbc83df48e~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-holy-scripture-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_4ad0249a905d4880806c3c9387e13c63~mv2.jpg",
+      "bytes": 154782,
+      "sha256": "e4ac40b7b18617d55056ad40528312af0439cb7f4e49f4cba162010a71e7b286",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_4ad0249a905d4880806c3c9387e13c63~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/messy-camp-2025"
+    },
+    {
+      "path": "images/81f7ac_4d70f8c6901349de9f25bae239d4fdf3~mv2.png",
+      "bytes": 404215,
+      "sha256": "19d3d6dc80d78d0c0fd6a4a799310ea4d1b9ee6c2abf71ec7c0e7ff8c71e600c",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_4d70f8c6901349de9f25bae239d4fdf3~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/ordination-service"
+    },
+    {
+      "path": "images/81f7ac_4db7aee0a0d242e5beaaafbb5ce31949~mv2.png",
+      "bytes": 1126234,
+      "sha256": "363bdd217e412c1b522ab3553c1929a4b1911de4cdda14740b7f2b4e0374fd9b",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_4db7aee0a0d242e5beaaafbb5ce31949~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/advent-christmas-2024"
+    },
+    {
+      "path": "images/81f7ac_4dfaba15047d43a696c7e8f53df065b8_tilde_mv2.jpg",
+      "bytes": 1062384,
+      "sha256": "644732212948fda5ae07c9a45c061a0ef0b15dd5b5ceef664de9841aee359340",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_4dfaba15047d43a696c7e8f53df065b8~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_4eacdeebd0e14d4bb96d370f2a32e897~mv2.jpg",
+      "bytes": 20124,
+      "sha256": "1f793bd840337aa3baa2ac2461aaade7312daabad7eb4d28ea783121d6045de3",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_4eacdeebd0e14d4bb96d370f2a32e897~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-god-in-prayer-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_5497f6eff6284e5098ff0991e6508472~mv2.png",
+      "bytes": 776542,
+      "sha256": "e7484608b05b0504e73c62ac9aabeadda0f4dbfbd17f056dc03b491af288203a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_5497f6eff6284e5098ff0991e6508472~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/make-known-witness-goal-2025-2026"
+    },
+    {
+      "path": "images/81f7ac_56418cff5f894de8b684ddd077be6eeb~mv2.png",
+      "bytes": 70437,
+      "sha256": "787c13ffc0d65c09d18cb5eab80c8b91d433dd2be4a87d2ef102ef1dd1082acc",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_56418cff5f894de8b684ddd077be6eeb~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-serve-a-sovereign-here"
+    },
+    {
+      "path": "images/81f7ac_5671e37a64f54b4fa87176da1695c479~mv2.png",
+      "bytes": 2266628,
+      "sha256": "075c207e0372e1931faf095b1afe3bdf71e6e8dea2beadf706d8b0f697b07218",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_5671e37a64f54b4fa87176da1695c479~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/christmas-new-years-2023"
+    },
+    {
+      "path": "images/81f7ac_57d8637cecb44e4f988e0a10e03b23f8~mv2.png",
+      "bytes": 1375659,
+      "sha256": "f6732b9c74c2534bfd90818c531e305f550032ae99d4f386c6dfc534f2906489",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_57d8637cecb44e4f988e0a10e03b23f8~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-in-freely-offered-good-news"
+    },
+    {
+      "path": "images/81f7ac_58c73836559d48398df0fe92f4004b4d~mv2.png",
+      "bytes": 1329948,
+      "sha256": "572e2eb9e3c326424cb02f0273e2a89642a64e8f961f781c8a35ffbea7e9e35d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_58c73836559d48398df0fe92f4004b4d~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/mountaintop-love"
+    },
+    {
+      "path": "images/81f7ac_5c4775941f434945a96cf43d5fd90366~mv2.png",
+      "bytes": 1382672,
+      "sha256": "976be567fc629121b897e0b679e6dbd34dffd00ad8c7ffeadf0c4ea93fa4ed49",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_5c4775941f434945a96cf43d5fd90366~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-sanctification-perseverance-of-the-saints"
+    },
+    {
+      "path": "images/81f7ac_5d54845d75eb455cac79bd22fde1aee2~mv2.png",
+      "bytes": 386162,
+      "sha256": "29dd6591ddac07a168ea255bd69581c80fbdbcd677d1c4df5f9d7684c3869dd0",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_5d54845d75eb455cac79bd22fde1aee2~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/upcoming-events-at-fbc-muncie-march-3-easter-2026"
+    },
+    {
+      "path": "images/81f7ac_5d99c71453c64fbe9dbb45710549a78b_tilde_mv2.jpg",
+      "bytes": 252643,
+      "sha256": "c8876036d31c64f2279589cac6a1f874e3d1792eb917f11f4da87a0cfd8c7eb0",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_5d99c71453c64fbe9dbb45710549a78b~mv2.jpg",
+      "label": "CCT - Andy Heimlich_edited.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_5dfccefa00574f48a79889cfdda78a5d~mv2.png",
+      "bytes": 404233,
+      "sha256": "7276dd5be3c368a04242a59bfa941633947c8aa37c76f4a261c4f6030efe6073",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_5dfccefa00574f48a79889cfdda78a5d~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/upcoming-events-at-fbc-muncie-march-3-easter-2026"
+    },
+    {
+      "path": "images/81f7ac_5eced5f3294a4977a8dc990c491b4c57_tilde_mv2.jpg",
+      "bytes": 6279568,
+      "sha256": "220628e58aa725e9eb4c3664bb1a6f753b8ff19b7a8ce8da61ea952cfe982d7d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_5eced5f3294a4977a8dc990c491b4c57~mv2.jpg",
+      "label": "Caroline Koby",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_602c96754b0f44a0808089b7a2ed0e7b~mv2.png",
+      "bytes": 1359035,
+      "sha256": "1eeb8ff775dd84e53ccf47bf8eff44ca54fbf6080e3b4643ba94e0177ba469b4",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_602c96754b0f44a0808089b7a2ed0e7b~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/human-goodness-human-corruption"
+    },
+    {
+      "path": "images/81f7ac_612ebbc86d2a4d208e7965dbda2d986a_tilde_mv2.png",
+      "bytes": 294839,
+      "sha256": "3a45feb6e377011dfcdb7ca53811a6052551dc2521f8473db8fb4fe99854fb15",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_612ebbc86d2a4d208e7965dbda2d986a~mv2.png",
+      "label": "Job Listing: Worship Arts Pastor (Part-time)",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_612ebbc86d2a4d208e7965dbda2d986a~mv2.png",
+      "bytes": 294839,
+      "sha256": "3a45feb6e377011dfcdb7ca53811a6052551dc2521f8473db8fb4fe99854fb15",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_612ebbc86d2a4d208e7965dbda2d986a~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/job-listing-worship-arts-pastor"
+    },
+    {
+      "path": "images/81f7ac_61b078921df547f9a2a72e7ac05a2404~mv2.jpg",
+      "bytes": 41215,
+      "sha256": "02153000bac3476ad6f2e666a313cedbdd8fd885e313fc71b97c8d60e0853836",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_61b078921df547f9a2a72e7ac05a2404~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-god-in-prayer-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_621da95ba1e643138e0248316642fa31~mv2.png",
+      "bytes": 1199904,
+      "sha256": "461ebe39efa37e7fcf56b02a9c17d3ee93dd65645af85baa95694b492dff0214",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_621da95ba1e643138e0248316642fa31~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/laborers"
+    },
+    {
+      "path": "images/81f7ac_62430ba549674b9c93deb467a62a8077~mv2.png",
+      "bytes": 1322061,
+      "sha256": "2509a214cb67dadd58d0f7adbd2b1b4e07c60f10c676f7f554ddcb5282809994",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_62430ba549674b9c93deb467a62a8077~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/mountaintop-priority"
+    },
+    {
+      "path": "images/81f7ac_62705d65f714416ca5703f4cd3cd7bd4~mv2.png",
+      "bytes": 565485,
+      "sha256": "22c9940ae6bcb4ab6c43effe0a2720723b4d68724feb80f6f2e18e85a36d33a0",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_62705d65f714416ca5703f4cd3cd7bd4~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/our-advocate"
+    },
+    {
+      "path": "images/81f7ac_690d6332a3e64eaa83fde3783a7bd36f~mv2.png",
+      "bytes": 516719,
+      "sha256": "92b4387597df17073b5bc0d3becf57d95aafc79b3685c28c1147668d851a3992",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_690d6332a3e64eaa83fde3783a7bd36f~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/global-servants-bonilla-giovanettis-bgs-to-visit-fbcm-sunday-april-28th"
+    },
+    {
+      "path": "images/81f7ac_6ac90c34d39c4e898a977c27d3abbb09_tilde_mv2.png",
+      "bytes": 776246,
+      "sha256": "6671627561d0e0b5e7a074b6e9da076a72e42ceda8b8cb5cf46a924a56df72c2",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6ac90c34d39c4e898a977c27d3abbb09~mv2.png",
+      "label": "Exalt (Witness Goal 2025-2026)",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_6ac90c34d39c4e898a977c27d3abbb09~mv2.png",
+      "bytes": 776246,
+      "sha256": "6671627561d0e0b5e7a074b6e9da076a72e42ceda8b8cb5cf46a924a56df72c2",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6ac90c34d39c4e898a977c27d3abbb09~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/exalt-witness-goal-2025-2026"
+    },
+    {
+      "path": "images/81f7ac_6ada73f6e7e243f880141e33294eca6d~mv2.jpg",
+      "bytes": 2088305,
+      "sha256": "11c3190c7f6a30ce4fe321bd707c5599b8bed570ea16dd8aed32b5cfc8fd3843",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6ada73f6e7e243f880141e33294eca6d~mv2.jpg",
+      "label": "A Korean Jesus welcoming children. Jesus is wearing a Joseon-era scholar's hat.",
+      "foundOn": "https://www.fbcmuncie.org/post/there-s-no-sin-in-single"
+    },
+    {
+      "path": "images/81f7ac_6c02a947d59b4d33ae778bc935c0b6d7_tilde_mv2.png",
+      "bytes": 1105019,
+      "sha256": "f774026cb46f03536889008f73b9890476925578142bbca9ce4c838953d1a587",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6c02a947d59b4d33ae778bc935c0b6d7~mv2.png",
+      "label": "Marriage, Household & Sexuality Resources",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_6c02a947d59b4d33ae778bc935c0b6d7~mv2.png",
+      "bytes": 1105019,
+      "sha256": "f774026cb46f03536889008f73b9890476925578142bbca9ce4c838953d1a587",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6c02a947d59b4d33ae778bc935c0b6d7~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/marriage-household-sexuality-resources"
+    },
+    {
+      "path": "images/81f7ac_6cbead1ea297434a852200cb8c0e094f~mv2.png",
+      "bytes": 581486,
+      "sha256": "8640e22507862708c2b74286ea71a67c62684a0680b98e23c483f94891240d9d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6cbead1ea297434a852200cb8c0e094f~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/our-watchword-work-gifts-for-service"
+    },
+    {
+      "path": "images/81f7ac_6ccae8b674e141bbad086e51ce7f9f72_tilde_mv2.png",
+      "bytes": 114584,
+      "sha256": "9c0bea2f8ffdf5ddfa402345dd523b8c38051679ad161d24dbaf9afd46daba8a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6ccae8b674e141bbad086e51ce7f9f72~mv2.png",
+      "label": "Upcoming Events at FBC Muncie | Lent & Easter 2026",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_6ccae8b674e141bbad086e51ce7f9f72~mv2.png",
+      "bytes": 114584,
+      "sha256": "9c0bea2f8ffdf5ddfa402345dd523b8c38051679ad161d24dbaf9afd46daba8a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6ccae8b674e141bbad086e51ce7f9f72~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/upcoming-events-at-fbc-muncie-march-3-easter-2026"
+    },
+    {
+      "path": "images/81f7ac_6ccff48d75c04836b00ed102d8ddd0ed~mv2.png",
+      "bytes": 846937,
+      "sha256": "ffd496507b3e4f69408b6f420cf75fba511725f984bb53235797eaa2fa192d1c",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6ccff48d75c04836b00ed102d8ddd0ed~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/will-god-take-away-his-promise"
+    },
+    {
+      "path": "images/81f7ac_6f49f77906dc457fa5b3fc060947d3d0~mv2.png",
+      "bytes": 957312,
+      "sha256": "f76f8341ead47acdb11946c2fe4a70585b946a7f64d7c07982f1783bd85e66ed",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_6f49f77906dc457fa5b3fc060947d3d0~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/upcoming-events-at-fbc-muncie-march-3-easter-2026"
+    },
+    {
+      "path": "images/81f7ac_72fb8e9610f84cc6ad57ee98fcb77f5c~mv2.jpg",
+      "bytes": 19244,
+      "sha256": "8467ad2d9c4ec0e7c2f22dacf339245c854ba83fdbc448aa3a0715196e3e7d8a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_72fb8e9610f84cc6ad57ee98fcb77f5c~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/marriage-household-sexuality-resources"
+    },
+    {
+      "path": "images/81f7ac_732cf054670f466d89de846a11d28b00~mv2.png",
+      "bytes": 762528,
+      "sha256": "a131d0cf04702d40cd39158685335b183faaf11dda89a6332469236d512cc57a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_732cf054670f466d89de846a11d28b00~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/a-light-wardrobe"
+    },
+    {
+      "path": "images/81f7ac_7671b48645e84fa7863a2afebd572fda~mv2.png",
+      "bytes": 773147,
+      "sha256": "71466530b110ba318beaeaa19166220514ebbc2cf1ce2438a9824d936adc6859",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_7671b48645e84fa7863a2afebd572fda~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/praise-worship-goal-2025-2026"
+    },
+    {
+      "path": "images/81f7ac_79c624f83ad94f08a85f81060f630e3c~mv2.png",
+      "bytes": 547907,
+      "sha256": "dd7fad394fd6c0826721ad4baea198bd4b5901ffd7af79aef70b3e41c9ff22bd",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_79c624f83ad94f08a85f81060f630e3c~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/justified-by-faith-empowered-by-the-spirit"
+    },
+    {
+      "path": "images/81f7ac_7ac02812dd62408b8edfd2602ff70b6b_tilde_mv2.jpeg",
+      "bytes": 121729,
+      "sha256": "8dc18efc4e9ea09dad55dd1976fa0e6fde79c1aeebf3d6565c5d72ed38cf464b",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_7ac02812dd62408b8edfd2602ff70b6b~mv2.jpeg",
+      "label": "Sally Butler",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_7ce4ea18c433464fb79a0cbda339d516~mv2.png",
+      "bytes": 933205,
+      "sha256": "0958e1070c3137667079a661441782d6986d10067a5cc639fec30889c6eb141d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_7ce4ea18c433464fb79a0cbda339d516~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/the-king-s-stride"
+    },
+    {
+      "path": "images/81f7ac_7f7052babe6e4307aee7b141fb9e7cb2~mv2.png",
+      "bytes": 619826,
+      "sha256": "d19b140ee0f26f650e10be6450419018534a6ac7ce0a17a8b8f5eba16bd214c2",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_7f7052babe6e4307aee7b141fb9e7cb2~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/waiting-in-the-dark"
+    },
+    {
+      "path": "images/81f7ac_84b7a768746244ab9a86b4f85b94409c_tilde_mv2.jpg",
+      "bytes": 10604827,
+      "sha256": "1cdb46a23f436a479490732594284082bae015671fcdbf9ebbf8f60314b994d1",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_84b7a768746244ab9a86b4f85b94409c~mv2.jpg",
+      "label": "Jennifer_Durke.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_88f45cdc3dd64ce99b057fcfaf547f43_tilde_mv2.jpg",
+      "bytes": 12623323,
+      "sha256": "d45cd37306812914d8db47cb980851b0c6275d9e11942390cae66fd6747178d5",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_88f45cdc3dd64ce99b057fcfaf547f43~mv2.jpg",
+      "label": "Sandi Brzak",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_89a6d9a567b6438fb23cc30524d3afcc~mv2.png",
+      "bytes": 1286197,
+      "sha256": "6135d885a7402b3c733c817e558c34386d6c7bcefc6f5bc3d24443fdfce65227",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_89a6d9a567b6438fb23cc30524d3afcc~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/spiritual-mothers"
+    },
+    {
+      "path": "images/81f7ac_8d908a1b5c1549bda5534db6b7779885_tilde_mv2.jpg",
+      "bytes": 10230166,
+      "sha256": "c68990968cbbdb3ee3866e1e6233fbc36e60ea9d7a33e6067cce08dbd7a2460f",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_8d908a1b5c1549bda5534db6b7779885~mv2.jpg",
+      "label": "Joe Songer",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_8ef2d262aa174349b9b5c3d343c6ed44~mv2.png",
+      "bytes": 726211,
+      "sha256": "d80f94b93752b6742afa7c5aef6d04f86f552c0bd98303074a9f25a463e51012",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_8ef2d262aa174349b9b5c3d343c6ed44~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/it-s-the-small-things"
+    },
+    {
+      "path": "images/81f7ac_931180bdb89e4c218785f5d07cdd450b~mv2.png",
+      "bytes": 1297046,
+      "sha256": "e8c0117f6c403b7a00e8c7917b7007d0d55248df8e3a534828ac0c462929e28f",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_931180bdb89e4c218785f5d07cdd450b~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/sabbath-as-salvation-for-god-s-people"
+    },
+    {
+      "path": "images/81f7ac_93bf7929f81244ea88323f48a96b5aca~mv2.png",
+      "bytes": 832397,
+      "sha256": "94828f16a715fe25b5a810ec7c132b88ea2b90bc0d5b7d4a1163fd95c382d5d9",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_93bf7929f81244ea88323f48a96b5aca~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/god-will-not-leave"
+    },
+    {
+      "path": "images/81f7ac_93db4f5dc61d44a0a8117b3584c55387~mv2.png",
+      "bytes": 728860,
+      "sha256": "86f5fe95a6c9875ca12e4b1d8d102e5beb05f7cd3ce8540e35b1a2c2604f0387",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_93db4f5dc61d44a0a8117b3584c55387~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/fear-fainting-on-planet-earth"
+    },
+    {
+      "path": "images/81f7ac_94a7213522f84eaaa12ca66c825882c8~mv2.png",
+      "bytes": 1286519,
+      "sha256": "ed7d1057ae1cd8c2970e98c0be03b1ac258cd866fbb5f85b4dfafef87b64301a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_94a7213522f84eaaa12ca66c825882c8~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/spiritual-fathers"
+    },
+    {
+      "path": "images/81f7ac_94f9d5be61824d35af52623eb5fa6819~mv2.png",
+      "bytes": 1292137,
+      "sha256": "2aed9158529ffb24db7da96317c7f2fdc47512cdeb99d522c0147ef17b6a28fa",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_94f9d5be61824d35af52623eb5fa6819~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/sabbath-for-us"
+    },
+    {
+      "path": "images/81f7ac_9616fba1ca124339b04dd2570c532855~mv2.png",
+      "bytes": 3706815,
+      "sha256": "825dd83dbf2ce956a62abca8c59a1ad32b6c633cc1d4bf69668e3f7207f3a474",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_9616fba1ca124339b04dd2570c532855~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/upcoming-events-at-fbc-muncie-march-3-easter-2026"
+    },
+    {
+      "path": "images/81f7ac_97bc4207cc524634bf010275201341d1~mv2.jpg",
+      "bytes": 73986,
+      "sha256": "62759351055b1d2480ffafd848733d52b98fea279e75bbd0ead2ca8bd135eb32",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_97bc4207cc524634bf010275201341d1~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/spiritual-fathers-spiritual-mothers"
+    },
+    {
+      "path": "images/81f7ac_98f7de259e854d09a5b675ef7db8862d~mv2.png",
+      "bytes": 1123170,
+      "sha256": "4302b14eceb37c908c6efb3e5d7c289bccbc0b9ffa6abc21fbba52bb872400a1",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_98f7de259e854d09a5b675ef7db8862d~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/local-individual-family-counseling-resources"
+    },
+    {
+      "path": "images/81f7ac_9a0cb55c61fd406082cefe572ce634be~mv2.png",
+      "bytes": 1297742,
+      "sha256": "6ccd41a0991695031c44c625c7cc579d87b8c82da85daa5e1bd8fd2bb9cb02fc",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_9a0cb55c61fd406082cefe572ce634be~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/when-restlessness-is-a-lack-of-trust"
+    },
+    {
+      "path": "images/81f7ac_9a6f41969a0f405d80759ce540e92f59~mv2.png",
+      "bytes": 79700,
+      "sha256": "d999328b29ad5d3e41c181a20e9f0e37f649194406563b41ee7d883406d53cfe",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_9a6f41969a0f405d80759ce540e92f59~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/elect-gentleness"
+    },
+    {
+      "path": "images/81f7ac_9bbbef7c9ed7458c87448a97e5eb7afd~mv2.png",
+      "bytes": 62952,
+      "sha256": "955472fca09dc931f19ba6850ea8c3894e6c23912f3ca3e9c4c7ab26a4d2dd29",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_9bbbef7c9ed7458c87448a97e5eb7afd~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/multiplied"
+    },
+    {
+      "path": "images/81f7ac_9e6830e0c0fc4703b7a8c25fb5490f41~mv2.png",
+      "bytes": 1316840,
+      "sha256": "22705c441af1d0a81875c73dbf26ff651b1489b5088661091a519b3ca229339f",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_9e6830e0c0fc4703b7a8c25fb5490f41~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/mountaintop-forgiveness"
+    },
+    {
+      "path": "images/81f7ac_a1e1d92051a84c19bbd31e01acca8abf~mv2.jpg",
+      "bytes": 91946,
+      "sha256": "a5da8216c527c78569f3bbd17f9faf2f988c0005032001a80acc28ad0262b036",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_a1e1d92051a84c19bbd31e01acca8abf~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/spiritual-fathers-spiritual-mothers"
+    },
+    {
+      "path": "images/81f7ac_a58a708d7bea4d9f84d8a7e73a59e637~mv2.png",
+      "bytes": 1198987,
+      "sha256": "153511562763aa55342068a7b93d9256698be8d56a81d898bd980d7f00312d5a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_a58a708d7bea4d9f84d8a7e73a59e637~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/stayers"
+    },
+    {
+      "path": "images/81f7ac_a709aa83d9be49c5808a78e04bcd01b8~mv2.png",
+      "bytes": 1396011,
+      "sha256": "56a4ae9603b6a88842da17d2eba5cc64921b57ab50ed13be0dd441b9c89a002e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_a709aa83d9be49c5808a78e04bcd01b8~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-the-beginning-is-near"
+    },
+    {
+      "path": "images/81f7ac_a996eefcdd5d42e3a4bf854a588f9c41_tilde_mv2.jpg",
+      "bytes": 261125,
+      "sha256": "7019e1b90a895bc944a24e0cfabb1e38dc6e639805e5bd17fd737c85817c9de0",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_a996eefcdd5d42e3a4bf854a588f9c41~mv2.jpg",
+      "label": "outreach photo 1_edited.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_aaacff838de749fc8d8ebba8758dcff8~mv2.png",
+      "bytes": 906090,
+      "sha256": "44429e02a841694757b55774ea2d90c83251bcca21a28661342dab292ffc7dda",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_aaacff838de749fc8d8ebba8758dcff8~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/love-in-action-truth"
+    },
+    {
+      "path": "images/81f7ac_abb3e7cf5698465792bbdb251dad38cd~mv2.png",
+      "bytes": 629059,
+      "sha256": "7b1e4b8d3d2f67ec56a199fcb433e3cba367abb81361d0f7ec1d7bc7a8f59bae",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_abb3e7cf5698465792bbdb251dad38cd~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/our-watchword"
+    },
+    {
+      "path": "images/81f7ac_ac0d7ce828f2459680ff0e58e7d55fe5_tilde_mv2.jpg",
+      "bytes": 26237,
+      "sha256": "e3b81a300b4ab1845725099d52dab3f5bd23d95a9b3495f3c0a8c4593b6ef7dd",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ac0d7ce828f2459680ff0e58e7d55fe5~mv2.jpg",
+      "label": "og:image",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_acf943a0e85049f69e0d995be44e1300~mv2.png",
+      "bytes": 763268,
+      "sha256": "c40d034ef5ff2a0898cb66f8636512ae60867cdebd3924da453375d798424669",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_acf943a0e85049f69e0d995be44e1300~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/christmas-new-years-2023"
+    },
+    {
+      "path": "images/81f7ac_ad7e160fdb8e47f384e913565e6b4cd5~mv2.jpg",
+      "bytes": 667125,
+      "sha256": "54b344cc52edb89605397ad4f590efb02b9b2fe60f5c24ff44497fb87924f699",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ad7e160fdb8e47f384e913565e6b4cd5~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/fear-fainting-on-planet-earth"
+    },
+    {
+      "path": "images/81f7ac_b0b969c9e8e249c8913d0af88e5317d8~mv2.png",
+      "bytes": 4080418,
+      "sha256": "69c4256bacc537238a2e4375446b5449a59086f7475c53dd0a617ec53495406c",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_b0b969c9e8e249c8913d0af88e5317d8~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/upcoming-events-at-fbc-muncie-march-3-easter-2026"
+    },
+    {
+      "path": "images/81f7ac_b0ff139891fe4826ac092aa90afcb0d4~mv2.png",
+      "bytes": 4672723,
+      "sha256": "9463229ddd849333fd0831dba91486c41d47e769c8851a8f7f44f8ac2e180053",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_b0ff139891fe4826ac092aa90afcb0d4~mv2.png",
+      "label": " Last Year's Outdoor Carnival. Snow cones, balloon animals, crafts, games and more!",
+      "foundOn": "https://www.fbcmuncie.org/post/messy-camp-2025"
+    },
+    {
+      "path": "images/81f7ac_b1c302242e444a74888db93023088273~mv2.jpg",
+      "bytes": 798689,
+      "sha256": "7b183f94ec2f1b94dcb717a8b9c23c5ccf46538059cb9a114bd2e51b6cd759e7",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_b1c302242e444a74888db93023088273~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/there-s-no-sin-in-single"
+    },
+    {
+      "path": "images/81f7ac_b3930c58f4a544da87572ac85d617729~mv2.png",
+      "bytes": 105300,
+      "sha256": "78a0065fc5fef437bda5a399480cc5f4a3719e68db89b0e9c068c5b3a4c89f03",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_b3930c58f4a544da87572ac85d617729~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/the-resurrection-the-life"
+    },
+    {
+      "path": "images/81f7ac_b80913b0411849c6badbe2acba797d3e~mv2.png",
+      "bytes": 318752,
+      "sha256": "c049ee878f5b24d72adf972923dfe8f188c28db05cfd909157f126a518b15c22",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_b80913b0411849c6badbe2acba797d3e~mv2.png",
+      "label": "https://open.spotify.com/show/1ZU36uuAsu4GEPA35jOT2q?si=nO5j1gQuRfyGtF9nI59CuA",
+      "foundOn": "https://www.fbcmuncie.org/post/turning-headship-on-its-head"
+    },
+    {
+      "path": "images/81f7ac_b89d4f7e3ba04cd09da5ba06830d8042_tilde_mv2.png",
+      "bytes": 1094152,
+      "sha256": "0f1f9b3cf7d9dad615e39d4a954fbcd80a7b839f3edf1aa4886b26c3f28bc556",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_b89d4f7e3ba04cd09da5ba06830d8042~mv2.png",
+      "label": "Ecclesiastes - faith when everything is not enough",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_b89d4f7e3ba04cd09da5ba06830d8042~mv2.png",
+      "bytes": 1094152,
+      "sha256": "0f1f9b3cf7d9dad615e39d4a954fbcd80a7b839f3edf1aa4886b26c3f28bc556",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_b89d4f7e3ba04cd09da5ba06830d8042~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/ecclesiastes-faith-when-everything-is-not-enough"
+    },
+    {
+      "path": "images/81f7ac_bb95fbfabab54141aab7a351e02fd9ad~mv2.jpg",
+      "bytes": 140652,
+      "sha256": "64b436aeb38d0356496560cd69c4ebeec340bf27f355a2b6addd86794c17d0e8",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_bb95fbfabab54141aab7a351e02fd9ad~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-holy-scripture-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_bbd9752818b04924a81164d1810233dd~mv2.png",
+      "bytes": 75962,
+      "sha256": "390f0c643553c303d3967a563eebba24aed54a62c573a4675756d779e4250d42",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_bbd9752818b04924a81164d1810233dd~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/elect-self-control"
+    },
+    {
+      "path": "images/81f7ac_bc8ef7e0310648c782888240e738284e~mv2.png",
+      "bytes": 1593955,
+      "sha256": "7d5d76dd761ea9a1cb0b723eb4224b9b56fa74e74a1c0f18f959c1b0393f9d9e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_bc8ef7e0310648c782888240e738284e~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/easter-2024-the-last-enemy-to-be-defeated"
+    },
+    {
+      "path": "images/81f7ac_bd44352f9ed34f33bedd96f24b8d912c_tilde_mv2.jpg",
+      "bytes": 1349314,
+      "sha256": "c4e90fc4cccc9aa5182eb2fb23de0969219a1599cdf0a2d3cd012e2fd5bba7f8",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_bd44352f9ed34f33bedd96f24b8d912c~mv2.jpg",
+      "label": "11.5_edited.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_bf2a3baaaa9c4c918ff5f7669a5072c5~mv2.png",
+      "bytes": 571375,
+      "sha256": "bda0f9e8b5ebe396b77295db0439766d845715de18c0932f911d166b4f1fe076",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_bf2a3baaaa9c4c918ff5f7669a5072c5~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/our-advocate"
+    },
+    {
+      "path": "images/81f7ac_c01b9721054143cc92200bc471b3030b~mv2.png",
+      "bytes": 1233650,
+      "sha256": "c68009f6191801618ca06f5983fc387c5bc9ef6523de706fc5ceda50471c1451",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_c01b9721054143cc92200bc471b3030b~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/imitators"
+    },
+    {
+      "path": "images/81f7ac_c3923d6d1cb04622a6eb42c34dd7c060~mv2.png",
+      "bytes": 762652,
+      "sha256": "585de1dc01eca51e2d4eb97459b227d5f2429efaf164765e98b03681f1cbe5dd",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_c3923d6d1cb04622a6eb42c34dd7c060~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/get-loud-our-watchword-2025-2026"
+    },
+    {
+      "path": "images/81f7ac_c497ece9c70148c1a8876f3ad0646b4c~mv2.png",
+      "bytes": 6865854,
+      "sha256": "15bfa38379382cdebdd439de01ad2cbca3a227ecde5f29c046be8b840067c6bc",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_c497ece9c70148c1a8876f3ad0646b4c~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/ordination-service"
+    },
+    {
+      "path": "images/81f7ac_c5178eec3a8b49c0b8d960188dada663~mv2.png",
+      "bytes": 1936619,
+      "sha256": "f7e91ec67ca9078cae5638890a1bbd99e0bce073b7752f950ee502001e66d697",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_c5178eec3a8b49c0b8d960188dada663~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/upcoming-events-at-fbc-muncie-march-3-easter-2026"
+    },
+    {
+      "path": "images/81f7ac_cb38cb3461b24dc4af766098bf93abc2~mv2.png",
+      "bytes": 832786,
+      "sha256": "299cec7b6c1a879ee8c00a4c501f86b6cd7e7420e2f1ab3d955f155963161604",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_cb38cb3461b24dc4af766098bf93abc2~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/walking-in-the-light-together"
+    },
+    {
+      "path": "images/81f7ac_cb8cfff8a62747b2b9933d095551dede~mv2.png",
+      "bytes": 1366123,
+      "sha256": "ada0333068e066df49a0a2287c57aac4f753b9c370c66f9e2be5353676918329",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_cb8cfff8a62747b2b9933d095551dede~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-the-church-is-the-body-of-christ"
+    },
+    {
+      "path": "images/81f7ac_cd10f3d76103422595821da5f84b4942_tilde_mv2.png",
+      "bytes": 1111497,
+      "sha256": "62350085b8ff279fb3d3e35e11edff875ba5531c3e3cb75fea8b38de57d99b9e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_cd10f3d76103422595821da5f84b4942~mv2.png",
+      "label": "Navigating difficult relationships, facing loss, & the cost of discipleship resources",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_cd10f3d76103422595821da5f84b4942~mv2.png",
+      "bytes": 1111497,
+      "sha256": "62350085b8ff279fb3d3e35e11edff875ba5531c3e3cb75fea8b38de57d99b9e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_cd10f3d76103422595821da5f84b4942~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/kingdom-family-vacation-anti-family-values-jesus-resources"
+    },
+    {
+      "path": "images/81f7ac_cd566de7cd3247cbaaffe29211d50d27~mv2.jpg",
+      "bytes": 80130,
+      "sha256": "49ed4fbbf3e015efcf7f91d0825968d868ae3f93cd75d491c51059362af71e5d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_cd566de7cd3247cbaaffe29211d50d27~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/kingdom-family-vacation-anti-family-values-jesus-resources"
+    },
+    {
+      "path": "images/81f7ac_ce4d2b0bd45b4e959c2c4b967116a96e~mv2.png",
+      "bytes": 628723,
+      "sha256": "3d5b072270bcd7e53dbfac3d0e64b042500051aa1d22ffbb0415256cc0ec224f",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ce4d2b0bd45b4e959c2c4b967116a96e~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/our-watchword-witness-evangelism"
+    },
+    {
+      "path": "images/81f7ac_ceea4e6c4ddd4cab9b02747aae88203b~mv2.png",
+      "bytes": 914219,
+      "sha256": "0359719699f5ca3730fb34be586a84c830e0819dfe5f6566af6caa51474066e1",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ceea4e6c4ddd4cab9b02747aae88203b~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/lent-easter-2025"
+    },
+    {
+      "path": "images/81f7ac_cfef622f27684e2c915cada506c03a0f_tilde_mv2.png",
+      "bytes": 3320063,
+      "sha256": "a3c7c92ad924a2f717b59f86c9655269096e83c255edce832858abc106b067ff",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_cfef622f27684e2c915cada506c03a0f~mv2.png",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_d072cd81ab67410fa9683828200efccc~mv2.jpg",
+      "bytes": 49293,
+      "sha256": "7d8de40dd8654283f15187f66bb6f744f8e0540254e0107de21090e85c3e817d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_d072cd81ab67410fa9683828200efccc~mv2.jpg",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/being-and-seeing-like-children-of-god"
+    },
+    {
+      "path": "images/81f7ac_d3362b5c910f4c0ba70b5aedc8d918d6~mv2.jpg",
+      "bytes": 166920,
+      "sha256": "41a8c997a7c15688074694a321241930bb330aa99cda7d6503f2eba27ebf10c4",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_d3362b5c910f4c0ba70b5aedc8d918d6~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-god-in-prayer-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_dd1a6e26262c403daf710e8047e1a496_tilde_mv2.png",
+      "bytes": 290718,
+      "sha256": "ed5391a66b9fdf263244759a0e5fbdaca963822e033da17a39ae2e57e7bfcd9e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_dd1a6e26262c403daf710e8047e1a496~mv2.png",
+      "label": "Job Listing: Pianist / Organist (Part-Time)",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_dd1a6e26262c403daf710e8047e1a496~mv2.png",
+      "bytes": 290718,
+      "sha256": "ed5391a66b9fdf263244759a0e5fbdaca963822e033da17a39ae2e57e7bfcd9e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_dd1a6e26262c403daf710e8047e1a496~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/job-listing-pianist-organist-part-time"
+    },
+    {
+      "path": "images/81f7ac_ddcdce5957294a24b427be5f8736f0ef~mv2.png",
+      "bytes": 94048,
+      "sha256": "917cbb70273c82578c6b178c2af372884e858c0941e7734d9018ed14f35e9142",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ddcdce5957294a24b427be5f8736f0ef~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/elect-spiritual-fruit-love"
+    },
+    {
+      "path": "images/81f7ac_e0bb62f0004148ccaffb1fec07f5be1c~mv2.jpg",
+      "bytes": 143137,
+      "sha256": "7a562ed8f54af42ba34e52f918bac67276071d24dc5e20faa26a501791cc8a56",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_e0bb62f0004148ccaffb1fec07f5be1c~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/spiritual-fathers-spiritual-mothers"
+    },
+    {
+      "path": "images/81f7ac_e24236bafaf74698b85dffd739a0f874~mv2.jpeg",
+      "bytes": 1314269,
+      "sha256": "2892d1fbee4fccc30e27815c33ea5dffaa608c52f4d6a7e26462121ca77b59cf",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_e24236bafaf74698b85dffd739a0f874~mv2.jpeg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/the-testimony-of-prophets-apostles"
+    },
+    {
+      "path": "images/81f7ac_e33532a258f348cd8444dde76faaa64d~mv2.jpg",
+      "bytes": 510139,
+      "sha256": "17a98e7be4992ca64e0e3f855f7eb1803297f073b03cee8d1f2cc53736adc1f3",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_e33532a258f348cd8444dde76faaa64d~mv2.jpg",
+      "label": "Photo from Melody Withers Photography (Wedding: Hanna & Nathan). A bride and groom stand in front of a projector screen with the lyrics \"Oh, the night has been won, And I shall overcome! Yet not I, But through Christ in me.\"",
+      "foundOn": "https://www.fbcmuncie.org/post/turning-headship-on-its-head"
+    },
+    {
+      "path": "images/81f7ac_e4eb04ef88244be7bd9015be4414d730~mv2.png",
+      "bytes": 1387191,
+      "sha256": "2d9a1926d9f9e33855b846ffafcbc78cc4bfb07565d74c4c50d41b3cb5f62159",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_e4eb04ef88244be7bd9015be4414d730~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/the-testimony-of-prophets-apostles"
+    },
+    {
+      "path": "images/81f7ac_e69b7e5fb03b44e18716b1e68c817860~mv2.png",
+      "bytes": 771198,
+      "sha256": "280d9f7ceb15bf9329984d119c0869c8deca82bc2a659aee62825a64555d4051",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_e69b7e5fb03b44e18716b1e68c817860~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/proclaiming-one-greater"
+    },
+    {
+      "path": "images/81f7ac_e6bbe07d77bc41f6b98bfa1ab3048f42~mv2.png",
+      "bytes": 1363865,
+      "sha256": "1856444112ad31152f12fe406161db585d83de5b0917aad963ed72dd95504955",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_e6bbe07d77bc41f6b98bfa1ab3048f42~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-in-the-practices-of-the-church"
+    },
+    {
+      "path": "images/81f7ac_e6bf89fe68e34a1a8c950d70c7081652_tilde_mv2.png",
+      "bytes": 949300,
+      "sha256": "9a0a09f6ae0223e2c58bf4135e47d2373cbe46774de4659bbf974927e1a5950d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_e6bf89fe68e34a1a8c950d70c7081652~mv2.png",
+      "label": "Understanding God In Prayer (\"We Believe\" Resources)",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_e6bf89fe68e34a1a8c950d70c7081652~mv2.png",
+      "bytes": 949300,
+      "sha256": "9a0a09f6ae0223e2c58bf4135e47d2373cbe46774de4659bbf974927e1a5950d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_e6bf89fe68e34a1a8c950d70c7081652~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-god-in-prayer-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_ea52ef4eb7ea4e289efde3bb0aa5adaa~mv2.png",
+      "bytes": 336815,
+      "sha256": "dfc7f9808d642e9ff89d3bde9bb1e693d5eeddee5d8407e264295ee341f33d1c",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ea52ef4eb7ea4e289efde3bb0aa5adaa~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/messy-camp-2025"
+    },
+    {
+      "path": "images/81f7ac_ed3e8764cc224ae29c7784c699569831~mv2.jpg",
+      "bytes": 73602,
+      "sha256": "0570bb4c8707ebe587ac93cf6b7df7625e80d7d73e3c77da0246ce5b1a4ff3c7",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ed3e8764cc224ae29c7784c699569831~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/understanding-god-in-prayer-we-believe-resources"
+    },
+    {
+      "path": "images/81f7ac_ede79aff88294d3ea2cd52472fd9ab71~mv2.jpg",
+      "bytes": 6651897,
+      "sha256": "ee3a1d8fdf610289939bb1ed1b3cde1396258501890d9636863bef7a3941be71",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ede79aff88294d3ea2cd52472fd9ab71~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/god-will-not-leave"
+    },
+    {
+      "path": "images/81f7ac_ee96a9da57554d48b92008a87a38e1e3_tilde_mv2.jpg",
+      "bytes": 1046640,
+      "sha256": "7e922969d60285403f4058b5fc4b3a792d7e1e4a1727312cd14e649085c4d9b6",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ee96a9da57554d48b92008a87a38e1e3~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_f1d06f78c8504e8a824448ea95e6aafa~mv2.png",
+      "bytes": 1295608,
+      "sha256": "a52129182156533220e33ff775ab8186375beff60450d2e07f1a2aa4ec320dea",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_f1d06f78c8504e8a824448ea95e6aafa~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/god-works-while-we-sleep"
+    },
+    {
+      "path": "images/81f7ac_f7361be561724c8c93d82157cc97b8a1~mv2.png",
+      "bytes": 715954,
+      "sha256": "281a5495d256adc15397f4a54c8f030aa4c9cca89e5efbae7ceea832afde48d0",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_f7361be561724c8c93d82157cc97b8a1~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/god-sees-us-through"
+    },
+    {
+      "path": "images/81f7ac_f80a1c2ea8824bc7a7c87c77dc61eef4~mv2.png",
+      "bytes": 86682,
+      "sha256": "c2755e785d690aaab469492675123e917626bba85a7062281d6d1dd0d849e373",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_f80a1c2ea8824bc7a7c87c77dc61eef4~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/fbcm-sermon-podcast-now-available"
+    },
+    {
+      "path": "images/81f7ac_f988d347148440f4b66a6c60db033b98~mv2.png",
+      "bytes": 619845,
+      "sha256": "5f7945c4d854276161e3aa60d8ec3cfaea7152cc021006fd09f13e6a831e190e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_f988d347148440f4b66a6c60db033b98~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/our-watchword-worship"
+    },
+    {
+      "path": "images/81f7ac_fae9ef9da3944b5f9abb7e8d3cf8a60d_tilde_mv2.png",
+      "bytes": 1105592,
+      "sha256": "1fe38fc803c17e60f255e72a0d1516a4e38c7b573a3bf70fa86863f7ab45b543",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_fae9ef9da3944b5f9abb7e8d3cf8a60d~mv2.png",
+      "label": "There's No 'Sin' in 'Single' Resources",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_fae9ef9da3944b5f9abb7e8d3cf8a60d~mv2.png",
+      "bytes": 1105592,
+      "sha256": "1fe38fc803c17e60f255e72a0d1516a4e38c7b573a3bf70fa86863f7ab45b543",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_fae9ef9da3944b5f9abb7e8d3cf8a60d~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/there-s-no-sin-in-single-resources"
+    },
+    {
+      "path": "images/81f7ac_fbab795755ae4019a6971791da2e8ea9~mv2.png",
+      "bytes": 647770,
+      "sha256": "550b6df7b79ece3215c5c6b0011b6fd02a093d55e0b37fb6ef0df394907536ff",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_fbab795755ae4019a6971791da2e8ea9~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/hearing-the-word"
+    },
+    {
+      "path": "images/81f7ac_fd6086cd0b6e4fa7b170dc462c3496d2_tilde_mv2.jpeg",
+      "bytes": 132498,
+      "sha256": "dddf65f4d8c2a22b4202aecc5187398ad44a2eeb8384afa28172123d29ece696",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_fd6086cd0b6e4fa7b170dc462c3496d2~mv2.jpeg",
+      "label": "Nina Oisten",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_fdaa5ae96fc647bf8ef0d1db8b8e8865~mv2.png",
+      "bytes": 796269,
+      "sha256": "e35a1cd5e1c33f8f5dcab6b6ee51d77e921fa82f17080f29694f603fb589eb16",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_fdaa5ae96fc647bf8ef0d1db8b8e8865~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/no-rest-for-the-wicked"
+    },
+    {
+      "path": "images/81f7ac_fde28ac7b1ef4fdbab73e53f98dc66be~mv2.png",
+      "bytes": 90831,
+      "sha256": "cc69eebf914de850001eeb4626ce0600a07520c29e19798b35ae9bc68d64f448",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_fde28ac7b1ef4fdbab73e53f98dc66be~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/elect-spiritual-fruit-love"
+    },
+    {
+      "path": "images/81f7ac_fe436631280448ef9ad23932b87088da_tilde_mv2.jpg",
+      "bytes": 320491,
+      "sha256": "63344c901a12cedeff7f89ff28ba9a3f487f830e1ebb0d1d80f2df65845a4dc8",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_fe436631280448ef9ad23932b87088da~mv2.jpg",
+      "label": "CCT - Nina Oisten_edited.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/81f7ac_ff9d7f0ee2b742419f67b1b66f9ec41a_tilde_mv2.jpeg",
+      "bytes": 105994,
+      "sha256": "559d3f856f5b4a4608bded5e3607047922e355c729e536ea2fc94591c75b63f3",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ff9d7f0ee2b742419f67b1b66f9ec41a~mv2.jpeg",
+      "label": "Andy Heimlich",
+      "foundOn": null
+    },
+    {
+      "path": "images/8e49eef64baf48db87e9d8f3cb139ac5.png",
+      "bytes": 5531986,
+      "sha256": "e3b94c9e5c36a3265ecb9a734643efc1d3843ba06bb15f323db0388541679336",
+      "sourceUrl": "https://static.wixstatic.com/media/8e49eef64baf48db87e9d8f3cb139ac5.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/our-watchword"
+    },
+    {
+      "path": "images/9e7d071d21054b3c8a3505055b5f615d.jpg",
+      "bytes": 1202164,
+      "sha256": "04c400d5eb29d8166c4e7f13d2063e330c832ea91a6f20184be76558a7a825bb",
+      "sourceUrl": "https://static.wixstatic.com/media/9e7d071d21054b3c8a3505055b5f615d.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/justified-by-faith-empowered-by-the-spirit"
+    },
+    {
+      "path": "images/b444c3_0f984ebd874e4396ad324974babca398~mv2.png",
+      "bytes": 918076,
+      "sha256": "6c42712e9df01b9e9f3621acc538cdf6c3d7c7798d05c463af7a5322b8756d9f",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_0f984ebd874e4396ad324974babca398~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/lent-easter-2025"
+    },
+    {
+      "path": "images/b444c3_0ff1a4d1653a4be389c252346ed4f531~mv2.png",
+      "bytes": 504341,
+      "sha256": "650ba3e123d1d37f31d3e2f9f6d094d85e7fee74567bdfad8b86e53b2c0fa83a",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_0ff1a4d1653a4be389c252346ed4f531~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/meet-icbc-s-camp-directors"
+    },
+    {
+      "path": "images/b444c3_11541a3cb173411fbda7ed5b3d5f0da0~mv2.png",
+      "bytes": 700095,
+      "sha256": "25ea0867ff92e40dd2910faf54b4e1fa2ffe6650bdc8539140c4f5455965cb6b",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_11541a3cb173411fbda7ed5b3d5f0da0~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/wind-wildfire"
+    },
+    {
+      "path": "images/b444c3_164051fba7aa41609387d5ddc51decbc~mv2.png",
+      "bytes": 63259,
+      "sha256": "5c725856c36c56b690b4fc41ad9ad7f4ec9bd25ed46095bcaa5a68ec0563b6ab",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_164051fba7aa41609387d5ddc51decbc~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/elect-joy"
+    },
+    {
+      "path": "images/b444c3_18df46d95737452fb5a44852f92ec067~mv2.png",
+      "bytes": 831012,
+      "sha256": "b59418784f88379bf7088fdc634473eef53cb13b35da471bb51aaeb358a69357",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_18df46d95737452fb5a44852f92ec067~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/harm-and-forgiveness"
+    },
+    {
+      "path": "images/b444c3_1ceda8e89f054c8ea070b8a2ba0d8c47~mv2.png",
+      "bytes": 827640,
+      "sha256": "644c318ff4d190bb706a0406fe8a40d23013348dbb87e9645ca85557e418a721",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_1ceda8e89f054c8ea070b8a2ba0d8c47~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/the-threat-of-envy"
+    },
+    {
+      "path": "images/b444c3_27d869aa23844066b9f173ace4685490~mv2.png",
+      "bytes": 81038,
+      "sha256": "ecc460fc3fdf5e3d1feef5372a21fb433c852e7fc88701b2a5ee443959583b04",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_27d869aa23844066b9f173ace4685490~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/one-authority"
+    },
+    {
+      "path": "images/b444c3_29bcbe73beb54b62baa8239e98f902a5~mv2.png",
+      "bytes": 2350536,
+      "sha256": "2b35fa3f9ea78383a96d7a3f5659562025e2fe9d2d1f809e15cba48b64f3ff28",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_29bcbe73beb54b62baa8239e98f902a5~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/guidance-through-gifts"
+    },
+    {
+      "path": "images/b444c3_2c60015d81274925a0357fb2786b0459~mv2.png",
+      "bytes": 1370768,
+      "sha256": "aad0a0ff2bc3e59b4a6f9727f6a93bb1fc710b3ce3e4a800027e53133b3ad129",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_2c60015d81274925a0357fb2786b0459~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-in-one-god-father-son-and-spirit"
+    },
+    {
+      "path": "images/b444c3_389df1476f6f432fae9fab1750c08c99~mv2.png",
+      "bytes": 85703,
+      "sha256": "e262851dea9a0ee4f83d0552a044e1b29e980fa5bfe771e2836060449b9463c1",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_389df1476f6f432fae9fab1750c08c99~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/elect-kindness"
+    },
+    {
+      "path": "images/b444c3_440a9033c4cc40bcb0c7816cffed5ea5~mv2.png",
+      "bytes": 818635,
+      "sha256": "1221c93f7c9c6a25c59d3c62ee52a1ae1e1a13d58ef6d9085c0a08cedff15757",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_440a9033c4cc40bcb0c7816cffed5ea5~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/prayer-as-love"
+    },
+    {
+      "path": "images/b444c3_464e2eeccebf4f11a8cd75f2d18e26f6_tilde_mv2.png",
+      "bytes": 753359,
+      "sha256": "b28730ed28c923eb0a8d447ad10f6f4e520e7ebc4ba7556eeef734583c6ca117",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_464e2eeccebf4f11a8cd75f2d18e26f6~mv2.png",
+      "label": "2025 Holiday Schedule",
+      "foundOn": null
+    },
+    {
+      "path": "images/b444c3_464e2eeccebf4f11a8cd75f2d18e26f6~mv2.png",
+      "bytes": 753359,
+      "sha256": "b28730ed28c923eb0a8d447ad10f6f4e520e7ebc4ba7556eeef734583c6ca117",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_464e2eeccebf4f11a8cd75f2d18e26f6~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/2025-holiday-schedule"
+    },
+    {
+      "path": "images/b444c3_48e74a4a68e24d2b84bf34b36456991d~mv2.png",
+      "bytes": 395592,
+      "sha256": "27cf37a0878596dae867ec1a702d1db37841f99b2e40e227b50f716c7299d19d",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_48e74a4a68e24d2b84bf34b36456991d~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/when-god-shows-up-justice-is-served"
+    },
+    {
+      "path": "images/b444c3_4e99aa1a25994e54aeb62f88b04ee4e2~mv2.png",
+      "bytes": 972712,
+      "sha256": "0e1cd8d922c402c95cba29dfd1c1fcbc0412a5a1072fd52328fe69d7ff4f145d",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_4e99aa1a25994e54aeb62f88b04ee4e2~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/joy-in-sacrifice"
+    },
+    {
+      "path": "images/b444c3_5151255ff0a44bb192b5bd3462d50fd0~mv2.png",
+      "bytes": 261978,
+      "sha256": "650e6789cb13c533b78969976ca458d30f9acfc32553ecce98265bd275341c5d",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_5151255ff0a44bb192b5bd3462d50fd0~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/passion-despite-fruitlessness"
+    },
+    {
+      "path": "images/b444c3_5b960db89abd49fb8014e8c61cbbaa88~mv2.png",
+      "bytes": 1335854,
+      "sha256": "3f011c5ba05f0118a12f2f610f7d6cad783dd822fbfd90eb9f24759aecdba868",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_5b960db89abd49fb8014e8c61cbbaa88~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/mountaintop-relationships"
+    },
+    {
+      "path": "images/b444c3_5f9bf266d6f2413da0b642d7121c30d5~mv2.png",
+      "bytes": 79028,
+      "sha256": "843afda7c6be60274ac0c19d6c99bb401b5332e6a22881414e2bf6061dc70a1d",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_5f9bf266d6f2413da0b642d7121c30d5~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/one-forevermore"
+    },
+    {
+      "path": "images/b444c3_619bf55840ad47ac8f6273d862eb026e~mv2.png",
+      "bytes": 233872,
+      "sha256": "24f190598d62daa7ce6e52a87a4a66343743678247cdedd2918bf436d7dd9bc2",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_619bf55840ad47ac8f6273d862eb026e~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/passion-despite-pride"
+    },
+    {
+      "path": "images/b444c3_63afd8e6e0f04470b50ee18b42c5ac7d~mv2.png",
+      "bytes": 266063,
+      "sha256": "6381e9695d88e35ee26bd862a3d02f41654783144e9d41e3ff1b0e598f3cb1a7",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_63afd8e6e0f04470b50ee18b42c5ac7d~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/passion-2024-lent-resources"
+    },
+    {
+      "path": "images/b444c3_69d5254e19704236840137115f4a7b46~mv2.png",
+      "bytes": 903131,
+      "sha256": "75b7a286140cd0971d95f62504901d1393e8fbdf82ab6243bfa90b3508937dda",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_69d5254e19704236840137115f4a7b46~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/testify-to-love"
+    },
+    {
+      "path": "images/b444c3_762f53ccda0e4eee8cc51147ab1aff2b~mv2.png",
+      "bytes": 1472393,
+      "sha256": "d80be4dee97e0afc6dbacef79a36ef5f80545d6a26077ad08cf373b4b6ddc643",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_762f53ccda0e4eee8cc51147ab1aff2b~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/remembering-resurrection"
+    },
+    {
+      "path": "images/b444c3_76b7c615af4d4d09a0d43891edf4caf1~mv2.png",
+      "bytes": 265396,
+      "sha256": "ec507247399a7ee08d9df9c3f478333f8ec8aee8cb0f5d0fe19f2d48505017f2",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_76b7c615af4d4d09a0d43891edf4caf1~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/passion-despite-weakness"
+    },
+    {
+      "path": "images/b444c3_807d51cc135344ea915deee4fbb381f5~mv2.png",
+      "bytes": 879471,
+      "sha256": "dd0fdc62e76bf810ed597b5c50150976ccf565500b210e40c31701f3a9d48059",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_807d51cc135344ea915deee4fbb381f5~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/lent-easter-2025"
+    },
+    {
+      "path": "images/b444c3_830bc38ec50d41a2af923dd485a22647~mv2.png",
+      "bytes": 65188,
+      "sha256": "3a34be1a45f31b47ac120bcc64232235c921937778c798f971997a3ef3c5716f",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_830bc38ec50d41a2af923dd485a22647~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/elect-peace"
+    },
+    {
+      "path": "images/b444c3_87f4b5bcc547469893d4624e3f4de82e~mv2.png",
+      "bytes": 984180,
+      "sha256": "102cfd93068b5790248a8d93773c54f54b5254f784dd98c17b6ee91ee6d86be2",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_87f4b5bcc547469893d4624e3f4de82e~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/joy-in-unity"
+    },
+    {
+      "path": "images/b444c3_8c2b6b5f35644e8b80b43707d493ec5f~mv2.png",
+      "bytes": 1327443,
+      "sha256": "0b292797e5240e22d714ec4ef052061d8e9f1b9abbdddcd4fcf1051afcf53729",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_8c2b6b5f35644e8b80b43707d493ec5f~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/mountaintop-blessing"
+    },
+    {
+      "path": "images/b444c3_8f198facd3a4492ca43cd80d4aba1125~mv2.png",
+      "bytes": 75443,
+      "sha256": "e9b6c6d85d6dc981b54d0d73631a3009f50468725d22c40b7a78f7ea42d4ba07",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_8f198facd3a4492ca43cd80d4aba1125~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/one-truth"
+    },
+    {
+      "path": "images/b444c3_964485e142dd4e4e9dba06decc64aae2_tilde_mv2.png",
+      "bytes": 98403,
+      "sha256": "0896b8a1f9fb28ccacb557aa61b7c959817c0d75bde0b302816e8277c0029dbe",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_964485e142dd4e4e9dba06decc64aae2~mv2.png",
+      "label": "Multiply Love",
+      "foundOn": null
+    },
+    {
+      "path": "images/b444c3_964485e142dd4e4e9dba06decc64aae2~mv2.png",
+      "bytes": 98403,
+      "sha256": "0896b8a1f9fb28ccacb557aa61b7c959817c0d75bde0b302816e8277c0029dbe",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_964485e142dd4e4e9dba06decc64aae2~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/multiply-love"
+    },
+    {
+      "path": "images/b444c3_980b1f8242b146f3b077489cad405233~mv2.png",
+      "bytes": 72054,
+      "sha256": "74d4314b536ee062939e0001de31c23f80b0c6db84bb38320981a4c6f3d5001a",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_980b1f8242b146f3b077489cad405233~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/elect-patience"
+    },
+    {
+      "path": "images/b444c3_9f85a1017dab42e7a33553e6dc92f734~mv2.png",
+      "bytes": 816800,
+      "sha256": "7ebf56b9c239bf2a3414a2f810d3378f1bf759f03304ab1deeb28ea36387a228",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_9f85a1017dab42e7a33553e6dc92f734~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/pentecost-the-best-birthday-ever"
+    },
+    {
+      "path": "images/b444c3_ab10e814029b43bba98380c339d6dacb~mv2.png",
+      "bytes": 1375478,
+      "sha256": "00f976d9f9d59295115810f7aa2b8f03779c8d8a53b42e3038a601c06fdf3313",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_ab10e814029b43bba98380c339d6dacb~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-in-god-s-saving-action"
+    },
+    {
+      "path": "images/b444c3_ab640971eebe418cbf64e6fd31689a42~mv2.png",
+      "bytes": 828514,
+      "sha256": "1c12708f99f2cba16e135a366ffa9d8d40ab1563097f735fbb56b5be9ec8c879",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_ab640971eebe418cbf64e6fd31689a42~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/promise-threat-betrayal"
+    },
+    {
+      "path": "images/b444c3_b608a57e28a5410385d92bb123fe880a~mv2.jpg",
+      "bytes": 406260,
+      "sha256": "459345e9e6162d4ec3d04f8005b0f8b99b8b558c62f514c4bdd46f433948aaf4",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_b608a57e28a5410385d92bb123fe880a~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/meet-icbc-s-camp-directors"
+    },
+    {
+      "path": "images/b444c3_bb0764a9d43f48bf9999d3f0a2cf1f67~mv2.png",
+      "bytes": 899929,
+      "sha256": "2e3bd0dd6127e3382975bc87e454a2e0620e5a213da7a69d6d4291e49c7cc269",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_bb0764a9d43f48bf9999d3f0a2cf1f67~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/overcomers"
+    },
+    {
+      "path": "images/b444c3_bb18073be8b148b8a0ff6578316b33c1~mv2.png",
+      "bytes": 846179,
+      "sha256": "d77f8b5a73432c94ee172730645ee26ba3dc4615c7150dd98e943d4ef3801627",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_bb18073be8b148b8a0ff6578316b33c1~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/passing-the-promise-to-the-next-generation"
+    },
+    {
+      "path": "images/b444c3_bd8c9d6a8b784d56b9b960e6d2187e9a~mv2.png",
+      "bytes": 253059,
+      "sha256": "400e084adc48eabbc738f9509ed0a49b179501d602d5e2f080d5d87ef2471c91",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_bd8c9d6a8b784d56b9b960e6d2187e9a~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/passion-despite-riches"
+    },
+    {
+      "path": "images/b444c3_bfd7b960fa914536a332ac9911f20ce4~mv2.png",
+      "bytes": 78005,
+      "sha256": "6a0f0750fbce69cb3b1c2aba1eff1f078e829a7e7eb8a8d8840e5b4ac7bc476d",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_bfd7b960fa914536a332ac9911f20ce4~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/one-liberty"
+    },
+    {
+      "path": "images/b444c3_c903832e4c9d491a8fc8e0f05cb6e265~mv2.png",
+      "bytes": 1279228,
+      "sha256": "f9997c74dab65ce23f2617d2053fcb2b116af37c3fb6e3daaeefb0b9b6678c4c",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_c903832e4c9d491a8fc8e0f05cb6e265~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/anti-family-values-jesus"
+    },
+    {
+      "path": "images/b444c3_c986a66000e74239bd0425410c370d57~mv2.png",
+      "bytes": 1293096,
+      "sha256": "ee672a176d7c267581bf38cc47f389d588832e2a4620a40c1c081b6828755132",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_c986a66000e74239bd0425410c370d57~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/joy-in-the-gospel"
+    },
+    {
+      "path": "images/b444c3_e67eade1c65441fcbf406d60b64d34a4_tilde_mv2.png",
+      "bytes": 1413244,
+      "sha256": "4918c6edc02c7b068e7c26a97f405b6a27dee6338e782165e04be3123912c6ac",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_e67eade1c65441fcbf406d60b64d34a4~mv2.png",
+      "label": "Blue Christmas? Hope & Mental Health for the Holidays",
+      "foundOn": null
+    },
+    {
+      "path": "images/b444c3_e67eade1c65441fcbf406d60b64d34a4~mv2.png",
+      "bytes": 1413244,
+      "sha256": "4918c6edc02c7b068e7c26a97f405b6a27dee6338e782165e04be3123912c6ac",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_e67eade1c65441fcbf406d60b64d34a4~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/blue-christmas-hope-mental-health-for-the-holidays"
+    },
+    {
+      "path": "images/b444c3_e833e0cf135d4acca13b39cfadb451b6~mv2.png",
+      "bytes": 232041,
+      "sha256": "05bf4a25ea3c5a0b610558fbfc71de3a7946ea50ccb41a3e90f97f08774f1950",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_e833e0cf135d4acca13b39cfadb451b6~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/holy-week-2024"
+    },
+    {
+      "path": "images/b444c3_ea7d5cd52641408baec136906faff4e5~mv2.png",
+      "bytes": 1322721,
+      "sha256": "20cf31084465e4ec198d61261cd17974e0f567a3faf15142201d1415d8fd4db6",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_ea7d5cd52641408baec136906faff4e5~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/mountaintop-law"
+    },
+    {
+      "path": "images/b444c3_fbf9d0c632e8447eb0f101174e57458d~mv2.png",
+      "bytes": 167971,
+      "sha256": "a6a9011071c015c784a7adf0c6e9492696cedf32e32a286d937552aea669fe34",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_fbf9d0c632e8447eb0f101174e57458d~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/lent-easter-2025"
+    },
+    {
+      "path": "images/b98776_006afe5affc842708c359cf4ee01c3ab~mv2.png",
+      "bytes": 931782,
+      "sha256": "7f853758df8607bc6b1eceacc2aee009b5e5c8050b67b4d7f74747bfa16bdc91",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_006afe5affc842708c359cf4ee01c3ab~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/prayer-as-listening"
+    },
+    {
+      "path": "images/b98776_034d6db8459449c38a926718e37196be~mv2.png",
+      "bytes": 52681,
+      "sha256": "c248aca3e9411aa840ca81ddf18629a4cc472ff8ba7a0c46e91d46ff8e97cb25",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_034d6db8459449c38a926718e37196be~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/a-church-for-a-lonely-world"
+    },
+    {
+      "path": "images/b98776_03ffce9e792442fd8570453a6c420eec_tilde_mv2.jpg",
+      "bytes": 1054327,
+      "sha256": "8fc1552e8d31bb48735298fb2e64da80a5b106d6f87f2353ace8ed57d37b9b52",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_03ffce9e792442fd8570453a6c420eec~mv2.jpg",
+      "label": "Adul Header image Possibility 1_edited_edited_edited.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_097cffca52654466bc5272d99143d885_tilde_mv2.jpg",
+      "bytes": 292492,
+      "sha256": "8158008ac59bc8fe8e1c803be6773ba34ad43119cfc45055b298ca936a24ba0e",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_097cffca52654466bc5272d99143d885~mv2.jpg",
+      "label": "Escape room youth_edited.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_0ab1c170d5a645778a45220857c224e3~mv2.png",
+      "bytes": 964400,
+      "sha256": "82a594b80accd0a087890ef003db84effe6f559f99b0dc7de0a4d359a38ca780",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_0ab1c170d5a645778a45220857c224e3~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/old-age-strangers"
+    },
+    {
+      "path": "images/b98776_0d58f98da64c4267b26765d1f4b9c899~mv2.png",
+      "bytes": 497951,
+      "sha256": "b0b97f64e9048d658ea20a283f62dafa74528663b2e33ab32710e86a1b3f65b7",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_0d58f98da64c4267b26765d1f4b9c899~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/when-god-shows-up-idols-are-made-foolish"
+    },
+    {
+      "path": "images/b98776_148b31477dc442a9b90cb9bb75e2c5ca~mv2.png",
+      "bytes": 1284076,
+      "sha256": "4fb3a645546313781e7724faf30b54161f55d5d174e3e1ae40427165f09769b7",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_148b31477dc442a9b90cb9bb75e2c5ca~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/joy-in-the-god-of-peace"
+    },
+    {
+      "path": "images/b98776_215361d745164acc8f990f916f9e0b4e~mv2.jpg",
+      "bytes": 391558,
+      "sha256": "62823e4a4725d686e904880e284de3b55b50810ef5e2b6742d1ee1a50f58ec78",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_215361d745164acc8f990f916f9e0b4e~mv2.jpg",
+      "label": "Photo Credit: Tim Hüfner (Unsplash)",
+      "foundOn": "https://www.fbcmuncie.org/post/joy-in-living-for-christ"
+    },
+    {
+      "path": "images/b98776_33c2ec06d298496b8a397638a3e189bd~mv2.png",
+      "bytes": 1018231,
+      "sha256": "252fc8e34cae469da33e3528be0b89ef462992bae0741f4055c951518ca23d5a",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_33c2ec06d298496b8a397638a3e189bd~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/walking-in-the-light-together"
+    },
+    {
+      "path": "images/b98776_3e73f2246a2940dba51cc008183b8974~mv2.png",
+      "bytes": 501802,
+      "sha256": "23942e59dcf1ce6a3e619927f0d147150af9f0cb234566df409771d70a6446e1",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_3e73f2246a2940dba51cc008183b8974~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/when-god-shows-up-confusion-becomes-clarity"
+    },
+    {
+      "path": "images/b98776_46a45e062a994a32bb3a6fd407690ba9_tilde_mv2.jpg",
+      "bytes": 4121589,
+      "sha256": "7e714051aa64ae33b40b42562deb2d40bc3b8c4ef48140f07a3eb211c0ab645c",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_46a45e062a994a32bb3a6fd407690ba9~mv2.jpg",
+      "label": "Adult or Outreach possbility 1.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_49095460f7734da6bdced3a87ca1e695~mv2.png",
+      "bytes": 5755636,
+      "sha256": "afe81e55c4b0a790a0d57d3c29cd60f8b954d2fed27403da9b362128016c1793",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_49095460f7734da6bdced3a87ca1e695~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/christmas-new-years-2023"
+    },
+    {
+      "path": "images/b98776_5436b7bf492c44ee962211a2be7e3024_tilde_mv2.jpg",
+      "bytes": 6060241,
+      "sha256": "9188d36581963127e9b06dd4f28c4b5130138c1a16bcb38f636a1598a8434691",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_5436b7bf492c44ee962211a2be7e3024~mv2.jpg",
+      "label": "Riverside.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_54d394a9d673424bbfdd476d16c701d3~mv2.png",
+      "bytes": 1420105,
+      "sha256": "029790705aea90d9a6106ee604446bac81caf7d3f22c1e22b624eb9b433599b6",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_54d394a9d673424bbfdd476d16c701d3~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/we-believe-in-the-separation-of-church-state"
+    },
+    {
+      "path": "images/b98776_67787c8eb89048ad98f19f414540d53f~mv2.png",
+      "bytes": 440321,
+      "sha256": "b45f3a01bbd3dce0c6f2f10b77260c800fbfcc346cabd8487184c061fc079898",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_67787c8eb89048ad98f19f414540d53f~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/a-church-for-a-lonely-world"
+    },
+    {
+      "path": "images/b98776_764ade5a13af497594a253f3b833c419~mv2.png",
+      "bytes": 496000,
+      "sha256": "21c6fb10681b9aa78f61e38f1a5b505d12423313bba9bad6fb52528e6f1e8998",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_764ade5a13af497594a253f3b833c419~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/when-god-shows-up-plans-are-changed"
+    },
+    {
+      "path": "images/b98776_77887ea2974a4cd9b00aef14a93fc435_tilde_mv2.jpg",
+      "bytes": 3311504,
+      "sha256": "1180069223bdf23334aff6df76cc94ee368aeac89b3f9e5c5cd3f7556e2303d8",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_77887ea2974a4cd9b00aef14a93fc435~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_79d80d109b534ba2ad72bd36a04fcfe8~mv2.png",
+      "bytes": 720119,
+      "sha256": "971848d6fe9dc03361510932ea9c97aff05f108653345587290d47158b181cc6",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_79d80d109b534ba2ad72bd36a04fcfe8~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/a-church-for-a-lonely-world"
+    },
+    {
+      "path": "images/b98776_7a52d1b4af414567bd82f8eac7866ab6~mv2.png",
+      "bytes": 456334,
+      "sha256": "a8c9985d1d4c057f6bbede5e03a4d1d87a52cea59d7d0216cca54d9acce62763",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_7a52d1b4af414567bd82f8eac7866ab6~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/holy-week-2024"
+    },
+    {
+      "path": "images/b98776_8106f290c06645b0b922a163d572f736~mv2.png",
+      "bytes": 477932,
+      "sha256": "84cced29978466055371ec8d90a127e05128f137412f27a41eacedb6bf5c7f1d",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_8106f290c06645b0b922a163d572f736~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/when-god-shows-up"
+    },
+    {
+      "path": "images/b98776_8b128e50850e43ac96379204f41308c6~mv2.png",
+      "bytes": 1409794,
+      "sha256": "8b0b170d7648d4a723aede3bbe4d5106a0e7b428f2fff292d74b045521af52ba",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_8b128e50850e43ac96379204f41308c6~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/fear-and-great-joy-easter-2023"
+    },
+    {
+      "path": "images/b98776_8fba531cde834350881fb3f843e9b71d~mv2.png",
+      "bytes": 877836,
+      "sha256": "11c0abb99969f806c1318ec7d11e7b0a516047a0183c6c6070153ce7fcbefa31",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_8fba531cde834350881fb3f843e9b71d~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/holy-week-2024"
+    },
+    {
+      "path": "images/b98776_917a22a18aca429d831435b3ae903b7a_tilde_mv2.png",
+      "bytes": 531793,
+      "sha256": "fb8274c7fb93780b0b43a62a8d334ce2a26b7f749666e423b07d5b680bf80879",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_917a22a18aca429d831435b3ae903b7a~mv2.png",
+      "label": "A Church for a Lonely World",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_917a22a18aca429d831435b3ae903b7a~mv2.png",
+      "bytes": 531793,
+      "sha256": "fb8274c7fb93780b0b43a62a8d334ce2a26b7f749666e423b07d5b680bf80879",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_917a22a18aca429d831435b3ae903b7a~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/a-church-for-a-lonely-world"
+    },
+    {
+      "path": "images/b98776_9559c7369fa3492f902f3e6270754241~mv2.jpg",
+      "bytes": 103890,
+      "sha256": "3ddb848bed8c990f326bbfe85572830907bb97445990bd75071e08a69244ad79",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_9559c7369fa3492f902f3e6270754241~mv2.jpg",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/joy-in-living-for-christ"
+    },
+    {
+      "path": "images/b98776_a92b8eb7e2d64a67a8b4599d6fd432fb_tilde_mv2.jpg",
+      "bytes": 6076709,
+      "sha256": "f97d803b9cb4eff0e2a3b3a8a868ffccebaec22ab2fd92f9645158341ec72bb2",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_a92b8eb7e2d64a67a8b4599d6fd432fb~mv2.jpg",
+      "label": "youth uno.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_b8825c7c4b9c4b94bac80697b20194ce~mv2.png",
+      "bytes": 1252501,
+      "sha256": "39e65455daf78b55237456d86e0ae7f85887efd06656d2b16abdda0e85cbd40d",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_b8825c7c4b9c4b94bac80697b20194ce~mv2.png",
+      "label": null,
+      "foundOn": "https://www.fbcmuncie.org/post/joy-without-complaining"
+    },
+    {
+      "path": "images/b98776_bb65481087f84990a296a4889c810921_tilde_mv2.jpg",
+      "bytes": 4436204,
+      "sha256": "45117b068e386cc7ed861ee851363026a5ec6c932058efd8f5e05ef684665d94",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_bb65481087f84990a296a4889c810921~mv2.jpg",
+      "label": "Youth large group.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_be609b7a431f4ad9a4f82e225deeb234_tilde_mv2.jpg",
+      "bytes": 2676762,
+      "sha256": "e73924a3aedb3c172e6fb2146f2d1756a2325acc0a32e6b8830f1b8cdbacf750",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_be609b7a431f4ad9a4f82e225deeb234~mv2.jpg",
+      "label": "deacons 2026_edited.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_c7bf26f80f0f48b0a797301b51acc78a~mv2.png",
+      "bytes": 1016440,
+      "sha256": "f36d67027955acd4a7b525d47bd4fd9fdf82bb561c37dfef55b274e4c8f117a9",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_c7bf26f80f0f48b0a797301b51acc78a~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/holy-week-2024"
+    },
+    {
+      "path": "images/b98776_cab592072aaa42e4985e30d96f58b5b2_tilde_mv2.jpg",
+      "bytes": 3542394,
+      "sha256": "880fb0470d77b488fe453318d4560846e2768c953f281e749a765a5efac93245",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_cab592072aaa42e4985e30d96f58b5b2~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_d249bca5a70942199c24e96d21ca8796~mv2.jpeg",
+      "bytes": 207223,
+      "sha256": "417a6b6bd80b206c6c357d44b3925812e5bc252c742497b1aa84ddd0fb2d69e1",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_d249bca5a70942199c24e96d21ca8796~mv2.jpeg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/a-church-for-a-lonely-world"
+    },
+    {
+      "path": "images/b98776_d35c1da859304aa79a6389960d9178bd_tilde_mv2.jpg",
+      "bytes": 195572,
+      "sha256": "1a6f5159b7207b6ca17373df0e7783578c13638056c31fce103accc34f08ebda",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_d35c1da859304aa79a6389960d9178bd~mv2.jpg",
+      "label": "children caterpillar_edited_edited.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_d9c986cab5f645e3970b166f81b2d23b~mv2.png",
+      "bytes": 291234,
+      "sha256": "1a8ff7a755f792ec9d9785e1182e4ad6567f2a5de820e017262fc54be75c7496",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_d9c986cab5f645e3970b166f81b2d23b~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/holy-week-2024"
+    },
+    {
+      "path": "images/b98776_db40e86aecf54d129bc23157229b25cb_tilde_mv2.jpg",
+      "bytes": 5588360,
+      "sha256": "edbd951e7a0e2f08b545a7c87ab6db7d1432fe1cee51de2fe3cd2ca15f125047",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_db40e86aecf54d129bc23157229b25cb~mv2.jpg",
+      "label": "",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_de87defc7238467abb5dbadcc1c28485~mv2.png",
+      "bytes": 132976,
+      "sha256": "457280039051c5a914b2e8fdf9f7c132dce3f219593eb56130d92b33e1a9bbdf",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_de87defc7238467abb5dbadcc1c28485~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/a-church-for-a-lonely-world"
+    },
+    {
+      "path": "images/b98776_e6612e5af7804e77ad336a6b384782ea_tilde_mv2.png",
+      "bytes": 4409968,
+      "sha256": "0c85555c53659e9c5dfdf63b846c96a17eda4dc85427942ff24c1f1d8fcbbdf1",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_e6612e5af7804e77ad336a6b384782ea~mv2.png",
+      "label": "DSC_0472 copy_edited_edited_edited.png",
+      "foundOn": null
+    },
+    {
+      "path": "images/b98776_f582265d36a34f38906f99066460d6ee~mv2.jpg",
+      "bytes": 196247,
+      "sha256": "62322d933b3aab9b8b6607eb28d65c1a42d011e40aa2a8ba096212abb48c0169",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_f582265d36a34f38906f99066460d6ee~mv2.jpg",
+      "label": "Desmond Tutu Photo Credit: Wikimedia Commons",
+      "foundOn": "https://www.fbcmuncie.org/post/joy-in-living-for-christ"
+    },
+    {
+      "path": "images/b98776_fad0935466ab44e6b6fb852aebd7f28e_tilde_mv2.jpg",
+      "bytes": 7885821,
+      "sha256": "e7c468509564621fc30d8d7e520b921929fd6fc1c04ce17702a216d4510d141c",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_fad0935466ab44e6b6fb852aebd7f28e~mv2.jpg",
+      "label": "wooden cross fbcm 2.jpg",
+      "foundOn": null
+    },
+    {
+      "path": "images/c9a116c5b0ef45e88cdc734f113098c1.jpg",
+      "bytes": 589119,
+      "sha256": "8c36214bf48597e5f66e940a518e7e9550f3c3d8de949b201ec11ec648bf1250",
+      "sourceUrl": "https://static.wixstatic.com/media/c9a116c5b0ef45e88cdc734f113098c1.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/there-s-no-sin-in-single"
+    },
+    {
+      "path": "images/d174119d6d26cf2ac22d3ab2fd805c6c.jpg",
+      "bytes": 405294,
+      "sha256": "d3b6576d9bf1ae663e7ed65b4059a9b8362af533e07b5335bd950ec7b34a47af",
+      "sourceUrl": "https://static.wixstatic.com/media/d174119d6d26cf2ac22d3ab2fd805c6c.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/sabbath-for-us"
+    },
+    {
+      "path": "images/e1f22b_c20cdb38378e46a397edcccaf02fe101~mv2.jpeg",
+      "bytes": 256589,
+      "sha256": "708e14b836bdde60584a4f2a1ae85349febf179d5b668af39e70fb3c6fe0adb1",
+      "sourceUrl": "https://static.wixstatic.com/media/e1f22b_c20cdb38378e46a397edcccaf02fe101~mv2.jpeg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/händel-s-messiah-sing-in-carols"
+    },
+    {
+      "path": "images/e1f22b_cb27f88bce9048d5b898afe1f175e1d0~mv2.png",
+      "bytes": 1350426,
+      "sha256": "6c084b9f69247f2e83070f8c139fd01d9a8d26715454e5090b62e9d32151517d",
+      "sourceUrl": "https://static.wixstatic.com/media/e1f22b_cb27f88bce9048d5b898afe1f175e1d0~mv2.png",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/händel-s-messiah-sing-in-carols"
+    },
+    {
+      "path": "images/nsplsh_2d745234666e4e4a573241_tilde_mv2.jpg",
+      "bytes": 3874551,
+      "sha256": "0eec0b91f971314c05ac9088d2ea6518b5dd4907626dcd07c34bde20c9b33151",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_2d745234666e4e4a573241~mv2.jpg",
+      "label": "Image by Anna Sullivan",
+      "foundOn": null
+    },
+    {
+      "path": "images/nsplsh_50c28de2bda5451c86d771260fe217de_tilde_mv2.jpg",
+      "bytes": 4267749,
+      "sha256": "4052e8f8ba461ab68cdcbe96c3169dfe6dadb14cd2436f6e114b694982d4065c",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_50c28de2bda5451c86d771260fe217de~mv2.jpg",
+      "label": "Image by Katherine Conrad",
+      "foundOn": null
+    },
+    {
+      "path": "images/nsplsh_525a6e345f467a4e554359~mv2_d_5184_3456_s_4_2.jpg",
+      "bytes": 3353524,
+      "sha256": "0da997f78e356adcdb4897e2844fd4695498c703f86d2848e2fe83aaf2392575",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_525a6e345f467a4e554359~mv2_d_5184_3456_s_4_2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/a-church-for-a-lonely-world"
+    },
+    {
+      "path": "images/nsplsh_6a335239432d5871653177~mv2.jpg",
+      "bytes": 2116976,
+      "sha256": "61c555036a21c5ccec7773734515e88b33a3d8f701622dee3fe24a5516370350",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_6a335239432d5871653177~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/waiting-in-the-dark"
+    },
+    {
+      "path": "images/nsplsh_6b427962484a3343455749_tilde_mv2_d_4048_3036_s_4_2.jpg",
+      "bytes": 604000,
+      "sha256": "dabb48139c401433d8e8de7cfd8124f3f2256a705fe31b33d4d7ca455c33d908",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_6b427962484a3343455749~mv2_d_4048_3036_s_4_2.jpg",
+      "label": "Image by Alicia Quan",
+      "foundOn": null
+    },
+    {
+      "path": "images/nsplsh_706561546e695a73555173_tilde_mv2_d_3384_5076_s_4_2.jpg",
+      "bytes": 6484066,
+      "sha256": "1c4628c2cd575f514fe827982276d37141102f8238107366e783cf8970b2a336",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_706561546e695a73555173~mv2_d_3384_5076_s_4_2.jpg",
+      "label": "Image by Samara Doole",
+      "foundOn": null
+    },
+    {
+      "path": "images/nsplsh_763248674e7a5244664949~mv2_d_4906_3258_s_4_2.jpg",
+      "bytes": 1250007,
+      "sha256": "99b6686385b13f4d0fff9d230c888df6f99a003653dd9b1ab2169fc874e477ad",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_763248674e7a5244664949~mv2_d_4906_3258_s_4_2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/fear-and-great-joy-easter-2023"
+    },
+    {
+      "path": "images/nsplsh_8d724000cbde4279bf61b743a0ee9752_tilde_mv2.jpg",
+      "bytes": 3468443,
+      "sha256": "ab233c8e06885412256b9b9912607292d3240cf1d4321f5a17b4c98b7b89a18d",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_8d724000cbde4279bf61b743a0ee9752~mv2.jpg",
+      "label": "Image by Beatriz Pérez Moya",
+      "foundOn": null
+    },
+    {
+      "path": "images/nsplsh_a082e75541a243a885c3e103a5ef3d4d~mv2.jpg",
+      "bytes": 6218867,
+      "sha256": "eae42af0bba16ffc773f8160de25375cb8568e760d5149764dc17f8ad1212737",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_a082e75541a243a885c3e103a5ef3d4d~mv2.jpg",
+      "label": "",
+      "foundOn": "https://www.fbcmuncie.org/post/sabbath-for-us"
+    },
+    {
+      "path": "images/nsplsh_c3cc9897db6d46e4949ba57823db98bb~mv2.jpg",
+      "bytes": 2025809,
+      "sha256": "7fcb7247d4396862b046ccf33fc48633d27360024460da9921f04f9b7e4ed636",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_c3cc9897db6d46e4949ba57823db98bb~mv2.jpg",
+      "label": "Wooden nativity scene with figures holding a lamb and shepherd's staff. Background features warm, glowing lights and dark, starry setting.",
+      "foundOn": "https://www.fbcmuncie.org/post/it-s-the-small-things"
+    },
+    {
+      "path": "images/nsplsh_d846b72175214c13b46af4c5e3502682_tilde_mv2.jpg",
+      "bytes": 1872903,
+      "sha256": "fd48792a1a02d7a792db05a3076c61ecf86858c41f087b9604d0721f46d396ea",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_d846b72175214c13b46af4c5e3502682~mv2.jpg",
+      "label": "Image by Sandy Millar",
+      "foundOn": null
+    },
+    {
+      "path": "images/nsplsh_e87d17eb31d64a258138dfbce79cd204~mv2.jpg",
+      "bytes": 1211704,
+      "sha256": "10c5519cdb8ed291de0a796754b2ebef7d4b1afe7bf06709c943e0f999cfd7e0",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_e87d17eb31d64a258138dfbce79cd204~mv2.jpg",
+      "label": "Light is never obvious to those living in darkness.",
+      "foundOn": "https://www.fbcmuncie.org/post/no-rest-for-the-wicked"
+    },
+    {
+      "path": "images/nsplsh_fe60b109424744a3bcbba0193f394f20_tilde_mv2.jpg",
+      "bytes": 13009126,
+      "sha256": "0c95204fc49394bd2f9d5b46b6fe15d961227b5c56e3bafca018d5b7c1b50728",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_fe60b109424744a3bcbba0193f394f20~mv2.jpg",
+      "label": "Image by engin akyurt",
+      "foundOn": null
+    },
+    {
+      "path": "files/08181c_045c4dee59534f709a9c1fbfc2455642.pdf",
+      "bytes": 549328,
+      "sha256": "6a5c0e30ef87051c0ffb6729dd6e89d0bfb854839783c376091be7f554be4264",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_045c4dee59534f709a9c1fbfc2455642.pdf",
+      "label": "November",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_1651a8d5bbd24926bda48d947a3f2d99.pdf",
+      "bytes": 8313354,
+      "sha256": "cd2016abd840a9d6b226e7f3105f8049af980472a2e72e6767b3499159cd1fe6",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_1651a8d5bbd24926bda48d947a3f2d99.pdf",
+      "label": "September",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_1a90c51a5f6249c2b871616fb67dd87e.pdf",
+      "bytes": 1528155,
+      "sha256": "b2e6d4c09ff324482b634c5ac78d103340e758d1ffd7e4834e2d11b858f4142e",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_1a90c51a5f6249c2b871616fb67dd87e.pdf",
+      "label": "August",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_1fa464b2da224de48691aca95e371087.pdf",
+      "bytes": 134672,
+      "sha256": "93acadeeb0323d3e61674c5a0a28f35dbaa0080b8a96d9f654dc4741719eade4",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_1fa464b2da224de48691aca95e371087.pdf",
+      "label": "Building Reservation Agreement",
+      "foundOn": [
+        "https://www.fbcmuncie.org/reservation"
+      ]
+    },
+    {
+      "path": "files/08181c_25d6fe5bc3c6491f914ddc048de9e30d.pdf",
+      "bytes": 1133152,
+      "sha256": "d5e70513736659d80d2af0e2214f93267452f54dfef83d29561557ffe90ada50",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_25d6fe5bc3c6491f914ddc048de9e30d.pdf",
+      "label": "January",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_4aa28fb129a34fc39ca40ad9daab217a.pdf",
+      "bytes": 11613542,
+      "sha256": "70fe5a637dbd9c8634e3698c6aa3efabe568b0820c292943e133de903e7e1083",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_4aa28fb129a34fc39ca40ad9daab217a.pdf",
+      "label": "June",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_4db0632b402847d692e8988d4b429aa9.pdf",
+      "bytes": 525214,
+      "sha256": "ce3819b8755d8270c983dae8bd1ba59873d07ce540edbd11877306ad2f9397d9",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_4db0632b402847d692e8988d4b429aa9.pdf",
+      "label": "July",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_4de24232c51a43fb802d6f11ed975429.pdf",
+      "bytes": 1156263,
+      "sha256": "b4457621d26d11e5c3dd4a6cc942527b4cb2e9adc73054280c02e5559bed2dbe",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_4de24232c51a43fb802d6f11ed975429.pdf",
+      "label": "October",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_56b0e5fac5e04a69ae013dfbe0d2eb73.pdf",
+      "bytes": 809783,
+      "sha256": "479d8dca1b96b839210c0def28253d0f84f8da580da3aa5108452d5711960e24",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_56b0e5fac5e04a69ae013dfbe0d2eb73.pdf",
+      "label": "Feburary",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_60d1fe16102f457fa87d72634ce9944f.pdf",
+      "bytes": 816616,
+      "sha256": "a446c699a3d8cd21b9343167b96005aa1685fd696351c8117e18ac49b48038cb",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_60d1fe16102f457fa87d72634ce9944f.pdf",
+      "label": "January",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_687bb2b8adcd479098af7adb493f646a.pdf",
+      "bytes": 1082001,
+      "sha256": "67e1a1243d03846ac19e73bc4d1585db8f0d7593549beb8fbbc5b65d02dac80f",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_687bb2b8adcd479098af7adb493f646a.pdf",
+      "label": "December",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_6f30aaaab1814b3b8cd670264bc8ba8a.pdf",
+      "bytes": 7525241,
+      "sha256": "adb2ea3982d04e7b511db5607fc427fe5003be02dfd8d7eaa03f3f29f93248f8",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_6f30aaaab1814b3b8cd670264bc8ba8a.pdf",
+      "label": "December",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_73c5b66d0ac94c7eae0e1d2555f05a9d.pdf",
+      "bytes": 10356136,
+      "sha256": "ac88efb25b2e2717f2d9f81f0d982384c203c628ae013ab98d262d5a19bfec0c",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_73c5b66d0ac94c7eae0e1d2555f05a9d.pdf",
+      "label": "March",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_75a0565927c14a929d1ebee1565e638c.pdf",
+      "bytes": 2221608,
+      "sha256": "3837be5c856dc14fd09d8273c6ea753fe25d4e3d58401bdade0415560ce9c3dd",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_75a0565927c14a929d1ebee1565e638c.pdf",
+      "label": "Download",
+      "foundOn": [
+        "https://www.fbcmuncie.org/who-we-are"
+      ]
+    },
+    {
+      "path": "files/08181c_7f1349cc8cb74753bbaf9b7c09ef396b.pdf",
+      "bytes": 125534,
+      "sha256": "e463adfc5043117c7aeef501af42ae2d2920555380c37addf7f7d2574e51785f",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_7f1349cc8cb74753bbaf9b7c09ef396b.pdf",
+      "label": "As our by-laws & constitution say",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/membership"
+      ]
+    },
+    {
+      "path": "files/08181c_8230c9fdb376445ba1921033727e27d0.pdf",
+      "bytes": 640545,
+      "sha256": "59f5773681044b38c2c9f1f91cd56f0a2b3d407e6a2339e77e4630631fda8c7d",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_8230c9fdb376445ba1921033727e27d0.pdf",
+      "label": "September",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_8c063a37471044c59ca0db5b1d7dbd1c.pdf",
+      "bytes": 12399680,
+      "sha256": "eb4013a5ea95b48f6c70bea8c58f3173d3278ce8e98ef03c5ccbfe2861794da3",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_8c063a37471044c59ca0db5b1d7dbd1c.pdf",
+      "label": "December",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_8e2db690ee234ead8e3baa4b3bb3003f.pdf",
+      "bytes": 571458,
+      "sha256": "8cd8235f0dc30902a998dce249cab73bcabe6e6b88e7339820b34c6593789bb2",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_8e2db690ee234ead8e3baa4b3bb3003f.pdf",
+      "label": "March",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_9ba56139a9b74e44809e5d95e098f271.pdf",
+      "bytes": 3811642,
+      "sha256": "609bf40625ae8893607bb82a5865ff9caef287aee127a20ee56d0f3c28c70255",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_9ba56139a9b74e44809e5d95e098f271.pdf",
+      "label": "September",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_a6636444b3054059a3e0e5a2fa28f4b9.pdf",
+      "bytes": 497562,
+      "sha256": "95e3e60ff4a7fd33e8a97201eeadf8cd3d0fae4103c3d109a56bd83c2af39be6",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_a6636444b3054059a3e0e5a2fa28f4b9.pdf",
+      "label": "March",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_be64a9c738884843ba795d52e0a781a1.pdf",
+      "bytes": 25417,
+      "sha256": "4b5413ad9c5887b74015ae9d4982bb064cac5533435482ab6d1218916005948e",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_be64a9c738884843ba795d52e0a781a1.pdf",
+      "label": "See Full Confession [PDF]",
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs"
+      ]
+    },
+    {
+      "path": "files/08181c_c3aeb7be1884403b98bf22a32bc8fa90.pdf",
+      "bytes": 678659,
+      "sha256": "69e1566ee3f53398e9f207be364d72e7ce53e4444c19287aee848da0884ae926",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_c3aeb7be1884403b98bf22a32bc8fa90.pdf",
+      "label": "April",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_d2510edd25864b71ba03b064b322729b.pdf",
+      "bytes": 1188197,
+      "sha256": "8c8a838cabad777e68bcbb4f9a11d29cb93e7d2dceee2751fb5bafcf89baf439",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_d2510edd25864b71ba03b064b322729b.pdf",
+      "label": "June",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_e7479b68a5e7481ab7aaf9bb77689164.pdf",
+      "bytes": 667119,
+      "sha256": "1d923476d46fabd58c454f3a93541a1f9dc59928a38933d271e18575f737a182",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_e7479b68a5e7481ab7aaf9bb77689164.pdf",
+      "label": "May",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_ec0cd1d6d4cf499795c4585f29257d99.pdf",
+      "bytes": 194246,
+      "sha256": "be3daafe56929c48735b7b7a021f798e8fc0ef2478e814e8613ba3a7bdbeda3e",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_ec0cd1d6d4cf499795c4585f29257d99.pdf",
+      "label": "Feburary",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_fc5aef737d16495e91a50b2faf46f916.pdf",
+      "bytes": 7300450,
+      "sha256": "bf39dba2c9fa7c9b58b0e6bfb65512a9759b7bcafda57d76fa366f20e0ad9f67",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_fc5aef737d16495e91a50b2faf46f916.pdf",
+      "label": "June",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/08181c_fea77401b60947bf8db17b5e3d76a472.pdf",
+      "bytes": 46111268,
+      "sha256": "fe69070260d584fa0ce2ba54c7ae159022794a1a31983e3e357e4c3095500caa",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_fea77401b60947bf8db17b5e3d76a472.pdf",
+      "label": "March",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_05f80946db614eac96ec3cd4b8d8eab1.pdf",
+      "bytes": 6445215,
+      "sha256": "977fb2b8079bc40b69732a5928dfddf606e3b4be4ba99786ba07c631507162fa",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_05f80946db614eac96ec3cd4b8d8eab1.pdf",
+      "label": "December",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_0b78d55647cc43b5838539d45b867a38.pdf",
+      "bytes": 65373580,
+      "sha256": "2b0709e288daf1a961da89e4152ce832efc13d3e473476424d6c2621a2b73426",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_0b78d55647cc43b5838539d45b867a38.pdf",
+      "label": "June",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_0d1c920c2e0c433a957007b7c294ae99.pdf",
+      "bytes": 1284635,
+      "sha256": "7498fb77b42b9c4bdb01cf880ecbd0046bd8dea5e4d5ae0f8117dae694317245",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_0d1c920c2e0c433a957007b7c294ae99.pdf",
+      "label": "August",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_1a14a90dc7f14358b548a62f112ee790.pdf",
+      "bytes": 75197995,
+      "sha256": "07fc7aac55952ce9758f12d3c27ecf216e677096eeb6e8dd18279ffe0d1d70aa",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_1a14a90dc7f14358b548a62f112ee790.pdf",
+      "label": "June",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_36c0080fd52e461ab6f0bb0925e95ba8.pdf",
+      "bytes": 37403156,
+      "sha256": "165f9de10318f0dedf057ee5d401ad34ffe3ec0f31be9ad26b869f5fc678eee5",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_36c0080fd52e461ab6f0bb0925e95ba8.pdf",
+      "label": "July",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_556c2f0cca034824b3e355f7d2ec0547.pdf",
+      "bytes": 1943876,
+      "sha256": "eb8e0c0a459dece344f01a6d6a46df61cde24e975d1bddb103e8c8375dc2b8fa",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_556c2f0cca034824b3e355f7d2ec0547.pdf",
+      "label": "December",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_5741d47a89d1483db1e9aca2662c2f4b.pdf",
+      "bytes": 14345786,
+      "sha256": "ac55577fc401aa828895dcae8bfbd3801c41184a3c77d2baa9f7326e2475b0ec",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_5741d47a89d1483db1e9aca2662c2f4b.pdf",
+      "label": "March",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_5d5875126f8e4370976dc50811d0cc40.pdf",
+      "bytes": 90584,
+      "sha256": "b570000e8f1fdebf7204cf4b1cddda0bf1a3614f8cfd09bcae0071e853b628c1",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_5d5875126f8e4370976dc50811d0cc40.pdf",
+      "label": "Wedding Contract",
+      "foundOn": [
+        "https://www.fbcmuncie.org/wedding"
+      ]
+    },
+    {
+      "path": "files/81f7ac_5e79d048123a4917b9e9ef9404644a19.pdf",
+      "bytes": 28937033,
+      "sha256": "77ef72f55eb3bb67e6f41426eb9d15104fdd5ef85164e6e0b54008e79b477045",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_5e79d048123a4917b9e9ef9404644a19.pdf",
+      "label": "Download Latest Issue",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_7af5da80701244c1b3beac3abbdd8920.pdf",
+      "bytes": 79285983,
+      "sha256": "feeef827eaef3f887909d2827d2d87a625f415df2c4e63dabe2a8aa8f86dde99",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_7af5da80701244c1b3beac3abbdd8920.pdf",
+      "label": "September",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_7bbd993865b341588fe0ca667c7080ba.pdf",
+      "bytes": 52073988,
+      "sha256": "49595903f4ceee835e8a4b3619feb7f744a899b2422770f054e6975e5147a523",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_7bbd993865b341588fe0ca667c7080ba.pdf",
+      "label": "June",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_8093ab2e600841ff948a2a8e01d16d16.pdf",
+      "bytes": 18610369,
+      "sha256": "098adf17a0e2ebff81377ee3b0f706213d2aa4ac581bfd173dfbaeb0d9bda52a",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_8093ab2e600841ff948a2a8e01d16d16.pdf",
+      "label": "March",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_861bff84ba4d48beb5072c156ff9b082.pdf",
+      "bytes": 192827,
+      "sha256": "35ea5fca56d9aadb6ed898c09f598660a16500329a7e7612a2cb1f1d99c21ffd",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_861bff84ba4d48beb5072c156ff9b082.pdf",
+      "label": "September",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_8d10609f830241b5a993aa9687118b5c.pdf",
+      "bytes": 182851,
+      "sha256": "f1a1535c10c94104803dcdf0b6da286a72c4dd2ca0a47eb110e139a2ac1062a0",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_8d10609f830241b5a993aa9687118b5c.pdf",
+      "label": "Download printable, text-only, version here.",
+      "foundOn": [
+        "https://www.fbcmuncie.org/history"
+      ]
+    },
+    {
+      "path": "files/81f7ac_b50f32a489fe47e49df8e91d5b58b01e.pdf",
+      "bytes": 62852659,
+      "sha256": "5e090862c98f6a97e5bb60e018698c0eac8674adaf5972dbbd0024db9e29ddeb",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_b50f32a489fe47e49df8e91d5b58b01e.pdf",
+      "label": "September",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_c7fe261d69bd4967808b02b376785d7f.pdf",
+      "bytes": 1843555,
+      "sha256": "1a4ca885162512e48c9b083bf4d6ea685ecd4dd270fb4daa43efe4490a99aa77",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_c7fe261d69bd4967808b02b376785d7f.pdf",
+      "label": "March",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/81f7ac_e490a9f4e94f453aace77be8b91bcaa9.pdf",
+      "bytes": 260217,
+      "sha256": "8e9c24a9fb597ca7538cdde987e0b778f3585c75945afd8659461d604d323ad6",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_e490a9f4e94f453aace77be8b91bcaa9.pdf",
+      "label": "Bridal Packet",
+      "foundOn": [
+        "https://www.fbcmuncie.org/wedding"
+      ]
+    },
+    {
+      "path": "files/81f7ac_ecda5e2b31294318bb6901762e8918dd.pdf",
+      "bytes": 32870425,
+      "sha256": "ce73af155255085a58146245154b41f663196aefa1effd41325e3f7137f8b039",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/81f7ac_ecda5e2b31294318bb6901762e8918dd.pdf",
+      "label": "December",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/b98776_1b38bc471d7e40a5a648afb80714eba5.pdf",
+      "bytes": 29716525,
+      "sha256": "81f7545635ad9e2a3ed2c029d3373a5d3ef2282ae0b5ec7b5bc7e5e4a7d001e5",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/b98776_1b38bc471d7e40a5a648afb80714eba5.pdf",
+      "label": "June",
+      "foundOn": [
+        "https://www.fbcmuncie.org/publications"
+      ]
+    },
+    {
+      "path": "files/b98776_b6017910db9f477bbcb71f843b742887.pdf",
+      "bytes": 980645,
+      "sha256": "8d274f5ddd4451201d098490bf6decf989369a28a9c68a31d8d6518aab2f6a94",
+      "sourceUrl": "https://www.fbcmuncie.org/_files/ugd/b98776_b6017910db9f477bbcb71f843b742887.pdf",
+      "label": "Re-envisioning Baptist Identity: A Manifesto for Baptist Communities in North America",
+      "foundOn": [
+        "https://www.fbcmuncie.org/baptists"
+      ]
+    },
+    {
+      "path": "video/81f7ac_59e19330783a4981a8a70296dd41afe3_1080p.mp4",
+      "bytes": 111097763,
+      "sha256": "fabc6acd0df8dfc155191caafa0982aa900d45498d9eff401268b35504c6a090",
+      "sourceUrl": "https://video.wixstatic.com/video/81f7ac_59e19330783a4981a8a70296dd41afe3/1080p/mp4/file.mp4",
+      "label": "In-post video, 1080p",
+      "foundOn": "https://www.fbcmuncie.org/post/kingdom-family-vacation-anti-family-values-jesus-resources"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+---
+title: "Passion Despite Fruitlessness"
+date: "2024-02-14T17:08:04.128Z"
+author: "Kendall Ellis"
+categories: ["Sermon Preview"]
+url: "https://www.fbcmuncie.org/post/passion-despite-fruitlessness"
+---
+
+# Passion Despite Fruitlessness
+
+![cover](../images/b444c3_5151255ff0a44bb192b5bd3462d50fd0~mv2.png)
+
+*This is a preview for the first sermon in the series “Passion: When God’s Love Meets Our Betrayal”  To watch the recording of any of the sermons in this sermon series, visit our website.*
+
+***In the morning, as they went along, they saw the fig tree withered from the roots.***
+
+***Peter remembered and said to Jesus, “Rabbi, look! The fig tree you cursed has withered!”***
+
+***-Mark 11:12-26 (NIV)***
+
+In college, I found myself accidentally taking a pilgrimage to Rome during Holy Week.
+
+(I know, I know: how does a small town Kentucky girl *accidentally* get to Rome? That, my friends, is a story for another day. But you can thank my friend Melissa and a very upset stomach.)
+
+Eight years later, and I’ve still never experienced a city alive the way Rome was the Holy Week of 2016. The air buzzed with thousands of visitors flooding the city to remember the events leading up to Jesus’ crucifixion and death. I remember visiting St. Peter’s Basilica at the Vatican, filled with weary wanderers with hopeful eyes–those mourning the traps of sin around them and yet expectant of Christ’s victory to come. I remember Melissa teaching me to do the stations of the cross for the first time, and the wonder I experienced practicing them in the streets surrounding the Colosseum.
+
+Jesus may have died at Golgotha. But the shadow of death looms at the site of Christian martyrs. It gives new meaning to Jesus’ call, “take up your cross and follow me” (Matt. 16:24). And it was here that God helped me understand the power and purpose of Lent and Holy Week within the Church Calendar.
+
+Lent is a season marked by reflection and confession prior to Easter. Traditionally, the Church uses this time to fast, recognizing our depravity and need for Jesus everyday of our lives. Like many Baptist churches, FBCM doesn’t have much of a history incorporating Lent practices into our rhythms of the year. And while that doesn’t make us “bad Christians,” I can’t help but wonder if we’re missing out something that God uses to deeply form many of our sister churches throughout the globe.
+
+So this Lent, FBCM is going to be doing something a little bit different. For the next forty days, we will be studying Mark’s gospel as we expand “Holy Week” into an entire Lenten series. We will explore the many ways in which the disciples betray Jesus in the week leading up to his death. But more importantly, we will also see how our God responds to our betrayals with his love and invites us into repentance and life everlasting.
+
+And wow! The text for Holy Monday is quite the place to start! Mark 11:12-26 accounts what might be Jesus’ most infamous or most heroic moment–depending on which side of the debate you’re on! Jesus appears to have zero chill when he enters the Temple in Jerusalem. At first glance, he sees innocent Jews being taken advantage of by merchants trying to turn a profit by selling overpriced animals to sacrifice for worship. It’s a sickening display watching the merchants prey on those who have little and simply want to worship the Lord.
+
+So naturally, Jesus does what any of us would do. He runs and flips over all the merchant’s tables! He chases them throughout the Temple while yelling, “My house shall be called a house of prayer for all nations. But you have turned it into a den of robbers!” (And in other gospels, there’s even a whip! Yikes!)
+
+Alright, so maybe *this* isn’t exactly what any of you would do. I’ve personally never flipped tables or chased people down the street when I’m mad. So it’s shocking that our God, Jesus, *does* do such a thing.
+
+So what do we do with this scene? Is it an excuse to justify extreme actions when we’re angry or see injustice? No, not quite.
+
+To really understand odd passages like this in the Bible, the best thing we can actually do is look at the context. And Mark’s gospel gives us some pretty big clues about what’s going on here. Both before *and* after the temple scene is a story about Jesus and his disciples and a fig tree. Jesus curses the fig tree for not bearing fruit, so the tree shrivels up. Then he teaches his disciples, “Have faith in God.”
+
+Not a shallow or showy type of faith put on display for others. But a genuine faith built on prayer, belief, repentance, and forgiveness.
+
+This is the problem with the people at the temple that day. The merchants were like the fig tree. They wanted to appear to be spiritual by “providing” sacrifices for worship. But it was all a show. There was no fruit of the spirit in it. They didn’t care about the worship. They only cared about the money they could make off of ripping others off.
+
+Jesus’ reaction is one that removes the weeds of unfruitfulness that prevent the Temple from the true worship that God has called them too. And while FBCM doesn’t have merchants turning our Fellowship Hall into a market, this Holy Monday story should make us reflect on the way we come into worship each Sunday. Congregational worship is serious business.
+
+And yet, despite their betrayal in worship and fruitlessness, Jesus marches on towards the cross.
+
+**Reflection Questions**
+
+1. **Reflect on the Bible:**How does the comparison between the fig tree and the temple change the way you think about the story of Jesus cleansing the temple?
+2. **Reflect on your life and faith:** How has our church betrayed God in our worship? Are there times that you come to church without keeping your focus on God? Why do you think it’s so easy for us to forget God when we come to church?
+3. **Reflect on God's grace:** How is God leading you to go deeper in faith, prayer, repentance, and forgiveness this Lenten series?

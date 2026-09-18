@@ -1,0 +1,198 @@
+{
+  "extractedFrom": "https://www.fbcmuncie.org/beliefs",
+  "extractedAt": "2026-09-18T18:27:34.834Z",
+  "note": "Header nav tree as rendered server-side by Wix into #SITE_HEADER. Footer links captured separately from #SITE_FOOTER. The trailing \"More...\" item is Wix's responsive overflow container - it holds no items of its own in the served HTML; at narrow viewports the browser moves overflowing top-level items into it.",
+  "nav": [
+    {
+      "label": "About Us",
+      "href": null,
+      "children": [
+        {
+          "label": "Who We Are",
+          "href": "https://www.fbcmuncie.org/who-we-are",
+          "children": []
+        },
+        {
+          "label": "What To Expect",
+          "href": "https://www.fbcmuncie.org/what-to-expect",
+          "children": []
+        },
+        {
+          "label": "Ministers",
+          "href": "https://www.fbcmuncie.org/ministers",
+          "children": []
+        },
+        {
+          "label": "Beliefs",
+          "href": "https://www.fbcmuncie.org/beliefs",
+          "children": []
+        },
+        {
+          "label": "Baptists",
+          "href": "https://www.fbcmuncie.org/baptists",
+          "children": []
+        },
+        {
+          "label": "Membership",
+          "href": "https://www.fbcmuncie.org/membership",
+          "children": []
+        },
+        {
+          "label": "History",
+          "href": "https://www.fbcmuncie.org/history",
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "Updates",
+      "href": null,
+      "children": [
+        {
+          "label": "Connect via Church Trac",
+          "href": "https://fbcmuncie.churchtrac.com/",
+          "children": []
+        },
+        {
+          "label": "Calendar",
+          "href": "https://fbcmuncie.churchcenter.com/calendar",
+          "children": []
+        },
+        {
+          "label": "Church App",
+          "href": "https://www.fbcmuncie.org/church-app",
+          "children": []
+        },
+        {
+          "label": "Publications",
+          "href": "https://www.fbcmuncie.org/publications",
+          "children": []
+        },
+        {
+          "label": "Blog",
+          "href": "https://www.fbcmuncie.org/blog",
+          "children": []
+        },
+        {
+          "label": "Children's Newsletter",
+          "href": "https://fbcmuncie.churchtrac.com/children",
+          "children": []
+        },
+        {
+          "label": "Youth Newsletter",
+          "href": "https://fbcmuncie.churchtrac.com/youth",
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "Ministry",
+      "href": null,
+      "children": [
+        {
+          "label": "Worship",
+          "href": "https://www.fbcmuncie.org/worship",
+          "children": []
+        },
+        {
+          "label": "Children",
+          "href": "https://www.fbcmuncie.org/children",
+          "children": []
+        },
+        {
+          "label": "Youth",
+          "href": "https://www.fbcmuncie.org/youth",
+          "children": []
+        },
+        {
+          "label": "Adult",
+          "href": "https://www.fbcmuncie.org/adult",
+          "children": []
+        },
+        {
+          "label": "Outreach",
+          "href": "https://www.fbcmuncie.org/outreach",
+          "children": []
+        },
+        {
+          "label": "Important Documents",
+          "href": "https://www.fbcmuncie.org/post/important-documents",
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "Building",
+      "href": null,
+      "children": [
+        {
+          "label": "Accessibility",
+          "href": "https://www.fbcmuncie.org/accessibility",
+          "children": []
+        },
+        {
+          "label": "Architecture",
+          "href": "https://www.fbcmuncie.org/architecture",
+          "children": []
+        },
+        {
+          "label": "Weddings",
+          "href": "https://www.fbcmuncie.org/wedding",
+          "children": []
+        },
+        {
+          "label": "Building Reservation",
+          "href": "https://www.fbcmuncie.org/reservation",
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "Giving",
+      "href": "https://fbcmuncie.churchcenter.com/giving",
+      "children": []
+    },
+    {
+      "label": "Contact",
+      "href": "https://www.fbcmuncie.org/contact",
+      "children": []
+    },
+    {
+      "label": "More...",
+      "href": null,
+      "children": []
+    }
+  ],
+  "footerLinks": [
+    {
+      "label": "",
+      "href": "https://www.fbcmuncie.org/",
+      "external": false
+    },
+    {
+      "label": "Facebook",
+      "href": "https://www.facebook.com/firstbaptistmuncie",
+      "external": true
+    },
+    {
+      "label": "Instagram",
+      "href": "https://www.instagram.com/fbcmuncie/",
+      "external": true
+    },
+    {
+      "label": "Youtube",
+      "href": "https://www.youtube.com/c/FbcmuncieOrg",
+      "external": true
+    },
+    {
+      "label": "Threads",
+      "href": "http://threads.net/fbcmuncie",
+      "external": true
+    },
+    {
+      "label": "Linktree",
+      "href": "https://podcasters.spotify.com/pod/show/first-baptist-church-munc",
+      "external": true
+    }
+  ]
+}

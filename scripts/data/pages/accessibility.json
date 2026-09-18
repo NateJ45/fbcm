@@ -1,0 +1,363 @@
+{
+  "url": "https://www.fbcmuncie.org/accessibility",
+  "slug": "accessibility",
+  "category": "pages",
+  "httpStatus": 200,
+  "fetchedAt": "2026-09-18T18:27:17.875Z",
+  "title": "Accessibility | First Baptist Muncie",
+  "metaDescription": "Our wheelchair accessible entrance is off the circular drive on the Adams street side. We also have wheelchair accessible restrooms and assisted-listening devices. Pictures within!",
+  "ogImage": "https://static.wixstatic.com/media/08181c_4782c7bea5ed425282267b3281a8ab91.svg/v1/fit/w_2500,h_1330,al_c/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+  "canonical": "https://www.fbcmuncie.org/accessibility",
+  "h1": null,
+  "headings": [
+    {
+      "level": 2,
+      "text": "Wheelchair Accessibility"
+    },
+    {
+      "level": 2,
+      "text": "Entrance"
+    },
+    {
+      "level": 2,
+      "text": "Restrooms"
+    },
+    {
+      "level": 2,
+      "text": "Assisted Listening"
+    },
+    {
+      "level": 2,
+      "text": "Questions?"
+    }
+  ],
+  "bodyText": "Wheelchair Accessibility\n\nOur wheelchair accessible entrance is off our circular drive, on the Adams street side of the building.\n\nThose wishing to use our automatic door should use the circular drive entrance.\n\nEntrance\n\nThe sidewalk leads to the wheelchair-accessible entrance. The door opener is on the side of our mailbox, close to the door on its right.\n\nOnce inside, there is an elevator which will go to any floor: our lower level (B) which houses our fellowship hall, the first floor (where the sanctuary and offices are) or the second floor (which hosts classrooms and our youth center).\n\nRestrooms\n\nWheelchair accessible restrooms, which also have baby changing tables, are on the first floor and the lower level (B).\n\nAssisted Listening\n\nOn Sundays, if you would like an assisted listening device, please ask one of our greeters or the Welcome Center and they will be happy to give you one.\n\nQuestions?\n\nPlease direct any questions to the office here.",
+  "images": [
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_8b3a93125f314c31abd6dd3e4b10a57f~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_8b3a93125f314c31abd6dd3e4b10a57f~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_8b3a93125f314c31abd6dd3e4b10a57f~mv2.jpg/v1/fill/w_123,h_82,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_8b3a93125f314c31abd6dd3e4b10a57f~mv2.jpg",
+      "alt": "adams circular drive.jpg",
+      "region": "main",
+      "localFile": "08181c_8b3a93125f314c31abd6dd3e4b10a57f_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_6714073c050b4ac28ea695fd3288b4aa~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_6714073c050b4ac28ea695fd3288b4aa~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_6714073c050b4ac28ea695fd3288b4aa~mv2.jpg/v1/fill/w_52,h_110,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_6714073c050b4ac28ea695fd3288b4aa~mv2.jpg",
+      "alt": "Wheelchair accessible entrance.jpg",
+      "region": "main",
+      "localFile": "08181c_6714073c050b4ac28ea695fd3288b4aa_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_af52fc4d3aa54018960967999e30e617~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_af52fc4d3aa54018960967999e30e617~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_af52fc4d3aa54018960967999e30e617~mv2.jpg/v1/fill/w_97,h_128,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_af52fc4d3aa54018960967999e30e617~mv2.jpg",
+      "alt": "Mailbox Motorized Door Button.jpg",
+      "region": "main",
+      "localFile": "08181c_af52fc4d3aa54018960967999e30e617_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_f83b21b96b31446d90314b2c0782c706~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_f83b21b96b31446d90314b2c0782c706~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_f83b21b96b31446d90314b2c0782c706~mv2.jpg/v1/fill/w_52,h_92,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_f83b21b96b31446d90314b2c0782c706~mv2.jpg",
+      "alt": "Accessible Restroom.jpg",
+      "region": "main",
+      "localFile": "08181c_f83b21b96b31446d90314b2c0782c706_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_336f8453f032452da530655a493c3c9f~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_336f8453f032452da530655a493c3c9f~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_336f8453f032452da530655a493c3c9f~mv2.jpg/v1/fill/w_97,h_97,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_336f8453f032452da530655a493c3c9f~mv2.jpg",
+      "alt": "Changing Station.jpg",
+      "region": "main",
+      "localFile": "08181c_336f8453f032452da530655a493c3c9f_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_5d24ca0140994eb3957782aec035415f~mv2.jpg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_5d24ca0140994eb3957782aec035415f~mv2.jpg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_5d24ca0140994eb3957782aec035415f~mv2.jpg/v1/fill/w_123,h_58,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/08181c_5d24ca0140994eb3957782aec035415f~mv2.jpg",
+      "alt": "Listening Device.jpg",
+      "region": "main",
+      "localFile": "08181c_5d24ca0140994eb3957782aec035415f_tilde_mv2.jpg"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_02dfa8c532a2453489f302fd65d89ba5~mv2.png",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_02dfa8c532a2453489f302fd65d89ba5~mv2.png",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_02dfa8c532a2453489f302fd65d89ba5~mv2.png/v1/fill/w_187,h_187,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/fbc_podcast_logo.png",
+      "alt": "fbc_podcast_logo.png",
+      "region": "footer",
+      "localFile": "08181c_02dfa8c532a2453489f302fd65d89ba5_tilde_mv2.png"
+    },
+    {
+      "originalUrl": "https://static.wixstatic.com/media/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+      "fullResUrl": "https://static.wixstatic.com/media/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+      "renderedUrl": "https://static.wixstatic.com/media/08181c_4782c7bea5ed425282267b3281a8ab91.svg/v1/fit/w_2500,h_1330,al_c/08181c_4782c7bea5ed425282267b3281a8ab91.svg",
+      "alt": "og:image",
+      "region": "og",
+      "localFile": "08181c_4782c7bea5ed425282267b3281a8ab91.svg"
+    }
+  ],
+  "links": [
+    {
+      "href": "https://www.fbcmuncie.org/contact",
+      "text": "office here",
+      "internal": true,
+      "region": "main"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/who-we-are",
+      "text": "Who We Are",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/what-to-expect",
+      "text": "What To Expect",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/ministers",
+      "text": "Ministers",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/beliefs",
+      "text": "Beliefs",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/baptists",
+      "text": "Baptists",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/membership",
+      "text": "Membership",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/history",
+      "text": "History",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchtrac.com/",
+      "text": "Connect via Church Trac",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/calendar",
+      "text": "Calendar",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/church-app",
+      "text": "Church App",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/publications",
+      "text": "Publications",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/blog",
+      "text": "Blog",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchtrac.com/children",
+      "text": "Children's Newsletter",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchtrac.com/youth",
+      "text": "Youth Newsletter",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/worship",
+      "text": "Worship",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/children",
+      "text": "Children",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/youth",
+      "text": "Youth",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/adult",
+      "text": "Adult",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/outreach",
+      "text": "Outreach",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/post/important-documents",
+      "text": "Important Documents",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/accessibility",
+      "text": "Accessibility",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/architecture",
+      "text": "Architecture",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/wedding",
+      "text": "Weddings",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/reservation",
+      "text": "Building Reservation",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://fbcmuncie.churchcenter.com/giving",
+      "text": "Giving",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/contact",
+      "text": "Contact",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/",
+      "text": "",
+      "internal": true,
+      "region": "header"
+    },
+    {
+      "href": "https://www.facebook.com/firstbaptistmuncie",
+      "text": "Facebook",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.threads.net/@fbcmuncie",
+      "text": "Threads",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.instagram.com/fbcmuncie/",
+      "text": "Instagram",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.youtube.com/c/FbcmuncieOrg",
+      "text": "Youtube",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://linktr.ee/fbcmuncie",
+      "text": "Linktree",
+      "internal": false,
+      "region": "header"
+    },
+    {
+      "href": "https://www.fbcmuncie.org/",
+      "text": "",
+      "internal": true,
+      "region": "footer"
+    },
+    {
+      "href": "https://www.facebook.com/firstbaptistmuncie",
+      "text": "Facebook",
+      "internal": false,
+      "region": "footer"
+    },
+    {
+      "href": "https://www.instagram.com/fbcmuncie/",
+      "text": "Instagram",
+      "internal": false,
+      "region": "footer"
+    },
+    {
+      "href": "https://www.youtube.com/c/FbcmuncieOrg",
+      "text": "Youtube",
+      "internal": false,
+      "region": "footer"
+    },
+    {
+      "href": "http://threads.net/fbcmuncie",
+      "text": "Threads",
+      "internal": false,
+      "region": "footer"
+    },
+    {
+      "href": "https://podcasters.spotify.com/pod/show/first-baptist-church-munc",
+      "text": "Linktree",
+      "internal": false,
+      "region": "footer"
+    }
+  ],
+  "embeds": [
+    {
+      "type": "script",
+      "src": "https://browser.sentry-cdn.com/7.120.3/modulemetadata.es5.min.js"
+    },
+    {
+      "type": "church-center",
+      "src": "https://fbcmuncie.churchcenter.com/calendar"
+    },
+    {
+      "type": "church-center",
+      "src": "https://fbcmuncie.churchcenter.com/giving"
+    },
+    {
+      "type": "church-trac",
+      "src": "https://fbcmuncie.churchtrac.com/"
+    },
+    {
+      "type": "church-trac",
+      "src": "https://fbcmuncie.churchtrac.com/children"
+    },
+    {
+      "type": "church-trac",
+      "src": "https://fbcmuncie.churchtrac.com/youth"
+    }
+  ]
+}
