@@ -39,6 +39,8 @@ import {
   ThumbsUpIcon,
   ColorWheelIcon,
   ArrowRightIcon,
+  HeartIcon,
+  UsersIcon,
 } from '@sanity/icons';
 import { makeGuideView } from './components/GuideView';
 import { guides, GUIDE_CATEGORIES } from './guides/content';
@@ -71,6 +73,8 @@ const HIDDEN_FROM_DEFAULT = new Set<string>([
   'page', // custom pages, placed explicitly under "Pages"
   'sectionPreset', // saved sections, placed explicitly under "Pages"
   'redirect', // placed explicitly under "Pages" -> Redirects
+  'ministry', // placed explicitly under "Content" -> Ministries
+  'staffMember', // placed explicitly under "Content" -> Staff
   // sanity-plugin-media registers this tag type; keep it out of the desk root
   // (the "Media" tool in the top sidebar is where tags belong).
   'media.tag',
@@ -257,6 +261,14 @@ export const deskStructure = (S: StructureBuilder, context: StructureResolverCon
               singletonWithPreview(S, 'businessInfo', 'Business info', PinIcon),
 
               S.divider(),
+
+              // Ministries: the church's groups and programs (Children, Outreach,
+              // Missions, etc). Task 7. No sermon type (YouTube is the archive)
+              // and no event type (Church Center holds the calendar).
+              S.documentTypeListItem('ministry').title('Ministries').icon(HeartIcon),
+
+              // Staff directory. Task 7.
+              S.documentTypeListItem('staffMember').title('Staff').icon(UsersIcon),
 
               S.divider(),
 

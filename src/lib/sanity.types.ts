@@ -101,6 +101,103 @@ export type SectionPreset = {
   note?: string;
 };
 
+export type StaffMember = {
+  _id: string;
+  _type: 'staffMember';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  role?: string;
+  email?: string;
+  bio?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+  photo?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
+  order?: number;
+};
+
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop';
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot';
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type Slug = {
+  _type: 'slug';
+  current?: string;
+  source?: string;
+};
+
+export type Ministry = {
+  _id: string;
+  _type: 'ministry';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  summary?: string;
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
+  order?: number;
+};
+
 export type JournalCategory = {
   _id: string;
   _type: 'journalCategory';
@@ -110,12 +207,6 @@ export type JournalCategory = {
   title?: string;
   slug?: Slug;
   description?: string;
-};
-
-export type Slug = {
-  _type: 'slug';
-  current?: string;
-  source?: string;
 };
 
 export type Announcement = {
@@ -203,22 +294,6 @@ export type NotFoundPage = {
   secondaryCtaHref?: string;
   tertiaryCtaLabel?: string;
   tertiaryCtaHref?: string;
-};
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop';
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-};
-
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot';
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
 };
 
 export type BusinessInfo = {
@@ -1381,14 +1456,16 @@ export type AllSanitySchemaTypes =
   | Photo
   | Redirect
   | SectionPreset
-  | JournalCategory
+  | StaffMember
+  | SanityImageCrop
+  | SanityImageHotspot
   | Slug
+  | Ministry
+  | JournalCategory
   | Announcement
   | StudioNotes
   | StudioGuide
   | NotFoundPage
-  | SanityImageCrop
-  | SanityImageHotspot
   | BusinessInfo
   | SiteSettings
   | HomePageReference
