@@ -1,19 +1,19 @@
 // BusinessOverview.tsx — Panel 2 of the Start Here handbook.
-// Single source of truth for the editor: live data from Sanity (services + site settings)
+// Single source of truth for the editor: live data from Sanity (site settings)
 // alongside static reference info about the business, ideal client, and voice.
 // Safe to edit by hand.
+//
+// 2026-09-18: the services block (a "Your services and prices" live panel
+// querying the `service` schema) was removed along with the `services`
+// scaffold capability. This panel still does real work for the two things
+// that survived: siteSettings (contact, availability, service areas, travel
+// fees) and studioNotes (who you are, your ideal client, your voice).
 
 import React, { useEffect, useState } from 'react';
 import { useClient } from 'sanity';
 import { Box, Card, Container, Heading, Stack, Text } from '@sanity/ui';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-
-interface ServiceRow {
-  name: string;
-  price: string;
-  bestFor: string;
-}
 
 interface TravelFeeTier {
   distanceLabel: string;
@@ -30,14 +30,8 @@ interface SiteSettingsData {
   socialFacebook: string | null;
 }
 
-interface LiveData {
-  services: ServiceRow[];
-  settings: SiteSettingsData;
-}
-
 // ─── Fetch ───────────────────────────────────────────────────────────────────
 
-const SERVICES_QUERY = `*[_type=="service"]|order(orderRank asc){name,price,bestFor}`;
 const SETTINGS_QUERY = `*[_type=="siteSettings"][0]{email,phone,availabilityStatus,serviceAreas,travelFees,socialInstagram,socialFacebook}`;
 
 interface NotesData {
@@ -85,19 +79,11 @@ function ErrorCard({ label }: { label: string }) {
 export default function BusinessOverview() {
   const client = useClient({ apiVersion: '2024-01-01' });
 
-  const [services, setServices] = useState<ServiceRow[] | null>(null);
   const [settings, setSettings] = useState<SiteSettingsData | null>(null);
   const [notes, setNotes] = useState<NotesData | null>(null);
-  const [servicesError, setServicesError] = useState(false);
   const [settingsError, setSettingsError] = useState(false);
 
   useEffect(() => {
-    // Fetch services
-    client
-      .fetch<ServiceRow[]>(SERVICES_QUERY)
-      .then((data) => setServices(data ?? []))
-      .catch(() => setServicesError(true));
-
     // Fetch site settings
     client
       .fetch<SiteSettingsData | null>(SETTINGS_QUERY)
@@ -123,62 +109,11 @@ export default function BusinessOverview() {
           </Heading>
           <Box marginTop={3}>
             <Text muted size={1}>
-              The live sections below are pulled directly from your Services and Site Settings, so
-              they are always current. To change anything, edit those documents.
+              The live section below is pulled directly from your Site Settings, so it is always
+              current. To change anything, edit that document.
             </Text>
           </Box>
         </Box>
-
-        {/* ── LIVE: Services + prices ─────────────────────────────────────── */}
-        <Card padding={4} radius={2} shadow={1} tone="default">
-          <Stack space={4}>
-            <Heading as="h2" size={1}>
-              Your services and prices (live)
-            </Heading>
-
-            {/* Loading */}
-            {services === null && !servicesError && <LoadingCard label="services" />}
-
-            {/* Error */}
-            {servicesError && <ErrorCard label="services" />}
-
-            {/* Data */}
-            {services !== null && services.length === 0 && (
-              <Text size={1} muted>
-                No services found. Add them under Content, Services.
-              </Text>
-            )}
-            {services !== null && services.length > 0 && (
-              <Stack space={3}>
-                {services.map((svc, i) => (
-                  <Card key={i} padding={3} radius={2} tone="transparent" shadow={1}>
-                    <Stack space={2}>
-                      <Box
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'baseline',
-                          flexWrap: 'wrap',
-                          gap: '4px',
-                        }}
-                      >
-                        <Text size={1} weight="semibold">
-                          {svc.name ?? 'Unnamed service'}
-                        </Text>
-                        <Text size={1}>{svc.price ?? '—'}</Text>
-                      </Box>
-                      {svc.bestFor ? (
-                        <Text size={1} muted>
-                          Best for: {svc.bestFor}
-                        </Text>
-                      ) : null}
-                    </Stack>
-                  </Card>
-                ))}
-              </Stack>
-            )}
-          </Stack>
-        </Card>
 
         {/* ── LIVE: Contact + availability + service areas ─────────────────── */}
         <Card padding={4} radius={2} shadow={1} tone="default">

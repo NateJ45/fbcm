@@ -245,7 +245,6 @@ docs.push({
     'Replace this with a line describing how working with this business goes, in plain words.',
   processPreviewCta: cta('Button label', '/process'),
 
-
   servicesGridEyebrow: 'What We Offer.',
   servicesGridHeadline: 'Replace this headline.',
   servicesGridSubhead: 'Replace this with a line introducing the list of services below.',
@@ -295,13 +294,6 @@ docs.push({
     },
   ],
 });
-
-
-
-
-
-
-
 
 // ── 11. contactPage (singleton) ──────────────────────────────────────────
 // Fields: seoTitle, seoDescription, heroEyebrow, heroHeadline, heroSubhead,
@@ -400,8 +392,6 @@ docs.push({
 
   schedulingLinkLabel: 'Replace this with the label on the scheduling link.',
 });
-
-
 
 // scaffold: journal
 // ── 14. journalCategory docs (2 items) ───────────────────────────────────
@@ -705,19 +695,6 @@ docs.push({
     {
       _type: 'howTo',
       _key: key(),
-      title: 'Add a new testimonial',
-      steps: [
-        'Open "Testimonials" from the left navigation.',
-        'Click "New Testimonial".',
-        'Fill in the quote, attribution, date, and source.',
-        'Click Publish.',
-        'Open "Home Page" and add the new testimonial to the "Testimonials in grid" field.',
-        'Click Publish on the Home Page.',
-      ],
-    },
-    {
-      _type: 'howTo',
-      _key: key(),
       title: 'Write a journal post',
       steps: [
         'Open "Journal Entries" from the left navigation.',
@@ -725,17 +702,6 @@ docs.push({
         'Fill in the title, slug, excerpt, and body.',
         'Set the publish date and click Publish.',
         'The post appears automatically on the journal index page.',
-      ],
-    },
-    {
-      _type: 'howTo',
-      _key: key(),
-      title: 'Change service pricing',
-      steps: [
-        'Open "Services" from the left navigation.',
-        'Click the service you want to update.',
-        'Edit the "Price display" field to the new price.',
-        'Click Publish.',
       ],
     },
   ],

@@ -254,10 +254,6 @@ export async function getHomePage() {
   );
 }
 
-// ---- Services page --------------------------------------------------------
-
-// Minimal service list for JSON-LD on the services page.
-
 // ---- Contact page ---------------------------------------------------------
 
 export async function getContactPage() {
