@@ -48,12 +48,28 @@ export interface SanityPostDoc {
 const SERMON_PREVIEW_CATEGORY = 'sermon preview';
 
 /**
+ * Sanity's own client rejects any document `_id` outside
+ * `/^[a-z0-9_][a-z0-9_.-]{0,127}$/i` before the request ever reaches the network
+ * (see @sanity/client's validateDocumentId) -- so `post-händel-s-...` throws
+ * "is not a valid document ID" on `createOrReplace`, non-ASCII or not.
+ *
+ * The public URL (`doc.slug.current`, rendered at /post/<slug>) is the thing
+ * that must survive byte for byte; nothing reads the internal `_id` as a URL.
+ * So each disallowed character is escaped into an ASCII-only, reversible,
+ * collision-safe run (`_x<hex codepoint>_`) rather than stripped or
+ * lowercased away, which is what would quietly re-slugify the id.
+ */
+function asciiSafeIdSegment(value: string): string {
+  return value.replace(/[^a-zA-Z0-9_.-]/g, (ch) => `_x${ch.codePointAt(0)!.toString(16)}_`);
+}
+
+/**
  * Deterministic, so `createOrReplace` REPLACES on a re-run instead of creating a
- * second copy. The slug is used raw: `händel-s-...` is a real live URL and
- * re-slugifying it would quietly break that post and only that post.
+ * second copy. Built from the slug (escaped for the id charset above, never
+ * re-slugified), so the same captured post always maps to the same document.
  */
 export function postDocId(slug: string): string {
-  return `post-${slug}`;
+  return `post-${asciiSafeIdSegment(slug)}`;
 }
 
 /**

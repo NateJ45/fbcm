@@ -24,10 +24,19 @@ test('the document id is deterministic, so a re-import replaces rather than dupl
   assert.equal(postDocId('stayers'), postDocId('stayers'));
 });
 
-test('a non-ASCII slug is preserved byte for byte, never re-slugified', () => {
+test('a non-ASCII slug is preserved byte for byte in the public slug field, never re-slugified', () => {
   const slug = 'händel-s-messiah-sing-in-carols';
   assert.equal(postFromCapture({ ...base, slug }).slug.current, slug);
-  assert.equal(postDocId(slug), `post-${slug}`);
+});
+
+test('the document id is ASCII-only (Sanity rejects non-ASCII _id values) but still deterministic', () => {
+  const slug = 'händel-s-messiah-sing-in-carols';
+  const id = postDocId(slug);
+  // The exact charset @sanity/client's validateDocumentId enforces client-side.
+  assert.match(id, /^[a-z0-9_][a-z0-9_.-]{0,127}$/i);
+  assert.equal(id, postDocId(slug), 're-running the import must produce the same id');
+  // The escape is reversible/identifiable, not a silent drop of the umlaut.
+  assert.ok(id.includes('_xe4_'), 'expected an escape for U+00E4 (ä)');
 });
 
 test('sermon-preview is DERIVED from the category, not stored as its own field', () => {
