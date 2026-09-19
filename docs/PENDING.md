@@ -280,3 +280,84 @@ and a `package-lock.json` grep both confirm every version named in the block
 leftover from an unrelated install. The consequence worth remembering: every future
 clone and every CI run now executes those three packages' scripts unattended. Re-check
 this list against `npm ls` when the lockfile bumps any of the three.
+
+---
+
+## FBCM: open loops after plan 1 (2026-09-18)
+
+Plan 1 (foundation and content) is complete and deployed at
+https://fbcm-site.nathanjnixon86.workers.dev. Plan 2 is pages, sections, the
+Studio and the identity pass; plan 3 is the cutover. These are the loops plan 1
+leaves open, with what closes each.
+
+### Waiting on Nathan
+
+- **`CLOUDFLARE_API_TOKEN` as a GitHub Actions secret.** `wrangler login` is OAuth
+  and produces no token, so `deploy.yml` cannot deploy from CI until one exists
+  (Workers Scripts:Edit is enough). Until then deploys are `npm run deploy` from a
+  laptop, which is exactly the failure PORTS.md card 50 was written to end.
+- **A GitHub PAT for the Sanity publish webhook.** Without it a Studio publish
+  changes the dataset and nothing else; the site rebuilds only on a push.
+- **A Cloudflare Web Analytics token** for the workers.dev host, pasted into `.env`
+  as `PUBLIC_CF_ANALYTICS_TOKEN`. The API connector lacks the RUM scope. Nothing
+  breaks without it; the site reports nothing.
+- **`SANITY_TOKEN` as a Worker secret** for `/preview/**`. Card 45 records that
+  `wrangler secret put` trips an agent permission gate. Preview fails closed with a
+  503 naming it, by design.
+
+### Plan 2 must do
+
+- **Post bodies are paragraphs only.** No Portable Text converter is installed, so
+  `bodyFromCapture()` carries all 95,016 words with paragraph breaks and drops
+  headings, links, lists, blockquotes and inline images. A unit test pins that so
+  it is a failing test to make pass, not a surprise. The captured `bodyHtml` in
+  `scripts/data/posts/*.json` is the source when a converter is added.
+- **All 42 redirect targets currently 404**: `/staff`, `/visit`, `/beliefs`,
+  `/ministries`, `/wedding`, `/give`, `/who-we-are`, `/history` do not exist yet.
+  Correct for plan 1. **Plan 3 precondition: no redirect target may 404**, or the
+  spec's "every retired URL keeps working" is false on day one.
+- `journalPage` singleton is unseeded; `/blog` renders the starter's defaults.
+- `seed-core.mjs` still seeds a service-business page set; the FBCM home page and
+  the eight custom pages need seeding for this church.
+- `src/pages/post/[slug].astro` fallback description reads "A note from the
+  studio." Same residue family as the fixed "Studio Journal".
+- `scripts/import-people.mjs` `bioOf()` has no unit test; its correctness rests on
+  the live re-import spot checks recorded in the plan-1 ledger.
+- CLAUDE.md and README.md: only the opening paragraph says what this repo is; the
+  body still documents the starter. Rewrite for this site.
+- Dead `Service` interface and `serviceListSchema()` in `src/lib/schemas.ts`.
+
+### For ncs-astro-sanity-starter (the library of record), found on this fork
+
+Six findings, each general, each worth a PORTS.md card. Two are already fixed in
+PORTABLE files here and marked in their headers for the sync session.
+
+1. **`npm run scaffold` markers are incomplete.** Twelve stale references survived
+   six removals, in registries the tool does not know about: `CtaLink.astro`'s URL
+   switch, a second preview id-prefix map, the `dynamicListSection` dropdown, a
+   console warning, two orphaned components, `BusinessOverview.tsx`, the Studio
+   guide's `studioMap`, OG-page and llms generators, `seed-core.mjs` howTo rows,
+   and `deploy.yml` plus `lighthouserc.json`, where four dead routes would have
+   failed the production deploy's own smoke step on the first run.
+2. **Fork residue card 44 did not catch:** `public/og/*.png` (23 share cards with
+   "Reid Design LLC" as image text, served per route by `BaseLayout`), and
+   `public/llms.txt` / `llms-full.txt` ("Studio Starter", example.com links, an
+   interior-design price list), which exist to be read by machines.
+3. **`apply-brand` rewrites `astro.config.mjs` `site:` to the bare apex** on every
+   run, dropping `www.`. Silent until search traffic moves.
+4. **`astro.config.mjs` read Sanity env from `process.env` only.** Astro never
+   copies `.env` onto `process.env` at config time, so a local build with a correct
+   `.env` emitted ZERO Sanity-driven redirects while the dataset held 42. CI was
+   unaffected (variables become real env), which is why nobody saw it. Fixed here
+   with a `loadEnv` fallback.
+5. **`src/lib/redirects.ts` (PORTABLE) normalised the destination and stripped
+   `?query` and `#fragment`.** 25 of 42 targets shipped wrong. Fixed here,
+   generally, header note dated 2026-09-18.
+6. **`scripts/audit-studio.mjs` (PORTABLE) check 7** fired on any dollar amount in
+   prose, an unclearable finding for a church blog mentioning a $15 ticket.
+   Generalised here to fire only when a structured price field is populated.
+
+Also worth a note on card 8/`sanityFetch`: a GROQ parse error in one section's
+projection (`[0...limit]`, a field reference as a slice bound) failed the ENTIRE
+home page query and fell back to defaults on a green build. `DYNAMIC_LIST_MAX`
+now ties the schema max and the slice with a drift test.
