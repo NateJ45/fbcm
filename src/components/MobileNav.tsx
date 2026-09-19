@@ -257,9 +257,9 @@ export default function MobileNav({
               <img
                 src={logoLightUrl}
                 alt={site.name}
-                width={280}
-                height={60}
-                className="block h-10 w-auto dark:hidden"
+                width={257}
+                height={100}
+                className="block h-12 w-auto dark:hidden"
                 loading="lazy"
                 decoding="async"
               />
@@ -268,9 +268,9 @@ export default function MobileNav({
                   src={logoDarkUrl}
                   alt=""
                   aria-hidden="true"
-                  width={280}
-                  height={60}
-                  className="hidden h-10 w-auto dark:block"
+                  width={257}
+                  height={100}
+                  className="hidden h-12 w-auto dark:block"
                   loading="lazy"
                   decoding="async"
                 />

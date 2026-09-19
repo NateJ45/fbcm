@@ -167,7 +167,11 @@ docs.push({
   _id: 'siteSettings',
   _type: 'siteSettings',
   title: 'First Baptist Church Muncie',
-  tagline: 'Your tagline goes here.',
+  // The church's own sentence, and the same string brand.config.json holds.
+  // It replaced the placeholder on 2026-09-19 (Task 9 fix 1) because the
+  // footer now prints the tagline in gold on every page, so a placeholder
+  // there is the most visible unfinished thing on the site.
+  tagline: "We're a Spirit-led people gathered to join Christ's presence in our community.",
   email: 'office@fbcmuncie.org',
   phone: '(765) 284-7749',
   address: '309 East Adams Street\nMuncie, IN 47305',
@@ -829,15 +833,23 @@ docs.push({
 //
 //   1. BACK UP. The live document is fetched and written verbatim to
 //      scripts/data/backups/<type>-<date>-pre-<label>.json before anything is
-//      written. The backup is committed; it is the record.
+//      written, and an existing backup is never overwritten: a second run
+//      under the same label on the same day gets a clock suffix. The
+//      backup is committed; it is the record.
 //   2. COMPARE. Every top-level key the live document carries (minus the
 //      system fields) is compared against the value the seed would write. A
 //      key the seed ADDS is fine, that is the point of the run. A key whose
 //      value DIFFERS means somebody edited the live document after it was
 //      seeded, and replacing it would silently throw that edit away. The
 //      script prints the difference and exits without writing.
+//   3. NAME WHAT YOU MEAN TO CHANGE. --expect takes a comma-separated list
+//      of top-level keys whose live value you know differs and intend to
+//      overwrite. Those are printed in full, then allowed; everything else
+//      still stops the run. There is deliberately no blanket --force:
+//      having to type the field name is what makes you look at it.
 //
 // Usage:  node scripts/seed-core.mjs --only siteSettings [--label task9]
+//                                     [--expect tagline,phone]
 
 const argv = process.argv.slice(2);
 function flag(name) {
@@ -846,6 +858,19 @@ function flag(name) {
 }
 const onlyType = flag('--only');
 const backupLabel = flag('--label') ?? 'seed';
+/**
+ * Top-level keys whose live value the operator KNOWS differs and means to
+ * overwrite, comma separated: `--expect tagline`. They are printed as loudly
+ * as an unexpected difference and then allowed. Everything else still stops
+ * the run. A blanket --force would be the easy version of this and the wrong
+ * one: naming the field is what makes the operator look at it.
+ */
+const expectedChanges = new Set(
+  (flag('--expect') ?? '')
+    .split(',')
+    .map((k) => k.trim())
+    .filter(Boolean),
+);
 
 /** Keys Sanity owns. They differ on every fetch and mean nothing to a diff. */
 const SYSTEM_KEYS = new Set(['_rev', '_createdAt', '_updatedAt']);
@@ -876,25 +901,40 @@ async function seedOne(type) {
   }
 
   // 1. Back up, verbatim, BEFORE anything else.
-  const { writeFileSync, mkdirSync } = await import('node:fs');
+  const { writeFileSync, mkdirSync, existsSync } = await import('node:fs');
   const stamp = new Date().toISOString().slice(0, 10);
   const dir = resolve(root, 'scripts/data/backups');
   mkdirSync(dir, { recursive: true });
-  const backupPath = resolve(dir, `${type}-${stamp}-pre-${backupLabel}.json`);
+  // A backup is a record, so it is never overwritten. A second run under the
+  // same label on the same day gets a clock suffix instead.
+  let backupPath = resolve(dir, `${type}-${stamp}-pre-${backupLabel}.json`);
+  if (existsSync(backupPath)) {
+    const clock = new Date().toISOString().slice(11, 19).replace(/:/g, '');
+    backupPath = resolve(dir, `${type}-${stamp}-pre-${backupLabel}-${clock}.json`);
+  }
   writeFileSync(backupPath, `${JSON.stringify(live, null, 2)}\n`, 'utf8');
   console.log(`Backed up the live ${type} to ${backupPath}`);
 
   // 2. Compare every key the live document already carries.
   const changed = [];
+  const expected = [];
   for (const k of Object.keys(live)) {
     if (SYSTEM_KEYS.has(k)) continue;
     const a = canonical(live[k]);
     const b = canonical(doc[k]);
-    if (a !== b) changed.push({ key: k, live: a, seed: b });
+    if (a === b) continue;
+    (expectedChanges.has(k) ? expected : changed).push({ key: k, live: a, seed: b });
   }
 
   const added = Object.keys(doc).filter((k) => !(k in live));
   if (added.length > 0) console.log(`Adding: ${added.join(', ')}`);
+
+  // Named differences are printed in full before the write, not summarised.
+  for (const c of expected) {
+    console.log(`Expected change: ${c.key}`);
+    console.log(`    live: ${c.live}`);
+    console.log(`    seed: ${c.seed}`);
+  }
 
   if (changed.length > 0) {
     console.error(
@@ -910,7 +950,11 @@ async function seedOne(type) {
     process.exit(2);
   }
 
-  console.log('No live value differs from the seed. Writing.');
+  console.log(
+    expected.length > 0
+      ? `No unexpected value differs from the seed (${expected.length} named change). Writing.`
+      : 'No live value differs from the seed. Writing.',
+  );
   await client.createOrReplace(doc);
   console.log(`  replaced  ${doc._type}  ${doc._id}`);
 }

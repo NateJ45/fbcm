@@ -218,8 +218,11 @@ function isGroupActive(items: { href: string }[]) {
         Lighthouse no longer sees a dark-variant in light-mode DOM (or
         vice-versa).
 
-        Dimensions and aspect ratio match the source 280:60, so the browser
-        reserves the right layout box before the file lands — no CLS.
+        Dimensions and aspect ratio match the wordmark's own 249.45:97.06,
+        so the browser reserves the right layout box before the file lands —
+        no CLS. This is NOT the old 280:60 lockup: the church's mark is a
+        tower beside two words and is nearly three times as tall for its
+        width, so the numbers here move with the file.
       */
       }
       {
@@ -239,9 +242,9 @@ function isGroupActive(items: { href: string }[]) {
         ) : (
           <img
             alt={brandName}
-            width={280}
-            height={60}
-            class="h-12 w-auto"
+            width={257}
+            height={100}
+            class="h-14 w-auto lg:h-20"
             loading="eager"
             decoding="async"
             data-theme-logo

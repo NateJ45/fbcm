@@ -235,8 +235,8 @@ const columnHeading = 'mb-s font-mono text-[0.75rem] tracking-eyebrow text-gold 
           class="inline-block transition-opacity hover:opacity-80"
         >
           {
-            /* Sized by WIDTH: this is a wide lockup (280x60), not a square
-              badge. An unloaded lazy image with width:auto shrink-wraps to
+            /* Sized by HEIGHT, with real width/height attributes at the
+              wordmark's own 249.45:97.06 aspect (NOT the old 280x60 lockup). An unloaded lazy image with width:auto shrink-wraps to
               0x0, never intersects the viewport and so never loads, which is a
               real bug this family has hit more than once. Give it real
               dimensions. */
@@ -244,9 +244,9 @@ const columnHeading = 'mb-s font-mono text-[0.75rem] tracking-eyebrow text-gold 
           <img
             src={footerLogo.src}
             alt={brandName}
-            width={280}
-            height={60}
-            class="h-14 w-auto"
+            width={257}
+            height={100}
+            class="h-16 w-auto"
             loading="lazy"
             decoding="async"
           />
@@ -346,11 +346,19 @@ const columnHeading = 'mb-s font-mono text-[0.75rem] tracking-eyebrow text-gold 
 
   {
     /* Thin bottom bar — copyright, small print, optional credit on one line so
-       they don't add a tall block to a footer column. */
+       they don't add a tall block to a footer column.
+
+       The extra `sm:pr-20`: BackToTop is `fixed right-6 bottom-6` and 44px
+       wide, so it owns the bottom 68px of the right edge on every page. This
+       row turns into a single line at `sm` and puts its links hard against
+       that edge, which parked the chip on top of "Privacy policy". 5rem of
+       right padding clears the chip with a gap to spare. Nothing about the
+       chip's own behaviour changes, and the row's LEFT edge still lines up
+       with the four columns above it. */
   }
   <div class="border-t border-bg/15">
     <div
-      class="mx-auto flex max-w-content flex-col gap-xs px-m py-m text-xs text-bg/75 sm:flex-row sm:items-center sm:justify-between"
+      class="mx-auto flex max-w-content flex-col gap-xs px-m py-m text-xs text-bg/75 sm:flex-row sm:items-center sm:justify-between sm:pr-20"
     >
       <p>&copy; {currentYear} {brandName}</p>
       <div class="flex items-center gap-m">
