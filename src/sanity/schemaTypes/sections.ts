@@ -28,6 +28,9 @@ import {
 } from '@sanity/icons';
 import { columnsField, headingAccentField, hideWhenRich, richTwin } from './_appearanceFields';
 import { sideOptions } from '../../lib/layout-variants';
+// scaffold: church
+import { CHURCH_SECTION_TYPES } from './churchSections';
+// scaffold:end
 
 // Shared image field with required alt text (accessibility + SEO).
 const imageWithAlt = (name = 'image', title = 'Image') =>
@@ -578,6 +581,9 @@ export const pageSectionSchemas = [
   spacerSection,
   logoStripSection,
   embedSection,
+  // scaffold: church
+  ...CHURCH_SECTION_TYPES,
+  // scaffold:end
 ];
 
 // The list a pageBuilder array uses for `of`. Single source of truth so every
@@ -623,6 +629,22 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
       title: 'About the business',
       of: ['teamSection', 'dynamicListSection', 'ctaBandSection'],
     },
+    // scaffold: church
+    {
+      name: 'church',
+      title: 'Church',
+      of: [
+        'sundayTimesSection',
+        'timelineSection',
+        'staffGridSection',
+        'faqSection',
+        'scriptureBandSection',
+        'heritageBandSection',
+        'giveBandSection',
+        'documentListSection',
+      ],
+    },
+    // scaffold:end
   ],
 };
 

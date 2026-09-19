@@ -68,6 +68,18 @@ export const HEADING_ACCENT_FIELDS: Readonly<Record<string, string>> = {
   ctaBandSection: 'headline',
 };
 
+// scaffold: church
+// Task 4 (2026-09-19): scriptureBandSection.accentWord is deliberately NOT
+// added here. This map's shape assumes the accent word lives in a field
+// literally named `headingAccent`, matched against a `heading`/`headline`
+// field on the same block (see `resolveAccentTarget` below, which hardcodes
+// `accentPath: [...itemPath, 'headingAccent']`). scriptureBandSection has
+// neither: its words are `verse`/`reference`, and its accent field is named
+// `accentWord`. The scripture accent is split at render time by
+// splitHeadingAccent() directly (Task 5), outside the in-canvas overlay this
+// registry serves.
+// scaffold:end
+
 /** The section types that offer an accent word. */
 export const HEADING_ACCENT_SECTION_TYPES: readonly string[] = Object.keys(HEADING_ACCENT_FIELDS);
 

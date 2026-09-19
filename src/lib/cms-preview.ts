@@ -139,6 +139,12 @@ const NON_STEGA_FIELDS = new Set([
   // and this template adds no surface or accent COLOUR enum at all (see
   // src/lib/surfaces.ts for why).
   'headingAccent',
+  // scaffold: church
+  // staffGridSection.group is a radio dropdown ('all' | 'pastors' |
+  // 'coordination' | 'support') that picks which Staff members render, not
+  // text an editor types. Same reasoning as every other enum on this list.
+  'group',
+  // scaffold:end
 ]);
 
 export function getPreviewClient(draftMode: boolean): SanityClient {

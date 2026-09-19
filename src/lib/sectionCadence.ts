@@ -32,6 +32,16 @@ export const SELF_CONTAINED_TYPES = new Set([
   'embedSection',
   // Church-reverse-port: dynamic list section manages its own surface
   'dynamicListSection',
+  // scaffold: church
+  // The four dark bands. Cream, indigo (x3) and brown are dark BY TYPE, not by
+  // a stored colour field, so they self-contain their surface the same way the
+  // U7 blocks above do.
+  'sundayTimesSection',
+  'faqSection',
+  'scriptureBandSection',
+  'heritageBandSection',
+  'giveBandSection',
+  // scaffold:end
 ]);
 
 /** _type strings for blocks that receive alternating surface assignment. */
@@ -41,6 +51,11 @@ export const CONTENT_TYPES = new Set([
   'gallerySection',
   'quoteSection',
   'videoSection',
+  // scaffold: church
+  'timelineSection',
+  'staffGridSection',
+  'documentListSection',
+  // scaffold:end
 ]);
 
 export interface SectionBlock {

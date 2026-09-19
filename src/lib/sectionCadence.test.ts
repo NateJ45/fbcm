@@ -203,3 +203,20 @@ test('dynamicListSection appears in SELF_CONTAINED_TYPES and not CONTENT_TYPES',
     'dynamicListSection must not be in CONTENT_TYPES',
   );
 });
+
+// ── Task 4: the eight church blocks ────────────────────────────────────────
+
+test('church blocks are classified: dark bands self-contained, the rest alternate', () => {
+  for (const t of [
+    'sundayTimesSection',
+    'faqSection',
+    'scriptureBandSection',
+    'heritageBandSection',
+    'giveBandSection',
+  ]) {
+    assert.ok(SELF_CONTAINED_TYPES.has(t), `${t} should be self-contained`);
+  }
+  for (const t of ['timelineSection', 'staffGridSection', 'documentListSection']) {
+    assert.ok(CONTENT_TYPES.has(t), `${t} should alternate with the cadence`);
+  }
+});

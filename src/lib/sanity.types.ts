@@ -15,6 +15,19 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type SanityFileAssetReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset';
+};
+
+export type ListedDocumentFile = {
+  asset?: SanityFileAssetReference;
+  media?: unknown; // Unable to locate the referenced type "file.media" in schema
+  _type: 'file';
+};
+
 export type SanityImageAssetReference = {
   _ref: string;
   _type: 'reference';
@@ -85,6 +98,30 @@ export type SectionPreset = {
     | ({
         _key: string;
       } & EmbedSection)
+    | ({
+        _key: string;
+      } & SundayTimesSection)
+    | ({
+        _key: string;
+      } & TimelineSection)
+    | ({
+        _key: string;
+      } & StaffGridSection)
+    | ({
+        _key: string;
+      } & FaqSection)
+    | ({
+        _key: string;
+      } & ScriptureBandSection)
+    | ({
+        _key: string;
+      } & HeritageBandSection)
+    | ({
+        _key: string;
+      } & GiveBandSection)
+    | ({
+        _key: string;
+      } & DocumentListSection)
     | ({
         _key: string;
       } & TeamSection)
@@ -581,6 +618,140 @@ export type TeamSection = {
   }>;
 };
 
+export type DocumentListSection = {
+  _type: 'documentListSection';
+  eyebrow?: string;
+  heading?: string;
+  docs?: Array<{
+    title?: string;
+    year?: number;
+    file?: ListedDocumentFile;
+    url?: string;
+    note?: string;
+    _type: 'listedDocument';
+    _key: string;
+  }>;
+};
+
+export type GiveBandSection = {
+  _type: 'giveBandSection';
+  heading?: string;
+  body?: string;
+  buttonLabel?: string;
+  buttonUrl?: string;
+};
+
+export type HeritageBandSection = {
+  _type: 'heritageBandSection';
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
+  cta?: CtaBlock;
+};
+
+export type ScriptureBandSection = {
+  _type: 'scriptureBandSection';
+  verse?: string;
+  reference?: string;
+  accentWord?: string;
+};
+
+export type FaqSection = {
+  _type: 'faqSection';
+  eyebrow?: string;
+  heading?: string;
+  items?: Array<{
+    question?: string;
+    answer?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: 'span';
+        _key: string;
+      }>;
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+      listItem?: 'bullet' | 'number';
+      markDefs?: Array<{
+        href?: string;
+        _type: 'link';
+        _key: string;
+      }>;
+      level?: number;
+      _type: 'block';
+      _key: string;
+    }>;
+    _type: 'faqItem';
+    _key: string;
+  }>;
+};
+
+export type StaffGridSection = {
+  _type: 'staffGridSection';
+  eyebrow?: string;
+  heading?: string;
+  group?: 'all' | 'pastors' | 'coordination' | 'support';
+  showBios?: boolean;
+};
+
+export type TimelineSection = {
+  _type: 'timelineSection';
+  eyebrow?: string;
+  heading?: string;
+  rows?: Array<{
+    marker?: string;
+    title?: string;
+    body?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: 'span';
+        _key: string;
+      }>;
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+      listItem?: 'bullet' | 'number';
+      markDefs?: Array<{
+        href?: string;
+        _type: 'link';
+        _key: string;
+      }>;
+      level?: number;
+      _type: 'block';
+      _key: string;
+    }>;
+    note?: string;
+    anchor?: Slug;
+    _type: 'timelineRow';
+    _key: string;
+  }>;
+};
+
+export type SundayTimesSection = {
+  _type: 'sundayTimesSection';
+  eyebrow?: string;
+  heading?: string;
+  items?: Array<{
+    label?: string;
+    big?: string;
+    body?: string;
+    _type: 'timeItem';
+    _key: string;
+  }>;
+  doors?: Array<{
+    name?: string;
+    body?: string;
+    _type: 'door';
+    _key: string;
+  }>;
+  showMap?: boolean;
+};
+
 export type EmbedSection = {
   _type: 'embedSection';
   eyebrow?: string;
@@ -890,6 +1061,30 @@ export type Page = {
     | ({
         _key: string;
       } & EmbedSection)
+    | ({
+        _key: string;
+      } & SundayTimesSection)
+    | ({
+        _key: string;
+      } & TimelineSection)
+    | ({
+        _key: string;
+      } & StaffGridSection)
+    | ({
+        _key: string;
+      } & FaqSection)
+    | ({
+        _key: string;
+      } & ScriptureBandSection)
+    | ({
+        _key: string;
+      } & HeritageBandSection)
+    | ({
+        _key: string;
+      } & GiveBandSection)
+    | ({
+        _key: string;
+      } & DocumentListSection)
   >;
   addToMainNav?: boolean;
   navGroup?: 'top' | 'services' | 'resources';
@@ -1242,6 +1437,30 @@ export type HomePage = {
       } & EmbedSection)
     | ({
         _key: string;
+      } & SundayTimesSection)
+    | ({
+        _key: string;
+      } & TimelineSection)
+    | ({
+        _key: string;
+      } & StaffGridSection)
+    | ({
+        _key: string;
+      } & FaqSection)
+    | ({
+        _key: string;
+      } & ScriptureBandSection)
+    | ({
+        _key: string;
+      } & HeritageBandSection)
+    | ({
+        _key: string;
+      } & GiveBandSection)
+    | ({
+        _key: string;
+      } & DocumentListSection)
+    | ({
+        _key: string;
       } & TeamSection)
     | ({
         _key: string;
@@ -1446,6 +1665,8 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+  | SanityFileAssetReference
+  | ListedDocumentFile
   | SanityImageAssetReference
   | Photo
   | Redirect
@@ -1470,6 +1691,14 @@ export type AllSanitySchemaTypes =
   | NavLink
   | DynamicListSection
   | TeamSection
+  | DocumentListSection
+  | GiveBandSection
+  | HeritageBandSection
+  | ScriptureBandSection
+  | FaqSection
+  | StaffGridSection
+  | TimelineSection
+  | SundayTimesSection
   | EmbedSection
   | LogoStripSection
   | SpacerSection
