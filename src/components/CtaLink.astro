@@ -112,7 +112,13 @@ function resolveHref(c?: CtaBlock | null): string {
 const href = resolveHref(cta);
 const label = cta?.label ?? fallbackLabel;
 const isExternal = cta?.linkType === 'external';
-const newTab = cta?.openInNewTab || isExternal;
+// An explicit `openInNewTab: false` is now honoured, even on an external link.
+// It has to be: since plan 2b task 4, a same-site path that a reference cannot
+// express ("/history#building", "/blog") rides in on `externalUrl`, and sending
+// the visitor to a second tab for a link inside the same site is wrong. Only an
+// UNSET value falls back to the old default of opening an off-site URL in a new
+// tab, so nothing an editor wrote before this change moves.
+const newTab = cta?.openInNewTab ?? isExternal;
 
 // Focus ring offset uses --background by default, but under onDark we offset
 // against transparent so the ring still reads on the photographic surface.

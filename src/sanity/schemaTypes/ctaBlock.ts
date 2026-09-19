@@ -46,6 +46,17 @@ export const ctaBlock = defineType({
       name: 'externalUrl',
       title: 'Full URL',
       type: 'url',
+      // RELATIVE URLs ARE ALLOWED ON PURPOSE (2026-09-19, plan 2b task 4).
+      // `internalLink` is a reference, so it can point at a DOCUMENT and
+      // nothing else: it cannot carry a fragment ("/history#building") and it
+      // cannot point at a route with no document behind it ("/blog"). Those
+      // two cases ride in here instead, as a relative path with
+      // openInNewTab off, which CtaLink.astro passes through unchanged. The
+      // default url validation rejects anything without a scheme, so it is
+      // widened rather than dropped: http, https, mailto and tel still have to
+      // look like themselves.
+      validation: (Rule) =>
+        Rule.uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] }),
       hidden: ({ parent }) => parent?.linkType !== 'external',
     }),
     defineField({
