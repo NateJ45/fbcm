@@ -55,6 +55,46 @@ function rawEmail(p) {
   return bare ? bare[0] : undefined;
 }
 
+/**
+ * A paragraph that is nothing but an address, however Wix spelled it:
+ * "cynthia@fbcmuncie.org", "membercare[at]fbcmuncie.org" (obfuscated against
+ * scrapers), "clerk@fbcmuncieorg" (the missing dot, see fixEmail). Those lines
+ * are the `email` FIELD, so repeating them inside the bio is a second copy of
+ * a value the page already renders.
+ */
+const isEmailLine = (s) => /^[\w.+-]+(?:@|\[at\])[\w.-]+$/i.test(s);
+
+/**
+ * The bio, which is NOT the whole captured body.
+ *
+ * `toPT(p.bodyText)` shipped all 16 bios with the person's own name and role
+ * as their first two paragraphs (the page already renders both, from their own
+ * fields), their email a third time, and the literal
+ * "[Button] < Back -> https://www.fbcmuncie.org/ministers" -- a link back to
+ * the Wix site this one replaces -- as the last line of every profile.
+ *
+ * So: drop the leading name and role, drop any bare address line, drop the
+ * Wix button, and run fixEmail over what is left so an address quoted inside
+ * the prose gets the same correction the field does. Four of the sixteen
+ * profiles (Andy Heimlich, Jaden Johnson, Nina Oisten, Sally Butler) are
+ * nothing BUT those lines; they come back undefined, which the schema reads as
+ * "show name, role and photo only", and that is the right page for them.
+ */
+function bioOf(p, who) {
+  const name = (p.h1 ?? p.title ?? '').trim();
+  const role = roleOf(p)?.trim();
+  const kept = (p.bodyText ?? '')
+    .split(/\n{2,}/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .filter((s, i) => !(i === 0 && s === name))
+    .filter((s, i) => !(i <= 1 && role && s === role))
+    .filter((s) => !s.startsWith('[Button]'))
+    .filter((s) => !isEmailLine(s));
+  if (!kept.length) return undefined;
+  return fixEmail(kept.join('\n\n'), `${who} (bio)`);
+}
+
 /** The role/title is the paragraph right after the name, not a level-2 heading. */
 function roleOf(p) {
   const paragraphs = (p.bodyText ?? '').split(/\n{2,}/).map((s) => s.trim());
@@ -97,7 +137,10 @@ for (const [i, file] of staffFiles.entries()) {
     slug: { _type: 'slug', current: slug },
     role: roleOf(p),
     email,
-    bio: p.bodyText?.trim() ? toPT(p.bodyText.trim()) : undefined,
+    bio: (() => {
+      const text = bioOf(p, slug);
+      return text ? toPT(text) : undefined;
+    })(),
     photo: photoImage,
     order: (i + 1) * 10,
   };

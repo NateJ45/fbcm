@@ -103,8 +103,7 @@ const FIELD_HELPERS = {
  * page-builder section that reads it. A section that is scaffold-removed loses
  * its collection with it, so an entry left behind here is itself a finding.
  */
-const RENDERED_BY = {
-};
+const RENDERED_BY = {};
 
 /** Sanity's own object types, whose keys we do not police. */
 const BUILT_IN = new Set([
@@ -477,11 +476,25 @@ section('7. Prices typed into prose');
   const docs = await client.fetch(`*[!(_type match "sanity.*") && !(_type match "system.*")]`);
   const MONEY = /\$[\d,]+/g;
   const lines = [];
+  // 2026-09-18: the check now needs a SECOND source to exist before it fires.
+  // The fault it was written for is one number living in two places, and the
+  // evidence for that is a structured price field that is actually FILLED IN.
+  // A dataset with none of them populated has no second copy to drift from, so
+  // every "$15" it holds is simply prose: a ticket price in a church news post,
+  // a salary in a job listing, a fundraising goal. Reporting those as findings
+  // is noise that nobody can ever clear, and a gate nobody can clear is a gate
+  // everybody learns to ignore. A site that sells things still has its prices
+  // in these fields, so the check fires there exactly as before.
+  let structuredInUse = 0;
   const walk = (node, doc, path) => {
     if (Array.isArray(node)) return node.forEach((v, i) => walk(v, doc, `${path}[${i}]`));
     if (node && typeof node === 'object') {
       return Object.entries(node).forEach(([k, v]) => {
-        if (k.startsWith('_') || STRUCTURED.has(k)) return;
+        if (k.startsWith('_')) return;
+        if (STRUCTURED.has(k)) {
+          if (v != null && v !== '' && !(Array.isArray(v) && v.length === 0)) structuredInUse++;
+          return;
+        }
         walk(v, doc, path ? `${path}.${k}` : k);
       });
     }
@@ -493,7 +506,15 @@ section('7. Prices typed into prose');
     );
   };
   for (const d of docs) walk(d, d, '');
-  report(lines);
+  if (!structuredInUse && lines.length) {
+    console.log(
+      `  none (${lines.length} dollar amount(s) are in prose, but no structured price\n` +
+        `  field [${[...STRUCTURED].join(', ')}] is filled in anywhere in this dataset,\n` +
+        `  so there is no second copy for them to disagree with)`,
+    );
+  } else {
+    report(lines);
+  }
 }
 
 console.log(`\n${problems === 0 ? 'Studio is clean.' : `${problems} thing(s) to look at.`}`);
