@@ -10,7 +10,7 @@
 // Output is committed so Cloudflare serves it without Sanity access at runtime.
 
 import { createClient } from '@sanity/client';
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadEnv } from './lib/loadEnv.mjs';
@@ -53,10 +53,30 @@ function ptToPlainText(blocks) {
     .trim();
 }
 
-// Site URL for generating absolute links in the output document.
-// Reads from env (PUBLIC_SITE_URL or SITE_URL) so CI/CD can override without
-// touching source. Matches the `url` field in src/data/site.ts at rest.
-const SITE = env.PUBLIC_SITE_URL ?? env.SITE_URL ?? 'https://example.com';
+// IDENTITY (2026-09-18). The two fallbacks below used to be the literal
+// strings 'Studio Starter' and 'https://example.com', so a fork that never set
+// the env vars published another business's name and a dead domain in a file
+// whose entire purpose is to be ingested and repeated by language models.
+// Nothing in a build, a type check or a test can see that, because the code is
+// correct and only the noun is wrong (CLAUDE.md rule 11).
+//
+// So the fallback is now brand/brand.config.json, which is this repo's single
+// source of truth for identity and is committed. Env still wins, so CI can
+// override without touching source; the difference is that doing nothing now
+// yields THIS site rather than the starter's.
+function brandConfig() {
+  try {
+    return JSON.parse(readFileSync(resolve(root, 'brand/brand.config.json'), 'utf-8'));
+  } catch {
+    return {};
+  }
+}
+const brand = brandConfig();
+
+// Site URL for generating absolute links in the output document. The brand
+// config holds the apex; the site is served from www (see src/data/site.ts).
+const SITE =
+  env.PUBLIC_SITE_URL ?? env.SITE_URL ?? (brand.domain ? `https://www.${brand.domain}` : '');
 
 const [settings, services, steps, faqs, projects, journal, guides] = await Promise.all([
   client
@@ -93,9 +113,16 @@ const [settings, services, steps, faqs, projects, journal, guides] = await Promi
 const lines = [];
 const p = (s = '') => lines.push(s);
 
-// Site name for the document heading. Reads SITE_NAME from env so CI can
-// override without touching source; mirrors `name` in src/data/site.ts.
-const siteName = env.SITE_NAME ?? 'Studio Starter';
+// Site name for the document heading. Env first, then the brand config.
+const siteName = env.SITE_NAME ?? brand.name ?? '';
+if (!siteName || !SITE) {
+  console.error(
+    'No site identity. Set `name` and `domain` in brand/brand.config.json (or SITE_NAME / ' +
+      'PUBLIC_SITE_URL in .env) before generating llms-full.txt: this file is written to be ' +
+      'ingested and repeated verbatim by language models, so a placeholder in it is published.',
+  );
+  process.exit(1);
+}
 
 p(`# ${siteName} — Full Site Content`);
 p('');

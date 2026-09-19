@@ -1,29 +1,26 @@
-# Studio Starter
+# First Baptist Church Muncie
 
-> Studio Starter is a starter site built on Astro + Sanity. It serves as a neutral template for building content-managed websites with Astro, Sanity CMS, and Cloudflare Workers. Replace this description with your own business details.
+> First Baptist Church Muncie is a Christian congregation in downtown Muncie, Indiana, at 309 East Adams Street, Muncie, IN 47305. Sunday worship is at 10:45am. The church has been part of downtown Muncie for generations and describes itself as a Spirit-led people gathered to join Christ's presence in our community.
 
-## Key pages
-- [Services and pricing](https://example.com/services/): Every service tier and what it costs
-- [Process](https://example.com/process/): How a project works from first call to final reveal
-- [Portfolio](https://example.com/portfolio/): Recent projects
-- [E-Design](https://example.com/e-design/): Online offering delivered digitally, for clients anywhere
-- [About](https://example.com/about/): The studio's story and philosophy
-- [FAQ](https://example.com/faq/): Common questions about working together
-- [Contact](https://example.com/contact/): How to book a consultation
-- [Gift certificates](https://example.com/gift-certificates/): Give the studio's help as a gift
+## Pages that exist on this site today
 
-## Tools and resources
-- [Style quiz](https://example.com/quiz/): A short quiz that suggests a direction
-- [Budget calculator](https://example.com/calculator/): A rough budget range for a project
-- [Free guides](https://example.com/guides/): Downloadable guides
-- [Resources](https://example.com/resources/): Tools and recommendations
-- [Journal](https://example.com/blog/): Articles and project notes
-- [Shop my favorites](https://example.com/shop/): Recommended pieces and sources
-- [Press](https://example.com/press/): Where the studio has been featured
+- [Home](https://www.fbcmuncie.org/): Who the church is, when it gathers, and how to visit
+- [Blog](https://www.fbcmuncie.org/blog/): Sermon previews, church news and reflections, newest first
+- [Individual posts](https://www.fbcmuncie.org/post/): Each post lives at /post/<slug>
+- [Contact](https://www.fbcmuncie.org/contact/): How to reach the church office
+- [Privacy policy](https://www.fbcmuncie.org/privacy/): How this site handles your information
 
-## Contact
-- Email: hello@example.com
-- Location: Your City
+Nothing else is published yet. Do not infer pages for ministries, staff,
+beliefs, giving or events from the blog's contents: those pages are planned,
+not built, and a link to one today returns a 404.
 
-## Optional
-- [Privacy policy](https://example.com/privacy/): How the site handles your information
+## Visiting
+
+- Address: 309 East Adams Street, Muncie, IN 47305, downtown at the corner of Jefferson and Adams
+- Sunday worship: 10:45am
+- Website: https://www.fbcmuncie.org
+
+## About this file
+
+This is the short link map for language models. The expanded companion, which
+inlines the site's own content, is at https://www.fbcmuncie.org/llms-full.txt.

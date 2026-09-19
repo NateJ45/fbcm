@@ -1,125 +1,148 @@
-# Studio Starter — Full Site Content
+# First Baptist Church Muncie — Full Site Content
 
-> Studio Starter is a starter site built on Astro + Sanity. Replace this description with your own business details.
-
-This is the expanded companion to /llms.txt. It inlines the substantive content of the site so a language model can answer questions about the studio from a single document. For the short link map, see /llms.txt.
-
-## Services and pricing
-
-### Consultation — $150
-A 60 to 90 minute visit where we walk your space, talk through what's not working, and leave you with a clear plan.
-Best for: Clients who know something feels off but aren't sure where to start.
-
-- 60 to 90 minute visit
-- Layout assessment and guidance
-- Color and finish direction
-- Clear next-steps plan
-
-### E-Design — starting at $450
-A fully digital design package for clients who prefer to manage the install themselves.
-Best for: Remote clients, hands-on clients, or anyone who wants a clear plan without the in-home install.
-
-- Full digital design plan delivered as a clickable PDF
-- Mood board and finish/material palette
-- 2D layout with furniture placement
-- Sourcing list with direct shopping links
-- One round of revisions
-- Two weeks of email follow-up while you shop
-
-### Full room design — starting at $650
-A complete plan for one room — layout, furniture, decor, paint direction, and a sourcing list with direct shopping links.
-Best for: A single-room reset where you want a plan you can act on at your own pace.
-
-- Layout and furniture placement
-- Mood board and concept direction
-- Furniture and decor recommendations
-- Color palette and finish guidance
-- Curated sourcing list with shopping links
-- One revision round
-
-### Full room design + styling — starting at $850
-Everything in Full Room Design, plus hands-on help — shopping, picking paint, hanging the art, styling the shelves.
-Best for: When you'd rather hand the project off than manage it.
-
-- Everything in Full Room Design
-- Hands-on shopping and sourcing
-- Paint color selections
-- Rug, art, and styling direction
-- In-home styling and final reveal
-
-### Shopping & sourcing — $75 per hour
-Help finding the right pieces — billed hourly, no minimum, trade-vendor access included.
-Best for: When you have the vision and just need the right finds.
-
-- Trade-only and retail vendor sourcing
-- Curated finds matched to your style
-- Shopping coordination and in-store visits
-- Vendor and lead-time management
-
-### Partnerships — Custom
-For builders, realtors, and contractors. Finish selections, staging, move-in styling — whatever the project needs.
-Best for: Builders, realtors, and contractors looking for a design partner.
-
-- Finish selections and fixture packages for new construction
-- Staging for listings and move-in styling for buyers
-- Design-side coordination for renovation projects
-
-## How a project works
-
-### Step 1: Consultation (Single visit)
-A free intro chat to make sure we're a fit, then a 60 to 90 minute visit to walk your space and build a clear plan.
-
-### Step 2: Design plan created (2 to 3 weeks)
-Mood board, layout, furniture and decor selections, and a sourcing list with direct shopping links. You see everything before anything is purchased.
-
-### Step 3: Shopping + selections (Per project scope)
-You shop the curated list at your own pace, or we source and order it for you. Trade vendor access is included either way.
-
-### Step 4: Styling + final reveal (Final visit)
-Everything gets placed, styled, and accessorized.
-
-## Frequently asked questions
-
-### Do I need to buy all new furniture?
-Not at all. We love working with pieces you already own. We'll identify what's worth keeping, what can be repurposed, and what genuinely needs to go.
-
-### Are you available for commercial projects?
-Primary focus is residential, but open to small commercial spaces, boutiques, offices, short-term rentals. Reach out and describe your project.
-
-### Do you work with contractors?
-For full-service projects involving renovation, we coordinate with contractors but don't act as a general contractor. We can provide referrals to trusted tradespeople and manage design-side communication.
-
-### What if something arrives damaged?
-For full-service clients where we manage purchasing, we handle all claims, returns, and reorders. Vendor relationships and trade accounts come with better resolution processes than retail.
-
-### What if I don't like the design plan?
-Every package includes one full revision round. The thorough consultation up front means major revisions are rare, but the protection is always there. Nothing gets ordered until you give explicit approval.
-
-### Are there hidden fees I should know about?
-No. The design fee is stated upfront before any work begins. The only additional cost is the furnishings and materials you choose to purchase, and you're always in control of that budget.
-
-### How long does a project take?
-The consultation is a single 60 to 90 minute visit. The design plan typically takes 2 to 3 weeks to build after the consultation. From there, shopping and styling timing depends on scope and on furniture lead times.
-
-### How does trade vendor access work?
-We have accounts with vendors not open to the public. These lines offer more distinctive pieces, and trade pricing is passed along to you, frequently offsetting a portion of the design fee.
-
-## Service area and contact
-
-- Location: Your City
-- Email: hello@example.com
-- Availability: Accepting new clients
-
-## Portfolio projects
-
-- [Example Project One](https://example.com/portfolio/example-project-one/) (Your City, 2026): Replace with your own portfolio entry description.
-- [Example Project Two](https://example.com/portfolio/example-project-two/) (Your City, 2026): Replace with your own portfolio entry description.
+> This is the expanded companion to /llms.txt for First Baptist Church Muncie. It inlines the substantive content of the site pulled from Sanity so a language model can answer questions about this business from a single document. For the short link map, see /llms.txt.
 
 ## Journal
 
-- [Example Journal Post](https://example.com/post/example-post/): Replace with your own journal entry description.
-
-## Free guides
-
-- [Example Guide One](https://example.com/guides/example-guide-one/): Replace with your own guide description.
-- [Example Guide Two](https://example.com/guides/example-guide-two/): Replace with your own guide description.
+- [Händel's Messiah Sing-In & Carols Muncie](https://www.fbcmuncie.org/post/händel-s-messiah-sing-in-carols/): Some Christmas events invite you to sit back and listen, but Messiah Sing-In & Carols is a time to join in and be a participant in the music!
+- [Upcoming Events at FBC Muncie | Lent & Easter 2026](https://www.fbcmuncie.org/post/upcoming-events-at-fbc-muncie-march-3-easter-2026/): We are grateful God is at work! Here's a look at what's coming up at First Baptist Church Muncie from now through Easter Sunday, April 5, 2026. Mark your calendars and invite a friend!
+- [Ecclesiastes - faith when everything is not enough](https://www.fbcmuncie.org/post/ecclesiastes-faith-when-everything-is-not-enough/): "What's it all about?" What is life? Does it have a meaning? The book of Ecclesiastes is perhaps the only true book of philosophy in the Bible.
+- [Blue Christmas? Hope & Mental Health for the Holidays](https://www.fbcmuncie.org/post/blue-christmas-hope-mental-health-for-the-holidays/): If Christmas feels heavy this year, you are not alone.
+- [2025 Holiday Schedule](https://www.fbcmuncie.org/post/2025-holiday-schedule/): Don't forget to celebrate the season with your FBCM family! Read here for our end of year event lineup!
+- [A Light Wardrobe](https://www.fbcmuncie.org/post/a-light-wardrobe/): Advent is upon us: the great time of anticipation and preparation. Get ready!
+- [Multiply Resources](https://www.fbcmuncie.org/post/multiplied/): While the disciples wanted to send the crowd away for a "fend for yourself" dinner, a young boy shared all that he had. And, with God at work, that was all which was actually needed.
+- [Multiply Love](https://www.fbcmuncie.org/post/multiply-love/): This is a sermon preview for November 2, 2025, the first of four sermons in FBCM's "Multiplied" sermon series.
+- [The Missing Piece](https://www.fbcmuncie.org/post/the-missing-piece/): "So Peter was kept in prison, but the church was earnestly praying to God for him." -excerpt from Acts 12:1-19 Ever tried to assemble a puzzle and then realize a piece is missing? Frustration!
+- [The Way, The Truth, & the Life](https://www.fbcmuncie.org/post/the-way-the-truth-the-life/): When we say that Jesus is The Way, The Truth, And the Life (as we should, Jesus says those words about himself!), we often prioritize the Truth and Life. Those are surely important, but we should not neglect the way.
+- [The Resurrection & The Life](https://www.fbcmuncie.org/post/the-resurrection-the-life/): Jesus said to her, “I am the resurrection and the life. The one who believes in me will live, even though they die; and whoever lives by believing in me will never die. Do you believe this?” From John 11:17-43
+- [Job Listing: Worship Arts Pastor (Part-time)](https://www.fbcmuncie.org/post/job-listing-worship-arts-pastor/): First Baptist Church Muncie is seeking a part-time Worship Arts Pastor to lead our congregation in Christ-centered, intergenerational worship. Details to apply within.
+- [Job Listing: Pianist / Organist (Part-Time)](https://www.fbcmuncie.org/post/job-listing-pianist-organist-part-time/): First Baptist Church Muncie is seeking a part-time Pianist/ Organist* to accompany our Worship Arts Pastor in Christ-centered, intergenerational worship. Details to apply within.
+- [Exalt (Witness Goal 2025-2026)](https://www.fbcmuncie.org/post/exalt-witness-goal-2025-2026/): What is the "work" of the church? Why do we do "acts of mercy"?
+- [Make Known (Witness Goal 2025-2026)](https://www.fbcmuncie.org/post/make-known-witness-goal-2025-2026/): Witness makes Jesus known in Christ-sharing relationships. These men who carry a man who is paralyzed are determined that this man on a mat would see Jesus.
+- [Proclaim (The Way [Discipleship] Goal 2025-2026)](https://www.fbcmuncie.org/post/proclaim-the-way-discipleship-goal-2025-2026/): The Way proclaims how we become like Christ. In the time of the New Testament, it was common for disciples to find a teacher they liked and respected.
+- [Praise (Worship Goal 2025-2026)](https://www.fbcmuncie.org/post/praise-worship-goal-2025-2026/): Here in Isaiah, we see that as God brings more people to himself, he also brings those people to join the church.
+- [Get Loud - Our Watchword 2025-2026](https://www.fbcmuncie.org/post/get-loud-our-watchword-2025-2026/): What's in a Watchword?
+- [Guidance Through Gifts](https://www.fbcmuncie.org/post/guidance-through-gifts/): During Messy Camp this week, Pastor Jonathan, Brady, and I have been acting out an opening skit that helps bring the big idea each day to life.
+- [God Sees Us Through](https://www.fbcmuncie.org/post/god-sees-us-through/): Have you ever seen someone fully devoted to something?
+- [Messy Camp 2025](https://www.fbcmuncie.org/post/messy-camp-2025/): Join us for a week of ALL the MESSY foods, games, stories, and crafts that your kids love! Messy Camp is designed to give kids a week of safe sensory play that the parents don't have to clean up.
+- [God's Power to Rebuild](https://www.fbcmuncie.org/post/hearing-the-word-1/): "It's over now." Those were my thoughts in the fourth quarter as the score slipped further and further out of the Pacer's favor in Game 7 of this year's NBA finals.
+- [Justified by Faith, Empowered by the Spirit](https://www.fbcmuncie.org/post/justified-by-faith-empowered-by-the-spirit/): This week, we learn about the Holy Spirit's role in giving us up— Hope which does not put us to shame. Hope which looks like Christ dying for the ungodly.
+- [Our Advocate](https://www.fbcmuncie.org/post/our-advocate/): "If only I had been there, and seen Jesus and saw what he did myself, then it would be easy to trust him." Maybe you've had a thought like this before. The Gospels may surprise us.
+- [Peacemakers](https://www.fbcmuncie.org/post/peacemakers/): Those who get to payback or peacemakers. We have a choice on which we will be. In a lecture on forgiveness, and its limits, Elizabeth Bruenig described her two children fighting.
+- [The Hopeful](https://www.fbcmuncie.org/post/the-hopeful/): I’ve never watched It’s Always Sunny in Philadelphia, but my favorite meme comes from an episode where Charlie thinks he’s discovered a “major conspiracy.”
+- [Laborers](https://www.fbcmuncie.org/post/laborers/): I had the “bright idea” to pop into a spin exercise class last week.
+- [Stayers](https://www.fbcmuncie.org/post/stayers/): If you ever decide to pop-in the church office during the Pastors’ office hours on Tuesdays, you might be surprised to find what you stumble upon.
+- [Imitators](https://www.fbcmuncie.org/post/imitators/): My daughter is one and a half years old. It's hard to believe. So much, she learns from imitation. Her new favorite phrase is "Oooooh Noooo!"
+- [Remembering Resurrection](https://www.fbcmuncie.org/post/remembering-resurrection/): This is a sermon preview and event overview for Holy Week and Easter 2025.
+- [The King's Stride](https://www.fbcmuncie.org/post/the-king-s-stride/): This is a sermon preview for the fourth week of our “Walking in Wisdom: A Lenten Study of Proverbs” series.
+- [Walking Together](https://www.fbcmuncie.org/post/walking-together/): Wisdom isn't a solitary quest. It's a gift to a community. How do receive wisdom together?
+- [Pacing Our Steps](https://www.fbcmuncie.org/post/pacing-our-steps/): Have you ever received contradictory advice?
+- [Baby Steps](https://www.fbcmuncie.org/post/baby-steps/): Fans of the 1990’s sitcom Boy Meets World love to quote “The Feeny Call.”
+- [Lent & Easter 2025](https://www.fbcmuncie.org/post/lent-easter-2025/): See how you can join FBCM during the 2025 Lent and Easter seasons.
+- [The Road Not Taken](https://www.fbcmuncie.org/post/the-road-not-taken/): Poet Robert Frost writes, “Two roads diverged in a wood, and I—I took the one less traveled by, And that has made all the difference."
+- [Mountaintop Priority](https://www.fbcmuncie.org/post/mountaintop-priority/): Treasure, money, and anxiety. If we haven't been convicted so far in Jesus's sermon on the mount, if one of us suspects Jesus is not talking
+- [Mountaintop Forgiveness](https://www.fbcmuncie.org/post/mountaintop-forgiveness/): This is a sermon preview for the fourth week of our “Mountaintop Manifesto” series.
+- [Mountaintop Love](https://www.fbcmuncie.org/post/mountaintop-love/): This is a sermon preview for the fourth week of our “Mountaintop Manifesto” series.
+- [Mountaintop Relationships](https://www.fbcmuncie.org/post/mountaintop-relationships/): Someone once joked that if their family had a motto, it would be this: Well, that escalated quickly. How relatable!
+- [Mountaintop Law](https://www.fbcmuncie.org/post/mountaintop-law/): The movie Lilo & Stitch begins with the trial of mad scientist Dr. Jumba and his failed Experiment 626–also known as “Stitch.”
+- [Mountaintop Blessing](https://www.fbcmuncie.org/post/mountaintop-blessing/): What's the most surprising news you've ever been told?
+- [It's The Small Things](https://www.fbcmuncie.org/post/it-s-the-small-things/): “But you, Bethlehem Ephrathah, though you are small among the clans of Judah,out of you will come for me one who will be ruler over Israel,whose origins are from of old,from ancient times.”-from Micah 5:2-5a "He has…
+- [No Rest For The Wicked](https://www.fbcmuncie.org/post/no-rest-for-the-wicked/): "I will save the lame and gather the outcast, and I will change their shame into praise and renown in all the earth." the prophet proclaims
+- [From the Wilderness, With Love](https://www.fbcmuncie.org/post/from-the-wilderness-with-love/): John the Baptist is about as cuddly as a cactus. But that shouldn't stop us from learning from him about love and repentance.
+- [Advent & Christmas 2024](https://www.fbcmuncie.org/post/advent-christmas-2024/): Advent 2024 is a special time. From caroling to Christmas Eve, find the special events here!
+- [Fear & Fainting On Planet Earth](https://www.fbcmuncie.org/post/fear-fainting-on-planet-earth/): It’s nearly impossible to think of a more Christmas-y Christmas hymn than “O Holy Night.” The song is about the night itself ...
+- [One Forevermore](https://www.fbcmuncie.org/post/one-forevermore/): I can’t hear the word “forever” without thinking about the movie The Sandlot.
+- [One Liberty](https://www.fbcmuncie.org/post/one-liberty/): This is a sermon preview for the third week of our “One: Unity Comes from God” series.
+- [ONE Truth](https://www.fbcmuncie.org/post/one-truth/): Is anything more satisfying than a good mystery?
+- [One Authority](https://www.fbcmuncie.org/post/one-authority/): Authority is one of those things we have a love-hate relationship with.
+- [Elect Self Control](https://www.fbcmuncie.org/post/elect-self-control/): Why do I find "Self-Control 2024" such an amusing fake political sign?
+- [Elect Gentleness](https://www.fbcmuncie.org/post/elect-gentleness/): ou believe in God, well and good. But even the demons believe and shudder (to paraphrase James 2:19). Many of us believe in God. In fact,
+- [Elect Goodness](https://www.fbcmuncie.org/post/elect-goodness/): Good and bad are such broad words in our language. In these short words, we hide a whole host of concepts. A movie can be good ...
+- [Elect Kindness](https://www.fbcmuncie.org/post/elect-kindness/): There's a viral Facebook post that says, "It costs nothing to be kind."
+- [Elect Patience](https://www.fbcmuncie.org/post/elect-patience/): Are you the tortoise or the hare?
+- [Elect Peace](https://www.fbcmuncie.org/post/elect-peace/): There is a pendant hanging in my office that I got as a gift when I began serving as a Resident Chaplain at Baylor University.
+- [Elect Joy](https://www.fbcmuncie.org/post/elect-joy/): I’ve got that joy, joy, joy, joy down in my heart. WHERE?
+- [Elect Spiritual Fruit: Love](https://www.fbcmuncie.org/post/elect-spiritual-fruit-love/): ove is not simply a feeling of affection. It is actively seeking the good of others. The Old Testament shows how the separateness, the hol
+- [Our Watchword: Work (Gifts for Service)](https://www.fbcmuncie.org/post/our-watchword-work-gifts-for-service/): Persecutions, bold preaching, mighty acts of God all fill the book of Acts. So does ordinary work
+- [Our Watchword: Witness (Evangelism)](https://www.fbcmuncie.org/post/our-watchword-witness-evangelism/): It is hard to imagine a more direct conversion experience than Paul's (Saul as he is referred to in this passage). He falls to the ground
+- [Our Watchword: The Way (Discipleship)](https://www.fbcmuncie.org/post/our-watchword/): "Discipleship" is a word like "abide" or "discerning" - while they do appear outside of church contexts they are very much "church-y" words.
+- [Our Watchword: Worship](https://www.fbcmuncie.org/post/our-watchword-worship/): “The church's defining characteristic is its worshipful response to the call of God to be his people." - Simon Chan in Liturgical Theology.
+- [Sabbath as Salvation for God's People](https://www.fbcmuncie.org/post/sabbath-as-salvation-for-god-s-people/): Greetings from Indian Creek Baptist Camp! We’ll save all the good camp stories for the teens to share when we get back to Muncie.
+- [When Restlessness is a Lack of Trust](https://www.fbcmuncie.org/post/when-restlessness-is-a-lack-of-trust/): I used to get my best night’s sleep when a thunderstorm would roll in.
+- [God Works While We Sleep](https://www.fbcmuncie.org/post/god-works-while-we-sleep/): In preparation for "On the Case" VBS, I’ve been reminded that there are many mysteries in life.
+- [Sabbath for us](https://www.fbcmuncie.org/post/sabbath-for-us/): Rest is a command in the Bible. It’s one of the ten commandments. God wants his people to rest. And, being the people we are, we’re good a
+- [Mentoring, Discipleship & Women in Ministry](https://www.fbcmuncie.org/post/spiritual-fathers-spiritual-mothers/): Resources on Christian Mentoring, Parenting, & Discipleship, Women in Ministry, and Scripture
+- [Spiritual Mothers](https://www.fbcmuncie.org/post/spiritual-mothers/): What does it mean to be a woman? Is there a place in the church for women faced with pressures from both society and the church?
+- [Spiritual Fathers](https://www.fbcmuncie.org/post/spiritual-fathers/): "The Trouble With Boys And Men" It seems like headlines about men and boys being in trouble proliferate. These are just the articles
+- [Marriage, Household & Sexuality Resources](https://www.fbcmuncie.org/post/marriage-household-sexuality-resources/): Resources this week focus on marriage, “headship,” mutually serving one another in marriage and how marriage involves an exclusive...
+- [Turning Headship On Its Head](https://www.fbcmuncie.org/post/turning-headship-on-its-head/): When it comes to family, a lot of us are going to think about marriage. Which made me think: there’s two kind of stories....
+- [There's No 'Sin' in 'Single' Resources](https://www.fbcmuncie.org/post/there-s-no-sin-in-single-resources/): Resources this week focus on singleness, divorce, being a widow / widower, and how single and married, childless and parents, are alike whol
+- [There's no "sin" in "single"](https://www.fbcmuncie.org/post/there-s-no-sin-in-single/): We often bring with us a lot of assumptions about marriage. The Pharisees in our scriptural passage this week did the same.
+- [Navigating difficult relationships, facing loss, & the cost of discipleship resources](https://www.fbcmuncie.org/post/kingdom-family-vacation-anti-family-values-jesus-resources/): Resources this week focus on strain and separation in relationships: navigating difficult relationships, facing loss, and the cost of discip
+- [Local Individual & Family Counseling Resources](https://www.fbcmuncie.org/post/local-individual-family-counseling-resources/): While experiences can and will vary, the following practitioners come with positive recommendations. Each organization is different...
+- [Anti-Family Values Jesus?](https://www.fbcmuncie.org/post/anti-family-values-jesus/): Science suggests that no one is actually a good multi-tasker, and I’m definitely proof of that.
+- [Wind & Wildfire](https://www.fbcmuncie.org/post/wind-wildfire/): On the cusp of summer break, I’ve noticed that wildfire prevention campaigns have returned.
+- [Overcomers](https://www.fbcmuncie.org/post/overcomers/): It hasn’t quite hit me that this Sunday will be my first Mothers’ Day as a mom.
+- [Testify to Love](https://www.fbcmuncie.org/post/testify-to-love/): In 1997, I was in my YPK (Youth Pastor’s Kid) Era, jamming to folks like DC Talk, Audio Adrenaline, and Jars of Clay in my car seat, chocolate milk in hand.
+- [Love in Action & Truth](https://www.fbcmuncie.org/post/love-in-action-truth/): International Ministries Global Servants Carlos Bonilla & Mayra Giovanetti make living and teaching the commands aimed at a disciple a core
+- [Meet ICBC's Camp Directors](https://www.fbcmuncie.org/post/meet-icbc-s-camp-directors/): “Jesus Christ is the same yesterday and today and forever.” - Hebrews 13:6-16FBCM is excited to welcome Jordan and Mindy Morris to lead worship on Sunday, April 21, 2024.
+- [Being and Seeing Like Children of God](https://www.fbcmuncie.org/post/being-and-seeing-like-children-of-god/): See what great love the Father has lavished on us, that we should be called children of God! And that is what we are!
+- [Global Servants Bonilla-Giovanettis (BGs) To Visit FBCM Sunday, April 28th](https://www.fbcmuncie.org/post/global-servants-bonilla-giovanettis-bgs-to-visit-fbcm-sunday-april-28th/): We have the privilege of welcoming Global Servants (Missionaries) Carlos Bonilla & Mayra Giovannetti (BGs for short) to Muncie Sunday April
+- [Walking in the Light, Together](https://www.fbcmuncie.org/post/walking-in-the-light-together/): When you think of Holiness, what do you think of? Maybe you imagine a solitary monk or nun in the wilderness, away from human contact
+- [Easter 2024 - "The Last Enemy To Be Defeated"](https://www.fbcmuncie.org/post/easter-2024-the-last-enemy-to-be-defeated/): “If only for this life we have hope in Christ, we are of all people most to be pitied. But Christ has indeed been raised from the dead, the firstfruits of those who have fallen asleep.”-From 1 Corinthians 15:12-26Easter!
+- [Passion Despite Weakness](https://www.fbcmuncie.org/post/passion-despite-weakness/): When I played soccer in high school, I wanted to like running for the sake of the game and my teammates.
+- [Passion Despite Pride](https://www.fbcmuncie.org/post/passion-despite-pride/): I made a fool of myself this week.
+- [Holy Week 2024](https://www.fbcmuncie.org/post/holy-week-2024/): This year, Holy Week officially begins with Palm Sunday on March 23 and lasts until Easter morning, March 31.
+- [Passion: 2024 Lent Resources](https://www.fbcmuncie.org/post/passion-2024-lent-resources/): As you fast from something this Lent, we encourage you to consider replacing that thing with one of the options below.
+- [Passion Despite Riches](https://www.fbcmuncie.org/post/passion-despite-riches/): I’m generally a rule follower, but there’s one rule of the elementary school cafeteria that I often ignored: no trading food.
+- [Passion Despite Fruitlessness](https://www.fbcmuncie.org/post/passion-despite-fruitlessness/): In college, I found myself accidentally taking a pilgrimage to Rome during Holy Week.
+- [FBCM Sermon Podcast Now Available](https://www.fbcmuncie.org/post/fbcm-sermon-podcast-now-available/): Our sermon podcast has returned!We'll continue to live stream on our YouTube channel.And you'll continue to be able to find previous videos on our church center channel⁠.But in addition, sometime the week after they're…
+- [When God shows up, justice is served.](https://www.fbcmuncie.org/post/when-god-shows-up-justice-is-served/): Barefoot and curious, little Kendall was obsessed with playing in the dirt.
+- [When God Shows Up, Idols are Made Foolish.](https://www.fbcmuncie.org/post/when-god-shows-up-idols-are-made-foolish/): At the time of sacrifice, the prophet Elijah stepped forward and prayed: “Lord, the God of Abraham, Isaac, and Israel, let it be known today that you are God in Israel and that I am your servant and have done all these…
+- [When God Shows Up, Confusion Becomes Clarity](https://www.fbcmuncie.org/post/when-god-shows-up-confusion-becomes-clarity/): When he was at the table with them, he took bread, gave thanks, broke it, and began to give it to them. Then their eyes were opened and they recognized him, and he disappeared from their sight.
+- [When God Shows Up, Plans Are Changed](https://www.fbcmuncie.org/post/when-god-shows-up-plans-are-changed/): God's people in exile, failed to keep their covenant with God, but God showed up to remind them that He still has plans for them.
+- [When God Shows Up](https://www.fbcmuncie.org/post/when-god-shows-up/): After Jesus was born in Bethlehem in Judea, during the time of King Herod, Magi from the east came to Jerusalem and asked, “Where is the one who has been born king of the Jews?
+- [Bearing Good News](https://www.fbcmuncie.org/post/bearing-good-news/): This sermon preview is part of "Pardon the Interruption: An Advent Series."To view past live streams, please view our live stream archive.For information and a schedule of our Christmas and New Year’s Service, see this…
+- [Christmas & New Year's 2023!](https://www.fbcmuncie.org/post/christmas-new-years-2023/): All about FBCM's worship services and office hours during this special time of year.
+- [Proclaiming One Greater](https://www.fbcmuncie.org/post/proclaiming-one-greater/): John the Baptist is a figure out of sync with our time, or any time. And yet, in many ways he is "Mr. Advent." He proclaims the coming of th
+- [Hearing the Word](https://www.fbcmuncie.org/post/hearing-the-word/): "All words, no follow through" is a complaint we might hear. It's a complaint against people in life who "talk a big game" but do little.
+- [Waiting in the Dark](https://www.fbcmuncie.org/post/waiting-in-the-dark/): This sermon preview is part of "Pardon the Interruption: An Advent Series." To view past live streams, please view our live stream archive.***The Lord will lay bare his holy arm in the sight of all the nations, and all…
+- [We Serve A Sovereign Here](https://www.fbcmuncie.org/post/we-serve-a-sovereign-here/): To say "Jesus is Lord" is not a religious statement with no connection to our lives. It is the truth which can change all of lif
+- [Prayer as Love](https://www.fbcmuncie.org/post/prayer-as-love/): This is a preview for the second sermon in the series “Longing, Listening, Love: A Series on Prayer.” To watch the recording of any of the sermons in this sermon series, visit our website.“And I pray that you, being…
+- [Prayer as Listening](https://www.fbcmuncie.org/post/prayer-as-listening/): In the classic game of Telephone, kids gather in a circle to pass along a secret message.
+- [Ordination Service](https://www.fbcmuncie.org/post/ordination-service/): All members, friends, neighbors, and community associates are invited as we celebrate the ordination of Pastor Kendall Ellis and the
+- [We Believe: The Beginning is Near!](https://www.fbcmuncie.org/post/we-believe-the-beginning-is-near/): Religious affiliation and attendance may be slipping in the Western world, but belief in “Heaven,” remains very high.
+- [We Believe: In The Separation of Church & State](https://www.fbcmuncie.org/post/we-believe-in-the-separation-of-church-state/): The idea that religious belief should not be punished is far from universal. But religious freedom is vital.
+- [We Believe: In The Practices of the Church](https://www.fbcmuncie.org/post/we-believe-in-the-practices-of-the-church/): Nowhere are the divisions within the church more sharp than in teachings about Baptism and the Lord's Supper. How do we make sense of this
+- [Important Documents](https://www.fbcmuncie.org/post/important-documents/): Downloadable files from the First Baptist Church Muncie Website all in one convenient location.
+- [We Believe: The Church is the Body of Christ](https://www.fbcmuncie.org/post/we-believe-the-church-is-the-body-of-christ/): The Church, and what we might call “organized religion” in general, is incredibly unpopular and increasingly distrusted.
+- [We Believe: Sanctification & Perseverance of the Saints](https://www.fbcmuncie.org/post/we-believe-sanctification-perseverance-of-the-saints/): The last of the questions asked of the actors on the television program "Inside the Actor's studio" is this: "If heaven exists, what would
+- [We Believe: In Faith & Repentance](https://www.fbcmuncie.org/post/we-believe-in-faith-repentance/): Have you ever thought about how we use certain words in certain ways, even though they mean the same thing? For example, "Election"
+- [We Believe: In Freely Offered Good News](https://www.fbcmuncie.org/post/we-believe-in-freely-offered-good-news/): Free. If you like me you almost expect to see an asterix next to that word. In fact, whenever I see "FREE" on an advertisement, I look for
+- [We Believe: In God's Saving Action](https://www.fbcmuncie.org/post/we-believe-in-god-s-saving-action/): If you pay attention long enough, you'll see the words "Jesus Saves" plastered any and everywhere. Sometimes in the weirdest of places.
+- [We Believe: In Human Goodness & Human Corruption](https://www.fbcmuncie.org/post/human-goodness-human-corruption/): “Yes sir, that’s one subject you can’t talk enough about– sin.” What is sin anyway?
+- [Understanding God In Prayer ("We Believe" Resources)](https://www.fbcmuncie.org/post/understanding-god-in-prayer-we-believe-resources/): We don't know God like we know an interesting bit of trivia. In fact, prayer is an important way we know God. Resources within.
+- [We Believe: In One God, Father, Son, and Spirit](https://www.fbcmuncie.org/post/we-believe-in-one-god-father-son-and-spirit/): I’m not much of a radio show person, but Air1 has a captivating segment where hosts CJ and Lauren ask an “impossible question of the day.”
+- [Understanding Holy Scripture ("We Believe" Resources)](https://www.fbcmuncie.org/post/understanding-holy-scripture-we-believe-resources/): -How did we get the biblical canon? -How do Christians read & understand the Bible? -Is the Bible anti-women? Pro-Slavery? Repressive?
+- [We Believe: In The Testimony of Prophets & Apostles](https://www.fbcmuncie.org/post/the-testimony-of-prophets-apostles/): A bit more than a decade ago Stanley Fish wrote an opinion piece in the New York Times entitled: “Citing Chapter and Verse: Which Scripture
+- [Harm and Forgiveness](https://www.fbcmuncie.org/post/harm-and-forgiveness/): Of the Genesis stories, Joseph is a well-known classic.
+- [Wrestling With God](https://www.fbcmuncie.org/post/wrestling-with-god/): This Song “Wrestling Jacob,” or “Come, O Thou Traveler Unknown” originally comes from the pen of Charles Wesley, from way back in 1742.
+- [Promise & Threat: Betrayal](https://www.fbcmuncie.org/post/promise-threat-betrayal/): #Barbenheimer has taken the box office and social media threads by storm. I admit: I am totally part of the storm!
+- [God Will Not Leave](https://www.fbcmuncie.org/post/god-will-not-leave/): I heard something once: "Americans are foolish enough to think 100 years is a long time, and Europeans foolish enough to think 100 miles is
+- [Family Division](https://www.fbcmuncie.org/post/family-division/): This is a sermon preview for the fourth sermon in the “Promise & Threat” sermon series. To watch the recording of any of the sermons in this sermon series, visit our website.
+- [Passing the Promise to the Next Generation](https://www.fbcmuncie.org/post/passing-the-promise-to-the-next-generation/): Amidst the BBQs, swimming, and fireworks, Independence Day is an interesting day of reflection.
+- [Will God Take Away His Promise?](https://www.fbcmuncie.org/post/will-god-take-away-his-promise/): When you're really famous, you get to go by one name. It's called a mononym: like Beyoncé, Zendaya, Prince, or Madonna. When it comes to a
+- [The Threat of Envy](https://www.fbcmuncie.org/post/the-threat-of-envy/): In the opening scene of Disney/Pixar’s Inside Out, Baby Riley’s parents try to introduce her to broccoli. (And any parent who’s ever had a picky toddler knows where this is going.)
+- [Old Age & Strangers](https://www.fbcmuncie.org/post/old-age-strangers/): Abraham and Sarah do not receive a message from God via a burning bush like Moses....
+- [Pentecost: The Best Birthday Ever](https://www.fbcmuncie.org/post/pentecost-the-best-birthday-ever/): Anyone who knows anything about me knows this: I love birthdays.
+- [Joy in the God of Peace](https://www.fbcmuncie.org/post/joy-in-the-god-of-peace/): Have you ever met someone too aggressively happy? They spin everything, performing Olympic level gymnastics to find the best way to spin
+- [Joy in Sacrifice](https://www.fbcmuncie.org/post/joy-in-sacrifice/): Two musicians from Rend Collective started a podcast a couple years ago titled Where’s the Joy in That?
+- [A Church for a Lonely World](https://www.fbcmuncie.org/post/a-church-for-a-lonely-world/): Another Epidemic - but this one is called an "Epidemic of Loneliness and Isolation." Over the past 24 hours, there has been quite a bit of conversation about an alarming report released by the U.S.
+- [Joy Without Complaining](https://www.fbcmuncie.org/post/joy-without-complaining/): “Do everything without grumbling or arguing…” - Philippians 2:14 Perhaps that sounds like a mantra repeated in vain by an exasperated
+- [Joy in Unity](https://www.fbcmuncie.org/post/joy-in-unity/): Reputation is a tricky thing. Some argue that reputation matters very little because it’s based merely on others’ perception of you rather
+- [Joy In Living For Christ](https://www.fbcmuncie.org/post/joy-in-living-for-christ/): "I'll definitely be satisfied when... I would certainly be happy if..." Such thoughts are not uncommon. Satisfaction, we often convince
+- [Joy in the Gospel](https://www.fbcmuncie.org/post/joy-in-the-gospel/): I admit it: I’m a bit of a mindless social media scroller. I don’t post much, but I’ve almost always got some platform pulled up, ready to
+- [Fear And Joy (Easter 2023)](https://www.fbcmuncie.org/post/fear-and-great-joy-easter-2023/): Fear and Joy. Worship and Doubt. Action and Hesitation. They seem to exist side-by-side in this story. Even more than that, they might ...
+- [Sing Hosanna!](https://www.fbcmuncie.org/post/sing-hosanna/): The fact God surprises us is a good thing, not a trap. Palm Sunday shows us the abundant blessing of God's expansive Kingdom.
+- [Sing to Our Redeemer](https://www.fbcmuncie.org/post/sing-to-our-redeemer/): Have you ever been trapped in a ditch? With Spring Break upon us, I’m reminded of previous travels. On one service trip, I found myself...
+- [Holy Week 2023 Schedule](https://www.fbcmuncie.org/post/holy-week-2023-schedule/): We have many Holy Week opportunities from the reflective to the celebratory. We would love for you to join us. See what all is happening.
