@@ -442,7 +442,7 @@ still open, all closing in plan 2b/2c:
   in the Studio once plan 2b seeds them.
 - CI's `test` job has been red on `main` since plan 1 (runs 8da1578, 111373d,
   124cd10, e43839a), always on one smoke test: `a post with a non-ASCII slug is
-  served at its original URL` gets 404 on the Linux runner's static server while
+served at its original URL` gets 404 on the Linux runner's static server while
   the same suite passes locally on Windows (66/66) and production serves
   `/post/h%C3%A4ndel-s-messiah-sing-in-carols` with 200 (after a 307 to the
   trailing slash). So the URL-preservation goal is met on the deployed Worker and
