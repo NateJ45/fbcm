@@ -17,7 +17,7 @@ test('every from-path is a root-relative path', () => {
   for (const r of fbcmRedirects()) assert.match(r.from, /^\//);
 });
 
-test('the five former-staff URLs are covered', () => {
+test('the six former-staff URLs are covered', () => {
   // These exist on no current page. A crawl sees only what is published and a
   // sitemap lists only what exists, so these came from Search Console and the
   // Internet Archive. Without this test nothing would ever notice they are gone.
@@ -28,6 +28,7 @@ test('the five former-staff URLs are covered', () => {
     'deena-green',
     'jennifer-durke',
     'leslie-pannell',
+    'michelle-heimlich',
   ]) {
     assert.ok(froms.has(`/team/${slug}`), `missing redirect for former staff ${slug}`);
   }

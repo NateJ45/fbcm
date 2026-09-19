@@ -312,12 +312,12 @@ leaves open, with what closes each.
 - **`SANITY_TOKEN` as a Worker secret** for `/preview/**`. Card 45 records that
   `wrangler secret put` trips an agent permission gate. Preview fails closed with a
   503 naming it, by design.
-- **The tagline is the studio's wording, not the church's own.**
-  `siteSettings.tagline` now reads "We're a Spirit-led people gathered to join
-  Christ's presence in our community.", taken from `brand/brand.config.json`
-  (Task 9 fix 1, 2026-09-19). It prints in gold on every page's footer and at
-  the top of the phone menu. Nothing is broken and nothing is blocked; the
-  church may replace it at any time in Site Settings -> Tagline.
+- ~~The tagline is the studio's wording, not the church's own.~~ Done
+  2026-09-19 (Task 9 fix 1). `siteSettings.tagline` now reads "We're a
+  Spirit-led people gathered to join Christ's presence in our community.",
+  taken from `brand/brand.config.json`. It prints in gold on every page's
+  footer and at the top of the phone menu. The church may replace it at any
+  time in Site Settings -> Tagline.
 
 ### Plan 2 must do
 
@@ -400,3 +400,31 @@ Also worth a note on card 8/`sanityFetch`: a GROQ parse error in one section's
 projection (`[0...limit]`, a field reference as a slice bound) failed the ENTIRE
 home page query and fell back to defaults on a green build. `DYNAMIC_LIST_MAX`
 now ties the schema max and the slice with a drift test.
+
+---
+
+## Plan 2a landed (2026-09-19)
+
+Identity tokens, eight church blocks, hero frames, the church header/footer, and
+the secretary's Studio desk are done and gated (Task 11). What is deliberately
+still open, all closing in plan 2b/2c:
+
+- `npm run parity compare` is intentionally all-red: the header and footer
+  changed on every page, so every baseline in `scripts/.parity/` differs. Do
+  not recapture now; plan 2c recaptures once, after the eleven pages land.
+- `visual.yml`'s CI-stored `/styleguide` baseline is stale after Task 6's eight
+  block fixtures; refresh it on CI with the workflow's own `update` input the
+  next time it runs, not by regenerating `scripts/.parity` locally.
+- `npm run check:links` is red on the seven plan-2 routes (`/visit`,
+  `/who-we-are`, `/beliefs`, `/ministries`, `/staff`, `/history`, `/wedding`),
+  all 404 until plan 2b builds them. No other broken link exists.
+- `public/favicon.svg` is still the starter's roundel, not the church's mark;
+  closes in plan 2c.
+- The `@portabletext/block-tools` dependency plan 2b needs for a real Portable
+  Text converter is not installed yet; it is a new dependency and needs
+  Nathan's approval first (CLAUDE.md: pause for confirmation before installing
+  new dependencies).
+- The Studio's insert-menu and desk are unverified against the deployed
+  origin's CORS-gated Sanity project (same family as item 1a above). That
+  check is Nathan's after this branch merges: he signs in at the deployed URL,
+  since the localhost Studio cannot reach the project without a CORS grant.

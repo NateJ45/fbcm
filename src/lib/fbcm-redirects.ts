@@ -19,6 +19,7 @@ const FORMER_STAFF = [
   'deena-green',
   'jennifer-durke',
   'leslie-pannell',
+  'michelle-heimlich',
 ];
 
 /**
