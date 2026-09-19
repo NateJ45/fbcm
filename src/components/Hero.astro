@@ -269,8 +269,13 @@ const wrapperHeight =
     <div class="mx-auto grid max-w-content grid-cols-1 items-stretch gap-0 px-m lg:grid-cols-12">
       <div class="order-2 flex flex-col justify-center py-section-md lg:order-1 lg:col-span-7 lg:pr-l">
         <div class="hero-entry-stagger max-w-2xl">
+          {/* One grammar per page (CLAUDE.md rule 17). The eyebrow is the shared
+              mono style every church band draws, and the headline carries the
+              same 56x2 gold rule SectionHeading gives every other heading.
+              On this cream ground the eyebrow is text-foreground/80, which is
+              SectionHeading's own default tone. */}
           {eyebrow && (
-            <p class="text-xs uppercase tracking-eyebrow text-muted-foreground">{eyebrow}</p>
+            <p class="font-mono text-[0.75rem] uppercase tracking-eyebrow text-foreground/80">{eyebrow}</p>
           )}
           <h1
             id={headingId}
@@ -284,6 +289,7 @@ const wrapperHeight =
               headline
             )}
           </h1>
+          <div class="mt-m h-0.5 w-14 bg-gold" aria-hidden="true"></div>
           {subhead && (
             <p class="mt-m max-w-2xl text-lg text-muted-foreground">
               {subheadParts.map((part) =>
@@ -311,8 +317,11 @@ const wrapperHeight =
           )}
           {(primaryCta || secondaryCta) && (
             <div class="mt-l flex flex-wrap gap-s">
-              {primaryCta && <CtaLink cta={primaryCta} variant="primary" />}
-              {secondaryCta && <CtaLink cta={secondaryCta} variant="secondary" />}
+              {/* The church pair, the same one the header's Give button and every
+                  band below use: gold fill with an indigo-field label (4.90:1,
+                  gated in theme-tokens.test.ts), outlined indigo beside it. */}
+              {primaryCta && <CtaLink cta={primaryCta} variant="gold" />}
+              {secondaryCta && <CtaLink cta={secondaryCta} variant="outline" />}
             </div>
           )}
         </div>
@@ -358,13 +367,15 @@ const wrapperHeight =
         as every interior section heading.
       */}
       <div class="hero-entry-stagger max-w-3xl">
+        {/* Same grammar as the split layout above and as every band below: mono
+            eyebrow, then the gold rule under the headline rather than a cream
+            hairline over it. Gold is the eyebrow colour on a fixed dark ground
+            (SectionHeading's tone="band"), and gold on --color-accent-dark is
+            6.75:1, gated in theme-tokens.test.ts. */}
         {eyebrow && (
-          <p class="text-xs uppercase tracking-eyebrow text-bg/85">{eyebrow}</p>
+          <p class="font-mono text-[0.75rem] uppercase tracking-eyebrow text-gold">{eyebrow}</p>
         )}
-        {eyebrow && (
-          <div class="mt-xs mb-m h-px w-12 bg-bg/40" aria-hidden="true"></div>
-        )}
-        <h1 id={headingId} class="font-display text-h1 leading-headline-tight tracking-[-0.02em] text-bg">
+        <h1 id={headingId} class="mt-xs font-display text-h1 leading-headline-tight tracking-[-0.02em] text-bg">
           {rotateEnabled ? (
             <>
               <span data-rotating-word data-rotating-words={rotatingPayload}>
@@ -379,6 +390,7 @@ const wrapperHeight =
             headline
           )}
         </h1>
+        <div class="mt-m h-0.5 w-14 bg-gold" aria-hidden="true"></div>
         {subhead && (
           <p class="mt-m max-w-2xl text-lg text-bg/90">
             {subheadParts.map((part) =>
@@ -406,8 +418,11 @@ const wrapperHeight =
         )}
         {(primaryCta || secondaryCta) && (
           <div class="mt-l flex flex-wrap gap-s">
-            {primaryCta && <CtaLink cta={primaryCta} variant="primary" onDark />}
-            {secondaryCta && <CtaLink cta={secondaryCta} variant="secondary" onDark />}
+            {/* Gold primary, white-outlined secondary: CtaLink's onDark outline.
+                The starter's bronze primary/secondary pair sat here, directly
+                under a gold Give button in the header. */}
+            {primaryCta && <CtaLink cta={primaryCta} variant="gold" onDark />}
+            {secondaryCta && <CtaLink cta={secondaryCta} variant="outline" onDark />}
           </div>
         )}
       </div>
@@ -430,12 +445,17 @@ const wrapperHeight =
 ) : (
   <section class="bg-background" aria-labelledby={headingId}>
     <div class:list={['mx-auto max-w-content px-m py-section-lg flex items-end', wrapperHeight]}>
+      {/* The text-only hero speaks the same grammar as the two above: the
+          church eyebrow tone (brown-mid on paper, gold in dark mode) and the
+          gold rule under the headline. */}
       <SectionHeading
         eyebrow={eyebrow}
         headline={headline}
         subhead={subhead}
         headingId={headingId}
         level="h1"
+        tone="church"
+        rule
       />
     </div>
   </section>
