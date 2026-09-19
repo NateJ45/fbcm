@@ -1,0 +1,136 @@
+{
+  "_createdAt": "2026-09-18T23:29:31Z",
+  "_id": "staff-kendall-ellis",
+  "_rev": "76n5oA2VRzKOmE8UAQXqNs",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T00:23:29Z",
+  "bio": [
+    {
+      "_key": "k78",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k79",
+          "_type": "span",
+          "marks": [],
+          "text": "Kendall Ellis is one of the Co-Pastors of First Baptist, alongside her husband Jonathan. Her Bachelor of Arts degree in French Language and Literature is from Georgetown College in Kentucky. Kendall received her Master of Divinity and Master of Social Work from Baylor University’s Truett Seminary and Garland School of Social Work in 2022."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k80",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k81",
+          "_type": "span",
+          "marks": [],
+          "text": "Before serving as a Pastor, Kendall served various internships at the intersection of the church and non-profit worlds, served college women as a resident chaplain, taught in a juvenile corrections facility, and served as a youth minister at a church."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k82",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k83",
+          "_type": "span",
+          "marks": [],
+          "text": "Kendall and Jonathan have one daughter (born 2023), named Moira Jane."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k84",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k85",
+          "_type": "span",
+          "marks": [],
+          "text": "In her free time, you can find Kendall hiking, attending to her plants, or baking sweet treats in the kitchen."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k86",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k87",
+          "_type": "span",
+          "marks": [],
+          "text": "Kendall’s favorite verse in Scripture is:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k88",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k89",
+          "_type": "span",
+          "marks": [],
+          "text": "Now if we are children, then we are heirs—heirs of God and co-heirs with Christ, if indeed we share in his sufferings in order that we may also share in his glory. - Romans 8:17 (NIV)"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k90",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k91",
+          "_type": "span",
+          "marks": [],
+          "text": "Email: kendall@fbcmuncie.org"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k92",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k93",
+          "_type": "span",
+          "marks": [],
+          "text": "Facebook: https://www.facebook.com/kendall.ellis.758"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "kendall@fbcmuncie.org",
+  "name": "Kendall Ellis",
+  "order": 110,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-7c2f716730179bcbecc59a170ff97f8c39b39f25-2806x4209-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Co-Pastor",
+  "slug": {
+    "_type": "slug",
+    "current": "kendall-ellis"
+  }
+}

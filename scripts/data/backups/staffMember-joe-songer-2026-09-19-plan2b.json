@@ -1,0 +1,94 @@
+{
+  "_createdAt": "2026-09-18T23:29:22Z",
+  "_id": "staff-joe-songer",
+  "_rev": "76n5oA2VRzKOmE8UAQXqK0",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T00:23:27Z",
+  "bio": [
+    {
+      "_key": "k50",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k51",
+          "_type": "span",
+          "marks": [],
+          "text": "When did you become a member?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k52",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k53",
+          "_type": "span",
+          "marks": [],
+          "text": "What do you love about FBCM?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k54",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k55",
+          "_type": "span",
+          "marks": [],
+          "text": "Hobbies:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k56",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k57",
+          "_type": "span",
+          "marks": [],
+          "text": "Something we should know:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k58",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k59",
+          "_type": "span",
+          "marks": [],
+          "text": "Favorite Scripture:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "property@fbcmuncie.org",
+  "name": "Joe Songer",
+  "order": 90,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-1e57f42bee6df470f330029a9877013d90d2833c-3614x5436-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Property Coordinator",
+  "slug": {
+    "_type": "slug",
+    "current": "joe-songer"
+  }
+}

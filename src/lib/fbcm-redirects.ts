@@ -23,7 +23,7 @@ const FORMER_STAFF = [
 ];
 
 /**
- * The 16 profiles that exist today and fold into /staff.
+ * The 17 profiles that exist today and fold into /staff.
  *
  * Exported (not just used below) so fbcm-redirects.test.ts can check it against
  * the team-*.json files captured in scripts/data/pages/ -- that capture is the
@@ -33,6 +33,14 @@ const FORMER_STAFF = [
  * FORMER_STAFF is deliberately excluded from that check: those five pages are
  * already gone from the live site (found via Search Console and the Internet
  * Archive, not a crawl), so they were never captured and never will be.
+ *
+ * julie-kirklin is the one entry here with the opposite problem: she is on
+ * staff today (added by scripts/set-staff-groups.mjs, plan 2b task 3) but
+ * never had her own /team/ page on Wix -- she only appears as a name and role
+ * on the ministers page -- so there is no team-julie-kirklin.json to check
+ * her against either. The drift-check test excludes her by name for that
+ * reason, the same way it excludes FORMER_STAFF, just from the other
+ * direction.
  */
 export const CURRENT_STAFF = [
   'andy-heimlich',
@@ -45,6 +53,7 @@ export const CURRENT_STAFF = [
   'jaden-johnson',
   'joe-songer',
   'jonathan-balmer',
+  'julie-kirklin',
   'kendall-ellis',
   'loraine-garrett',
   'molly-flodder',

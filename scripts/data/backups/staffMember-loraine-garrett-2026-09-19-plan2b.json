@@ -1,0 +1,164 @@
+{
+  "_createdAt": "2026-09-18T23:29:37Z",
+  "_id": "staff-loraine-garrett",
+  "_rev": "F5Duw02wR0YDcoTNSWhSkF",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T00:23:30Z",
+  "bio": [
+    {
+      "_key": "k94",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k95",
+          "_type": "span",
+          "marks": [],
+          "text": "When Did You Become A Member of First Baptist Church?"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k96",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k97",
+          "_type": "span",
+          "marks": [],
+          "text": "March 2022"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k98",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k99",
+          "_type": "span",
+          "marks": [],
+          "text": "What Do You Love About FBCM?"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k100",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k101",
+          "_type": "span",
+          "marks": [],
+          "text": "I love the feeling of being welcomed. I love how we incorporate both traditional and contemporary songs into worship, bringing together a diverse group of people."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k102",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k103",
+          "_type": "span",
+          "marks": [],
+          "text": "What Hobbies Do You Enjoy?"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k104",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k105",
+          "_type": "span",
+          "marks": [],
+          "text": "My favorite hobby is riding my bicycles, my fat bike for winter and my road bike for the warmer months. I also enjoy practicing calligraphy, bowling, reading, doing puzzles, playing card and board games with my family and friends."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k106",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k107",
+          "_type": "span",
+          "marks": [],
+          "text": "Something We Should Know"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k108",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k109",
+          "_type": "span",
+          "marks": [],
+          "text": "I am an Army veteran, having served 2 tours in Iraq."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k110",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k111",
+          "_type": "span",
+          "marks": [],
+          "text": "Favorite Verse, Story, or Passage From Scripture?"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k112",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k113",
+          "_type": "span",
+          "marks": [],
+          "text": "Psalms 30:4-5"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "youth@fbcmuncie.org",
+  "name": "Loraine Garrett",
+  "order": 120,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-39c6a5a982e07377eae7d6c8bfaf78a50ffaa9c5-3527x5290-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Youth Coordinator",
+  "slug": {
+    "_type": "slug",
+    "current": "loraine-garrett"
+  }
+}

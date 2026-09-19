@@ -1,0 +1,21 @@
+{
+  "_createdAt": "2026-09-18T23:28:44Z",
+  "_id": "staff-andy-heimlich",
+  "_rev": "QjI0kncFolotw4PTBgTony",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T00:23:18Z",
+  "name": "Andy Heimlich",
+  "order": 10,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-3328a3b4e1ce58eb5ddee6914704568880fb76d7-456x600-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Moderator",
+  "slug": {
+    "_type": "slug",
+    "current": "andy-heimlich"
+  }
+}

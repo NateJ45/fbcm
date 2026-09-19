@@ -1,0 +1,21 @@
+{
+  "_createdAt": "2026-09-18T23:29:48Z",
+  "_id": "staff-sally-butler",
+  "_rev": "QjI0kncFolotw4PTBgTpUE",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T00:23:33Z",
+  "name": "Sally Butler",
+  "order": 150,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-efac410f9a078a1dc65df2d8fe458d3812981ab9-490x600-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Member Care Coordinator",
+  "slug": {
+    "_type": "slug",
+    "current": "sally-butler"
+  }
+}

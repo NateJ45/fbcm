@@ -1,0 +1,21 @@
+{
+  "_createdAt": "2026-09-18T23:29:16Z",
+  "_id": "staff-jaden-johnson",
+  "_rev": "F5Duw02wR0YDcoTNSWhSHN",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T00:23:26Z",
+  "name": "Jaden Johnson",
+  "order": 80,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-eda4def63fe0cf4be83ad4da5cf3f027bd35f219-600x490-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Children's Ministry Coordinator",
+  "slug": {
+    "_type": "slug",
+    "current": "jaden-johnson"
+  }
+}

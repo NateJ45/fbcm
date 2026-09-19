@@ -1,0 +1,94 @@
+{
+  "_createdAt": "2026-09-18T23:29:04Z",
+  "_id": "staff-dana-davis",
+  "_rev": "76n5oA2VRzKOmE8UAQXqDY",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T00:23:23Z",
+  "bio": [
+    {
+      "_key": "k28",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k29",
+          "_type": "span",
+          "marks": [],
+          "text": "When did you become a member?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k30",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k31",
+          "_type": "span",
+          "marks": [],
+          "text": "What do you love about FBCM?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k32",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k33",
+          "_type": "span",
+          "marks": [],
+          "text": "Hobbies:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k34",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k35",
+          "_type": "span",
+          "marks": [],
+          "text": "Something we should know:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k36",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k37",
+          "_type": "span",
+          "marks": [],
+          "text": "Favorite Scripture:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "outreach@fbcmuncie.org",
+  "name": "Dana Davis",
+  "order": 50,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-2756c3c91c14c05b4b4d4062b74aa3c5e8f40dcc-3306x4972-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Outreach Coordinator",
+  "slug": {
+    "_type": "slug",
+    "current": "dana-davis"
+  }
+}

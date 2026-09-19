@@ -59,8 +59,14 @@ test('CURRENT_STAFF matches the team pages actually captured in scripts/data/pag
     .filter((f) => f.startsWith('team-') && f.endsWith('.json'))
     .map((f) => f.slice('team-'.length, -'.json'.length))
     .sort();
+  // julie-kirklin is excluded here for the mirror-image reason FORMER_STAFF is
+  // excluded above: she is on staff today (plan 2b task 3) but never had her
+  // own /team/ page on Wix, so there is no team-julie-kirklin.json to compare
+  // her against. Comparing the two lists directly would fail forever, for the
+  // right person and the wrong reason.
+  const currentStaffWithoutJulie = CURRENT_STAFF.filter((s) => s !== 'julie-kirklin').sort();
   assert.deepEqual(
-    [...CURRENT_STAFF].sort(),
+    currentStaffWithoutJulie,
     capturedSlugs,
     'CURRENT_STAFF has drifted from the captured team-*.json pages in scripts/data/pages/',
   );

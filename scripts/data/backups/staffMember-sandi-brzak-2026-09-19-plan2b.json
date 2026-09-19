@@ -1,0 +1,94 @@
+{
+  "_createdAt": "2026-09-18T23:29:53Z",
+  "_id": "staff-sandi-brzak",
+  "_rev": "F5Duw02wR0YDcoTNSWhT7L",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T00:23:34Z",
+  "bio": [
+    {
+      "_key": "k124",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k125",
+          "_type": "span",
+          "marks": [],
+          "text": "When did you become a member?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k126",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k127",
+          "_type": "span",
+          "marks": [],
+          "text": "What do you love about FBCM?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k128",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k129",
+          "_type": "span",
+          "marks": [],
+          "text": "Hobbies:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k130",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k131",
+          "_type": "span",
+          "marks": [],
+          "text": "Something we should know:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k132",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k133",
+          "_type": "span",
+          "marks": [],
+          "text": "Favorite Scripture:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "treasurer@fbcmuncie.org",
+  "name": "Sandi Brzak",
+  "order": 160,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-20eaa43484e3caafbad4dc095e5d99741bf7ce3a-3668x5516-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Treasurer",
+  "slug": {
+    "_type": "slug",
+    "current": "sandi-brzak"
+  }
+}

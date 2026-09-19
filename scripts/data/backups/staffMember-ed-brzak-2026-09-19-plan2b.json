@@ -1,0 +1,94 @@
+{
+  "_createdAt": "2026-09-18T23:29:09Z",
+  "_id": "staff-ed-brzak",
+  "_rev": "F5Duw02wR0YDcoTNSWhS8i",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T00:23:24Z",
+  "bio": [
+    {
+      "_key": "k38",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k39",
+          "_type": "span",
+          "marks": [],
+          "text": "When did you become a member?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k40",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k41",
+          "_type": "span",
+          "marks": [],
+          "text": "What do you love about FBCM?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k42",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k43",
+          "_type": "span",
+          "marks": [],
+          "text": "Hobbies:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k44",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k45",
+          "_type": "span",
+          "marks": [],
+          "text": "Something we should know:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k46",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k47",
+          "_type": "span",
+          "marks": [],
+          "text": "Favorite Scripture:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "atlarge@fbcmuncie.org",
+  "name": "Ed Brzak",
+  "order": 60,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-24fac54bf1325caeee387827432ded3c84db5a9c-3050x4587-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "At Large Coordinator",
+  "slug": {
+    "_type": "slug",
+    "current": "ed-brzak"
+  }
+}
