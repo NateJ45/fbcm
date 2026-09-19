@@ -1,3 +1,4 @@
+// scaffold-file: church
 // Pure helpers behind the church blocks. Nothing here touches Sanity or the DOM,
 // so every rule that decides what a visitor sees is unit-tested.
 
