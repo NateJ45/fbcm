@@ -113,7 +113,11 @@ test('the three CTA builders match the ctaBlock schema', () => {
   const internal = ctaInternal('Plan a visit', 'visit');
   assert.equal(internal._type, 'ctaBlock');
   assert.equal(internal.linkType, 'internal');
-  assert.deepEqual(internal.internalLink, { _type: 'reference', _ref: 'page-visit' });
+  assert.deepEqual(internal.internalLink, {
+    _type: 'reference',
+    _ref: 'page-visit',
+    _weak: true,
+  });
   assert.equal(internal._key, 'cta-1');
 
   assert.equal(ctaInternal('Home', 'home').internalLink._ref, 'homePage');
@@ -129,4 +133,10 @@ test('the three CTA builders match the ctaBlock schema', () => {
   assert.equal(anchor.openInNewTab, false);
 
   assert.throws(() => ctaAnchor('Bad', 'history#building'), /starting with "\/"/);
+});
+
+test('ctaInternal emits a WEAK reference so a forward link cannot fail the write', () => {
+  resetCtaKeys();
+  assert.equal(ctaInternal('Plan a visit', 'visit').internalLink._weak, true);
+  assert.equal(ctaInternal('Home', 'home').internalLink._weak, true);
 });

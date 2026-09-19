@@ -307,6 +307,10 @@ export function ctaInternal(label, slug) {
     internalLink: {
       _type: 'reference',
       _ref: slug === 'home' ? 'homePage' : `page-${slug}`,
+      // WEAK on purpose. Pages link to pages that are seeded LATER in the run,
+      // and Sanity rejects a STRONG reference to a document that does not exist
+      // yet, so the first page to link forward would fail the whole write.
+      _weak: true,
     },
   };
 }
