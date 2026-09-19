@@ -211,7 +211,15 @@ const CHURCH_PAIRS_AA: Array<[string, string, string]> = [
   ['color-gold', 'color-brown', 'eyebrows on the heritage band'],
   ['color-taupe', 'color-indigo-field', 'muted text on the dark band'],
   ['color-taupe', 'color-brown', 'muted text on the heritage band'],
-  ['color-indigo', 'color-gold', 'primary button label'],
+  // Two gold-button pairs, and the SECOND one is what actually renders.
+  // --color-indigo flips to paper-white under .dark, so the header, the mobile
+  // drawer and CtaLink's gold variant all write text-indigo-field on bg-gold,
+  // which holds its value in both themes. The indigo pair stays on the list
+  // because the light theme still resolves to it; the indigo-field pair is the
+  // one with the thinner headroom (4.90 against 5.60), so it is the one that
+  // would catch a palette nudge first.
+  ['color-indigo', 'color-gold', 'primary button label (light theme resolution)'],
+  ['color-indigo-field', 'color-gold', 'the gold button label, as shipped'],
   ['color-cream', 'color-brown', 'body on the heritage band'],
 ];
 const CHURCH_PAIRS_FORBIDDEN: Array<[string, string, string]> = [
@@ -221,9 +229,12 @@ const CHURCH_PAIRS_FORBIDDEN: Array<[string, string, string]> = [
   ['color-taupe', 'color-cream', 'taupe text on paper'],
 ];
 
-test('every church pair that ships clears AA body text', () => {
+test('every church pair that ships clears AA body text', (t) => {
   for (const [fg, bg, why] of CHURCH_PAIRS_AA) {
     const r = contrastRatio(token(fg), token(bg));
+    // Printed as well as asserted: a gate that only says "pass" cannot tell you
+    // a pair has drifted from 5.6 to 4.6 and is one nudge from failing.
+    t.diagnostic(`${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
     assert.ok(r >= AA_BODY_TEXT, `${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
   }
 });

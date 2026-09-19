@@ -26,7 +26,11 @@
 //     already ships (npm run parity compare is the gate on that). Once the
 //     whole site is church-branded, a later task can repoint primary ->
 //     gold and secondary -> outline in ONE place, here.
-//       gold:    indigo label on a gold fill (5.60:1, theme-tokens.test.ts)
+//       gold:    indigo-field label on a gold fill (4.90:1, gated in
+//                theme-tokens.test.ts). NOT --color-indigo, which measures
+//                5.60:1 but flips to paper-white under .dark; indigo-field
+//                holds its value in both themes, which is why the header and
+//                the mobile drawer use it too.
 //       outline: indigo outline on light; under onDark, a white outline, which
 //                is what the indigo and brown bands ask for.
 //
