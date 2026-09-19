@@ -23,6 +23,10 @@ export const routes: string[] = [
   '/contact',
   '/blog', // scaffold: journal
   '/privacy',
+  // The styleguide (Task 6, 2026-09-19): fixed-data wall the visual-regression
+  // suite screenshots. Listed here so it also gets smoke, axe light/dark,
+  // contrast and reflow coverage like every other route, not just pixels.
+  '/styleguide',
 ];
 
 /**

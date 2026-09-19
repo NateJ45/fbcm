@@ -39,6 +39,20 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import { site } from '@/data/site';
+import { surfaceClass } from '@/lib/surfaces';
+// scaffold: church
+// The eight church blocks (Task 6), fixtured with real church content so a
+// pixel diff here means the design moved, not the content. See the fixture
+// data block below for why each value is what it is.
+import SundayTimes from '@/components/sections/SundayTimes.astro';
+import Timeline from '@/components/sections/Timeline.astro';
+import StaffGrid from '@/components/sections/StaffGrid.astro';
+import FaqBand from '@/components/sections/FaqBand.astro';
+import ScriptureBand from '@/components/sections/ScriptureBand.astro';
+import HeritageBand from '@/components/sections/HeritageBand.astro';
+import GiveBand from '@/components/sections/GiveBand.astro';
+import DocumentList from '@/components/sections/DocumentList.astro';
+// scaffold:end
 
 /** The brand palette from the `@theme` block in src/styles/globals.css. */
 const BRAND_TOKENS = [
@@ -81,6 +95,230 @@ const HEADINGS = [
 /** Fixed CTA stand-ins. Never read from Sanity: that is the whole point. */
 const PRIMARY_CTA = { label: 'Book a call', linkType: 'external' as const, externalUrl: '#' };
 const SECONDARY_CTA = { label: 'See the work', linkType: 'external' as const, externalUrl: '#' };
+
+// scaffold: church
+// =============================================================================
+// Church block fixtures (Task 6)
+// =============================================================================
+// Real church content, never lorem: the words themselves are what a
+// visual-regression baseline is defending, so a placeholder string here would
+// let a real content-shaped bug (a heading colliding with a long word, a
+// button label wrapping) hide behind "it's just lorem ipsum". Every fact below
+// is FBCM's own: the Sunday schedule, the three doors, the FAQ answers
+// (verbatim from scripts/data/pages/faq-entries.json), Isaiah 12:4, the
+// building's 1929 date, the giving URL, and the three real publications.
+//
+// The one deliberate exception is the staff grid: three SYNTHETIC people
+// (never real staff or real photos), because that block's data comes from
+// GROQ in production and the styleguide must stay fixed regardless of who is
+// actually on staff. NO PHOTO IS SET on any of them, on purpose: the two
+// candidates were tried and rejected. The 404 page's own fallback ref
+// (src/pages/404.astro) is a leftover from the FORKED starter's demo project
+// (CLAUDE.md rule 11, "check for residue") and this repo's real, configured
+// Sanity project (7jw947g5) has never heard of it, so it 404s and paints a
+// browser's broken-image icon rather than a designed state. Every real asset
+// actually IN this project's library was checked by eye (161 assets, all
+// imported from the church's own blog) and every one is a photograph of
+// identifiable people at a real event, which is wrong to attach to a fake
+// name and a fake "Pastor" title even captioned as a fixture. StaffGrid.astro
+// already has a real, theme-aware, designed answer for "no photo yet" -- the
+// aspect-[4/5] bg-surface-soft box under the gold rule -- so leaving `photo`
+// undefined uses the component's own fallback rather than inventing a new one.
+
+/** One-paragraph portable text block, for the two fields typed as rich text. */
+function paragraph(key: string, text: string) {
+  return [
+    {
+      _type: 'block',
+      _key: key,
+      style: 'normal',
+      markDefs: [],
+      children: [{ _type: 'span', _key: `${key}-s1`, text }],
+    },
+  ];
+}
+
+const SUNDAY_TIMES_FIXTURE = {
+  eyebrow: 'This Sunday',
+  heading: 'When we gather',
+  items: [
+    {
+      _key: 'st-1',
+      label: 'Sunday school',
+      big: '9:30 am',
+      body: 'Classes for all ages meet before worship.',
+    },
+    {
+      _key: 'st-2',
+      label: 'Donut hour',
+      big: '10:15 am',
+      body: 'Coffee and donuts in the fellowship hall, a relaxed way to meet people before the service.',
+    },
+    {
+      _key: 'st-3',
+      label: 'Worship',
+      big: '10:45 am',
+      body: 'The main service, in the sanctuary.',
+    },
+  ],
+  doors: [
+    {
+      _key: 'door-1',
+      name: 'Adams Street circular drive',
+      body: 'The accessible entrance. An automatic door opener sits beside the mailbox.',
+    },
+    {
+      _key: 'door-2',
+      name: 'Front doors',
+      body: 'The large wooden doors open straight into the sanctuary.',
+    },
+    {
+      _key: 'door-3',
+      name: 'Jefferson Street side doors',
+      body: 'Near the church offices, on the Jefferson Street side of the building.',
+    },
+  ],
+  showMap: true,
+};
+
+const TIMELINE_FIXTURE = {
+  eyebrow: 'A Sunday morning',
+  heading: 'How the morning runs',
+  rows: [
+    {
+      _key: 'tl-1',
+      marker: '9:30 am',
+      title: 'Sunday school',
+      body: paragraph('tl-1-p1', 'Classes for all ages meet before worship.'),
+    },
+    {
+      _key: 'tl-2',
+      marker: '10:15 am',
+      title: 'Donut hour',
+      body: paragraph(
+        'tl-2-p1',
+        'Coffee and donuts in the fellowship hall, a relaxed way to meet people before the service.',
+      ),
+    },
+    {
+      _key: 'tl-3',
+      marker: '10:45 am',
+      title: 'Worship',
+      body: paragraph('tl-3-p1', 'The main service, in the sanctuary.'),
+    },
+    {
+      _key: 'tl-4',
+      marker: 'First Sunday',
+      title: 'Communion',
+      body: paragraph('tl-4-p1', 'Communion is observed on the first Sunday of each month.'),
+    },
+  ],
+};
+
+const STAFF_GRID_FIXTURE = {
+  eyebrow: 'Who you will meet',
+  heading: 'Staff',
+  group: 'all',
+  showBios: true,
+  members: [
+    {
+      _id: 'staff-1',
+      name: 'First Last',
+      slug: 'first-last',
+      role: 'Pastor',
+      email: 'placeholder@example.com',
+      group: 'pastors',
+      order: 1,
+      bio: paragraph('staff-1-bio', 'Synthetic bio text for the styleguide fixture only.'),
+    },
+    {
+      _id: 'staff-2',
+      name: 'First Last',
+      slug: 'first-last-2',
+      role: 'Church Coordination Team',
+      email: 'placeholder@example.com',
+      group: 'coordination',
+      order: 1,
+      bio: paragraph('staff-2-bio', 'Synthetic bio text for the styleguide fixture only.'),
+    },
+    {
+      _id: 'staff-3',
+      name: 'First Last',
+      slug: 'first-last-3',
+      role: 'Volunteer Coordinator',
+      email: 'placeholder@example.com',
+      group: 'support',
+      order: 1,
+      bio: paragraph('staff-3-bio', 'Synthetic bio text for the styleguide fixture only.'),
+    },
+  ],
+};
+
+// Verbatim from scripts/data/pages/faq-entries.json (sortOrder 7 and 10).
+const FAQ_FIXTURE = {
+  eyebrow: 'Questions',
+  heading: 'Questions and answers',
+  items: [
+    {
+      _key: 'faq-1',
+      question: 'What should I wear?',
+      answer: paragraph(
+        'faq-1-p1',
+        'Casual dress is welcome. People wear a variety of styles of clothes from short sleeves (especially in the summer), to suit jackets and “Sunday dresses.” Please dress comfortably and in a way which allows you to devote attention to worship.',
+      ),
+    },
+    {
+      _key: 'faq-2',
+      question: 'Am I allowed to take the Lord’s Supper (communion?)',
+      answer: paragraph(
+        'faq-2-p1',
+        'We believe it is the Lord’s table, and all who believe in him and have been baptized may partake. This includes believing Christians, no matter their particular denomination.',
+      ),
+    },
+  ],
+};
+
+const SCRIPTURE_FIXTURE = {
+  verse:
+    'Give praise to the Lord, proclaim his name; make known among the nations what he has done',
+  reference: 'Isaiah 12:4',
+  accentWord: 'proclaim',
+};
+
+// A real photo from FBCM's own library (already public: imported from the
+// church's own blog), chosen deliberately over the other 160 assets in the
+// project because it is the one that actually shows the BUILDING -- the
+// sanctuary's arches and its stained glass window -- rather than a close-up
+// portrait. The congregation is visible only from behind, which is why this
+// one and not another was the right choice: see the fixture-data comment
+// above for the two options this ruled out.
+const HERITAGE_FIXTURE = {
+  eyebrow: 'Our building',
+  heading: 'Since 1929',
+  body: 'The limestone building on the corner of Adams and Jefferson has been the congregation’s home since 1929.',
+  image: {
+    asset: { _ref: 'image-e6666c121c6318a9ce9f82798fefbfe16d6ac9d4-4032x1908-jpg' },
+    alt: 'Inside the sanctuary, looking toward the stained glass window.',
+  },
+};
+
+const GIVE_BAND_FIXTURE = {
+  heading: 'Give',
+  body: 'Give online, in the offering plate on Sunday, or by mail.',
+  buttonLabel: 'Give through Church Center',
+  buttonUrl: 'https://fbcmuncie.churchcenter.com/giving',
+};
+
+const DOCUMENT_LIST_FIXTURE = {
+  eyebrow: 'Resources',
+  heading: 'Documents',
+  docs: [
+    { _key: 'doc-1', title: 'The Visitor', year: 2025, note: 'Quarterly newsletter' },
+    { _key: 'doc-2', title: 'We Are the Clay', year: 2019 },
+    { _key: 'doc-3', title: 'Constitution and bylaws', note: 'Governing documents' },
+  ],
+};
+// scaffold:end
 ---
 
 <BaseLayout
@@ -140,11 +378,23 @@ const SECONDARY_CTA = { label: 'See the work', linkType: 'external' as const, ex
           line has enough letters in it for a rasterisation change to show.
         </p>
         <p class="mt-2 text-sm text-muted-foreground">Muted body copy, one step down.</p>
-        <p class="mt-4 font-mono text-[0.75rem] tracking-eyebrow text-primary uppercase">
+        {
+          /* BUG FOUND WHEN TASK 6 ADDED THIS PAGE TO THE AXE SWEEP (it had never
+             been route-listed before): both lines below used the FIXED brand-
+             mirror tokens (--color-primary / --color-primary-dark), which never
+             flip with .dark and exist for text on FIXED grounds (gold, the ink
+             band, hover states -- see the comment on --color-primary in
+             globals.css). Applied directly to the page ground, which DOES flip,
+             they read fine in light and at ~1.1-1.3:1 in dark. The real pattern
+             for an eyebrow and a link ON THE PAGE GROUND is the theme-aware
+             pair SectionHeading.astro and Footer.astro already use:
+             text-foreground/80 and text-link. */
+        }
+        <p class="mt-4 font-mono text-[0.75rem] tracking-eyebrow text-foreground/80 uppercase">
           Eyebrow, uppercase, tracked
         </p>
         <p class="mt-4">
-          A <a class="nav-underline text-primary-dark" href="#">link with the nav underline</a> in a sentence,
+          A <a class="nav-underline text-link" href="#">link with the nav underline</a> in a sentence,
           so its rule sits against real type.
         </p>
       </div>
@@ -169,8 +419,16 @@ const SECONDARY_CTA = { label: 'See the work', linkType: 'external' as const, ex
     </div>
   </section>
 
-  {/* The alternating surface, with a CTA pair on it, so both grounds are shot. */}
-  <section class="surface-warm py-section-lg">
+  {
+    /* The alternating surface, with a CTA pair on it, so both grounds are shot.
+     BUG FOUND IN TASK 1: this section carried `surface-warm` (a gradient-only
+     overlay utility, see globals.css) with no `bg-*` class at all, so it never
+     painted the muted surface it claims to demonstrate -- it was rendering the
+     page background underneath. surfaceClass('muted') is the real class the
+     cadence assigns (bg-surface-soft: a taupe tint over cream in light, #262548
+     in dark), fixed here rather than relaxed away. */
+  }
+  <section class={`${surfaceClass('muted')} surface-warm py-section-lg`}>
     <div class="mx-auto w-full max-w-content px-6">
       <SectionHeading
         headingId="styleguide-surface"
@@ -209,4 +467,84 @@ const SECONDARY_CTA = { label: 'See the work', linkType: 'external' as const, ex
       </div>
     </div>
   </section>
+
+  {/* scaffold: church */}
+  <section class="bg-background py-section-lg">
+    <div class="mx-auto w-full max-w-content px-6">
+      <h2 class="font-display text-h3">Church blocks</h2>
+      <p class="mt-2 max-w-[60ch] text-sm text-muted-foreground">
+        The eight page-builder blocks the church site adds. Every fixture below is real church
+        content, not lorem: the Sunday schedule, the three doors, two FAQ entries verbatim, Isaiah
+        12:4, the building's 1929 date and the real giving link. The staff grid is the one exception
+        on purpose, three synthetic people, because that block's data comes from Sanity in
+        production.
+      </p>
+    </div>
+  </section>
+
+  <SundayTimes
+    eyebrow={SUNDAY_TIMES_FIXTURE.eyebrow}
+    heading={SUNDAY_TIMES_FIXTURE.heading}
+    items={SUNDAY_TIMES_FIXTURE.items}
+    doors={SUNDAY_TIMES_FIXTURE.doors}
+    showMap={SUNDAY_TIMES_FIXTURE.showMap}
+    headingId="styleguide-sundaytimes"
+  />
+
+  <Timeline
+    eyebrow={TIMELINE_FIXTURE.eyebrow}
+    heading={TIMELINE_FIXTURE.heading}
+    rows={TIMELINE_FIXTURE.rows}
+    surface="muted"
+    headingId="styleguide-timeline"
+  />
+
+  <StaffGrid
+    eyebrow={STAFF_GRID_FIXTURE.eyebrow}
+    heading={STAFF_GRID_FIXTURE.heading}
+    group={STAFF_GRID_FIXTURE.group}
+    showBios={STAFF_GRID_FIXTURE.showBios}
+    members={STAFF_GRID_FIXTURE.members}
+    surface="background"
+    headingId="styleguide-staffgrid"
+  />
+
+  <FaqBand
+    eyebrow={FAQ_FIXTURE.eyebrow}
+    heading={FAQ_FIXTURE.heading}
+    items={FAQ_FIXTURE.items}
+    headingId="styleguide-faq"
+  />
+
+  <ScriptureBand
+    verse={SCRIPTURE_FIXTURE.verse}
+    reference={SCRIPTURE_FIXTURE.reference}
+    accentWord={SCRIPTURE_FIXTURE.accentWord}
+    headingId="styleguide-scripture"
+  />
+
+  <HeritageBand
+    eyebrow={HERITAGE_FIXTURE.eyebrow}
+    heading={HERITAGE_FIXTURE.heading}
+    body={HERITAGE_FIXTURE.body}
+    image={HERITAGE_FIXTURE.image}
+    headingId="styleguide-heritage"
+  />
+
+  <GiveBand
+    heading={GIVE_BAND_FIXTURE.heading}
+    body={GIVE_BAND_FIXTURE.body}
+    buttonLabel={GIVE_BAND_FIXTURE.buttonLabel}
+    buttonUrl={GIVE_BAND_FIXTURE.buttonUrl}
+    headingId="styleguide-give"
+  />
+
+  <DocumentList
+    eyebrow={DOCUMENT_LIST_FIXTURE.eyebrow}
+    heading={DOCUMENT_LIST_FIXTURE.heading}
+    docs={DOCUMENT_LIST_FIXTURE.docs}
+    surface="muted"
+    headingId="styleguide-documentlist"
+  />
+  {/* scaffold:end */}
 </BaseLayout>
