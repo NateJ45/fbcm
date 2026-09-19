@@ -1,6 +1,7 @@
 ---
 // Page-builder block: image and text side by side. Image side is
 // editor-controlled; surface comes from SectionRenderer. Safe to edit by hand.
+import { surfaceClass } from '@/lib/surfaces';
 import SanityImage from '@/components/SanityImage.astro';
 import PortableText from '@/components/PortableText';
 import CtaLink from '@/components/CtaLink.astro';
@@ -27,7 +28,7 @@ const {
   headingId,
 } = Astro.props as Props;
 
-const bg = surface === 'muted' ? 'bg-muted' : 'bg-background';
+const bg = surfaceClass(surface);
 const imageFirst = imageSide === 'left';
 const bodyClass = `text-foreground/85 text-lg leading-relaxed ${heading || eyebrow ? 'mt-m' : ''}`;
 ---

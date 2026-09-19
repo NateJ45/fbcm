@@ -94,7 +94,59 @@ export function sectionsProjection(field = 'pageBuilder'): string {
         // source nothing serves any more: the component renders nothing.
         []
       )
+    },
+    // scaffold: church
+    // The eight church blocks. Most of them are flat objects that the leading
+    // spread already carries whole; the four arms that do real work are staffGrid
+    // (which reaches OUT to the staffMember collection), timeline (slug ->
+    // string), heritage (image + cta) and documentList (file asset -> url).
+    _type == "sundayTimesSection" => {
+      ...,
+      items[],
+      doors[]
+    },
+    _type == "timelineSection" => {
+      ...,
+      rows[]{
+        ...,
+        "anchor": anchor.current
+      }
+    },
+    // The parent's group field is reached with ^ from inside the subquery.
+    // The third clause is the one that matters: a staff member with NO group
+    // set is support staff (that is what groupStaff() in church-derive.ts
+    // decides), so a "support" section must fetch the ungrouped ones too or
+    // they vanish from the site entirely while still existing in the dataset.
+    _type == "staffGridSection" => {
+      ...,
+      "members": *[_type == "staffMember" && (^.group == "all" || group == ^.group || (^.group == "support" && !defined(group)))] | order(order asc, name asc) {
+        _id, name, "slug": slug.current, role, email, phone, group, order, bio,
+        photo{ ..., asset->, "alt": coalesce(alt, asset->altText, name) }
+      }
+    },
+    _type == "faqSection" => {
+      ...,
+      items[]
+    },
+    _type == "scriptureBandSection" => {
+      ...
+    },
+    _type == "heritageBandSection" => {
+      ...,
+      image${IMAGE_PROJECTION},
+      cta${CTA_PROJECTION}
+    },
+    _type == "giveBandSection" => {
+      ...
+    },
+    _type == "documentListSection" => {
+      ...,
+      docs[]{
+        ...,
+        "fileUrl": file.asset->url
+      }
     }
+    // scaffold:end
   }`;
 }
 
@@ -166,6 +218,10 @@ export const SITE_SETTINGS_PROJECTION = `{
     lifeEventFormUrl,
     mapImage${IMAGE_PROJECTION},
     directionsUrl,
+    // The street address, used by the sundayTimes block's fallback card when no
+    // map picture is set. GROQ returns null for a field a document has not got,
+    // so projecting it is safe whether or not the field is filled in.
+    address,
     // Optional editor-managed menus. Empty arrays mean "use the built-in defaults."
     navItems[]{
       ${NAV_LINK_FIELDS},

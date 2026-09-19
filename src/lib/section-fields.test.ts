@@ -33,7 +33,13 @@ import {
   type RichTwin,
 } from './section-fields.ts';
 
-const BLOCK_LIBRARIES = ['sections', 'richSections'] as const;
+// churchSections.ts joined the list on 2026-09-19 (Plan 2a, Task 5). It was
+// missing, which meant the colour-field gate below was not watching the eight
+// church blocks at all: a `tone` or `background` field could have been added
+// to one of them and CLAUDE.md #9 would have gone unenforced. The church
+// blocks carry no heading-accent field and no rich twin, so the two registry
+// assertions are unaffected; only the forbidden-field sweep gains ground.
+const BLOCK_LIBRARIES = ['sections', 'richSections', 'churchSections'] as const;
 
 function readLibrary(name: string): string {
   return readFileSync(new URL(`../sanity/schemaTypes/${name}.ts`, import.meta.url), 'utf8');

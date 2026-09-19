@@ -7,7 +7,15 @@
 // Variants:
 //   - level: which heading tag (h1 for hero, h2 for sections, h3 for sub-sections). Default h2.
 //   - align: "left" (default) or "center" for centered section heads
-//   - tone: "default" (foreground on light surfaces) or "inverse" (bg/light on dark CTA banners)
+//   - tone: "default" (foreground on light surfaces), "inverse" (bg/light on
+//     dark CTA banners), "church" (the church's LIGHT surfaces: a brown-mid
+//     eyebrow that becomes gold in dark mode, because --color-brown-mid does
+//     not move between themes and would sit dark-on-dark if it did nothing),
+//     or "band" (the church's dark bands: gold eyebrow,
+//     paper-white headline, taupe subhead). "band" exists because the church
+//     identity gives the eyebrow on a dark band the brand gold, which neither
+//     of the other two tones can express, and putting it here keeps the five
+//     dark-band components from each inventing their own eyebrow.
 //
 // Script accent:
 //   - scriptAccent?: optional single word/phrase from the headline to render
@@ -32,6 +40,17 @@
 //     not emphasis, and the script accent is the older, louder device.
 //   - Unset or not found, `headline` renders exactly the string it always did.
 //
+// Gold rule (Plan 2a, Task 5):
+//   - rule?: draws the 56x2px gold rule BENEATH the heading. The church
+//     identity (spec section 2.3) gives every heading that rule, and the
+//     church blocks all ask for it, so it is drawn HERE once rather than in
+//     eight components. It defaults to false, so no existing caller changes a
+//     single byte of rendered HTML (npm run parity compare is the gate).
+//   - It REPLACES the hairline under the eyebrow. Drawing both puts two rules
+//     inside one heading block, which is decoration, not structure, and the
+//     church spec asks for exactly one (spec 2.3). So `rule` suppresses the
+//     older hairline rather than sitting beside it.
+//
 // Rich subhead (same card):
 //   - subheadRich?: the optional portable-text twin of `subhead`, allowing bold
 //     and italic and nothing else (src/lib/inline-rich.ts). When it holds text
@@ -52,7 +71,7 @@ interface Props {
   headingId: string;
   level?: 'h1' | 'h2' | 'h3';
   align?: 'left' | 'center';
-  tone?: 'default' | 'inverse';
+  tone?: 'default' | 'inverse' | 'band' | 'church';
   /**
    * Optional single word/phrase from the headline to render in handwritten
    * the script accent font. Matched case-insensitively against the headline,
@@ -66,6 +85,8 @@ interface Props {
    * already in play: one accent per heading.
    */
   headingAccent?: string;
+  /** Draw the 56x2px gold rule beneath the heading (church identity). */
+  rule?: boolean;
   class?: string;
 }
 
@@ -80,6 +101,7 @@ const {
   tone = 'default',
   scriptAccent,
   headingAccent,
+  rule = false,
   class: extraClass = '',
 } = Astro.props as Props;
 
@@ -107,18 +129,29 @@ const headingClass =
       : 'font-display text-h3 leading-tight';
 
 const wrapperAlign = align === 'center' ? 'text-center mx-auto' : 'text-left';
-const toneHeadline = tone === 'inverse' ? 'text-bg' : 'text-foreground';
+// text-bg, never text-cream, on anything that sits on a FIXED dark band:
+// --color-cream flips to ink under .dark (globals.css) while --color-bg stays
+// paper-white in both themes.
+const toneHeadline = tone === 'default' || tone === 'church' ? 'text-foreground' : 'text-bg';
 // Default tone swapped from text-secondary (Warm Taupe, fails AA at 12px) to
 // text-foreground/80 (4.77:1 on Cream). Inverse tone (used on FinalCta's
 // dark Charcoal panel) keeps cream-on-dark.
-const toneEyebrow = tone === 'inverse' ? 'text-bg/75' : 'text-foreground/80';
-const toneSub = tone === 'inverse' ? 'text-bg/80' : 'text-foreground/80';
+const toneEyebrow =
+  tone === 'band'
+    ? 'text-gold'
+    : tone === 'church'
+      ? 'text-brown-mid dark:text-gold'
+      : tone === 'inverse'
+        ? 'text-bg/75'
+        : 'text-foreground/80';
+const toneSub =
+  tone === 'band' ? 'text-taupe' : tone === 'inverse' ? 'text-bg/80' : 'text-foreground/80';
 
 // Bronze hairline accent beneath the eyebrow. Matches the brand-stripe
 // signature now repeating on every marketing card so section headings read
 // with the same editorial vocabulary. On inverse tone (dark FinalCta panel)
 // the hairline switches to lifted cream so it stays visible.
-const accentColor = tone === 'inverse' ? 'bg-bg/40' : 'bg-primary/60';
+const accentColor = tone === 'default' || tone === 'church' ? 'bg-primary/60' : 'bg-bg/40';
 const accentAlign = align === 'center' ? 'mx-auto' : '';
 ---
 
@@ -127,7 +160,11 @@ const accentAlign = align === 'center' ? 'mx-auto' : '';
     eyebrow && (
       <>
         <p class:list={['text-xs tracking-eyebrow uppercase', toneEyebrow]}>{eyebrow}</p>
-        <div class:list={['mt-s mb-m h-px w-12', accentAlign, accentColor]} aria-hidden="true" />
+        {rule ? (
+          <div class="mb-m" />
+        ) : (
+          <div class:list={['mt-s mb-m h-px w-12', accentAlign, accentColor]} aria-hidden="true" />
+        )}
       </>
     )
   }
@@ -189,6 +226,7 @@ const accentAlign = align === 'center' ? 'mx-auto' : '';
         </h3>
       ))
   }
+  {rule && <div class:list={['mt-m h-0.5 w-14 bg-gold', accentAlign]} aria-hidden="true" />}
   {
     (subhead || richSubhead) && (
       <p class:list={['mt-m text-lg', toneSub]}>

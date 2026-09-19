@@ -25,6 +25,16 @@ import type {
   CtaBandSection as _CtaBandSection,
   VideoSection as _VideoSection,
   SpacerSection as _SpacerSection,
+  // scaffold: church
+  SundayTimesSection as _SundayTimesSection,
+  TimelineSection as _TimelineSection,
+  StaffGridSection as _StaffGridSection,
+  FaqSection as _FaqSection,
+  ScriptureBandSection as _ScriptureBandSection,
+  HeritageBandSection as _HeritageBandSection,
+  GiveBandSection as _GiveBandSection,
+  DocumentListSection as _DocumentListSection,
+  // scaffold:end
   // U7 new blocks — hand-authored below since typegen has not run yet
   // FaqSection, LogoStripSection, TeamSection, EmbedSection — not imported from
   // sanity.types yet; their projected types are fully defined below.
@@ -267,6 +277,88 @@ export interface ProjectedDynamicListSection {
 }
 
 // ---------------------------------------------------------------------------
+// scaffold: church
+// The eight church blocks. Each one starts from the GENERATED schema type and
+// overrides only what sectionsProjection() reshapes, which is the same
+// discipline the blocks above follow. Three of them reshape nothing at all and
+// are the generated type plus a _key.
+// ---------------------------------------------------------------------------
+
+/** sundayTimesSection — three columns, doors, and the map from siteSettings. */
+export type ProjectedSundayTimesSection = { _key: string } & _SundayTimesSection;
+
+/** One timeline row after `"anchor": anchor.current` flattens the slug. */
+export type ProjectedTimelineRow = Omit<NonNullable<_TimelineSection['rows']>[number], 'anchor'> & {
+  /** The slug's string, ready to drop straight into `id=`. */
+  anchor?: string;
+};
+
+/** timelineSection — marker column plus a bordered body column per row. */
+export type ProjectedTimelineSection = { _key: string } & Omit<_TimelineSection, 'rows'> & {
+    rows?: ProjectedTimelineRow[];
+  };
+
+/**
+ * One staff member as the staffGrid arm projects them.
+ *
+ * `group` and `phone` are optional here because staffMember.ts does not carry
+ * those fields yet (Task 7 adds them). GROQ returns null for a field that does
+ * not exist, so the projection is already correct and the component already
+ * handles their absence: groupStaff() files anyone without a group under
+ * support, which is exactly the rule the GROQ arm's third clause encodes.
+ */
+export interface ProjectedStaffMember {
+  _id?: string;
+  name: string;
+  slug?: string;
+  role?: string;
+  email?: string;
+  phone?: string;
+  group?: string | null;
+  order?: number | null;
+  bio?: unknown;
+  photo?: ProjectedImage | null;
+}
+
+/** staffGridSection — the section fields plus the members it pulled in. */
+export type ProjectedStaffGridSection = { _key: string } & _StaffGridSection & {
+    members?: ProjectedStaffMember[];
+  };
+
+/** faqSection — native <details> on the indigo band. */
+export type ProjectedFaqSection = { _key: string } & _FaqSection;
+
+/** scriptureBandSection — verse, reference and the one gold accent word. */
+export type ProjectedScriptureBandSection = { _key: string } & _ScriptureBandSection;
+
+/** heritageBandSection — the brown band: text left, photo right. */
+export type ProjectedHeritageBandSection = { _key: string } & Omit<
+  _HeritageBandSection,
+  'image' | 'cta'
+> & {
+    image?: ProjectedImage | null;
+    cta?: ProjectedCtaBlock | null;
+  };
+
+/** giveBandSection — the indigo giving band. */
+export type ProjectedGiveBandSection = { _key: string } & _GiveBandSection;
+
+/** One listed document after `"fileUrl": file.asset->url`. */
+export type ProjectedListedDocument = Omit<
+  NonNullable<_DocumentListSection['docs']>[number],
+  'file'
+> & {
+  /** The uploaded file's CDN url, or null when the row points at `url` instead. */
+  fileUrl?: string | null;
+};
+
+/** documentListSection — the yearly downloads list. */
+export type ProjectedDocumentListSection = { _key: string } & Omit<_DocumentListSection, 'docs'> & {
+    docs?: ProjectedListedDocument[];
+  };
+// scaffold:end
+
+// ---------------------------------------------------------------------------
 // Discriminated union
 // ---------------------------------------------------------------------------
 
@@ -285,4 +377,14 @@ export type PageBuilderBlock =
   | ProjectedTeamSection
   | ProjectedEmbedSection
   // Church-reverse-port
-  | ProjectedDynamicListSection;
+  | ProjectedDynamicListSection
+  // scaffold: church
+  | ProjectedSundayTimesSection
+  | ProjectedTimelineSection
+  | ProjectedStaffGridSection
+  | ProjectedFaqSection
+  | ProjectedScriptureBandSection
+  | ProjectedHeritageBandSection
+  | ProjectedGiveBandSection
+  | ProjectedDocumentListSection;
+// scaffold:end

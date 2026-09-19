@@ -18,7 +18,19 @@
 //     `text-link` > `text-bg` in the cascade — the bronze always won. Use
 //     onDark={true} from now on instead of overriding via className.
 //
-// Both variants share generous padding, uppercase tracking, and a 44×44 minimum tap target.
+//   - "gold" / "outline" — the CHURCH pair (Plan 2a spec 2.3: "Two buttons:
+//     primary (indigo on gold), secondary (indigo outline; white outline on
+//     dark)"). They are added alongside primary/secondary rather than
+//     replacing them because the starter's own pages still render the bronze
+//     pair, and repointing `primary` would rewrite the HTML of every page that
+//     already ships (npm run parity compare is the gate on that). Once the
+//     whole site is church-branded, a later task can repoint primary ->
+//     gold and secondary -> outline in ONE place, here.
+//       gold:    indigo label on a gold fill (5.60:1, theme-tokens.test.ts)
+//       outline: indigo outline on light; under onDark, a white outline, which
+//                is what the indigo and brown bands ask for.
+//
+// All variants share generous padding, uppercase tracking, and a 44×44 minimum tap target.
 
 interface CtaBlock {
   label?: string;
@@ -32,7 +44,7 @@ interface CtaBlock {
 
 interface Props {
   cta?: CtaBlock | null;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'gold' | 'outline';
   /** When true, swap variant colors for legibility on a dark surface. */
   onDark?: boolean;
   /** Fallback href if the CTA can't be resolved (e.g., siteSettings hasn't been populated). */
@@ -107,6 +119,19 @@ const baseClasses = onDark
 // The primary variant keeps the bronze button — bronze on top of the dark hero
 // gradient still reads at 5.5:1 (white-on-bronze-dark) and stays visually anchored.
 const variantClasses = (() => {
+  // The church pair. `gold` never changes on a dark band: gold is a fill in
+  // both themes and the indigo label on it clears AA either way.
+  if (variant === 'gold') {
+    return 'bg-gold text-indigo-field hover:bg-gold/90';
+  }
+  if (variant === 'outline') {
+    // text-bg, not text-cream: --color-cream FLIPS to ink in dark mode (see
+    // globals.css .dark), while --color-bg stays paper-white in both, which is
+    // what a fixed dark band needs.
+    return onDark
+      ? 'border border-bg/70 text-bg hover:bg-bg/10 hover:border-bg'
+      : 'border border-indigo text-indigo hover:bg-indigo/5';
+  }
   if (variant === 'primary') {
     return onDark
       ? 'bg-primary-dark text-white hover:bg-primary'
