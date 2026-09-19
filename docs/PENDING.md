@@ -297,8 +297,15 @@ leaves open, with what closes each.
   `6d670311`, smoke passed against `vars.PRODUCTION_URL`. Deploys now happen on
   every push to `main` and on `sanity-publish` dispatches; `npm run deploy` from
   a laptop is the fallback, not the path.
-- **A GitHub PAT for the Sanity publish webhook.** Without it a Studio publish
-  changes the dataset and nothing else; the site rebuilds only on a push.
+- ~~A GitHub PAT for the Sanity publish webhook.~~ Done 2026-09-18. Webhook
+  `Rebuild live site` on project 7jw947g5 POSTs `{"event_type": "sanity-publish"}`
+  to GitHub's dispatches endpoint with a fine-grained PAT (fbcm only, Contents
+  write). Proved with two real revisions: runs 35411581409 and 35411598171, both
+  `repository_dispatch`, both Deploy and Smoke green, versions `cdaa19bd` and
+  `ffb5b6f8`. The second queued behind the first (`cancel-in-progress: false`).
+  An editor's publish now reaches the live site in about two minutes with no
+  developer involved. When the PAT expires, publishes silently stop rebuilding;
+  its expiry date is the thing to write down.
 - **A Cloudflare Web Analytics token** for the workers.dev host, pasted into `.env`
   as `PUBLIC_CF_ANALYTICS_TOKEN`. The API connector lacks the RUM scope. Nothing
   breaks without it; the site reports nothing.
