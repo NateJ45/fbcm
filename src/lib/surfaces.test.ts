@@ -1,7 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { AA_BODY_TEXT, AA_LARGE_TEXT, contrastRatio } from './contrast.ts';
+import {
+  AA_BODY_TEXT,
+  AA_LARGE_TEXT,
+  contrastRatio,
+  hexToRgb,
+  relativeLuminance,
+} from './contrast.ts';
 import {
   DARK_SCOPE,
   LIGHT_SCOPE,
@@ -109,7 +115,7 @@ describe('surface pairs resolve', () => {
     assert.equal(surfaceClass(undefined), 'bg-background');
     assert.equal(surfaceClass(null), 'bg-background');
     assert.equal(surfaceClass('not-a-surface'), 'bg-background');
-    assert.equal(surfaceClass('muted'), 'bg-muted');
+    assert.equal(surfaceClass('muted'), 'bg-surface-soft');
   });
 });
 
@@ -134,6 +140,57 @@ describe('surface pairs clear WCAG AA', () => {
       });
     }
   }
+});
+
+describe('the soft alternating surface reads in both themes (Task 1, fix round 1)', () => {
+  // The "muted" surface's background is now --color-surface-soft (globals.css
+  // :root/.dark, via the --surface-soft semantic token), light value the 16%
+  // taupe-over-cream tint (--color-bg-soft, #F0EEEC), dark value #262548. The
+  // generic loop above already proves --foreground/--link clear AA on it in
+  // both themes; this adds the two pairs the fix-round review named directly:
+  // indigo ink on the light soft surface, and its dark equivalent.
+  //
+  // The dark pair reads --color-indigo, not --color-cream. --color-indigo and
+  // --color-cream swap LITERAL values between themes (see the "Dark mode:
+  // indigo becomes paper, cream becomes ink" comment in globals.css) so that
+  // whichever token plays the INK role keeps playing it: --color-indigo is
+  // the ink role (navy in light, #FBFBFA near-white in dark), so it is the
+  // token to read for ink in either theme. Reading --color-cream in the DARK
+  // scope instead would return its dark override, #1C1B3A -- a dark navy,
+  // which is the PAPER role's dark value, not an ink colour, and pairs at
+  // 1.14:1 against #262548. That is not a typo to fix; it is why this test
+  // reads --color-indigo for both rows instead.
+  it('indigo ink on the light soft surface clears AA', () => {
+    const ratio = contrastRatio(
+      themes[0][1]('--color-indigo'),
+      themes[0][1]('--color-surface-soft'),
+    );
+    assert.ok(
+      ratio >= AA_BODY_TEXT,
+      `--color-indigo on --color-surface-soft (light) is ${ratio}:1`,
+    );
+  });
+
+  it('indigo ink (near-white in dark, the "cream" paper colour) on the dark soft surface clears AA', () => {
+    const ratio = contrastRatio(
+      themes[1][1]('--color-indigo'),
+      themes[1][1]('--color-surface-soft'),
+    );
+    assert.ok(ratio >= AA_BODY_TEXT, `--color-indigo on --color-surface-soft (dark) is ${ratio}:1`);
+  });
+
+  it('the dark soft surface is genuinely darker than the light one, not a near-white leftover', () => {
+    // The regression this whole fix round exists to close: before this,
+    // nothing in .dark repointed the muted band, so a reader in dark mode
+    // still got the light-mode taupe tint - near-white on a dark page.
+    const lightLum = relativeLuminance(hexToRgb(themes[0][1]('--color-surface-soft')));
+    const darkLum = relativeLuminance(hexToRgb(themes[1][1]('--color-surface-soft')));
+    assert.ok(
+      darkLum < lightLum / 4,
+      `dark soft surface (${themes[1][1]('--color-surface-soft')}) is not meaningfully darker ` +
+        `than the light one (${themes[0][1]('--color-surface-soft')})`,
+    );
+  });
 });
 
 describe('the heading accent word', () => {

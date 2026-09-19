@@ -79,12 +79,26 @@ export const SECTION_SURFACES: SurfacePair[] = [
     value: 'muted',
     title: 'Soft paper',
     hint: 'The alternating band. The cadence puts it between two Paper sections.',
-    className: 'bg-muted',
-    dot: '#F3F4F2',
-    dotDark: '#202327',
+    // Repointed 2026-09-19 (Task 1, fix round 1) from bg-muted/--muted to the
+    // --color-surface-soft semantic token. The old shadcn --muted pair was
+    // already dark-aware on its own, but the church's rebrand gave the
+    // alternating band a specific brand value in LIGHT mode (--color-bg-soft,
+    // the 16% taupe-over-cream tint) with no dark counterpart. --surface-soft
+    // (declared in globals.css :root / .dark, exposed here as --color-surface-
+    // soft via @theme inline) carries that light value forward and gives it a
+    // real dark value (#262548) without redeclaring --color-bg-soft itself,
+    // which the palette gate in theme-tokens.test.ts forbids in .dark.
+    className: 'bg-surface-soft',
+    dot: '#F0EEEC',
+    dotDark: '#262548',
     dotInk: '#2A2D31',
     inCadence: true,
-    tokens: { bg: '--muted', text: '--foreground', heading: '--foreground', link: '--link' },
+    tokens: {
+      bg: '--color-surface-soft',
+      text: '--foreground',
+      heading: '--foreground',
+      link: '--link',
+    },
   },
   {
     value: 'card',

@@ -143,6 +143,10 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
+  /* The alternating section surface's real background, both themes. See the
+     --surface-soft declarations in :root / .dark for why this exists instead
+     of a plain --color-bg-soft reference. */
+  --color-surface-soft: var(--surface-soft);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-primary-foreground: var(--primary-foreground);
   --color-popover-foreground: var(--popover-foreground);
@@ -302,6 +306,13 @@
   --error: oklch(0.577 0.245 27.325); /* matches --destructive */
   --error-foreground: #ffffff;
   --outline: #586577; /* matches --ring */
+
+  /* The alternating "muted" section surface's soft band, semantically indirect
+     for the same reason --color-accent points at var(--accent): the palette
+     gate (theme-tokens.test.ts) asserts --color-bg-soft as a LIGHT-only token
+     and fails if .dark ever redeclares it, so dark mode's soft surface can't
+     be a second declaration of --color-bg-soft. This token is the detour. */
+  --surface-soft: var(--color-bg-soft);
 }
 
 /* ---------- Dark mode --------------------------------------------------
@@ -373,6 +384,12 @@
   --color-cream: #1c1b3a;
   --color-indigo: #fbfbfa;
   --color-indigo-field: #2a2950;
+
+  /* The alternating "muted" surface's real dark value. Unlike --color-bg-soft
+     (which this gate forbids .dark from touching), --surface-soft is a plain
+     shadcn-style semantic token, so overriding it here is the normal move
+     the whole :root / .dark block already makes for every other surface. */
+  --surface-soft: #262548;
 }
 
 /* ---------- Base resets and defaults ---------------------------------- */
