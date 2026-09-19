@@ -45,7 +45,11 @@ const getArg = (n) => {
   return i >= 0 ? args[i + 1] : null;
 };
 const LIMIT = getArg('--limit') ? parseInt(getArg('--limit'), 10) : null;
-const ONLY = getArg('--only') ? getArg('--only').split(',').map((s) => s.trim()) : null;
+const ONLY = getArg('--only')
+  ? getArg('--only')
+      .split(',')
+      .map((s) => s.trim())
+  : null;
 const FORCE = args.includes('--force');
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -92,7 +96,12 @@ async function fetchBuffer(url, tries = 3) {
         }
       } else {
         const buf = Buffer.from(await res.arrayBuffer());
-        return { ok: true, status: res.status, buf, contentType: res.headers.get('content-type') || '' };
+        return {
+          ok: true,
+          status: res.status,
+          buf,
+          contentType: res.headers.get('content-type') || '',
+        };
       }
     } catch (e) {
       lastErr = { status: 0, message: e.message };
@@ -105,24 +114,59 @@ async function fetchBuffer(url, tries = 3) {
 /* --------------------------------------------------------- tiny HTML tree */
 
 const VOID = new Set([
-  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta',
-  'param', 'source', 'track', 'wbr',
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
 ]);
 
 const ENTITIES = {
-  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', ndash: '–',
-  mdash: '—', lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”',
-  hellip: '…', middot: '·', bull: '•', copy: '©', reg: '®',
-  trade: '™', deg: '°', frac12: '½', frac14: '¼', eacute: 'é',
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+  ndash: '–',
+  mdash: '—',
+  lsquo: '‘',
+  rsquo: '’',
+  ldquo: '“',
+  rdquo: '”',
+  hellip: '…',
+  middot: '·',
+  bull: '•',
+  copy: '©',
+  reg: '®',
+  trade: '™',
+  deg: '°',
+  frac12: '½',
+  frac14: '¼',
+  eacute: 'é',
 };
 
 function decodeEntities(s) {
   if (!s) return '';
   return s.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);/g, (m, g) => {
     if (g[0] === '#') {
-      const code = g[1] === 'x' || g[1] === 'X' ? parseInt(g.slice(2), 16) : parseInt(g.slice(1), 10);
+      const code =
+        g[1] === 'x' || g[1] === 'X' ? parseInt(g.slice(2), 16) : parseInt(g.slice(1), 10);
       if (Number.isFinite(code) && code > 0 && code <= 0x10ffff) {
-        try { return String.fromCodePoint(code); } catch { return m; }
+        try {
+          return String.fromCodePoint(code);
+        } catch {
+          return m;
+        }
       }
       return m;
     }
@@ -132,7 +176,9 @@ function decodeEntities(s) {
 
 function parseAttrs(str) {
   const attrs = {};
-  for (const m of str.matchAll(/([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*(?:=\s*("([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g)) {
+  for (const m of str.matchAll(
+    /([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*(?:=\s*("([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g,
+  )) {
     const name = m[1].toLowerCase();
     const val = m[3] ?? m[4] ?? m[5] ?? '';
     attrs[name] = decodeEntities(val);
@@ -144,7 +190,8 @@ function parseAttrs(str) {
 function parseHTML(html) {
   const root = { tag: '#root', attrs: {}, children: [] };
   const stack = [root];
-  const re = /<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>|<!\w[^>]*>|<\/\s*([a-zA-Z][a-zA-Z0-9-]*)\s*>|<([a-zA-Z][a-zA-Z0-9-]*)((?:[^>"']|"[^"]*"|'[^']*')*)>/g;
+  const re =
+    /<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>|<!\w[^>]*>|<\/\s*([a-zA-Z][a-zA-Z0-9-]*)\s*>|<([a-zA-Z][a-zA-Z0-9-]*)((?:[^>"']|"[^"]*"|'[^']*')*)>/g;
   let last = 0;
   let m;
   while ((m = re.exec(html))) {
@@ -156,7 +203,10 @@ function parseHTML(html) {
     if (m[1]) {
       const name = m[1].toLowerCase();
       for (let i = stack.length - 1; i > 0; i--) {
-        if (stack[i].tag === name) { stack.length = i; break; }
+        if (stack[i].tag === name) {
+          stack.length = i;
+          break;
+        }
       }
     } else if (m[2]) {
       const name = m[2].toLowerCase();
@@ -212,10 +262,42 @@ function extractElementByMarker(html, marker) {
 }
 
 const KEEP_TAGS = new Set([
-  'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'img',
-  'blockquote', 'em', 'i', 'strong', 'b', 'u', 'br', 'hr', 'figure',
-  'figcaption', 'iframe', 'video', 'audio', 'source', 'table', 'thead',
-  'tbody', 'tr', 'td', 'th', 'pre', 'code', 'sub', 'sup',
+  'p',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'ul',
+  'ol',
+  'li',
+  'a',
+  'img',
+  'blockquote',
+  'em',
+  'i',
+  'strong',
+  'b',
+  'u',
+  'br',
+  'hr',
+  'figure',
+  'figcaption',
+  'iframe',
+  'video',
+  'audio',
+  'source',
+  'table',
+  'thead',
+  'tbody',
+  'tr',
+  'td',
+  'th',
+  'pre',
+  'code',
+  'sub',
+  'sup',
 ]);
 const DROP_ENTIRELY = new Set(['script', 'style', 'noscript', 'svg', 'button', 'nav', 'head']);
 const KEEP_ATTRS = {
@@ -259,8 +341,25 @@ function cleanTree(node) {
 }
 
 const BLOCK = new Set([
-  'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote',
-  'figure', 'figcaption', 'table', 'tr', 'hr', 'pre', 'iframe', 'video',
+  'p',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'ul',
+  'ol',
+  'li',
+  'blockquote',
+  'figure',
+  'figcaption',
+  'table',
+  'tr',
+  'hr',
+  'pre',
+  'iframe',
+  'video',
 ]);
 
 function escHtml(s) {
@@ -270,7 +369,10 @@ function escHtml(s) {
 function serialize(nodes, indent = 0) {
   let out = '';
   for (const n of nodes) {
-    if (n.tag === '#text') { out += escHtml(n.text); continue; }
+    if (n.tag === '#text') {
+      out += escHtml(n.text);
+      continue;
+    }
     const attrs = Object.entries(n.attrs || {})
       .map(([k, v]) => ` ${k}="${String(v).replace(/"/g, '&quot;')}"`)
       .join('');
@@ -288,8 +390,14 @@ function serialize(nodes, indent = 0) {
 function toText(nodes) {
   let out = '';
   for (const n of nodes) {
-    if (n.tag === '#text') { out += n.text; continue; }
-    if (n.tag === 'br') { out += '\n'; continue; }
+    if (n.tag === '#text') {
+      out += n.text;
+      continue;
+    }
+    if (n.tag === 'br') {
+      out += '\n';
+      continue;
+    }
     if (n.tag === 'img' || n.tag === 'iframe') continue;
     const inner = toText(n.children || []);
     out += BLOCK.has(n.tag) ? `\n${inner}\n` : inner;
@@ -313,20 +421,36 @@ const wordCount = (s) => (s.trim() ? s.trim().split(/\s+/).length : 0);
 function mdInline(nodes, imgMap) {
   let out = '';
   for (const n of nodes) {
-    if (n.tag === '#text') { out += n.text.replace(/([*_`])/g, '\\$1'); continue; }
+    if (n.tag === '#text') {
+      out += n.text.replace(/([*_`])/g, '\\$1');
+      continue;
+    }
     const inner = mdInline(n.children || [], imgMap);
     switch (n.tag) {
-      case 'strong': case 'b': out += inner.trim() ? `**${inner.trim()}**` : ''; break;
-      case 'em': case 'i': out += inner.trim() ? `*${inner.trim()}*` : ''; break;
-      case 'code': out += `\`${inner}\``; break;
-      case 'a': out += n.attrs.href ? `[${inner.trim() || n.attrs.href}](${n.attrs.href})` : inner; break;
-      case 'br': out += '  \n'; break;
+      case 'strong':
+      case 'b':
+        out += inner.trim() ? `**${inner.trim()}**` : '';
+        break;
+      case 'em':
+      case 'i':
+        out += inner.trim() ? `*${inner.trim()}*` : '';
+        break;
+      case 'code':
+        out += `\`${inner}\``;
+        break;
+      case 'a':
+        out += n.attrs.href ? `[${inner.trim() || n.attrs.href}](${n.attrs.href})` : inner;
+        break;
+      case 'br':
+        out += '  \n';
+        break;
       case 'img': {
         const local = imgMap.get(n.attrs.src);
         out += `![${n.attrs.alt || ''}](${local ? '../images/' + local : n.attrs.src})`;
         break;
       }
-      default: out += inner;
+      default:
+        out += inner;
     }
   }
   return out;
@@ -341,7 +465,12 @@ function toMarkdown(nodes, imgMap, depth = 0) {
       continue;
     }
     switch (n.tag) {
-      case 'h1': case 'h2': case 'h3': case 'h4': case 'h5': case 'h6': {
+      case 'h1':
+      case 'h2':
+      case 'h3':
+      case 'h4':
+      case 'h5':
+      case 'h6': {
         const lvl = Number(n.tag[1]);
         const t = mdInline(n.children, imgMap).trim();
         if (t) blocks.push(`${'#'.repeat(Math.min(6, lvl + 1))} ${t}`);
@@ -354,13 +483,22 @@ function toMarkdown(nodes, imgMap, depth = 0) {
       }
       case 'blockquote': {
         const inner = toMarkdown(n.children, imgMap, depth + 1);
-        if (inner.trim()) blocks.push(inner.trim().split('\n').map((l) => `> ${l}`.trimEnd()).join('\n'));
+        if (inner.trim())
+          blocks.push(
+            inner
+              .trim()
+              .split('\n')
+              .map((l) => `> ${l}`.trimEnd())
+              .join('\n'),
+          );
         break;
       }
-      case 'ul': case 'ol': {
+      case 'ul':
+      case 'ol': {
         const items = (n.children || []).filter((c) => c.tag === 'li');
         const lines = items.map((li, i) => {
-          const t = mdInline(li.children, imgMap).trim() ||
+          const t =
+            mdInline(li.children, imgMap).trim() ||
             toMarkdown(li.children, imgMap, depth + 1).trim();
           const bullet = n.tag === 'ol' ? `${i + 1}.` : '-';
           return `${'  '.repeat(depth)}${bullet} ${t}`;
@@ -373,14 +511,18 @@ function toMarkdown(nodes, imgMap, depth = 0) {
         blocks.push(`![${n.attrs.alt || ''}](${local ? '../images/' + local : n.attrs.src})`);
         break;
       }
-      case 'iframe': case 'video': {
+      case 'iframe':
+      case 'video': {
         if (n.attrs.src) blocks.push(`[embedded media: ${n.attrs.src}]`);
         break;
       }
-      case 'figure': case 'figcaption':
+      case 'figure':
+      case 'figcaption':
         blocks.push(toMarkdown(n.children, imgMap, depth).trim());
         break;
-      case 'hr': blocks.push('---'); break;
+      case 'hr':
+        blocks.push('---');
+        break;
       case 'table': {
         const rows = [];
         const collect = (nd) => {
@@ -390,13 +532,19 @@ function toMarkdown(nodes, imgMap, depth = 0) {
           }
         };
         collect(n);
-        const lines = rows.map((r) =>
-          '| ' + (r.children || [])
-            .filter((c) => c.tag === 'td' || c.tag === 'th')
-            .map((c) => mdInline(c.children, imgMap).trim().replace(/\|/g, '\\|'))
-            .join(' | ') + ' |');
+        const lines = rows.map(
+          (r) =>
+            '| ' +
+            (r.children || [])
+              .filter((c) => c.tag === 'td' || c.tag === 'th')
+              .map((c) => mdInline(c.children, imgMap).trim().replace(/\|/g, '\\|'))
+              .join(' | ') +
+            ' |',
+        );
         if (lines.length) {
-          const cols = (rows[0].children || []).filter((c) => c.tag === 'td' || c.tag === 'th').length;
+          const cols = (rows[0].children || []).filter(
+            (c) => c.tag === 'td' || c.tag === 'th',
+          ).length;
           lines.splice(1, 0, '| ' + Array(cols).fill('---').join(' | ') + ' |');
           blocks.push(lines.join('\n'));
         }
@@ -438,8 +586,12 @@ function safeFileName(name) {
 }
 
 const CHROME_PATTERNS = [
-  /blank\.gif/i, /\/shapes\//i, /spacer/i, /1x1\./i,
-  /static\.parastorage\.com/i, /\/favicon/i,
+  /blank\.gif/i,
+  /\/shapes\//i,
+  /spacer/i,
+  /1x1\./i,
+  /static\.parastorage\.com/i,
+  /\/favicon/i,
 ];
 
 function isChrome(url) {
@@ -465,14 +617,22 @@ function parsePost(url, html) {
   const head = headEnd > 0 ? html.slice(0, headEnd) : html.slice(0, 200000);
 
   let ld = null;
-  for (const m of html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+  for (const m of html.matchAll(
+    /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+  )) {
     try {
       const parsed = JSON.parse(m[1].trim());
       const arr = Array.isArray(parsed) ? parsed : [parsed];
       for (const o of arr) {
-        if (o && (o['@type'] === 'BlogPosting' || o['@type'] === 'Article' || o['@type'] === 'NewsArticle')) ld = o;
+        if (
+          o &&
+          (o['@type'] === 'BlogPosting' || o['@type'] === 'Article' || o['@type'] === 'NewsArticle')
+        )
+          ld = o;
       }
-    } catch { /* ignore malformed */ }
+    } catch {
+      /* ignore malformed */
+    }
   }
 
   const title =
@@ -486,22 +646,35 @@ function parsePost(url, html) {
 
   let publishedDate =
     metaContent(head, 'article:published_time') || (ld && ld.datePublished) || null;
-  let dateSource = publishedDate ? (metaContent(head, 'article:published_time') ? 'meta' : 'jsonld') : null;
+  let dateSource = publishedDate
+    ? metaContent(head, 'article:published_time')
+      ? 'meta'
+      : 'jsonld'
+    : null;
   if (!publishedDate) {
     const t = html.match(/<time[^>]*datetime=["']([^"']+)["']/i);
-    if (t) { publishedDate = t[1]; dateSource = 'time-element'; }
+    if (t) {
+      publishedDate = t[1];
+      dateSource = 'time-element';
+    }
   }
   if (!publishedDate) {
     const t = html.match(/data-hook="time-ago"[^>]*>([^<]+)</i);
     if (t) {
       const d = new Date(t[1]);
-      if (!isNaN(d)) { publishedDate = d.toISOString(); dateSource = 'visible-text'; }
+      if (!isNaN(d)) {
+        publishedDate = d.toISOString();
+        dateSource = 'visible-text';
+      }
     }
   }
   if (publishedDate) {
     const d = new Date(publishedDate);
     if (!isNaN(d)) publishedDate = d.toISOString();
-    else { publishedDate = null; dateSource = null; }
+    else {
+      publishedDate = null;
+      dateSource = null;
+    }
   }
 
   const author =
@@ -558,7 +731,12 @@ function parsePost(url, html) {
           const full = isWixMedia(src) ? toFullRes(src) : src;
           if (!seenImg.has(full)) {
             seenImg.add(full);
-            images.push({ originalUrl: src, fullResUrl: full, alt: n.attrs.alt || '', localFile: null });
+            images.push({
+              originalUrl: src,
+              fullResUrl: full,
+              alt: n.attrs.alt || '',
+              localFile: null,
+            });
           }
         }
       } else if (n.tag === 'a') {
@@ -570,7 +748,12 @@ function parsePost(url, html) {
             internal: /^https?:\/\/(www\.)?fbcmuncie\.org/i.test(href) || href.startsWith('/'),
           });
         }
-      } else if (n.tag === 'iframe' || n.tag === 'video' || n.tag === 'audio' || n.tag === 'source') {
+      } else if (
+        n.tag === 'iframe' ||
+        n.tag === 'video' ||
+        n.tag === 'audio' ||
+        n.tag === 'source'
+      ) {
         if (n.attrs.src) embeds.push(n.attrs.src);
       }
       if (n.children) walk(n.children);
@@ -588,8 +771,19 @@ function parsePost(url, html) {
   }
 
   return {
-    title, publishedDate, dateSource, author, categories, tags, excerpt,
-    coverImage, images, links, embeds, tree, bodySource,
+    title,
+    publishedDate,
+    dateSource,
+    author,
+    categories,
+    tags,
+    excerpt,
+    coverImage,
+    images,
+    links,
+    embeds,
+    tree,
+    bodySource,
   };
 }
 
@@ -614,7 +808,9 @@ async function downloadImage(fullResUrl, renderedUrl) {
       imageCache.set(fullResUrl, name);
       return name;
     }
-  } catch { /* not present */ }
+  } catch {
+    /* not present */
+  }
 
   let res = await fetchBuffer(fullResUrl);
   let usedFallback = false;
@@ -625,7 +821,11 @@ async function downloadImage(fullResUrl, renderedUrl) {
       if (alt.ok && alt.buf && alt.buf.length) {
         res = alt;
         usedFallback = true;
-        imageStats.fallbacks.push({ fullResUrl, usedUrl: renderedUrl, reason: `full-res HTTP ${res.status ?? 'err'}` });
+        imageStats.fallbacks.push({
+          fullResUrl,
+          usedUrl: renderedUrl,
+          reason: `full-res HTTP ${res.status ?? 'err'}`,
+        });
       }
     }
   }
@@ -636,7 +836,9 @@ async function downloadImage(fullResUrl, renderedUrl) {
   }
   if (usedFallback) {
     const ext = (res.contentType.match(/image\/(\w+)/) || [])[1];
-    if (ext && !name.toLowerCase().endsWith(ext.toLowerCase())) { /* keep media-id name */ }
+    if (ext && !name.toLowerCase().endsWith(ext.toLowerCase())) {
+      /* keep media-id name */
+    }
   }
   await fs.writeFile(dest, res.buf);
   imageStats.downloaded++;
@@ -685,17 +887,32 @@ async function capturePost(url, report) {
         report.skipped++;
         return;
       }
-    } catch { /* not captured yet */ }
+    } catch {
+      /* not captured yet */
+    }
   }
 
   const res = await fetchText(url);
   if (!res.ok) {
     report.failures.push({ url, status: res.status, error: res.error || '' });
     const rec = {
-      url, slug, httpStatus: res.status, fetchedAt: new Date().toISOString(),
-      title: null, publishedDate: null, author: null, categories: [], tags: [],
-      excerpt: '', coverImage: null, bodyHtml: '', bodyText: '', images: [],
-      links: [], embeds: [], captureError: res.error || `HTTP ${res.status}`,
+      url,
+      slug,
+      httpStatus: res.status,
+      fetchedAt: new Date().toISOString(),
+      title: null,
+      publishedDate: null,
+      author: null,
+      categories: [],
+      tags: [],
+      excerpt: '',
+      coverImage: null,
+      bodyHtml: '',
+      bodyText: '',
+      images: [],
+      links: [],
+      embeds: [],
+      captureError: res.error || `HTTP ${res.status}`,
     };
     await fs.writeFile(jsonPath, JSON.stringify(rec, null, 2));
     report.records.push(rec);
@@ -743,7 +960,7 @@ async function capturePost(url, report) {
   await fs.writeFile(jsonPath, JSON.stringify(rec, null, 2));
   await fs.writeFile(
     path.join(POSTS_DIR, `${safeFileName(slug)}.md`),
-    buildMarkdown(rec, imgMap, p.tree)
+    buildMarkdown(rec, imgMap, p.tree),
   );
   report.records.push(rec);
   report.captured++;
@@ -780,16 +997,20 @@ async function main() {
   const report = { records: [], failures: [], captured: 0, skipped: 0, attempted: urls.length };
 
   let done = 0;
-  await runPool(urls, async (url) => {
-    try {
-      await capturePost(url, report);
-    } catch (e) {
-      report.failures.push({ url, status: 0, error: e.message });
-      console.error('ERROR', url, e.message);
-    }
-    done++;
-    if (done % 10 === 0 || done === urls.length) console.log(`  ${done}/${urls.length}`);
-  }, CONCURRENCY);
+  await runPool(
+    urls,
+    async (url) => {
+      try {
+        await capturePost(url, report);
+      } catch (e) {
+        report.failures.push({ url, status: 0, error: e.message });
+        console.error('ERROR', url, e.message);
+      }
+      done++;
+      if (done % 10 === 0 || done === urls.length) console.log(`  ${done}/${urls.length}`);
+    },
+    CONCURRENCY,
+  );
 
   // ---- index.json
   const index = report.records
@@ -811,7 +1032,12 @@ async function main() {
   await fs.writeFile(path.join(POSTS_DIR, 'index.json'), JSON.stringify(index, null, 2));
 
   await writeReport(report, index, urls.length);
-  console.log('\nDone. captured=%d skipped=%d failures=%d', report.captured, report.skipped, report.failures.length);
+  console.log(
+    '\nDone. captured=%d skipped=%d failures=%d',
+    report.captured,
+    report.skipped,
+    report.failures.length,
+  );
 }
 
 /* ---------------------------------------------------------------- report */
@@ -822,7 +1048,7 @@ async function writeReport(report, index, attempted) {
   const withBody100 = recs.filter((r) => (r.wordCount ?? wordCount(r.bodyText || '')) > 100);
   const noBody = recs.filter((r) => !(r.bodyText || '').trim());
   const embedOnly = recs.filter(
-    (r) => (r.embeds || []).length > 0 && (r.wordCount ?? wordCount(r.bodyText || '')) < 40
+    (r) => (r.embeds || []).length > 0 && (r.wordCount ?? wordCount(r.bodyText || '')) < 40,
   );
   const dates = withDate.map((r) => r.publishedDate).sort();
   const catCounts = {};
@@ -840,11 +1066,17 @@ async function writeReport(report, index, attempted) {
 
   const newsletterish = recs.filter((r) => {
     const t = ((r.title || '') + ' ' + (r.excerpt || '')).toLowerCase();
-    return /newsletter|weekly update|this week at|announcements|bulletin|e-?news|happenings/.test(t);
+    return /newsletter|weekly update|this week at|announcements|bulletin|e-?news|happenings/.test(
+      t,
+    );
   });
 
   const sorted = [...recs]
-    .map((r) => ({ t: r.title || r.slug, w: r.wordCount ?? wordCount(r.bodyText || ''), s: r.slug }))
+    .map((r) => ({
+      t: r.title || r.slug,
+      w: r.wordCount ?? wordCount(r.bodyText || ''),
+      s: r.slug,
+    }))
     .sort((a, b) => b.w - a.w);
   const longest = sorted.slice(0, 5);
   const shortest = [...sorted].reverse().slice(0, 5);
@@ -852,25 +1084,34 @@ async function writeReport(report, index, attempted) {
   // Bytes on disk. Two figures: the whole shared folder, and the subset this
   // blog capture actually references (stable across re-runs, unlike the
   // per-run download counters).
-  let diskBytes = 0, diskCount = 0;
+  let diskBytes = 0,
+    diskCount = 0;
   try {
     for (const f of await fs.readdir(IMAGES_DIR)) {
       const st = await fs.stat(path.join(IMAGES_DIR, f));
-      if (st.isFile()) { diskBytes += st.size; diskCount++; }
+      if (st.isFile()) {
+        diskBytes += st.size;
+        diskCount++;
+      }
     }
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 
   const referenced = new Set();
   for (const r of recs) {
     if (r.coverImage?.localFile) referenced.add(r.coverImage.localFile);
     for (const im of r.images || []) if (im.localFile) referenced.add(im.localFile);
   }
-  let blogBytes = 0, blogMissing = 0;
+  let blogBytes = 0,
+    blogMissing = 0;
   for (const f of referenced) {
     try {
       const st = await fs.stat(path.join(IMAGES_DIR, f));
       blogBytes += st.size;
-    } catch { blogMissing++; }
+    } catch {
+      blogMissing++;
+    }
   }
 
   const mb = (n) => (n / 1024 / 1024).toFixed(2);
@@ -882,14 +1123,22 @@ async function writeReport(report, index, attempted) {
   L.push(`- Posts listed in sitemap / attempted: **${attempted}**`);
   L.push(`- Post records on disk: **${recs.length}**`);
   L.push(`- Captured this run: ${report.captured}; skipped (already captured): ${report.skipped}`);
-  L.push(`- Posts with a publishedDate: **${withDate.length} / ${recs.length}**  (undated: ${recs.length - withDate.length})`);
+  L.push(
+    `- Posts with a publishedDate: **${withDate.length} / ${recs.length}**  (undated: ${recs.length - withDate.length})`,
+  );
   L.push(`- Posts with a body over 100 words: **${withBody100.length}**`);
   L.push(`- Posts with NO body text: **${noBody.length}**`);
   L.push(`- Distinct images referenced by these posts: **${referenced.size}**`);
-  L.push(`- Total bytes of those images on disk: **${blogBytes.toLocaleString()} bytes (${mb(blogBytes)} MB)**`);
+  L.push(
+    `- Total bytes of those images on disk: **${blogBytes.toLocaleString()} bytes (${mb(blogBytes)} MB)**`,
+  );
   if (blogMissing) L.push(`- Referenced images MISSING from disk: **${blogMissing}**`);
-  L.push(`- This run: downloaded ${imageStats.downloaded}, skipped ${imageStats.skippedExisting} already present, ${imageStats.bytes.toLocaleString()} bytes transferred`);
-  L.push(`- Whole shared images/ folder (blog + the site-pages capture): ${diskCount} files, ${diskBytes.toLocaleString()} bytes (${mb(diskBytes)} MB)`);
+  L.push(
+    `- This run: downloaded ${imageStats.downloaded}, skipped ${imageStats.skippedExisting} already present, ${imageStats.bytes.toLocaleString()} bytes transferred`,
+  );
+  L.push(
+    `- Whole shared images/ folder (blog + the site-pages capture): ${diskCount} files, ${diskBytes.toLocaleString()} bytes (${mb(diskBytes)} MB)`,
+  );
   L.push('');
   L.push('## Date range', '');
   if (dates.length) {
@@ -906,17 +1155,21 @@ async function writeReport(report, index, attempted) {
   if (!report.failures.length && !imageStats.failures.length) L.push('None.');
   if (report.failures.length) {
     L.push('### Post URLs', '');
-    for (const f of report.failures) L.push(`- ${f.url} — HTTP ${f.status}${f.error ? ` (${f.error})` : ''}`);
+    for (const f of report.failures)
+      L.push(`- ${f.url} — HTTP ${f.status}${f.error ? ` (${f.error})` : ''}`);
     L.push('');
   }
   if (imageStats.failures.length) {
     L.push('### Image URLs', '');
-    for (const f of imageStats.failures) L.push(`- ${f.url} — HTTP ${f.status}${f.error ? ` (${f.error})` : ''}`);
+    for (const f of imageStats.failures)
+      L.push(`- ${f.url} — HTTP ${f.status}${f.error ? ` (${f.error})` : ''}`);
     L.push('');
   }
   L.push('## Full-resolution fallbacks', '');
-  if (!imageStats.fallbacks.length) L.push('None — every image was fetched at its original (pre-/v1/) upload URL.');
-  for (const f of imageStats.fallbacks) L.push(`- ${f.fullResUrl} failed (${f.reason}); saved derivative ${f.usedUrl}`);
+  if (!imageStats.fallbacks.length)
+    L.push('None — every image was fetched at its original (pre-/v1/) upload URL.');
+  for (const f of imageStats.fallbacks)
+    L.push(`- ${f.fullResUrl} failed (${f.reason}); saved derivative ${f.usedUrl}`);
   L.push('');
   L.push('## 5 longest posts', '');
   for (const p of longest) L.push(`- ${p.w} words — ${p.t} (${p.s})`);
@@ -927,11 +1180,13 @@ async function writeReport(report, index, attempted) {
   L.push('## Things a rebuild needs to know', '');
   L.push(`### Posts with no body text (${noBody.length})`);
   if (!noBody.length) L.push('None.');
-  for (const r of noBody) L.push(`- ${r.slug} — ${r.title || '(no title)'} [bodySource=${r.bodySource || 'n/a'}]`);
+  for (const r of noBody)
+    L.push(`- ${r.slug} — ${r.title || '(no title)'} [bodySource=${r.bodySource || 'n/a'}]`);
   L.push('');
   L.push(`### Posts that are essentially just an embed (${embedOnly.length})`);
   if (!embedOnly.length) L.push('None.');
-  for (const r of embedOnly) L.push(`- ${r.slug} — ${r.wordCount} words, embeds: ${(r.embeds || []).join(', ')}`);
+  for (const r of embedOnly)
+    L.push(`- ${r.slug} — ${r.wordCount} words, embeds: ${(r.embeds || []).join(', ')}`);
   L.push('');
   L.push(`### Duplicate titles (${dupes.length})`);
   if (!dupes.length) L.push('None.');
@@ -940,14 +1195,20 @@ async function writeReport(report, index, attempted) {
   const noCover = recs.filter((r) => !r.coverImage);
   L.push(`### Posts with no cover image (${noCover.length})`);
   if (!noCover.length) L.push('None.');
-  for (const r of noCover) L.push(`- ${r.slug} — ${r.title} (verified: the live page emits no og:image and no hero <img>)`);
+  for (const r of noCover)
+    L.push(
+      `- ${r.slug} — ${r.title} (verified: the live page emits no og:image and no hero <img>)`,
+    );
   L.push('');
 
   const mediaEmbeds = [];
   for (const r of recs) for (const e of r.embeds || []) mediaEmbeds.push({ slug: r.slug, src: e });
   L.push(`### Embedded media NOT downloaded (${mediaEmbeds.length})`);
   if (!mediaEmbeds.length) L.push('None.');
-  else L.push('This capture downloads images only. These embed sources are recorded in the post JSON but the media files themselves are still only on Wix — fetch them before the site is torn down:');
+  else
+    L.push(
+      'This capture downloads images only. These embed sources are recorded in the post JSON but the media files themselves are still only on Wix — fetch them before the site is torn down:',
+    );
   for (const e of mediaEmbeds) L.push(`- ${e.slug} → ${e.src}`);
   L.push('');
 
@@ -956,12 +1217,23 @@ async function writeReport(report, index, attempted) {
   for (const r of newsletterish) L.push(`- ${r.slug} — ${r.title}`);
   L.push('');
   L.push('### Notes', '');
-  L.push('- Wix server-renders post bodies; the body was taken from the Ricos rich-content subtree (`data-hook="post-description"`), stripped of Wix wrapper divs/spans and presentational attributes.');
-  L.push('- Dates come from `<meta property="article:published_time">` (Wix emits a full ISO timestamp), cross-checked against JSON-LD `datePublished`.');
-  L.push('- Every image was requested at its original upload URL: everything before `/v1/` in the rendered Wix URL. Local files are named after the Wix media id.');
-  L.push('- `images/` is shared with the site-pages/team capture; existing non-zero files were left untouched.');
+  L.push(
+    '- Wix server-renders post bodies; the body was taken from the Ricos rich-content subtree (`data-hook="post-description"`), stripped of Wix wrapper divs/spans and presentational attributes.',
+  );
+  L.push(
+    '- Dates come from `<meta property="article:published_time">` (Wix emits a full ISO timestamp), cross-checked against JSON-LD `datePublished`.',
+  );
+  L.push(
+    '- Every image was requested at its original upload URL: everything before `/v1/` in the rendered Wix URL. Local files are named after the Wix media id.',
+  );
+  L.push(
+    '- `images/` is shared with the site-pages/team capture; existing non-zero files were left untouched.',
+  );
 
   await fs.writeFile(path.join(DATA_DIR, 'blog-capture-report.md'), L.join('\n'));
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

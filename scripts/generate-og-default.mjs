@@ -11,7 +11,7 @@ const root = resolve(__dirname, '..');
 
 const result = await renderOg({
   wordmark: 'First Baptist Church Muncie',
-  tagline: ['Your tagline goes here.'],
+  tagline: ["We're a Spirit-led people gathered to join Christ's presence in our community."],
   outPath: resolve(root, 'public/og-default.png'),
 });
 

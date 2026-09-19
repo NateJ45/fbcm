@@ -105,8 +105,17 @@ test('unknown _type gets null surface (treated as unknown, not content)', () => 
 // ── Phase B: rich section type classification ─────────────────────────────
 
 test('rich SELF_CONTAINED types get null surface', () => {
+  // 2026-09-18: this list was empty, so the loop below ran zero times and the
+  // test passed while asserting nothing. A scaffold removal took the phase-B
+  // self-contained types it named with it. Re-pointed at the self-contained
+  // types this repo STILL declares, which is what the test was for.
   const richSelf: string[] = [
+    'logoStripSection',
+    'teamSection',
+    'embedSection',
+    'dynamicListSection',
   ];
+  assert.ok(richSelf.length > 0, 'a list this test loops over must not be empty');
   for (const type of richSelf) {
     const rows = classifySections([block(type)]);
     assert.equal(rows[0].surface, null, `${type} should have null surface`);
@@ -114,10 +123,7 @@ test('rich SELF_CONTAINED types get null surface', () => {
 });
 
 test('rich CONTENT types get alternating surface', () => {
-  const richContent: string[] = [
-    'serviceAreaSection',
-    'guaranteeSection',
-  ];
+  const richContent: string[] = ['serviceAreaSection', 'guaranteeSection'];
   for (const type of richContent) {
     const rows = classifySections([block(type)]);
     assert.equal(rows[0].surface, 'background', `${type} should get background on first`);
@@ -143,10 +149,12 @@ test('rich self-contained types do not advance the cadence counter', () => {
 });
 
 test('every new rich type appears in SELF_CONTAINED_TYPES or CONTENT_TYPES', () => {
-  const all8: string[] = [
-    'serviceAreaSection',
-    'guaranteeSection',
-  ];
+  // 2026-09-18: was two names after a scaffold removal, which made "every new
+  // rich type" a claim about two of the fifteen. Now it is derived from the sets
+  // themselves, so a type added to neither set, or to both, fails here without
+  // anyone having to remember to edit a hand-maintained list.
+  const all8: string[] = [...SELF_CONTAINED_TYPES, ...CONTENT_TYPES];
+  assert.ok(all8.length > 0, 'a list this test loops over must not be empty');
   for (const type of all8) {
     const inSelf = SELF_CONTAINED_TYPES.has(type);
     const inContent = CONTENT_TYPES.has(type);
@@ -167,7 +175,6 @@ test('divider inserted between richTextSection and serviceAreaSection (different
 });
 
 // ── U7: new page-builder blocks — all SELF_CONTAINED ─────────────────────
-
 
 test('logoStripSection is SELF_CONTAINED (null surface)', () => {
   const rows = classifySections([block('logoStripSection')]);
@@ -197,11 +204,7 @@ test('U7 blocks do not advance the content cadence counter', () => {
 });
 
 test('every U7 type appears in SELF_CONTAINED_TYPES and not CONTENT_TYPES', () => {
-  const u7: string[] = [
-    'logoStripSection',
-    'teamSection',
-    'embedSection',
-  ];
+  const u7: string[] = ['logoStripSection', 'teamSection', 'embedSection'];
   for (const type of u7) {
     assert.ok(SELF_CONTAINED_TYPES.has(type), `${type} must be in SELF_CONTAINED_TYPES`);
     assert.ok(!CONTENT_TYPES.has(type), `${type} must not be in CONTENT_TYPES`);

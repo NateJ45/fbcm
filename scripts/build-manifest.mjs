@@ -9,25 +9,41 @@ import path from 'node:path';
 
 const DATA = path.join(import.meta.dirname, 'data');
 
-const sha256 = (file) => new Promise((res, rej) => {
-  const h = createHash('sha256');
-  createReadStream(file).on('data', (d) => h.update(d)).on('end', () => res(h.digest('hex'))).on('error', rej);
-});
+const sha256 = (file) =>
+  new Promise((res, rej) => {
+    const h = createHash('sha256');
+    createReadStream(file)
+      .on('data', (d) => h.update(d))
+      .on('end', () => res(h.digest('hex')))
+      .on('error', rej);
+  });
 
 // Source URLs come from whichever manifest recorded them, keyed by local filename.
 const sources = new Map();
 const noteSource = (localFile, url, label, foundOn) => {
   if (!localFile) return;
   const key = path.basename(localFile);
-  if (!sources.has(key)) sources.set(key, { url: url ?? null, label: label ?? null, foundOn: foundOn ?? null });
+  if (!sources.has(key))
+    sources.set(key, { url: url ?? null, label: label ?? null, foundOn: foundOn ?? null });
 };
 
-const readJson = async (p) => { try { return JSON.parse(await readFile(p, 'utf8')); } catch { return null; } };
+const readJson = async (p) => {
+  try {
+    return JSON.parse(await readFile(p, 'utf8'));
+  } catch {
+    return null;
+  }
+};
 const rows = (m) => (Array.isArray(m) ? m : m ? (m.files ?? m.images ?? Object.values(m)) : []);
 
 for (const name of ['images-manifest.json', 'files-manifest.json']) {
   for (const r of rows(await readJson(path.join(DATA, name)))) {
-    noteSource(r.localFile, r.fullResUrl ?? r.originalUrl ?? r.href ?? r.url, r.text ?? r.alt, r.foundOn);
+    noteSource(
+      r.localFile,
+      r.fullResUrl ?? r.originalUrl ?? r.href ?? r.url,
+      r.text ?? r.alt,
+      r.foundOn,
+    );
   }
 }
 // The post video was fetched by hand (it lives on video.wixstatic.com, not in the
@@ -52,7 +68,11 @@ for (const dir of ['posts']) {
 const out = [];
 for (const dir of ['images', 'files', 'video']) {
   let names;
-  try { names = await readdir(path.join(DATA, dir)); } catch { continue; }
+  try {
+    names = await readdir(path.join(DATA, dir));
+  } catch {
+    continue;
+  }
   for (const name of names.sort()) {
     const full = path.join(DATA, dir, name);
     const s = await stat(full);
@@ -72,20 +92,33 @@ for (const dir of ['images', 'files', 'video']) {
 const byDir = out.reduce((a, r) => {
   const d = r.path.split('/')[0];
   a[d] ??= { files: 0, bytes: 0 };
-  a[d].files++; a[d].bytes += r.bytes;
+  a[d].files++;
+  a[d].bytes += r.bytes;
   return a;
 }, {});
 
-await writeFile(path.join(DATA, 'binary-manifest.json'), JSON.stringify({
-  generatedAt: new Date().toISOString(),
-  source: 'https://www.fbcmuncie.org/ (Wix), captured before the Astro/Sanity rebuild',
-  totals: { files: out.length, bytes: out.reduce((n, r) => n + r.bytes, 0) },
-  byDirectory: byDir,
-  withoutSourceUrl: out.filter((r) => !r.sourceUrl).length,
-  files: out,
-}, null, 2) + '\n', 'utf8');
+await writeFile(
+  path.join(DATA, 'binary-manifest.json'),
+  JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      source: 'https://www.fbcmuncie.org/ (Wix), captured before the Astro/Sanity rebuild',
+      totals: { files: out.length, bytes: out.reduce((n, r) => n + r.bytes, 0) },
+      byDirectory: byDir,
+      withoutSourceUrl: out.filter((r) => !r.sourceUrl).length,
+      files: out,
+    },
+    null,
+    2,
+  ) + '\n',
+  'utf8',
+);
 
 console.log('files:', out.length);
-console.log('bytes:', out.reduce((n, r) => n + r.bytes, 0));
-for (const [d, v] of Object.entries(byDir)) console.log(`  ${d}: ${v.files} files, ${(v.bytes / 1e6).toFixed(1)} MB`);
+console.log(
+  'bytes:',
+  out.reduce((n, r) => n + r.bytes, 0),
+);
+for (const [d, v] of Object.entries(byDir))
+  console.log(`  ${d}: ${v.files} files, ${(v.bytes / 1e6).toFixed(1)} MB`);
 console.log('missing a source URL:', out.filter((r) => !r.sourceUrl).length);

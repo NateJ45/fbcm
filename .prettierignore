@@ -36,6 +36,15 @@ modules
 # Retired work, kept but not maintained. See archive/README.md.
 archive
 
+# The archival capture of the old Wix site: 340 JSON files that are EVIDENCE of
+# what that site served, byte for byte. Reformatting them would rewrite the
+# record. Added 2026-09-18.
+scripts/data/
+
+# Superpowers planning scratch: specs, plans and session notes, not source.
+# Added 2026-09-18.
+.superpowers/
+
 # Planning history and migration notes: prose archives, not maintained source.
 docs/superpowers
 
