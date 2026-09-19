@@ -657,6 +657,7 @@ export type HeritageBandSection = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: 'image';
   };
   cta?: CtaBlock;

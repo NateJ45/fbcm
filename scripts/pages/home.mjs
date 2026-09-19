@@ -1,0 +1,253 @@
+// scripts/pages/home.mjs
+//
+// The home page, composed exactly as section 5.1 of
+// docs/superpowers/specs/2026-09-19-fbcm-plan2-pages-design.md describes it:
+// eight bands that answer the four visitor questions (who, when, where, what
+// happens) before anybody has to scroll twice.
+//
+// Three things about this file are deliberate and worth knowing before editing.
+//
+// 1. NOTHING IS RETYPED FROM SITE SETTINGS. The service time, the street and
+//    the livestream address are read off the live siteSettings document and
+//    trimmed, never copied as literals (CLAUDE.md rule 15). If the church moves
+//    the service to 11:00 the hero follows on the next seed.
+//
+// 2. THE CHURCH'S OWN SENTENCES COME OUT OF THE WIX CAPTURE. The Sunday band's
+//    worship and livestream lines are from scripts/data/pages/home.txt; the
+//    first-Sunday band is read from scripts/data/pages/what-to-expect.txt
+//    through fromCapture(), which THROWS if an anchor phrase has moved. Only
+//    the sentences listed in `newCopy` are new, and every one of them goes into
+//    the church-approval note.
+//
+// 3. THE THREE-UP USES h3 LEADS, NOT BOLD LEADS. The spec asks for three
+//    paragraphs each opening with a bold lead. `paragraphs()` in
+//    scripts/lib/page-copy.mjs renders inline LINKS but has no bold mark, and
+//    extending it was out of scope for this task, so each door is a short h3
+//    heading above its sentence. The reading order and the three links are
+//    identical; only the weight of the lead differs.
+
+export default {
+  id: 'homePage',
+  type: 'homePage',
+  slug: 'home',
+
+  // Every sentence below that did not exist on the Wix site. The generated note
+  // (docs/superpowers/notes/2026-09-19-copy-for-church-approval.md) puts these
+  // in front of the church before launch.
+  newCopy: [
+    'A downtown church in Muncie, Indiana. (hero kicker)',
+    'Downtown, at the corner of Adams and Jefferson. (Sunday band, "Find us")',
+    'We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself. (three-up, What we believe)',
+    'Sunday school, music, youth, and work with partners across Muncie and beyond. (three-up, How we serve)',
+    'The congregation has met in downtown Muncie since 1859, and in this building since 1912. (three-up, Where we’ve been)',
+    'The tower, the oak pews and the stained glass have been in daily use for more than a century. (heritage band)',
+    'Gifts pay the staff, keep the building open and fund the work this church does in Muncie. (give band)',
+  ],
+
+  // Frames and bands with identifiable children in them, for the consent
+  // conversation. hero-children is the third hero frame.
+  photoConsent: ['hero-children'],
+
+  async build(ctx) {
+    const { images, copy, settings } = ctx;
+    const { paragraphs, heading, fromCapture, ctaInternal, ctaExternal, ctaAnchor, keyer } = copy;
+
+    if (!settings) {
+      throw new Error(
+        'home.mjs: siteSettings is not available. The home page reads the service time, ' +
+          'street and livestream address from it rather than retyping them.',
+      );
+    }
+
+    // ── Facts, derived from settings ────────────────────────────────────────
+    // "Sundays at 10:45 am" -> "10:45 am"; the address's first line is the
+    // street. Both are computed, so neither can drift from Site settings.
+    const serviceTime = String(settings.serviceTime ?? '')
+      .replace(/^Sundays at /i, '')
+      .trim();
+    const streetLine = String(settings.address ?? '')
+      .split(/\r?\n/)[0]
+      .trim();
+
+    // ── Hero frames ─────────────────────────────────────────────────────────
+    // Tower first because it loads first and it is the frame the church is
+    // known by; then the sanctuary, the children at the arch, the congregation
+    // and the building corner. Each manifest entry already carries its alt.
+    const frameKey = keyer('frame');
+    const frames = [];
+    for (const key of [
+      'hero-tower',
+      'hero-sanctuary',
+      'hero-children',
+      'hero-congregation',
+      'hero-building',
+    ]) {
+      const img = await images.image(key);
+      if (!img) throw new Error(`home.mjs: no photo in the manifest for "${key}"`);
+      frames.push({ ...img, _key: frameKey() });
+    }
+
+    const sanctuary = await images.image('hero-sanctuary');
+    const tower = await images.image('hero-tower');
+
+    // ── The first-Sunday body ───────────────────────────────────────────────
+    // The church's own arrival paragraphs, verbatim, minus the line that was
+    // only a button label on Wix ("click below" pointed at a button that does
+    // not exist here).
+    const arrival = fromCapture('what-to-expect', {
+      from: 'Welcome and Check-In',
+      to: 'Sunday School',
+      keyPrefix: 'wte-a',
+    }).filter((b) => !blockText(b).includes('click below'));
+
+    // And their own sentence about care during the service. The spec's
+    // suggested "Worship" anchor matches "Children's Worship Arts" first (the
+    // capture uses that phrase higher up the page), so it returns the
+    // fellowship HEADINGS rather than prose; the anchor is the nursery heading
+    // instead. Same section of the same page, still verbatim.
+    const duringTheService = fromCapture('what-to-expect', {
+      from: 'Nursery Care (104)',
+      to: 'Family Room (105)',
+      keyPrefix: 'wte-b',
+    });
+
+    return {
+      pageBuilder: [
+        // 1. Hero. Five frames cross-fade; the headline is plain because
+        //    heroSection carries no accent field (see src/components/Hero.astro
+        //    and the heroSection schema in sections.ts).
+        {
+          _type: 'heroSection',
+          _key: 'home-hero',
+          layout: 'full',
+          size: 'tall',
+          eyebrow: 'A downtown church in Muncie, Indiana',
+          headline: 'Praise and proclaim.',
+          subhead: settings.tagline,
+          frames,
+          facts: [
+            { _type: 'heroFact', _key: 'fact-1', label: 'Sundays', value: serviceTime },
+            { _type: 'heroFact', _key: 'fact-2', label: 'Where', value: streetLine },
+            { _type: 'heroFact', _key: 'fact-3', label: 'Online', value: 'Live on YouTube' },
+          ],
+          primaryCta: ctaInternal('Plan a visit', 'visit'),
+          secondaryCta: ctaExternal('Watch online', settings.livestreamUrl),
+        },
+
+        // 2. When we gather. The worship and livestream sentences are the
+        //    church's own, off the Wix home page.
+        {
+          _type: 'sundayTimesSection',
+          _key: 'home-sundays',
+          eyebrow: 'Sundays',
+          heading: 'When we gather',
+          items: [
+            {
+              _type: 'timeItem',
+              _key: 'time-1',
+              label: 'Worship',
+              big: serviceTime,
+              body: 'Worship is at 10:45 AM each Sunday.',
+            },
+            {
+              _type: 'timeItem',
+              _key: 'time-2',
+              label: 'Find us',
+              big: '309 East Adams',
+              body: 'Downtown, at the corner of Adams and Jefferson.',
+            },
+            {
+              _type: 'timeItem',
+              _key: 'time-3',
+              label: "Can't be there?",
+              big: 'Online',
+              body: 'For live streams, please visit our YouTube channel.',
+            },
+          ],
+          // Doors and parking belong on the Visit page, which carries all three
+          // entrances. Here the map and the address are enough.
+          showMap: true,
+        },
+
+        // 3. What a first Sunday is like. Their words, their sanctuary.
+        {
+          _type: 'imageTextSection',
+          _key: 'home-first-sunday',
+          image: sanctuary,
+          imageSide: 'right',
+          eyebrow: 'Your first Sunday',
+          heading: 'What a first Sunday is like',
+          body: [...arrival, ...duringTheService],
+          cta: ctaInternal('Plan a visit', 'visit'),
+        },
+
+        // 4. Three doors into the site: beliefs, ministries, history.
+        {
+          _type: 'richTextSection',
+          _key: 'home-three-up',
+          eyebrow: 'First Baptist Muncie',
+          heading: 'A Baptist church in the heart of downtown since 1859.',
+          width: 'normal',
+          align: 'left',
+          body: [
+            heading('What we believe', 3, 'door-1h'),
+            ...paragraphs(
+              'We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself. [Our beliefs](/beliefs)',
+              'door-1p',
+            ),
+            heading('How we serve', 3, 'door-2h'),
+            ...paragraphs(
+              'Sunday school, music, youth, and work with partners across Muncie and beyond. [Ministries](/ministries)',
+              'door-2p',
+            ),
+            heading('Where we’ve been', 3, 'door-3h'),
+            ...paragraphs(
+              'The congregation has met in downtown Muncie since 1859, and in this building since 1912. [Our history](/history)',
+              'door-3p',
+            ),
+          ],
+        },
+
+        // 5. The building, on brown, with the tower.
+        {
+          _type: 'heritageBandSection',
+          _key: 'home-heritage',
+          eyebrow: 'The building',
+          heading: 'Limestone, oak and glass',
+          body: 'The tower, the oak pews and the stained glass have been in daily use for more than a century.',
+          image: tower,
+          cta: ctaAnchor("The building's story", '/history#building'),
+        },
+
+        // 6. The three most recent posts. `columns` is left unset so the block
+        //    takes its schema default.
+        {
+          _type: 'dynamicListSection',
+          _key: 'home-blog',
+          headline: 'From the blog',
+          source: 'journal',
+          limit: 3,
+          cta: ctaAnchor('All posts', '/blog'),
+        },
+
+        // 7. Give. buttonLabel and buttonUrl are left to their schema defaults,
+        //    so the button says "Give through Church Center" and points at the
+        //    giving address in Site settings.
+        {
+          _type: 'giveBandSection',
+          _key: 'home-give',
+          heading: 'Support the work of this church',
+          body: 'Gifts pay the staff, keep the building open and fund the work this church does in Muncie.',
+        },
+      ],
+
+      seoTitle: 'First Baptist Church Muncie | Sundays 10:45 am, downtown Muncie',
+      seoDescription: `${settings.tagline} 309 East Adams Street, Muncie, Indiana.`,
+    };
+  },
+};
+
+/** The plain text of one portable-text block, for filtering. */
+function blockText(block) {
+  return (block.children ?? []).map((c) => c.text ?? '').join('');
+}

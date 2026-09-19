@@ -92,6 +92,7 @@ const FIELD_HELPERS = {
   headingAccentField: ['headingAccent'],
   columnsField: ['columns'],
   publishAtField: ['publishAt'],
+  anchorField: ['anchor'],
   seoFields: ['seoPreview', 'seoTitle', 'seoDescription', 'seoImage', 'hideFromSearch'],
 };
 
@@ -139,9 +140,33 @@ const schemaFiles = () => readdirSync(SCHEMA_DIR).filter((f) => f.endsWith('.ts'
 
 // ── Read the schema ────────────────────────────────────────────────────────
 
+/**
+ * Module-level shared field constants in one schema file:
+ * `const eyebrow = defineField({ name: 'eyebrow', ... })`, spread into several
+ * types by bare identifier. Returns identifier -> field name.
+ *
+ * Without this the parser only sees the `name:` literal where the CONST is
+ * declared, which is outside every `defineType(` slice, so every type using the
+ * shared field looks as though it never declared it and every document storing
+ * it is reported as "Remove field" bait. A shared const is the same idea as a
+ * helper call (FIELD_HELPERS above), just written without the parentheses.
+ */
+function sharedFieldConsts(src) {
+  const map = new Map();
+  for (const m of src.matchAll(
+    /const\s+([A-Za-z0-9_]+)\s*=\s*defineField\(\{[\s\S]{0,400}?name:\s*'([A-Za-z0-9_]+)'/g,
+  )) {
+    map.set(m[1], m[2]);
+  }
+  return map;
+}
+
 /** Every declared field name inside one block of schema source. */
-function fieldNames(body) {
+function fieldNames(body, shared = new Map()) {
   const names = new Set([...body.matchAll(/name:\s*'([A-Za-z0-9_]+)'/g)].map((m) => m[1]));
+  for (const [ident, field] of shared) {
+    if (new RegExp(`(^|[^A-Za-z0-9_.])${ident}\\s*,`).test(body)) names.add(field);
+  }
   for (const [helper, arg] of Object.entries(FIELD_HELPERS)) {
     if (arg === 'first-arg') {
       const re = new RegExp(`${helper}\\(\\s*'([A-Za-z0-9_]+)'`, 'g');
@@ -160,24 +185,25 @@ function readSchema() {
 
   for (const file of schemaFiles()) {
     const src = readFileSync(resolve(SCHEMA_DIR, file), 'utf8');
+    const shared = sharedFieldConsts(src);
 
     // Top-level document and object types.
     const starts = [...src.matchAll(/defineType\(\{\s*\n?\s*name:\s*'([A-Za-z0-9_]+)'/g)];
     starts.forEach((m, i) => {
       const end = i + 1 < starts.length ? starts[i + 1].index : src.length;
-      add(m[1], fieldNames(src.slice(m.index, end)));
+      add(m[1], fieldNames(src.slice(m.index, end), shared));
     });
 
     // Inline object members inside arrays, which are real types with real keys.
     for (const m of src.matchAll(
       /defineArrayMember\(\{[\s\S]{0,200}?type:\s*'object',[\s\S]{0,200}?name:\s*'([A-Za-z0-9_]+)'/g,
     )) {
-      add(m[1], fieldNames(src.slice(m.index, m.index + 3000)));
+      add(m[1], fieldNames(src.slice(m.index, m.index + 3000), shared));
     }
     for (const m of src.matchAll(
       /defineArrayMember\(\{[\s\S]{0,200}?name:\s*'([A-Za-z0-9_]+)',[\s\S]{0,200}?type:\s*'object'/g,
     )) {
-      add(m[1], fieldNames(src.slice(m.index, m.index + 3000)));
+      add(m[1], fieldNames(src.slice(m.index, m.index + 3000), shared));
     }
   }
   return types;

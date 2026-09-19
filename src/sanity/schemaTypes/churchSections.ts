@@ -314,6 +314,18 @@ export const heritageBandSection = defineType({
       type: 'image',
       options: { hotspot: true },
       description: 'A photo of the building or the glass.',
+      // SanityImage.astro reads `source.alt` for every image it draws, so this
+      // block always intended to carry alt text; the field was simply never
+      // declared. Without it the Studio renders a stored alt as "Unknown field
+      // found" with a REMOVE FIELD button beside it (CLAUDE.md rule 1).
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+          description: 'Describe the photo in a few words, for screen readers and search engines.',
+        }),
+      ],
     }),
     defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
     anchorField(),
