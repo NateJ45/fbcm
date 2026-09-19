@@ -1,0 +1,170 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: the staff grid. Three cards across, each a 4:5 portrait under
+// a 2px gold top rule, the name in the serif, the role in brown-mid and the email as
+// a real mailto link, because the commonest reason anyone opens a staff page is to
+// write to one person.
+//
+// Every card carries the person's slug as its id, so /staff#pastor-name lands on the
+// card. When the block is set to "Everyone" the three groups are drawn in
+// STAFF_GROUPS order with a serif subhead each, and an empty group is skipped rather
+// than left as a heading over nothing.
+//
+// The bio is a native <details>, so it costs no JavaScript and the keyboard works.
+//
+// A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
+import SectionHeading from '@/components/SectionHeading.astro';
+import SanityImage from '@/components/SanityImage.astro';
+import PortableText from '@/components/PortableText';
+import { surfaceClass } from '@/lib/surfaces';
+import { groupStaff, STAFF_GROUPS, type StaffGroup } from '@/lib/church-derive';
+import { plain } from '@/lib/nav-href';
+
+interface StaffMember {
+  _id?: string;
+  name: string;
+  slug?: string;
+  role?: string;
+  email?: string;
+  phone?: string;
+  group?: string | null;
+  order?: number | null;
+  bio?: any;
+  photo?: any;
+}
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  group?: string;
+  showBios?: boolean;
+  members?: StaffMember[];
+  surface?: 'background' | 'muted';
+  headingId: string;
+}
+
+const {
+  eyebrow,
+  heading,
+  group = 'all',
+  showBios,
+  members = [],
+  surface = 'background',
+  headingId,
+} = Astro.props as Props;
+
+const bg = surfaceClass(surface);
+
+// The Studio's own words for each group, so the page and the editor agree.
+const GROUP_LABELS: Record<StaffGroup, string> = {
+  pastors: 'Pastors',
+  coordination: 'Church Coordination Team',
+  support: 'Support and volunteer roles',
+};
+
+const named = members.filter((m) => m?.name);
+const grouped = groupStaff(named);
+
+// "Everyone" draws all three groups with a subhead each; any other choice draws one
+// unlabelled run of cards, because the section heading has already said who they are.
+const showGroups = group === 'all';
+const shown: { key: StaffGroup; label: string; people: StaffMember[] }[] = showGroups
+  ? STAFF_GROUPS.map((g) => ({ key: g, label: GROUP_LABELS[g], people: grouped[g] })).filter(
+      (g) => g.people.length > 0,
+    )
+  : [{ key: 'support' as StaffGroup, label: '', people: named }];
+
+// Names arrive stega-encoded in the Studio preview, and the payload is written in
+// characters that a regex reads as whitespace, so splitting a raw name on whitespace
+// shatters it into dozens of fake words. plain() strips the payload first.
+const firstName = (name: string) => plain(name).split(/\s+/)[0] || plain(name);
+
+// Group subheads are h3, so a card name under one is h4; with no subheads the card
+// name is the h3 directly beneath the section's h2. Heading order is never skipped.
+const NameTag = showGroups ? 'h4' : 'h3';
+---
+
+<section class={bg} aria-labelledby={heading ? headingId : undefined}>
+  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+    <SectionHeading
+      eyebrow={eyebrow}
+      headline={heading}
+      headingId={headingId}
+      level="h2"
+      align="left"
+      tone="church"
+      rule
+    />
+
+    {
+      shown.map((section) => (
+        <div class="mt-section-md">
+          {section.label && (
+            <h3 class="font-display text-h3 leading-tight text-foreground">{section.label}</h3>
+          )}
+
+          <div
+            class:list={[
+              'grid grid-cols-1 gap-l sm:grid-cols-2 md:grid-cols-3',
+              section.label ? 'mt-l' : '',
+            ]}
+            data-stagger-grid
+          >
+            {section.people.map((person) => (
+              <article id={person.slug || undefined} class="scroll-mt-28">
+                {person.photo?.asset ? (
+                  <div class="aspect-[4/5] w-full overflow-hidden border-t-2 border-gold">
+                    <SanityImage
+                      source={person.photo}
+                      width={480}
+                      sizes="(min-width: 768px) 30vw, (min-width: 640px) 45vw, 100vw"
+                      quality={78}
+                      class="h-full w-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div
+                    class="aspect-[4/5] w-full border-t-2 border-gold bg-surface-soft"
+                    aria-hidden="true"
+                  />
+                )}
+
+                <NameTag class="mt-m font-display text-xl leading-snug text-foreground">
+                  {person.name}
+                </NameTag>
+
+                {person.role && (
+                  <p class="mt-xs text-sm text-brown-mid dark:text-gold">{person.role}</p>
+                )}
+
+                {person.email && (
+                  <a
+                    href={`mailto:${person.email}`}
+                    class="mt-xs inline-block text-sm text-link underline-offset-4 hover:underline"
+                  >
+                    {person.email}
+                  </a>
+                )}
+
+                {person.phone && <p class="mt-xs text-sm text-foreground/75">{person.phone}</p>}
+
+                {showBios !== false && person.bio && (
+                  <details class="group mt-s">
+                    <summary class="cursor-pointer list-none text-xs font-semibold tracking-eyebrow text-brown-mid uppercase underline-offset-4 hover:underline dark:text-gold [&::-webkit-details-marker]:hidden">
+                      About {firstName(person.name)}
+                    </summary>
+                    <PortableText
+                      value={person.bio}
+                      className="mt-s text-[0.9375rem] leading-relaxed text-foreground/85"
+                    />
+                  </details>
+                )}
+              </article>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

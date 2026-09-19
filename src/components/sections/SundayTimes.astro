@@ -1,0 +1,175 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: Sunday times and location. Three columns carry the facts a
+// first-time visitor needs (time, length, what to wear), then a location band pairs
+// the map from Site settings with the doors and parking notes. SELF_CONTAINED: it
+// paints its own paper surface, because the church blocks are light or dark BY TYPE
+// (see SELF_CONTAINED_TYPES in src/lib/sectionCadence.ts).
+//
+// The map, the address and the directions link all come from Site settings, so the
+// church types them once. When the editor turns the map off, or no map picture has
+// been uploaded yet, the left cell becomes a cream address card rather than an empty
+// box: the address is the one thing this band must never fail to show.
+import SectionHeading from '@/components/SectionHeading.astro';
+import SanityImage from '@/components/SanityImage.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import { getSiteSettings } from '@/lib/queries';
+import { site } from '@/data/site';
+
+interface TimeItem {
+  _key?: string;
+  label?: string;
+  big?: string;
+  body?: string;
+}
+
+interface Door {
+  _key?: string;
+  name?: string;
+  body?: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  items?: TimeItem[];
+  doors?: Door[];
+  showMap?: boolean;
+  headingId: string;
+}
+
+const { eyebrow, heading, items = [], doors = [], showMap, headingId } = Astro.props as Props;
+
+// getSiteSettings() memoises its promise (src/lib/queries.ts), so a page carrying
+// this block and the give band still makes exactly one request for the settings.
+const settings = await getSiteSettings();
+const mapImage = settings?.mapImage;
+const directionsUrl: string | undefined = settings?.directionsUrl ?? undefined;
+const showTheMap = showMap !== false && !!mapImage?.asset;
+
+// The address card's lines. `address` is a plain string in Site settings and may
+// hold more than one line; the city/state pair comes from Business info through the
+// same flattened settings object. Both are optional, so the card falls back to the
+// church's own name and never renders empty.
+const addressLines: string[] = [
+  ...(typeof settings?.address === 'string' ? settings.address.split('\n') : []),
+  [settings?.city, settings?.state].filter(Boolean).join(', '),
+]
+  .map((line) => line.trim())
+  .filter(Boolean);
+
+const validItems = items.filter((i) => i?.label || i?.big || i?.body);
+const validDoors = doors.filter((d) => d?.name || d?.body);
+
+const directionsCta = directionsUrl
+  ? {
+      label: 'Open in Google Maps',
+      linkType: 'external' as const,
+      externalUrl: directionsUrl,
+      openInNewTab: true,
+    }
+  : null;
+---
+
+<section class="bg-background" aria-labelledby={heading ? headingId : undefined}>
+  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+    <SectionHeading
+      eyebrow={eyebrow}
+      headline={heading}
+      headingId={headingId}
+      level="h2"
+      align="left"
+      tone="church"
+      rule
+    />
+
+    {
+      validItems.length > 0 && (
+        <dl class="mt-section-md grid grid-cols-1 gap-l md:grid-cols-3 md:gap-section-md">
+          {validItems.map((item) => (
+            <div>
+              {item.label && (
+                <dt class="text-xs font-semibold tracking-eyebrow text-brown-mid uppercase dark:text-gold">
+                  {item.label}
+                </dt>
+              )}
+              <dd class="mt-s">
+                {item.big && (
+                  <p class="font-display text-[2.5rem] leading-none text-foreground">{item.big}</p>
+                )}
+                {item.body && (
+                  <p class="mt-s text-[0.9375rem] leading-relaxed text-foreground/85">
+                    {item.body}
+                  </p>
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    <div class="mt-section-md grid grid-cols-1 gap-l md:grid-cols-2 md:gap-section-md">
+      <div>
+        {
+          showTheMap ? (
+            <SanityImage
+              source={mapImage}
+              width={720}
+              sizes="(min-width: 768px) 45vw, 100vw"
+              quality={75}
+              alt="Map of the streets around the church"
+              class="h-auto w-full border-t-2 border-gold"
+            />
+          ) : (
+            <div class="border-t-2 border-gold bg-surface-soft p-l">
+              <p class="font-display text-xl text-foreground">{settings?.title ?? site.name}</p>
+              {addressLines.map((line) => (
+                <p class="mt-xs text-[0.9375rem] leading-relaxed text-foreground/85">{line}</p>
+              ))}
+            </div>
+          )
+        }
+
+        {
+          directionsCta && (
+            <div class="mt-m">
+              <CtaLink cta={directionsCta} variant="outline" />
+            </div>
+          )
+        }
+      </div>
+
+      {
+        validDoors.length > 0 && (
+          <ol class="space-y-l" role="list">
+            {validDoors.map((door, i) => (
+              <li class="flex gap-m">
+                {/* bg-indigo + text-cream is the one pair that INVERTS together:
+                    globals.css flips indigo to paper and cream to ink in dark
+                    mode, so the disc reads in both themes without a variant. */}
+                <span
+                  aria-hidden="true"
+                  class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo text-sm font-semibold text-cream"
+                >
+                  {i + 1}
+                </span>
+                <div>
+                  {door.name && (
+                    <h3 class="font-display text-xl leading-snug text-foreground">{door.name}</h3>
+                  )}
+                  {door.body && (
+                    <p class="mt-xs text-[0.9375rem] leading-relaxed text-foreground/85">
+                      {door.body}
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        )
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,79 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: questions and answers on the indigo field. Native <details>
+// elements, so the keyboard works, find-in-page finds a closed answer, and no
+// JavaScript ships. The first question opens by default so the band never reads as
+// a stack of closed doors.
+//
+// SELF_CONTAINED: the band is dark by type. Everything on it uses text-bg rather
+// than text-cream, because --color-cream flips to ink under .dark while --color-bg
+// stays paper-white in both themes, and this band stays dark in both.
+//
+// THE ANSWER'S COLOUR IS AN OVERRIDE, and it has to be. PortableText.tsx hard-codes
+// text-foreground on every paragraph, list and list item, which is right on paper
+// and invisible on this band: in light mode text-foreground is the dark ink the band
+// is already painted with, so the answers rendered as blank space. Passing a colour
+// on the wrapper does not help, because the class on the <p> beats the class on its
+// parent. The arbitrary descendant variants below ([&_p]:...) generate
+// `.wrapper p { ... }`, which outranks a single class, so they win without anyone
+// having to edit the shared PortableText component and re-render every other page.
+import SectionHeading from '@/components/SectionHeading.astro';
+import PortableText from '@/components/PortableText';
+
+interface FaqItem {
+  _key?: string;
+  question?: string;
+  answer?: any;
+}
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  items?: FaqItem[];
+  headingId: string;
+}
+
+const { eyebrow, heading, items = [], headingId } = Astro.props as Props;
+const validItems = items.filter((i) => i?.question);
+---
+
+<section class="bg-indigo-field" aria-labelledby={heading ? headingId : undefined}>
+  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+    <SectionHeading
+      eyebrow={eyebrow}
+      headline={heading}
+      headingId={headingId}
+      level="h2"
+      align="left"
+      tone="band"
+      rule
+    />
+
+    {
+      validItems.length > 0 && (
+        <div class="mt-section-md border-t border-taupe/25">
+          {validItems.map((item, i) => (
+            <details class="group border-b border-taupe/25" open={i === 0}>
+              <summary class="flex cursor-pointer list-none items-start justify-between gap-m py-m font-display text-[1.1875rem] leading-snug text-bg [&::-webkit-details-marker]:hidden">
+                <span>{item.question}</span>
+                <span
+                  aria-hidden="true"
+                  class="mt-1 shrink-0 text-lg leading-none text-gold transition-transform duration-200 group-open:rotate-45"
+                >
+                  +
+                </span>
+              </summary>
+              {item.answer && (
+                <PortableText
+                  value={item.answer}
+                  className="pb-m text-[0.9375rem] leading-relaxed text-bg/85 [&_a]:text-gold [&_li]:text-bg/85 [&_p]:text-bg/85 [&_strong]:text-bg [&_ul]:text-bg/85"
+                />
+              )}
+            </details>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

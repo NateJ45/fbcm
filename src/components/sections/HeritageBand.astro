@@ -1,0 +1,69 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: the brown band. The second of the two darks, reserved for the
+// history and the building: text on the left across seven columns, the photograph on
+// the right across five, carrying the 2px gold top rule every contained picture on
+// this site carries. On a phone the picture stacks under the words.
+//
+// SELF_CONTAINED: brown in both themes (globals.css does not move the browns), so
+// the ink on it is text-bg, which is paper-white in both themes, rather than
+// text-cream, which flips to ink under .dark.
+import SectionHeading from '@/components/SectionHeading.astro';
+import SanityImage from '@/components/SanityImage.astro';
+import CtaLink from '@/components/CtaLink.astro';
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  image?: any;
+  cta?: any;
+  headingId: string;
+}
+
+const { eyebrow, heading, body, image, cta, headingId } = Astro.props as Props;
+---
+
+<section class="bg-brown" aria-labelledby={heading ? headingId : undefined}>
+  <div
+    class="mx-auto grid max-w-content grid-cols-1 items-center gap-l px-m py-section-lg md:grid-cols-12 md:gap-section-md"
+    data-reveal
+  >
+    <div class="md:col-span-7">
+      <SectionHeading
+        eyebrow={eyebrow}
+        headline={heading}
+        headingId={headingId}
+        level="h2"
+        align="left"
+        tone="band"
+        rule
+      />
+
+      {body && <p class="mt-m text-lg leading-relaxed text-bg/85">{body}</p>}
+
+      {
+        cta?.label && (
+          <div class="mt-l">
+            <CtaLink cta={cta} variant="outline" onDark />
+          </div>
+        )
+      }
+    </div>
+
+    {
+      image?.asset && (
+        <div class="md:col-span-5">
+          <SanityImage
+            source={image}
+            width={720}
+            sizes="(min-width: 768px) 40vw, 100vw"
+            quality={75}
+            class="h-auto w-full border-t-2 border-gold"
+          />
+        </div>
+      )
+    }
+  </div>
+</section>

@@ -1,0 +1,70 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: the giving band on the indigo field. Seven columns of words
+// and one gold button; the right five columns are empty ON PURPOSE, because the
+// band's job is to be quiet and unmissable at once, and a second object in it would
+// give the eye somewhere else to go.
+//
+// The button goes to the block's own link when the editor typed one, and otherwise
+// to the giving address in Site settings, so the church can move its giving page in
+// one place. Church Center is somebody else's site, so the link opens in a new tab.
+//
+// SELF_CONTAINED: dark by type, and the ink on it is text-bg (paper-white in both
+// themes) rather than text-cream (which flips to ink under .dark).
+import SectionHeading from '@/components/SectionHeading.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import { getSiteSettings } from '@/lib/queries';
+
+interface Props {
+  heading?: string;
+  body?: string;
+  buttonLabel?: string;
+  buttonUrl?: string;
+  headingId: string;
+}
+
+const { heading, body, buttonLabel, buttonUrl, headingId } = Astro.props as Props;
+
+const settings = await getSiteSettings();
+const href: string | undefined = buttonUrl || settings?.givingUrl || undefined;
+
+const giveCta = href
+  ? {
+      label: buttonLabel || 'Give through Church Center',
+      linkType: 'external' as const,
+      externalUrl: href,
+      openInNewTab: true,
+    }
+  : null;
+---
+
+<section class="bg-indigo-field" aria-labelledby={heading ? headingId : undefined}>
+  <div
+    class="mx-auto grid max-w-content grid-cols-1 gap-l px-m py-section-lg md:grid-cols-12 md:gap-section-md"
+    data-reveal
+  >
+    <div class="md:col-span-7">
+      <SectionHeading
+        headline={heading}
+        headingId={headingId}
+        level="h2"
+        align="left"
+        tone="band"
+        rule
+      />
+
+      {body && <p class="mt-m text-lg leading-relaxed text-bg/85">{body}</p>}
+
+      {
+        giveCta && (
+          <div class="mt-l">
+            <CtaLink cta={giveCta} variant="gold" onDark />
+          </div>
+        )
+      }
+    </div>
+
+    {/* The right five columns stay empty. See the note at the top of this file. */}
+  </div>
+</section>

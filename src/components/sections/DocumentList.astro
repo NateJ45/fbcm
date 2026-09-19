@@ -1,0 +1,98 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: documents to download. Newsletters, annual reports, the
+// constitution. Each row is a gold top rule, a serif title that is the link, the
+// year in small caps and an optional note, which is the plainest thing that can
+// carry a list somebody scans for one year and then leaves.
+//
+// Rows are sorted newest first by sortDocsByYearDesc() in church-derive.ts (undated
+// rows last, ties by title), so the order is derived, never typed twice. A row
+// pointing at an uploaded file gets the `download` attribute; a row pointing at
+// somebody else's page must not, because you cannot download a website.
+//
+// A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
+import SectionHeading from '@/components/SectionHeading.astro';
+import { surfaceClass } from '@/lib/surfaces';
+import { sortDocsByYearDesc } from '@/lib/church-derive';
+
+interface ListedDocument {
+  _key?: string;
+  title?: string | null;
+  year?: number | null;
+  fileUrl?: string | null;
+  url?: string | null;
+  note?: string | null;
+}
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  docs?: ListedDocument[];
+  surface?: 'background' | 'muted';
+  headingId: string;
+}
+
+const { eyebrow, heading, docs = [], surface = 'background', headingId } = Astro.props as Props;
+const bg = surfaceClass(surface);
+
+// sortDocsByYearDesc needs a title on every row, so rows without one are dropped
+// first: a document nobody can name is not a row a visitor can use.
+const sorted = sortDocsByYearDesc(
+  docs.filter((d): d is ListedDocument & { title: string } => !!d?.title),
+);
+---
+
+<section class={bg} aria-labelledby={heading ? headingId : undefined}>
+  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+    <SectionHeading
+      eyebrow={eyebrow}
+      headline={heading}
+      headingId={headingId}
+      level="h2"
+      align="left"
+      tone="church"
+      rule
+    />
+
+    {
+      sorted.length > 0 && (
+        <ul class="mt-section-md" role="list">
+          {sorted.map((doc) => {
+            const href = doc.fileUrl || doc.url;
+            const isFile = !!doc.fileUrl;
+            return (
+              <li class="border-t-2 border-gold py-m">
+                <div class="flex flex-wrap items-baseline justify-between gap-s">
+                  {href ? (
+                    <a
+                      href={href}
+                      download={isFile ? true : undefined}
+                      target={isFile ? undefined : '_blank'}
+                      rel={isFile ? undefined : 'noopener noreferrer'}
+                      class="font-display text-[1.125rem] leading-snug text-foreground underline-offset-4 hover:underline"
+                    >
+                      {doc.title}
+                    </a>
+                  ) : (
+                    <p class="font-display text-[1.125rem] leading-snug text-foreground">
+                      {doc.title}
+                    </p>
+                  )}
+
+                  {typeof doc.year === 'number' && (
+                    <span class="text-xs font-semibold tracking-eyebrow text-brown-mid uppercase dark:text-gold">
+                      {doc.year}
+                    </span>
+                  )}
+                </div>
+
+                {doc.note && <p class="mt-xs text-sm text-foreground/75">{doc.note}</p>}
+              </li>
+            );
+          })}
+        </ul>
+      )
+    }
+  </div>
+</section>

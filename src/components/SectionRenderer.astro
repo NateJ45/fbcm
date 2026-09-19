@@ -23,6 +23,16 @@ import LogoStrip from '@/components/sections/LogoStrip.astro';
 import TeamGrid from '@/components/sections/TeamGrid.astro';
 import EmbedSection from '@/components/sections/EmbedSection.astro';
 import DynamicList from '@/components/sections/DynamicList.astro';
+// scaffold: church
+import SundayTimes from '@/components/sections/SundayTimes.astro';
+import Timeline from '@/components/sections/Timeline.astro';
+import StaffGrid from '@/components/sections/StaffGrid.astro';
+import FaqBand from '@/components/sections/FaqBand.astro';
+import ScriptureBand from '@/components/sections/ScriptureBand.astro';
+import HeritageBand from '@/components/sections/HeritageBand.astro';
+import GiveBand from '@/components/sections/GiveBand.astro';
+import DocumentList from '@/components/sections/DocumentList.astro';
+// scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
 import type { PageBuilderBlock } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
@@ -177,7 +187,73 @@ const wrapAttrs = (key: string | undefined) =>
             heightHint={s.heightHint ?? 'medium'}
             headingId={headingId}
           />
-        ) : s._type === 'dynamicListSection' ? (
+        ) : /* scaffold: church */ s._type === 'sundayTimesSection' ? (
+          <SundayTimes
+            eyebrow={s.eyebrow}
+            heading={s.heading}
+            items={s.items ?? []}
+            doors={s.doors ?? []}
+            showMap={s.showMap}
+            headingId={headingId}
+          />
+        ) : s._type === 'timelineSection' ? (
+          <Timeline
+            eyebrow={s.eyebrow}
+            heading={s.heading}
+            rows={s.rows ?? []}
+            surface={surface ?? 'background'}
+            headingId={headingId}
+          />
+        ) : s._type === 'staffGridSection' ? (
+          <StaffGrid
+            eyebrow={s.eyebrow}
+            heading={s.heading}
+            group={s.group}
+            showBios={s.showBios}
+            members={s.members ?? []}
+            surface={surface ?? 'background'}
+            headingId={headingId}
+          />
+        ) : s._type === 'faqSection' ? (
+          <FaqBand
+            eyebrow={s.eyebrow}
+            heading={s.heading}
+            items={s.items ?? []}
+            headingId={headingId}
+          />
+        ) : s._type === 'scriptureBandSection' ? (
+          <ScriptureBand
+            verse={s.verse}
+            reference={s.reference}
+            accentWord={s.accentWord}
+            headingId={headingId}
+          />
+        ) : s._type === 'heritageBandSection' ? (
+          <HeritageBand
+            eyebrow={s.eyebrow}
+            heading={s.heading}
+            body={s.body}
+            image={s.image}
+            cta={s.cta}
+            headingId={headingId}
+          />
+        ) : s._type === 'giveBandSection' ? (
+          <GiveBand
+            heading={s.heading}
+            body={s.body}
+            buttonLabel={s.buttonLabel}
+            buttonUrl={s.buttonUrl}
+            headingId={headingId}
+          />
+        ) : s._type === 'documentListSection' ? (
+          <DocumentList
+            eyebrow={s.eyebrow}
+            heading={s.heading}
+            docs={s.docs ?? []}
+            surface={surface ?? 'background'}
+            headingId={headingId}
+          />
+        ) : /* scaffold:end */ s._type === 'dynamicListSection' ? (
           <DynamicList
             eyebrow={s.eyebrow}
             headline={s.headline}
