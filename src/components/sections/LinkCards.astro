@@ -1,0 +1,117 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: two to four short cards, each a door into another part
+// of the site. The spec asks for a "three-up" on Home (5.1 item 4) and again
+// on Who We Are (5.3 item 7), and before this block existed the only way to
+// draw one was a richTextSection with three h3 leads, which renders as a
+// stacked list, not a row.
+//
+// Three decisions worth keeping.
+//
+// 1. THE CTA IS A TEXT LINK, NEVER A BUTTON. A row of four cards each with a
+//    button is four buttons competing with the page's real calls to action.
+//    CLAUDE.md rule 17 says buttons come from one family and the page picks
+//    where they go: here that is the hero and the closing band. The card's
+//    link goes through CtaLink's `link` variant so ctaBlock href resolution
+//    still lives in exactly one file.
+//
+// 2. THE COLUMN COUNT COMES FROM THE CARD COUNT. Two cards make two columns,
+//    four make four. The classes are written out as literals in COLUMNS below
+//    rather than built from a variable, because Tailwind's scanner reads
+//    SOURCE TEXT: `lg:grid-cols-${n}` generates no CSS at all and the grid
+//    would quietly render as one column at every width.
+//
+// 3. THE CARD GROUND IS THE OPPOSITE OF THE SECTION GROUND. The cadence
+//    (src/lib/sectionCadence.ts) hands this block `background` or `muted`, and
+//    a card painted the same colour as the band it sits on is not a card. On
+//    the page ground the cards take the soft surface; on the soft ground they
+//    take the page surface. Both pairs are measured in
+//    src/lib/surfaces.test.ts.
+//
+// A CONTENT block: the alternating surface arrives as a prop from
+// SectionRenderer.
+import SectionHeading from '@/components/SectionHeading.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import { surfaceClass } from '@/lib/surfaces';
+import type { ProjectedLinkCard } from '@/lib/pageBuilder.types';
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  cards?: ProjectedLinkCard[];
+  surface?: 'background' | 'muted';
+  headingId: string;
+}
+
+const {
+  eyebrow,
+  heading,
+  intro,
+  cards = [],
+  surface = 'background',
+  headingId,
+} = Astro.props as Props;
+
+const bg = surfaceClass(surface);
+
+// A card with no title is a card nobody can read, so it never renders.
+const shown = cards.filter((c) => c?.title);
+
+// Written out, never interpolated: see note 2 in the header. Keys are the card
+// counts the schema allows (min 2, max 4); anything outside that falls back to
+// three, which is the shape the spec asks for on both pages that use this.
+const COLUMNS: Record<number, string> = {
+  2: 'sm:grid-cols-2',
+  3: 'sm:grid-cols-2 lg:grid-cols-3',
+  4: 'sm:grid-cols-2 lg:grid-cols-4',
+};
+const colClass = COLUMNS[shown.length] ?? COLUMNS[3];
+
+// See note 3. surfaceClass() is not used for the card, because `card` in that
+// registry is the starter's raised white panel and this design wants the
+// church's own two grounds trading places.
+const cardBg = surface === 'muted' ? 'bg-background' : 'bg-surface-soft';
+---
+
+{
+  shown.length > 0 && (
+    <section class={bg} aria-labelledby={heading ? headingId : undefined}>
+      <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+        <SectionHeading
+          eyebrow={eyebrow}
+          headline={heading}
+          subhead={intro}
+          headingId={headingId}
+          level="h2"
+          align="left"
+          tone="church"
+          rule
+        />
+
+        <div class:list={['mt-section-md grid grid-cols-1 gap-l', colClass]} data-stagger-grid>
+          {shown.map((card) => (
+            <article
+              class:list={['card-lift flex h-full flex-col border-t-2 border-gold p-m', cardBg]}
+            >
+              <h3 class="font-display text-h4 leading-snug text-foreground">{card.title}</h3>
+
+              {card.body && (
+                <p class="mt-s text-[0.9375rem] leading-relaxed text-muted-foreground">
+                  {card.body}
+                </p>
+              )}
+
+              {card.cta?.label && (
+                <p class="mt-auto pt-m">
+                  <CtaLink cta={card.cta} variant="link" />
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -55,6 +55,7 @@ export const CONTENT_TYPES = new Set([
   'timelineSection',
   'staffGridSection',
   'documentListSection',
+  'linkCardsSection',
   // scaffold:end
 ]);
 

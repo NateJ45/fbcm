@@ -41,9 +41,9 @@ import CtaLink from '@/components/CtaLink.astro';
 import { site } from '@/data/site';
 import { surfaceClass } from '@/lib/surfaces';
 // scaffold: church
-// The eight church blocks (Task 6), fixtured with real church content so a
-// pixel diff here means the design moved, not the content. See the fixture
-// data block below for why each value is what it is.
+// The church blocks (Task 6, plus link cards from task 5b), fixtured with real
+// church content so a pixel diff here means the design moved, not the content.
+// See the fixture data block below for why each value is what it is.
 import SundayTimes from '@/components/sections/SundayTimes.astro';
 import Timeline from '@/components/sections/Timeline.astro';
 import StaffGrid from '@/components/sections/StaffGrid.astro';
@@ -52,6 +52,7 @@ import ScriptureBand from '@/components/sections/ScriptureBand.astro';
 import HeritageBand from '@/components/sections/HeritageBand.astro';
 import GiveBand from '@/components/sections/GiveBand.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
+import LinkCards from '@/components/sections/LinkCards.astro';
 // scaffold:end
 // Task 7: temporary hero fixtures (frames, layout, facts). No hero with frames
 // exists in the dataset yet (plan 2b seeds one) so these two calls are the
@@ -374,6 +375,57 @@ const DOCUMENT_LIST_FIXTURE = {
     { _key: 'doc-3', title: 'Constitution and bylaws', note: 'Governing documents' },
   ],
 };
+
+// Three cards, because three is the shape both pages that use this block ask
+// for (spec 5.1 item 4 and 5.3 item 7) and the one where the lg:grid-cols-3
+// branch is what gets shot. The links point at the three pages the Home band
+// really points at, written as same-site paths rather than references: the
+// styleguide never reads Sanity, so a reference here would resolve to nothing.
+const LINK_CARDS_FIXTURE = {
+  eyebrow: 'First Baptist Muncie',
+  heading: 'A Baptist church in the heart of downtown since 1859.',
+  cards: [
+    {
+      _key: 'lc-1',
+      _type: 'linkCard' as const,
+      title: 'What we believe',
+      body: 'We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself.',
+      cta: {
+        label: 'Our beliefs',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/beliefs',
+        openInNewTab: false,
+      },
+    },
+    {
+      _key: 'lc-2',
+      _type: 'linkCard' as const,
+      title: 'How we serve',
+      body: 'Sunday school, music, youth, and work with partners across Muncie and beyond.',
+      cta: {
+        label: 'Ministries',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/ministries',
+        openInNewTab: false,
+      },
+    },
+    {
+      _key: 'lc-3',
+      _type: 'linkCard' as const,
+      title: 'Where we’ve been',
+      body: 'The congregation has met in downtown Muncie since 1859, and in this building since 1929.',
+      cta: {
+        label: 'Our history',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/history',
+        openInNewTab: false,
+      },
+    },
+  ],
+};
 // scaffold:end
 ---
 
@@ -627,6 +679,14 @@ const DOCUMENT_LIST_FIXTURE = {
     docs={DOCUMENT_LIST_FIXTURE.docs}
     surface="muted"
     headingId="styleguide-documentlist"
+  />
+
+  <LinkCards
+    eyebrow={LINK_CARDS_FIXTURE.eyebrow}
+    heading={LINK_CARDS_FIXTURE.heading}
+    cards={LINK_CARDS_FIXTURE.cards}
+    surface="background"
+    headingId="styleguide-linkcards"
   />
   {/* scaffold:end */}
 </BaseLayout>

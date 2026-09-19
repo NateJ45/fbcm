@@ -124,6 +124,9 @@ export type SectionPreset = {
       } & DocumentListSection)
     | ({
         _key: string;
+      } & LinkCardsSection)
+    | ({
+        _key: string;
       } & TeamSection)
     | ({
         _key: string;
@@ -622,6 +625,21 @@ export type TeamSection = {
   }>;
 };
 
+export type LinkCardsSection = {
+  _type: 'linkCardsSection';
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  cards?: Array<{
+    title?: string;
+    body?: string;
+    cta?: CtaBlock;
+    _type: 'linkCard';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
 export type DocumentListSection = {
   _type: 'documentListSection';
   eyebrow?: string;
@@ -1118,6 +1136,9 @@ export type Page = {
     | ({
         _key: string;
       } & DocumentListSection)
+    | ({
+        _key: string;
+      } & LinkCardsSection)
   >;
   addToMainNav?: boolean;
   navGroup?: 'top' | 'services' | 'resources';
@@ -1494,6 +1515,9 @@ export type HomePage = {
       } & DocumentListSection)
     | ({
         _key: string;
+      } & LinkCardsSection)
+    | ({
+        _key: string;
       } & TeamSection)
     | ({
         _key: string;
@@ -1644,6 +1668,7 @@ export type AllSanitySchemaTypes =
   | NavLink
   | DynamicListSection
   | TeamSection
+  | LinkCardsSection
   | DocumentListSection
   | GiveBandSection
   | HeritageBandSection

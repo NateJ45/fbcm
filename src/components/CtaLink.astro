@@ -16,6 +16,12 @@
 //     label on it clears AA either way.
 //   - "outline" — indigo outline on light; under onDark, a white outline,
 //     which is what the indigo and brown bands ask for.
+//   - "link" — NOT a button. A plain text link in --link with the shared
+//     nav-underline hover, for a place where a row of buttons would be four
+//     buttons shouting at once (the link-cards band). Added 2026-09-19 so that
+//     ctaBlock href resolution stays in ONE file: a component drawing its own
+//     <a> would have had to re-implement resolveHref() below, and the second
+//     copy is the one that forgets /post/<slug>.
 //   - `onDark` toggle — for CTAs sitting over a dark surface (hero image
 //     overlay, a fixed indigo or brown band). Passing a `class` override to
 //     recolor does not work: Tailwind v4 generates utilities alphabetically, so
@@ -52,7 +58,7 @@ interface Props {
    * deprecated aliases for them (see the header): kept so old callers compile,
    * not a separate look.
    */
-  variant?: 'primary' | 'secondary' | 'gold' | 'outline';
+  variant?: 'primary' | 'secondary' | 'gold' | 'outline' | 'link';
   /** When true, swap variant colors for legibility on a dark surface. */
   onDark?: boolean;
   /** Fallback href if the CTA can't be resolved (e.g., siteSettings hasn't been populated). */
@@ -122,6 +128,13 @@ const newTab = cta?.openInNewTab ?? isExternal;
 
 // Focus ring offset uses --background by default, but under onDark we offset
 // against transparent so the ring still reads on the photographic surface.
+// The text-link look shares nothing with the button base: no pill padding, no
+// uppercase tracking, no 44px floor (WCAG 2.5.8 exempts a link in a block of
+// text, and this one sits at the foot of a card's prose).
+const linkClasses = onDark
+  ? 'nav-underline inline-block text-sm font-semibold text-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+  : 'nav-underline inline-block text-sm font-semibold text-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+
 const baseClasses = onDark
   ? 'press-tactile inline-flex items-center justify-center min-h-[44px] px-l py-s text-xs font-semibold uppercase tracking-[0.18em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
   : 'press-tactile inline-flex items-center justify-center min-h-[44px] px-l py-s text-xs font-semibold uppercase tracking-[0.18em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
@@ -148,7 +161,9 @@ const variantClasses = (() => {
 
 <a
   href={href}
-  class:list={[baseClasses, variantClasses, extraClass]}
+  class:list={resolved === 'link'
+    ? [linkClasses, extraClass]
+    : [baseClasses, variantClasses, extraClass]}
   target={newTab ? '_blank' : undefined}
   rel={newTab ? 'noopener noreferrer' : undefined}
 >

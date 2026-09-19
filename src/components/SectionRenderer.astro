@@ -32,6 +32,7 @@ import ScriptureBand from '@/components/sections/ScriptureBand.astro';
 import HeritageBand from '@/components/sections/HeritageBand.astro';
 import GiveBand from '@/components/sections/GiveBand.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
+import LinkCards from '@/components/sections/LinkCards.astro';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
 import type { PageBuilderBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
@@ -314,6 +315,15 @@ const wrapAttrs = (key: string | undefined) =>
             eyebrow={s.eyebrow}
             heading={s.heading}
             docs={s.docs ?? []}
+            surface={surface ?? 'background'}
+            headingId={headingId}
+          />
+        ) : s._type === 'linkCardsSection' ? (
+          <LinkCards
+            eyebrow={s.eyebrow}
+            heading={s.heading}
+            intro={s.intro}
+            cards={s.cards ?? []}
             surface={surface ?? 'background'}
             headingId={headingId}
           />

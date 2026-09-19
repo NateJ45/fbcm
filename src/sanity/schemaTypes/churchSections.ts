@@ -1,5 +1,5 @@
 // scaffold: church
-// The eight blocks a church page needs and a service business does not. Every
+// The nine blocks a church page needs and a service business does not. Every
 // description says what to TYPE. No block carries a colour field: the dark bands
 // (sundayTimes is cream, faq/scripture/give are indigo, heritage is brown) are dark
 // by TYPE, which is what keeps SectionRenderer's cadence the only source of surface.
@@ -434,6 +434,67 @@ export const documentListSection = defineType({
   },
 });
 
+export const linkCardsSection = defineType({
+  name: 'linkCardsSection',
+  title: 'Link cards',
+  type: 'object',
+  description:
+    'Two to four short cards, each a door into another part of the site. Use it for the "here are the three things you probably came for" band.',
+  fields: [
+    eyebrow,
+    heading,
+    defineField({
+      name: 'intro',
+      title: 'Intro',
+      type: 'text',
+      rows: 2,
+      description: 'One or two sentences under the heading. Leave blank for none.',
+    }),
+    defineField({
+      name: 'cards',
+      title: 'Cards',
+      type: 'array',
+      validation: (r) => r.min(2).max(4),
+      description:
+        'Two, three or four. The grid draws exactly as many columns as there are cards, so three cards is a row of three.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'linkCard',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+              description: 'A few words, like "What we believe".',
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'body',
+              title: 'Text',
+              type: 'text',
+              rows: 3,
+              description: 'One sentence. The card is a door, not the room.',
+            }),
+            defineField({
+              name: 'cta',
+              title: 'Link',
+              type: 'ctaBlock',
+              description: 'Where the card goes. It draws as a text link, never a button.',
+            }),
+          ],
+          preview: { select: { title: 'title', subtitle: 'body' } },
+        }),
+      ],
+    }),
+    anchorField(),
+  ],
+  preview: {
+    select: { title: 'heading' },
+    prepare: ({ title }) => ({ title: title || 'Link cards', subtitle: 'Link cards' }),
+  },
+});
+
 export const CHURCH_SECTION_TYPES = [
   sundayTimesSection,
   timelineSection,
@@ -443,5 +504,6 @@ export const CHURCH_SECTION_TYPES = [
   heritageBandSection,
   giveBandSection,
   documentListSection,
+  linkCardsSection,
 ];
 // scaffold:end

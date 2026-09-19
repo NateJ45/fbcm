@@ -34,6 +34,7 @@ import type {
   HeritageBandSection as _HeritageBandSection,
   GiveBandSection as _GiveBandSection,
   DocumentListSection as _DocumentListSection,
+  LinkCardsSection as _LinkCardsSection,
   // scaffold:end
   // U7 new blocks — hand-authored below since typegen has not run yet
   // FaqSection, LogoStripSection, TeamSection, EmbedSection — not imported from
@@ -366,6 +367,16 @@ export type ProjectedListedDocument = Omit<
   fileUrl?: string | null;
 };
 
+/** One link card after its ctaBlock is resolved by CTA_PROJECTION. */
+export type ProjectedLinkCard = Omit<NonNullable<_LinkCardsSection['cards']>[number], 'cta'> & {
+  cta?: ProjectedCtaBlock | null;
+};
+
+/** linkCardsSection — two to four doors into the rest of the site. */
+export type ProjectedLinkCardsSection = { _key: string } & Omit<_LinkCardsSection, 'cards'> & {
+    cards?: ProjectedLinkCard[];
+  };
+
 /** documentListSection — the yearly downloads list. */
 export type ProjectedDocumentListSection = { _key: string } & Omit<_DocumentListSection, 'docs'> & {
     docs?: ProjectedListedDocument[];
@@ -400,7 +411,8 @@ export type PageBuilderBlock =
   | ProjectedScriptureBandSection
   | ProjectedHeritageBandSection
   | ProjectedGiveBandSection
-  | ProjectedDocumentListSection;
+  | ProjectedDocumentListSection
+  | ProjectedLinkCardsSection;
 // scaffold:end
 
 // ---------------------------------------------------------------------------

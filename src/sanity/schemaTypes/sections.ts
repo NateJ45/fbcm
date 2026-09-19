@@ -705,6 +705,7 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
         'heritageBandSection',
         'giveBandSection',
         'documentListSection',
+        'linkCardsSection',
       ],
     },
     // scaffold:end

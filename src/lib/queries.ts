@@ -97,7 +97,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       )
     },
     // scaffold: church
-    // The eight church blocks. Most of them are flat objects that the leading
+    // The nine church blocks. Most of them are flat objects that the leading
     // spread already carries whole; the four arms that do real work are staffGrid
     // (which reaches OUT to the staffMember collection), timeline (slug ->
     // string), heritage (image + cta) and documentList (file asset -> url).
@@ -153,6 +153,18 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       docs[]{
         ...,
         "fileUrl": file.asset->url
+      }
+    },
+    // Each card owns a ctaBlock, so the reference inside it has to be resolved
+    // the same way the hero's buttons are. The leading spread would hand the
+    // component a bare _ref and the card's link would fall back to /contact.
+    _type == "linkCardsSection" => {
+      ...,
+      cards[]{
+        _key,
+        title,
+        body,
+        cta${CTA_PROJECTION}
       }
     }
     // scaffold:end
