@@ -51,14 +51,6 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       ...,
       images[]${IMAGE_PROJECTION}
     },
-    _type == "serviceAreaSection" => {
-      ...,
-      "travelFees": *[_type == "businessInfo"][0].travelFees
-    },
-    _type == "guaranteeSection" => {
-      ...,
-      "siteSettingsText": *[_type == "siteSettings"][0].satisfactionGuarantee
-    },
     _type == "logoStripSection" => {
       ...,
       logos[]${IMAGE_PROJECTION}
@@ -107,11 +99,16 @@ export function sectionsProjection(field = 'pageBuilder'): string {
 }
 
 // ---- Site settings (used in BaseLayout / Header / Footer) -----------------
-// availabilityStatus, serviceAreas, travelFees, city, state, serviceRegion,
-// geoLat, and geoLng moved to the businessInfo singleton. Pulled in here under
-// the same flat field names so Header / Footer / pages that read
-// siteSettings.serviceAreas etc. keep working with no change; only the source
+// city, state, serviceRegion, geoLat, and geoLng live on the businessInfo
+// singleton. Pulled in here under the same flat field names so pages that read
+// siteSettings.geoLat etc. keep working with no change; only the source
 // document changed.
+//
+// 2026-09-19: serviceTime, serviceLength, officeHours, pastoralHours and the
+// Church Center / Church Trac / YouTube / giving / form addresses live at the
+// TOP LEVEL of siteSettings (Studio tab "Church details", group: 'church').
+// They are not nested under a "church" key in the data, only grouped in the
+// Studio UI.
 
 // One menu link (schemaTypes/navLink.ts), as every menu needs it: the label,
 // the hand-typed address that older items still carry, and the picked page
@@ -137,10 +134,6 @@ export const SITE_SETTINGS_PROJECTION = `{
     tagline,
     email,
     phone,
-    businessType,
-    "availabilityStatus": *[_type == "businessInfo"][0].availabilityStatus,
-    "serviceAreas": *[_type == "businessInfo"][0].serviceAreas,
-    "travelFees": *[_type == "businessInfo"][0].travelFees,
     "geoLat": *[_type == "businessInfo"][0].geoLat,
     "geoLng": *[_type == "businessInfo"][0].geoLng,
     "city": *[_type == "businessInfo"][0].city,
@@ -157,10 +150,22 @@ export const SITE_SETTINGS_PROJECTION = `{
     footerCredit,
     footerCreditUrl,
     newsletter,
-    googleBusinessUrl,
-    reviewsNote,
-    satisfactionGuarantee,
     logo${IMAGE_PROJECTION},
+    // Church details (Studio tab "Church details"). Top-level fields, only
+    // grouped together in the Studio UI.
+    serviceTime,
+    serviceLength,
+    officeHours,
+    pastoralHours,
+    churchCenterUrl,
+    givingUrl,
+    churchTracUrl,
+    youtubeUrl,
+    livestreamUrl,
+    visitorFormUrl,
+    lifeEventFormUrl,
+    mapImage${IMAGE_PROJECTION},
+    directionsUrl,
     // Optional editor-managed menus. Empty arrays mean "use the built-in defaults."
     navItems[]{
       ${NAV_LINK_FIELDS},
@@ -177,16 +182,7 @@ export const SITE_SETTINGS_PROJECTION = `{
     showSocials,
     showFooterSocials,
     sectionVisibility{
-      showPortfolio,
-      showJournal,
-      showShop,
-      showEDesign,
-      showGiftCertificates,
-      showPress,
-      showResources,
-      showGuides,
-      showStyleQuiz,
-      showBudgetCalculator
+      showJournal
     }
   }`;
 
@@ -200,7 +196,7 @@ export async function getSiteSettings() {
   return _siteSettingsPromise;
 }
 
-// ---- Business info (service areas, travel, availability, geo) -------------
+// ---- Business info (location + geo) ----------------------------------------
 // Most consumers read these through getSiteSettings (flat names), but pages
 // or blocks that need businessInfo directly can use this.
 export async function getBusinessInfo() {
@@ -210,9 +206,6 @@ export async function getBusinessInfo() {
     city,
     state,
     serviceRegion,
-    serviceAreas,
-    travelFees,
-    availabilityStatus,
     geoLat,
     geoLng,
     additionalLocations[]{

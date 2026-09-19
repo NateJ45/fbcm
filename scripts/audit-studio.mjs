@@ -472,7 +472,7 @@ section('7. Prices typed into prose');
 {
   // The fields ALLOWED to hold money, because they are the source of it. A fork
   // adds its own structured price fields here.
-  const STRUCTURED = new Set(['price', 'priceNumeric', 'fee', 'travelFees', 'amount']);
+  const STRUCTURED = new Set(['price', 'priceNumeric', 'fee', 'amount']);
   const docs = await client.fetch(`*[!(_type match "sanity.*") && !(_type match "system.*")]`);
   const MONEY = /\$[\d,]+/g;
   const lines = [];

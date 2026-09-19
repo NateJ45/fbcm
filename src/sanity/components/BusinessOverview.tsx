@@ -5,9 +5,12 @@
 //
 // 2026-09-18: the services block (a "Your services and prices" live panel
 // querying the `service` schema) was removed along with the `services`
-// scaffold capability. This panel still does real work for the two things
-// that survived: siteSettings (contact, availability, service areas, travel
-// fees) and studioNotes (who you are, your ideal client, your voice).
+// scaffold capability.
+// 2026-09-19: availability, service areas and travel fees were removed along
+// with the siteSettings fields the church rebuild forked away from (see
+// siteSettings.ts "Church details"). This panel still does real work for the
+// two things that survived: siteSettings (contact) and studioNotes (who you
+// are, your ideal client, your voice).
 
 import React, { useEffect, useState } from 'react';
 import { useClient } from 'sanity';
@@ -15,24 +18,16 @@ import { Box, Card, Container, Heading, Stack, Text } from '@sanity/ui';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-interface TravelFeeTier {
-  distanceLabel: string;
-  fee: string;
-}
-
 interface SiteSettingsData {
   email: string | null;
   phone: string | null;
-  availabilityStatus: string | null;
-  serviceAreas: string[] | null;
-  travelFees: TravelFeeTier[] | null;
   socialInstagram: string | null;
   socialFacebook: string | null;
 }
 
 // ─── Fetch ───────────────────────────────────────────────────────────────────
 
-const SETTINGS_QUERY = `*[_type=="siteSettings"][0]{email,phone,availabilityStatus,serviceAreas,travelFees,socialInstagram,socialFacebook}`;
+const SETTINGS_QUERY = `*[_type=="siteSettings"][0]{email,phone,socialInstagram,socialFacebook}`;
 
 interface NotesData {
   businessSummary: string | null;
@@ -119,7 +114,7 @@ export default function BusinessOverview() {
         <Card padding={4} radius={2} shadow={1} tone="default">
           <Stack space={4}>
             <Heading as="h2" size={1}>
-              Contact, availability, and service areas (live)
+              Contact (live)
             </Heading>
 
             {/* Loading */}
@@ -131,17 +126,6 @@ export default function BusinessOverview() {
             {/* Data */}
             {settings !== null && (
               <Stack space={3}>
-                {settings.availabilityStatus ? (
-                  <Box>
-                    <Text size={1} weight="semibold">
-                      Availability
-                    </Text>
-                    <Box marginTop={1}>
-                      <Text size={1}>{settings.availabilityStatus}</Text>
-                    </Box>
-                  </Box>
-                ) : null}
-
                 {settings.email ? (
                   <Box>
                     <Text size={1} weight="semibold">
@@ -182,34 +166,6 @@ export default function BusinessOverview() {
                     </Text>
                     <Box marginTop={1}>
                       <Text size={1}>{settings.socialFacebook}</Text>
-                    </Box>
-                  </Box>
-                ) : null}
-
-                {settings.serviceAreas && settings.serviceAreas.length > 0 ? (
-                  <Box>
-                    <Text size={1} weight="semibold">
-                      Service areas
-                    </Text>
-                    <Box marginTop={1}>
-                      <Text size={1}>{settings.serviceAreas.join(', ')}</Text>
-                    </Box>
-                  </Box>
-                ) : null}
-
-                {settings.travelFees && settings.travelFees.length > 0 ? (
-                  <Box>
-                    <Text size={1} weight="semibold">
-                      Travel fee tiers
-                    </Text>
-                    <Box marginTop={1}>
-                      <Stack space={1}>
-                        {settings.travelFees.map((tier, i) => (
-                          <Text key={i} size={1}>
-                            {tier.distanceLabel}: {tier.fee}
-                          </Text>
-                        ))}
-                      </Stack>
                     </Box>
                   </Box>
                 ) : null}

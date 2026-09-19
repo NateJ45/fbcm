@@ -41,9 +41,6 @@ export const CONTENT_TYPES = new Set([
   'gallerySection',
   'quoteSection',
   'videoSection',
-  // Rich section types — phase B
-  'serviceAreaSection',
-  'guaranteeSection',
 ]);
 
 export interface SectionBlock {

@@ -22,8 +22,6 @@ import {
   DocumentTextIcon,
   BulbOutlineIcon,
   OlistIcon,
-  PinIcon,
-  CheckmarkCircleIcon,
   UsersIcon,
   HelpCircleIcon,
   SyncIcon,
@@ -95,73 +93,6 @@ const proseBody = (name = 'body', title = 'Text') =>
       }),
     ],
   });
-
-// ── 7. serviceAreaSection ────────────────────────────────────────────────────
-// Two-column service area info + optional travel fee table (from businessInfo).
-// Participates in alternating surface cadence (CONTENT) — receives surface prop.
-export const serviceAreaSection = defineType({
-  name: 'serviceAreaSection',
-  title: 'Service area',
-  type: 'object',
-  icon: PinIcon,
-  fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
-    defineField({
-      name: 'headline',
-      title: 'Headline',
-      type: 'string',
-      validation: (R) => R.required(),
-    }),
-    defineField({
-      name: 'description',
-      title: 'Description',
-      type: 'text',
-      rows: 3,
-      description: 'Lead paragraph about the primary service area.',
-    }),
-    defineField({
-      name: 'showTravelFees',
-      title: 'Show travel fee tiers',
-      type: 'boolean',
-      initialValue: true,
-      description:
-        'When on, the travel fee tier table from Business Info is pulled in automatically. Turn off to show the heading and description only.',
-    }),
-  ],
-  preview: {
-    select: { title: 'headline' },
-    prepare: ({ title }) => ({ title: title || 'Service area', subtitle: 'Service area' }),
-  },
-});
-
-// ── 8. guaranteeSection ──────────────────────────────────────────────────────
-// Trust/guarantee statement rendered as a styled callout band.
-// Two sources: editor can write text inline, or leave blank to pull
-// siteSettings.satisfactionGuarantee at render time.
-// Participates in alternating surface cadence (CONTENT) — receives surface prop.
-export const guaranteeSection = defineType({
-  name: 'guaranteeSection',
-  title: 'Guarantee / trust statement',
-  type: 'object',
-  icon: CheckmarkCircleIcon,
-  fields: [
-    defineField({
-      name: 'text',
-      title: 'Statement text (optional)',
-      type: 'text',
-      rows: 2,
-      description:
-        'The guarantee or trust statement. Leave blank to use the default text from Site Settings.',
-    }),
-  ],
-  preview: {
-    select: { title: 'text' },
-    prepare: ({ title }) => ({
-      title: title ? `"${String(title).slice(0, 60)}"` : 'Guarantee (from Site Settings)',
-      subtitle: 'Guarantee / trust statement',
-    }),
-  },
-});
 
 // ── 10. teamSection ─────────────────────────────────────────────────────────
 // Inline team member grid. Members are stored as inline objects rather than
@@ -345,12 +276,7 @@ export const dynamicListSection = defineType({
 
 // ── Exports ──────────────────────────────────────────────────────────────────
 
-export const richSectionSchemas = [
-  serviceAreaSection,
-  guaranteeSection,
-  teamSection,
-  dynamicListSection,
-];
+export const richSectionSchemas = [teamSection, dynamicListSection];
 
 export const RICH_SECTION_TYPES = richSectionSchemas.map((s) => ({ type: s.name }));
 
@@ -375,10 +301,6 @@ export const ABOUT_SECTION_TYPES = [
   { type: 'dynamicListSection' },
 ];
 
-export const SERVICES_SECTION_TYPES = [
-  ...SECTION_TYPES,
-  { type: 'serviceAreaSection' },
-  { type: 'guaranteeSection' },
-];
+export const SERVICES_SECTION_TYPES = [...SECTION_TYPES];
 
 export const PROCESS_SECTION_TYPES = [...SECTION_TYPES];

@@ -267,7 +267,7 @@ export const contactPage = defineType({
       title: 'Availability note override',
       type: 'string',
       group: 'scheduling',
-      description: 'Optional override of siteSettings.availabilityStatus. Usually leave blank.',
+      description: 'Optional note shown near the form. Usually leave blank.',
     }),
 
     defineField({

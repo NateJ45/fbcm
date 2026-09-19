@@ -41,13 +41,7 @@ export const PAGE_BUILDER_TYPES = new Set<string>(Object.keys(SECTION_HOST_TYPES
  * richSections.ts. A name that drifts off the list only costs a false "worth a
  * look", never a wrong page.
  */
-const SELF_FILLING_SECTIONS = [
-  'dynamicListSection',
-  'guaranteeSection',
-  'logoStripSection',
-  'serviceAreaSection',
-  'spacerSection',
-];
+const SELF_FILLING_SECTIONS = ['dynamicListSection', 'logoStripSection', 'spacerSection'];
 
 export const PAGE_CHECK_CONFIG: PageCheckConfig = {
   // Both builder arrays, in the order they render. A page singleton that has

@@ -79,9 +79,7 @@ const SITE =
   env.PUBLIC_SITE_URL ?? env.SITE_URL ?? (brand.domain ? `https://www.${brand.domain}` : '');
 
 const [settings, services, steps, faqs, projects, journal, guides] = await Promise.all([
-  client
-    .fetch(`*[_type=="siteSettings"][0]{ email, phone, serviceAreas, availabilityStatus }`)
-    .catch(() => null),
+  client.fetch(`*[_type=="siteSettings"][0]{ email, phone }`).catch(() => null),
   client
     .fetch(
       `*[_type=="service"]|order(orderRank){ name, price, shortDescription, features, bestFor }`,
@@ -176,13 +174,10 @@ if (Array.isArray(faqs) && faqs.length) {
 }
 
 if (settings) {
-  p('## Service area and contact');
+  p('## Contact');
   p('');
-  if (Array.isArray(settings.serviceAreas) && settings.serviceAreas.length)
-    p(`- Serving: ${settings.serviceAreas.join(', ')}`);
   if (settings.email) p(`- Email: ${settings.email}`);
   if (settings.phone) p(`- Phone: ${settings.phone}`);
-  if (settings.availabilityStatus) p(`- Availability: ${settings.availabilityStatus}`);
   p('');
 }
 

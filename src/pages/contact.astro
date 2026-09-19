@@ -40,12 +40,9 @@ const questionProps = questions.length > 0 ? { customFields: questions } : {};
 const schedulingLink = page?.schedulingLink;
 const schedulingLinkLabel = page?.schedulingLinkLabel ?? 'Schedule a 20-minute discovery call.';
 
-const availability = page?.availabilityNote ?? siteSettings?.availabilityStatus;
+const availability = page?.availabilityNote;
 const email = siteSettings?.email;
 const phone = siteSettings?.phone;
-
-// Satisfaction guarantee — renders near the form CTA when set in siteSettings.
-const satisfactionGuarantee = siteSettings?.satisfactionGuarantee;
 
 // Post-inquiry roadmap — prefer the structured steps when present;
 // fall through to the legacy whatToExpectContent when the array is empty.
@@ -78,18 +75,6 @@ const schemas = [
     {/* Form column */}
     <div class="lg:col-span-2">
       {formIntroNote && <p class="mb-m text-base text-foreground/80">{formIntroNote}</p>}
-
-      {
-        /* Satisfaction guarantee line — renders above the form when set in
-          siteSettings so it reassures visitors before they fill anything in. */
-      }
-      {
-        satisfactionGuarantee && (
-          <p class="mb-m flex items-start gap-xs border-l-2 border-primary py-px pl-s text-sm text-foreground/80">
-            {satisfactionGuarantee}
-          </p>
-        )
-      }
 
       <ContactForm
         client:visible
@@ -226,19 +211,6 @@ const schemas = [
             >
               {schedulingLinkLabel}
             </a>
-          </div>
-        )
-      }
-
-      {
-        siteSettings?.serviceAreas && siteSettings.serviceAreas.length > 0 && (
-          <div>
-            <p class="mb-xs text-xs tracking-widest text-foreground/80 uppercase">Service area</p>
-            <ul class="space-y-0.5 text-sm text-foreground">
-              {siteSettings.serviceAreas.slice(0, 8).map((area: string) => (
-                <li>{area}</li>
-              ))}
-            </ul>
           </div>
         )
       }

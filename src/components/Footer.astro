@@ -13,17 +13,15 @@
 //   2. Optional newsletter signup (only when siteSettings.newsletter.enabled)
 //   3. Compact brand bar: logo + tagline side by side (one short row, not a
 //      tall stacked block) so the footer stays roughly half its old height.
-//   4. Five-column link grid: Studio / Work / Free tools / Latest projects /
-//      Get in touch (email, phone, location, socials).
+//   4. Link grid: Journal (when visible) / Get in touch (email, phone,
+//      location, socials). Editor-managed footerColumns replace the built-in
+//      columns when set.
 //   5. Thin bottom bar: auto-year copyright, privacy link, optional "Site
 //      by..." credit, all on one line.
 //
 // Tailwind v4 gotcha: max-w-xs/s/m/l are shadowed by this project's custom
 // --spacing-* tokens (they resolve to a few px, not the container scale). Use
 // max-w-md / max-w-2xl / arbitrary values like max-w-[28rem] for text widths.
-//
-// Latest projects pull from Sanity. Gracefully degrades to a "see portfolio"
-// message when nothing is published yet.
 
 import { getImage } from 'astro:assets';
 import { site } from '@/data/site';
@@ -40,7 +38,6 @@ import {
 import { Mail, Phone } from 'lucide-react';
 import CopyEmailButton from '@/components/CopyEmailButton';
 import NewsletterSignup from '@/components/NewsletterSignup';
-import { getAllProjects, type CoreProjectCard } from '@/lib/queries';
 // THE SVG, NOT A PNG, and the same files the header uses.
 //
 // Until 2026-09-08 this imported logo-{light,dark}.png, which were a REAL
@@ -92,7 +89,6 @@ interface Props {
         socialInstagram?: string;
         socialFacebook?: string;
         socialLinks?: SocialLink[] | null;
-        serviceAreas?: string[];
         tagline?: string;
         footerCredit?: string;
         footerCreditUrl?: string;
@@ -170,11 +166,6 @@ const useCustomFooterColumns = sanityFooterColumns.length > 0;
 // The small-print row at the very bottom. EMPTY means "keep the built-in
 // privacy link", which is rendered as its own markup below.
 const LEGAL_LINKS = chrome.legalNav;
-
-// Pull the three most recent projects for the Latest Projects column.
-// Falls back to an empty array when Sanity isn't reachable (build won't fail).
-const allProjects: CoreProjectCard[] = (await getAllProjects().catch(() => [])) ?? [];
-const latestProjects = allProjects.slice(0, 3);
 ---
 
 <footer class="bg-muted text-foreground">
@@ -230,163 +221,34 @@ const latestProjects = allProjects.slice(0, 3);
       ) : (
         <>
           {/* --- Built-in columns (default when footerColumns is empty) --- */}
+          {/* 2026-09-19: this used to also carry Studio (Press), Work
+              (Portfolio, Shop, Gift Certificates), Free tools & guides (Style
+              Quiz, Cost Calculator, Guides, Resources) and a Latest Projects
+              column, all gated on service-business sectionVisibility toggles
+              that never applied to a church. Removed along with those
+              toggles; see src/lib/sectionVisibility.ts. Journal is the one
+              built-in link that stays: it is core. */}
 
-          {/* STUDIO */}
-          <nav aria-labelledby="footer-studio">
-            <p
-              id="footer-studio"
-              class="mb-s text-xs tracking-eyebrow text-foreground/80 uppercase"
-            >
-              Studio
-            </p>
-            <ul class="list-none space-y-2 p-0 text-sm">
-              {visible.press && (
-                <li>
-                  <a href="/press" class="text-foreground/85 transition-colors hover:text-link">
-                    Press
-                  </a>
-                </li>
-              )}
-            </ul>
-          </nav>
-
-          {/* WORK */}
-          <nav aria-labelledby="footer-work">
-            <p id="footer-work" class="mb-s text-xs tracking-eyebrow text-foreground/80 uppercase">
-              Work
-            </p>
-            <ul class="list-none space-y-2 p-0 text-sm">
-              {visible.portfolio && (
-                <li>
-                  <a href="/portfolio" class="text-foreground/85 transition-colors hover:text-link">
-                    Portfolio
-                  </a>
-                </li>
-              )}
-              {visible.portfolio && (
-                <li>
-                  <a
-                    href="/portfolio/before-after"
-                    class="text-foreground/85 transition-colors hover:text-link"
-                  >
-                    Before &amp; After
-                  </a>
-                </li>
-              )}
-              {/* scaffold: journal */}
-              {visible.journal && (
+          {/* scaffold: journal */}
+          {visible.journal && (
+            <nav aria-labelledby="footer-journal">
+              <p
+                id="footer-journal"
+                class="mb-s text-xs tracking-eyebrow text-foreground/80 uppercase"
+              >
+                Read
+              </p>
+              <ul class="list-none space-y-2 p-0 text-sm">
                 <li>
                   <a href="/blog" class="text-foreground/85 transition-colors hover:text-link">
                     Journal
                   </a>
                 </li>
-              )}
-              {/* scaffold:end */}
-              {visible.shop && (
-                <li>
-                  <a href="/shop" class="text-foreground/85 transition-colors hover:text-link">
-                    Shop
-                  </a>
-                </li>
-              )}
-              {visible.giftCertificates && (
-                <li>
-                  <a
-                    href="/gift-certificates"
-                    class="text-foreground/85 transition-colors hover:text-link"
-                  >
-                    Gift Certificates
-                  </a>
-                </li>
-              )}
-            </ul>
-          </nav>
-
-          {/* FREE TOOLS & GUIDES */}
-          <nav aria-labelledby="footer-tools">
-            <p id="footer-tools" class="mb-s text-xs tracking-eyebrow text-foreground/80 uppercase">
-              Free tools &amp; guides
-            </p>
-            <ul class="list-none space-y-2 p-0 text-sm">
-              {visible.styleQuiz && (
-                <li>
-                  <a href="/quiz" class="text-foreground/85 transition-colors hover:text-link">
-                    Style Quiz
-                  </a>
-                </li>
-              )}
-              {visible.budgetCalculator && (
-                <li>
-                  <a
-                    href="/calculator"
-                    class="text-foreground/85 transition-colors hover:text-link"
-                  >
-                    Cost Calculator
-                  </a>
-                </li>
-              )}
-              {visible.guides && (
-                <li>
-                  <a href="/guides" class="text-foreground/85 transition-colors hover:text-link">
-                    Guides
-                  </a>
-                </li>
-              )}
-              {visible.resources && (
-                <li>
-                  <a href="/resources" class="text-foreground/85 transition-colors hover:text-link">
-                    Resources
-                  </a>
-                </li>
-              )}
-            </ul>
-          </nav>
-        </>
-      )
-    }
-
-    {/* LATEST PROJECTS — only when portfolio is visible. */}
-    {
-      visible.portfolio ? (
-        <nav aria-labelledby="footer-latest">
-          <p id="footer-latest" class="mb-s text-xs tracking-eyebrow text-foreground/80 uppercase">
-            Latest projects
-          </p>
-          {latestProjects.length > 0 ? (
-            <ul class="list-none space-y-2 p-0 text-sm">
-              {latestProjects.map((p) => (
-                <li>
-                  <a
-                    href={`/portfolio/${p.slug?.current ?? ''}`}
-                    class="text-foreground/85 transition-colors hover:text-link"
-                  >
-                    {p.title}
-                  </a>
-                </li>
-              ))}
-              <li class="pt-xs">
-                <a
-                  href="/portfolio"
-                  class="inline-flex items-center gap-xs text-xs font-semibold tracking-eyebrow text-link uppercase transition-colors hover:text-primary-dark"
-                >
-                  View all <span aria-hidden="true">→</span>
-                </a>
-              </li>
-            </ul>
-          ) : (
-            <p class="text-sm text-foreground/85 italic">
-              Case studies are coming soon.{' '}
-              <a
-                href="/portfolio"
-                class="text-link underline underline-offset-2 hover:text-primary-dark"
-              >
-                See the portfolio →
-              </a>
-            </p>
+              </ul>
+            </nav>
           )}
-        </nav>
-      ) : (
-        <div aria-hidden="true" />
+          {/* scaffold:end */}
+        </>
       )
     }
 

@@ -49,7 +49,6 @@ interface Props {
         phone?: string;
         socialInstagram?: string;
         socialFacebook?: string;
-        availabilityStatus?: string;
       })
     | null;
 }
@@ -57,7 +56,6 @@ interface Props {
 const { siteSettings } = Astro.props as Props;
 
 const brandName = siteSettings?.siteName ?? siteSettings?.title ?? site.name;
-const availability = siteSettings?.availabilityStatus ?? '';
 
 // The chrome (menu, header button, logo, the show/hide switches) resolves
 // through one shared helper (see src/lib/siteSettings.ts) so the header, the
@@ -171,29 +169,6 @@ function isGroupActive(items: { href: string }[]) {
         <p class="text-xs tracking-eyebrow text-foreground/80 uppercase">
           {siteSettings?.tagline ?? site.name}
         </p>
-        {
-          /* Availability status, mirroring the mobile pill. Same pulsing dot
-            and link to /contact, so the trust signal is consistent at every
-            width (compact "Open" on phones, full status from md up). */
-        }
-        {
-          availability && (
-            <>
-              <span class="h-3 w-px bg-border-soft" aria-hidden="true" />
-              <a
-                href="/contact"
-                class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-eyebrow text-foreground uppercase transition-colors hover:text-link"
-                aria-label={`${availability}. Get in touch.`}
-              >
-                <span class="relative flex h-2 w-2 shrink-0" aria-hidden="true">
-                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-tertiary opacity-60" />
-                  <span class="relative inline-flex h-2 w-2 rounded-full bg-tertiary" />
-                </span>
-                {availability}
-              </a>
-            </>
-          )
-        }
       </div>
       <div class="flex items-center gap-m">
         {
@@ -267,42 +242,6 @@ function isGroupActive(items: { href: string }[]) {
   <div
     class="relative mx-auto flex max-w-content items-center justify-center border-b border-border px-l py-m lg:justify-between"
   >
-    {
-      /* Mobile-only availability pill, mirroring the hamburger menu's
-        absolute-right placement. Gives mobile visitors an at-a-glance trust
-        signal ("Open / accepting new clients") and a single-tap path to
-        /contact — meaningfully conversion-positive in a tiny footprint. Renders
-        nothing when siteSettings.availabilityStatus is empty so the slot just
-        stays empty negative space. */
-    }
-    {
-      availability && (
-        <a
-          href="/contact"
-          class="absolute top-1/2 left-m inline-flex h-9 -translate-y-1/2 items-center gap-1.5 rounded-full border border-border-soft bg-muted pr-2.5 pl-2 text-foreground transition-colors hover:border-primary hover:text-primary-dark lg:hidden"
-          aria-label={`${availability}. Tap to start a conversation.`}
-        >
-          <span class="relative flex h-2 w-2 shrink-0" aria-hidden="true">
-            {/* Soft pulsing halo — kills under prefers-reduced-motion via the
-              global rule that flattens all animations. */}
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-tertiary opacity-60" />
-            <span class="relative inline-flex h-2 w-2 rounded-full bg-tertiary" />
-          </span>
-          {/* On the narrowest phones the centered logo leaves room only for a
-            compact "Open". From md up, where the pill has space before the
-            logo, show the full availabilityStatus so the roomy header doesn't
-            read as half-empty. The complete status is always in the aria-label
-            and on the Contact page. */}
-          <span class="text-[0.65rem] font-semibold tracking-eyebrow whitespace-nowrap uppercase md:hidden">
-            Open
-          </span>
-          <span class="hidden text-[0.65rem] font-semibold tracking-eyebrow whitespace-nowrap uppercase md:inline">
-            {availability}
-          </span>
-        </a>
-      )
-    }
-
     <a
       href="/"
       class="inline-flex items-center transition-opacity hover:opacity-80"
@@ -518,10 +457,10 @@ function isGroupActive(items: { href: string }[]) {
 
 {
   /* Progressive enhancement for the desktop dropdown nav. Everything still
-    works without this (native <details> toggles on click/Enter/Space, links
-    are real <a> tags). This adds: open-on-hover with a small close delay,
-    close-on-outside-click, close-on-Escape, and close-when-a-link-is-followed.
-    Re-binds on astro:page-load so it survives View Transitions navigations. */
+  works without this (native <details> toggles on click/Enter/Space, links
+  are real <a> tags). This adds: open-on-hover with a small close delay,
+  close-on-outside-click, close-on-Escape, and close-when-a-link-is-followed.
+  Re-binds on astro:page-load so it survives View Transitions navigations. */
 }
 <script>
   // Query groups fresh each call — the nav DOM is replaced on every View

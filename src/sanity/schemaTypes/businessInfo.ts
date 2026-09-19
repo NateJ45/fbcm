@@ -1,13 +1,12 @@
 // Foundation, edit with care
-// Content-side singleton. Business facts that change as the studio grows:
-// where you work, travel fees, availability, and the studio's map location.
-// These used to live on siteSettings; they moved here so Site Settings stays
-// identity + infrastructure and this document holds the operational data.
+// Content-side singleton. Location facts: where the business is, and its map
+// coordinates. This used to also carry service areas, travel fees and an
+// availability status; those were service-business fields removed 2026-09-19
+// when the church rebuild gave siteSettings its own "Church details" tab
+// (see siteSettings.ts). What is left here (city, state, geo) is still read
+// by the LocalBusiness structured data (src/lib/schemas.ts) and the map on
+// the Contact page.
 // One instance only (id 'businessInfo'); singleton enforcement is in sanity.config.ts.
-//
-// IMPORTANT: the travelFees object type is named 'travelFeeTier' to match the
-// old siteSettings.travelFees member type, so data migrated from siteSettings
-// validates here without rework.
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
 
@@ -67,58 +66,6 @@ export const businessInfo = defineType({
         'The broader area you serve, shown as "Serving {this}" in the footer. Example: "Greater Metro Area". Leave blank for fully remote businesses.',
       initialValue: 'Your Metro Area',
       hidden: ({ document }) => document?.businessModel === 'remote',
-    }),
-    defineField({
-      name: 'serviceAreas',
-      title: 'Service areas',
-      type: 'array',
-      description:
-        'Cities and neighborhoods you serve, in display order. Put your home-base city first. This list shows up on the site and tells search engines where you work. Leave blank for fully remote businesses.',
-      of: [defineArrayMember({ type: 'string' })],
-      hidden: ({ document }) => document?.businessModel === 'remote',
-      // Optional — no required validation; remote businesses have no service areas.
-    }),
-    defineField({
-      name: 'travelFees',
-      title: 'Travel fee tiers',
-      type: 'array',
-      description:
-        'Drive-time tiers and the travel fee for each. Always quoted upfront. Leave blank for fully remote businesses.',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          name: 'travelFeeTier',
-          fields: [
-            defineField({
-              name: 'distanceLabel',
-              title: 'Distance label',
-              type: 'string',
-              description: 'Like "45 to 75 minutes".',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'fee',
-              title: 'Fee',
-              type: 'string',
-              description: 'Like "$50" or "None".',
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
-          preview: {
-            select: { title: 'distanceLabel', subtitle: 'fee' },
-          },
-        }),
-      ],
-      hidden: ({ document }) => document?.businessModel === 'remote',
-      // Optional — no required validation; remote businesses have no travel fees.
-    }),
-    defineField({
-      name: 'availabilityStatus',
-      title: 'Availability status',
-      type: 'string',
-      description:
-        'Short status shown on the Contact page. Examples: "Accepting new clients", "Booking for Fall 2026", "Currently full, accepting waitlist".',
-      validation: (Rule) => Rule.required().max(80),
     }),
     defineField({
       name: 'geoLat',

@@ -19,8 +19,6 @@ import ImageText from '@/components/sections/ImageText.astro';
 import GalleryGrid from '@/components/sections/GalleryGrid.astro';
 import QuoteBlock from '@/components/sections/QuoteBlock.astro';
 import VideoEmbed from '@/components/sections/VideoEmbed.astro';
-import ServiceAreaSection from '@/components/sections/ServiceAreaSection.astro';
-import GuaranteeSection from '@/components/sections/GuaranteeSection.astro';
 import LogoStrip from '@/components/sections/LogoStrip.astro';
 import TeamGrid from '@/components/sections/TeamGrid.astro';
 import EmbedSection from '@/components/sections/EmbedSection.astro';
@@ -151,22 +149,6 @@ const wrapAttrs = (key: string | undefined) =>
             caption={s.caption}
             surface={surface ?? 'background'}
             headingId={headingId}
-          />
-        ) : s._type === 'serviceAreaSection' ? (
-          <ServiceAreaSection
-            eyebrow={s.eyebrow}
-            headline={s.headline}
-            description={s.description}
-            travelFees={s.travelFees ?? []}
-            showTravelFees={s.showTravelFees ?? true}
-            surface={surface ?? 'background'}
-            headingId={headingId}
-          />
-        ) : s._type === 'guaranteeSection' ? (
-          <GuaranteeSection
-            text={s.text}
-            siteSettingsText={s.siteSettingsText}
-            surface={surface ?? 'background'}
           />
         ) : s._type === 'logoStripSection' ? (
           <LogoStrip

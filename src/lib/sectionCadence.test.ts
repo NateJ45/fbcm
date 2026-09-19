@@ -122,32 +122,6 @@ test('rich SELF_CONTAINED types get null surface', () => {
   }
 });
 
-test('rich CONTENT types get alternating surface', () => {
-  const richContent: string[] = ['serviceAreaSection', 'guaranteeSection'];
-  for (const type of richContent) {
-    const rows = classifySections([block(type)]);
-    assert.equal(rows[0].surface, 'background', `${type} should get background on first`);
-  }
-});
-
-test('rich content types advance the cadence counter', () => {
-  const rows = classifySections([
-    block('richTextSection'), // background (idx 0)
-    block('serviceAreaSection'), // muted (idx 1)
-    block('guaranteeSection'), // background (idx 2)
-  ]);
-  assert.deepEqual(surfaces(rows), ['background', 'muted', 'background']);
-});
-
-test('rich self-contained types do not advance the cadence counter', () => {
-  const rows = classifySections([
-    block('richTextSection'), // background (idx 0)
-    block('statSection'), // null (self-contained, no advance)
-    block('serviceAreaSection'), // muted (idx 1)
-  ]);
-  assert.deepEqual(surfaces(rows), ['background', null, 'muted']);
-});
-
 test('every new rich type appears in SELF_CONTAINED_TYPES or CONTENT_TYPES', () => {
   // 2026-09-18: was two names after a scaffold removal, which made "every new
   // rich type" a claim about two of the fifteen. Now it is derived from the sets
@@ -164,14 +138,6 @@ test('every new rich type appears in SELF_CONTAINED_TYPES or CONTENT_TYPES', () 
     );
     assert.ok(!(inSelf && inContent), `${type} cannot be in both sets`);
   }
-});
-
-test('divider inserted between richTextSection and serviceAreaSection (different surfaces)', () => {
-  const rows = classifySections([
-    block('richTextSection'), // background
-    block('serviceAreaSection'), // muted -> divider before
-  ]);
-  assert.deepEqual(dividers(rows), [false, true]);
 });
 
 // ── U7: new page-builder blocks — all SELF_CONTAINED ─────────────────────
@@ -222,7 +188,7 @@ test('dynamicListSection does not advance the content cadence counter', () => {
   const rows = classifySections([
     block('richTextSection'), // background (idx 0)
     block('dynamicListSection'), // null — self-contained, no advance
-    block('serviceAreaSection'), // muted (idx 1)
+    block('imageTextSection'), // muted (idx 1)
   ]);
   assert.deepEqual(surfaces(rows), ['background', null, 'muted']);
 });

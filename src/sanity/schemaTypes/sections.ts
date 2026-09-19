@@ -611,7 +611,7 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
     {
       name: 'proof',
       title: 'Proof and trust',
-      of: ['quoteSection', 'statSection', 'logoStripSection', 'guaranteeSection'],
+      of: ['quoteSection', 'statSection', 'logoStripSection'],
     },
     {
       name: 'media',
@@ -621,7 +621,7 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
     {
       name: 'business',
       title: 'About the business',
-      of: ['teamSection', 'serviceAreaSection', 'dynamicListSection', 'ctaBandSection'],
+      of: ['teamSection', 'dynamicListSection', 'ctaBandSection'],
     },
   ],
 };

@@ -128,39 +128,38 @@ function cta(label, href) {
 const docs = [];
 
 // ── 1. siteSettings (singleton) ──────────────────────────────────────────
-// Fields: title, tagline, email, phone?, availabilityStatus, serviceAreas,
-//         travelFees, socialInstagram?, socialFacebook?, seoImage?,
-//         footerCredit?, footerCreditUrl?, newsletter{enabled,...},
-//         googleBusinessUrl?, reviewsNote?, sectionVisibility, satisfactionGuarantee?
+// Fields: title, tagline, email, phone?, serviceTime, serviceLength,
+//         officeHours, pastoralHours, churchCenterUrl, givingUrl,
+//         churchTracUrl, youtubeUrl, livestreamUrl, visitorFormUrl,
+//         lifeEventFormUrl, mapImage?, directionsUrl, socialInstagram?,
+//         socialFacebook?, seoImage?, footerCredit?, footerCreditUrl?,
+//         newsletter{enabled,...}, sectionVisibility
 
 docs.push({
   _id: 'siteSettings',
   _type: 'siteSettings',
-  title: 'Studio Starter',
+  title: 'First Baptist Church Muncie',
   tagline: 'Your tagline goes here.',
-  email: 'hello@example.com',
-  availabilityStatus: 'Replace with your current availability',
-  serviceAreas: ['Your City', 'Surrounding Region'],
-  travelFees: [
-    {
-      _type: 'travelFeeTier',
-      _key: key(),
-      distanceLabel: 'Nearest tier (replace me)',
-      fee: 'None',
-    },
-    {
-      _type: 'travelFeeTier',
-      _key: key(),
-      distanceLabel: 'Middle tier (replace me)',
-      fee: 'Replace with a fee',
-    },
-    {
-      _type: 'travelFeeTier',
-      _key: key(),
-      distanceLabel: 'Furthest tier (replace me)',
-      fee: 'Replace with a fee',
-    },
+  email: 'office@fbcmuncie.org',
+  phone: '(765) 284-7749',
+  serviceTime: 'Sundays at 10:45 am',
+  serviceLength: 'About an hour',
+  officeHours: [
+    pt('Monday to Thursday: 9 am to 12 pm and 1 pm to 4 pm'),
+    pt('Friday: 9 am to 12 pm'),
+    pt('Sunday: 9 am to 12 pm'),
+    pt('Hours may change on holidays.'),
   ],
+  pastoralHours: [pt('Tuesdays: 9 am to 12 pm and 1 pm to 5 pm')],
+  churchCenterUrl: 'https://fbcmuncie.churchcenter.com/',
+  givingUrl: 'https://fbcmuncie.churchcenter.com/giving',
+  churchTracUrl: 'https://fbcmuncie.churchtrac.com/',
+  youtubeUrl: 'https://www.youtube.com/c/FbcmuncieOrg',
+  livestreamUrl: 'https://www.youtube.com/@FbcmuncieOrg/streams',
+  visitorFormUrl: 'https://fbcmuncie.churchcenter.com/people/forms/159198',
+  lifeEventFormUrl: 'https://fbcmuncie.churchcenter.com/people/forms/159897',
+  directionsUrl:
+    'https://www.google.com/maps/search/?api=1&query=309+East+Adams+Street+Muncie+IN+47305',
   newsletter: {
     enabled: false,
     heading: 'Your signup heading goes here.',
@@ -170,19 +169,8 @@ docs.push({
     consentNote: 'No spam. Unsubscribe anytime.',
   },
   sectionVisibility: {
-    showPortfolio: true,
     showJournal: true,
-    showShop: true,
-    showEDesign: true,
-    showGiftCertificates: true,
-    showPress: true,
-    showResources: true,
-    showGuides: true,
-    showStyleQuiz: true,
-    showBudgetCalculator: true,
   },
-  satisfactionGuarantee:
-    'Replace this with the promise this business actually makes, or clear the field to hide it.',
 });
 
 // ── 2. homePage (singleton) ───────────────────────────────────────────────
@@ -274,15 +262,6 @@ docs.push({
       size: 'tall',
       primaryCta: cta('Primary button label', '/contact'),
       secondaryCta: cta('Second button label', '/about'),
-    },
-    {
-      _type: 'serviceAreaSection',
-      _key: key(),
-      eyebrow: 'Service Area.',
-      headline: 'Replace this headline.',
-      description:
-        'Replace this with where this business works and what it charges to travel, if anything.',
-      showTravelFees: true,
     },
     {
       _type: 'ctaBandSection',

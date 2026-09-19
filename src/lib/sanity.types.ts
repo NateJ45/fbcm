@@ -87,12 +87,6 @@ export type SectionPreset = {
       } & EmbedSection)
     | ({
         _key: string;
-      } & ServiceAreaSection)
-    | ({
-        _key: string;
-      } & GuaranteeSection)
-    | ({
-        _key: string;
       } & TeamSection)
     | ({
         _key: string;
@@ -306,14 +300,6 @@ export type BusinessInfo = {
   city?: string;
   state?: string;
   serviceRegion?: string;
-  serviceAreas?: Array<string>;
-  travelFees?: Array<{
-    distanceLabel?: string;
-    fee?: string;
-    _type: 'travelFeeTier';
-    _key: string;
-  }>;
-  availabilityStatus?: string;
   geoLat?: number;
   geoLng?: number;
   additionalLocations?: Array<{
@@ -336,6 +322,59 @@ export type SiteSettings = {
   tagline?: string;
   email?: string;
   phone?: string;
+  serviceTime?: string;
+  serviceLength?: string;
+  officeHours?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+  pastoralHours?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+  churchCenterUrl?: string;
+  givingUrl?: string;
+  churchTracUrl?: string;
+  youtubeUrl?: string;
+  livestreamUrl?: string;
+  visitorFormUrl?: string;
+  lifeEventFormUrl?: string;
+  mapImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
+  directionsUrl?: string;
   navItems?: Array<
     | ({
         _key: string;
@@ -389,14 +428,6 @@ export type SiteSettings = {
     alt?: string;
     _type: 'image';
   };
-  availabilityStatus?: string;
-  serviceAreas?: Array<string>;
-  travelFees?: Array<{
-    distanceLabel?: string;
-    fee?: string;
-    _type: 'travelFeeTier';
-    _key: string;
-  }>;
   socialInstagram?: string;
   socialFacebook?: string;
   socialLinks?: Array<{
@@ -415,19 +446,6 @@ export type SiteSettings = {
     _type: 'socialLink';
     _key: string;
   }>;
-  businessType?:
-    | 'LocalBusiness'
-    | 'ProfessionalService'
-    | 'HomeAndConstructionBusiness'
-    | 'LegalService'
-    | 'MedicalBusiness'
-    | 'HealthAndBeautyBusiness'
-    | 'FoodEstablishment'
-    | 'Store'
-    | 'RealEstateAgent'
-    | 'TravelAgency'
-    | 'EducationalOrganization'
-    | 'NGO';
   seoImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -449,21 +467,9 @@ export type SiteSettings = {
     successMessage?: string;
     consentNote?: string;
   };
-  googleBusinessUrl?: string;
-  reviewsNote?: string;
   sectionVisibility?: {
-    showPortfolio?: boolean;
     showJournal?: boolean;
-    showShop?: boolean;
-    showEDesign?: boolean;
-    showGiftCertificates?: boolean;
-    showPress?: boolean;
-    showResources?: boolean;
-    showGuides?: boolean;
-    showStyleQuiz?: boolean;
-    showBudgetCalculator?: boolean;
   };
-  satisfactionGuarantee?: string;
 };
 
 export type HomePageReference = {
@@ -573,19 +579,6 @@ export type TeamSection = {
     _type: 'teamMember';
     _key: string;
   }>;
-};
-
-export type GuaranteeSection = {
-  _type: 'guaranteeSection';
-  text?: string;
-};
-
-export type ServiceAreaSection = {
-  _type: 'serviceAreaSection';
-  eyebrow?: string;
-  headline?: string;
-  description?: string;
-  showTravelFees?: boolean;
 };
 
 export type EmbedSection = {
@@ -1477,8 +1470,6 @@ export type AllSanitySchemaTypes =
   | NavLink
   | DynamicListSection
   | TeamSection
-  | GuaranteeSection
-  | ServiceAreaSection
   | EmbedSection
   | LogoStripSection
   | SpacerSection

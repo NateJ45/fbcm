@@ -1,4 +1,5 @@
-// Site-wide singleton. Header, footer, contact info, service areas, travel fees.
+// Site-wide singleton. Header, footer, contact info, and the church's own
+// facts (service time, hours, Church Center/Church Trac/YouTube addresses).
 // One instance only; singleton enforcement happens in sanity.config.ts.
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
@@ -12,11 +13,11 @@ export const siteSettings = defineType({
   options: { canvasApp: { exclude: true } },
   groups: [
     { name: 'identity', title: 'Identity & contact' },
+    { name: 'church', title: 'Church details' },
     { name: 'navigation', title: 'Navigation (menus)' },
     { name: 'visibility', title: 'Section visibility' },
     { name: 'social', title: 'Social & footer' },
     { name: 'newsletter', title: 'Newsletter' },
-    { name: 'reviews', title: 'Reviews' },
   ],
   fields: [
     defineField({
@@ -47,6 +48,108 @@ export const siteSettings = defineType({
       type: 'string',
       description: 'Public phone number, if you want one shown. Leave blank to hide.',
     }),
+
+    // ── Church details ────────────────────────────────────────────────────────
+    // Top-level fields, grouped under one Studio tab. See the ruling at the top
+    // of task-2-brief.md: a Sanity field GROUP is a tab, not a nested object,
+    // so these are NOT siteSettings.church.* in the data, just in the Studio UI.
+    defineField({
+      name: 'serviceTime',
+      title: 'Service time',
+      type: 'string',
+      group: 'church',
+      description: 'As it should read on the page, like "Sundays at 10:45 am".',
+      initialValue: 'Sundays at 10:45 am',
+    }),
+    defineField({
+      name: 'serviceLength',
+      title: 'How long the service runs',
+      type: 'string',
+      group: 'church',
+      description: 'A few words, like "About an hour".',
+      initialValue: 'About an hour',
+    }),
+    defineField({
+      name: 'officeHours',
+      title: 'Office hours',
+      type: 'array',
+      of: [{ type: 'block' }],
+      group: 'church',
+      description: 'One line per day or range, like "Monday to Thursday, 9 to 12 and 1 to 4".',
+    }),
+    defineField({
+      name: 'pastoralHours',
+      title: "Pastors' office hours",
+      type: 'array',
+      of: [{ type: 'block' }],
+      group: 'church',
+      description: 'When the pastors keep office hours, like "Tuesdays, 9 to 12 and 1 to 5".',
+    }),
+    defineField({
+      name: 'churchCenterUrl',
+      title: 'Church Center address',
+      type: 'url',
+      group: 'church',
+      description: 'The web address of the Church Center home page.',
+    }),
+    defineField({
+      name: 'givingUrl',
+      title: 'Giving address',
+      type: 'url',
+      group: 'church',
+      description: 'Where the Give button sends people. Usually the Church Center giving page.',
+    }),
+    defineField({
+      name: 'churchTracUrl',
+      title: 'Church Trac address',
+      type: 'url',
+      group: 'church',
+      description: 'The web address of the Church Trac home page.',
+    }),
+    defineField({
+      name: 'youtubeUrl',
+      title: 'YouTube channel',
+      type: 'url',
+      group: 'church',
+      description: 'The channel address.',
+    }),
+    defineField({
+      name: 'livestreamUrl',
+      title: 'Live stream address',
+      type: 'url',
+      group: 'church',
+      description: 'Where "Watch online" sends people on a Sunday.',
+    }),
+    defineField({
+      name: 'visitorFormUrl',
+      title: 'Visitor card form',
+      type: 'url',
+      group: 'church',
+      description: 'The Church Center form a new visitor fills in.',
+    }),
+    defineField({
+      name: 'lifeEventFormUrl',
+      title: 'Life update form',
+      type: 'url',
+      group: 'church',
+      description: 'The Church Center form for births, deaths, anniversaries and the like.',
+    }),
+    defineField({
+      name: 'mapImage',
+      title: 'Map picture',
+      type: 'image',
+      group: 'church',
+      description: 'A picture of the map around the church. Shown wherever the address appears.',
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: 'directionsUrl',
+      title: 'Directions link',
+      type: 'url',
+      group: 'church',
+      description: 'Where the "Open in Google Maps" button goes.',
+    }),
+
     // ── Navigation ────────────────────────────────────────────────────────────
     // Optional editor-managed nav menus. When empty the header and footer render
     // their built-in defaults (see Header.astro and Footer.astro). As soon as
@@ -302,65 +405,6 @@ export const siteSettings = defineType({
       ],
     }),
 
-    defineField({
-      name: 'availabilityStatus',
-      title: 'Availability status',
-      type: 'string',
-      description:
-        'Short status next to the green dot on the Contact page. Examples: "Accepting new clients" / "Booking for Fall 2026" / "Currently booked, accepting waitlist".',
-      // NOT required: see the note on homePage.heroHeadline. This field moved
-      // to the businessInfo singleton, which is where the requirement lives now.
-      validation: (Rule) => Rule.max(80),
-      hidden: true,
-      readOnly: true,
-    }),
-    defineField({
-      name: 'serviceAreas',
-      title: 'Service areas',
-      type: 'array',
-      description:
-        'Cities and neighborhoods you serve, in display order. Put your primary market first.',
-      of: [defineArrayMember({ type: 'string' })],
-      // NOT required: moved to businessInfo. A hidden required field blocks
-      // publishing with an error the editor cannot see or act on.
-      hidden: true,
-      readOnly: true,
-    }),
-    defineField({
-      name: 'travelFees',
-      title: 'Travel fee tiers',
-      type: 'array',
-      description: 'Drive-time tiers and the travel fee for each. Always quoted upfront.',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          name: 'travelFeeTier',
-          fields: [
-            defineField({
-              name: 'distanceLabel',
-              title: 'Distance label',
-              type: 'string',
-              description: 'Like "45 to 75 minutes".',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'fee',
-              title: 'Fee',
-              type: 'string',
-              description: 'Like "$50" or "None".',
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
-          preview: {
-            select: { title: 'distanceLabel', subtitle: 'fee' },
-          },
-        }),
-      ],
-      // NOT required: moved to businessInfo. A hidden required field blocks
-      // publishing with an error the editor cannot see or act on.
-      hidden: true,
-      readOnly: true,
-    }),
     // LEGACY — superseded by socialLinks array below.
     // Kept hidden + readOnly so existing data continues to validate.
     // Do not delete; use socialLinks for new and updated entries.
@@ -439,31 +483,6 @@ export const siteSettings = defineType({
           },
         }),
       ],
-    }),
-    defineField({
-      name: 'businessType',
-      title: 'Business type',
-      type: 'string',
-      description:
-        'The schema.org business category search engines use to understand what your business does. Pick the closest match. This feeds the structured data (JSON-LD) on every page, which helps Google show your listing correctly in Maps, search cards, and rich results.',
-      options: {
-        list: [
-          { title: 'Local Business (generic)', value: 'LocalBusiness' },
-          { title: 'Professional Service', value: 'ProfessionalService' },
-          { title: 'Home and Construction Business', value: 'HomeAndConstructionBusiness' },
-          { title: 'Legal Service', value: 'LegalService' },
-          { title: 'Medical Business', value: 'MedicalBusiness' },
-          { title: 'Health and Beauty Business', value: 'HealthAndBeautyBusiness' },
-          { title: 'Food Establishment', value: 'FoodEstablishment' },
-          { title: 'Store', value: 'Store' },
-          { title: 'Real Estate Agent', value: 'RealEstateAgent' },
-          { title: 'Travel Agency', value: 'TravelAgency' },
-          { title: 'Educational Organization', value: 'EducationalOrganization' },
-          { title: 'NGO', value: 'NGO' },
-        ],
-        layout: 'dropdown',
-      },
-      initialValue: 'LocalBusiness',
     }),
     defineField({
       name: 'seoImage',
@@ -562,37 +581,18 @@ export const siteSettings = defineType({
       ],
     }),
 
-    // ── Reviews ──────────────────────────────────────────────────────────────
-    defineField({
-      name: 'googleBusinessUrl',
-      title: 'Google Business Profile URL',
-      type: 'url',
-      description:
-        'Link to the studio\'s Google Business listing. When set, a "Read more on Google" link appears near the reviews note below.',
-    }),
-    defineField({
-      name: 'reviewsNote',
-      title: 'Reviews note',
-      type: 'string',
-      description:
-        'Optional small-print line near the reviews section. Example: "Reviews from Google, Facebook, and Houzz."',
-    }),
-
     // ── Section visibility ────────────────────────────────────────────────────
     // Controls which optional sections appear on the live site.
     // IMPORTANT: an unset field (undefined/null) counts as VISIBLE — only an
     // explicit `false` hides a section. This means the existing live site is
     // completely unaffected until an editor intentionally turns something off.
     //
-    // 2026-09-18: most of the toggles below name a module that now lives in
-    // `archive/modules/` (portfolio, shop, e-design/virtual-services, gift
-    // certificates, press, guides/lead-magnets, style quiz, budget calculator).
-    // They are KEPT rather than removed, for two reasons: `getSectionVisibility`
-    // treats a module route as hidden-unless-enabled, so an off switch for a
-    // route nothing builds costs nothing, and a module coming back out of the
-    // archive needs its switch to still be here. `showJournal` and
-    // `showResources` are the live ones: journal is core, resources is one of
-    // the two modules still staged in `modules/`.
+    // 2026-09-19: this used to carry nine more toggles for service-business
+    // modules that never applied to a church (portfolio, shop, e-design, gift
+    // certificates, press, resources, guides, style quiz, budget calculator).
+    // Removed along with the fields the church rebuild forked away from; see
+    // src/lib/sectionVisibility.ts. `showJournal` is the one that stays: the
+    // journal is core.
     defineField({
       name: 'sectionVisibility',
       title: 'Section visibility',
@@ -601,14 +601,6 @@ export const siteSettings = defineType({
       description: 'Turn optional sections on or off. An unset toggle counts as ON.',
       fields: [
         defineField({
-          name: 'showPortfolio',
-          title: 'Portfolio',
-          type: 'boolean',
-          initialValue: true,
-          description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
-        }),
-        defineField({
           name: 'showJournal',
           title: 'Journal',
           type: 'boolean',
@@ -616,81 +608,7 @@ export const siteSettings = defineType({
           description:
             'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
         }),
-        defineField({
-          name: 'showShop',
-          title: 'Shop',
-          type: 'boolean',
-          initialValue: true,
-          description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
-        }),
-        defineField({
-          name: 'showEDesign',
-          title: 'E-Design',
-          type: 'boolean',
-          initialValue: true,
-          description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
-        }),
-        defineField({
-          name: 'showGiftCertificates',
-          title: 'Gift Certificates',
-          type: 'boolean',
-          initialValue: true,
-          description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
-        }),
-        defineField({
-          name: 'showPress',
-          title: 'Press',
-          type: 'boolean',
-          initialValue: true,
-          description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
-        }),
-        defineField({
-          name: 'showResources',
-          title: 'Resources hub',
-          type: 'boolean',
-          initialValue: true,
-          description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
-        }),
-        defineField({
-          name: 'showGuides',
-          title: 'Guides',
-          type: 'boolean',
-          initialValue: true,
-          description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
-        }),
-        defineField({
-          name: 'showStyleQuiz',
-          title: 'Style Quiz',
-          type: 'boolean',
-          initialValue: true,
-          description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
-        }),
-        defineField({
-          name: 'showBudgetCalculator',
-          title: 'Budget Calculator',
-          type: 'boolean',
-          initialValue: true,
-          description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
-        }),
       ],
-    }),
-
-    // ── Satisfaction guarantee ────────────────────────────────────────────────
-    defineField({
-      name: 'satisfactionGuarantee',
-      title: 'Satisfaction guarantee line',
-      type: 'text',
-      rows: 2,
-      description:
-        'In-scope satisfaction guarantee shown near CTAs on the Services and Contact pages. Leave blank to hide.',
     }),
   ],
   preview: {

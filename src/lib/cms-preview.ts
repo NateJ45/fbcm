@@ -94,7 +94,6 @@ const NON_STEGA_FIELDS = new Set([
   // businessInfo.ts, page.ts, studioGuide.ts, studioPlaybook.ts).
   'align',
   'businessModel',
-  'businessType',
   'category',
   'columns',
   'heightHint',

@@ -8,7 +8,7 @@
 //   - CTA blocks: internalLink is resolved to `{ _type: string; slug: string }`
 //     (not a union of Reference types).
 //   - Rich sections inject collection fields that do not exist on the schema
-//     type at all (services, points, steps, travelFees, siteSettingsText).
+//     type at all (services, points, steps).
 //
 // For each divergence we use a locally-scoped override type rather than `as any`,
 // so callers that read these fields get a meaningful type (not `unknown`).
@@ -25,8 +25,6 @@ import type {
   CtaBandSection as _CtaBandSection,
   VideoSection as _VideoSection,
   SpacerSection as _SpacerSection,
-  ServiceAreaSection as _ServiceAreaSection,
-  GuaranteeSection as _GuaranteeSection,
   // U7 new blocks — hand-authored below since typegen has not run yet
   // FaqSection, LogoStripSection, TeamSection, EmbedSection — not imported from
   // sanity.types yet; their projected types are fully defined below.
@@ -156,16 +154,6 @@ export type ProjectedSpacerSection = { _key: string } & _SpacerSection & {
     [key: string]: unknown;
   };
 
-/** serviceAreaSection adds `travelFees` resolved from businessInfo. */
-export type ProjectedServiceAreaSection = { _key: string } & _ServiceAreaSection & {
-    travelFees?: Array<{ distanceLabel?: string; fee?: string }>;
-  };
-
-/** guaranteeSection adds `siteSettingsText` resolved from siteSettings. */
-export type ProjectedGuaranteeSection = { _key: string } & _GuaranteeSection & {
-    siteSettingsText?: string;
-  };
-
 // ---------------------------------------------------------------------------
 // U7 new blocks — hand-authored projected types (typegen will regenerate
 // sanity.types.ts after this unit lands; at that point the orchestrator should
@@ -292,8 +280,6 @@ export type PageBuilderBlock =
   | ProjectedCtaBandSection
   | ProjectedVideoSection
   | ProjectedSpacerSection
-  | ProjectedServiceAreaSection
-  | ProjectedGuaranteeSection
   // U7 new blocks
   | ProjectedLogoStripSection
   | ProjectedTeamSection

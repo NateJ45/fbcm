@@ -21,12 +21,10 @@ interface SiteSettings {
   title?: string;
   email?: string;
   phone?: string;
-  serviceAreas?: string[];
   socialInstagram?: string;
   socialFacebook?: string;
   /** New flexible social links array (U8). When present, merged with legacy fields in sameAs. */
   socialLinks?: SocialLink[] | null;
-  businessType?: string;
   /** Studio city name — set in Sanity businessInfo or update via apply-brand */
   city?: string;
   /** Studio region/state abbreviation */
@@ -55,7 +53,7 @@ export function localBusinessSchema(settings: SiteSettings | null | undefined): 
   const s = settings ?? {};
   const schema: Record<string, any> = {
     '@context': 'https://schema.org',
-    '@type': s.businessType ?? 'LocalBusiness',
+    '@type': 'Church',
     '@id': `${site.url}/#business`,
     name: s.title ?? site.name,
     url: site.url,
@@ -92,12 +90,6 @@ export function localBusinessSchema(settings: SiteSettings | null | undefined): 
       latitude: s.geoLat,
       longitude: s.geoLng,
     };
-  }
-
-  // Omit areaServed when the only entry is the placeholder default.
-  const areas = (s.serviceAreas ?? []).filter((a) => a && a !== PLACEHOLDER_CITY);
-  if (areas.length > 0) {
-    schema.areaServed = areas.map((city) => ({ '@type': 'City', name: city }));
   }
 
   if (s.phone) schema.telephone = s.phone;
