@@ -41,7 +41,12 @@ const MONTHS = [
   'December',
 ];
 
-/** "Sermon preview, week of 15 January 2024". Falls back to the bare eyebrow. */
+/**
+ * "Sermon preview, week of 15 January 2024". Falls back to the bare eyebrow.
+ *
+ * Nothing imports this yet on purpose: it is the sermon eyebrow plan 2b draws.
+ * Covered by church-derive.test.ts in the meantime, so it is carried, not dead.
+ */
 export function weekOfLabel(publishedAt: string): string {
   const d = new Date(publishedAt);
   if (Number.isNaN(d.getTime())) return 'Sermon preview';

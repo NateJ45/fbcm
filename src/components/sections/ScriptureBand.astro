@@ -26,16 +26,19 @@ const { found, before, word, after } = splitHeadingAccent(verse, accentWord);
 ---
 
 {
+  /* The region is named by the REFERENCE, not the blockquote: pointing
+    aria-labelledby at the verse made the landmark's accessible name the whole
+    of scripture. With no reference typed the region stays unnamed, which is
+    quieter and just as findable. */
+}
+{
   verse && (
-    <section class="bg-indigo-field" aria-labelledby={headingId}>
+    <section class="bg-indigo-field" aria-labelledby={reference ? headingId : undefined}>
       <div class="mx-auto max-w-content px-m py-section-lg text-center" data-reveal>
         {/* text-bg, never text-cream: --color-cream flips to ink under .dark
             while --color-bg stays paper-white, and this band is dark in both
             themes (see the .dark block in globals.css). */}
-        <blockquote
-          id={headingId}
-          class="mx-auto max-w-3xl font-display text-[1.875rem] leading-snug text-bg"
-        >
+        <blockquote class="mx-auto max-w-3xl font-display text-[1.875rem] leading-snug text-bg">
           {found ? (
             <>
               {before}
@@ -48,7 +51,9 @@ const { found, before, word, after } = splitHeadingAccent(verse, accentWord);
         </blockquote>
 
         {reference && (
-          <p class="mt-m text-xs font-semibold tracking-eyebrow text-gold uppercase">{reference}</p>
+          <p id={headingId} class="mt-m text-xs font-semibold tracking-eyebrow text-gold uppercase">
+            {reference}
+          </p>
         )}
       </div>
     </section>

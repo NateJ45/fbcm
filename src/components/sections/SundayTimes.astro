@@ -17,6 +17,7 @@ import CtaLink from '@/components/CtaLink.astro';
 import { getSiteSettings } from '@/lib/queries';
 import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { site } from '@/data/site';
+import { splitStega, reattachStega } from '@/lib/preview-stega';
 
 interface TimeItem {
   _key?: string;
@@ -73,12 +74,17 @@ const showTheMap = showMap !== false && !!mapImage?.asset;
 // hold more than one line; the city/state pair comes from Business info through the
 // same flattened settings object. Both are optional, so the card falls back to the
 // church's own name and never renders empty.
+// splitStega first: the payload is written in U+200B/C/D and U+FEFF, and
+// trim() eats U+FEFF, so splitting the raw string shatters it and click-to-edit
+// stops resolving on the address. The payload is put back on the first line.
+const addressSplit = splitStega(typeof settings?.address === 'string' ? settings.address : '');
 const addressLines: string[] = [
-  ...(typeof settings?.address === 'string' ? settings.address.split('\n') : []),
+  ...addressSplit.cleaned.split('\n'),
   [settings?.city, settings?.state].filter(Boolean).join(', '),
 ]
   .map((line) => line.trim())
-  .filter(Boolean);
+  .filter(Boolean)
+  .map((line, i) => (i === 0 ? reattachStega(line, addressSplit.encoded) : line));
 
 const validItems = items.filter((i) => i?.label || i?.big || i?.body);
 const validDoors = doors.filter((d) => d?.name || d?.body);

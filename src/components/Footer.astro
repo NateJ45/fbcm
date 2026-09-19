@@ -63,6 +63,7 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 import logoDarkAsset from '@/assets/logo-dark.svg';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
 import { telHref } from '@/lib/phone';
+import { splitStega, reattachStega } from '@/lib/preview-stega';
 
 // Passed through Astro's pipeline for a cache-busted URL. No width variants and
 // no webp conversion: this is an SVG, so one file is sharp at every size and
@@ -137,13 +138,19 @@ const officeLines: string[] = (siteSettings?.officeHours ?? [])
   .filter(Boolean);
 
 // The street address is one Site settings field holding one line per line.
-const addressLines: string[] =
-  typeof siteSettings?.address === 'string'
-    ? siteSettings.address
-        .split('\n')
-        .map((line) => line.trim())
-        .filter(Boolean)
-    : [];
+// Cleaned through splitStega BEFORE splitting and trimming: the stega payload
+// is written in U+200B/C/D and U+FEFF, and trim() eats U+FEFF, so splitting the
+// raw string shatters the payload and click-to-edit stops resolving on the
+// address. The payload goes back onto the first line, which keeps the field
+// editable in the preview. Same rule the officeHours join above states.
+const addressSplit = splitStega(
+  typeof siteSettings?.address === 'string' ? siteSettings.address : '',
+);
+const addressLines: string[] = addressSplit.cleaned
+  .split('\n')
+  .map((line) => line.trim())
+  .filter(Boolean)
+  .map((line, i) => (i === 0 ? reattachStega(line, addressSplit.encoded) : line));
 
 // Social links: prefer the socialLinks array; fall back to the legacy
 // socialInstagram / socialFacebook fields so existing datasets keep working.

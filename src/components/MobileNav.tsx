@@ -116,9 +116,10 @@ export default function MobileNav({
 }: Props) {
   const [open, setOpen] = useState(false);
 
-  const tagline =
-    siteSettings?.tagline ??
-    "We're a Spirit-led people gathered to join Christ's presence in our community.";
+  // No hard-coded fallback: the church's real tagline is seeded into
+  // siteSettings.tagline, and a second copy here is the one that goes stale.
+  // With the field unset the block simply does not render.
+  const tagline = siteSettings?.tagline;
   const phone = siteSettings?.phone;
 
   // Church Center is somebody else's site, so the Give button opens in a new
@@ -167,9 +168,11 @@ export default function MobileNav({
           )}
 
           {/* Tagline in display serif for editorial feel. */}
-          <p className="px-l pb-l font-display text-h4 leading-snug text-foreground/85 italic">
-            {tagline}
-          </p>
+          {tagline && (
+            <p className="px-l pb-l font-display text-h4 leading-snug text-foreground/85 italic">
+              {tagline}
+            </p>
+          )}
 
           {/* Primary nav — flat items + group headers with indented sub-items. */}
           <nav className="border-t border-border-soft py-s" aria-label="Primary mobile">
