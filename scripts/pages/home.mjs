@@ -19,12 +19,13 @@
 //    the sentences listed in `newCopy` are new, and every one of them goes into
 //    the church-approval note.
 //
-// 3. THE THREE-UP USES h3 LEADS, NOT BOLD LEADS. The spec asks for three
-//    paragraphs each opening with a bold lead. `paragraphs()` in
-//    scripts/lib/page-copy.mjs renders inline LINKS but has no bold mark, and
-//    extending it was out of scope for this task, so each door is a short h3
-//    heading above its sentence. The reading order and the three links are
-//    identical; only the weight of the lead differs.
+// 3. THE THREE-UP IS A linkCardsSection, NOT A richTextSection. It shipped
+//    first as three h3 leads inside one rich-text block, which reads as a
+//    stacked list at every width: the spec (5.1 item 4) asks for a row of
+//    three. Task 5b added the block, so the three doors are now three cards
+//    with the same three sentences and the same three links, and the link on
+//    each card is a text link rather than a button, because the page's buttons
+//    belong to the hero and the give band (CLAUDE.md rule 17).
 
 export default {
   id: 'homePage',
@@ -37,9 +38,9 @@ export default {
   newCopy: [
     'A downtown church in Muncie, Indiana. (hero kicker)',
     'Downtown, at the corner of Adams and Jefferson. (Sunday band, "Find us")',
-    'We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself. (three-up, What we believe)',
-    'Sunday school, music, youth, and work with partners across Muncie and beyond. (three-up, How we serve)',
-    'The congregation has met in downtown Muncie since 1859, and in this building since 1912. (three-up, Where we’ve been)',
+    'We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself. (link cards, What we believe)',
+    'Sunday school, music, youth, and work with partners across Muncie and beyond. (link cards, How we serve)',
+    'The congregation has met in downtown Muncie since 1859, and in this building since 1929. (link cards, Where we’ve been)',
     'The tower, the oak pews and the stained glass have been in daily use for more than a century. (heritage band)',
     'Gifts pay the staff, keep the building open and fund the work this church does in Muncie. (give band)',
   ],
@@ -50,7 +51,7 @@ export default {
 
   async build(ctx) {
     const { images, copy, settings } = ctx;
-    const { paragraphs, heading, fromCapture, ctaInternal, ctaExternal, ctaAnchor, keyer } = copy;
+    const { fromCapture, ctaInternal, ctaExternal, ctaAnchor, keyer } = copy;
 
     if (!settings) {
       throw new Error(
@@ -181,30 +182,39 @@ export default {
           cta: ctaInternal('Plan a visit', 'visit'),
         },
 
-        // 4. Three doors into the site: beliefs, ministries, history.
+        // 4. Three doors into the site: beliefs, ministries, history. The
+        //    sentences are unchanged from the rich-text version this replaced,
+        //    except that the building's date is 1929 rather than 1912: the
+        //    church's own architecture page says the building was completed in
+        //    1929 (the original rendering is 1927) and the History spec dates
+        //    the building era 1921 to 1929, so 1912 was simply wrong.
         {
-          _type: 'richTextSection',
+          _type: 'linkCardsSection',
           _key: 'home-three-up',
           eyebrow: 'First Baptist Muncie',
           heading: 'A Baptist church in the heart of downtown since 1859.',
-          width: 'normal',
-          align: 'left',
-          body: [
-            heading('What we believe', 3, 'door-1h'),
-            ...paragraphs(
-              'We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself. [Our beliefs](/beliefs)',
-              'door-1p',
-            ),
-            heading('How we serve', 3, 'door-2h'),
-            ...paragraphs(
-              'Sunday school, music, youth, and work with partners across Muncie and beyond. [Ministries](/ministries)',
-              'door-2p',
-            ),
-            heading('Where we’ve been', 3, 'door-3h'),
-            ...paragraphs(
-              'The congregation has met in downtown Muncie since 1859, and in this building since 1912. [Our history](/history)',
-              'door-3p',
-            ),
+          cards: [
+            {
+              _type: 'linkCard',
+              _key: 'door-1',
+              title: 'What we believe',
+              body: 'We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself.',
+              cta: ctaInternal('Our beliefs', 'beliefs'),
+            },
+            {
+              _type: 'linkCard',
+              _key: 'door-2',
+              title: 'How we serve',
+              body: 'Sunday school, music, youth, and work with partners across Muncie and beyond.',
+              cta: ctaInternal('Ministries', 'ministries'),
+            },
+            {
+              _type: 'linkCard',
+              _key: 'door-3',
+              title: 'Where we’ve been',
+              body: 'The congregation has met in downtown Muncie since 1859, and in this building since 1929.',
+              cta: ctaInternal('Our history', 'history'),
+            },
           ],
         },
 

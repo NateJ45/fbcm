@@ -8,9 +8,9 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - A downtown church in Muncie, Indiana. (hero kicker)
 - Downtown, at the corner of Adams and Jefferson. (Sunday band, "Find us")
-- We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself. (three-up, What we believe)
-- Sunday school, music, youth, and work with partners across Muncie and beyond. (three-up, How we serve)
-- The congregation has met in downtown Muncie since 1859, and in this building since 1912. (three-up, Where we’ve been)
+- We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself. (link cards, What we believe)
+- Sunday school, music, youth, and work with partners across Muncie and beyond. (link cards, How we serve)
+- The congregation has met in downtown Muncie since 1859, and in this building since 1929. (link cards, Where we’ve been)
 - The tower, the oak pews and the stained glass have been in daily use for more than a century. (heritage band)
 - Gifts pay the staff, keep the building open and fund the work this church does in Muncie. (give band)
 
