@@ -334,6 +334,13 @@ leaves open, with what closes each.
 - CLAUDE.md and README.md: only the opening paragraph says what this repo is; the
   body still documents the starter. Rewrite for this site.
 - Dead `Service` interface and `serviceListSchema()` in `src/lib/schemas.ts`.
+- **The `/styleguide` visual baseline needs a refresh on CI once Task 6 lands.**
+  Task 6 (2026-09-19) added the eight church-block fixtures to the page, which
+  changes its rendered output; `visual.yml`'s stored baseline for that route is
+  now stale and will report a diff on the next run. Do NOT regenerate
+  `scripts/.parity` locally for this (that happens once, at the end of plan
+  2c, per the task-6 brief). Refresh the CI baseline itself with `visual.yml`'s
+  own `update` input the first time it runs against this change.
 
 ### For ncs-astro-sanity-starter (the library of record), found on this fork
 
