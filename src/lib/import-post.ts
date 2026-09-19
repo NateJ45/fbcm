@@ -20,6 +20,23 @@ export interface CapturedPost {
   bodyHtml?: string;
 }
 
+/** One Portable Text span inside a body block. */
+export interface SanitySpan {
+  _type: 'span';
+  _key: string;
+  text: string;
+  marks: string[];
+}
+
+/** One Portable Text block on `journalEntry.body`. */
+export interface SanityBlock {
+  _type: 'block';
+  _key: string;
+  style: 'normal';
+  markDefs: never[];
+  children: SanitySpan[];
+}
+
 /** One `journalEntry.categories` array member: a keyed reference to a journalCategory doc. */
 export interface SanityCategoryReference {
   _type: 'reference';
@@ -40,6 +57,9 @@ export interface SanityPostDoc {
   categories: SanityCategoryReference[];
   tags: string[];
   excerpt?: string;
+  // `journalEntry.body` is Rule.required().min(1), and the capture carries
+  // 95,016 words that were simply never read. See bodyFromCapture below.
+  body: SanityBlock[];
   // Deliberately no postKind / isSermonPreview field here. That distinction is
   // derived at render time from `categories` via isSermonPreview(), never stored.
 }
@@ -85,8 +105,132 @@ export function categoryDocId(name: string): string {
   return `category-${slug}`;
 }
 
+/**
+ * `journalCategory.slug` is Rule.required(), and the import wrote none, so all
+ * five category documents opened invalid. The slug is the SAME string the
+ * document id is built from, taken from the one place that derives it, so the
+ * id and the public slug can never disagree.
+ */
+export function categorySlug(name: string): string {
+  return categoryDocId(name).replace(/^category-/, '');
+}
+
 export function isSermonPreview(categories: readonly string[] = []): boolean {
   return categories.some((c) => c.trim().toLowerCase() === SERMON_PREVIEW_CATEGORY);
+}
+
+// ── HTML entities ──────────────────────────────────────────────────────────
+// The capture holds the entity as it appeared in the Wix markup, so a title
+// shipped to Sanity as "Advent &amp; Christmas 2024" and rendered on the live
+// site exactly that way: the entity was escaped a second time on the way out.
+// Decoded here, once, at the boundary, so everything downstream holds real text.
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+  hellip: '…',
+  mdash: '—',
+  ndash: '–',
+  lsquo: '‘',
+  rsquo: '’',
+  ldquo: '“',
+  rdquo: '”',
+};
+
+/** "&amp;" -> "&", "&#39;" -> "'", "&#x2019;" -> "’". Unknown entities are left alone. */
+export function decodeEntities(value: string): string {
+  return value.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, body: string) => {
+    if (body.startsWith('#x') || body.startsWith('#X')) {
+      return String.fromCodePoint(parseInt(body.slice(2), 16));
+    }
+    if (body.startsWith('#')) return String.fromCodePoint(parseInt(body.slice(1), 10));
+    const named = NAMED_ENTITIES[body.toLowerCase()];
+    return named ?? whole;
+  });
+}
+
+// ── The body ───────────────────────────────────────────────────────────────
+// WHICH CONVERTER, AND WHY. Neither @portabletext/block-tools nor
+// @sanity/block-tools is installed, and this repo does not add a dependency
+// without asking. So the body is built from `bodyText` on the same rule
+// `toPT()` in scripts/lib/sanity-lib.mjs uses -- split on blank lines, one
+// `normal` block per paragraph -- rather than from `bodyHtml`. HEADINGS, LINKS
+// AND INLINE IMAGES DO NOT CARRY; they are plan-2 work, and a converter is
+// what will carry them.
+//
+// Written here rather than called from sanity-lib.mjs for two reasons: that
+// module exits the process at import time when no Sanity project is
+// configured (so a unit test could not import it), and its `_key` generator is
+// a module-level counter, which is not pure. Keys here are derived from the
+// block's own index, so the same capture always produces byte-identical
+// blocks and `createOrReplace` is a genuine no-op on a re-run.
+const MAX_EXCERPT = 220;
+
+/** The captured body as Portable Text: one `normal` block per paragraph. */
+export function bodyFromCapture(captured: CapturedPost): SanityBlock[] {
+  const source = captured.bodyText ?? '';
+  return String(source)
+    .split(/\n{2,}/)
+    .map((s) => decodeEntities(s).trim())
+    .filter(Boolean)
+    .map((text, i) => ({
+      _type: 'block' as const,
+      _key: `b${i}`,
+      style: 'normal' as const,
+      markDefs: [] as never[],
+      children: [{ _type: 'span' as const, _key: `b${i}s0`, text, marks: [] as string[] }],
+    }));
+}
+
+/**
+ * An excerpt that fits `journalEntry.excerpt`'s Rule.required().max(220).
+ *
+ * 33 of the 142 captured excerpts are longer than that, so the Studio opened
+ * with them permanently invalid. The schema limit is right (it is also the SEO
+ * description), so the DATA is trimmed, and trimmed where a reader would stop:
+ * the last sentence boundary at or before the limit, else the last word
+ * boundary with an ellipsis. Never mid-word.
+ */
+export function excerptFromCapture(captured: CapturedPost): string | undefined {
+  const raw = decodeEntities(captured.excerpt ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!raw) return undefined;
+  if (raw.length <= MAX_EXCERPT) return raw;
+
+  const window = raw.slice(0, MAX_EXCERPT);
+  const sentenceEnd = Math.max(
+    window.lastIndexOf('. '),
+    window.lastIndexOf('! '),
+    window.lastIndexOf('? '),
+  );
+  // A sentence that ends exactly at the limit has no trailing space to find.
+  const flush = /[.!?]$/.test(window) ? window.length - 1 : -1;
+  const cut = Math.max(sentenceEnd, flush);
+  if (cut > 0) return window.slice(0, cut + 1).trim();
+
+  // No sentence boundary: fall back to the last whole word, marked as cut. The
+  // ellipsis is a character of its own, so the window it is added to is one
+  // short of the limit -- and a "word" with no space in it anywhere (a pasted
+  // URL) still has to be cut somewhere, so the hard slice is the last resort.
+  const head = raw.slice(0, MAX_EXCERPT - 1);
+  const lastSpace = head.lastIndexOf(' ');
+  const words = (lastSpace > 0 ? head.slice(0, lastSpace) : head).replace(/[\s,;:]+$/, '');
+  return `${words}…`;
+}
+
+/**
+ * `journalEntry.coverImage.alt` is required, and the Wix capture carries no alt
+ * for the cover, so the post's own title is the honest description of it.
+ */
+export function coverAltFromCapture(
+  captured: CapturedPost & { coverImage?: { alt?: string } },
+): string {
+  const capturedAlt = captured.coverImage?.alt?.trim();
+  return capturedAlt || decodeEntities(captured.title ?? '').trim() || 'Cover image';
 }
 
 export function postFromCapture(captured: CapturedPost): SanityPostDoc {
@@ -96,7 +240,7 @@ export function postFromCapture(captured: CapturedPost): SanityPostDoc {
   return {
     _id: postDocId(captured.slug),
     _type: 'journalEntry',
-    title: captured.title,
+    title: decodeEntities(captured.title ?? ''),
     slug: { _type: 'slug', current: captured.slug },
     publishedAt: captured.publishedDate,
     author: captured.author ?? undefined,
@@ -108,7 +252,8 @@ export function postFromCapture(captured: CapturedPost): SanityPostDoc {
       _ref: categoryDocId(name),
     })),
     tags: captured.tags ?? [],
-    excerpt: captured.excerpt ?? undefined,
+    excerpt: excerptFromCapture(captured),
+    body: bodyFromCapture(captured),
     // No postKind / isSermonPreview field. Derived at render time from
     // `categories` via isSermonPreview(). See the note at the top of this file.
   };

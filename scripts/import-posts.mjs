@@ -16,7 +16,12 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { client, APPLY, makeUploader, ROOT } from './lib/sanity-lib.mjs';
-import { postFromCapture, categoryDocId } from '../src/lib/import-post.ts';
+import {
+  postFromCapture,
+  categoryDocId,
+  categorySlug,
+  coverAltFromCapture,
+} from '../src/lib/import-post.ts';
 
 const POSTS = resolve(ROOT, 'scripts/data/posts');
 // The binaries are not in the repo. See ../fbcm-archive/README.md.
@@ -30,7 +35,14 @@ const captures = files.map((f) => JSON.parse(readFileSync(resolve(POSTS, f), 'ut
 // not exist yet is a broken reference the Studio shows as a missing document.
 const categoryNames = [...new Set(captures.flatMap((c) => c.categories ?? []))].sort();
 for (const name of categoryNames) {
-  const doc = { _id: categoryDocId(name), _type: 'journalCategory', title: name };
+  // journalCategory.slug is required. Derived from the same string the id is,
+  // so the document id and the public slug can never drift apart.
+  const doc = {
+    _id: categoryDocId(name),
+    _type: 'journalCategory',
+    title: name,
+    slug: { _type: 'slug', current: categorySlug(name) },
+  };
   if (APPLY) await client.createOrReplace(doc);
   else console.log(`would write ${doc._id} (${name})`);
 }
@@ -53,8 +65,12 @@ for (const captured of captures) {
       missingImages.push(`${captured.slug}: ${cover} (not found in archive)`);
     } else if (APPLY) {
       try {
+        // `alt` is required on journalEntry.coverImage. The Wix capture holds
+        // no alt for the cover, so coverAltFromCapture falls back to the post's
+        // own title -- without it all 142 documents open invalid in the Studio.
         doc.coverImage = {
           _type: 'image',
+          alt: coverAltFromCapture(captured),
           asset: { _type: 'reference', _ref: await uploader.upload(coverPath) },
         };
         withCover++;

@@ -1,7 +1,16 @@
 // src/lib/import-post.test.ts
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { postDocId, categoryDocId, isSermonPreview, postFromCapture } from './import-post.ts';
+import {
+  postDocId,
+  categoryDocId,
+  isSermonPreview,
+  postFromCapture,
+  bodyFromCapture,
+  excerptFromCapture,
+  coverAltFromCapture,
+  decodeEntities,
+} from './import-post.ts';
 
 const base = {
   slug: 'stayers',
@@ -75,4 +84,126 @@ test('a post with no categories produces an empty array, not a broken reference'
 
 test('an undated post is rejected rather than imported with a wrong date', () => {
   assert.throws(() => postFromCapture({ ...base, publishedDate: '' }), /publishedDate/);
+});
+
+// ── The body (2026-09-18) ──────────────────────────────────────────────────
+// The capture's 95,016 words were declared on CapturedPost and never read, so
+// every one of the 142 live posts was a title, a date and an excerpt. These
+// cover the mapper that fixes that, and they also PIN what does not carry:
+// no converter is installed, so bodyHtml's headings and links flatten to text.
+
+const richFixture = {
+  ...base,
+  slug: 'rich',
+  title: 'Lessons &amp; Carols',
+  bodyHtml:
+    '<h2>Advent begins</h2><p>Join us on <a href="https://www.fbcmuncie.org/visit">Sunday</a>' +
+    ' for bread &amp; wine.</p>',
+  bodyText: 'Advent begins\n\nJoin us on Sunday for bread &amp; wine.',
+};
+
+test('the captured body becomes Portable Text, one block per paragraph', () => {
+  const body = bodyFromCapture(richFixture);
+  assert.equal(body.length, 2);
+  assert.equal(body[0]._type, 'block');
+  assert.equal(body[0].style, 'normal');
+  assert.equal(body[0].children[0].text, 'Advent begins');
+  assert.equal(body[1].children[0].text, 'Join us on Sunday for bread & wine.');
+});
+
+test('every body block and span carries a _key, and the keys are unique', () => {
+  const body = bodyFromCapture(richFixture);
+  const keys = body.flatMap((b) => [b._key, ...b.children.map((c) => c._key)]);
+  assert.ok(keys.every(Boolean));
+  assert.equal(new Set(keys).size, keys.length);
+});
+
+test('the body mapper is pure: the same capture gives byte-identical blocks', () => {
+  assert.deepEqual(bodyFromCapture(richFixture), bodyFromCapture(richFixture));
+});
+
+test('postFromCapture puts the body on the document (journalEntry.body is required)', () => {
+  const doc = postFromCapture(richFixture);
+  assert.ok(Array.isArray(doc.body));
+  assert.ok(doc.body.length >= 1, 'body must satisfy Rule.required().min(1)');
+});
+
+test('what the plain-text mapper does NOT carry, stated as a test (plan-2 work)', () => {
+  const body = bodyFromCapture(richFixture);
+  // The heading in bodyHtml arrives as an ordinary paragraph, not style h2.
+  assert.equal(body[0].style, 'normal');
+  // The link is text only: no markDefs, no marks on the span.
+  assert.deepEqual(body[1].markDefs, []);
+  assert.deepEqual(body[1].children[0].marks, []);
+  assert.ok(!body[1].children[0].text.includes('http'));
+});
+
+test('a post with no captured body produces an empty array rather than a fake block', () => {
+  assert.deepEqual(bodyFromCapture({ ...base, bodyText: '   ' }), []);
+});
+
+// ── Entities ───────────────────────────────────────────────────────────────
+
+test('HTML entities are decoded once, at the boundary', () => {
+  assert.equal(decodeEntities('Advent &amp; Christmas 2024'), 'Advent & Christmas 2024');
+  assert.equal(decodeEntities('it&#39;s'), "it's");
+  assert.equal(decodeEntities('it&#x27;s'), "it's");
+  assert.equal(decodeEntities('&lt;tag&gt;'), '<tag>');
+  // An entity we do not know is left exactly as it was, never half-decoded.
+  assert.equal(decodeEntities('&fooble;'), '&fooble;');
+});
+
+test('the live title "Advent &amp; Christmas 2024" comes out as real text', () => {
+  assert.equal(postFromCapture(richFixture).title, 'Lessons & Carols');
+});
+
+test('the excerpt is decoded too', () => {
+  const doc = postFromCapture({ ...base, excerpt: 'Bread &amp; wine' });
+  assert.equal(doc.excerpt, 'Bread & wine');
+});
+
+// ── Excerpt length (journalEntry.excerpt is Rule.required().max(220)) ──────
+
+const sentence = (n: number) => `${'word '.repeat(n).trim()}.`;
+
+test('a short excerpt is passed through untouched', () => {
+  assert.equal(excerptFromCapture({ ...base, excerpt: 'Short one.' }), 'Short one.');
+});
+
+test('a long excerpt is cut at the last sentence boundary at or before 220', () => {
+  const long = `${sentence(20)} ${sentence(20)} ${sentence(40)}`;
+  const out = excerptFromCapture({ ...base, excerpt: long })!;
+  assert.ok(out.length <= 220, `expected <= 220, got ${out.length}`);
+  assert.ok(out.endsWith('.'), `expected a sentence end, got "${out.slice(-20)}"`);
+  assert.ok(long.startsWith(out), 'the kept text must be a prefix of the original');
+});
+
+test('with no sentence boundary it cuts at a word boundary, never mid-word', () => {
+  const out = excerptFromCapture({ ...base, excerpt: 'word '.repeat(80).trim() })!;
+  assert.ok(out.length <= 220);
+  assert.ok(out.endsWith('…'));
+  assert.ok(!/\bwor…$/.test(out), 'must not cut inside a word');
+  assert.deepEqual(
+    out.slice(0, -1).trim().split(' ').filter(Boolean).at(-1),
+    'word',
+    'the last kept token must be a whole word',
+  );
+});
+
+test('every captured excerpt fits the schema limit after the transform', () => {
+  const out = excerptFromCapture({ ...base, excerpt: 'a'.repeat(400) })!;
+  assert.ok(out.length <= 220);
+});
+
+// ── Cover alt (journalEntry.coverImage.alt is required) ────────────────────
+
+test('the cover alt falls back to the post title when the capture has none', () => {
+  assert.equal(coverAltFromCapture(richFixture), 'Lessons & Carols');
+});
+
+test('a captured cover alt wins over the title', () => {
+  assert.equal(
+    coverAltFromCapture({ ...richFixture, coverImage: { alt: 'Candles on a windowsill' } }),
+    'Candles on a windowsill',
+  );
 });
