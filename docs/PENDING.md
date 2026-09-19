@@ -428,3 +428,15 @@ still open, all closing in plan 2b/2c:
   origin's CORS-gated Sanity project (same family as item 1a above). That
   check is Nathan's after this branch merges: he signs in at the deployed URL,
   since the localhost Studio cannot reach the project without a CORS grant.
+- Parked from the final plan-2a review, for plan 2b's first task: `CtaLink`'s
+  `primary` variant is still the starter's bronze, and `FinalCta` composes it on
+  every page; repoint the primary family to the gold pair (indigo-field text on
+  gold, 4.90:1, already gated) so the whole site has one button family.
+- Parked minors from the same review: the hero pause pill's a11y trio (visible
+  label on the icon state, `aria-controls`, focus return), `MobileNav` still
+  serialises `siteSettings.email` it no longer shows, and `DocumentList` sorts
+  with `localeCompare` on titles that carry stega markers in the preview (use
+  `splitStega()` first). Each is under ten lines.
+- The Pages desk list orders `page` documents by nav position with a GROQ
+  `select()` that has had no live `page` documents to run against; spot-check it
+  in the Studio once plan 2b seeds them.
