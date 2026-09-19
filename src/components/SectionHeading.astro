@@ -6,7 +6,16 @@
 //
 // Variants:
 //   - level: which heading tag (h1 for hero, h2 for sections, h3 for sub-sections). Default h2.
-//   - align: "left" (default) or "center" for centered section heads
+//   - align: "left" (default) or "center" for centered section heads.
+//     2026-09-19: eight starter components used to pass align="center" plus
+//     class="mx-auto" on every call, so a page mixing church blocks (left) with
+//     starter blocks (centred) had two left edges and broke CLAUDE.md rule 17.
+//     They now pass nothing and take the left default. Centring is a PAGE
+//     decision made per call, not a component default, and on this site the
+//     only centred headings are the ones drawn inside a fixed dark band
+//     (FinalCta, spec section 2.3). A component's own GRID may still centre
+//     itself (a logo strip's marks, a team card's portrait); the heading may
+//     not.
 //   - tone: "default" (foreground on light surfaces), "inverse" (bg/light on
 //     dark CTA banners), "church" (the church's LIGHT surfaces: a brown-mid
 //     eyebrow that becomes gold in dark mode, because --color-brown-mid does

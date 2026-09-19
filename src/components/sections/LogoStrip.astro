@@ -48,13 +48,7 @@ const containerClass =
     >
       <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
         {hasHeading && (
-          <SectionHeading
-            eyebrow={eyebrow}
-            headline={headline}
-            headingId={headingId}
-            align="center"
-            class="mx-auto"
-          />
+          <SectionHeading eyebrow={eyebrow} headline={headline} headingId={headingId} />
         )}
 
         <div class:list={[containerClass, hasHeading && 'mt-section-md']}>

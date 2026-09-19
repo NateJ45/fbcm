@@ -369,11 +369,18 @@ const wrapperHeight =
       <div class="hero-entry-stagger max-w-3xl">
         {/* Same grammar as the split layout above and as every band below: mono
             eyebrow, then the gold rule under the headline rather than a cream
-            hairline over it. Gold is the eyebrow colour on a fixed dark ground
-            (SectionHeading's tone="band"), and gold on --color-accent-dark is
-            6.75:1, gated in theme-tokens.test.ts. */}
+            hairline over it.
+
+            The eyebrow is CREAM here, not gold, and that is a departure from
+            the dark bands on purpose. Gold clears AA against the flat
+            --color-accent-dark band those use, but this hero's ground is a
+            PHOTOGRAPH under an overlay, and on the bright-sky frames the gold
+            line was the weakest text on the page. text-bg/90 is the same paper
+            white as the headline at 90%, so the eyebrow reads on every one of
+            the five frames. The gold rule below the headline keeps the brand
+            colour in the band. */}
         {eyebrow && (
-          <p class="font-mono text-[0.75rem] uppercase tracking-eyebrow text-gold">{eyebrow}</p>
+          <p class="font-mono text-[0.75rem] uppercase tracking-eyebrow text-bg/90">{eyebrow}</p>
         )}
         <h1 id={headingId} class="mt-xs font-display text-h1 leading-headline-tight tracking-[-0.02em] text-bg">
           {rotateEnabled ? (
