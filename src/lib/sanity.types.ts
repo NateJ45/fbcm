@@ -142,6 +142,8 @@ export type StaffMember = {
   slug?: Slug;
   role?: string;
   email?: string;
+  phone?: string;
+  group?: 'pastors' | 'coordination' | 'support';
   bio?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -923,7 +925,6 @@ export type HeroSection = {
   _type: 'heroSection';
   eyebrow?: string;
   headline?: string;
-  scriptAccent?: string;
   subhead?: string;
   backgroundImage?: {
     asset?: SanityImageAssetReference;
@@ -933,6 +934,22 @@ export type HeroSection = {
     alt?: string;
     _type: 'image';
   };
+  layout?: 'full' | 'split';
+  frames?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+    _key: string;
+  }>;
+  facts?: Array<{
+    label?: string;
+    value?: string;
+    _type: 'heroFact';
+    _key: string;
+  }>;
   primaryCta?: CtaBlock;
   secondaryCta?: CtaBlock;
   size?: 'tall' | 'short';

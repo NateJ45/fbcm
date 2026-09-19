@@ -734,53 +734,190 @@
   }
 }
 
-/* ---- Home hero slideshow. HeroBackground.astro stacks 2+ .hero-slide images
-   inside [data-hero-slideshow] and cross-fades them via the .is-active toggle
-   (a small inline script advances the active slide every 4.5s). Each slide also
-   runs a subtle continuous Ken Burns zoom. Lives here (global), not in a scoped
-   component <style>, because the slides are rendered by the child SanityImage
-   component and would not carry HeroBackground's scope attribute. Reduced-motion
-   users keep the first slide static. ---- */
-.hero-slideshow {
+/* ---- Home hero cross-fade. Pure CSS, no script driving the frames.
+   HeroBackground.astro stacks 2-6 .hero-frame images inside .hero-fade and
+   gives each one an --frames count, an 8-second --frame-s length, and an
+   animation-delay of index * 8s (frameAnimationDelays() in hero-frames.ts).
+   Every frame in a given hero runs the SAME crossfade keyframe (one of the
+   two below), so the delay alone is what staggers them into a slow
+   cross-fade instead of all fading in at once.
+
+   Keyframe arithmetic (why two keyframes, and not calc()):
+   calc() is not supported inside keyframe SELECTOR percentages, so the
+   breakpoints are fixed numbers rather than computed per frame count. The
+   frame slot (the gap between one frame's delay and the next's) is always a
+   fixed 8s, but the keyframe percentages are relative to the FULL cycle
+   (frames * 8s), so the same percentages land at a different fraction of the
+   cycle depending on frame count -- and one fixed set of percentages cannot
+   serve both ends of a 2-6 frame range without either leaving a visible gap
+   at the low end or blurring three photos together at the high end. So there
+   are two keyframes, and HeroBackground.astro picks which one a hero's
+   frames use (by adding the `few-frames` modifier class) based on the actual
+   frame count -- still pure CSS, just a server-computed choice of which
+   named animation to run, exactly like the --frames/--frame-s custom
+   properties are already a per-render choice.
+
+   `hero-crossfade` (4-6 frames, holds long, fades quickly -- a crisp
+   one-photo-at-a-time cross-fade):
+     - 4 frames: cycle = 32s. 8s (the next frame's start) = 25% of the cycle.
+       The hold ends at 20% (6.4s) and the fade-out finishes at 26% (8.32s),
+       so this frame is still ~17% opaque at the instant the next frame
+       starts ramping up from 0 -- no gap.
+     - 5 frames: cycle = 40s. 8s = 20% of the cycle, exactly the end of the
+       hold -- this frame is at full opacity right up to the next frame's
+       start (the brief's original worked example).
+     - 6 frames: cycle = 48s. 8s = 16.7% of the cycle, inside the hold
+       (4%-20%) -- this frame is still at full opacity when the next frame
+       starts, the most comfortable case of the three.
+   In every case (4, 5 or 6 frames) the outgoing frame has not reached
+   opacity 0 by the time the incoming frame starts brightening from 0.
+
+   `hero-crossfade-few` (2-3 frames -- the same fixed percentages would leave
+   a real gap here: with only 2 frames, 8s is 50% of a 16s cycle, and
+   `hero-crossfade`'s fade-out is long finished (26% = 4.16s) by then, so
+   BOTH frames would sit at opacity 0 together for several seconds -- a
+   black/navy flash on the homepage hero, found by screenshotting this exact
+   fixture at exactly 10s in and seeing nothing rendered). `few` needs its
+   fade-out to survive past the 50% mark:
+     - 2 frames: cycle = 16s. 8s (next frame's start) = 50% of the cycle.
+       The fade-out here runs 40%-52%, finishing at 8.32s -- just past the
+       8s the next frame starts, so there is always some opacity on screen.
+     - 3 frames: cycle = 24s. 8s = 33.3% of the cycle, well inside the
+       40%-52% fade-out window (this frame is still above half-opacity),
+       comfortably before it reaches zero.
+   The wider fade-out window means 2-3 frames blend a little longer into each
+   other than 4-6 frames do; that is a softer cross-fade, not a gap, and
+   correctness (something always on screen) wins over crispness here.
+
+   Ken Burns zoom composes with the cross-fade for free: it is a second,
+   independent `animation` value (transform-only, comma-separated in the
+   `.hero-frame` rule) with its own duration, so pausing or fading opacity
+   never touches it and there is no script involved either way. Kept from the
+   original slideshow implementation rather than dropped.
+
+   Lives here (global), not in a scoped component <style>, because the frames
+   are rendered by the child SanityImage component and would not carry
+   HeroBackground's scope attribute. ---- */
+.hero-fade {
   position: absolute;
   inset: 0;
 }
-.hero-slide {
+.hero-frame {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 1.5s ease;
   transform-origin: center;
-  animation: hero-kb 16s ease-in-out infinite alternate;
+  animation:
+    hero-crossfade calc(var(--frames, 1) * var(--frame-s, 8) * 1s) infinite,
+    hero-kb 16s ease-in-out infinite alternate;
   will-change: opacity, transform;
 }
-.hero-slide.is-active {
-  opacity: 1;
+@keyframes hero-crossfade {
+  0% {
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 1;
+  }
+  26% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }
-.hero-slide:nth-child(3n + 2) {
+/* 2-3 frame hero: see the arithmetic above for why this needs a longer hold
+   and a later, wider fade-out than the 4-6 frame keyframe. */
+@keyframes hero-crossfade-few {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.hero-fade.few-frames .hero-frame {
+  /* Longhand override: only the crossfade half of the two-animation list
+     changes. Duration (from --frames/--frame-s), delay and the Ken Burns
+     animation itself come from the base .hero-frame rule and the inline
+     style untouched. */
+  animation-name: hero-crossfade-few, hero-kb;
+}
+.hero-frame:nth-child(3n + 2) {
   transform-origin: top left;
-  animation-duration: 18s;
+  animation-duration: calc(var(--frames, 1) * var(--frame-s, 8) * 1s), 18s;
 }
-.hero-slide:nth-child(3n + 3) {
+.hero-frame:nth-child(3n + 3) {
   transform-origin: bottom right;
-  animation-duration: 20s;
+  animation-duration: calc(var(--frames, 1) * var(--frame-s, 8) * 1s), 20s;
 }
-@keyframes hero-kb {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.07);
-  }
+.hero-fade:hover .hero-frame,
+.hero-fade:focus-within .hero-frame,
+.hero-fade.is-paused .hero-frame {
+  animation-play-state: paused;
+}
+/* Pause button, bottom-right corner of the hero image. Small, quiet, always
+   reachable by keyboard. */
+.hero-pause {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 10;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+  color: var(--color-bg);
+  background: rgba(var(--tint-rgb), 0.25);
+  border: 1px solid rgba(var(--tint-rgb), 0.4);
+}
+.hero-pause:hover {
+  background: rgba(var(--tint-rgb), 0.4);
+}
+.hero-pause:focus-visible {
+  outline: 2px solid var(--color-bg);
+  outline-offset: 2px;
+}
+/* Dot indicators, decorative (aria-hidden) -- the pause button is the only
+   interactive control the slideshow needs. */
+.hero-dots {
+  position: absolute;
+  bottom: 1.125rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 0.375rem;
+}
+.hero-dots > span {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: rgba(var(--tint-rgb), 0.45);
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-slide {
+  .hero-frame {
     transition: none;
     animation: none;
     transform: none;
+    opacity: 0;
+  }
+  .hero-frame:first-child {
+    opacity: 1;
   }
 }
 

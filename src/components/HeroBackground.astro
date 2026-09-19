@@ -1,16 +1,26 @@
 ---
 // Safe to edit by hand
 // The hero background layer. With 0-1 images it renders a single static photo
-// exactly as the hero always has. With 2+ images it renders a slow cross-fading
-// slideshow with a subtle Ken Burns zoom, driven by CSS plus a small inline
-// script (the same pattern the hero already uses for its other scripts).
+// exactly as the hero always has. With 2-6 images it renders a slow
+// cross-fading slideshow with a subtle Ken Burns zoom, driven ENTIRELY by CSS
+// (see the .hero-fade / .hero-frame / hero-crossfade rules in globals.css) --
+// there is no interval timer advancing slides any more. Each frame gets its
+// own animation-delay from frameAnimationDelays() in src/lib/hero-frames.ts,
+// so the delay alone staggers the frames into a cross-fade.
 //
 // The first slide is the LCP image (eager + high priority) and carries its alt,
 // like the single-image hero; the additional slides use empty alt so they are
-// decorative. Reduced-motion users get a single static image (the script never
-// starts and the CSS animation/transition is disabled).
+// decorative. Reduced-motion users get a single static image (the CSS
+// animation is disabled in that media query).
+//
+// The only script left here is the pause button: it toggles .is-paused on the
+// slideshow wrapper, which pauses BOTH animations (crossfade and Ken Burns)
+// via animation-play-state. It is bound the same idempotent way the hero's
+// other inline scripts are, so it survives Astro View Transitions without
+// double-binding.
 
 import SanityImage from '@/components/SanityImage.astro';
+import { frameAnimationDelays } from '@/lib/hero-frames';
 
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
@@ -22,12 +32,24 @@ const { images } = Astro.props as Props;
 const slides = (images ?? []).filter((img) => !!img?.asset);
 const isSlideshow = slides.length >= 2;
 const first = slides[0];
+
+// One frame every 8 seconds, per the brief. frameAnimationDelays() also
+// guards frame count to at least 1, though the schema already caps at 6.
+const SECONDS_PER_FRAME = 8;
+const delays = frameAnimationDelays(slides.length, SECONDS_PER_FRAME);
+
+// Which crossfade keyframe a hero's frames use. Fixed keyframe percentages
+// (calc() is not allowed in a keyframe selector) cannot serve the whole 2-6
+// frame range without either a visible gap at 2-3 frames or a blurry overlap
+// at 4-6, so there are two keyframes (globals.css) and this is the choice
+// between them: `few-frames` picks the wider hold/fade-out tuned for 2-3.
+const fewFrames = slides.length <= 3;
 ---
 
 {first && (
   <>
     {isSlideshow ? (
-      <div class="hero-slideshow" data-hero-slideshow>
+      <div class:list={['hero-fade', { 'few-frames': fewFrames }]} data-hero-fade>
         {slides.map((img, i) => (
           <SanityImage
             source={img}
@@ -37,9 +59,18 @@ const first = slides[0];
             fetchpriority={i === 0 ? 'high' : 'low'}
             quality={70}
             alt={i === 0 ? undefined : ''}
-            class={`hero-slide${i === 0 ? ' is-active' : ''}`}
+            class="hero-frame"
+            style={`--frames:${slides.length}; --frame-s:${SECONDS_PER_FRAME}; animation-delay:${delays[i]}s`}
           />
         ))}
+        <button type="button" class="hero-pause" aria-pressed="false">
+          Pause
+        </button>
+        <div class="hero-dots" aria-hidden="true">
+          {slides.map(() => (
+            <span></span>
+          ))}
+        </div>
       </div>
     ) : (
       <SanityImage
@@ -66,36 +97,27 @@ const first = slides[0];
 {isSlideshow && (
   <script is:inline>
     (function () {
-      function initHeroSlideshow() {
-        // Tear down any timer from a previous page first. The tab and its
-        // document-level listeners persist across Astro View Transitions, so
-        // re-wiring without this would stack intervals on detached slides.
-        if (window.__heroSlideshowTimer) {
-          clearInterval(window.__heroSlideshowTimer);
-          window.__heroSlideshowTimer = null;
-        }
-        var box = document.querySelector('[data-hero-slideshow]');
+      // Toggles .is-paused on the [data-hero-fade] wrapper, which the CSS
+      // uses to pause both the crossfade and the Ken Burns zoom together
+      // (animation-play-state with no per-animation value pauses all of an
+      // element's animations at once). Bound once, guarded against Astro
+      // View Transitions re-running this script on a detached button.
+      function initHeroPause() {
+        var box = document.querySelector('[data-hero-fade]');
         if (!box) return;
-        var slides = box.querySelectorAll('.hero-slide');
-        if (slides.length < 2) return;
-        var reduce = false;
-        try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) {}
-        if (reduce) return; // first slide stays visible, no motion
-
-        var current = 0;
-        var STEP_MS = 4500; // 3s hold + 1.5s cross-fade
-        window.__heroSlideshowTimer = setInterval(function () {
-          if (document.hidden) return; // pause while the tab is hidden
-          slides[current].classList.remove('is-active');
-          current = (current + 1) % slides.length;
-          slides[current].classList.add('is-active');
-        }, STEP_MS);
+        var button = box.querySelector('.hero-pause');
+        if (!button || button.dataset.wired === '1') return;
+        button.dataset.wired = '1';
+        button.addEventListener('click', function () {
+          var paused = box.classList.toggle('is-paused');
+          button.setAttribute('aria-pressed', paused ? 'true' : 'false');
+          button.textContent = paused ? 'Play' : 'Pause';
+        });
       }
-      initHeroSlideshow();
-      // Register the navigation re-init once so the listener never stacks.
-      if (!window.__heroSlideshowBound) {
-        window.__heroSlideshowBound = true;
-        document.addEventListener('astro:page-load', initHeroSlideshow);
+      initHeroPause();
+      if (!window.__heroPauseBound) {
+        window.__heroPauseBound = true;
+        document.addEventListener('astro:page-load', initHeroPause);
       }
     })();
   </script>

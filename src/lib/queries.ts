@@ -34,6 +34,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     _type == "heroSection" => {
       ...,
       backgroundImage${IMAGE_PROJECTION},
+      frames[]${IMAGE_PROJECTION},
       primaryCta${CTA_PROJECTION},
       secondaryCta${CTA_PROJECTION}
     },

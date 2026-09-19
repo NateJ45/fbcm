@@ -53,6 +53,12 @@ import HeritageBand from '@/components/sections/HeritageBand.astro';
 import GiveBand from '@/components/sections/GiveBand.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
 // scaffold:end
+// Task 7: temporary hero fixtures (frames, layout, facts). No hero with frames
+// exists in the dataset yet (plan 2b seeds one) so these two calls are the
+// only way to see the cross-fade and the split layout render before content
+// lands. Remove once plan 2b's seeded hero gives the styleguide (and Playwright)
+// something real to shoot instead.
+import Hero from '@/components/Hero.astro';
 
 /** The brand palette from the `@theme` block in src/styles/globals.css. */
 const BRAND_TOKENS = [
@@ -302,6 +308,46 @@ const HERITAGE_FIXTURE = {
   },
 };
 
+// Task 7: temporary hero fixtures. Three real FBCM photos (from this
+// project's own asset library, same source as HERITAGE_FIXTURE above) for the
+// full-bleed cross-fade, and one for the split layout with three facts.
+const HERO_FULL_FIXTURE = {
+  eyebrow: 'Welcome home',
+  headline: 'A church for the whole of Muncie',
+  subhead: 'Join us this Sunday for worship, fellowship, and a warm welcome.',
+  frames: [
+    {
+      asset: { _ref: 'image-e6666c121c6318a9ce9f82798fefbfe16d6ac9d4-4032x1908-jpg' },
+      alt: 'Inside the sanctuary, looking toward the stained glass window.',
+    },
+    {
+      asset: { _ref: 'image-25c93a161fc4fbb25f3b87f80522315e3596ea70-1159x643-jpg' },
+      alt: 'A styleguide fixture photo of the church.',
+    },
+    {
+      asset: { _ref: 'image-4a5061d1625f61322237a6950c9bd2d6f819edba-1900x1400-jpg' },
+      alt: 'A styleguide fixture photo of the church.',
+    },
+  ],
+};
+
+const HERO_SPLIT_FIXTURE = {
+  eyebrow: 'This week',
+  headline: 'Come as you are',
+  subhead: 'One service, one family, every Sunday morning.',
+  frames: [
+    {
+      asset: { _ref: 'image-25c93a161fc4fbb25f3b87f80522315e3596ea70-1159x643-jpg' },
+      alt: 'A styleguide fixture photo of the church.',
+    },
+  ],
+  facts: [
+    { _key: 'fact-1', label: 'Sundays', value: '10:45 am' },
+    { _key: 'fact-2', label: 'Where', value: '309 E Adams St' },
+    { _key: 'fact-3', label: 'Online', value: 'Facebook Live' },
+  ],
+};
+
 const GIVE_BAND_FIXTURE = {
   heading: 'Give',
   body: 'Give online, in the offering plate on Sunday, or by mail.',
@@ -481,6 +527,28 @@ const DOCUMENT_LIST_FIXTURE = {
       </p>
     </div>
   </section>
+
+  {/* Task 7: temporary hero fixtures, see the note by the fixture data above. */}
+  <Hero
+    eyebrow={HERO_FULL_FIXTURE.eyebrow}
+    headline={HERO_FULL_FIXTURE.headline}
+    subhead={HERO_FULL_FIXTURE.subhead}
+    backgroundImages={HERO_FULL_FIXTURE.frames}
+    layout="full"
+    size="short"
+    headingId="styleguide-hero-full"
+  />
+
+  <Hero
+    eyebrow={HERO_SPLIT_FIXTURE.eyebrow}
+    headline={HERO_SPLIT_FIXTURE.headline}
+    subhead={HERO_SPLIT_FIXTURE.subhead}
+    backgroundImages={HERO_SPLIT_FIXTURE.frames}
+    facts={HERO_SPLIT_FIXTURE.facts}
+    layout="split"
+    size="short"
+    headingId="styleguide-hero-split"
+  />
 
   <SundayTimes
     eyebrow={SUNDAY_TIMES_FIXTURE.eyebrow}

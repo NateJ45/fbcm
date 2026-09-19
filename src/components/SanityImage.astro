@@ -31,6 +31,9 @@ interface Props {
   /** Provide explicit sizes attribute for responsive serving. Strongly recommended for any non-fixed-width image. */
   sizes?: string;
   class?: string;
+  /** Inline style passthrough. Used by the hero cross-fade to set each
+      frame's --frames/--frame-s custom properties and animation-delay. */
+  style?: string;
   /** Quality 0-100. Default 75 for content, drop to 65 for big hero photos. */
   quality?: number;
   /**
@@ -56,6 +59,7 @@ const {
   loading = 'lazy',
   sizes,
   class: className,
+  style,
   quality = 75,
   format = 'auto',
   fetchpriority,
@@ -117,4 +121,5 @@ const resolvedAlt = alt !== undefined ? alt : (source.alt ?? '');
   fetchpriority={fetchpriority}
   sizes={sizes ?? `(max-width: ${width}px) 100vw, ${width}px`}
   class={className}
+  style={style}
 />

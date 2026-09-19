@@ -108,15 +108,72 @@ export const heroSection = defineType({
       type: 'string',
       validation: (R) => R.required(),
     }),
-    defineField({
-      name: 'scriptAccent',
-      title: 'Handwritten accent word (optional)',
-      type: 'string',
-      description:
-        'One word from the headline to render in the script font. Must match exactly. Leave blank to skip.',
-    }),
     defineField({ name: 'subhead', title: 'Subhead', type: 'text', rows: 2 }),
     imageWithAlt('backgroundImage', 'Background photo (optional)'),
+    defineField({
+      name: 'layout',
+      title: 'Layout',
+      type: 'string',
+      initialValue: 'full',
+      options: {
+        list: [
+          { title: 'Photo behind the words', value: 'full' },
+          { title: 'Words left, photo right', value: 'split' },
+        ],
+        layout: 'radio',
+      },
+      description: 'Pick one.',
+    }),
+    defineField({
+      name: 'frames',
+      title: 'Photos',
+      type: 'array',
+      validation: (R) => R.max(6),
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Describe the photo',
+              type: 'string',
+              description: 'A short sentence for people who cannot see it.',
+            }),
+          ],
+        },
+      ],
+      description:
+        'One photo, or up to six. With more than one, the home page fades slowly between them; the first loads first, so put the best one first.',
+    }),
+    defineField({
+      name: 'facts',
+      title: 'Three facts',
+      type: 'array',
+      validation: (R) => R.max(3),
+      of: [
+        {
+          type: 'object',
+          name: 'heroFact',
+          fields: [
+            defineField({
+              name: 'label',
+              title: 'Small label',
+              type: 'string',
+              description: 'Like "Sundays".',
+            }),
+            defineField({
+              name: 'value',
+              title: 'Value',
+              type: 'string',
+              description: 'Like "10:45 am".',
+            }),
+          ],
+          preview: { select: { title: 'value', subtitle: 'label' } },
+        },
+      ],
+      description: 'Up to three short facts under the words: when, where, online.',
+    }),
     defineField({ name: 'primaryCta', title: 'Main button', type: 'ctaBlock' }),
     defineField({ name: 'secondaryCta', title: 'Second button (optional)', type: 'ctaBlock' }),
     defineField({

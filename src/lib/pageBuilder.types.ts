@@ -116,9 +116,11 @@ export interface ProjectedCtaBlock {
 
 export type ProjectedHeroSection = { _key: string } & Omit<
   _HeroSection,
-  'backgroundImage' | 'primaryCta' | 'secondaryCta'
+  'backgroundImage' | 'frames' | 'primaryCta' | 'secondaryCta'
 > & {
     backgroundImage?: ProjectedImage | null;
+    /** Up to six photos (schema-capped). 2+ render the home hero's CSS cross-fade. */
+    frames?: ProjectedImage[] | null;
     primaryCta?: ProjectedCtaBlock | null;
     secondaryCta?: ProjectedCtaBlock | null;
   };
@@ -301,11 +303,9 @@ export type ProjectedTimelineSection = { _key: string } & Omit<_TimelineSection,
 /**
  * One staff member as the staffGrid arm projects them.
  *
- * `group` and `phone` are optional here because staffMember.ts does not carry
- * those fields yet (Task 7 adds them). GROQ returns null for a field that does
- * not exist, so the projection is already correct and the component already
- * handles their absence: groupStaff() files anyone without a group under
- * support, which is exactly the rule the GROQ arm's third clause encodes.
+ * `group` and `phone` are optional: a member with no group set is filed under
+ * support by groupStaff() (church-derive.ts), which is exactly the rule the
+ * GROQ arm's third clause encodes, and a member with no phone just shows none.
  */
 export interface ProjectedStaffMember {
   _id?: string;

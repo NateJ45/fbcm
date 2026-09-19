@@ -1,9 +1,13 @@
 ---
 // Safe to edit by hand
-// Page hero. Two shapes:
-//   1) "image" hero (home, optionally Process/Services if a hero photo is added)
+// Page hero. Three shapes:
+//   1) "image, full" hero (home, optionally Process/Services if a hero photo is added)
 //      — full-bleed Sanity background image with a dark scrim, h1 + subhead + CTAs overlay.
-//   2) "text" hero (About, Contact, FAQ, Process by default)
+//   2) "image, split" hero (layout="split", Task 7) — cream two-column band:
+//      words on the left (eyebrow, headline, subhead, facts, buttons), the
+//      first photo on the right with a gold left rule. 7:5 columns at lg,
+//      stacked with the photo first on mobile.
+//   3) "text" hero (About, Contact, FAQ, Process by default)
 //      — clean editorial heading on Soft Linen with eyebrow + headline + subhead.
 //
 // The image hero is the LCP element on the homepage. SanityImage is set to loading="eager"
@@ -11,6 +15,7 @@
 // preloads inline. Don't add layout-shift animations to this section.
 
 import HeroBackground from '@/components/HeroBackground.astro';
+import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { splitHeadingAccent } from '@/lib/heading-accent';
@@ -28,6 +33,14 @@ interface CtaBlock {
 
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
+/** One fact under the hero words (Task 7): a short label/value pair like
+    "Sundays" / "10:45 am". Up to three, schema-capped. */
+interface HeroFact {
+  _key?: string;
+  label?: string;
+  value?: string;
+}
+
 interface Props {
   eyebrow?: string;
   headline: string;
@@ -36,6 +49,14 @@ interface Props {
   /** Optional list of hero images. 2+ render a cross-fading slideshow; 1 (or
       falling back to backgroundImage) renders a single static image. */
   backgroundImages?: SanityImageObject[] | null;
+  /**
+   * "full" (default when unset) = photo behind the words, full-bleed, as the
+   * hero always rendered. "split" = cream two-column band, words left, first
+   * photo right. Only meaningful when an image is present.
+   */
+  layout?: 'full' | 'split';
+  /** Up to three short facts (when, where, online) shown under the subhead. */
+  facts?: HeroFact[] | null;
   primaryCta?: CtaBlock | null;
   secondaryCta?: CtaBlock | null;
   headingId: string;
@@ -55,6 +76,11 @@ interface Props {
    *
    * Don't combine with `rotatingWords` — they may target the same first
    * word; pick one effect per hero. If both are passed, rotatingWords wins.
+   *
+   * heroSection (the page-builder block) no longer offers this field (Task 7
+   * dropped it from that schema); it is kept here because the singleton hero
+   * fields on other pages (blog index, contact, the preview route) still pass
+   * their own scriptAccent value through to this component.
    */
   scriptAccent?: string;
 }
@@ -65,6 +91,8 @@ const {
   subhead,
   backgroundImage,
   backgroundImages,
+  layout = 'full',
+  facts,
   primaryCta,
   secondaryCta,
   headingId,
@@ -72,6 +100,8 @@ const {
   rotatingWords,
   scriptAccent,
 } = Astro.props as Props;
+
+const heroFacts = (facts ?? []).filter((f) => f?.label || f?.value).slice(0, 3);
 
 // Split the headline into a first word + the rest, so the rotator can swap
 // the first word in place without touching the rest of the line. Matches
@@ -230,7 +260,78 @@ const wrapperHeight =
   </script>
 )}
 
-{hasImage ? (
+{hasImage && layout === 'split' ? (
+  <section class="bg-background text-foreground" aria-labelledby={headingId}>
+    {/* Split hero (Task 7): words left, photo right, 7:5 at lg. Stacked with
+        the photo first on mobile so the page doesn't open on a wall of text.
+        Shares the site's left edge and container (max-w-content px-m) with
+        every other band on the page (CLAUDE.md rule 17: one grammar per page). */}
+    <div class="mx-auto grid max-w-content grid-cols-1 items-stretch gap-0 px-m lg:grid-cols-12">
+      <div class="order-2 flex flex-col justify-center py-section-md lg:order-1 lg:col-span-7 lg:pr-l">
+        <div class="hero-entry-stagger max-w-2xl">
+          {eyebrow && (
+            <p class="text-xs uppercase tracking-eyebrow text-muted-foreground">{eyebrow}</p>
+          )}
+          <h1
+            id={headingId}
+            class="mt-xs font-display text-h1 leading-headline-tight tracking-[-0.02em] text-foreground"
+          >
+            {scriptFound ? (
+              <>
+                {scriptBefore}<span class="font-script">{scriptWord}</span>{scriptAfter}
+              </>
+            ) : (
+              headline
+            )}
+          </h1>
+          {subhead && (
+            <p class="mt-m max-w-2xl text-lg text-muted-foreground">
+              {subheadParts.map((part) =>
+                part.type === 'em'
+                  ? <em class="italic font-display text-foreground">{part.value}</em>
+                  : part.value
+              )}
+            </p>
+          )}
+          {heroFacts.length > 0 && (
+            <dl class="mt-l flex flex-wrap gap-l">
+              {heroFacts.map((fact) => (
+                <div>
+                  {fact.label && (
+                    <dt class="font-mono text-[0.75rem] tracking-eyebrow uppercase text-muted-foreground">
+                      {fact.label}
+                    </dt>
+                  )}
+                  {fact.value && (
+                    <dd class="mt-1 font-display text-h4 text-foreground">{fact.value}</dd>
+                  )}
+                </div>
+              ))}
+            </dl>
+          )}
+          {(primaryCta || secondaryCta) && (
+            <div class="mt-l flex flex-wrap gap-s">
+              {primaryCta && <CtaLink cta={primaryCta} variant="primary" />}
+              {secondaryCta && <CtaLink cta={secondaryCta} variant="secondary" />}
+            </div>
+          )}
+        </div>
+      </div>
+      <div class="order-1 border-l-4 border-gold lg:order-2 lg:col-span-5">
+        <SanityImage
+          source={effectiveImages[0]}
+          width={1200}
+          height={900}
+          sizes="(min-width: 1024px) 40vw, 100vw"
+          loading="eager"
+          fetchpriority="high"
+          quality={75}
+          class="h-full min-h-[16rem] w-full object-cover"
+        />
+      </div>
+    </div>
+  </section>
+) : hasImage ? (
   <section
     class:list={[
       'relative overflow-hidden bg-accent-dark text-bg flex flex-col justify-end',
@@ -286,6 +387,22 @@ const wrapperHeight =
                 : part.value
             )}
           </p>
+        )}
+        {heroFacts.length > 0 && (
+          <dl class="mt-l flex flex-wrap gap-l">
+            {heroFacts.map((fact) => (
+              <div>
+                {fact.label && (
+                  <dt class="font-mono text-[0.75rem] tracking-eyebrow uppercase text-bg/80">
+                    {fact.label}
+                  </dt>
+                )}
+                {fact.value && (
+                  <dd class="mt-1 font-display text-h4 text-bg">{fact.value}</dd>
+                )}
+              </div>
+            ))}
+          </dl>
         )}
         {(primaryCta || secondaryCta) && (
           <div class="mt-l flex flex-wrap gap-s">

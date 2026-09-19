@@ -41,6 +41,26 @@ export const staffMember = defineType({
       description: 'Their church email address. Leave blank to show none.',
     }),
     defineField({
+      name: 'phone',
+      title: 'Phone number',
+      type: 'string',
+      description: 'Their church phone number, if they have one. Leave blank to show none.',
+    }),
+    defineField({
+      name: 'group',
+      title: 'Group',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Pastors', value: 'pastors' },
+          { title: 'Church Coordination Team', value: 'coordination' },
+          { title: 'Support and volunteer roles', value: 'support' },
+        ],
+        layout: 'radio',
+      },
+      description: 'Pick one. Pastors show first on the Staff page.',
+    }),
+    defineField({
       name: 'bio',
       title: 'About them',
       type: 'array',
