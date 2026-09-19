@@ -240,16 +240,8 @@ docs.push({
       _key: 'fcol-elsewhere',
       title: 'Elsewhere',
       links: [
-        externalLink(
-          'fcol-elsewhere-cc',
-          'Church Center: calendar and giving',
-          CHURCH_CENTER_URL,
-        ),
-        externalLink(
-          'fcol-elsewhere-ct',
-          'Church Trac: newsletters and the app',
-          CHURCH_TRAC_URL,
-        ),
+        externalLink('fcol-elsewhere-cc', 'Church Center: calendar and giving', CHURCH_CENTER_URL),
+        externalLink('fcol-elsewhere-ct', 'Church Trac: newsletters and the app', CHURCH_TRAC_URL),
         externalLink('fcol-elsewhere-yt', 'YouTube: every service', YOUTUBE_URL),
       ],
     },
