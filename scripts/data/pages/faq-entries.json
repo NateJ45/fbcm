@@ -1,0 +1,134 @@
+{
+  "source": "Wix FAQ app, GET https://www.wixapis.com/faq/v2/question-entries on site 561b096d-3460-4ac4-8625-dc536b7ad348, 2026-09-19",
+  "why": "The FAQ widget renders answers client-side only, so the 2026-09-18 crawl captured questions with no answers. The Wix FAQ app stores them as Draft.js; this file keeps the plain text and the links, verbatim.",
+  "categories": {
+    "6c034276-fcae-490d-b6ea-a222d2dfcbeb": {
+      "title": "What To Expect",
+      "renderedOn": "/what-to-expect"
+    },
+    "6c6a9707-a64e-46ec-ab90-92f48bf3359a": {
+      "title": "Children FAQ",
+      "renderedOn": "/children"
+    }
+  },
+  "conflicts": [
+    "Room numbers disagree across the site: these FAQ answers and /what-to-expect say nursery 104 and family room 105; the /children page body says nursery 105 and family room 104 in two places. The church must say which is right before either is published."
+  ],
+  "formerStaffReferenced": [
+    "/team/michelle-heimlich (linked as the Children's Ministry CCT Leader; not among the 16 current profiles; needs a redirect and the church's word on who holds the role now)"
+  ],
+  "entries": [
+    {
+      "categoryId": "6c034276-fcae-490d-b6ea-a222d2dfcbeb",
+      "sortOrder": 6,
+      "question": "How do I find the church?",
+      "answer": "The church is located in downtown Muncie at 309 East Adams Street. Google maps will take you to the correct place. Our parking lot is located on the Adams Street side. The most common doors people use are the Adams Street entrance at our circular drive (wheelchair accessible), the large wooden front doors which go into the sanctuary, or the Jefferson Street side doors which enter our main hallway near the church offices.",
+      "links": []
+    },
+    {
+      "categoryId": "6c034276-fcae-490d-b6ea-a222d2dfcbeb",
+      "sortOrder": 7,
+      "question": "What should I wear?",
+      "answer": "Casual dress is welcome. People wear a variety of styles of clothes from short sleeves (especially in the summer), to suit jackets and “Sunday dresses.” Please dress comfortably and in a way which allows you to devote attention to worship.",
+      "links": []
+    },
+    {
+      "categoryId": "6c034276-fcae-490d-b6ea-a222d2dfcbeb",
+      "sortOrder": 8,
+      "question": "Are there nursery care or children’s worship during service?",
+      "answer": "There are. Nursery is available in room 104 for children under three. Greeters will help you check in and direct you. Each child will be given a name tag.  Children up to fifth grade will be dismissed to Children’s Church every week except communion Sunday (first week of the month — nursery care is still available). We also have a “Family Room” with rocking chairs, toys, a changing table, and a live stream of the service, for families and little ones who want to step out of worship at any time.",
+      "links": []
+    },
+    {
+      "categoryId": "6c034276-fcae-490d-b6ea-a222d2dfcbeb",
+      "sortOrder": 9,
+      "question": "Is your building accessible / ADA compliant?",
+      "answer": "We have a wheel-chair accessible door, an elevator, two wheelchair-accessible bathrooms, and assisted listening devices available upon request. Our building was built in 1929, and is therefore not officially ADA compliant– though we have made efforts to retrofit our building to make it as accessible as possible. For more information see our accessibility page. ",
+      "links": [
+        {
+          "text": "see our accessibility page",
+          "url": "https://fbcmuncie.org/accessibility"
+        }
+      ]
+    },
+    {
+      "categoryId": "6c034276-fcae-490d-b6ea-a222d2dfcbeb",
+      "sortOrder": 10,
+      "question": "Am I allowed to take the Lord’s Supper (communion?)",
+      "answer": "We believe it is the Lord’s table, and all who believe in him and have been baptized may partake. This includes believing Christians, no matter their particular denomination.",
+      "links": []
+    },
+    {
+      "categoryId": "6c034276-fcae-490d-b6ea-a222d2dfcbeb",
+      "sortOrder": 11,
+      "question": "I don’t have a background in the Christian religion / I’m not sure what I believe. Will that be a problem if I want to visit?",
+      "answer": "It won’t be a problem at all! Anyone is welcome to attend our time of Worship. You may participate (in singing, the prayers, in Sunday Bible study) as you wish. And, if you want to see a service before you attend in-person, check out our live streams. Please know the pastoral staff is always happy to discuss any questions you might have about our faith in God: Father, Son, & Holy Spirit.",
+      "links": [
+        {
+          "text": "check out our live streams",
+          "url": "https://fbcmuncie.churchcenter.com/channels/4999"
+        }
+      ]
+    },
+    {
+      "categoryId": "6c034276-fcae-490d-b6ea-a222d2dfcbeb",
+      "sortOrder": 12,
+      "question": "What if I have other questions?",
+      "answer": "Please contact the office. You can find our contact form here.",
+      "links": [
+        {
+          "text": "You can find our contact form here",
+          "url": "https://fbcmuncie.churchcenter.com/people/forms/159198"
+        }
+      ]
+    },
+    {
+      "categoryId": "6c6a9707-a64e-46ec-ab90-92f48bf3359a",
+      "sortOrder": 1,
+      "question": "What security measures are in place?",
+      "answer": "We have a check-in station for children at our Welcome Center, located on the first floor hallway just outside the sanctuary. At the welcome center, our greeters will be able to assist you with checking-in your children and getting them to the correct classrooms. Each classroom maintains at least two adults at all times. All Children's ministry volunteers are background checked and trained by an FBC Leader.",
+      "links": []
+    },
+    {
+      "categoryId": "6c6a9707-a64e-46ec-ab90-92f48bf3359a",
+      "sortOrder": 2,
+      "question": "What does check-in involve?",
+      "answer": "When checking-in, parents enter a phone number and a name tag is issued for each child in that family. On the name tag is the child’s name, age, parent’s phone number (that is how you will be notified if your child is sick, hurt, etc), any known allergies, and a random code. Parents will get a security tag with a code that matches their child’s; this tag will need to be presented for pick up.",
+      "links": []
+    },
+    {
+      "categoryId": "6c6a9707-a64e-46ec-ab90-92f48bf3359a",
+      "sortOrder": 3,
+      "question": "Can I volunteer on the Children’s Ministry team or in a classroom?",
+      "answer": "We are always looking for those who have a heart to love and teach our children, but also would like to build a relationship and make expectations and resources available to those who volunteer. Background checks and training are required for all volunteers. You can contact the church office, the Children's Ministry CCT Leader, or our pastors for more information. ",
+      "links": [
+        {
+          "text": "contact the church office",
+          "url": "https://fbcmuncie.org/contact"
+        },
+        {
+          "text": "the Children's Ministry CCT Leader",
+          "url": "https://fbcmuncie.org/team/michelle-heimlich"
+        },
+        {
+          "text": "our pastors",
+          "url": "https://fbcmuncie.org/contact"
+        }
+      ]
+    },
+    {
+      "categoryId": "6c6a9707-a64e-46ec-ab90-92f48bf3359a",
+      "sortOrder": 4,
+      "question": "Can children bring an offering?",
+      "answer": "Absolutely! We encourage it! There are containers in each classroom in which the children can place their offering.",
+      "links": []
+    },
+    {
+      "categoryId": "6c6a9707-a64e-46ec-ab90-92f48bf3359a",
+      "sortOrder": 5,
+      "question": "Does my child need to bring a Bible?",
+      "answer": "No. But they are welcome to if they have their own. In Sunday School and Children’s Church the kids will be looking over passages in the Bible. We will certainly provide a Bible if your child does not have one.",
+      "links": []
+    }
+  ]
+}
