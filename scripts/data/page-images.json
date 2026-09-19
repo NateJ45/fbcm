@@ -1,0 +1,42 @@
+{
+  "hero-tower": { "file": "08181c_087c222f4750499ba5c0a6c514267c35_tilde_mv2.jpg", "alt": "The limestone bell tower of First Baptist Church against a blue sky", "maxWidth": 2400 },
+  "hero-sanctuary": { "file": "08181c_ac4bdf55910a4bf08971622eadbe31f6_tilde_mv2.jpg", "alt": "The sanctuary from the balcony, light through the stained glass", "maxWidth": 2400 },
+  "hero-children": { "file": "08181c_b178e014f570469ba249e1dd6f8c4122_tilde_mv2.jpg", "alt": "Children gathered under the sanctuary arch", "maxWidth": 2400, "consent": true },
+  "hero-congregation": { "file": "08181c_37d562a315d04a83afc879ec7ee9a460_tilde_mv2.jpg", "alt": "The congregation standing to sing on a Sunday morning", "maxWidth": 2400, "crop": { "top": 0, "bottom": 0.18 } },
+  "hero-building": { "file": "08181c_be2602489e0d4b63929aa41445a72ff6_tilde_mv2.jpg", "alt": "The corner of the church at Adams and Jefferson", "maxWidth": 2400, "crop": { "left": 0, "right": 0.38 } },
+
+  "visit-children": { "file": "08181c_cb74be6da795403791604886a27141a3_tilde_mv2.jpg", "alt": "Two girls in front of a stained glass window", "maxWidth": 1600, "consent": true },
+
+  "whoweare-congregation": { "same": "hero-congregation", "alt": "The congregation standing to sing on a Sunday morning" },
+
+  "beliefs-glass": { "file": "08181c_ac4bdf55910a4bf08971622eadbe31f6_tilde_mv2.jpg", "alt": "Light through the sanctuary's stained glass window", "maxWidth": 1600, "crop": { "left": 0.55 } },
+
+  "ministries-worship-team": { "file": "08181c_360b7e1579244dbc95697ca78172c167_tilde_mv2.jpg", "alt": "The worship team leading music on a Sunday morning", "maxWidth": 1600, "consent": false },
+  "ministries-handbells": { "file": "08181c_88fa93aff6f14b358d1ee43721b7e189_tilde_mv2.jpg", "alt": "The handbell choir rehearsing", "maxWidth": 1600, "consent": false },
+  "ministries-children": { "same": "hero-children", "alt": "Children gathered under the sanctuary arch" },
+  "ministries-youth": { "file": "08181c_bd26ffeb7cc14d029caf2663a0452bf3_tilde_mv2.jpg", "alt": "Two teens speaking to the youth group on stage", "maxWidth": 1600, "consent": true },
+
+  "staff-deacons-2026": { "file": "b98776_be609b7a431f4ad9a4f82e225deeb234_tilde_mv2.jpg", "alt": "The 2026 deacons of First Baptist Church Muncie", "maxWidth": 1600, "consent": false },
+
+  "history-era-1": { "file": "08181c_d3895914beb9430abd4699efa520970f_tilde_mv2.jpg", "alt": "Beginnings, 1859", "maxWidth": 2400 },
+  "history-era-2": { "file": "08181c_51599a87bcd74bbcb934352c94b6694b_tilde_mv2.jpg", "alt": "The first church building, built in 1862", "maxWidth": 2400 },
+  "history-era-3": { "file": "08181c_c2bb509034894c6ea2c5d6cde38eee77_tilde_mv2.jpg", "alt": "The second church building, built in 1890", "maxWidth": 2400 },
+  "history-era-4": { "file": "08181c_f0c685ba2a9a4230a89046a68ea6cbe6_tilde_mv2.jpg", "alt": "Pastor William Graham Everson, the Fighting Parson, 1921", "maxWidth": 2400 },
+  "history-era-5": { "file": "08181c_f475a65492c942ae8d35135e75128328_tilde_mv2.jpg", "alt": "The church building sold at auction during the Depression, 1938", "maxWidth": 2400 },
+  "history-era-6": { "file": "08181c_980bb1003ef94f809e5bb5d71bfd73a6_tilde_mv2.jpg", "alt": "The congregation in the 1950s", "maxWidth": 2400 },
+  "history-era-7": { "file": "08181c_8656f37b410845e39ee4e723cf094a32_tilde_mv2.jpg", "alt": "The congregation in the 1990s", "maxWidth": 2400 },
+
+  "wedding-sanctuary": { "same": "hero-sanctuary", "alt": "The sanctuary from the balcony, light through the stained glass" },
+  "wedding-bridal-suite": { "file": "08181c_1efc7b5f13bf45b3b1ea6639bf426b49_tilde_mv2.jpg", "alt": "The bridal suite lounge", "maxWidth": 1600 },
+  "wedding-fellowship-hall": { "file": "08181c_b0ea7034fb294342847320368a763de5_tilde_mv2.jpg", "alt": "The fellowship hall", "maxWidth": 1600 },
+  "wedding-kitchen": { "file": "08181c_ed1c39cb6e50457b81df74f62f0fa843_tilde_mv2.jpg", "alt": "The church kitchen", "maxWidth": 1600 },
+  "wedding-youth-center": { "file": "08181c_5a4270727fb647c89dd5f59532a1601a_tilde_mv2.jpg", "alt": "The youth center", "maxWidth": 1600 },
+  "wedding-exterior": { "file": "08181c_f0bbfdccafa34e00b7f42470a9353cff_tilde_mv2.jpg", "alt": "A wedding party celebrating in front of the church's red doors", "maxWidth": 1600 },
+
+  "contact-building": { "same": "hero-building", "alt": "The corner of the church at Adams and Jefferson" },
+
+  "logo-abcusa": { "file": "08181c_1f9b399e288b420b8408f9b61759250f_tilde_mv2.png", "alt": "American Baptist Churches USA logo", "maxWidth": 800, "format": "png" },
+  "logo-abc-indiana-kentucky": { "file": "08181c_d295dfa7f3f042959b35e60e01abaf11_tilde_mv2.png", "alt": "American Baptist Churches of Indiana and Kentucky logo", "maxWidth": 800, "format": "png" },
+
+  "notfound-tower": { "same": "hero-tower", "alt": "The limestone bell tower of First Baptist Church against a blue sky" }
+}
