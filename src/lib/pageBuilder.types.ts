@@ -108,6 +108,20 @@ export interface ProjectedCtaBlock {
   href?: string;
 }
 
+/**
+ * The shared shape every block that can be a LINK TARGET carries: the optional
+ * `anchor` slug from `anchorField()` (src/sanity/schemaTypes/_anchorField.ts).
+ *
+ * `sectionsProjection()` projects it with the leading `...` spread, so GROQ
+ * returns the whole slug object rather than a flattened string. The blocks whose
+ * projected types are derived from the GENERATED schema types pick it up for
+ * free after `npm run typegen`; the four hand-authored interfaces below extend
+ * this instead.
+ */
+export interface AnchoredSection {
+  anchor?: { current?: string | null } | null;
+}
+
 // ---------------------------------------------------------------------------
 // Per-block projected types
 // Each member carries _key (required for page-builder arrays in Sanity) and
@@ -179,7 +193,7 @@ export type ProjectedLogoStripLogo = ProjectedImage;
  * logoStripSection — grayscale logo row or grid.
  * SELF_CONTAINED (no surface prop).
  */
-export interface ProjectedLogoStripSection {
+export interface ProjectedLogoStripSection extends AnchoredSection {
   _type: 'logoStripSection';
   _key: string;
   eyebrow?: string;
@@ -255,7 +269,7 @@ export interface ProjectedDynamicListItem {
  * Source-specific behaviour:
  *   journal -> latest journalEntry cards (title, excerpt, publishedAt, coverImage)
  */
-export interface ProjectedDynamicListSection {
+export interface ProjectedDynamicListSection extends AnchoredSection {
   _type: 'dynamicListSection';
   _key: string;
   eyebrow?: string;

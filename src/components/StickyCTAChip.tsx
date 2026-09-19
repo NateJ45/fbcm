@@ -127,7 +127,7 @@ export default function StickyCTAChip({ label, href = '/contact', threshold = 0.
              labels. Past that, truncate kicks in as a safety net.
           Left padding reduced from pl-l to pl-m so more room goes to the
           label text instead of the bronze gutter. */}
-      <div className="relative flex max-w-[min(92vw,28rem)] items-center gap-1 rounded-full bg-primary-dark py-s pr-s pl-m text-white shadow-lg shadow-foreground/15">
+      <div className="relative flex max-w-[min(92vw,28rem)] items-center gap-1 rounded-full bg-gold py-s pr-s pl-m text-indigo-field shadow-lg shadow-foreground/15">
         <a
           href={href}
           tabIndex={visible ? 0 : -1}
@@ -143,7 +143,7 @@ export default function StickyCTAChip({ label, href = '/contact', threshold = 0.
           onClick={dismiss}
           tabIndex={visible ? 0 : -1}
           aria-label="Dismiss"
-          className="-mr-1 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+          className="-mr-1 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-indigo-field/80 transition-colors hover:bg-indigo-field/10 hover:text-indigo-field"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path

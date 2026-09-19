@@ -29,6 +29,7 @@ import {
 import { SECTION_TYPES } from './sections';
 import { columnsField, headingAccentField, hideWhenRich, richTwin } from './_appearanceFields';
 import { DYNAMIC_LIST_MAX } from '../../lib/dynamicListLimits';
+import { anchorField } from './_anchorField';
 
 // ── Shared helpers (mirrors sections.ts helpers — keep in sync if you change
 //    the main helpers, or extract to a shared file in a future refactor) ──────
@@ -264,6 +265,7 @@ export const dynamicListSection = defineType({
       description: `Between 3 and ${DYNAMIC_LIST_MAX} items. The section shows this many in a card grid.`,
     }),
     defineField({ name: 'cta', title: 'Link button (optional)', type: 'ctaBlock' }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'headline', source: 'source', limit: 'limit' },

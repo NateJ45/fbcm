@@ -36,6 +36,7 @@ import DocumentList from '@/components/sections/DocumentList.astro';
 import { classifySections } from '@/lib/sectionCadence';
 import type { PageBuilderBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
+import { sectionAnchor } from '@/lib/anchor';
 
 interface Props {
   sections?: unknown[];
@@ -48,10 +49,14 @@ interface Props {
    * in-canvas insert / duplicate / remove / drag-to-reorder controls
    * (PORTS.md card 17).
    *
-   * The live pages never pass it, and with it absent the wrapper is a
-   * `<Fragment>`, which renders NOTHING at all. That is why the static build's
-   * markup stays byte-identical with this feature installed, and
-   * `npm run parity compare` is the standing gate on that promise.
+   * The live pages never pass it, and with it absent the wrapper is the same
+   * <div> carrying the same anchor id and NOTHING else, so the live markup and
+   * the preview markup differ by exactly this one attribute.
+   *
+   * (Until 2026-09-19 the wrapper was a `<Fragment>` on live renders, which
+   * rendered nothing at all. Plan 2b task 1 gave every band a stable anchor id,
+   * and an id needs an element to sit on, so the wrapper is now unconditional
+   * and `scripts/.parity` baselines captured before that date no longer match.)
    */
   editDoc?: EditDoc;
   /**
@@ -76,11 +81,49 @@ interface Props {
 const { sections = [], idPrefix = 'section', editDoc, settings } = Astro.props as Props;
 const rows = classifySections<PageBuilderBlock>(sections as PageBuilderBlock[], idPrefix);
 
-// A real element in preview, nothing at all on the live site. The wrapper must
-// NOT be `display: contents`: the overlay outlines the element's rect, and a
-// contents element has none. A plain block-level div around a full-width
-// <section> changes no layout.
-const Wrap = editDoc ? 'div' : Fragment;
+// The section wrapper. It is a real block-level element on EVERY render now,
+// live and preview alike, because it carries the anchor id (2026-09-19, plan 2b
+// task 1). It must NOT be `display: contents`: the overlay outlines the
+// element's rect, and a contents element has none. A plain block-level div
+// around a full-width <section> changes no layout.
+//
+// The only preview-only thing left on it is `data-sanity`, which is what gives
+// the Presentation overlay its in-canvas insert / duplicate / remove /
+// drag-to-reorder controls (PORTS.md card 17). Nothing else goes on this
+// element: the live markup should differ from the preview markup by that one
+// attribute and no more.
+const Wrap = 'div';
+
+// ANCHOR IDS. Every band gets one so a link can reach it:
+//   - the editor's `anchor` slug when they set one (that is the stable name a
+//     redirect or a printed bulletin points at: /beliefs#baptists),
+//   - otherwise `<headingId>-band`, which is positional and good enough for a
+//     link written the same day.
+//
+// The fallback is deliberately NOT `headingId` itself. `headingId` is already
+// on the <h2> inside the section, and the section's own landmark points at it
+// with aria-labelledby, so reusing it here would put two elements with the same
+// id in the document and break that reference (axe's duplicate-id-aria).
+//
+// Collisions are resolved rather than allowed: two bands whose editors typed
+// the same anchor would otherwise both answer to it and the browser would pick
+// the first, silently. The second one gets `-2`, the third `-3`, and so on.
+const usedAnchors = new Set<string>();
+const uniqueAnchor = (block: unknown, headingId: string): string => {
+  const base = sectionAnchor(
+    block as { anchor?: { current?: string | null } | null },
+    `${headingId}-band`,
+  );
+  let id = base;
+  let n = 1;
+  while (usedAnchors.has(id)) {
+    n += 1;
+    id = `${base}-${n}`;
+  }
+  usedAnchors.add(id);
+  return id;
+};
+
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
 ---
@@ -90,7 +133,7 @@ const wrapAttrs = (key: string | undefined) =>
     <>
       {insertDividerBefore && <SectionDivider />}
 
-      <Wrap {...wrapAttrs((s as { _key?: string })._key)}>
+      <Wrap id={uniqueAnchor(s, headingId)} {...wrapAttrs((s as { _key?: string })._key)}>
         {s._type === 'heroSection' ? (
           <Hero
             eyebrow={s.eyebrow}

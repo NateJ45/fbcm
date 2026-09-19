@@ -193,7 +193,7 @@ export default function NewsletterSignup({ newsletter, source = 'newsletter' }: 
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="press-tactile inline-flex min-h-[44px] w-full items-center justify-center rounded-sm bg-primary-dark px-l py-s text-xs font-semibold tracking-widest text-white uppercase transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+          className="press-tactile inline-flex min-h-[44px] w-full items-center justify-center rounded-sm bg-gold px-l py-s text-xs font-semibold tracking-widest text-indigo-field uppercase transition-colors hover:bg-gold/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {status === 'submitting' ? 'Subscribing…' : buttonLabel}
         </button>

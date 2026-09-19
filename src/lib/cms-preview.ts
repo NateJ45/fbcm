@@ -145,6 +145,11 @@ const NON_STEGA_FIELDS = new Set([
   // text an editor types. Same reasoning as every other enum on this list.
   'group',
   // scaffold:end
+  // slug.current: an id or a URL segment, never display text. Added 2026-09-19
+  // with anchorField(): the section anchor is written straight into `id=` and
+  // read back out of a URL fragment, so an encoded copy would produce a
+  // wrapper id nobody can link to, in the preview only.
+  'current',
 ]);
 
 export function getPreviewClient(draftMode: boolean): SanityClient {

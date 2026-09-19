@@ -113,6 +113,15 @@ local gate today; `.github/workflows/ci.yml` carries the reason inline. To close
 capture on CI once, diff against the committed baselines, and wire the step in if they
 match.
 
+**The committed baselines are stale as of 2026-09-19** (plan 2b task 1). Every
+page-builder section now renders inside a `<div id="...">` so a link can jump to it
+(`src/lib/anchor.ts`), where the live render used to emit no wrapper at all. That is a
+deliberate, site-wide HTML change, so `npm run parity compare` reports a diff on every
+section-driven page until somebody runs `npm run parity capture` and commits the new
+baselines. Task 1 deliberately did not touch `scripts/.parity/`: recapturing mid-plan
+would throw away the one signal that says whether a LATER page task changed a render it
+did not mean to. Recapture once plan 2b's pages are in.
+
 ### 3. `@astrojs/mdx` is installed but unused
 
 No `.mdx` file exists in `src/` or `modules/`. It is kept because a project may want MDX

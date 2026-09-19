@@ -3,12 +3,12 @@
 # check would fail forever on every repo. Copy the SHAPE from here, and keep
 # the step list, the concurrency group and the linkinator skip identical.
 #
-# This repo ships no Sanity project of its own, so there is nothing to pin and
-# the build takes the credential-less fallback path. A client repo sets its
-# PUBLIC_SANITY_* identifiers in an `env:` block here (they are public, they
-# appear in every GROQ request URL) so the build and the test job run against
-# the REAL content, which is what decides whether a page is a real render or a
-# hidden-section stub.
+# This repo DOES have a Sanity project, so both jobs carry a job-level `env:`
+# with the PUBLIC_SANITY_* identifiers (they are public, they appear in every
+# GROQ request URL) and build against the REAL content, which is what decides
+# whether a page is a real render or a hidden-section stub. Without them
+# `sanityFetch` takes the credential-less fallback path and the static build has
+# zero posts.
 name: CI
 
 on:
@@ -26,6 +26,13 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Public identifiers (they ship in every image URL). Without them
+    # `sanityFetch` returns fallbacks and the static build has zero posts,
+    # which is why the non-ASCII slug smoke test 404'd on CI from plan 1
+    # (2026-09-19).
+    env:
+      PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+      PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
     steps:
       - uses: actions/checkout@v7
 
@@ -149,6 +156,13 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    # Public identifiers (they ship in every image URL). Without them
+    # `sanityFetch` returns fallbacks and the static build has zero posts,
+    # which is why the non-ASCII slug smoke test 404'd on CI from plan 1
+    # (2026-09-19).
+    env:
+      PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+      PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
     steps:
       - uses: actions/checkout@v7
 

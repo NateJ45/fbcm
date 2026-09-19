@@ -584,6 +584,7 @@ export type DynamicListSection = {
   source?: 'journal';
   limit?: number;
   cta?: CtaBlock;
+  anchor?: Slug;
 };
 
 export type TeamSection = {
@@ -634,6 +635,7 @@ export type DocumentListSection = {
     _type: 'listedDocument';
     _key: string;
   }>;
+  anchor?: Slug;
 };
 
 export type GiveBandSection = {
@@ -642,6 +644,7 @@ export type GiveBandSection = {
   body?: string;
   buttonLabel?: string;
   buttonUrl?: string;
+  anchor?: Slug;
 };
 
 export type HeritageBandSection = {
@@ -657,6 +660,7 @@ export type HeritageBandSection = {
     _type: 'image';
   };
   cta?: CtaBlock;
+  anchor?: Slug;
 };
 
 export type ScriptureBandSection = {
@@ -664,6 +668,7 @@ export type ScriptureBandSection = {
   verse?: string;
   reference?: string;
   accentWord?: string;
+  anchor?: Slug;
 };
 
 export type FaqSection = {
@@ -693,6 +698,7 @@ export type FaqSection = {
     _type: 'faqItem';
     _key: string;
   }>;
+  anchor?: Slug;
 };
 
 export type StaffGridSection = {
@@ -701,6 +707,7 @@ export type StaffGridSection = {
   heading?: string;
   group?: 'all' | 'pastors' | 'coordination' | 'support';
   showBios?: boolean;
+  anchor?: Slug;
 };
 
 export type TimelineSection = {
@@ -733,6 +740,7 @@ export type TimelineSection = {
     _type: 'timelineRow';
     _key: string;
   }>;
+  anchor?: Slug;
 };
 
 export type SundayTimesSection = {
@@ -753,6 +761,7 @@ export type SundayTimesSection = {
     _key: string;
   }>;
   showMap?: boolean;
+  anchor?: Slug;
 };
 
 export type EmbedSection = {
@@ -779,6 +788,7 @@ export type LogoStripSection = {
     _key: string;
   }>;
   layout?: 'row' | 'grid';
+  anchor?: Slug;
 };
 
 export type SpacerSection = {
@@ -842,6 +852,7 @@ export type QuoteSection = {
   quote?: string;
   attribution?: string;
   detail?: string;
+  anchor?: Slug;
 };
 
 export type GallerySection = {
@@ -858,6 +869,7 @@ export type GallerySection = {
     _key: string;
   }>;
   columns?: 2 | 3 | 4;
+  anchor?: Slug;
 };
 
 export type ImageTextSection = {
@@ -892,6 +904,7 @@ export type ImageTextSection = {
     _key: string;
   }>;
   cta?: CtaBlock;
+  anchor?: Slug;
 };
 
 export type RichTextSection = {
@@ -920,6 +933,7 @@ export type RichTextSection = {
   }>;
   width?: 'normal' | 'narrow';
   align?: 'left' | 'center';
+  anchor?: Slug;
 };
 
 export type HeroSection = {

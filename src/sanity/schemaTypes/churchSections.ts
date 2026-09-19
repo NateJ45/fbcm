@@ -12,6 +12,7 @@
 // time by splitHeadingAccent() directly (Task 5), not through the in-canvas
 // overlay registry.
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { anchorField } from './_anchorField';
 
 const eyebrow = defineField({
   name: 'eyebrow',
@@ -99,6 +100,7 @@ export const sundayTimesSection = defineType({
       initialValue: true,
       description: 'Uses the map picture and address from Site settings.',
     }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'heading' },
@@ -166,6 +168,7 @@ export const timelineSection = defineType({
         }),
       ],
     }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'heading' },
@@ -203,6 +206,7 @@ export const staffGridSection = defineType({
       initialValue: true,
       description: 'Turn off to show only name, role, email and photo.',
     }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'heading', group: 'group' },
@@ -248,6 +252,7 @@ export const faqSection = defineType({
         }),
       ],
     }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'heading' },
@@ -281,6 +286,7 @@ export const scriptureBandSection = defineType({
       description:
         'One word that appears in the text, spelled exactly as it appears. Leave blank for none.',
     }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'reference', subtitle: 'verse' },
@@ -310,6 +316,7 @@ export const heritageBandSection = defineType({
       description: 'A photo of the building or the glass.',
     }),
     defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'heading', media: 'image' },
@@ -346,6 +353,7 @@ export const giveBandSection = defineType({
       type: 'url',
       description: 'Leave blank to use the giving address from Site settings.',
     }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'heading' },
@@ -406,6 +414,7 @@ export const documentListSection = defineType({
         }),
       ],
     }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'heading' },

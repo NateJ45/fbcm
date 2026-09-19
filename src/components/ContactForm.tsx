@@ -888,7 +888,7 @@ export default function ContactForm({
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="inline-flex items-center bg-primary-dark px-l py-s text-sm font-semibold tracking-widest text-white uppercase transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex items-center bg-gold px-l py-s text-sm font-semibold tracking-widest text-indigo-field uppercase transition-colors hover:bg-gold/90 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {status === 'submitting' ? 'Sending…' : 'Send message'}
       </button>

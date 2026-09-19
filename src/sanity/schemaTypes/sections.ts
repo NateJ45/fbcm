@@ -27,6 +27,7 @@ import {
   CodeBlockIcon,
 } from '@sanity/icons';
 import { columnsField, headingAccentField, hideWhenRich, richTwin } from './_appearanceFields';
+import { anchorField } from './_anchorField';
 import { sideOptions } from '../../lib/layout-variants';
 // scaffold: church
 import { CHURCH_SECTION_TYPES } from './churchSections';
@@ -239,6 +240,7 @@ export const richTextSection = defineType({
         layout: 'radio',
       },
     }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'heading', body: 'body' },
@@ -268,6 +270,7 @@ export const imageTextSection = defineType({
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
     proseBody('body', 'Text'),
     defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'heading', media: 'image' },
@@ -309,6 +312,7 @@ export const gallerySection = defineType({
       ],
     }),
     columnsField('gallerySection'),
+    anchorField(),
   ],
   preview: {
     select: { images: 'images', heading: 'heading' },
@@ -341,6 +345,7 @@ export const quoteSection = defineType({
       type: 'string',
       description: 'Context that adds credibility. Example: "Location" or "Project type".',
     }),
+    anchorField(),
   ],
   preview: {
     select: { title: 'quote', subtitle: 'attribution' },
@@ -547,6 +552,7 @@ export const logoStripSection = defineType({
         layout: 'radio',
       },
     }),
+    anchorField(),
   ],
   preview: {
     select: { logos: 'logos', eyebrow: 'eyebrow', headline: 'headline' },
