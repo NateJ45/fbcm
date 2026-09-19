@@ -25,5 +25,5 @@ const sections = page?.pageBuilder?.length ? page.pageBuilder : DEFAULT_HOME_SEC
 ---
 
 <BaseLayout {title} {description} {siteSettings} seoImage={page?.seoImage}>
-  <SectionRenderer {sections} idPrefix="home" />
+  <SectionRenderer {sections} idPrefix="home" settings={siteSettings} />
 </BaseLayout>

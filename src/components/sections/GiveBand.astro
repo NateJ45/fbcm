@@ -15,6 +15,7 @@
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import { getSiteSettings } from '@/lib/queries';
+import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
 
 interface Props {
   heading?: string;
@@ -22,11 +23,28 @@ interface Props {
   buttonLabel?: string;
   buttonUrl?: string;
   headingId: string;
+  /**
+   * Site settings, handed down by SectionRenderer from the route that already
+   * fetched them. In /preview/** that is the DRAFT client, so an editor moving
+   * the giving link sees it; calling getSiteSettings() here would read the
+   * published document and then serve a memoised copy of it for the isolate's
+   * whole life. The fetch below is only the fallback for callers that pass
+   * nothing (the styleguide, and the code-defined default sections).
+   */
+  settings?: SectionSiteSettings | null;
 }
 
-const { heading, body, buttonLabel, buttonUrl, headingId } = Astro.props as Props;
+const {
+  heading,
+  body,
+  buttonLabel,
+  buttonUrl,
+  headingId,
+  settings: settingsProp,
+} = Astro.props as Props;
 
-const settings = await getSiteSettings();
+const settings: SectionSiteSettings | null =
+  settingsProp !== undefined ? settingsProp : await getSiteSettings();
 const href: string | undefined = buttonUrl || settings?.givingUrl || undefined;
 
 const giveCta = href

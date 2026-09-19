@@ -36,7 +36,13 @@ import Hero from '@/components/Hero.astro';
 import FinalCta from '@/components/FinalCta.astro';
 import SectionRenderer from '@/components/SectionRenderer.astro';
 import { previewFetch, previewConfig, previewUnconfiguredResponse } from '@/lib/cms-preview';
-import { IMAGE_PROJECTION, CTA_PROJECTION, sectionsProjection } from '@/lib/queries';
+import {
+  IMAGE_PROJECTION,
+  CTA_PROJECTION,
+  sectionsProjection,
+  SITE_SETTINGS_PROJECTION,
+} from '@/lib/queries';
+import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
 
 // Fresh clone with no project id / no runtime token: say so, do not 500.
 const config = previewConfig();
@@ -130,6 +136,22 @@ if (!doc) {
   );
 }
 
+// Site settings for the blocks that show a field from Site settings rather
+// than from the block (the Sunday-times band's map and address, the give
+// band's link). Fetched HERE with the DRAFT client and handed to
+// SectionRenderer, so an editor's unpublished change to those fields shows up
+// in the preview. A block calling the build-time getSiteSettings() would read
+// the published document instead, and then memoise it for the isolate's life.
+//
+// Deliberately NOT skipped on a soft refresh the way PreviewLayout skips the
+// chrome: a soft refresh re-renders the sections, which is exactly what needs
+// these values. Same projection as the live build, and null-safe, so a failed
+// fetch just puts the blocks back on their own fallbacks.
+const sectionSettings = await previewFetch<SectionSiteSettings | null>(
+  draftMode,
+  `*[_type == "siteSettings"][0]${SITE_SETTINGS_PROJECTION}`,
+).catch(() => null);
+
 // The doc id the overlay and /preview/live listen on, read from the QUERY (a
 // Studio-created page has a random id). The draft perspective can return the
 // drafts. twin's id; strip the prefix so the listen filter matches both twins.
@@ -201,7 +223,7 @@ const title = `${label} - Preview`;
       </div>
     )
   }
-  <SectionRenderer {sections} {idPrefix} {editDoc} />
+  <SectionRenderer {sections} {idPrefix} {editDoc} settings={sectionSettings} />
   {
     hasFinalCta && (
       <FinalCta

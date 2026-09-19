@@ -15,6 +15,7 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import { getSiteSettings } from '@/lib/queries';
+import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { site } from '@/data/site';
 
 interface TimeItem {
@@ -37,13 +38,33 @@ interface Props {
   doors?: Door[];
   showMap?: boolean;
   headingId: string;
+  /**
+   * Site settings, handed down by SectionRenderer from the route that already
+   * fetched them. In /preview/** that is the DRAFT client, so an editor
+   * changing the map, the address or the directions link sees it; calling
+   * getSiteSettings() here would read the published document and then serve a
+   * memoised copy of it for the isolate's whole life. The fetch below is only
+   * the fallback for callers that pass nothing (the styleguide, and the
+   * code-defined default sections).
+   */
+  settings?: SectionSiteSettings | null;
 }
 
-const { eyebrow, heading, items = [], doors = [], showMap, headingId } = Astro.props as Props;
+const {
+  eyebrow,
+  heading,
+  items = [],
+  doors = [],
+  showMap,
+  headingId,
+  settings: settingsProp,
+} = Astro.props as Props;
 
-// getSiteSettings() memoises its promise (src/lib/queries.ts), so a page carrying
-// this block and the give band still makes exactly one request for the settings.
-const settings = await getSiteSettings();
+// The fallback path still goes through getSiteSettings(), whose promise is
+// memoised (src/lib/queries.ts), so a page carrying this block and the give band
+// makes at most one request for the settings either way.
+const settings: SectionSiteSettings | null =
+  settingsProp !== undefined ? settingsProp : await getSiteSettings();
 const mapImage = settings?.mapImage;
 const directionsUrl: string | undefined = settings?.directionsUrl ?? undefined;
 const showTheMap = showMap !== false && !!mapImage?.asset;

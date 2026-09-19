@@ -388,3 +388,35 @@ export type PageBuilderBlock =
   | ProjectedGiveBandSection
   | ProjectedDocumentListSection;
 // scaffold:end
+
+// ---------------------------------------------------------------------------
+// Site settings, as a page-builder block sees them
+// ---------------------------------------------------------------------------
+/**
+ * The slice of `siteSettings` that section components read.
+ *
+ * Blocks do NOT fetch this themselves. The route that renders the page already
+ * has the settings document (every route fetches it for the header and footer)
+ * and hands it to `SectionRenderer`, which passes it down. That matters in
+ * `/preview/**`: the preview route fetches with the DRAFT client, so an editor
+ * changing `givingUrl` or the map sees it, where a block calling the build-time
+ * `getSiteSettings()` would read the published document instead (and would keep
+ * reading a memoised copy of it for the isolate's whole life).
+ *
+ * Every field is optional: a fresh clone with no Sanity project renders these
+ * blocks with their own fallbacks.
+ */
+export interface SectionSiteSettings {
+  /** The church's name, used by the Sunday-times address card. */
+  title?: string;
+  /** Where the give band's button points when the block has no link of its own. */
+  givingUrl?: string;
+  /** Street address, possibly multi-line, for the Sunday-times address card. */
+  address?: string;
+  city?: string;
+  state?: string;
+  /** Projected Sanity image for the location map. */
+  mapImage?: ProjectedImage | null;
+  /** Google Maps (or similar) link under the map. */
+  directionsUrl?: string;
+}

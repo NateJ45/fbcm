@@ -34,7 +34,7 @@ import GiveBand from '@/components/sections/GiveBand.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
-import type { PageBuilderBlock } from '@/lib/pageBuilder.types';
+import type { PageBuilderBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 
 interface Props {
@@ -54,9 +54,26 @@ interface Props {
    * `npm run parity compare` is the standing gate on that promise.
    */
   editDoc?: EditDoc;
+  /**
+   * The siteSettings document the route already fetched for the header and
+   * footer. A couple of blocks (the Sunday-times band and the give band) show
+   * fields that live in Site settings rather than in the block, and they read
+   * this rather than fetching for themselves.
+   *
+   * That is what keeps the preview honest: `/preview/**` fetches settings with
+   * the DRAFT client, so an editor's unpublished change to the giving link or
+   * the map shows up in the same render as their change to the block. A block
+   * calling the build-time `getSiteSettings()` would read the PUBLISHED
+   * document instead, and then hold a memoised copy of it for the Worker
+   * isolate's whole life.
+   *
+   * Absent (the styleguide, a bare render) the blocks fall back to their own
+   * `getSiteSettings()` call, so nothing breaks by leaving it off.
+   */
+  settings?: SectionSiteSettings | null;
 }
 
-const { sections = [], idPrefix = 'section', editDoc } = Astro.props as Props;
+const { sections = [], idPrefix = 'section', editDoc, settings } = Astro.props as Props;
 const rows = classifySections<PageBuilderBlock>(sections as PageBuilderBlock[], idPrefix);
 
 // A real element in preview, nothing at all on the live site. The wrapper must
@@ -197,6 +214,7 @@ const wrapAttrs = (key: string | undefined) =>
             doors={s.doors ?? []}
             showMap={s.showMap}
             headingId={headingId}
+            settings={settings}
           />
         ) : s._type === 'timelineSection' ? (
           <Timeline
@@ -246,6 +264,7 @@ const wrapAttrs = (key: string | undefined) =>
             buttonLabel={s.buttonLabel}
             buttonUrl={s.buttonUrl}
             headingId={headingId}
+            settings={settings}
           />
         ) : s._type === 'documentListSection' ? (
           <DocumentList
