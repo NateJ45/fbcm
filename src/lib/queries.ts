@@ -113,14 +113,22 @@ export function sectionsProjection(field = 'pageBuilder'): string {
         "anchor": anchor.current
       }
     },
-    // The parent's group field is reached with ^ from inside the subquery.
+    // The parent's group field is reached with ^ from inside the subquery, and
+    // every reach is wrapped in coalesce(^.group, "all"). The schema's
+    // initialValue only fires for a block an editor creates in the Studio: a
+    // block written programmatically (a seeded or imported page) carries no
+    // group key at all, and an uncoalesced ^.group then fails all three
+    // clauses at once, so the grid renders a heading over nothing on a green
+    // build. "all" is also what the component itself defaults to, so the query
+    // default and the render default now agree.
+    //
     // The third clause is the one that matters: a staff member with NO group
     // set is support staff (that is what groupStaff() in church-derive.ts
     // decides), so a "support" section must fetch the ungrouped ones too or
     // they vanish from the site entirely while still existing in the dataset.
     _type == "staffGridSection" => {
       ...,
-      "members": *[_type == "staffMember" && (^.group == "all" || group == ^.group || (^.group == "support" && !defined(group)))] | order(order asc, name asc) {
+      "members": *[_type == "staffMember" && (coalesce(^.group, "all") == "all" || group == coalesce(^.group, "all") || (coalesce(^.group, "all") == "support" && !defined(group)))] | order(order asc, name asc) {
         _id, name, "slug": slug.current, role, email, phone, group, order, bio,
         photo{ ..., asset->, "alt": coalesce(alt, asset->altText, name) }
       }

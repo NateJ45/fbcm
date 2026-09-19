@@ -1,6 +1,7 @@
 // src/lib/church-derive.test.ts
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs'; // scaffold: church
 import { groupStaff, weekOfLabel, sortDocsByYearDesc, STAFF_GROUPS } from './church-derive.ts';
 
 test('staff group order is pastors, coordination, support, and unknown lands in support', () => {
@@ -56,3 +57,28 @@ test('documents sort newest year first, undated last, ties by title', () => {
     ['C', 'B', 'D', 'A'],
   );
 });
+
+// scaffold: church
+// ---------------------------------------------------------------------------
+// The staffGrid GROQ arm, read off disk
+// ---------------------------------------------------------------------------
+// GROQ is a string here, so nothing type-checks it and the build stays green
+// when it is wrong. This is the reservedSlugs.test.ts move: read the source and
+// assert the shape the arm has to keep. A block created programmatically (a
+// seeded or imported page, which is what the /staff page will be) carries no
+// `group` key, and every bare `^.group` comparison then fails at once, leaving
+// a heading over an empty grid.
+test('every ^.group reach in the staffGrid arm is coalesced to "all"', () => {
+  const src = readFileSync(new URL('./queries.ts', import.meta.url), 'utf8');
+  const arm = src.slice(
+    src.indexOf('_type == "staffGridSection" =>'),
+    src.indexOf('_type == "faqSection" =>'),
+  );
+  assert.ok(arm.length > 0, 'staffGridSection arm not found in queries.ts');
+
+  // Three reaches, all wrapped.
+  assert.equal((arm.match(/coalesce\(\^\.group, "all"\)/g) ?? []).length, 3);
+  // And no bare one left behind.
+  assert.equal(arm.replace(/coalesce\(\^\.group, "all"\)/g, '').includes('^.group'), false);
+});
+// scaffold:end
