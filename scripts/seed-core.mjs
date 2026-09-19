@@ -644,90 +644,140 @@ docs.push({
 // ── 19. studioGuide (singleton) ──────────────────────────────────────────
 // Fields: guideTitle, guideIntro, studioMap [{area, description}],
 //         howTos [{title, steps[]}], tips [{heading, tone, body}]
+//
+// Task 10 of plan 2a (2026-09-19) rewrote every row and every how-to for a
+// church secretary, not a design studio: the areas below are the six things
+// she actually opens (Home page, Visit page, the other pages, Blog posts,
+// Staff members, Ministries, Site settings), and the how-tos are the tasks
+// she is actually asked to do, in her own words.
 
 docs.push({
   _id: 'studioGuide',
   _type: 'studioGuide',
   guideTitle: 'How the website works',
   guideIntro:
-    'Welcome to Studio Starter. This guide walks you through where everything lives in Sanity and how to make changes to the site without breaking anything.',
+    'This guide walks you through where everything lives in the Studio and how to make changes to the website without breaking anything.',
   studioMap: [
     {
       _type: 'mapRow',
       _key: key(),
-      area: 'Site Settings',
+      area: 'Home page',
       description:
-        'Your business name, tagline, email, phone, service areas, travel fees, social links, and newsletter settings. Start here after setup.',
+        'The sections on the front page of the site: the photo and headline at the top, and everything below it. Drag to reorder, or add and remove sections from the same screen.',
     },
     {
       _type: 'mapRow',
       _key: key(),
-      area: 'Preview (the tool with the page list)',
+      area: 'Visit page',
       description:
-        'The live editing view. Pick a page from the list on the left and it appears on the right exactly as visitors will see it, including changes you have not published yet. Click any text on the page to jump straight to the field that holds it.',
+        'What a first-time visitor needs to know before they come: service time, address, what to expect, and parking. Set once, changed rarely.',
     },
     {
       _type: 'mapRow',
       _key: key(),
-      area: 'Home Page',
+      area: 'The other pages',
       description:
-        'The headline, hero text, section copy, and CTA buttons on the homepage. Images are uploaded separately and referenced here.',
+        'Who We Are, Beliefs, and History live under Pages too, built from the same section library as the home page.',
     },
     {
       _type: 'mapRow',
       _key: key(),
-      area: 'Journal Page + Journal Entries',
+      area: 'Blog posts',
       description:
-        'The Journal page controls the index hero. Individual Journal Entry documents are your blog posts.',
+        'Sermon previews and church news. Each post has a title, a category, and the text of the post. New posts appear on the Blog page automatically.',
+    },
+    {
+      _type: 'mapRow',
+      _key: key(),
+      area: 'Staff members',
+      description:
+        'Everyone on the Staff page: pastors, the coordination team, and support and volunteer roles. Each one has a name, role, photo, and short bio.',
+    },
+    {
+      _type: 'mapRow',
+      _key: key(),
+      area: 'Ministries',
+      description:
+        'The church’s groups and programs, like Children or Outreach. Each one has a name, a short summary, and a longer description.',
+    },
+    {
+      _type: 'mapRow',
+      _key: key(),
+      area: 'Site settings',
+      description:
+        'The church’s name, service time, office hours, address, and the links in the header and footer. Most of the site reads from here.',
     },
   ],
   howTos: [
     {
       _type: 'howTo',
       _key: key(),
-      title: 'Update your business name and tagline',
+      title: 'Post this week’s sermon preview',
       steps: [
-        'Open "Site Settings" from the left navigation.',
-        'Edit the "Site title" and "Tagline" fields.',
+        'Open "Blog" then "Posts" from the left navigation.',
+        'Click "New" (or the plus button) to start a post.',
+        'Fill in the title and the text of the preview, and pick the category "Sermon Preview".',
         'Click Publish.',
       ],
     },
     {
       _type: 'howTo',
       _key: key(),
-      title: 'Rearrange a page while looking at it',
+      title: 'Change the service time or office hours',
       steps: [
-        'Open "Preview" from the top of the Studio.',
-        'Pick the page you want from the list on the left.',
-        'Hover a section on the page. An outline appears around it with a small toolbar.',
-        'Use the plus buttons to add a section above or below it. The menu that opens is grouped and searchable, so you can type "gallery" instead of hunting.',
-        'Drag the section by its outline to move it up or down the page.',
-        'Use the toolbar to duplicate a section, or to remove one you do not want.',
-        'Changes save as you go. Click Publish when the page looks right.',
+        'Open "Site settings" from the left navigation.',
+        'Click the "Church details" tab at the top of the form.',
+        'Edit the service time or office hours field.',
+        'Click Publish.',
       ],
     },
     {
       _type: 'howTo',
       _key: key(),
-      title: 'Change wording without hunting for the field',
+      title: 'Add or remove a staff member',
       steps: [
-        'Open "Preview" and pick the page.',
-        'Click the words you want to change, right there on the page.',
-        'The edit panel opens on that exact field.',
-        'Type the new wording. The page beside you updates as you type.',
-        'Click Publish when you are happy with it.',
+        'Open "People" then "Staff members" from the left navigation.',
+        'Click "New" to add someone, or open an existing person to edit or remove them.',
+        'Set their group (Pastors, Church Coordination Team, or Support and volunteer roles).',
+        'Click Publish.',
       ],
     },
     {
       _type: 'howTo',
       _key: key(),
-      title: 'Write a journal post',
+      title: 'Change a photo on the home page',
       steps: [
-        'Open "Journal Entries" from the left navigation.',
-        'Click "New Journal Entry".',
-        'Fill in the title, slug, excerpt, and body.',
-        'Set the publish date and click Publish.',
-        'The post appears automatically on the journal index page.',
+        'Open "Pages" then "Home" from the left navigation.',
+        'Open the first section at the top of the page layout.',
+        'Find the Photos field and upload the new image, or remove the old one.',
+        'Click Publish.',
+      ],
+    },
+    {
+      _type: 'howTo',
+      _key: key(),
+      title: 'What happens when I press Publish',
+      steps: [
+        'The site rebuilds itself in about two minutes.',
+        'Nobody needs to be called. The change appears on its own once the rebuild finishes.',
+      ],
+    },
+    {
+      _type: 'howTo',
+      _key: key(),
+      title: 'The one button never to press',
+      steps: [
+        '"Remove field": it deletes that information from every page.',
+        'If you see it next to something, leave it alone and ask for help instead.',
+      ],
+    },
+    {
+      _type: 'howTo',
+      _key: key(),
+      title: 'Add a photo to the Staff page or a blog post',
+      steps: [
+        'Open the Media library and click Upload.',
+        'Photos of children need a signed consent form on file at the office before they go up.',
       ],
     },
   ],
@@ -735,37 +785,37 @@ docs.push({
     {
       _type: 'tip',
       _key: key(),
-      heading: 'Start with Site Settings',
+      heading: 'Start with Site settings',
       tone: 'primary',
-      body: 'The most important first step: open Site Settings and replace the placeholder email, business name, service areas, and travel fees with your real information. Everything else on the site pulls from here.',
-    },
-    {
-      _type: 'tip',
-      _key: key(),
-      heading: 'Replace placeholder content before going live',
-      tone: 'caution',
-      body: 'The seed content is neutral placeholder copy. Every page has text that says "replace this with your own content." Make sure you have reviewed and updated all of it before pointing your real domain at the site.',
+      body: 'Open Site settings first and check the service time, office hours, address, and contact details are correct. Most of the site reads from here.',
     },
     {
       _type: 'tip',
       _key: key(),
       heading: 'Edit on the page, not in a list of fields',
       tone: 'positive',
-      body: 'The "Preview" tool is the easiest way to work. You see the real page, click the thing you want to change, and the right field opens. You can also add, duplicate, reorder and remove whole sections without leaving the page. Everything you do there is a draft until you press Publish.',
+      body: 'The Preview tool is the easiest way to work. You see the real page, click the thing you want to change, and the right field opens. You can also add, reorder, and remove whole sections without leaving the page. Everything you do there is a draft until you press Publish.',
     },
     {
       _type: 'tip',
       _key: key(),
-      heading: 'Publishing is immediate',
+      heading: 'Publishing is not instant, but it is automatic',
       tone: 'default',
-      body: 'When you click Publish in Sanity, the change goes live on the site within a few seconds. There is no staging step. If you want to draft something before it goes live, leave it as a Draft in Sanity.',
+      body: 'When you click Publish, the site rebuilds itself in about two minutes. There is no staging step and nobody needs to be called. If you want to draft something before it goes live, leave it as a draft and come back to it.',
     },
     {
       _type: 'tip',
       _key: key(),
-      heading: 'Photos are optional but worth it',
-      tone: 'positive',
-      body: 'Every page works without photos -- the layouts fall back gracefully. But a real hero photo on the home page will make the site feel finished faster than any other single change.',
+      heading: 'Photos of children need a consent form on file first',
+      tone: 'caution',
+      body: 'Before adding a photo of a child to the Staff page or a blog post, check that a signed consent form is on file at the office.',
+    },
+    {
+      _type: 'tip',
+      _key: key(),
+      heading: 'Stuck? Ask before you delete anything',
+      tone: 'caution',
+      body: 'If a screen looks wrong, or you see a "Remove field" button, stop and ask for help rather than guessing. Nothing else in the Studio can be broken by clicking around.',
     },
   ],
 });
@@ -777,22 +827,12 @@ docs.push({
   _id: 'studioNotes',
   _type: 'studioNotes',
   businessSummary:
-    'Studio Starter is a placeholder business description. Replace this with a clear, plain-English description of this business: what it does, where it works, and what makes its approach different.',
+    'First Baptist Church Muncie, at 309 East Adams Street. Replace this with a short, plain description of the church for anyone writing for the site: who the congregation is, and what a visitor should know before their first Sunday.',
   idealClient:
-    'Replace this with a description of your ideal client. Be specific. The more clearly you can picture who you are writing for, the easier it is to write copy that speaks to them.',
+    'Replace this with a description of who the church is writing for online: a longtime member checking the service time, or someone considering visiting for the first time. The more clearly this is described, the easier it is to write pages that speak to them.',
   voiceSummary:
-    'Replace this with a description of your voice. Plain-spoken and warm? Confident and direct? A little irreverent? Pick a lane and describe it in a sentence or two so anyone writing for the site stays consistent.',
-  wordsToAvoid: [
-    'transformative',
-    'curated',
-    'elevated',
-    'tailored',
-    'seamless',
-    'bespoke',
-    'meticulous',
-    'leverage',
-    'robust',
-  ],
+    'Replace this with a description of the church’s voice in writing. Warm and plain-spoken? Formal? Pick a description in a sentence or two so anyone writing for the site sounds consistent.',
+  wordsToAvoid: ['transformative', 'curated', 'elevated', 'tailored', 'seamless', 'synergy'],
 });
 
 // ── 21. studioPlaybook (singleton) ───────────────────────────────────────
@@ -850,6 +890,13 @@ docs.push({
 //
 // Usage:  node scripts/seed-core.mjs --only siteSettings [--label task9]
 //                                     [--expect tagline,phone]
+//
+// --only ALSO accepts a comma-separated list of ids, so a task that touches
+// more than one singleton runs one command instead of one per document:
+// `--only studioGuide,studioNotes` backs up and compares BOTH before writing
+// EITHER. Task 10 (2026-09-19) is the first caller: the Studio help singletons
+// counted 0 on the live dataset (plan 1 never ran the core seeder), so there
+// was nothing to diff against and the backup is an empty record by design.
 
 const argv = process.argv.slice(2);
 function flag(name) {
@@ -895,12 +942,12 @@ async function seedOne(type) {
   }
 
   const live = await client.fetch(`*[_id == $id][0]`, { id: doc._id });
-  if (!live) {
-    console.error(`No live document with _id "${doc._id}". Run the full seed first.`);
-    process.exit(1);
-  }
 
-  // 1. Back up, verbatim, BEFORE anything else.
+  // 1. Back up, verbatim, BEFORE anything else. A document that does not
+  // exist yet backs up as `null` -- that absence is itself the record (rule
+  // 16 says write the backup step first; it does not say there has to be
+  // something in it). Task 10 hit exactly this: the Studio help singletons
+  // counted 0 on the live dataset because plan 1 never ran the core seeder.
   const { writeFileSync, mkdirSync, existsSync } = await import('node:fs');
   const stamp = new Date().toISOString().slice(0, 10);
   const dir = resolve(root, 'scripts/data/backups');
@@ -912,8 +959,19 @@ async function seedOne(type) {
     const clock = new Date().toISOString().slice(11, 19).replace(/:/g, '');
     backupPath = resolve(dir, `${type}-${stamp}-pre-${backupLabel}-${clock}.json`);
   }
-  writeFileSync(backupPath, `${JSON.stringify(live, null, 2)}\n`, 'utf8');
-  console.log(`Backed up the live ${type} to ${backupPath}`);
+  writeFileSync(backupPath, `${JSON.stringify(live ?? null, null, 2)}\n`, 'utf8');
+  console.log(
+    live
+      ? `Backed up the live ${type} to ${backupPath}`
+      : `No live ${type} document yet. Backed up that absence (null) to ${backupPath}.`,
+  );
+
+  if (!live) {
+    console.log(`No live value to compare. Writing ${type} for the first time.`);
+    await client.createOrReplace(doc);
+    console.log(`  created   ${doc._type}  ${doc._id}`);
+    return;
+  }
 
   // 2. Compare every key the live document already carries.
   const changed = [];
@@ -988,7 +1046,18 @@ async function seed() {
 }
 
 if (onlyType) {
-  await seedOne(onlyType);
+  // Comma-separated: each id runs its own backup-then-compare-then-write in
+  // turn. If one id's live value differs unexpectedly, seedOne exits(2)
+  // before writing that id, but any id already processed earlier in the list
+  // has already been backed up and written; that is why --only is for a
+  // handful of singletons the operator has looked at, not a blanket rewrite.
+  const types = onlyType
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean);
+  for (const type of types) {
+    await seedOne(type);
+  }
 } else {
   await seed();
 }

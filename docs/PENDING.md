@@ -347,6 +347,24 @@ leaves open, with what closes each.
   `scripts/.parity` locally for this (that happens once, at the end of plan
   2c, per the task-6 brief). Refresh the CI baseline itself with `visual.yml`'s
   own `update` input the first time it runs against this change.
+- **`src/sanity/guides/content.ts` is still the starter's generic "Help & Guide"
+  template** ("THIS IS A TEMPLATE. REWRITE IT PER PROJECT" at its own header),
+  written for a design studio, not a church. Task 10 (2026-09-19) unhooked it
+  from the desk rather than half-rewrite it under a task scoped to
+  `structure.ts` and the `studioGuide` seed: the desk's Help group now holds
+  only "How the website works" (studioGuide) and "Your church at a glance"
+  (studioNotes), both rewritten for a church secretary. If this guide system is
+  wanted back, it needs its own pass over `content.ts`'s guide list, in the
+  church's own language, before it is wired back into `structure.ts`.
+- **Sign-in to the Studio at a local origin needs a one-time CORS grant.**
+  Verifying Task 10's desk in a real browser (`npm run preview`, `/studio`)
+  reached the Sanity "Connect this Studio to your project" screen every time,
+  never a sign-in form: `http://127.0.0.1:<port>` is not on this project's CORS
+  allow list, so every `users/me` call fails preflight (console shows only that
+  error, nothing from schema or structure, which is what the task needed to
+  confirm). Registering `npx sanity cors add http://127.0.0.1:<port> --credentials`
+  is the fix, same family as item 1a above; nobody has done it for this project
+  yet.
 
 ### For ncs-astro-sanity-starter (the library of record), found on this fork
 

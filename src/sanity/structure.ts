@@ -1,17 +1,26 @@
-// Studio Desk structure. Pins Site Settings at the top, then ALL page singletons
-// (one document each) under "Pages", then the reusable content collections under
-// "Content", then "Journal". Every document type is placed explicitly so nothing
-// floats loose at the desk root. The trailing default-list filter is a safety net
-// for any future type that hasn't been placed (and hides sanity-plugin-media's
-// media.tag type, which would otherwise show at the root).
+// Studio Desk structure, rewritten for Task 10 of plan 2a (2026-09-19) into the
+// six groups a church secretary needs and nothing else: Pages, Blog, People,
+// Ministries, Site settings, Help. The earlier "Content", "Help & Guide" and
+// "Start Here" groupings (inherited from the starter this was forked from)
+// are gone. Two things that lived in "Start Here" survive because they still
+// do real work for this editor: the "How the website works" guide and the
+// "Your church at a glance" notes, both folded into Help below. The generic
+// starter guide DATA in src/sanity/guides/content.ts ("THIS IS A TEMPLATE,
+// REWRITE IT PER PROJECT" at its own header) is no longer wired into the
+// desk; rewriting it for the church is separate work this task does not
+// cover, so it is left alone rather than half-adapted.
 //
-// "Pages" is one list (so the rule for editors is simple: every page lives here).
+// Every document type is placed explicitly so nothing floats loose at the
+// desk root. The trailing default-list filter is a safety net for any future
+// type that hasn't been placed (and hides sanity-plugin-media's media.tag
+// type, which would otherwise show at the root).
 //
 // Orderable lists: ORDERABLE_TYPES below lists any collection using the
-// orderable-document-list plugin (currently none -- the two that did were
-// removed with their capabilities). Editors drag rows to reorder; the plugin
-// writes an `orderRank` string. GROQ queries order by orderRank (with
-// displayOrder fallback) so the site mirrors Studio.
+// orderable-document-list plugin (currently none). Staff and Ministries are
+// ordered instead with a GROQ `select()` expression passed as an ordering
+// field (see NAV_PAGE_ORDER / STAFF_GROUP_ORDER below) so the desk mirrors
+// the priority the site itself uses, without adding a plugin nothing else
+// here needs.
 //
 // Preview: 2026-08-28 the per-document iframe tab (sanity-plugin-iframe-pane)
 // was retired in favour of the Presentation tool, which renders the SSR
@@ -21,32 +30,28 @@
 
 import type { StructureBuilder, StructureResolverContext } from 'sanity/structure';
 import {
+  ArrowRightIcon,
   BellIcon,
   BlockElementIcon,
+  BookIcon,
   CogIcon,
+  DocumentsIcon,
+  DocumentTextIcon,
+  EditIcon,
+  EnvelopeIcon,
+  HeartIcon,
   HomeIcon,
   InfoOutlineIcon,
-  EnvelopeIcon,
-  DocumentTextIcon,
-  DocumentsIcon,
-  ThListIcon,
-  EditIcon,
-  TagIcon,
-  BookIcon,
   LockIcon,
   PinIcon,
   PresentationIcon,
+  TagIcon,
   ThumbsUpIcon,
-  ColorWheelIcon,
-  ArrowRightIcon,
-  HeartIcon,
   UsersIcon,
 } from '@sanity/icons';
-import { makeGuideView } from './components/GuideView';
-import { guides, GUIDE_CATEGORIES } from './guides/content';
 import StudioGuide from './components/StudioGuide';
 import BusinessOverview from './components/BusinessOverview';
-import BrandKit from './components/BrandKit';
+import { STAFF_GROUPS } from '../lib/church-derive';
 import { site } from '../data/site';
 
 const SINGLETON_TYPES = [
@@ -67,14 +72,14 @@ const ORDERABLE_TYPES = [] as const;
 const HIDDEN_FROM_DEFAULT = new Set<string>([
   ...SINGLETON_TYPES,
   ...ORDERABLE_TYPES,
-  'announcement', // placed explicitly under Content → Announcements
-  'journalEntry', // scaffold: journal
-  'journalCategory', // scaffold: journal
+  'announcement', // placed explicitly under "Site settings"
+  'journalEntry', // scaffold: journal -- placed explicitly under "Blog"
+  'journalCategory', // scaffold: journal -- placed explicitly under "Blog"
   'page', // custom pages, placed explicitly under "Pages"
   'sectionPreset', // saved sections, placed explicitly under "Pages"
-  'redirect', // placed explicitly under "Pages" -> Redirects
-  'ministry', // placed explicitly under "Content" -> Ministries
-  'staffMember', // placed explicitly under "Content" -> Staff
+  'redirect', // placed explicitly under "Site settings" -> Old web addresses
+  'ministry', // placed explicitly at the top level as "Ministries"
+  'staffMember', // placed explicitly under "People"
   // sanity-plugin-media registers this tag type; keep it out of the desk root
   // (the "Media" tool in the top sidebar is where tags belong).
   'media.tag',
@@ -97,67 +102,210 @@ function singletonWithPreview(S: StructureBuilder, schemaType: string, title: st
     .child(S.document().schemaType(schemaType).documentId(schemaType).views([S.view.form()]));
 }
 
-export const deskStructure = (S: StructureBuilder, context: StructureResolverContext) =>
+// ── Pages: order the church's own pages the way the header menu reads them ──
+//
+// Home and Contact are singletons (one document, always present). The rest of
+// the church's pages -- Visit, Who We Are, Beliefs, History -- are `page`
+// documents an editor built from the section library, and plan 2b creates
+// them. There is no field on `page` recording "where it sits in the nav": the
+// nav itself (siteSettings.navItems, seeded in scripts/seed-core.mjs) is the
+// one place that order lives, so the desk reads it from there rather than
+// duplicating it onto every page document (CLAUDE.md rule 15: a second copy
+// of an order is the one that goes stale).
+//
+// GROQ's order() takes an arbitrary expression, so a `select()` ranks known
+// slugs and falls every other page after them, alphabetically by title. A
+// page whose slug isn't below (one plan 2b hasn't created yet, or a future
+// one added later) still shows up; it just sorts to the end until someone
+// gives it a nav slot.
+const NAV_PAGE_ORDER = ['visit', 'who-we-are', 'beliefs', 'history'];
+
+const NAV_PAGE_RANK = `select(${NAV_PAGE_ORDER.map(
+  (slug, i) => `slug.current == "${slug}" => ${i}`,
+).join(', ')}, ${NAV_PAGE_ORDER.length})`;
+
+function navOrderedPagesList(S: StructureBuilder) {
+  return S.documentTypeListItem('page')
+    .title('Visit, Who We Are, Beliefs, History')
+    .icon(DocumentsIcon)
+    .child(
+      S.documentList()
+        .title('Pages')
+        .filter('_type == "page"')
+        .defaultOrdering([
+          { field: NAV_PAGE_RANK, direction: 'asc' },
+          { field: 'title', direction: 'asc' },
+        ]),
+    );
+}
+
+// ── People: staff sorted the way the Staff page itself groups them ──────────
+//
+// src/lib/church-derive.ts's groupStaff() puts pastors first, then the
+// coordination team, then support and volunteer roles, and STAFF_GROUPS is
+// the one place that order is written down. Importing it here (rather than
+// re-typing "pastors", "coordination", "support" in a second place) means the
+// desk can never drift from what the live Staff page actually shows.
+const STAFF_GROUP_RANK = `select(${STAFF_GROUPS.map(
+  (group, i) => `group == "${group}" => ${i}`,
+).join(', ')}, ${STAFF_GROUPS.length})`;
+
+export const deskStructure = (S: StructureBuilder, _context: StructureResolverContext) =>
   S.list()
     .title(site.name)
     .items([
-      // HELP & GUIDE — the handbook, first so it is always in reach.
-      //
-      // PORTS.md card 41. The guides are DATA in src/sanity/guides/content.ts,
-      // held in the repo rather than in Sanity, so they cannot be deleted by
-      // the person who most needs them and every fork inherits them with the
-      // code. THE SHIPPED SET IS GENERIC ON PURPOSE and is meant to be
-      // rewritten per project; see that file's header.
-      //
-      // It sits ABOVE "Start Here" rather than replacing it. Start Here is
-      // three editable singletons and works well when a project seeds them,
-      // but a fork that skips `npm run seed` gets four panes that open EMPTY,
-      // which is what happened in stonesteps-50k. A repo-data handbook cannot
-      // do that. A project that wants only one of the two should delete the
-      // other rather than ship both.
+      // ── Pages ────────────────────────────────────────────────────────────
       S.listItem()
-        .id('help-and-guide')
-        .title('Help & Guide')
-        .icon(InfoOutlineIcon)
+        .title('Pages')
+        .icon(DocumentTextIcon)
         .child(
           S.list()
-            .id('help-and-guide-list')
-            .title('Help & Guide')
-            .items(
-              GUIDE_CATEGORIES.flatMap((category) => {
-                const mine = guides.filter((g) => g.category === category);
-                return mine.length === 0
-                  ? []
-                  : [
-                      S.divider().title(category),
-                      ...mine.map((g) =>
-                        S.listItem()
-                          .id(`guide-${g.slug}`)
-                          .title(g.title)
-                          .icon(() => g.icon)
-                          .child(
-                            S.component(makeGuideView(g.slug) as never)
-                              .id(`guide-view-${g.slug}`)
-                              .title(g.title),
-                          ),
-                      ),
-                    ];
-              }),
-            ),
+            .title('Pages')
+            .items([
+              singletonWithPreview(S, 'homePage', 'Home', HomeIcon),
+              singletonWithPreview(S, 'contactPage', 'Contact', EnvelopeIcon),
+
+              S.divider(),
+
+              navOrderedPagesList(S),
+
+              S.divider(),
+
+              singletonWithPreview(S, 'privacyPage', 'Privacy', LockIcon),
+              singletonWithPreview(S, 'notFoundPage', 'Not found (404)', DocumentTextIcon),
+
+              S.divider(),
+
+              // Saved sections: one band of a page, kept for reuse. Made from a
+              // page's publish menu ("Save a section as preset..."), added to a
+              // page from the Saved sections group in the Presentation
+              // navigator.
+              S.documentTypeListItem('sectionPreset')
+                .title('Saved sections')
+                .icon(BlockElementIcon),
+            ]),
         ),
 
       S.divider(),
 
-      // Start Here — three-panel handbook for the editor.
-      // Panel 1: how the Studio works and step-by-step how-tos (static).
-      // Panel 2: live business overview (services + site settings fetched from Sanity).
-      // Panel 3: brand kit — colors + fonts for Canva (static).
+      // ── Blog ─────────────────────────────────────────────────────────────
+      // scaffold: journal
       S.listItem()
-        .title('Start Here')
+        .title('Blog')
+        .icon(BookIcon)
+        .child(
+          S.list()
+            .title('Blog')
+            .items([
+              singletonWithPreview(S, 'journalPage', 'Blog page (the /blog index)', BookIcon),
+
+              S.divider(),
+
+              S.documentTypeListItem('journalEntry')
+                .title('Posts')
+                .icon(EditIcon)
+                .child(
+                  S.documentList()
+                    .title('Posts')
+                    .filter('_type == "journalEntry"')
+                    .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
+                ),
+
+              S.documentTypeListItem('journalCategory').title('Categories').icon(TagIcon),
+            ]),
+        ),
+      // scaffold:end
+
+      S.divider(),
+
+      // ── People ───────────────────────────────────────────────────────────
+      S.listItem()
+        .title('People')
+        .icon(UsersIcon)
+        .child(
+          S.list()
+            .title('People')
+            .items([
+              S.documentTypeListItem('staffMember')
+                .title('Staff members')
+                .icon(UsersIcon)
+                .child(
+                  S.documentList()
+                    .title('Staff members')
+                    .filter('_type == "staffMember"')
+                    .defaultOrdering([
+                      { field: STAFF_GROUP_RANK, direction: 'asc' },
+                      { field: 'order', direction: 'asc' },
+                      { field: 'name', direction: 'asc' },
+                    ]),
+                ),
+            ]),
+        ),
+
+      S.divider(),
+
+      // ── Ministries ───────────────────────────────────────────────────────
+      // Flat, not nested: a ministry IS the whole group, there is nothing else
+      // under it, so it opens straight to the list rather than a one-item menu.
+      S.documentTypeListItem('ministry')
+        .title('Ministries')
+        .icon(HeartIcon)
+        .child(
+          S.documentList()
+            .title('Ministries')
+            .filter('_type == "ministry"')
+            .defaultOrdering([
+              { field: 'order', direction: 'asc' },
+              { field: 'title', direction: 'asc' },
+            ]),
+        ),
+
+      S.divider(),
+
+      // ── Site settings ────────────────────────────────────────────────────
+      S.listItem()
+        .title('Site settings')
+        .icon(CogIcon)
+        .child(
+          S.list()
+            .title('Site settings')
+            .items([
+              singletonWithPreview(S, 'siteSettings', 'Site settings', CogIcon),
+              singletonWithPreview(S, 'businessInfo', 'Location details', PinIcon),
+
+              S.divider(),
+
+              S.documentTypeListItem('announcement').title('Announcement banner').icon(BellIcon),
+
+              S.divider(),
+
+              // Redirects: old address -> new address. Most entries are filed
+              // automatically when a page's web address changes on publish
+              // (src/sanity/components/slugRedirect.tsx); the editor adds one by
+              // hand for an address that never existed on this site. A divider
+              // with a title is the closest the desk builder has to a subtitle
+              // on a list item, so the one-line description sits just above it.
+              S.divider().title('Old web addresses -- forwards visitors from a page that moved'),
+              S.documentTypeListItem('redirect').title('Old web addresses').icon(ArrowRightIcon),
+            ]),
+        ),
+
+      S.divider(),
+
+      // ── Help ─────────────────────────────────────────────────────────────
+      // The two Start Here panels that still do real work for this church:
+      // the how-to guide (studioGuide, rewritten in Task 10 for a church
+      // secretary) and the church-at-a-glance notes (studioNotes). Brand kit
+      // was removed here (2026-09-19): a swatches-and-fonts panel for making
+      // flyers away from the site is not one of this desk's six jobs, and it
+      // read no field this task touched, so it was simply unhooked rather than
+      // repaired.
+      S.listItem()
+        .title('Help')
         .icon(InfoOutlineIcon)
         .child(
           S.list()
-            .title('Start Here')
+            .title('Help')
             .items([
               S.listItem()
                 .title('How the website works')
@@ -172,7 +320,7 @@ export const deskStructure = (S: StructureBuilder, context: StructureResolverCon
                     ]),
                 ),
               S.listItem()
-                .title('Your business at a glance')
+                .title('Your church at a glance')
                 .icon(ThumbsUpIcon)
                 .child(
                   S.document()
@@ -183,119 +331,8 @@ export const deskStructure = (S: StructureBuilder, context: StructureResolverCon
                       S.view.form().title('Edit notes'),
                     ]),
                 ),
-              S.listItem()
-                .title('Brand kit')
-                .icon(ColorWheelIcon)
-                .child(S.component(BrandKit).title('Brand kit')),
             ]),
         ),
-
-      S.divider(),
-
-      // Site Settings — pinned singleton (no preview; not a page)
-      singletonWithPreview(S, 'siteSettings', 'Site Settings', CogIcon),
-
-      S.divider(),
-
-      // Pages — every page singleton lives here.
-      S.listItem()
-        .title('Pages')
-        .icon(DocumentTextIcon)
-        .child(
-          S.list()
-            .title('Pages')
-            .items([
-              singletonWithPreview(S, 'homePage', 'Home', HomeIcon),
-              singletonWithPreview(S, 'contactPage', 'Contact', EnvelopeIcon),
-              singletonWithPreview(S, 'journalPage', 'Journal (index page)', BookIcon), // scaffold: journal
-              singletonWithPreview(S, 'notFoundPage', '404 Page', DocumentTextIcon),
-
-              S.divider(),
-
-              singletonWithPreview(S, 'privacyPage', 'Privacy Policy Page', LockIcon),
-
-              S.divider(),
-
-              // Custom pages: editors build these themselves from the section library.
-              // Multi-instance (not a singleton), so it is a normal document list.
-              S.documentTypeListItem('page')
-                .title('Custom pages (build your own)')
-                .icon(DocumentsIcon),
-
-              S.divider(),
-
-              // Saved sections: one band of a page, kept for reuse. Made from a
-              // page's publish menu ("Save a section as preset..."), added to a
-              // page from the Saved sections group in the Presentation
-              // navigator. Ordered by name, because the name is the only way
-              // you find one again.
-              S.documentTypeListItem('sectionPreset')
-                .title('Saved sections')
-                .icon(BlockElementIcon),
-
-              S.divider(),
-
-              // Redirects: old address -> new address. Most entries are filed
-              // automatically when a page's web address changes on publish
-              // (src/sanity/components/slugRedirect.tsx); the editor adds one by
-              // hand for an address that never existed on this site.
-              S.documentTypeListItem('redirect')
-                .title('Redirects (old links)')
-                .icon(ArrowRightIcon),
-            ]),
-        ),
-
-      S.divider(),
-
-      // Content — reusable collections. Orderable types get drag-and-drop;
-      // non-orderable use standard lists.
-      S.listItem()
-        .title('Content')
-        .icon(ThListIcon)
-        .child(
-          S.list()
-            .title('Content')
-            .items([
-              // Business info: service areas, travel fees, availability, geo.
-              // Moved here from Site Settings so Settings is identity + infrastructure only.
-              singletonWithPreview(S, 'businessInfo', 'Business info', PinIcon),
-
-              S.divider(),
-
-              // Ministries: the church's groups and programs (Children, Outreach,
-              // Missions, etc). Task 7. No sermon type (YouTube is the archive)
-              // and no event type (Church Center holds the calendar).
-              S.documentTypeListItem('ministry').title('Ministries').icon(HeartIcon),
-
-              // Staff directory. Task 7.
-              S.documentTypeListItem('staffMember').title('Staff').icon(UsersIcon),
-
-              S.divider(),
-
-              // Announcement banners: queued notices that appear above the header.
-              // Each one has a date window (startDate / endDate) and an on/off toggle.
-              // The active announcement is picked at build time; a rebuild is required
-              // for the banner to appear or disappear on the live site.
-              S.documentTypeListItem('announcement').title('Announcements').icon(BellIcon),
-            ]),
-        ),
-
-      S.divider(),
-
-      // scaffold: journal
-      // Journal — its own section so the editor can find posts + categories at a glance
-      S.listItem()
-        .title('Journal')
-        .icon(BookIcon)
-        .child(
-          S.list()
-            .title('Journal')
-            .items([
-              S.documentTypeListItem('journalEntry').title('Posts').icon(EditIcon),
-              S.documentTypeListItem('journalCategory').title('Categories').icon(TagIcon),
-            ]),
-        ),
-      // scaffold:end
 
       // Safety net: surface any document type we have NOT explicitly placed above
       // (and keep the hidden set, including media.tag, out of the desk root).
