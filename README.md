@@ -1,6 +1,8 @@
-# NCS Astro + Sanity Starter
+# First Baptist Church Muncie
 
-A reusable, production-grade starter for small-business marketing sites on **Astro + Sanity + Cloudflare Workers**, by [Nixon Creative Studio](https://nixoncreativestudio.com). It is the foundation the studio's client sites are built on, so a polished, editor-friendly site is an afternoon of setup instead of a month of plumbing.
+The website for First Baptist Church Muncie (309 East Adams Street, Muncie, IN 47305), built on **Astro + Sanity + Cloudflare Workers**. It was forked from [`ncs-astro-sanity-starter`](https://github.com/nixoncreativestudio) on 2026-09-18 and replaces the church's Wix site, carrying its 142 blog posts across at their original `/post/<slug>` URLs. The binding spec for the rebuild is `docs/superpowers/specs/2026-09-18-fbcm-rebuild-design.md`; read it before changing what the site is for.
+
+Everything below this paragraph is still the starter's own README and is rewritten in plan 2. Where it says "the starter", read "this site's foundation".
 
 ---
 

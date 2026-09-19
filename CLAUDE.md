@@ -1,6 +1,6 @@
-# NCS Astro + Sanity Starter — CLAUDE.md
+# First Baptist Church Muncie — CLAUDE.md
 
-This is the always-loaded reference for the `ncs-astro-sanity-starter` codebase: the conventions and landmines an agent needs on every task. Deep detail for specific areas (theme, components, SEO, performance, Sanity, deployment) lives under `docs/agent/` and is read on demand. The topic index at the bottom is the map.
+**What this repo is.** The First Baptist Church Muncie website (309 East Adams Street, Muncie, IN 47305), forked from `ncs-astro-sanity-starter` on 2026-09-18 and replacing the church's Wix site. The binding spec is `docs/superpowers/specs/2026-09-18-fbcm-rebuild-design.md`: read it before making a judgement call about what the site should do. Plan 1 built the foundation and imported the content (142 posts at their original `/post/<slug>` URLs, 16 staff, 5 ministries, 42 retired-URL redirects); the ministry, staff, beliefs and visit pages are plan-2 work and 404 today. The rest of this file is still the starter's own reference, rewritten in plan 2, and it remains accurate about the STACK: the conventions and landmines an agent needs on every task. Deep detail for specific areas (theme, components, SEO, performance, Sanity, deployment) lives under `docs/agent/` and is read on demand. The topic index at the bottom is the map.
 
 **Read `docs/PENDING.md` early in a session.** It is the live registry of open loops: queued work, known gaps, and waiting-on-a-human items. If you finish or discover one, update it in the same commit.
 
