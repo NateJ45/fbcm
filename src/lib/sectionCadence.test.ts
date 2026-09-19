@@ -204,7 +204,12 @@ test('dynamicListSection appears in SELF_CONTAINED_TYPES and not CONTENT_TYPES',
   );
 });
 
+// scaffold: church
 // ── Task 4: the eight church blocks ────────────────────────────────────────
+// Marked as a block: the eight type names live in SELF_CONTAINED_TYPES /
+// CONTENT_TYPES in sectionCadence.ts, which --remove church edits. Without the
+// markers the removal would leave this test asserting names that no longer
+// exist, which is rule 14's failure mode with the volume turned up.
 
 test('church blocks are classified: dark bands self-contained, the rest alternate', () => {
   for (const t of [
@@ -220,3 +225,4 @@ test('church blocks are classified: dark bands self-contained, the rest alternat
     assert.ok(CONTENT_TYPES.has(t), `${t} should alternate with the cadence`);
   }
 });
+// scaffold:end

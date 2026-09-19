@@ -39,7 +39,11 @@ import {
 // to one of them and CLAUDE.md #9 would have gone unenforced. The church
 // blocks carry no heading-accent field and no rich twin, so the two registry
 // assertions are unaffected; only the forbidden-field sweep gains ground.
-const BLOCK_LIBRARIES = ['sections', 'richSections', 'churchSections'] as const;
+const BLOCK_LIBRARIES = [
+  'sections',
+  'richSections',
+  'churchSections', // scaffold: church
+] as const;
 
 function readLibrary(name: string): string {
   return readFileSync(new URL(`../sanity/schemaTypes/${name}.ts`, import.meta.url), 'utf8');
