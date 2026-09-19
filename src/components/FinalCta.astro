@@ -3,7 +3,8 @@
 // The full-bleed call-to-action section that closes every interior page (and the home page).
 // Charcoal Dark panel with editorial headline, optional subhead, and a Bronze CTA pill.
 // This is intentionally the only section on the page that uses the dark brand panel:
-// it punctuates the read and pushes toward booking a consultation.
+// it punctuates the read and points at the next step, which for this church is
+// planning a first visit.
 //
 // scriptAccent: optional single word/phrase from the headline to render in handwritten
 // the script accent font via the `.font-script` utility. Inherits the heading color (text-bg) so
@@ -37,8 +38,17 @@ interface Props {
   secondaryCta?: CtaBlock | null;
   /** Override the default heading id (defaults to "final-cta"). */
   headingId?: string;
-  /** Fallback CTA label when cta.label isn't set. */
+  /**
+   * Fallback CTA label and href when the block resolves no CTA of its own.
+   *
+   * These defaults SHIP: the band renders whenever a ctaBandSection has no cta
+   * set, which is every page singleton in an unseeded dataset. The starter's
+   * "Book a Consultation" -> /contact sat here until 2026-09-19 (CLAUDE.md rule
+   * 11: correct code carrying the wrong noun). A Sanity cta still overrides
+   * both.
+   */
   fallbackCtaLabel?: string;
+  fallbackCtaHref?: string;
   /**
    * Optional single word/phrase from the headline to render in handwritten
    * the script accent font. Matched case-insensitively against the headline,
@@ -69,12 +79,13 @@ interface Props {
 
 const {
   eyebrow,
-  headline = 'Ready to Love Your Space?',
-  subhead = "Let's start with a conversation.",
+  headline = 'Come and see',
+  subhead = 'Plan a visit, or send us a note and we will answer.',
   cta,
   secondaryCta,
   headingId = 'final-cta',
-  fallbackCtaLabel = 'Book a Consultation',
+  fallbackCtaLabel = 'Plan your visit',
+  fallbackCtaHref = '/visit',
   scriptAccent,
   headingAccent,
   subheadRich,
@@ -182,7 +193,7 @@ const richSubhead = hasInlineRich(subheadRich);
         cta={cta}
         variant="primary"
         onDark
-        fallbackHref="/contact"
+        fallbackHref={fallbackCtaHref}
         fallbackLabel={fallbackCtaLabel}
       />
       {secondaryCta && <CtaLink cta={secondaryCta} variant="secondary" onDark />}

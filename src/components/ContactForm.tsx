@@ -104,7 +104,7 @@ const SOURCE_OPTIONS = [
   'Facebook',
   'Friend or family referral',
   'Industry referral',
-  'Reading the journal',
+  'Reading the blog',
   'Other',
 ] as const;
 

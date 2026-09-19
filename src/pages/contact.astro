@@ -23,9 +23,10 @@ const [page, siteSettings] = await Promise.all([
 ]);
 
 const title = page?.seoTitle ?? `Contact ${site.name}`;
-const description = page?.seoDescription ?? 'Start a conversation about your space.';
+const description =
+  page?.seoDescription ?? 'How to reach the church office, and where to find us on Sunday.';
 
-const heroEyebrow = page?.heroEyebrow ?? 'Request a Consultation.';
+const heroEyebrow = page?.heroEyebrow ?? 'Get in touch.';
 const heroHeadline = page?.heroHeadline ?? 'Start the Conversation.';
 const heroSubhead = page?.heroSubhead ?? '';
 const formIntroNote = page?.formIntroNote ?? '';
@@ -38,7 +39,7 @@ const questions = normalizeCustomFields(page?.formFields);
 const questionProps = questions.length > 0 ? { customFields: questions } : {};
 
 const schedulingLink = page?.schedulingLink;
-const schedulingLinkLabel = page?.schedulingLinkLabel ?? 'Schedule a 20-minute discovery call.';
+const schedulingLinkLabel = page?.schedulingLinkLabel ?? 'Find a time to talk with a pastor.';
 
 const availability = page?.availabilityNote;
 const email = siteSettings?.email;
