@@ -851,12 +851,88 @@
     opacity: 0;
   }
 }
+
+/* ---- The FIRST frame starts visible, because it is the LCP image.
+   Both keyframes above open at `0% { opacity: 0 }` and ramp in, which is right
+   for frames 2-6 (they arrive out of a cross-fade) and wrong for frame 1: an
+   element at opacity 0 is not a rendered LCP candidate, so the photo that
+   HeroBackground.astro loads eager + fetchpriority="high" was handing back on
+   the client exactly what it bought on the network. The ramp is 4% of the
+   cycle on `hero-crossfade` (1.28s at 4 frames, 1.60s at 5, 1.92s at 6) and 8%
+   on `hero-crossfade-few` (1.28s at 2 frames, 1.92s at 3).
+
+   The fix keeps every other breakpoint where it was and MOVES THE FADE-IN TO
+   THE END OF THE CYCLE, so the frame reaches opacity 1 at the instant the
+   cycle wraps rather than 4% (or 8%) after it:
+
+     hero-crossfade-first      0% = 1 (was 0)      hold to 20%, out by 26%
+                               96% = 0 -> 100% = 1   the same 4% ramp, moved
+     hero-crossfade-few-first  0% = 1 (was 0)      hold to 40%, out by 52%
+                               92% = 0 -> 100% = 1   the same 8% ramp, moved
+
+   Why moved rather than deleted: a keyframe that ended the cycle at 0 and
+   began the next at 1 would jump, and at 4 frames that jump is visible (the
+   outgoing frame is only ~17% opaque at the wrap, per the arithmetic above).
+   Ending the ramp exactly at 100% makes the loop continuous (100% == 0%), and
+   it can only ever put MORE on screen during the wrap, never less, so no frame
+   count can open a gap. The handoff to frame 2 is untouched: the hold and the
+   fade-out still sit at 20%/26% (and 40%/52%), so the cross-fade an editor
+   sees is the same one it was.
+
+   The reduced-motion rule at the bottom of this file already pins the first
+   frame to opacity 1 with no animation, and is unchanged. ---- */
+@keyframes hero-crossfade-first {
+  0% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 1;
+  }
+  26% {
+    opacity: 0;
+  }
+  96% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes hero-crossfade-few-first {
+  0% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 0;
+  }
+  92% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 .hero-fade.few-frames .hero-frame {
   /* Longhand override: only the crossfade half of the two-animation list
      changes. Duration (from --frames/--frame-s), delay and the Ken Burns
      animation itself come from the base .hero-frame rule and the inline
      style untouched. */
   animation-name: hero-crossfade-few, hero-kb;
+}
+/* Frame 1 only. Written after the few-frames rule above because it matches at
+   the same specificity; the few-frames first-child rule below carries one more
+   class and wins over both. */
+.hero-fade .hero-frame:first-child {
+  animation-name: hero-crossfade-first, hero-kb;
+  /* Belt and braces for the first painted frame: if the animation has not been
+     applied yet, the element still starts opaque rather than invisible. */
+  opacity: 1;
+}
+.hero-fade.few-frames .hero-frame:first-child {
+  animation-name: hero-crossfade-few-first, hero-kb;
 }
 .hero-frame:nth-child(3n + 2) {
   transform-origin: top left;
