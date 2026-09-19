@@ -329,6 +329,11 @@ const HERO_FULL_FIXTURE = {
       alt: 'A styleguide fixture photo of the church.',
     },
   ],
+  // Buttons on both heroes, so the styleguide shows the church pair the way a
+  // real hero does: gold fill with an indigo-field label for the primary, the
+  // outlined variant beside it (CLAUDE.md rule 17).
+  primaryCta: { label: 'Plan your visit', linkType: 'external' as const, externalUrl: '#' },
+  secondaryCta: { label: 'Watch a service', linkType: 'external' as const, externalUrl: '#' },
 };
 
 const HERO_SPLIT_FIXTURE = {
@@ -346,6 +351,11 @@ const HERO_SPLIT_FIXTURE = {
     { _key: 'fact-2', label: 'Where', value: '309 E Adams St' },
     { _key: 'fact-3', label: 'Online', value: 'Facebook Live' },
   ],
+  // Buttons on both heroes, so the styleguide shows the church pair the way a
+  // real hero does: gold fill with an indigo-field label for the primary, the
+  // outlined variant beside it (CLAUDE.md rule 17).
+  primaryCta: { label: 'Plan your visit', linkType: 'external' as const, externalUrl: '#' },
+  secondaryCta: { label: 'Service times', linkType: 'external' as const, externalUrl: '#' },
 };
 
 const GIVE_BAND_FIXTURE = {
@@ -534,6 +544,8 @@ const DOCUMENT_LIST_FIXTURE = {
     headline={HERO_FULL_FIXTURE.headline}
     subhead={HERO_FULL_FIXTURE.subhead}
     backgroundImages={HERO_FULL_FIXTURE.frames}
+    primaryCta={HERO_FULL_FIXTURE.primaryCta}
+    secondaryCta={HERO_FULL_FIXTURE.secondaryCta}
     layout="full"
     size="short"
     headingId="styleguide-hero-full"
@@ -545,6 +557,8 @@ const DOCUMENT_LIST_FIXTURE = {
     subhead={HERO_SPLIT_FIXTURE.subhead}
     backgroundImages={HERO_SPLIT_FIXTURE.frames}
     facts={HERO_SPLIT_FIXTURE.facts}
+    primaryCta={HERO_SPLIT_FIXTURE.primaryCta}
+    secondaryCta={HERO_SPLIT_FIXTURE.secondaryCta}
     layout="split"
     size="short"
     headingId="styleguide-hero-split"
