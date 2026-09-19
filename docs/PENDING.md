@@ -292,10 +292,11 @@ leaves open, with what closes each.
 
 ### Waiting on Nathan
 
-- **`CLOUDFLARE_API_TOKEN` as a GitHub Actions secret.** `wrangler login` is OAuth
-  and produces no token, so `deploy.yml` cannot deploy from CI until one exists
-  (Workers Scripts:Edit is enough). Until then deploys are `npm run deploy` from a
-  laptop, which is exactly the failure PORTS.md card 50 was written to end.
+- ~~`CLOUDFLARE_API_TOKEN` as a GitHub Actions secret.~~ Done 2026-09-18. First CI
+  deploy (run 35411176093) succeeded: gate green, 277 files uploaded, version
+  `6d670311`, smoke passed against `vars.PRODUCTION_URL`. Deploys now happen on
+  every push to `main` and on `sanity-publish` dispatches; `npm run deploy` from
+  a laptop is the fallback, not the path.
 - **A GitHub PAT for the Sanity publish webhook.** Without it a Studio publish
   changes the dataset and nothing else; the site rebuilds only on a push.
 - **A Cloudflare Web Analytics token** for the workers.dev host, pasted into `.env`
