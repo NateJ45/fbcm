@@ -17,7 +17,9 @@ const [page, siteSettings] = await Promise.all([
 ]);
 
 const title = page?.seoTitle ?? site.name;
-const description = page?.seoDescription ?? 'Your tagline goes here.';
+const description =
+  page?.seoDescription ??
+  "We're a Spirit-led people gathered to join Christ's presence in our community.";
 
 const sections = page?.pageBuilder?.length ? page.pageBuilder : DEFAULT_HOME_SECTIONS;
 ---

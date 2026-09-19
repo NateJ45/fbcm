@@ -100,7 +100,9 @@ export default function MobileNav({
 }: Props) {
   const [open, setOpen] = useState(false);
 
-  const tagline = siteSettings?.tagline ?? 'Your tagline goes here.';
+  const tagline =
+    siteSettings?.tagline ??
+    "We're a Spirit-led people gathered to join Christ's presence in our community.";
   const email = siteSettings?.email;
   const phone = siteSettings?.phone;
   const ig = siteSettings?.socialInstagram;

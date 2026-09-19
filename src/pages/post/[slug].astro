@@ -83,7 +83,10 @@ if (!entry) {
 }
 
 // Meta
-const title = entry.seoTitle ?? `${entry.title} · Studio Journal`;
+// "Blog" is what this section is called here: the route is /blog and the nav
+// says Blog. "Studio Journal" was the starter's name for it and it was riding
+// on all 142 titles, og:title, twitter:title and og:image:alt.
+const title = entry.seoTitle ?? `${entry.title} · Blog`;
 const description = entry.seoDescription ?? entry.excerpt ?? 'A note from the studio.';
 const coverOg = entry.coverImage?.asset
   ? urlFor(entry.coverImage).width(1200).height(630).fit('crop').quality(80).format('webp').url()

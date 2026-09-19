@@ -59,13 +59,27 @@ const {
 
 const canonical = new URL(Astro.url.pathname, site.url).toString();
 
-// Per-page OG image: convention is /og/<route-slug>.png generated at build time.
-// `/` → /og/home.png, `/contact` → /og/contact.png, `/portfolio/foo` → /og/portfolio-foo.png.
-// Falls back to og-default.png if the slug-specific file isn't there.
+// Per-page OG image: the convention is /og/<route-slug>.png, generated at build
+// time by `npm run og:pages`. `/` → /og/home.png, `/contact` → /og/contact.png.
+//
+// 2026-09-18: the cards themselves are NOT in this repo. public/og/ held another
+// client's set and was deleted as residue, and nothing regenerated it, so every
+// page emitted an og:image URL that 404s -- which is worse than no card at all,
+// because a social scraper shows a broken preview rather than falling back.
+// So the convention is now CHECKED against what is actually on disk with
+// import.meta.glob (a build-time, statically analysed read of public/og/), and
+// a route with no card of its own gets /og-default.png, which is committed.
+// Posts resolve a real Sanity CDN image and never reach this function.
+// Keys only: the glob is never awaited, so nothing is bundled. It exists
+// purely to answer "is there a card for this route on disk right now?", and
+// it answers {} when public/og/ is absent entirely, which is today's state.
+const OG_PAGE_CARDS = import.meta.glob('../../public/og/*.png');
+const hasOgCard = (path: string) => `../..${path}` in OG_PAGE_CARDS;
+
 function ogPathForRoute(pathname: string): string {
   const trimmed = pathname.replace(/^\/|\/$/g, '');
-  if (!trimmed) return '/og/home.png';
-  return `/og/${trimmed.replace(/\//g, '-')}.png`;
+  const candidate = trimmed ? `/og/${trimmed.replace(/\//g, '-')}.png` : '/og/home.png';
+  return hasOgCard(candidate) ? candidate : site.assets.ogDefault;
 }
 
 // Resolve a raw Sanity image object to a 1200x630 OG URL through the image
@@ -85,17 +99,19 @@ const resolvedOg = ogImage ?? perPageOg ?? globalOg ?? ogPathForRoute(Astro.url.
 const absOg = resolvedOg.startsWith('http') ? resolvedOg : new URL(resolvedOg, site.url).toString();
 
 // Build the document title. If the editor-supplied seoTitle already contains
-// the brand name anywhere, use it verbatim. Otherwise append " — {site.name}"
+// the brand name anywhere, use it verbatim. Otherwise append " | {site.name}"
 // so the tab + search-result line carries the brand. Strips a trailing suffix
 // once before evaluating so any legacy pre-baked suffix is handled.
-const brandSuffix = ` — ${site.name}`;
+// ' | ', not an em-dash: CLAUDE.md rule 2 bans em-dashes in site copy, and a
+// <title> is the first copy a visitor reads. It was in all 142 post titles.
+const brandSuffix = ` | ${site.name}`;
 const cleanTitle = title.endsWith(brandSuffix)
   ? title.slice(0, -brandSuffix.length)
   : title;
 const hasBrandInline = cleanTitle.toLowerCase().includes(site.name.toLowerCase());
 const fullTitle = cleanTitle === site.name || hasBrandInline
   ? cleanTitle
-  : `${cleanTitle} — ${site.name}`;
+  : `${cleanTitle}${brandSuffix}`;
 
 // Auto-inject LocalBusiness on every page when siteSettings is available.
 // Pages can still pass their own additional schemas (Service, FAQPage, BreadcrumbList).
