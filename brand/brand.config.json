@@ -16,10 +16,16 @@
       "--color-secondary": "#AAB0B8",
       "--color-tertiary": "#9DB0A6",
       "--color-bg": "#FBFBFA",
-      "--color-bg-soft": "#F3F4F2",
+      "--color-bg-soft": "#F0EEEC",
       "--color-border-soft": "#E6E7E5",
       "--color-white-pure": "#FFFFFF",
-      "--color-gold": "#D59B29"
+      "--color-gold": "#D59B29",
+      "--color-indigo": "#292854",
+      "--color-indigo-field": "#353351",
+      "--color-brown": "#39251E",
+      "--color-brown-mid": "#724F43",
+      "--color-taupe": "#B5ABA3",
+      "--color-cream": "#FBFBFA"
     },
     "light": {
       "--background": "#FBFBFA",

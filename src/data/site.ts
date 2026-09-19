@@ -49,7 +49,7 @@ export const site = {
     secondary: '#AAB0B8', // Cool Gray
     tertiary: '#9DB0A6', // Muted Sage
     bg: '#FBFBFA', // Paper
-    bgSoft: '#F3F4F2', // Soft Paper
+    bgSoft: '#F0EEEC', // Soft Paper
     border: '#E6E7E5', // Faint dividers
   },
 

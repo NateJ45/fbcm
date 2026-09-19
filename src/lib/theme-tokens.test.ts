@@ -197,3 +197,54 @@ for (const [fg, bg] of GOLD_PAIRS) {
     );
   });
 }
+
+// ---------------------------------------------------------------------------
+// Plan 2a: the church's full palette. Roles measured 2026-09-19; the four
+// forbidden pairs are asserted FAILING so nobody can ship them by accident.
+// ---------------------------------------------------------------------------
+
+const CHURCH_PAIRS_AA: Array<[string, string, string]> = [
+  ['color-indigo', 'color-cream', 'ink on paper'],
+  ['color-brown', 'color-cream', 'brown ink on paper'],
+  ['color-brown-mid', 'color-cream', 'eyebrows on paper'],
+  ['color-gold', 'color-indigo-field', 'eyebrows on the dark band'],
+  ['color-gold', 'color-brown', 'eyebrows on the heritage band'],
+  ['color-taupe', 'color-indigo-field', 'muted text on the dark band'],
+  ['color-taupe', 'color-brown', 'muted text on the heritage band'],
+  ['color-indigo', 'color-gold', 'primary button label'],
+  ['color-cream', 'color-brown', 'body on the heritage band'],
+];
+const CHURCH_PAIRS_FORBIDDEN: Array<[string, string, string]> = [
+  ['color-gold', 'color-cream', 'gold text on paper'],
+  ['color-cream', 'color-gold', 'white on gold'],
+  ['color-gold', 'color-brown-mid', 'gold on mid brown'],
+  ['color-taupe', 'color-cream', 'taupe text on paper'],
+];
+
+test('every church pair that ships clears AA body text', () => {
+  for (const [fg, bg, why] of CHURCH_PAIRS_AA) {
+    const r = contrastRatio(token(fg), token(bg));
+    assert.ok(r >= AA_BODY_TEXT, `${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
+  }
+});
+
+test('the four forbidden church pairs really do fail, so the list stays honest', () => {
+  for (const [fg, bg, why] of CHURCH_PAIRS_FORBIDDEN) {
+    const r = contrastRatio(token(fg), token(bg));
+    assert.ok(
+      r < AA_BODY_TEXT,
+      `${why} unexpectedly passes at ${r.toFixed(2)}:1; update the roles`,
+    );
+  }
+});
+
+test('the taupe tint surface keeps indigo ink readable', () => {
+  // bg-soft is now a 16% taupe tint over cream. flatten()'s real signature
+  // (see src/lib/contrast.ts) is flatten(fg: Rgb, alpha: number, bg: Rgb): Rgb
+  // -- foreground first, then alpha, then backdrop, all as Rgb objects, not
+  // hex strings -- so token()'s hex output has to go through hexToRgb() on
+  // the way in and rgbToHex() on the way out.
+  const tint = flatten(hexToRgb(token('color-taupe')), 0.16, hexToRgb(token('color-cream')));
+  const r = contrastRatio(token('color-indigo'), rgbToHex(tint));
+  assert.ok(r >= AA_BODY_TEXT, `indigo on taupe tint is ${r.toFixed(2)}:1`);
+});

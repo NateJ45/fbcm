@@ -34,7 +34,7 @@
   --color-secondary: #aab0b8; /* Cool Gray — borders, eyebrows */
   --color-tertiary: #9db0a6; /* Muted Sage — sparingly */
   --color-bg: #fbfbfa; /* Paper — primary surface */
-  --color-bg-soft: #f3f4f2; /* Soft Paper — alternating surface */
+  --color-bg-soft: #f0eeec; /* Soft Paper — a 16% taupe tint over cream, see theme-tokens.test.ts */
   --color-border-soft: #e6e7e5; /* Faint dividers */
   --color-white-pure: #ffffff;
   /* Gold — the church's second brand colour, a FILL and an on-dark ink, never
@@ -52,6 +52,23 @@
      --color-accent or --color-accent-dark at this value — those are ink-on-
      paper roles and gold cannot serve them. */
   --color-gold: #d59b29;
+
+  /* Plan 2a: the church's full five-colour logo palette. Roles measured
+     2026-09-19 in src/lib/theme-tokens.test.ts (CHURCH_PAIRS_AA /
+     CHURCH_PAIRS_FORBIDDEN). Indigo is the same hue as --color-primary /
+     --color-accent above (hue 241) — those two keep pointing at it so nothing
+     existing breaks — and indigo-field is the slightly lighter dark-band
+     field the client's own Wix footer already uses. Gold's role does not
+     change: still a fill and an on-dark ink, never a paper ink or a ground
+     for white (see the comment above). Taupe is a muted ink for the dark
+     band and the heritage (brown) band only — it fails on cream, which is
+     asserted as a FORBIDDEN pair, not a passing one. */
+  --color-indigo: #292854; /* Indigo — hue 241, same value as --color-primary */
+  --color-indigo-field: #353351; /* Indigo Field — the dark-band surface, lighter than indigo */
+  --color-brown: #39251e; /* Brown — the heritage band surface */
+  --color-brown-mid: #724f43; /* Brown Mid — eyebrows on paper */
+  --color-taupe: #b5aba3; /* Taupe — muted text on the dark and heritage bands only */
+  --color-cream: #fbfbfa; /* Cream — paper, same value as --color-bg */
 
   /* Fonts */
   --font-display: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
@@ -345,6 +362,17 @@
   --error: oklch(0.704 0.191 22.216); /* matches dark --destructive */
   --error-foreground: #ffffff;
   --outline: #8a96a6; /* matches dark --ring */
+
+  /* Dark mode: indigo becomes paper, cream becomes ink. Gold and the browns do not move.
+     --color-bg-soft is deliberately NOT redeclared here even though the task brief that
+     introduced this block called for #262548: --color-bg-soft is one of the tokens
+     theme-tokens.test.ts's scope-premise test ("`.dark` does not redeclare a palette
+     token this gate asserts as light") explicitly forbids redeclaring in `.dark`, and
+     that assertion is not to be weakened. Giving `bg-soft` a real dark-mode value is
+     follow-up work, tracked in the task-1 report rather than done here. */
+  --color-cream: #1c1b3a;
+  --color-indigo: #fbfbfa;
+  --color-indigo-field: #2a2950;
 }
 
 /* ---------- Base resets and defaults ---------------------------------- */
