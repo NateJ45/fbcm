@@ -112,14 +112,24 @@ export interface ResolvedChromeSettings {
  */
 export function fallbackNavItems(visible: SectionVisibility): NavItem[] {
   return [
-    ...(visible.journal ? [{ kind: 'flat' as const, label: 'Journal', href: '/blog' }] : []), // scaffold: journal
+    ...(visible.journal ? [{ kind: 'flat' as const, label: 'Blog', href: '/blog' }] : []), // scaffold: journal
   ];
 }
 
-/** Built-in header button. One unambiguous ask. */
+/**
+ * Built-in header button. One unambiguous ask.
+ *
+ * 2026-09-19: was "Book a consultation", which is the service-business ask this
+ * repo was forked from and not something a church says. The church's real
+ * button is Give, pointing at Church Center, and it is SET IN SANITY (see the
+ * siteSettings seed) because a giving address is per-church data, not a code
+ * default. This fallback only ever renders on a build with no Sanity project
+ * behind it, so it says the one thing that is true of every site here: there is
+ * a Contact page.
+ */
 export const FALLBACK_HEADER_CTA: HeaderCta = {
   show: true,
-  label: 'Book a consultation',
+  label: 'Contact us',
   href: '/contact',
 };
 

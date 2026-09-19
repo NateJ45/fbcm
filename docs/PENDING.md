@@ -312,6 +312,12 @@ leaves open, with what closes each.
 - **`SANITY_TOKEN` as a Worker secret** for `/preview/**`. Card 45 records that
   `wrangler secret put` trips an agent permission gate. Preview fails closed with a
   503 naming it, by design.
+- **The church's real tagline.** `siteSettings.tagline` still reads "Your tagline
+  goes here." It was a placeholder nobody could see while the footer was the
+  starter's; Task 9 (2026-09-19) puts it in gold serif at the top of the footer
+  on every page, and in the mobile drawer, so it is now the most visible
+  placeholder on the site. One short line from the church closes it, typed into
+  Site Settings -> Tagline. Nothing breaks until then, it just reads unfinished.
 
 ### Plan 2 must do
 

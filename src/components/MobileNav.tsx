@@ -19,25 +19,33 @@
 // client:only="react" is still the escape hatch. VisualEditingOverlay in
 // PreviewLayout.astro uses it for that kind of reason.
 //
-// Layout (top to bottom inside the sheet):
-//   1. Brand accent stripe (4px Warm Bronze) + "Menu" eyebrow
-//   2. Primary CTA — Book a consultation
+// Layout (top to bottom inside the sheet), and it MIRRORS the desktop header
+// (Plan 2a, Task 9): the same seven links, the same one button, the same two
+// utility links. A phone visitor should not be offered a different site.
+//   1. Brand accent stripe + "Menu" eyebrow
+//   2. The Give button — the header's one button, gold with an indigo label
 //   3. Tagline in display serif italic
-//   4. Nav links — flat items are single rows; dropdown groups are a heading
-//      row with indented sub-items underneath (always expanded on mobile,
-//      no accordion needed — full-height drawers have plenty of room)
+//   4. Nav links — the seven; flat items are single rows, dropdown groups are
+//      a heading row with indented sub-items underneath (always expanded on
+//      mobile, no accordion needed: full-height drawers have plenty of room)
 //   5. Spacer pushes the rest to the bottom
-//   6. Email link with Mail icon
-//   7. Social icons row (Instagram, Facebook) + ThemeToggle on the right
-//   8. Logo centered at the bottom of the panel
+//   6. The utility pair the desktop header puts in its top row: the phone as a
+//      tel: link, and Contact. ThemeToggle on the right.
+//   7. Logo centered at the bottom of the panel
 //
-// Data: tagline, email, social URLs all come from Sanity siteSettings via
-// the Header, with sensible defaults so the menu renders cleanly before
-// content is wired up.
+// The Instagram / Facebook buttons came out on 2026-09-19 along with the
+// header's eyebrow strip. The church's public places are YouTube and Church
+// Center, both of which the footer carries as named links, and the dataset has
+// no Instagram or Facebook address behind those two buttons at all. The email
+// row went with them: Contact is the one place the church asks people to write
+// from, and it is now the drawer's second utility link.
+//
+// Data: tagline, phone and the menu all come from Sanity siteSettings via the
+// Header, with sensible defaults so the menu renders cleanly before content is
+// wired up.
 
 import { useState } from 'react';
-import { Menu, Mail, Phone, ChevronRight } from 'lucide-react';
-import { IconBrandInstagram, IconBrandFacebook } from '@tabler/icons-react';
+import { Menu, Phone, ChevronRight } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import ThemeToggle from './ThemeToggle';
 import { telHref } from '@/lib/phone';
@@ -61,10 +69,13 @@ type NavItem = FlatNavLink | DropdownNavGroup;
 
 interface MobileNavSiteSettings {
   tagline?: string;
+  /**
+   * Still accepted so the Header can keep passing the same object shape (and
+   * keep honouring the "Show the email address in the menu" switch), but the
+   * drawer no longer renders an email row. See the note at the top.
+   */
   email?: string;
   phone?: string;
-  socialInstagram?: string;
-  socialFacebook?: string;
 }
 
 interface Props {
@@ -74,7 +85,7 @@ interface Props {
    * Optimized logo URLs pre-rendered by Astro's getImage() in the parent
    * Header.astro. A React island cannot call Astro's build-time image
    * pipeline itself, so the parent does the work once at build time and
-   * passes the resulting WebP URLs in as plain strings.
+   * passes the resulting URLs in as plain strings.
    */
   logoLightUrl?: string;
   logoDarkUrl?: string;
@@ -86,8 +97,13 @@ interface Props {
   cta?: { show: boolean; label: string; href: string };
 }
 
-/** Built-in drawer button, matching the header's own default. */
-const DEFAULT_CTA = { show: true, label: 'Book a consultation', href: '/contact' };
+/**
+ * Built-in drawer button, matching FALLBACK_HEADER_CTA in
+ * src/lib/siteSettings.ts. Header.astro compares against these exact two values
+ * to decide whether to serialize a `cta` prop at all, so the two defaults must
+ * stay identical.
+ */
+const DEFAULT_CTA = { show: true, label: 'Contact us', href: '/contact' };
 
 // ---- Component --------------------------------------------------------------
 
@@ -103,10 +119,11 @@ export default function MobileNav({
   const tagline =
     siteSettings?.tagline ??
     "We're a Spirit-led people gathered to join Christ's presence in our community.";
-  const email = siteSettings?.email;
   const phone = siteSettings?.phone;
-  const ig = siteSettings?.socialInstagram;
-  const fb = siteSettings?.socialFacebook;
+
+  // Church Center is somebody else's site, so the Give button opens in a new
+  // tab. An internal destination stays in this one.
+  const ctaIsExternal = /^https?:\/\//i.test(cta.href);
 
   const close = () => setOpen(false);
 
@@ -128,18 +145,21 @@ export default function MobileNav({
         >
           {/* Eyebrow header. */}
           <SheetHeader className="pt-xl px-l pb-m">
-            <SheetTitle className="font-body text-xs font-normal tracking-eyebrow text-foreground/80 uppercase">
+            <SheetTitle className="font-mono text-[0.75rem] font-normal tracking-eyebrow text-muted-foreground uppercase">
               Menu
             </SheetTitle>
           </SheetHeader>
 
-          {/* Primary CTA — main conversion action surfaced before the nav list. */}
+          {/* The one button, surfaced before the nav list. Gold fill, indigo
+              label: the same pair the desktop header and the give band use. */}
           {cta.show && (
             <div className="px-l pb-l">
               <a
                 href={cta.href}
+                target={ctaIsExternal ? '_blank' : undefined}
+                rel={ctaIsExternal ? 'noopener noreferrer' : undefined}
                 onClick={close}
-                className="block w-full rounded-md bg-primary-dark px-m py-m text-center text-xs font-semibold tracking-eyebrow text-white uppercase transition-colors hover:bg-accent-dark"
+                className="block w-full rounded-sm bg-gold px-m py-m text-center text-xs font-semibold tracking-eyebrow text-indigo-field uppercase transition-colors hover:bg-gold/90"
               >
                 {cta.label}
               </a>
@@ -160,7 +180,7 @@ export default function MobileNav({
                     key={item.href}
                     href={item.href}
                     onClick={close}
-                    className="flex items-center px-l py-s font-display text-lg text-foreground transition-colors hover:bg-muted hover:text-link"
+                    className="flex min-h-[44px] items-center px-l py-s font-display text-lg text-foreground transition-colors hover:bg-muted hover:text-link"
                   >
                     {item.label}
                   </a>
@@ -173,7 +193,7 @@ export default function MobileNav({
                 <div key={item.label}>
                   {/* Group heading — visually distinct from flat items. Not
                       a link itself; the sub-items carry the real hrefs. */}
-                  <p className="px-l pt-m pb-xs text-xs tracking-eyebrow text-foreground/80 uppercase">
+                  <p className="px-l pt-m pb-xs font-mono text-[0.75rem] tracking-eyebrow text-muted-foreground uppercase">
                     {item.label}
                   </p>
                   {item.items.map((sub) => (
@@ -181,7 +201,7 @@ export default function MobileNav({
                       key={sub.href}
                       href={sub.href}
                       onClick={close}
-                      className="flex items-center gap-xs py-xs pr-l pl-[calc(theme(spacing.l)+0.5rem)] font-body text-base text-foreground transition-colors hover:bg-muted hover:text-link"
+                      className="flex min-h-[44px] items-center gap-xs py-xs pr-l pl-[calc(theme(spacing.l)+0.5rem)] font-body text-base text-foreground transition-colors hover:bg-muted hover:text-link"
                     >
                       <ChevronRight
                         size={12}
@@ -199,53 +219,29 @@ export default function MobileNav({
           {/* Spacer pushes the contact + logo block to the bottom. */}
           <div className="flex-1" />
 
-          {/* Contact + socials + theme. */}
+          {/* The desktop header's utility row, restated for the phone: the
+              number, then Contact, with the theme control on the right. */}
           <div className="border-t border-border-soft px-l pt-m pb-s">
-            <p className="mb-s text-xs tracking-eyebrow text-foreground/80 uppercase">
+            <p className="mb-s font-mono text-[0.75rem] tracking-eyebrow text-muted-foreground uppercase">
               Get in touch
             </p>
-            {email && (
-              <a
-                href={`mailto:${email}`}
-                className="inline-flex items-center gap-s text-sm text-link hover:underline"
-              >
-                <Mail size={16} aria-hidden="true" />
-                {email}
-              </a>
-            )}
             {phone && (
               <a
                 href={telHref(phone)}
-                className="mt-s flex items-center gap-s text-sm text-link hover:underline"
+                className="flex min-h-[44px] items-center gap-s text-sm text-link hover:underline"
               >
                 <Phone size={16} aria-hidden="true" />
                 {phone}
               </a>
             )}
-
-            <div className="mt-m flex items-center gap-s">
-              {ig && (
-                <a
-                  href={ig}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border-soft text-foreground transition-colors hover:border-primary-dark hover:bg-primary-dark hover:text-white"
-                >
-                  <IconBrandInstagram size={20} stroke={1.5} />
-                </a>
-              )}
-              {fb && (
-                <a
-                  href={fb}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border-soft text-foreground transition-colors hover:border-primary-dark hover:bg-primary-dark hover:text-white"
-                >
-                  <IconBrandFacebook size={20} stroke={1.5} />
-                </a>
-              )}
+            <div className="flex items-center gap-s">
+              <a
+                href="/contact"
+                onClick={close}
+                className="flex min-h-[44px] items-center text-sm text-link hover:underline"
+              >
+                Contact
+              </a>
               <div className="ml-auto">
                 <ThemeToggle />
               </div>
@@ -254,8 +250,8 @@ export default function MobileNav({
 
           {/* Logo at the bottom — brand-anchored close to the sheet's foot.
               URLs come from Astro's image pipeline via Header.astro's
-              getImage() calls, so this is a WebP file with the same hash
-              as the desktop header logo (free cache hit). */}
+              getImage() calls, so this is the same file (and the same cache
+              entry) as the desktop header logo. */}
           {logoLightUrl && (
             <div className="flex justify-center border-t border-border-soft px-l py-l">
               <img

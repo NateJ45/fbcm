@@ -363,6 +363,7 @@ export type SiteSettings = {
   phone?: string;
   serviceTime?: string;
   serviceLength?: string;
+  address?: string;
   officeHours?: Array<{
     children?: Array<{
       marks?: Array<string>;

@@ -70,6 +70,14 @@ export const siteSettings = defineType({
       initialValue: 'About an hour',
     }),
     defineField({
+      name: 'address',
+      title: 'Street address',
+      type: 'text',
+      rows: 2,
+      group: 'church',
+      description: 'One line per line of the address, as it should print.',
+    }),
+    defineField({
       name: 'officeHours',
       title: 'Office hours',
       type: 'array',
@@ -165,8 +173,8 @@ export const siteSettings = defineType({
       type: 'array',
       group: 'navigation',
       description:
-        'The links in the website header. Drag to reorder. Add a "Link" for a single page, or a "Dropdown" to group several links under one label. The header design fits at most six, so keep the list short. Leave empty to use the built-in default menu. Once you add items here, they replace the whole menu, so include every link you want.',
-      validation: (Rule) => Rule.max(6),
+        'The links in the website header. Drag to reorder. Add a "Link" for a single page, or a "Dropdown" to group several links under one label. The header design fits at most seven, so keep the list short. Leave empty to use the built-in default menu. Once you add items here, they replace the whole menu, so include every link you want.',
+      validation: (Rule) => Rule.max(7),
       of: [
         // The shared link object (./navLink.ts). Existing menu items already
         // carry _type "navLink", so they keep working unchanged and simply gain
@@ -280,7 +288,7 @@ export const siteSettings = defineType({
                   preview: { select: { title: 'label', subtitle: 'href' } },
                 }),
               ],
-              validation: (Rule) => Rule.required().min(1).max(8),
+              validation: (Rule) => Rule.required().min(1).max(10),
             }),
           ],
           preview: {
@@ -296,7 +304,7 @@ export const siteSettings = defineType({
 
     // The button at the right of the header (and at the top of the phone menu).
     // Everything is optional: an empty label keeps the built-in
-    // "Book a consultation" pointing at Contact, and turning it off removes the
+    // "Contact us" button pointing at Contact, and turning it off removes the
     // button everywhere.
     defineField({
       name: 'headerCta',
@@ -304,7 +312,7 @@ export const siteSettings = defineType({
       type: 'object',
       group: 'navigation',
       description:
-        'The one button at the right of the header. Leave the boxes blank to keep the built-in "Book a consultation" button.',
+        'The one button at the right of the header. On this site it is the Give button. Leave the boxes blank to keep the built-in "Contact us" button.',
       options: { collapsible: true, collapsed: true },
       fields: [
         defineField({
@@ -318,7 +326,7 @@ export const siteSettings = defineType({
           name: 'label',
           title: 'Button text',
           type: 'string',
-          description: 'Leave blank for "Book a consultation".',
+          description: 'Leave blank for "Contact us".',
         }),
         defineField({
           name: 'link',
@@ -330,7 +338,7 @@ export const siteSettings = defineType({
       preview: {
         select: { show: 'show', label: 'label' },
         prepare: ({ show, label }) => ({
-          title: label || 'Book a consultation',
+          title: label || 'Contact us',
           subtitle: show === false ? 'Hidden' : 'Header button',
         }),
       },

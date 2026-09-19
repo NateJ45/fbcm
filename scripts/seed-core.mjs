@@ -135,6 +135,34 @@ const docs = [];
 //         socialFacebook?, seoImage?, footerCredit?, footerCreditUrl?,
 //         newsletter{enabled,...}, sectionVisibility
 
+// The giving address is typed ONCE, here, and used TWICE: as the church's own
+// `givingUrl`, and as the destination of the header's Give button. A headerCta
+// link is a `navLink` object, and a navLink cannot reference another field of
+// the same document, so the schema has no way to make the two follow each
+// other. This constant is what keeps them equal. IF YOU CHANGE THE GIVING
+// ADDRESS, CHANGE IT HERE AND NOWHERE ELSE, or the button and the Give band
+// will quietly point at different pages.
+const GIVING_URL = 'https://fbcmuncie.churchcenter.com/giving';
+const CHURCH_CENTER_URL = 'https://fbcmuncie.churchcenter.com/';
+const CHURCH_TRAC_URL = 'https://fbcmuncie.churchtrac.com/';
+const YOUTUBE_URL = 'https://www.youtube.com/c/FbcmuncieOrg';
+
+// Menu helpers. The _key values are written out by hand rather than taken from
+// key() above, because that counter is shared with every portable-text block in
+// this file: allocating menu keys from it would shift the _keys of every block
+// seeded after this document, and re-running the seeder would then rewrite
+// documents nothing had asked to change.
+//
+// `href` is the hand-typed address field, which WINS over the page picker (see
+// src/lib/nav-href.ts). The church's plan-2 pages have no documents behind them
+// yet, so a typed address is the only thing that can point at them.
+function link(k, label, href) {
+  return { _type: 'navLink', _key: k, label, href };
+}
+function externalLink(k, label, url) {
+  return { _type: 'navLink', _key: k, label, linkType: 'external', externalUrl: url };
+}
+
 docs.push({
   _id: 'siteSettings',
   _type: 'siteSettings',
@@ -142,6 +170,7 @@ docs.push({
   tagline: 'Your tagline goes here.',
   email: 'office@fbcmuncie.org',
   phone: '(765) 284-7749',
+  address: '309 East Adams Street\nMuncie, IN 47305',
   serviceTime: 'Sundays at 10:45 am',
   serviceLength: 'About an hour',
   officeHours: [
@@ -151,10 +180,10 @@ docs.push({
     pt('Hours may change on holidays.'),
   ],
   pastoralHours: [pt('Tuesdays: 9 am to 12 pm and 1 pm to 5 pm')],
-  churchCenterUrl: 'https://fbcmuncie.churchcenter.com/',
-  givingUrl: 'https://fbcmuncie.churchcenter.com/giving',
-  churchTracUrl: 'https://fbcmuncie.churchtrac.com/',
-  youtubeUrl: 'https://www.youtube.com/c/FbcmuncieOrg',
+  churchCenterUrl: CHURCH_CENTER_URL,
+  givingUrl: GIVING_URL,
+  churchTracUrl: CHURCH_TRAC_URL,
+  youtubeUrl: YOUTUBE_URL,
   livestreamUrl: 'https://www.youtube.com/@FbcmuncieOrg/streams',
   visitorFormUrl: 'https://fbcmuncie.churchcenter.com/people/forms/159198',
   lifeEventFormUrl: 'https://fbcmuncie.churchcenter.com/people/forms/159897',
@@ -168,6 +197,63 @@ docs.push({
     successMessage: "You're in. Check your inbox.",
     consentNote: 'No spam. Unsubscribe anytime.',
   },
+  // The seven top-menu links, in the order the church reads them. Seven is the
+  // maximum the schema allows and the maximum the header row fits on one line.
+  navItems: [
+    link('nav-visit', 'Visit', '/visit'),
+    link('nav-who', 'Who We Are', '/who-we-are'),
+    link('nav-beliefs', 'Beliefs', '/beliefs'),
+    link('nav-ministries', 'Ministries', '/ministries'),
+    link('nav-staff', 'Staff', '/staff'),
+    link('nav-history', 'History', '/history'),
+    link('nav-blog', 'Blog', '/blog'),
+  ],
+  // The one button at the right of the header. See GIVING_URL above: this link
+  // and `givingUrl` must stay equal.
+  headerCta: {
+    show: true,
+    label: 'Give',
+    link: { _type: 'navLink', label: 'Give', linkType: 'external', externalUrl: GIVING_URL },
+  },
+  // Footer link columns. The fourth column, Office, is drawn in code from
+  // `officeHours` and the address, because it is prose and not a link list.
+  footerColumns: [
+    {
+      _type: 'footerColumn',
+      _key: 'fcol-pages',
+      title: 'Pages',
+      links: [
+        link('fcol-pages-visit', 'Visit', '/visit'),
+        link('fcol-pages-who', 'Who We Are', '/who-we-are'),
+        link('fcol-pages-beliefs', 'Beliefs', '/beliefs'),
+        link('fcol-pages-ministries', 'Ministries', '/ministries'),
+        link('fcol-pages-staff', 'Staff', '/staff'),
+        link('fcol-pages-history', 'History', '/history'),
+        link('fcol-pages-blog', 'Blog', '/blog'),
+        link('fcol-pages-wedding', 'Weddings and Building Use', '/wedding'),
+        link('fcol-pages-contact', 'Contact', '/contact'),
+        link('fcol-pages-privacy', 'Privacy', '/privacy'),
+      ],
+    },
+    {
+      _type: 'footerColumn',
+      _key: 'fcol-elsewhere',
+      title: 'Elsewhere',
+      links: [
+        externalLink(
+          'fcol-elsewhere-cc',
+          'Church Center: calendar and giving',
+          CHURCH_CENTER_URL,
+        ),
+        externalLink(
+          'fcol-elsewhere-ct',
+          'Church Trac: newsletters and the app',
+          CHURCH_TRAC_URL,
+        ),
+        externalLink('fcol-elsewhere-yt', 'YouTube: every service', YOUTUBE_URL),
+      ],
+    },
+  ],
   sectionVisibility: {
     showJournal: true,
   },
@@ -737,6 +823,106 @@ docs.push({
   enabled: false,
 });
 
+// ── --only <type>: write ONE document, and only after proving it is safe ──
+//
+// `npm run seed` rewrites every core document. That is right for a fresh
+// clone and wrong for a live dataset, where a later task adds one field to one
+// singleton and has no business touching the twenty documents an editor may
+// have changed since. `--only siteSettings` writes that one document, and it
+// refuses to write at all unless the live copy still matches what the seed
+// would produce.
+//
+// The guard is two steps, in this order (CLAUDE.md rule 16: write the backup
+// step first and the dry run falls out of it):
+//
+//   1. BACK UP. The live document is fetched and written verbatim to
+//      scripts/data/backups/<type>-<date>-pre-<label>.json before anything is
+//      written. The backup is committed; it is the record.
+//   2. COMPARE. Every top-level key the live document carries (minus the
+//      system fields) is compared against the value the seed would write. A
+//      key the seed ADDS is fine, that is the point of the run. A key whose
+//      value DIFFERS means somebody edited the live document after it was
+//      seeded, and replacing it would silently throw that edit away. The
+//      script prints the difference and exits without writing.
+//
+// Usage:  node scripts/seed-core.mjs --only siteSettings [--label task9]
+
+const argv = process.argv.slice(2);
+function flag(name) {
+  const i = argv.indexOf(name);
+  return i === -1 ? undefined : argv[i + 1];
+}
+const onlyType = flag('--only');
+const backupLabel = flag('--label') ?? 'seed';
+
+/** Keys Sanity owns. They differ on every fetch and mean nothing to a diff. */
+const SYSTEM_KEYS = new Set(['_rev', '_createdAt', '_updatedAt']);
+
+/** Stable stringify so key ORDER never shows up as a difference. */
+function canonical(value) {
+  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
+  if (value && typeof value === 'object') {
+    return `{${Object.keys(value)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${canonical(value[k])}`)
+      .join(',')}}`;
+  }
+  return JSON.stringify(value === undefined ? null : value);
+}
+
+async function seedOne(type) {
+  const doc = docs.find((d) => d._type === type);
+  if (!doc) {
+    console.error(`No seed document of type "${type}" in this file.`);
+    process.exit(1);
+  }
+
+  const live = await client.fetch(`*[_id == $id][0]`, { id: doc._id });
+  if (!live) {
+    console.error(`No live document with _id "${doc._id}". Run the full seed first.`);
+    process.exit(1);
+  }
+
+  // 1. Back up, verbatim, BEFORE anything else.
+  const { writeFileSync, mkdirSync } = await import('node:fs');
+  const stamp = new Date().toISOString().slice(0, 10);
+  const dir = resolve(root, 'scripts/data/backups');
+  mkdirSync(dir, { recursive: true });
+  const backupPath = resolve(dir, `${type}-${stamp}-pre-${backupLabel}.json`);
+  writeFileSync(backupPath, `${JSON.stringify(live, null, 2)}\n`, 'utf8');
+  console.log(`Backed up the live ${type} to ${backupPath}`);
+
+  // 2. Compare every key the live document already carries.
+  const changed = [];
+  for (const k of Object.keys(live)) {
+    if (SYSTEM_KEYS.has(k)) continue;
+    const a = canonical(live[k]);
+    const b = canonical(doc[k]);
+    if (a !== b) changed.push({ key: k, live: a, seed: b });
+  }
+
+  const added = Object.keys(doc).filter((k) => !(k in live));
+  if (added.length > 0) console.log(`Adding: ${added.join(', ')}`);
+
+  if (changed.length > 0) {
+    console.error(
+      `\nSTOP. The live ${type} differs from what this seed would write, on ${changed.length} field(s).`,
+    );
+    console.error('Writing would throw those edits away. Nothing has been written.\n');
+    for (const c of changed) {
+      console.error(`  ${c.key}`);
+      console.error(`    live: ${c.live}`);
+      console.error(`    seed: ${c.seed}`);
+    }
+    console.error('\nNEEDS_CONTEXT: reconcile the seed with the live document, then re-run.');
+    process.exit(2);
+  }
+
+  console.log('No live value differs from the seed. Writing.');
+  await client.createOrReplace(doc);
+  console.log(`  replaced  ${doc._type}  ${doc._id}`);
+}
+
 // ── Seed all documents ────────────────────────────────────────────────────
 
 async function seed() {
@@ -765,4 +951,8 @@ async function seed() {
   console.log('Replace all placeholder text in Sanity before going live.');
 }
 
-seed();
+if (onlyType) {
+  await seedOne(onlyType);
+} else {
+  await seed();
+}
