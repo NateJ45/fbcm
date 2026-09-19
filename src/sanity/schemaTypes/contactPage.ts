@@ -57,7 +57,7 @@ export const contactPage = defineType({
       title: 'Hero eyebrow',
       type: 'string',
       group: 'hero',
-      initialValue: 'Request a Consultation.',
+      initialValue: 'Get in touch.',
     }),
     defineField({
       name: 'heroHeadline',
