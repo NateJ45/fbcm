@@ -121,6 +121,9 @@ export type SectionPreset = {
       } & GiveBandSection)
     | ({
         _key: string;
+      } & HoursSection)
+    | ({
+        _key: string;
       } & DocumentListSection)
     | ({
         _key: string;
@@ -644,6 +647,13 @@ export type DocumentListSection = {
   anchor?: Slug;
 };
 
+export type HoursSection = {
+  _type: 'hoursSection';
+  eyebrow?: string;
+  heading?: string;
+  anchor?: Slug;
+};
+
 export type GiveBandSection = {
   _type: 'giveBandSection';
   heading?: string;
@@ -1111,6 +1121,9 @@ export type Page = {
       } & GiveBandSection)
     | ({
         _key: string;
+      } & HoursSection)
+    | ({
+        _key: string;
       } & DocumentListSection)
     | ({
         _key: string;
@@ -1420,6 +1433,9 @@ export type HomePage = {
       } & GiveBandSection)
     | ({
         _key: string;
+      } & HoursSection)
+    | ({
+        _key: string;
       } & DocumentListSection)
     | ({
         _key: string;
@@ -1577,6 +1593,7 @@ export type AllSanitySchemaTypes =
   | TeamSection
   | LinkCardsSection
   | DocumentListSection
+  | HoursSection
   | GiveBandSection
   | HeritageBandSection
   | ScriptureBandSection

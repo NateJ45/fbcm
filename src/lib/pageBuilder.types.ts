@@ -33,6 +33,7 @@ import type {
   ScriptureBandSection as _ScriptureBandSection,
   HeritageBandSection as _HeritageBandSection,
   GiveBandSection as _GiveBandSection,
+  HoursSection as _HoursSection,
   DocumentListSection as _DocumentListSection,
   LinkCardsSection as _LinkCardsSection,
   // scaffold:end
@@ -360,6 +361,9 @@ export type ProjectedHeritageBandSection = { _key: string } & Omit<
 /** giveBandSection — the indigo giving band. */
 export type ProjectedGiveBandSection = { _key: string } & _GiveBandSection;
 
+/** hoursSection — the office and pastors' hours, read live off siteSettings. */
+export type ProjectedHoursSection = { _key: string } & _HoursSection;
+
 /** One listed document after `"fileUrl": file.asset->url`. */
 export type ProjectedListedDocument = Omit<
   NonNullable<_DocumentListSection['docs']>[number],
@@ -413,6 +417,7 @@ export type PageBuilderBlock =
   | ProjectedScriptureBandSection
   | ProjectedHeritageBandSection
   | ProjectedGiveBandSection
+  | ProjectedHoursSection
   | ProjectedDocumentListSection
   | ProjectedLinkCardsSection;
 // scaffold:end
@@ -447,4 +452,13 @@ export interface SectionSiteSettings {
   mapImage?: ProjectedImage | null;
   /** Google Maps (or similar) link under the map. */
   directionsUrl?: string;
+  /**
+   * The church office's opening hours and the pastors' appointment hours, both
+   * portable text, both read by the hours band (Hours.astro). They live on
+   * siteSettings rather than on the block so the band, the footer and any
+   * future surface can never disagree (CLAUDE.md rule 15). `unknown` here
+   * because PortableTextStatic owns the block shape; it narrows on the way in.
+   */
+  officeHours?: unknown;
+  pastoralHours?: unknown;
 }

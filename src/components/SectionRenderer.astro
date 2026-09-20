@@ -31,6 +31,7 @@ import FaqBand from '@/components/sections/FaqBand.astro';
 import ScriptureBand from '@/components/sections/ScriptureBand.astro';
 import HeritageBand from '@/components/sections/HeritageBand.astro';
 import GiveBand from '@/components/sections/GiveBand.astro';
+import Hours from '@/components/sections/Hours.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
 import LinkCards from '@/components/sections/LinkCards.astro';
 // scaffold:end
@@ -318,6 +319,14 @@ const wrapAttrs = (key: string | undefined) =>
             buttonLabel={s.buttonLabel}
             buttonUrl={s.buttonUrl}
             level={openingLevel(blockIndex)}
+            headingId={headingId}
+            settings={settings}
+          />
+        ) : s._type === 'hoursSection' ? (
+          <Hours
+            eyebrow={s.eyebrow}
+            heading={s.heading}
+            surface={surface ?? 'background'}
             headingId={headingId}
             settings={settings}
           />

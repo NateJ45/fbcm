@@ -224,6 +224,23 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none)
 
+## /contact
+
+### New sentences
+
+- Tell us and a member of the pastoral team will follow up. (Share a life update, the sentence that introduces the form link. The old page listed the life events and linked the form with no word about what happens next, which the content map flagged as the page's main gap.)
+- Phone, email, address and office hours for First Baptist Church Muncie at 309 East Adams Street, plus how to share a life update and how to book time with a pastor. (search description, not shown on the page)
+
+### Edits to the church’s own text
+
+- Dropped: the trailing comma on "Engagement/Marriage Announcement," (contact.txt line 19). It reads as a typo in a bulleted list, and every other item in the list ends with no punctuation at all.
+- Re-laid out, not rewritten: the "For Business, Billing, or Related Needs" block. The capture puts the heading, the phone number and the email address on four separate lines (contact.txt lines 44 to 48). Here the heading is an h3 and the two values print under it, read from Site settings rather than retyped, so they cannot drift from the header, the footer and the hero facts.
+- Not carried over: the "Other questions?" paragraph and the second copy of the phone number and email under "Mailing Address". The old page printed its contact details twice, which the content map lists as a problem; this page prints them once, in the hero facts, and once more under the business heading where the church deliberately distinguishes billing enquiries.
+
+### Photos of children
+
+- (none)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

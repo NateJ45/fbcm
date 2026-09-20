@@ -149,6 +149,11 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     _type == "giveBandSection" => {
       ...
     },
+    // hoursSection stores only its eyebrow and heading: the hours themselves
+    // live on siteSettings and the component reads them from there.
+    _type == "hoursSection" => {
+      ...
+    },
     _type == "documentListSection" => {
       ...,
       docs[]{

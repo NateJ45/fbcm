@@ -221,7 +221,7 @@ test('church blocks are classified: dark bands self-contained, the rest alternat
   ]) {
     assert.ok(SELF_CONTAINED_TYPES.has(t), `${t} should be self-contained`);
   }
-  for (const t of ['timelineSection', 'staffGridSection', 'documentListSection']) {
+  for (const t of ['timelineSection', 'staffGridSection', 'documentListSection', 'hoursSection']) {
     assert.ok(CONTENT_TYPES.has(t), `${t} should alternate with the cadence`);
   }
 });

@@ -1,0 +1,118 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: the hours band. Three columns, all of them READ FROM SITE
+// SETTINGS rather than typed into the block.
+//
+// THE BLOCK STORES NO HOURS, AND THAT IS THE POINT (CLAUDE.md rule 15). The
+// office hours, the pastors' hours and the street address are each typed once,
+// on siteSettings, where the footer already reads them. A field on this block
+// would be a second copy, and the second copy is the one that goes stale the
+// week the office changes its Friday closing time. The editor gets the eyebrow
+// and the heading, which are about THIS page; the hours themselves stay where
+// every other surface reads them from.
+//
+// Surface (background / muted) is assigned by SectionRenderer, so the band
+// takes its place in the page cadence like any other content block.
+import SectionHeading from '@/components/SectionHeading.astro';
+import PortableTextStatic from '@/components/PortableTextStatic.astro';
+import { surfaceClass } from '@/lib/surfaces';
+import { getSiteSettings } from '@/lib/queries';
+import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  surface?: 'background' | 'muted';
+  headingId: string;
+  /**
+   * Handed down by SectionRenderer from the route that already fetched them.
+   * In /preview/** that is the DRAFT client, so an editor changing the Friday
+   * hours sees it immediately. The fetch below is only the fallback for callers
+   * that pass nothing (the styleguide, the code-defined default sections).
+   */
+  settings?: SectionSiteSettings | null;
+}
+
+const { eyebrow, heading, surface = 'background', headingId, settings: settingsProp } = Astro.props;
+
+const settings: SectionSiteSettings | null =
+  settingsProp !== undefined ? settingsProp : await getSiteSettings();
+
+const bg = surfaceClass(surface);
+
+// The address is one field with a newline in it, so it prints line by line
+// rather than as one run-on line.
+const addressLines = String(settings?.address ?? '')
+  .split(/\r?\n/)
+  .map((line) => line.trim())
+  .filter(Boolean);
+
+// SectionSiteSettings types both hours fields as `unknown` on purpose: the
+// block shape belongs to PortableTextStatic, not to the settings interface.
+// These two casts are where it narrows, and the shape below is a mirror of that
+// component's own `Block`. If it ever stops matching, this is the one place to
+// change.
+interface PtSpan {
+  _type: 'span';
+  _key: string;
+  text?: string;
+  marks?: string[];
+}
+interface PtBlock {
+  _type: 'block';
+  _key: string;
+  style?: string;
+  listItem?: 'bullet' | 'number';
+  level?: number;
+  children?: PtSpan[];
+  markDefs?: { _key: string; _type: string; href?: string; openInNewTab?: boolean }[];
+}
+
+const officeHours = (settings?.officeHours ?? null) as PtBlock[] | null;
+const pastoralHours = (settings?.pastoralHours ?? null) as PtBlock[] | null;
+---
+
+<section class={bg} aria-labelledby={heading ? headingId : undefined}>
+  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+    <SectionHeading eyebrow={eyebrow} headline={heading} headingId={headingId} align="left" rule />
+
+    <div class="mt-l grid grid-cols-1 gap-l md:grid-cols-3 md:gap-section-md">
+      {
+        officeHours && (
+          <div>
+            <h3 class="text-xs tracking-eyebrow text-foreground/80 uppercase">Church office</h3>
+            <PortableTextStatic value={officeHours} className="mt-s space-y-2 text-foreground/85" />
+          </div>
+        )
+      }
+
+      {
+        pastoralHours && (
+          <div>
+            <h3 class="text-xs tracking-eyebrow text-foreground/80 uppercase">
+              Pastors, by appointment
+            </h3>
+            <PortableTextStatic
+              value={pastoralHours}
+              className="mt-s space-y-2 text-foreground/85"
+            />
+          </div>
+        )
+      }
+
+      {
+        addressLines.length > 0 && (
+          <div>
+            <h3 class="text-xs tracking-eyebrow text-foreground/80 uppercase">Where to find us</h3>
+            <address class="mt-s space-y-1 text-foreground/85 not-italic">
+              {addressLines.map((line) => (
+                <span class="block">{line}</span>
+              ))}
+            </address>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

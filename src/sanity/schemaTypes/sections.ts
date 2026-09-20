@@ -710,6 +710,7 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
         'scriptureBandSection',
         'heritageBandSection',
         'giveBandSection',
+        'hoursSection',
         'documentListSection',
         'linkCardsSection',
       ],

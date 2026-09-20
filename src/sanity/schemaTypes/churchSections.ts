@@ -373,6 +373,24 @@ export const giveBandSection = defineType({
   },
 });
 
+// The hours band. It carries NO hours of its own, on purpose (CLAUDE.md rule
+// 15): the office and pastors' hours are already typed once on Site settings,
+// and Hours.astro reads them from there, so the band and the footer can never
+// disagree about when the office is open.
+export const hoursSection = defineType({
+  name: 'hoursSection',
+  title: 'Hours',
+  type: 'object',
+  fields: [eyebrow, heading, anchorField()],
+  preview: {
+    select: { title: 'heading' },
+    prepare: ({ title }) => ({
+      title: title || 'Hours',
+      subtitle: 'Hours (read from Site settings)',
+    }),
+  },
+});
+
 export const documentListSection = defineType({
   name: 'documentListSection',
   title: 'Documents to download',
@@ -503,6 +521,7 @@ export const CHURCH_SECTION_TYPES = [
   scriptureBandSection,
   heritageBandSection,
   giveBandSection,
+  hoursSection,
   documentListSection,
   linkCardsSection,
 ];
