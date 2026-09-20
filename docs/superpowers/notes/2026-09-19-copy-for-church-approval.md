@@ -31,6 +31,16 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - visit-children: Two girls in front of a stained glass window
 - ministries-children: Children gathered under the sanctuary arch
 
+## /who-we-are
+
+### New sentences
+
+- Where to park, when to arrive, and what happens once you are inside. (link cards, Plan a visit)
+
+### Photos of children
+
+- (none)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

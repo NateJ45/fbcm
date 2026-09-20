@@ -29,6 +29,7 @@ export const routes: string[] = [
   '/styleguide',
   // The plan-2b pages are listed here as they land.
   '/visit',
+  '/who-we-are',
 ];
 
 /**
