@@ -1,0 +1,1342 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First Baptist Church Muncie: home page art-direction prototype</title>
+    <meta name="robots" content="noindex" />
+    <!--
+  Art-direction prototype, 2026-09-20. Static, outside the component system on purpose.
+  Brief: docs/superpowers/notes/2026-09-20-design-research.md.
+  Type: Fraunces (display), Newsreader (reading), Archivo (furniture). All three free,
+  all three available as @fontsource packages for production.
+  Palette: the five brand colours unchanged, moved from chrome to accent. Chrome is paper and ink.
+-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&family=Archivo:ital,wdth,wght@0,75..100,400..600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #f4efe6;
+        --paper-2: #ebe4d8;
+        --ink: #17151f;
+        --ink-2: #514c58;
+        --ink-3: #7d7883;
+        --indigo: #292854;
+        --indigo-deep: #1b1a3a;
+        --gold: #d59b29;
+        --gold-ink: #8a5f0c;
+        --taupe: #b5aba3;
+        --brown: #39251e;
+        --brown-2: #724f43;
+        --hair: rgba(23, 21, 31, 0.16);
+        --hair-strong: rgba(23, 21, 31, 0.34);
+        --on-dark: #f4efe6;
+        --on-dark-2: rgba(244, 239, 230, 0.72);
+        --hair-dark: rgba(244, 239, 230, 0.18);
+        --display: 'Fraunces', Georgia, serif;
+        --text: 'Newsreader', Georgia, serif;
+        --ui: 'Archivo', system-ui, sans-serif;
+        --gutter: clamp(20px, 5vw, 72px);
+        --max: 1400px;
+      }
+      :root[data-theme='dark'] {
+        --paper: #14121b;
+        --paper-2: #1c1926;
+        --ink: #f1ece3;
+        --ink-2: #c2bcc9;
+        --ink-3: #8f8998;
+        --hair: rgba(241, 236, 227, 0.16);
+        --hair-strong: rgba(241, 236, 227, 0.34);
+        --indigo: #22214a;
+        --brown: #2b1b16;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --paper: #14121b;
+          --paper-2: #1c1926;
+          --ink: #f1ece3;
+          --ink-2: #c2bcc9;
+          --ink-3: #8f8998;
+          --hair: rgba(241, 236, 227, 0.16);
+          --hair-strong: rgba(241, 236, 227, 0.34);
+          --indigo: #22214a;
+          --brown: #2b1b16;
+        }
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--text);
+        font-size: 1.0625rem;
+        line-height: 1.7;
+        font-optical-sizing: auto;
+        -webkit-font-smoothing: antialiased;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .wrap {
+        max-width: var(--max);
+        margin-inline: auto;
+        padding-inline: var(--gutter);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: clamp(16px, 2.5vw, 40px);
+      }
+
+      /* type voices */
+      .display {
+        font-family: var(--display);
+        font-optical-sizing: auto;
+        font-variation-settings: 'SOFT' 40;
+        font-weight: 300;
+        letter-spacing: -0.018em;
+        line-height: 0.95;
+        text-wrap: balance;
+      }
+      .display b {
+        font-weight: 500;
+      }
+      .h2 {
+        font-family: var(--display);
+        font-weight: 300;
+        font-variation-settings: 'SOFT' 40;
+        font-size: clamp(2rem, 1.2rem + 2.6vw, 3.25rem);
+        line-height: 1.05;
+        letter-spacing: -0.012em;
+        text-wrap: balance;
+      }
+      .h3 {
+        font-family: var(--display);
+        font-weight: 400;
+        font-size: clamp(1.375rem, 1rem + 1vw, 1.75rem);
+        line-height: 1.15;
+        letter-spacing: -0.005em;
+      }
+      .lede {
+        font-family: var(--text);
+        font-style: italic;
+        font-weight: 300;
+        font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+        line-height: 1.35;
+        text-wrap: pretty;
+      }
+      .ui {
+        font-family: var(--ui);
+        font-stretch: 88%;
+        font-weight: 500;
+        font-size: 0.8125rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .ui-sm {
+        font-family: var(--ui);
+        font-stretch: 92%;
+        font-size: 0.875rem;
+        letter-spacing: 0.02em;
+      }
+      .num {
+        font-family: var(--display);
+        font-variant-numeric: oldstyle-nums proportional-nums;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .measure {
+        max-width: 62ch;
+      }
+      .prose p + p {
+        margin-top: 1em;
+      }
+      .hair {
+        border: 0;
+        border-top: 1px solid var(--hair);
+      }
+
+      /* buttons: one family */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6em;
+        font-family: var(--ui);
+        font-weight: 600;
+        font-size: 0.8125rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 1.05em 1.6em;
+        border-radius: 2px;
+        transition:
+          transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+          background 0.25s;
+      }
+      .btn-gold {
+        background: var(--gold);
+        color: #1b1408;
+      }
+      .btn-gold:hover {
+        background: #e2a93a;
+        transform: translateY(-1px);
+      }
+      .link {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.5em;
+        font-family: var(--ui);
+        font-weight: 600;
+        font-size: 0.8125rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-bottom: 1px solid currentColor;
+        padding-bottom: 0.25em;
+      }
+      .link .arr {
+        font-family: var(--text);
+        font-size: 1.1em;
+        transition: transform 0.25s;
+      }
+      .link:hover .arr {
+        transform: translateX(4px);
+      }
+
+      /* header */
+      .site-header {
+        position: absolute;
+        inset: 0 0 auto 0;
+        z-index: 5;
+        color: var(--on-dark);
+      }
+      .site-header .wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 88px;
+      }
+      .brand img {
+        height: 56px;
+        width: auto;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: clamp(18px, 2.2vw, 34px);
+      }
+      .nav a {
+        font-family: var(--ui);
+        font-weight: 500;
+        font-size: 0.9375rem;
+        letter-spacing: 0.01em;
+        opacity: 0.92;
+        position: relative;
+        padding: 0.35em 0;
+      }
+      .nav a::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 100%;
+        bottom: 0;
+        height: 1px;
+        background: var(--gold);
+        transition: right 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .nav a:hover::after {
+        right: 0;
+      }
+      .nav .give {
+        color: var(--gold);
+        font-weight: 600;
+      }
+      .theme {
+        appearance: none;
+        background: transparent;
+        border: 1px solid var(--hair-dark);
+        color: inherit;
+        font: inherit;
+        font-family: var(--ui);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.45em 0.8em;
+        border-radius: 2px;
+        cursor: pointer;
+        margin-left: 8px;
+      }
+      .menu-btn {
+        display: none;
+      }
+      @media (max-width: 900px) {
+        .nav {
+          display: none;
+        }
+        .menu-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5em;
+          background: transparent;
+          border: 1px solid var(--hair-dark);
+          color: inherit;
+          font-family: var(--ui);
+          font-size: 0.75rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 0.55em 0.9em;
+          border-radius: 2px;
+        }
+        .brand img {
+          height: 46px;
+        }
+        .site-header .wrap {
+          height: 74px;
+        }
+      }
+
+      /* hero */
+      .hero {
+        position: relative;
+        min-height: 100svh;
+        display: grid;
+        align-items: end;
+        color: var(--on-dark);
+        isolation: isolate;
+        overflow: hidden;
+      }
+      .hero picture,
+      .hero img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .hero img {
+        object-position: 62% 28%;
+        z-index: -2;
+      }
+      .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+          linear-gradient(
+            to top,
+            rgba(23, 21, 31, 0.94) 0%,
+            rgba(23, 21, 31, 0.62) 34%,
+            rgba(23, 21, 31, 0.12) 62%,
+            rgba(23, 21, 31, 0) 80%
+          ),
+          linear-gradient(to right, rgba(23, 21, 31, 0.55) 0%, rgba(23, 21, 31, 0) 55%);
+      }
+      .hero-inner {
+        padding-block: clamp(72px, 12vh, 128px) clamp(40px, 7vh, 72px);
+        width: 100%;
+      }
+      .today {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--on-dark);
+        margin-bottom: clamp(18px, 3vh, 32px);
+      }
+      .today .dot {
+        width: 44px;
+        height: 1px;
+        background: var(--gold);
+      }
+      .hero h1 {
+        font-size: clamp(3.4rem, 1rem + 10.5vw, 9.75rem);
+        max-width: 12ch;
+      }
+      .hero .lede {
+        margin-top: clamp(18px, 3vh, 30px);
+        max-width: 34ch;
+        color: var(--on-dark);
+      }
+      .facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: clamp(24px, 4vw, 64px);
+        margin-top: clamp(28px, 5vh, 48px);
+        padding-top: clamp(20px, 3vh, 28px);
+        border-top: 1px solid var(--hair-dark);
+        max-width: 960px;
+      }
+      .facts .k {
+        display: block;
+        color: var(--on-dark-2);
+        margin-bottom: 0.35em;
+      }
+      .facts .v {
+        font-family: var(--text);
+        font-size: clamp(1.25rem, 1rem + 0.9vw, 1.625rem);
+        line-height: 1.15;
+      }
+      .facts .v small {
+        font-size: 0.72em;
+        color: var(--on-dark-2);
+        margin-left: 0.4em;
+        font-style: italic;
+      }
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 22px 34px;
+        margin-top: clamp(26px, 4vh, 40px);
+      }
+      .hero .link {
+        color: var(--on-dark);
+      }
+      .rise {
+        opacity: 0;
+        transform: translateY(22px);
+        animation: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      }
+      .rise.d1 {
+        animation-delay: 0.15s;
+      }
+      .rise.d2 {
+        animation-delay: 0.3s;
+      }
+      .rise.d3 {
+        animation-delay: 0.45s;
+      }
+      .rise.d4 {
+        animation-delay: 0.6s;
+      }
+      @keyframes rise {
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .rise {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (max-width: 900px) {
+        .hero img {
+          object-position: 50% 20%;
+        }
+      }
+
+      /* sunday: two doors */
+      .sunday {
+        padding-block: clamp(72px, 11vw, 150px);
+      }
+      .doors {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: clamp(16px, 2.5vw, 40px);
+        row-gap: 56px;
+        align-items: start;
+      }
+      .door-1 {
+        grid-column: 1/6;
+      }
+      .door-2 {
+        grid-column: 7/13;
+        position: relative;
+      }
+      .door .ui {
+        color: var(--gold-ink);
+        display: block;
+        margin-bottom: 22px;
+      }
+      .big-time {
+        font-size: clamp(5.5rem, 3rem + 9vw, 11rem);
+        margin-left: -0.04em;
+      }
+      .big-time span {
+        font-size: 0.28em;
+        letter-spacing: 0;
+        vertical-align: 0.1em;
+        margin-left: 0.15em;
+        font-style: italic;
+        font-weight: 300;
+      }
+      .door-1 .lede {
+        margin-top: 10px;
+        max-width: 26ch;
+      }
+      .sched {
+        margin-top: 36px;
+        border-top: 1px solid var(--hair);
+      }
+      .sched li {
+        display: grid;
+        grid-template-columns: 7ch 1fr;
+        gap: 20px;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--hair);
+        align-items: baseline;
+      }
+      .sched .num {
+        font-size: 1.5rem;
+      }
+      .sched .what {
+        font-family: var(--text);
+        font-size: 1.0625rem;
+      }
+      .sched .what em {
+        color: var(--ink-2);
+      }
+      .door-2 .frame {
+        position: relative;
+        margin-right: calc(-1 * var(--gutter));
+        margin-right: min(
+          calc(-1 * var(--gutter)),
+          calc((100vw - var(--max)) / -2 - var(--gutter))
+        );
+      }
+      .door-2 .frame img {
+        aspect-ratio: 4/3;
+        object-fit: cover;
+        width: 100%;
+      }
+      .door-2 .cap {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-top: 14px;
+        color: var(--ink-3);
+        font-family: var(--ui);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+      }
+      .door-2 .h3 {
+        margin-top: 34px;
+        max-width: 24ch;
+      }
+      .door-2 p {
+        margin-top: 12px;
+        max-width: 44ch;
+        color: var(--ink-2);
+      }
+      .door-2 .link {
+        margin-top: 24px;
+      }
+      @media (max-width: 900px) {
+        .door-1,
+        .door-2 {
+          grid-column: 1/-1;
+        }
+        .door-2 .frame {
+          margin-right: calc(-1 * var(--gutter));
+          margin-left: calc(-1 * var(--gutter));
+        }
+      }
+
+      /* statement: nave full bleed */
+      .statement {
+        position: relative;
+        min-height: 88svh;
+        display: grid;
+        align-items: end;
+        color: var(--on-dark);
+        isolation: isolate;
+      }
+      .statement img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 40%;
+        z-index: -2;
+      }
+      .statement::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(
+          to top,
+          rgba(23, 21, 31, 0.92) 0%,
+          rgba(23, 21, 31, 0.5) 45%,
+          rgba(23, 21, 31, 0.08) 85%
+        );
+      }
+      .statement .wrap {
+        padding-block: clamp(56px, 9vw, 120px);
+      }
+      .statement h2 {
+        font-size: clamp(2.6rem, 1rem + 5.4vw, 6rem);
+        max-width: 15ch;
+      }
+      .three {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        margin-top: clamp(40px, 6vw, 72px);
+        border-top: 1px solid var(--hair-dark);
+      }
+      .three a {
+        padding: 28px clamp(16px, 2vw, 32px) 8px 0;
+        border-right: 1px solid var(--hair-dark);
+        margin-right: clamp(16px, 2vw, 32px);
+      }
+      .three a:last-child {
+        border-right: 0;
+        margin-right: 0;
+      }
+      .three .ui {
+        color: var(--gold);
+        display: block;
+        margin-bottom: 12px;
+      }
+      .three .h3 {
+        color: var(--on-dark);
+      }
+      .three p {
+        color: var(--on-dark-2);
+        margin-top: 10px;
+        font-size: 1rem;
+        line-height: 1.55;
+        max-width: 34ch;
+      }
+      .three .arr {
+        display: inline-block;
+        margin-top: 14px;
+        font-family: var(--text);
+        font-style: italic;
+        color: var(--on-dark);
+      }
+      @media (max-width: 800px) {
+        .three {
+          grid-template-columns: 1fr;
+        }
+        .three a {
+          border-right: 0;
+          border-bottom: 1px solid var(--hair-dark);
+          padding: 22px 0;
+          margin: 0;
+        }
+        .three a:last-child {
+          border-bottom: 0;
+        }
+      }
+
+      /* first sunday: asymmetric */
+      .first {
+        padding-block: clamp(72px, 11vw, 150px);
+      }
+      .first .head {
+        grid-column: 1/5;
+      }
+      .first .body {
+        grid-column: 6/12;
+      }
+      .first .head .ui {
+        color: var(--gold-ink);
+        display: block;
+        margin-bottom: 22px;
+      }
+      .first .head .h2 {
+        max-width: 11ch;
+      }
+      .first .head .lede {
+        margin-top: 22px;
+        max-width: 22ch;
+        color: var(--ink-2);
+        font-size: 1.25rem;
+      }
+      .first .body p {
+        font-size: 1.125rem;
+        line-height: 1.72;
+      }
+      .first .body .link {
+        margin-top: 32px;
+      }
+      .first .photo {
+        grid-column: 5/13;
+        margin-top: clamp(56px, 7vw, 96px);
+        margin-right: min(
+          calc(-1 * var(--gutter)),
+          calc((100vw - var(--max)) / -2 - var(--gutter))
+        );
+      }
+      .first .photo img {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        object-position: 50% 40%;
+      }
+      .first .photo .cap {
+        margin-top: 12px;
+        color: var(--ink-3);
+        font-family: var(--ui);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+      }
+      @media (max-width: 900px) {
+        .first .head,
+        .first .body {
+          grid-column: 1/-1;
+        }
+        .first .body {
+          margin-top: 36px;
+        }
+        .first .photo {
+          grid-column: 1/-1;
+          margin-inline: calc(-1 * var(--gutter));
+        }
+      }
+
+      /* pastors: indigo */
+      .pastors {
+        background: var(--indigo);
+        color: var(--on-dark);
+        padding-block: clamp(72px, 10vw, 140px);
+      }
+      .pastors .pic {
+        grid-column: 1/7;
+      }
+      .pastors .pic img {
+        width: 100%;
+        aspect-ratio: 5/4;
+        object-fit: cover;
+        object-position: 50% 30%;
+      }
+      .pastors .txt {
+        grid-column: 8/13;
+        align-self: center;
+      }
+      .pastors .ui {
+        color: var(--gold);
+        display: block;
+        margin-bottom: 22px;
+      }
+      .pastors .h2 {
+        max-width: 14ch;
+      }
+      .pastors p {
+        margin-top: 22px;
+        color: var(--on-dark-2);
+        max-width: 40ch;
+      }
+      .pastors .link {
+        margin-top: 30px;
+        color: var(--on-dark);
+      }
+      @media (max-width: 900px) {
+        .pastors .pic,
+        .pastors .txt {
+          grid-column: 1/-1;
+        }
+        .pastors .txt {
+          margin-top: 36px;
+        }
+      }
+
+      /* building: details + brown */
+      .building {
+        background: var(--brown);
+        color: var(--on-dark);
+      }
+      .details {
+        display: grid;
+        grid-template-columns: 5fr 3fr 4fr;
+        gap: 6px;
+        height: clamp(320px, 52vw, 680px);
+      }
+      .details img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .details .a img {
+        object-position: 50% 50%;
+      }
+      .details .b img {
+        object-position: 50% 38%;
+      }
+      .details .c img {
+        object-position: 50% 55%;
+      }
+      .building .wrap {
+        padding-block: clamp(64px, 8vw, 110px);
+      }
+      .building .h2 {
+        grid-column: 1/7;
+      }
+      .building .side {
+        grid-column: 8/13;
+        align-self: end;
+      }
+      .building .side p {
+        color: var(--on-dark-2);
+        max-width: 42ch;
+      }
+      .building .side .link {
+        margin-top: 26px;
+        color: var(--on-dark);
+      }
+      .building .meta {
+        grid-column: 1/7;
+        margin-top: 32px;
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+      .building .meta div {
+        border-left: 1px solid var(--hair-dark);
+        padding-left: 16px;
+      }
+      .building .meta .num {
+        font-size: 2.25rem;
+        color: var(--on-dark);
+      }
+      .building .meta .k {
+        color: var(--on-dark-2);
+        margin-top: 6px;
+      }
+      @media (max-width: 900px) {
+        .details {
+          grid-template-columns: 1fr 1fr;
+          height: auto;
+          grid-auto-rows: 44vw;
+        }
+        .details .a {
+          grid-column: 1/-1;
+        }
+        .building .h2,
+        .building .side,
+        .building .meta {
+          grid-column: 1/-1;
+        }
+        .building .side {
+          margin-top: 28px;
+        }
+      }
+
+      /* blog: editorial list */
+      .blog {
+        padding-block: clamp(72px, 11vw, 150px);
+      }
+      .blog .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 24px;
+        border-bottom: 1px solid var(--hair-strong);
+        padding-bottom: 18px;
+      }
+      .blog .top .ui {
+        color: var(--gold-ink);
+      }
+      .post {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: clamp(16px, 2.5vw, 40px);
+        padding: 34px 0;
+        border-bottom: 1px solid var(--hair);
+        align-items: baseline;
+      }
+      .post .date {
+        grid-column: 1/3;
+        font-family: var(--ui);
+        font-size: 0.8125rem;
+        letter-spacing: 0.06em;
+        color: var(--ink-3);
+      }
+      .post .t {
+        grid-column: 3/9;
+      }
+      .post .t .h3 {
+        font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+        transition: color 0.2s;
+      }
+      .post:hover .t .h3 {
+        color: var(--gold-ink);
+      }
+      .post .t p {
+        margin-top: 10px;
+        color: var(--ink-2);
+        max-width: 56ch;
+      }
+      .post .tag {
+        grid-column: 10/13;
+        justify-self: end;
+        font-family: var(--ui);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+      }
+      @media (max-width: 800px) {
+        .post .date,
+        .post .t,
+        .post .tag {
+          grid-column: 1/-1;
+        }
+        .post .tag {
+          justify-self: start;
+          margin-top: 10px;
+        }
+        .post .t {
+          margin-top: 8px;
+        }
+      }
+
+      /* give */
+      .give {
+        background: var(--paper-2);
+        padding-block: clamp(64px, 9vw, 120px);
+      }
+      .give .h2 {
+        grid-column: 1/8;
+      }
+      .give .r {
+        grid-column: 8/13;
+        align-self: center;
+      }
+      .give p {
+        color: var(--ink-2);
+        max-width: 38ch;
+      }
+      .give .btn {
+        margin-top: 22px;
+      }
+      @media (max-width: 900px) {
+        .give .h2,
+        .give .r {
+          grid-column: 1/-1;
+        }
+        .give .r {
+          margin-top: 24px;
+        }
+      }
+
+      /* footer */
+      footer {
+        background: var(--indigo-deep);
+        color: var(--on-dark);
+        padding-block: clamp(56px, 7vw, 96px) 32px;
+      }
+      footer .cols {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1.4fr;
+        gap: 40px;
+      }
+      footer .brand img {
+        height: 64px;
+      }
+      footer .tag {
+        margin-top: 22px;
+        max-width: 26ch;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 1.25rem;
+        line-height: 1.35;
+        color: var(--on-dark-2);
+      }
+      footer .ui {
+        color: var(--gold);
+        display: block;
+        margin-bottom: 16px;
+      }
+      footer li {
+        list-style: none;
+        font-family: var(--ui);
+        font-size: 0.9375rem;
+        line-height: 2;
+      }
+      footer .hours {
+        font-family: var(--text);
+        color: var(--on-dark-2);
+        line-height: 1.7;
+      }
+      footer .base {
+        margin-top: 56px;
+        padding-top: 22px;
+        border-top: 1px solid var(--hair-dark);
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+        font-family: var(--ui);
+        font-size: 0.8125rem;
+        color: var(--on-dark-2);
+      }
+      @media (max-width: 900px) {
+        footer .cols {
+          grid-template-columns: 1fr 1fr;
+        }
+        footer .cols > div:first-child {
+          grid-column: 1/-1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="#"
+          ><img src="img/logo-dark.svg" alt="First Baptist Church Muncie"
+        /></a>
+        <nav class="nav" aria-label="Primary">
+          <a href="#">Visit</a><a href="#">Who We Are</a><a href="#">Beliefs</a
+          ><a href="#">Ministries</a><a href="#">Staff</a><a href="#">History</a><a href="#">Blog</a
+          ><a href="#" class="give">Give</a>
+          <button class="theme" type="button" onclick="toggleTheme()">Theme</button>
+        </nav>
+        <button class="menu-btn" type="button">Menu</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <picture>
+        <source media="(max-width: 700px)" srcset="img/exterior.jpg" />
+        <img
+          src="img/tower.jpg"
+          alt="The limestone bell tower of First Baptist Church against a cloudy sky"
+          fetchpriority="high"
+        />
+      </picture>
+      <div class="wrap hero-inner">
+        <p class="today ui rise">
+          <span class="dot" aria-hidden="true"></span
+          ><span id="today">This Sunday · Worship at 10:45 am</span>
+        </p>
+        <h1 class="display rise d1">Praise and proclaim.</h1>
+        <p class="lede rise d2">
+          We’re a Spirit-led people gathered to join Christ’s presence in our community.
+        </p>
+        <div class="facts rise d3">
+          <div>
+            <span class="k ui">Sundays</span
+            ><span class="v">10:45 am <small>about an hour</small></span>
+          </div>
+          <div>
+            <span class="k ui">Where</span><span class="v">309 East Adams, at Jefferson</span>
+          </div>
+          <div><span class="k ui">Online</span><span class="v">Live on YouTube</span></div>
+        </div>
+        <div class="hero-cta rise d4">
+          <a class="btn btn-gold" href="#">Plan a visit</a>
+          <a class="link" href="#">Watch online <span class="arr">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="sunday">
+      <div class="wrap doors">
+        <div class="door door-1">
+          <span class="ui">Sunday morning</span>
+          <div class="num big-time">10:45<span>am</span></div>
+          <p class="lede">
+            Worship is at 10:45 each Sunday. Hymns, the choir, and a sermon, then coffee in the
+            fellowship hall.
+          </p>
+          <ul class="sched">
+            <li>
+              <span class="num">9:30</span
+              ><span class="what">Sunday school <em>for every age, adults included</em></span>
+            </li>
+            <li>
+              <span class="num">10:15</span
+              ><span class="what">Donut hour <em>between Bible study and worship</em></span>
+            </li>
+            <li>
+              <span class="num">10:45</span
+              ><span class="what">Worship <em>nursery care in 104, family room in 105</em></span>
+            </li>
+          </ul>
+        </div>
+        <div class="door door-2">
+          <div class="frame">
+            <img
+              src="img/congregation.jpg"
+              alt="The congregation standing to sing on a Sunday morning"
+            />
+            <div class="cap">
+              <span>The nave, a Sunday in December</span
+              ><span>Photograph: First Baptist Church</span>
+            </div>
+          </div>
+          <h3 class="h3">Your first Sunday, start to finish</h3>
+          <p>
+            At each entrance, all ages are invited to check in with a greeter. The greeters can
+            direct you where you need to go and answer questions you may have.
+          </p>
+          <a class="link" href="#">Plan a visit <span class="arr">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="statement">
+      <img
+        src="img/nave.jpg"
+        alt="The sanctuary from the balcony, light through the stained glass"
+        loading="lazy"
+      />
+      <div class="wrap">
+        <h2 class="display">A Baptist church in the heart of downtown since 1859.</h2>
+        <div class="three">
+          <a href="#"
+            ><span class="ui">What we believe</span
+            ><span class="h3">The Bible, believer’s baptism, and a free church</span>
+            <p>
+              We hold to the Bible, to baptism on a person’s own profession of faith, and to the
+              freedom of each church to govern itself.
+            </p>
+            <span class="arr">Our beliefs →</span></a
+          >
+          <a href="#"
+            ><span class="ui">How we serve</span
+            ><span class="h3">Sunday school, music, youth, and the city</span>
+            <p>Sunday school, music, youth, and work with partners across Muncie and beyond.</p>
+            <span class="arr">Ministries →</span></a
+          >
+          <a href="#"
+            ><span class="ui">Where we’ve been</span
+            ><span class="h3">Downtown since 1859, in this building since 1929</span>
+            <p>
+              The congregation has met in downtown Muncie since 1859, and in this building since
+              1929.
+            </p>
+            <span class="arr">Our history →</span></a
+          >
+        </div>
+      </div>
+    </section>
+
+    <section class="first">
+      <div class="wrap grid">
+        <div class="head">
+          <span class="ui">Your first Sunday</span>
+          <h2 class="h2">What a first Sunday is like</h2>
+          <p class="lede">From the parking lot to the last hymn, in the church’s own words.</p>
+        </div>
+        <div class="body prose">
+          <p>At each entrance, all ages are invited to check-in with a greeter.</p>
+          <p>
+            The Greeters can direct you where you need to go, and answer questions you may have.
+          </p>
+          <p>Children will receive a name tag for nursery or children’s church.</p>
+          <p>For children ages 3 and younger, nursery care is available throughout the service.</p>
+          <a class="link" href="#">Doors, parking and access <span class="arr">→</span></a>
+        </div>
+        <figure class="photo">
+          <img
+            src="img/children.jpg"
+            alt="Children gathered under the sanctuary arch"
+            loading="lazy"
+          />
+          <figcaption class="cap">Children under the arch, Easter morning</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="pastors">
+      <div class="wrap grid">
+        <div class="pic">
+          <img
+            src="img/pastors.jpg"
+            alt="Co-pastors Kendall Ellis and Jonathan Balmer in the sanctuary"
+            loading="lazy"
+          />
+        </div>
+        <div class="txt">
+          <span class="ui">Our pastors</span>
+          <h2 class="h2">Kendall Ellis and Jonathan Balmer serve as co-pastors.</h2>
+          <p>
+            We believe that Christ is the head of the church, our Great Shepherd. Pastors serve as
+            under-shepherds, under Christ, called by God and the congregation to serve Christ’s
+            church.
+          </p>
+          <a class="link" href="#">Meet the staff <span class="arr">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="building">
+      <div class="details">
+        <div class="a">
+          <img src="img/glass.jpg" alt="The alpha and omega window" loading="lazy" />
+        </div>
+        <div class="b">
+          <img
+            src="img/cross.jpg"
+            alt="The wooden cross against the stained glass"
+            loading="lazy"
+          />
+        </div>
+        <div class="c">
+          <img src="img/communion.jpg" alt="Communion being prepared" loading="lazy" />
+        </div>
+      </div>
+      <div class="wrap grid">
+        <h2 class="h2">Limestone, oak and glass.</h2>
+        <div class="side">
+          <p>
+            The tower, the oak pews and the stained glass have been in daily use for more than a
+            century. The building was completed in 1929 and has been on the National Register of
+            Historic Places since 1988.
+          </p>
+          <a class="link" href="#">The building’s story <span class="arr">→</span></a>
+        </div>
+        <div class="meta">
+          <div>
+            <div class="num">1859</div>
+            <div class="k ui-sm">Congregation gathered</div>
+          </div>
+          <div>
+            <div class="num">1929</div>
+            <div class="k ui-sm">This building completed</div>
+          </div>
+          <div>
+            <div class="num">1988</div>
+            <div class="k ui-sm">National Register</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="blog">
+      <div class="wrap">
+        <div class="top">
+          <span class="ui">From the blog</span
+          ><a class="link" href="#">All posts <span class="arr">→</span></a>
+        </div>
+        <a class="post" href="#">
+          <span class="date">September 17, 2026</span>
+          <span class="t"
+            ><span class="h3">Händel’s Messiah Sing-In &amp; Carols Muncie</span>
+            <p>
+              Some Christmas events invite you to sit back and listen, but Messiah Sing-In &amp;
+              Carols is a time to join in and be a participant in the music.
+            </p></span
+          >
+          <span class="tag">Music</span>
+        </a>
+        <a class="post" href="#">
+          <span class="date">March 3, 2026</span>
+          <span class="t"
+            ><span class="h3">Upcoming Events at FBC Muncie: Lent &amp; Easter 2026</span>
+            <p>
+              We are grateful God is at work. Here is a look at what is coming up at First Baptist
+              Church Muncie from now through Easter Sunday.
+            </p></span
+          >
+          <span class="tag">Events</span>
+        </a>
+        <a class="post" href="#">
+          <span class="date">December 8, 2025</span>
+          <span class="t"
+            ><span class="h3">Blue Christmas? Hope &amp; Mental Health for the Holidays</span>
+            <p>If Christmas feels heavy this year, you are not alone.</p></span
+          >
+          <span class="tag">Care</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="give">
+      <div class="wrap grid">
+        <h2 class="h2">Support the work of this church.</h2>
+        <div class="r">
+          <p>
+            Gifts pay the staff, keep the building open and fund the work this church does in
+            Muncie.
+          </p>
+          <a class="btn btn-gold" href="#">Give through Church Center</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <a class="brand" href="#"
+              ><img src="img/logo-dark.svg" alt="First Baptist Church Muncie"
+            /></a>
+            <p class="tag">
+              We’re a Spirit-led people gathered to join Christ’s presence in our community.
+            </p>
+          </div>
+          <div>
+            <span class="ui">Pages</span>
+            <ul>
+              <li>Visit</li>
+              <li>Who We Are</li>
+              <li>Beliefs</li>
+              <li>Ministries</li>
+              <li>Staff</li>
+              <li>History</li>
+              <li>Give</li>
+              <li>Blog</li>
+            </ul>
+          </div>
+          <div>
+            <span class="ui">Elsewhere</span>
+            <ul>
+              <li>Church Center</li>
+              <li>Church Trac</li>
+              <li>YouTube</li>
+              <li>Facebook</li>
+            </ul>
+          </div>
+          <div>
+            <span class="ui">Office</span>
+            <p class="hours">
+              Monday to Thursday, 9 am to 12 pm and 1 pm to 4 pm<br />Friday, 9 am to 12 pm<br />Sunday,
+              9 am to 12 pm<br /><br />309 East Adams Street<br />Muncie, IN 47305<br />(765)
+              284-7749
+            </p>
+          </div>
+        </div>
+        <div class="base">
+          <span>© 2026 First Baptist Church Muncie</span><span>Privacy policy</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Live dated line: the next Sunday, computed, never typed.
+      (function () {
+        var d = new Date();
+        var add = (7 - d.getDay()) % 7;
+        var s = new Date(d);
+        s.setDate(d.getDate() + add);
+        var label =
+          (add === 0 ? 'Today, ' : 'This Sunday, ') +
+          s.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+        document.getElementById('today').textContent = label + ' · Worship at 10:45 am';
+      })();
+      function toggleTheme() {
+        var r = document.documentElement;
+        var cur =
+          r.getAttribute('data-theme') ||
+          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        r.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+      }
+    </script>
+  </body>
+</html>
