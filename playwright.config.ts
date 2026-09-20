@@ -52,7 +52,10 @@ export default defineConfig({
     {
       name: 'webkit-iphone',
       use: { ...devices['iPhone 14'] },
-      testMatch: /(smoke|a11y|a11y-dark)\.spec\.ts$/,
+      // anchors.spec.ts added 2026-09-20 (plan 2c task 4): the sticky-header
+      // offset is a CSS value, and WebKit's own anchor-scroll timing is exactly
+      // the kind of thing Chromium alone would not catch, so it runs here too.
+      testMatch: /(smoke|a11y|a11y-dark|anchors)\.spec\.ts$/,
     },
   ],
   webServer: {
