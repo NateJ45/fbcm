@@ -59,6 +59,8 @@ export default defineConfig({
     command: `npm run build && npx http-server dist/client -p ${PORT} -s -c-1 --silent`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    // A full build of a 400-page site takes 3 to 4 minutes on a CI runner;
+    // 10 minutes is the floor for any repo in the family.
+    timeout: 600_000,
   },
 });

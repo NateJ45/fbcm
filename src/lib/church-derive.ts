@@ -76,3 +76,45 @@ export function sortDocsByYearDesc<T extends { year?: number | null; title: stri
 ): T[] {
   return [...docs].sort((a, b) => (b.year ?? -Infinity) - (a.year ?? -Infinity));
 }
+
+/** One heading over a run of rows that share it. `heading` is null for the
+ *  single-group case (everything shares a year, or nothing has one), which
+ *  tells the caller to render the flat list it always has, unchanged. */
+export interface DocGroup<T> {
+  heading: string | null;
+  docs: T[];
+}
+
+/**
+ * Groups a year-sorted list of documents under year subheadings, descending,
+ * with undated rows last under "Undated" — but only when the list actually
+ * spans two or more distinct years (including "undated" as one of them). A
+ * single-year list, or a list with no years at all, comes back as ONE group
+ * with `heading: null`, so a caller can render it exactly as before without
+ * a branch of its own.
+ *
+ * Input must already be sorted (sortDocsByYearDesc): this function only
+ * partitions, it does not reorder. Kept general on `year`/`title` rather than
+ * a concrete doc type so both the DocumentList block and the blog's
+ * publications list can share it.
+ */
+export function groupDocsByYear<T extends { year?: number | null; title: string }>(
+  docs: T[],
+): DocGroup<T>[] {
+  const distinctYears = new Set(docs.map((d) => d.year ?? null));
+  if (distinctYears.size < 2) {
+    return docs.length > 0 ? [{ heading: null, docs }] : [];
+  }
+
+  const groups: DocGroup<T>[] = [];
+  let current: DocGroup<T> | null = null;
+  for (const doc of docs) {
+    const label = typeof doc.year === 'number' ? String(doc.year) : 'Undated';
+    if (!current || current.heading !== label) {
+      current = { heading: label, docs: [] };
+      groups.push(current);
+    }
+    current.docs.push(doc);
+  }
+  return groups;
+}

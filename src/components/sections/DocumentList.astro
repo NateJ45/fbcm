@@ -11,10 +11,15 @@
 // pointing at an uploaded file gets the `download` attribute; a row pointing at
 // somebody else's page must not, because you cannot download a website.
 //
+// When the sorted list spans two or more distinct years, groupDocsByYear()
+// (same module) partitions it into year subheadings, descending, undated
+// last. A single-year or undated-only list comes back as one ungrouped
+// group (heading: null), so it renders exactly as it always has.
+//
 // A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
 import SectionHeading from '@/components/SectionHeading.astro';
 import { surfaceClass } from '@/lib/surfaces';
-import { sortDocsByYearDesc } from '@/lib/church-derive';
+import { sortDocsByYearDesc, groupDocsByYear } from '@/lib/church-derive';
 
 interface ListedDocument {
   _key?: string;
@@ -41,6 +46,7 @@ const bg = surfaceClass(surface);
 const sorted = sortDocsByYearDesc(
   docs.filter((d): d is ListedDocument & { title: string } => !!d?.title),
 );
+const groups = groupDocsByYear(sorted);
 ---
 
 <section class={bg} aria-labelledby={heading ? headingId : undefined}>
@@ -56,43 +62,62 @@ const sorted = sortDocsByYearDesc(
     />
 
     {
-      sorted.length > 0 && (
-        <ul class="mt-section-md" role="list">
-          {sorted.map((doc) => {
-            const href = doc.fileUrl || doc.url;
-            const isFile = !!doc.fileUrl;
-            return (
-              <li class="border-t-2 border-gold py-m">
-                <div class="flex flex-wrap items-baseline justify-between gap-s">
-                  {href ? (
-                    <a
-                      href={href}
-                      download={isFile ? true : undefined}
-                      target={isFile ? undefined : '_blank'}
-                      rel={isFile ? undefined : 'noopener noreferrer'}
-                      class="font-display text-[1.125rem] leading-snug text-foreground underline-offset-4 hover:underline"
-                    >
-                      {doc.title}
-                    </a>
-                  ) : (
-                    <p class="font-display text-[1.125rem] leading-snug text-foreground">
-                      {doc.title}
-                    </p>
-                  )}
+      groups.map((group, i) => (
+        <>
+          {
+            /* Only rendered when the list spans two or more distinct years
+               (groupDocsByYear returns a single ungrouped entry otherwise).
+               Plain serif h3, same left edge as everything else on the page,
+               no gold rule of its own: the section's own SectionHeading
+               already carries that. */
+            group.heading && (
+              <h3
+                class:list={[
+                  'font-display text-h4 text-foreground',
+                  i === 0 ? 'mt-section-md' : 'mt-section-lg',
+                ]}
+              >
+                {group.heading}
+              </h3>
+            )
+          }
+          <ul class:list={[group.heading ? 'mt-m' : 'mt-section-md']} role="list">
+            {group.docs.map((doc) => {
+              const href = doc.fileUrl || doc.url;
+              const isFile = !!doc.fileUrl;
+              return (
+                <li class="border-t-2 border-gold py-m">
+                  <div class="flex flex-wrap items-baseline justify-between gap-s">
+                    {href ? (
+                      <a
+                        href={href}
+                        download={isFile ? true : undefined}
+                        target={isFile ? undefined : '_blank'}
+                        rel={isFile ? undefined : 'noopener noreferrer'}
+                        class="font-display text-[1.125rem] leading-snug text-foreground underline-offset-4 hover:underline"
+                      >
+                        {doc.title}
+                      </a>
+                    ) : (
+                      <p class="font-display text-[1.125rem] leading-snug text-foreground">
+                        {doc.title}
+                      </p>
+                    )}
 
-                  {typeof doc.year === 'number' && (
-                    <span class="text-xs font-semibold tracking-eyebrow text-brown-mid uppercase dark:text-gold">
-                      {doc.year}
-                    </span>
-                  )}
-                </div>
+                    {typeof doc.year === 'number' && (
+                      <span class="text-xs font-semibold tracking-eyebrow text-brown-mid uppercase dark:text-gold">
+                        {doc.year}
+                      </span>
+                    )}
+                  </div>
 
-                {doc.note && <p class="mt-xs text-sm text-foreground/75">{doc.note}</p>}
-              </li>
-            );
-          })}
-        </ul>
-      )
+                  {doc.note && <p class="mt-xs text-sm text-foreground/75">{doc.note}</p>}
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      ))
     }
   </div>
 </section>

@@ -425,7 +425,10 @@ PORTABLE files here and marked in their headers for the sync session.
    around it. It is general (any site the family grows past ~250 pages hits it)
    and the fix is one number, but it puts every repo in the family into drift
    until a sync session, so it wants a PORTS.md card rather than a quiet edit
-   here. **Open, and it will fail this repo's CI on the next push.**
+   here. **Fixed in this repo (2026-09-20): `webServer.timeout` raised to
+   `600_000`. Still needs a PORTS.md card when the sync session pushes the
+   change out to the rest of the family, since the canonical copy elsewhere
+   is still 180 seconds.**
 
 Also worth a note on card 8/`sanityFetch`: a GROQ parse error in one section's
 projection (`[0...limit]`, a field reference as a slice bound) failed the ENTIRE

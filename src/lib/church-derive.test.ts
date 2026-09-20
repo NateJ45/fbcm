@@ -3,7 +3,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs'; // scaffold: church
-import { groupStaff, weekOfLabel, sortDocsByYearDesc, STAFF_GROUPS } from './church-derive.ts';
+import {
+  groupStaff,
+  weekOfLabel,
+  sortDocsByYearDesc,
+  groupDocsByYear,
+  STAFF_GROUPS,
+} from './church-derive.ts';
 
 test('staff group order is pastors, coordination, support, and unknown lands in support', () => {
   assert.deepEqual(STAFF_GROUPS, ['pastors', 'coordination', 'support']);
@@ -84,6 +90,45 @@ test('every ^.group reach in the staffGrid arm is coalesced to "all"', () => {
   assert.equal(arm.replace(/coalesce\(\^\.group, "all"\)/g, '').includes('^.group'), false);
 });
 // scaffold:end
+
+test('groupDocsByYear: mixed years group descending with undated last', () => {
+  const sorted = sortDocsByYearDesc([
+    { title: 'C', year: 2025 },
+    { title: 'B', year: 2023 },
+    { title: 'D', year: 2023 },
+    { title: 'A', year: null },
+  ]);
+  const groups = groupDocsByYear(sorted);
+  assert.deepEqual(
+    groups.map((g) => [g.heading, g.docs.map((d) => d.title)]),
+    [
+      ['2025', ['C']],
+      ['2023', ['B', 'D']],
+      ['Undated', ['A']],
+    ],
+  );
+});
+
+test('groupDocsByYear: all one year (or all undated) comes back as one ungrouped group', () => {
+  const oneYear = groupDocsByYear([
+    { title: 'A', year: 2024 },
+    { title: 'B', year: 2024 },
+  ]);
+  assert.deepEqual(oneYear, [
+    {
+      heading: null,
+      docs: [
+        { title: 'A', year: 2024 },
+        { title: 'B', year: 2024 },
+      ],
+    },
+  ]);
+
+  const allUndated = groupDocsByYear([{ title: 'X', year: null }]);
+  assert.deepEqual(allUndated, [{ heading: null, docs: [{ title: 'X', year: null }] }]);
+
+  assert.deepEqual(groupDocsByYear([]), []);
+});
 
 test('two rows in one year keep the order they were given, not the alphabet', () => {
   // The Visitor has twelve 2020 issues. Sorted by title they would read April,
