@@ -442,6 +442,12 @@ export const ctaBandSection = defineType({
     }),
     richTwin('subheadRich', 'Subhead'),
     defineField({ name: 'cta', title: 'Button', type: 'ctaBlock' }),
+    // The second button the band could always DRAW but could never be GIVEN:
+    // FinalCta.astro has accepted a `secondaryCta` since it was written, and
+    // nothing upstream of it declared one. Added 2026-09-19 (plan 2b ruling
+    // P13) so a closing band can offer a second door without the page having to
+    // spend its hero on it.
+    defineField({ name: 'secondaryCta', title: 'Second button (optional)', type: 'ctaBlock' }),
     imageWithAlt('backgroundImage', 'Background photo (optional)'),
   ],
   preview: {

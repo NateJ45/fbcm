@@ -167,10 +167,12 @@ export type ProjectedStatSection = { _key: string } & _StatSection;
 
 export type ProjectedCtaBandSection = { _key: string } & Omit<
   _CtaBandSection,
-  'backgroundImage' | 'cta'
+  'backgroundImage' | 'cta' | 'secondaryCta'
 > & {
     backgroundImage?: ProjectedImage | null;
     cta?: ProjectedCtaBlock | null;
+    /** The band's optional second button (plan 2b ruling P13). */
+    secondaryCta?: ProjectedCtaBlock | null;
   };
 
 export type ProjectedVideoSection = { _key: string } & _VideoSection;

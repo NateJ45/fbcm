@@ -844,6 +844,7 @@ export type CtaBandSection = {
     _key: string;
   }>;
   cta?: CtaBlock;
+  secondaryCta?: CtaBlock;
   backgroundImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;

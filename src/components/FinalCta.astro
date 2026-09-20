@@ -80,7 +80,11 @@ interface Props {
 const {
   eyebrow,
   headline = 'Come and see',
-  subhead = 'Plan a visit, or send us a note and we will answer.',
+  // NO DEFAULT SUBHEAD (plan 2b ruling P14, 2026-09-19). The band used to
+  // invent "Plan a visit, or send us a note and we will answer." whenever a
+  // page left the field blank, which put a sentence nobody wrote onto the
+  // bottom of the page. A band with no subhead now renders without one.
+  subhead,
   cta,
   secondaryCta,
   headingId = 'final-cta',

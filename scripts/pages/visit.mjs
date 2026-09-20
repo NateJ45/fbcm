@@ -386,19 +386,21 @@ export default {
 
         // 7. Closing band.
         //
-        //    ONE BUTTON, not two, and that is a schema limit rather than a
-        //    choice: ctaBandSection declares `cta` and nothing else
-        //    (src/sanity/schemaTypes/sections.ts:444), the query projects only
-        //    `cta` (src/lib/queries.ts:41-45) and SectionRenderer passes only
-        //    `cta` (src/components/SectionRenderer.astro:152-163), even though
-        //    FinalCta.astro:38 already accepts a `secondaryCta`. The livestream
-        //    is one tap away in the hero, so the visitor card takes the band.
+        //    TWO BUTTONS now. The band carried one until 2026-09-19, not by
+        //    choice but because ctaBandSection declared only `cta` while
+        //    FinalCta.astro had accepted a `secondaryCta` all along. Ruling P13
+        //    closed that gap end to end (schema, query, SectionRenderer), so
+        //    the visitor card and the livestream both sit here, and the subhead
+        //    is the two facts a visitor needs at the moment they decide, read
+        //    off Site settings rather than retyped (rule 15).
         {
           _type: 'ctaBandSection',
           _key: 'visit-cta',
           eyebrow: 'We’d love to meet you',
           headline: 'Come as you are.',
+          subhead: `${settings.serviceTime}. ${streetLine}.`,
           cta: ctaExternal('Fill in a visitor card', settings.visitorFormUrl),
+          secondaryCta: ctaExternal('Watch live', settings.livestreamUrl),
         },
       ],
 

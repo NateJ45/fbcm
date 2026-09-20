@@ -41,7 +41,8 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     _type == "ctaBandSection" => {
       ...,
       backgroundImage${IMAGE_PROJECTION},
-      cta${CTA_PROJECTION}
+      cta${CTA_PROJECTION},
+      secondaryCta${CTA_PROJECTION}
     },
     _type == "imageTextSection" => {
       ...,

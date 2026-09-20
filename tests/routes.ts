@@ -27,6 +27,8 @@ export const routes: string[] = [
   // suite screenshots. Listed here so it also gets smoke, axe light/dark,
   // contrast and reflow coverage like every other route, not just pixels.
   '/styleguide',
+  // The plan-2b pages are listed here as they land.
+  '/visit',
 ];
 
 /**
