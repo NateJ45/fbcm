@@ -339,22 +339,17 @@ leaves open, with what closes each.
   exist and `npm run check:links` is green. **Plan 3 precondition still
   stands: no redirect target may 404**, and plan 2c proves it against the
   deployed site rather than against `dist/`.
-- **A fragment landing arrives under the sticky header.** Measured on `/staff`
-  (task 10, 1280x900, light): `#kendall-ellis` and `#loraine-garrett` put the
-  card's top edge at viewport y=112 (`scroll-mt-28` on the card in
-  `StaffGrid.astro`) and `#coordination` puts the section's top edge at y=0,
-  while the expanded header occupies the top ~172px. So a card anchor loses the
-  top of its portrait and a SECTION anchor loses the first line of its heading.
-  Both come from shared code, not from one page: the section wrapper in
-  `SectionRenderer.astro` carries no scroll-margin at all, and the card's 112px
-  is short of the header. It affects every anchor the retired URLs point at
-  (`/beliefs#baptists`, `/ministries#youth`, `/staff#*`), so the fix belongs in
-  those two components in one deliberate change, with a parity recapture.
-- `journalPage` singleton is unseeded; `/blog` renders the starter's defaults.
-- `seed-core.mjs` still seeds a service-business page set; the FBCM home page and
-  the eight custom pages need seeding for this church.
-- `src/pages/post/[slug].astro` fallback description reads "A note from the
-  studio." Same residue family as the fixed "Studio Journal".
+- ~~A fragment landing arrives under the sticky header.~~ Closed in the plan 2b
+  final fix wave (2026-09-20). One token, `--header-offset` in `globals.css`,
+  re-measured in Chromium against the production build (186px at 1280, 93px at 375) and consumed by `scroll-mt-[var(--header-offset)]` on both the
+  `SectionRenderer` band wrapper and the `StaffGrid` card.
+- ~~`journalPage` singleton is unseeded.~~ Closed in plan 2b task 15.
+- ~~`seed-core.mjs` still seeds a service-business page set; the eight custom
+  pages need seeding.~~ Closed in plan 2b: thirteen page modules under
+  `scripts/pages/`, run by `npm run seed-pages`.
+- ~~`src/pages/post/[slug].astro` fallback description reads "A note from the
+  studio."~~ Closed in the plan 2b final fix wave: the label is gone, and the
+  fallback is the site description.
 - `scripts/import-people.mjs` `bioOf()` has no unit test; its correctness rests on
   the live re-import spot checks recorded in the plan-1 ledger.
 - CLAUDE.md and README.md: only the opening paragraph says what this repo is; the

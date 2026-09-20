@@ -98,7 +98,12 @@ if (!entry) {
 // says Blog. "Studio Journal" was the starter's name for it and it was riding
 // on all 142 titles, og:title, twitter:title and og:image:alt.
 const title = entry.seoTitle ?? `${entry.title} · Blog`;
-const description = entry.seoDescription ?? entry.excerpt ?? 'A note from the studio.';
+// The third fallback used to read "A note from the studio.", starter residue
+// from the fork (CLAUDE.md rule 11) that no post has ever shipped: 0 of the 142
+// built post pages carry the string, because every entry has a seoDescription
+// or an excerpt. It was a trap rather than a defect, so it is replaced with the
+// one line about this church rather than a new label nobody would maintain.
+const description = entry.seoDescription ?? entry.excerpt ?? `Writing from ${site.name}.`;
 const coverOg = entry.coverImage?.asset
   ? urlFor(entry.coverImage).width(1200).height(630).fit('crop').quality(80).format('webp').url()
   : undefined;

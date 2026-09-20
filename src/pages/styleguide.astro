@@ -53,6 +53,7 @@ import HeritageBand from '@/components/sections/HeritageBand.astro';
 import GiveBand from '@/components/sections/GiveBand.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
 import LinkCards from '@/components/sections/LinkCards.astro';
+import Hours from '@/components/sections/Hours.astro';
 // scaffold:end
 // Task 7: temporary hero fixtures (frames, layout, facts). No hero with frames
 // exists in the dataset yet (plan 2b seeds one) so these two calls are the
@@ -381,6 +382,60 @@ const DOCUMENT_LIST_FIXTURE = {
 // branch is what gets shot. The links point at the three pages the Home band
 // really points at, written as same-site paths rather than references: the
 // styleguide never reads Sanity, so a reference here would resolve to nothing.
+// The hours band reads everything it prints off siteSettings (Hours.astro, and
+// CLAUDE.md rule 15), so the fixture is a settings OBJECT rather than a set of
+// block fields. Passing it explicitly also keeps the styleguide off the live
+// dataset: the component only falls back to getSiteSettings() when no prop is
+// given, and a visual baseline that moves when the church edits its Friday
+// closing time is not a baseline. The values are FBCM's own, as seeded.
+const HOURS_FIXTURE = {
+  eyebrow: 'Office',
+  heading: "Office and pastors' hours",
+  settings: {
+    address: '309 East Adams Street\nMuncie, IN 47305',
+    officeHours: [
+      {
+        _type: 'block' as const,
+        _key: 'oh-1',
+        style: 'normal',
+        children: [
+          {
+            _type: 'span' as const,
+            _key: 'oh-1-0',
+            text: 'Monday to Thursday: 9 am to 12 pm and 1 pm to 4 pm',
+          },
+        ],
+      },
+      {
+        _type: 'block' as const,
+        _key: 'oh-2',
+        style: 'normal',
+        children: [{ _type: 'span' as const, _key: 'oh-2-0', text: 'Friday: 9 am to 12 pm' }],
+      },
+      {
+        _type: 'block' as const,
+        _key: 'oh-3',
+        style: 'normal',
+        children: [{ _type: 'span' as const, _key: 'oh-3-0', text: 'Sunday: 9 am to 12 pm' }],
+      },
+    ],
+    pastoralHours: [
+      {
+        _type: 'block' as const,
+        _key: 'ph-1',
+        style: 'normal',
+        children: [
+          {
+            _type: 'span' as const,
+            _key: 'ph-1-0',
+            text: 'Tuesdays are set aside for meetings with members and visitors.',
+          },
+        ],
+      },
+    ],
+  },
+};
+
 const LINK_CARDS_FIXTURE = {
   eyebrow: 'First Baptist Muncie',
   heading: 'A Baptist church in the heart of downtown since 1859.',
@@ -687,6 +742,14 @@ const LINK_CARDS_FIXTURE = {
     cards={LINK_CARDS_FIXTURE.cards}
     surface="background"
     headingId="styleguide-linkcards"
+  />
+
+  <Hours
+    eyebrow={HOURS_FIXTURE.eyebrow}
+    heading={HOURS_FIXTURE.heading}
+    settings={HOURS_FIXTURE.settings}
+    surface="muted"
+    headingId="styleguide-hours"
   />
   {/* scaffold:end */}
 </BaseLayout>

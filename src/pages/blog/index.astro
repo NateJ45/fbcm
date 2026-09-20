@@ -29,7 +29,15 @@ import {
 import { getSectionVisibility } from '@/lib/sectionVisibility';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
-import { splitDurable, paginate, weekOfEyebrow, PER_PAGE } from '@/lib/blog-derive';
+import {
+  splitDurable,
+  paginate,
+  weekOfEyebrow,
+  clean,
+  tagIndex,
+  PER_PAGE,
+} from '@/lib/blog-derive';
+import { slugify } from '@/lib/slugify';
 
 import Hero from '@/components/Hero.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
@@ -66,6 +74,17 @@ const featured = durable.slice(0, 6);
 const thisWeek = previews[0] ?? null;
 const firstPage = paginate(all, PER_PAGE, 1);
 
+// The routes the redirect script below is allowed to send a visitor to. Both
+// lists are derived from the SAME data the two routes build from, so the script
+// can never point at a page this build did not produce:
+//   - category: the filter in src/pages/blog/category/[slug].astro's
+//     getStaticPaths (a slug, and at least one post),
+//   - tag: the grouping in src/pages/blog/tag/[tag].astro's getStaticPaths.
+const builtCategorySlugs = ((categories ?? []) as any[])
+  .filter((c) => c?.slug?.current && (c.postCount ?? 0) > 0)
+  .map((c) => clean(c.slug.current));
+const builtTagSlugs = tagIndex(all as any[], slugify).map((g) => g.slug);
+
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
@@ -81,16 +100,28 @@ const schemas = [
      index cannot read a querystring at build time; this hands the visitor on to
      the built category page instead. `pianist` was a TAG on the old site, not a
      category, so it goes to the tag route. `fbcm-events-1` is the legacy spelling
-     of `fbcm-events`. Anything else falls through and /blog just renders. */
+     of `fbcm-events`.
+
+     ANYTHING ELSE FALLS THROUGH and /blog just renders, which is what the
+     comment always claimed and what the script now actually does. It used to
+     redirect on ANY non-empty value, so a mistyped or long-dead slug in
+     somebody's bookmark was sent to a category route this build never made:
+     a 404 in place of the archive index. The two allow-lists are built above
+     from the same data the two routes' getStaticPaths use, so the script and
+     the build cannot disagree about what exists. */
   }
-  <script is:inline>
+  <script is:inline define:vars={{ categorySlugs: builtCategorySlugs, tagSlugs: builtTagSlugs }}>
     (function () {
       var slug = new URLSearchParams(location.search).get('category');
       if (!slug) return;
       var MOVED = { 'fbcm-events-1': 'fbcm-events' };
-      var TAGS = { pianist: 1 };
       var s = MOVED[slug] || slug;
-      location.replace((TAGS[s] ? '/blog/tag/' : '/blog/category/') + encodeURIComponent(s) + '/');
+      if (categorySlugs.indexOf(s) !== -1) {
+        location.replace('/blog/category/' + encodeURIComponent(s) + '/');
+      } else if (tagSlugs.indexOf(s) !== -1) {
+        location.replace('/blog/tag/' + encodeURIComponent(s) + '/');
+      }
+      // Unknown slug: do nothing. The archive index is already rendering.
     })();
   </script>
 

@@ -132,7 +132,16 @@ const uniqueAnchor = (block: unknown, headingId: string): string => {
 // the indigo giveBandSection; both read this the same way. Without it the
 // page has no h1 at all: axe reports page-has-heading-one and a screen reader
 // is handed a page with no title.
-const openingLevel = (index: number): 'h1' | 'h2' => (index === 0 ? 'h1' : 'h2');
+//
+// THE PROMOTION IS CONDITIONAL ON THERE BEING NO HERO (2026-09-20). Block
+// index 0 used to be promoted unconditionally, so a page whose first block was
+// a band AND which also carried a heroSection further down would emit two h1s,
+// which is the opposite failure and the one axe does not always name clearly.
+// None of the eleven pages is built that way today, which is exactly why the
+// guard belongs here rather than in a reviewer's memory: the arrangement is
+// one drag in the Studio away.
+const hasHero = rows.some(({ block }) => (block as { _type?: string })._type === 'heroSection');
+const openingLevel = (index: number): 'h1' | 'h2' => (index === 0 && !hasHero ? 'h1' : 'h2');
 
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
