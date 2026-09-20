@@ -3,25 +3,23 @@
 // Custom 404. Warm, on-brand, two clear paths back. No search (there isn't one).
 //
 // Layout: two-column on desktop (text + photograph), stacked on mobile. The
-// photo is sourced from Sanity and can be replaced with any studio photo.
-// Asset is referenced by _ref so it pipes through the same SanityImage
-// CDN/transform pipeline as every other photo on the site.
+// photo is sourced from Sanity (the notFoundPage singleton's heroImage) and
+// pipes through the same SanityImage CDN/transform pipeline as every other
+// photo on the site. There is no code-drawn fallback photo any more (rule
+// 11: the previous fallback was a leftover Reid Design asset ref, "Studio
+// dogs on the sofa", that shipped because nothing in the build ever pointed
+// at the placeholder to notice it was somebody else's photo). When the
+// singleton has no image, the page simply renders without one.
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getNotFoundPage, getSiteSettings } from '@/lib/queries';
 import SanityImage from '@/components/SanityImage.astro';
+import CtaLink from '@/components/CtaLink.astro';
 
 const [notFoundPage, siteSettings] = await Promise.all([
   getNotFoundPage().catch(() => null),
   getSiteSettings().catch(() => null),
 ]);
-
-// Fallback photo — Studio dogs on the sofa, in case the singleton hasn't been
-// populated. Sanity singleton always wins if its image field is set.
-const fallbackPhoto = {
-  asset: { _ref: 'image-ce9be41407b946b7453724575c3cfd7aec2f7c4c-3024x4032-jpg' },
-  alt: 'Studio photo.',
-};
 
 const seoTitle = notFoundPage?.seoTitle ?? 'Page not found';
 const seoDescription =
@@ -34,24 +32,39 @@ const body =
   notFoundPage?.body ??
   "It happens. Maybe a link is old, maybe the URL has a typo. Either way, here's where to head next.";
 
-const primaryLabel = notFoundPage?.primaryCtaLabel ?? 'Back home';
-const primaryHref = notFoundPage?.primaryCtaHref ?? '/';
-// A CORE route, not /portfolio: the portfolio is an opt-in module that a fresh
-// clone does not build, so the old default shipped a 404 page whose own button
-// 404s. A project that turns the module on can point this at /portfolio in the
-// Studio.
-const secondaryLabel = notFoundPage?.secondaryCtaLabel ?? 'Back to the home page';
-const secondaryHref = notFoundPage?.secondaryCtaHref ?? '/';
-const tertiaryLabel = notFoundPage?.tertiaryCtaLabel ?? 'Get in touch';
-const tertiaryHref = notFoundPage?.tertiaryCtaHref ?? '/contact';
+// CtaLink draws every button on the site (CLAUDE.md rule 17: one button
+// family). The singleton's three CTA slots are plain label/href strings
+// rather than the ctaBlock shape CtaLink resolves references from, so each
+// is wrapped as an "external" cta here: resolveHref() just returns
+// externalUrl unchanged for that link type, and openInNewTab is forced to
+// false because these are same-site paths, not a link off the site.
+function asCta(label: string, href: string) {
+  return { label, linkType: 'external' as const, externalUrl: href, openInNewTab: false };
+}
 
-const photo = notFoundPage?.heroImage ?? fallbackPhoto;
-const caption = notFoundPage?.heroImage?.caption ?? 'From the studio';
+const primaryCta = asCta(
+  notFoundPage?.primaryCtaLabel ?? 'Plan a visit',
+  notFoundPage?.primaryCtaHref ?? '/visit',
+);
+const secondaryCta = asCta(
+  notFoundPage?.secondaryCtaLabel ?? 'Read the blog',
+  notFoundPage?.secondaryCtaHref ?? '/blog',
+);
+const tertiaryCta = asCta(
+  notFoundPage?.tertiaryCtaLabel ?? 'Contact us',
+  notFoundPage?.tertiaryCtaHref ?? '/contact',
+);
+
+const photo = notFoundPage?.heroImage ?? null;
+const caption = notFoundPage?.heroImage?.caption ?? '';
 ---
 
 <BaseLayout title={seoTitle} description={seoDescription} siteSettings={siteSettings} noindex>
   <section
-    class="mx-auto grid max-w-content grid-cols-1 items-center gap-section-md px-m py-section-lg md:grid-cols-[1fr_1.1fr]"
+    class:list={[
+      'mx-auto grid max-w-content grid-cols-1 items-center gap-section-md px-m py-section-lg',
+      photo && 'md:grid-cols-[1fr_1.1fr]',
+    ]}
     aria-labelledby="not-found-heading"
   >
     {
@@ -73,42 +86,33 @@ const caption = notFoundPage?.heroImage?.caption ?? 'From the studio';
       </p>
 
       <div class="mt-l flex flex-wrap justify-center gap-m md:justify-start">
-        <a
-          href={primaryHref}
-          class="press-tactile inline-flex items-center rounded-sm bg-gold px-l py-s text-xs font-semibold tracking-eyebrow text-indigo-field uppercase hover:bg-gold/90"
-        >
-          {primaryLabel}
-        </a>
-        <a
-          href={secondaryHref}
-          class="press-tactile inline-flex items-center rounded-sm border border-indigo px-l py-s text-xs font-semibold tracking-eyebrow text-indigo uppercase hover:bg-indigo/5"
-        >
-          {secondaryLabel}
-        </a>
-        <a
-          href={tertiaryHref}
-          class="press-tactile inline-flex items-center rounded-sm border border-border-soft px-l py-s text-xs font-semibold tracking-eyebrow text-foreground/85 uppercase hover:border-indigo hover:text-indigo"
-        >
-          {tertiaryLabel}
-        </a>
+        <CtaLink cta={primaryCta} variant="gold" />
+        <CtaLink cta={secondaryCta} variant="outline" />
+        <CtaLink cta={tertiaryCta} variant="outline" />
       </div>
     </div>
 
     {
       /* Photo column. Stacks above the text on mobile (md:order-2 swaps it on
-        desktop so the eye lands on text first, photo balances right). */
+        desktop so the eye lands on text first, photo balances right). Renders
+        only when the singleton has an image: there is no code-drawn fallback
+        photo any more (see the top-of-file note). */
+      photo && (
+        <figure class="order-first md:order-2">
+          <SanityImage
+            source={photo}
+            width={1200}
+            sizes="(min-width: 768px) 50vw, 100vw"
+            quality={75}
+            class="h-auto w-full rounded-md"
+          />
+          {caption && (
+            <figcaption class="mt-s text-right text-xs tracking-eyebrow text-foreground/80 uppercase">
+              {caption}
+            </figcaption>
+          )}
+        </figure>
+      )
     }
-    <figure class="order-first md:order-2">
-      <SanityImage
-        source={photo}
-        width={1200}
-        sizes="(min-width: 768px) 50vw, 100vw"
-        quality={75}
-        class="h-auto w-full rounded-md"
-      />
-      <figcaption class="mt-s text-right text-xs tracking-eyebrow text-foreground/80 uppercase">
-        {caption}
-      </figcaption>
-    </figure>
   </section>
 </BaseLayout>

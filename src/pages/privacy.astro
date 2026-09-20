@@ -38,11 +38,22 @@ const heroHeadline = page?.heroHeadline ?? 'Privacy Policy';
 const heroSubhead = page?.heroSubhead ?? '';
 
 // Format the lastUpdated date from Sanity or fall back to a static string.
+// Sanity's `date` field is a plain "YYYY-MM-DD" with no time zone, and
+// `new Date(d)` parses that as UTC midnight. Formatting with the LOCAL time
+// zone (toLocaleDateString's default) then rolls it back a calendar day for
+// any visitor west of UTC, which is every US time zone: a policy dated
+// 2026-09-20 read as "September 19, 2026". UTC getters read back the same
+// calendar day that was typed, everywhere.
 function formatDate(d?: string): string {
   if (!d) return '';
   const date = new Date(d);
   if (Number.isNaN(date.getTime())) return '';
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
 }
 const lastUpdated = formatDate(page?.lastUpdated);
 

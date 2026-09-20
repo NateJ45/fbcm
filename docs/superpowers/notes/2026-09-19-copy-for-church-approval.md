@@ -265,6 +265,45 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none)
 
+## /privacy
+
+### New sentences
+
+- This site is run by First Baptist Church Muncie to share what is happening at the church. This policy explains what the site itself does with information from anyone who visits it. (intro)
+- This site has no contact form, sign-up form or account system of its own. (What this site does not do)
+- It does not ask you to create an account or log in. (What this site does not do)
+- It does not set any cookies of its own. (What this site does not do)
+- This site runs no analytics at all. Visits are not counted, and nothing is stored on your device for measurement. (How visits are measured, when PUBLIC_CF_ANALYTICS_TOKEN is unset)
+- Page visits are counted with Cloudflare Web Analytics, which sets no cookies and does not identify individual visitors. (How visits are measured, when PUBLIC_CF_ANALYTICS_TOKEN is set)
+- This site links out to a few services the church uses for things this site itself does not do. (Links to other services, lead-in)
+- Church Center handles online giving and event registration. It has its own privacy policy, separate from this one. (Links to other services, Church Center)
+- Church Trac holds other church records. It has its own privacy policy, separate from this one. (Links to other services, Church Trac)
+- YouTube hosts our livestream and sermon recordings. It has its own privacy policy, separate from this one. (Links to other services, YouTube)
+- Questions about this policy, or about anything on this site, can go to the church office. (How to reach us, lead-in)
+
+### Edits to the church’s own text
+
+- (none: their text is cut, never reworded)
+
+### Photos of children
+
+- (none)
+
+## /not-found
+
+### New sentences
+
+- That page has moved or never was. (headline)
+- It happens. If you followed an old link, it may have moved when we rebuilt this site. Here's where to go instead. (body)
+
+### Edits to the church’s own text
+
+- (none: their text is cut, never reworded)
+
+### Photos of children
+
+- (none)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

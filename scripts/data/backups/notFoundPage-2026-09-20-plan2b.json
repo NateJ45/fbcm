@@ -1,0 +1,29 @@
+{
+  "_createdAt": "2026-09-19T01:06:10Z",
+  "_id": "notFoundPage",
+  "_rev": "76n5oA2VRzKOmE8UAQZ7rc",
+  "_system": {
+    "base": {
+      "id": "notFoundPage",
+      "rev": "F5Duw02wR0YDcoTNSWnpx2"
+    }
+  },
+  "_type": "notFoundPage",
+  "_updatedAt": "2026-09-19T01:06:36Z",
+  "body": "It happens. Maybe a link is old, maybe the URL has a typo. Either way, here's where to head next.",
+  "eyebrow": "404",
+  "headline": "That page wandered off.",
+  "heroImage": {
+    "_type": "image",
+    "alt": "test",
+    "caption": "From the studio"
+  },
+  "primaryCtaHref": "/",
+  "primaryCtaLabel": "Back home",
+  "secondaryCtaHref": "/",
+  "secondaryCtaLabel": "Browse our services",
+  "seoDescription": "That page wandered off. Head back to the homepage or get in touch.",
+  "seoTitle": "Page not found",
+  "tertiaryCtaHref": "/contact",
+  "tertiaryCtaLabel": "Get in touch"
+}
