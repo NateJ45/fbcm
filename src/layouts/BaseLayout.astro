@@ -604,8 +604,32 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           // input gesture (the same wheel/touch signal `isUserScroll` uses
           // above) or the deadline stops it, so a visitor who starts
           // scrolling themselves is never fought for control of the page.
+          // CLAUDE.md rule 5: back/forward restores whatever scroll position
+          // the visitor was actually at, forward navigation resets to the
+          // top -- that's the Lenis reset above, a SEPARATE mechanism from
+          // this one. Browsers implement rule 5 themselves for a plain
+          // (non-SPA) history traversal: they restore the prior scrollY
+          // instead of re-running "scroll to #fragment", precisely because
+          // the visitor already chose where they were looking. If the URL
+          // still carries a hash (nothing removes it on scroll), landing on
+          // it here would fight that restoration and silently break rule 5
+          // for every page with an anchor in its URL. `navigation.type` is
+          // `'back_forward'` for exactly this case; the call is guarded
+          // because Safari didn't add the Navigation Timing L2 API until
+          // relatively recently, and a `.type` read on a `PerformanceEntry`
+          // that lacks it should never be allowed to throw and skip wiring
+          // the rest of the polish script.
+          let isBackForward = false;
+          try {
+            isBackForward =
+              (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined)?.type ===
+              'back_forward';
+          } catch {
+            isBackForward = false;
+          }
+
           const hashId = location.hash ? decodeURIComponent(location.hash.slice(1)) : '';
-          const hashTarget = hashId ? document.getElementById(hashId) : null;
+          const hashTarget = !isBackForward && hashId ? document.getElementById(hashId) : null;
           if (hashTarget) {
             const land = () => {
               const offset = parseFloat(getComputedStyle(hashTarget).scrollMarginTop) || 0;

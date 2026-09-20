@@ -146,3 +146,35 @@ test('keyboard End hides the sticky header, Home shows it again', async ({ page 
     'Home should show the header again, same as scrolling to the top for real',
   ).toBeNull();
 });
+
+// =============================================================================
+// Back/forward restores the browser's own scroll position, not the anchor
+// =============================================================================
+// CLAUDE.md rule 5: history navigation (back/forward) restores whatever
+// scroll position the visitor was actually at, forward navigation resets to
+// the top. A page loaded via back/forward with a hash still in the URL
+// (e.g. /beliefs#baptists after the visitor had scrolled to 2000px and come
+// back) must NOT have the fragment-landing code re-jump it to the anchor --
+// that would fight the browser's own scroll restoration and undo rule 5.
+// =============================================================================
+
+test('back/forward restores scroll position, not the fragment landing', async ({ page }) => {
+  await page.goto('/beliefs#baptists', { waitUntil: 'load' });
+  await page.evaluate(() => window.scrollTo(0, 2000));
+  // Give the polish script's own correction loop a chance to react (it
+  // shouldn't, since this is a real scrollTo with no gesture behind it, but
+  // the point of this test is the back-navigation case below, not this one).
+  await page.waitForTimeout(300);
+
+  await page.goto('/visit', { waitUntil: 'load' });
+  await page.goBack({ waitUntil: 'load' });
+  // Let a (correctly skipped) landing loop run its course if it were going
+  // to fire, so a false pass isn't just "we didn't wait long enough".
+  await page.waitForTimeout(1700);
+
+  const restoredY = await page.evaluate(() => window.scrollY);
+  expect(
+    restoredY,
+    `back navigation should restore the pre-navigation scroll position (~2000px), not re-jump to the anchor (got ${restoredY})`,
+  ).toBeGreaterThan(1500);
+});
