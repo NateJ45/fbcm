@@ -113,14 +113,21 @@ local gate today; `.github/workflows/ci.yml` carries the reason inline. To close
 capture on CI once, diff against the committed baselines, and wire the step in if they
 match.
 
-**The committed baselines are stale as of 2026-09-19** (plan 2b task 1). Every
-page-builder section now renders inside a `<div id="...">` so a link can jump to it
-(`src/lib/anchor.ts`), where the live render used to emit no wrapper at all. That is a
-deliberate, site-wide HTML change, so `npm run parity compare` reports a diff on every
-section-driven page until somebody runs `npm run parity capture` and commits the new
-baselines. Task 1 deliberately did not touch `scripts/.parity/`: recapturing mid-plan
-would throw away the one signal that says whether a LATER page task changed a render it
-did not mean to. Recapture once plan 2b's pages are in.
+**Recaptured 2026-09-20** (plan 2c task 7), once the eleven pages and Task 6's
+Lighthouse fixes had landed. `npm run parity:capture` / `npm run parity:compare` (both
+`scripts/page-parity.mjs capture|compare --exclude "blog/page/**,blog/tag/**,blog/category/**/page/**"`)
+now hold 162 baselines in `scripts/.parity/` (12 MB), one per template plus every
+distinct post and category page, with the generated pagination archive (`blog/page/N`,
+`blog/tag/*`, `blog/category/*/page/N`) excluded so a real diff cannot hide in hundreds
+of copies of the same DIFF line. `npm run parity compare` (or `npm run parity:compare`)
+is 162/162 PASS as of this recapture; it is **no longer intentionally red**. The
+`--exclude` flag and its `PARITY_EXCLUDE` env twin are general additions to
+`scripts/page-parity.mjs` (a PORTABLE file), documented in its header comment, with the
+glob matcher split into `scripts/lib/parity-glob.mjs` and unit-tested. **Upstream
+finding for PORTS.md:** the exclusion mechanism is a candidate port for any family
+member whose content grows a paginated archive (presacademy's events, for one) --
+capturing hundreds of near-identical archive pages was already a problem here at 142
+posts and five categories, and it only gets worse with more content.
 
 ### 3. `@astrojs/mdx` is installed but unused
 
