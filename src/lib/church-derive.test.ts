@@ -47,7 +47,7 @@ test('an unparseable date yields the plain eyebrow rather than "Invalid Date"', 
   assert.equal(weekOfLabel('not a date'), 'Sermon preview');
 });
 
-test('documents sort newest year first, undated last, ties by title', () => {
+test('documents sort newest year first, undated last, ties keep their order', () => {
   const out = sortDocsByYearDesc([
     { title: 'B', year: 2023 },
     { title: 'A', year: null },
@@ -84,3 +84,18 @@ test('every ^.group reach in the staffGrid arm is coalesced to "all"', () => {
   assert.equal(arm.replace(/coalesce\(\^\.group, "all"\)/g, '').includes('^.group'), false);
 });
 // scaffold:end
+
+test('two rows in one year keep the order they were given, not the alphabet', () => {
+  // The Visitor has twelve 2020 issues. Sorted by title they would read April,
+  // August, December, February; the seeder hands them over newest first and
+  // that is the order a reader wants.
+  const out = sortDocsByYearDesc([
+    { title: 'December', year: 2020 },
+    { title: 'April', year: 2020 },
+    { title: 'January', year: 2020 },
+  ]);
+  assert.deepEqual(
+    out.map((d) => d.title),
+    ['December', 'April', 'January'],
+  );
+});

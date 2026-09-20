@@ -60,11 +60,19 @@ export function weekOfLabel(publishedAt: string): string {
   return `Sermon preview, week of ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 }
 
-/** Newest year first; undated documents last; ties by title. Never mutates. */
+/**
+ * Newest year first; undated documents last; ties keep the order they arrived
+ * in. Never mutates.
+ *
+ * The tiebreak used to be the title, which is alphabetical, and alphabetical is
+ * wrong for the one list that has many rows in a single year: twelve 2020
+ * issues of The Visitor came out April, August, December, February. Inside a
+ * year the ORDER OF THE ARRAY is the answer, because that is the order an
+ * editor dragged the rows into (and, for a seeded list, the order the seeder
+ * worked out). Array.prototype.sort is stable, so returning 0 is enough.
+ */
 export function sortDocsByYearDesc<T extends { year?: number | null; title: string }>(
   docs: T[],
 ): T[] {
-  return [...docs].sort(
-    (a, b) => (b.year ?? -Infinity) - (a.year ?? -Infinity) || a.title.localeCompare(b.title),
-  );
+  return [...docs].sort((a, b) => (b.year ?? -Infinity) - (a.year ?? -Infinity));
 }

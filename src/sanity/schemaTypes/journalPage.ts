@@ -143,7 +143,14 @@ export const journalPage = defineType({
       description:
         'Optional. A photo behind the closing call-to-action. The site automatically darkens it so the headline and button stay readable. Leave empty to keep the solid charcoal panel.',
     }),
-    additionalSectionsField,
+    // Spread with its `name` written out rather than passed as a bare
+    // identifier: scripts/audit-studio.mjs reads the schema as SOURCE and only
+    // resolves a shared field const inside the file that declares it, so an
+    // imported one looks undeclared and every document storing it is reported
+    // as "Remove field" bait (check 3, CLAUDE.md rule 1). The name here and the
+    // one in sections.ts are the same string by construction: the spread would
+    // overwrite a different one.
+    defineField({ ...additionalSectionsField, name: 'additionalSections' }),
   ],
   // The posts grid, the pager and the chips are all drawn in code from the
   // journalEntry documents; this array is the one editable zone on /blog, and

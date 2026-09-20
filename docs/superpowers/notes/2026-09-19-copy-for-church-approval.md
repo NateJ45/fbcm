@@ -241,6 +241,30 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none)
 
+## /blog
+
+### New sentences
+
+- Writing from First Baptist. (hero headline)
+- Sermon previews for the coming Sunday, news from around the church, and longer pieces from the pastors. (hero subhead, one sentence)
+- The Visitor and two books (publications heading)
+- Come and see for yourself. (closing band headline)
+- Sermon previews, church news and writing from the pastors of First Baptist Church Muncie. (search description)
+
+### Edits to the church’s own text
+
+- Corrected: the two issues the Wix buttons label "Feburary" are seeded as "February". It is a typo in a button label, not a word of the church's own prose.
+- Renamed: the "Download Latest Issue" button becomes an issue row like the others, titled with its month, under the church's own heading for it ("Current Visitor") on publications.txt line 9. The old label described the button, not the issue.
+- Dropped: the "Other Updates" block from publications.txt (Church Connect sign-up and "see our Blog"). The first belongs on a page about the app and the second points at the page this list now lives on.
+
+### Facts to confirm from this page
+
+- Which year each issue of The Visitor belongs to. The Wix capture records the MONTH of each issue (the button read "December") but not the year: the years were headings in a Wix widget and the association did not survive the capture. Each year here is derived from the PDF's own creation date, snapped to the nearest occurrence of the named month (a December issue built on 2023-11-28 is December 2023; a January issue built on 2020-12-30 is January 2021). One June issue carries no creation date at all and is seeded undated. Please check the years on the list, and tell us the year of the undated June.
+
+### Photos of children
+
+- (none)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.
