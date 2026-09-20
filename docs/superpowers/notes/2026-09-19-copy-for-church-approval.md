@@ -134,6 +134,37 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none)
 
+## /history
+
+### New sentences
+
+- Since 1859. (the opening band’s heading)
+- The story continues on Sunday. (the closing band’s headline)
+- First Baptist Church Muncie was founded by twelve people in 1859 and has worshipped in downtown Muncie ever since. (search description, not shown on the page)
+- The seven era names in the timeline and on the bands, which are labels the spec gives rather than sentences the church wrote: Founding; Struggle and Rairden; The gas boom to the debt paid; The Fighting Parson and the building; Sold and bought back; Postwar to Mattox; Saunders to the co-pastors.
+
+### Edits to the church’s own text
+
+- Cut as a repeat, once: "On September 10, 1859 twelve Indiana residents, meeting at the county courthouse, founded the first Baptist Church in Muncie." (history.txt line 11) is the opening band’s founding sentence and is not printed a second time in the Founding band, which starts at the fuller paragraph beneath it (line 13, "...four men and eight women, became the charter members..."). This is the duplicated charter-members sentence spec 5.7 asks to remove.
+- Corrected: "Overcrowded conditions led the congregation to move into a new and much larger church in 1880." becomes "...in 1890." (history.txt line 51.) The church’s own next sentence gives the date as July 20, 1890, and the content map flags the 1880 as a typo.
+- Cut as a repeat: "The old church simply could not hold that many people, and so the congregation eventually moved into a new building on July 20, 1890." (history.txt line 53) is word for word the closing sentence of the Gas Boom paragraph three lines above it (line 47).
+- Cut as a repeat: "Phenomenal growth followed, with the membership soaring to 500 in 1900." (history.txt line 59) is also word for word a sentence of the Gas Boom paragraph (line 47).
+- Cut as a repeat: "The church helped establish Riverside Baptist Church with financial support and by encouraging several of its families who lived on the west side to join this new Baptist church." (history.txt line 123) is the same sentence as the second sentence of the paragraph below it (line 125), which adds only "First," and "(pictured, right)".
+- Cut as a repeat: "The Pastoral search team’s efforts to find a pastor resulted in the church calling not just one Pastor, but two: Jonathan Balmer and Kendall Ellis." (history.txt line 171) is the same sentence as the one in the paragraph below it (line 175), which adds "(a married couple) were called by the congregation in May of 2022 to serve as Co-Pastors".
+- Joined: history.txt lines 109 and 111 are one sentence the Wix layout broke in two. "And eventually, one year and one week after the sale of the building," and "Muncie First Baptist bought it back for $70,000." are printed as one sentence.
+- 2 em-dashes converted to commas or colons (CLAUDE.md rule 2): history.txt line 113 "the war effort—a number that was 30 percent higher" and line 147 "many members left First Baptist—some because they were unhappy". No word changes. The spaced en-dashes at lines 175 and 177 are left as the church wrote them.
+- Cut, not written: the seven timeline leads are the first sentence of each era’s own first paragraph, quoted verbatim from history.txt lines 13, 21, 45, 89, 103, 117 and 135.
+- Cut and re-cased, twice, for the two book notes: "Our church has a History book written by Dr. William G. Eidson" becomes "Written by Dr. William G. Eidson." and keeps the church’s own "We have several copies in our church library."; the Clay note is "Edited by Julie Downey Davis." and "The book can be purchased online." from the same two sentences of scripts/data/pages/publications.txt lines 27 and 31.
+
+### Facts to confirm from this page
+
+- The 1917 note-burning: 24 or 30 December? The same section of scripts/data/pages/history.txt says both. Line 77 says the debt was paid "highlighted by a note-burning ceremony on December 24, 1917."; line 85 says "On December 24, 1917, the total church indebtedness of $8413.80 was paid in full. To celebrate this momentous occasion, the church had a special note-burning ceremony on December 30." The page prints both, exactly as written, and changes neither.
+- Gas boom, "to the country" or "to the county"? scripts/data/pages/history.txt line 45 reads "The Gas Boom of the 1880s and 90s brought many new residents to the country and large increases in church membership." The paragraph below it (line 47) is about "Muncie and Delaware County", so this looks like a typo for "county". It is printed as written, and it is also the page’s first timeline lead, so it appears twice.
+
+### Photos of children
+
+- (none)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

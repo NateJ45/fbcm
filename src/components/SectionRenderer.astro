@@ -125,12 +125,19 @@ const uniqueAnchor = (block: unknown, headingId: string): string => {
   return id;
 };
 
+// A page that OPENS on the brown band has no hero, so that band carries the
+// page's h1; everywhere else it is an h2, like every other band. /history is
+// the only page in the site built that way today, and without this it has no
+// h1 at all: axe reports page-has-heading-one and a screen reader is handed a
+// page with no title.
+const heritageLevel = (index: number): 'h1' | 'h2' => (index === 0 ? 'h1' : 'h2');
+
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
 ---
 
 {
-  rows.map(({ block: s, surface, insertDividerBefore, headingId }) => (
+  rows.map(({ block: s, surface, insertDividerBefore, headingId }, blockIndex) => (
     <>
       {insertDividerBefore && <SectionDivider />}
 
@@ -300,6 +307,7 @@ const wrapAttrs = (key: string | undefined) =>
             body={s.body}
             image={s.image}
             cta={s.cta}
+            level={heritageLevel(blockIndex)}
             headingId={headingId}
           />
         ) : s._type === 'giveBandSection' ? (

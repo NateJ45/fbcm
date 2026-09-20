@@ -336,8 +336,8 @@ leaves open, with what closes each.
   it is a failing test to make pass, not a surprise. The captured `bodyHtml` in
   `scripts/data/posts/*.json` is the source when a converter is added.
 - **Some redirect targets still 404**: `/visit`, `/who-we-are`, `/beliefs` and
-  `/ministries` landed in plan 2b (tasks 5, 7, 8 and 9), `/staff` in task 10;
-  `/wedding`, `/give` and `/history` do not exist yet. **Plan 3 precondition: no
+  `/ministries` landed in plan 2b (tasks 5, 7, 8 and 9), `/staff` in task 10,
+  `/history` in task 11; `/wedding` and `/give` do not exist yet. **Plan 3 precondition: no
   redirect target may 404**, or the spec's "every retired URL keeps working" is
   false on day one.
 - **A fragment landing arrives under the sticky header.** Measured on `/staff`
@@ -436,9 +436,10 @@ still open, all closing in plan 2b/2c:
 - `visual.yml`'s CI-stored `/styleguide` baseline is stale after Task 6's eight
   block fixtures; refresh it on CI with the workflow's own `update` input the
   next time it runs, not by regenerating `scripts/.parity` locally.
-- `npm run check:links` is red on the three plan-2 routes still to build
-  (`/staff`, `/history`, `/wedding`). `/visit`, `/who-we-are`, `/beliefs` and
-  `/ministries` now answer 200. No other broken link exists.
+- `npm run check:links` is red on the one plan-2 route still to build
+  (`/wedding`, 303 links to it). `/visit`, `/who-we-are`, `/beliefs`,
+  `/ministries`, `/staff` and `/history` now answer 200. No other broken link
+  exists.
 - `public/favicon.svg` is still the starter's roundel, not the church's mark;
   closes in plan 2c.
 - The `@portabletext/block-tools` dependency plan 2b needs for a real Portable

@@ -19,10 +19,17 @@ interface Props {
   body?: string;
   image?: any;
   cta?: any;
+  /**
+   * The heading tag. 'h2' everywhere except when this band OPENS a page, in
+   * which case it is the page's only h1 and SectionRenderer passes 'h1'.
+   * /history is the one page in the site that opens on this band rather than
+   * on a hero, and a page with no h1 fails axe's page-has-heading-one.
+   */
+  level?: 'h1' | 'h2';
   headingId: string;
 }
 
-const { eyebrow, heading, body, image, cta, headingId } = Astro.props as Props;
+const { eyebrow, heading, body, image, cta, level = 'h2', headingId } = Astro.props as Props;
 ---
 
 <section class="bg-brown" aria-labelledby={heading ? headingId : undefined}>
@@ -35,7 +42,7 @@ const { eyebrow, heading, body, image, cta, headingId } = Astro.props as Props;
         eyebrow={eyebrow}
         headline={heading}
         headingId={headingId}
-        level="h2"
+        level={level}
         align="left"
         tone="band"
         rule
