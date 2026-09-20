@@ -17,7 +17,27 @@ test('every from-path is a root-relative path', () => {
   for (const r of fbcmRedirects()) assert.match(r.from, /^\//);
 });
 
-test('the six former-staff URLs are covered', () => {
+test('the redirect set is the size it is meant to be', () => {
+  // A count, so adding a rule is a deliberate act with a number attached.
+  // 44 through plan 2c; 49 since task 16 added the five in-body URLs the
+  // restored post bodies revealed (see the test below).
+  assert.equal(fbcmRedirects().length, 49);
+});
+
+test('the five URLs the restored post bodies link to are covered', () => {
+  // Task 16 (2026-09-20) put the church's own in-body links back into the 142
+  // posts, and five of them pointed at paths with neither a page nor a rule.
+  // They resolve on Wix today and would 404 the day the domain moves, which is
+  // exactly the class of breakage nothing else would catch.
+  const map = new Map(fbcmRedirects().map((r) => [r.from, r.to]));
+  assert.equal(map.get('/about-us'), '/who-we-are');
+  assert.equal(map.get('/team/james-heimlich'), '/staff');
+  for (const tag of ['2', '3', 'Barbenheimer']) {
+    assert.equal(map.get(`/blog/hashtags/${tag}`), '/blog');
+  }
+});
+
+test('the seven former-staff URLs are covered', () => {
   // These exist on no current page. A crawl sees only what is published and a
   // sitemap lists only what exists, so these came from Search Console and the
   // Internet Archive. Without this test nothing would ever notice they are gone.
@@ -29,6 +49,7 @@ test('the six former-staff URLs are covered', () => {
     'jennifer-durke',
     'leslie-pannell',
     'michelle-heimlich',
+    'james-heimlich',
   ]) {
     assert.ok(froms.has(`/team/${slug}`), `missing redirect for former staff ${slug}`);
   }

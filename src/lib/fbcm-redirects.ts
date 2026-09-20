@@ -20,6 +20,12 @@ const FORMER_STAFF = [
   'jennifer-durke',
   'leslie-pannell',
   'michelle-heimlich',
+  // Added 2026-09-20 (task 16). The church links to /team/james-heimlich from
+  // family-division.json, which calls him "James Heimlich, our Ministry
+  // Resident". No such page was ever captured, and the profile on staff today
+  // is andy-heimlich, so this lands on /staff rather than guessing at an
+  // anchor for a person the page may not name.
+  'james-heimlich',
 ];
 
 /**
@@ -71,6 +77,20 @@ const STAFF_WITH_BIOS = new Set([
   'molly-flodder',
 ]);
 
+/**
+ * Wix's tag-index URLs, found in the church's own words inside their own posts
+ * when task 16 restored the in-body links (2026-09-20). This site has no
+ * equivalent index page -- it uses /blog/tag/<tag> per tag -- and two of the
+ * three are page NUMBERS on a paginated tag list, which map to nothing at all.
+ * They all land on the blog index, which is the honest nearest thing.
+ *
+ * Three explicit rules rather than one wildcard, because the redirect layer has
+ * none: `normalizeRedirectPath` treats "*" as an ordinary path character and
+ * Astro's `redirects` map is keyed on exact paths. A rule that looks like a
+ * pattern and matches literally is worse than three rules that say what they do.
+ */
+const BLOG_HASHTAGS = ['2', '3', 'Barbenheimer'];
+
 const MINISTRIES = ['worship', 'children', 'youth', 'adult', 'outreach'];
 const BLOG_CATEGORIES = [
   'sermon-preview',
@@ -102,6 +122,14 @@ export function fbcmRedirects(): FbcmRedirect[] {
       to: '/beliefs#membership',
       permanent: true,
       note: 'Merged into Beliefs',
+    },
+    {
+      // The church links to /about-us from their own posts; the page is gone
+      // and /who-we-are is what replaced it.
+      from: '/about-us',
+      to: '/who-we-are',
+      permanent: true,
+      note: 'Renamed to Who we are',
     },
     { from: '/ministers', to: '/staff', permanent: true, note: 'Renamed to Staff' },
     { from: '/team', to: '/staff', permanent: true, note: 'Renamed to Staff' },
@@ -140,6 +168,12 @@ export function fbcmRedirects(): FbcmRedirect[] {
       to: '/staff',
       permanent: true,
       note: 'Former staff; page already gone from Wix but still earning search clicks',
+    })),
+    ...BLOG_HASHTAGS.map((h) => ({
+      from: `/blog/hashtags/${h}`,
+      to: '/blog',
+      permanent: true,
+      note: 'Wix tag index; this site has no equivalent page, so it lands on the archive',
     })),
     ...BLOG_CATEGORIES.map((c) => ({
       from: `/blog/categories/${c}`,
