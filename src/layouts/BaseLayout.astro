@@ -487,48 +487,143 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           (header as any).__polishWired = true;
           let lastY = window.scrollY;
           let ticking = false;
-          // Task 4 (2026-09-20, plan 2c): a URL fragment (`#anchor`) makes the
-          // browser jump-scroll on load -- this script runs at the end of the
-          // body, BEFORE that jump happens, so lastY above is captured at 0 and
-          // the jump itself looks identical to a fast scroll-down to the
-          // heuristic below. Every retired-URL redirect that lands on an anchor
-          // (/beliefs#baptists, /visit#accessibility, ...) hid the header the
-          // instant it landed, which is backwards: the visitor never scrolled,
-          // they just arrived. `settled` blocks onScroll from acting until two
-          // animation frames after wiring, by which point any browser-native
-          // fragment jump has already happened, and lastY is re-baselined to
-          // wherever that landed -- so normal hide-on-scroll-down still works
-          // for scrolling the visitor actually does, starting from there.
-          let settled = false;
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              lastY = window.scrollY;
-              settled = true;
-            });
-          });
+
+          // Task 4 (2026-09-20, plan 2c) shipped a "settled" gate here: wait
+          // two animation frames after wiring, then re-baseline lastY, on the
+          // theory that a browser's own "scroll to #fragment on load" jump
+          // always lands inside that window. Three real Playwright failures
+          // on 2026-09-20 disproved it, in both directions and on both
+          // engines:
+          //   - webkit-iphone, /history#building (a ~33,000px page): the
+          //     native jump landed AFTER the two-frame window (fonts/images
+          //     still shifting layout below the fold), so onScroll read the
+          //     late jump as a huge scroll-down and hid the header the
+          //     instant the page "settled" (header bottom 2.8px, target top
+          //     103.7px, when the target should sit just under a visible
+          //     header).
+          //   - webkit-iphone /staff#kendall-ellis, and chromium under
+          //     prefers-reduced-motion on /beliefs#baptists (reduced motion
+          //     never sets data-state="hidden", so hiding was never in play
+          //     for that one): the native jump was still 2px-100px+ short of
+          //     its target when measured, because browsers can perform the
+          //     fragment jump in more than one pass (a first pass before
+          //     scroll-margin/late styles are fully applied, a corrective
+          //     pass after) and there is no fixed number of frames that is
+          //     reliably "enough" for either engine.
+          // A frame-counting gate can't win this: the browser's own jump
+          // has no settle signal, and any delta-size threshold trying to
+          // tell "a jump" from "a fast scroll" gets it backwards as soon as
+          // the residual jump is smaller than a screen (which is most of
+          // the time -- a jump on a short page is only ever a few hundred
+          // pixels).
+          //
+          // So this drops the size/timing guessing entirely and gates on
+          // WHY the scroll happened instead: hide-on-scroll only ever acts
+          // on a scroll that was directly preceded by a real input gesture
+          // (wheel or touch). A browser's native fragment jump, and any
+          // corrective pass it makes afterwards, fires `scroll` with no
+          // such gesture behind it, so it is invisible to the heuristic no
+          // matter how large or how late it is -- literally "a fragment
+          // landing is never a user scroll". `GESTURE_WINDOW_MS` (600ms)
+          // covers the gap between an input event and the `scroll` event(s)
+          // it produces, including the tail of a momentum/inertia scroll on
+          // touch, without being so long that an old gesture could still be
+          // "current" when an unrelated later scroll happens.
+          let lastGestureAt = -Infinity;
+          const GESTURE_WINDOW_MS = 600;
+          const markGesture = () => {
+            lastGestureAt = performance.now();
+          };
+          window.addEventListener('wheel', markGesture, { passive: true });
+          window.addEventListener('touchstart', markGesture, { passive: true });
+          window.addEventListener('touchmove', markGesture, { passive: true });
+
           const SHOW_THRESHOLD = 80; // small jitter buffer
           const HIDE_AFTER = 120;    // don't hide until past hero band
 
           const onScroll = () => {
-            if (!settled || ticking) return;
+            if (ticking) return;
             ticking = true;
             requestAnimationFrame(() => {
               const y = window.scrollY;
               const dy = y - lastY;
-              if (reduceMotion) {
-                header.removeAttribute('data-state');
-              } else if (y < HIDE_AFTER) {
-                header.removeAttribute('data-state');
-              } else if (dy > 4) {
-                header.setAttribute('data-state', 'hidden');
-              } else if (dy < -4) {
-                header.removeAttribute('data-state');
+              const isUserScroll = performance.now() - lastGestureAt <= GESTURE_WINDOW_MS;
+              if (isUserScroll) {
+                if (reduceMotion) {
+                  header.removeAttribute('data-state');
+                } else if (y < HIDE_AFTER) {
+                  header.removeAttribute('data-state');
+                } else if (dy > 4) {
+                  header.setAttribute('data-state', 'hidden');
+                } else if (dy < -4) {
+                  header.removeAttribute('data-state');
+                }
               }
               lastY = y;
               ticking = false;
             });
           };
           window.addEventListener('scroll', onScroll, { passive: true });
+
+          // ---- Land on the fragment ourselves ------------------------------
+          // The gesture gate above stops a fragment landing from hiding the
+          // header, but it does nothing about the OTHER half of the same bug
+          // reports: the native jump landing SHORT of --header-offset
+          // (globals.css) because it hadn't finished when something
+          // measured it. Rather than trust the browser's own timing (which,
+          // per the comment above, is not on any schedule we can wait out),
+          // do the scroll ourselves: compute the same resting position
+          // `scroll-margin-top` targets, in plain arithmetic so it behaves
+          // identically on every engine.
+          //
+          // A first version of this re-asserted that position until it held
+          // for two consecutive frames, then stopped. That still failed
+          // intermittently (chromium, prefers-reduced-motion, /beliefs --
+          // 3 of 16 runs landed at 82.9375px every time, a first-pass jump
+          // Chromium can still make on its OWN schedule, sometimes arriving
+          // AFTER our two stable frames had already told us to stop
+          // watching). Two frames of quiet is not proof the browser is done
+          // -- exactly the lesson from the settle gate this replaced -- so
+          // there is no early exit here at all: correction keeps running
+          // every animation frame for the full 1500ms, and only a real
+          // input gesture (the same wheel/touch signal `isUserScroll` uses
+          // above) or the deadline stops it, so a visitor who starts
+          // scrolling themselves is never fought for control of the page.
+          const hashId = location.hash ? decodeURIComponent(location.hash.slice(1)) : '';
+          const hashTarget = hashId ? document.getElementById(hashId) : null;
+          if (hashTarget) {
+            const land = () => {
+              const offset = parseFloat(getComputedStyle(hashTarget).scrollMarginTop) || 0;
+              const y = window.scrollY + hashTarget.getBoundingClientRect().top - offset;
+              window.scrollTo(0, Math.max(0, y));
+              // Keep the hide/show heuristic's own tracking in sync so a
+              // real scroll right after we finish reads its delta from
+              // where we actually left the page, not from before we moved
+              // it (that delta would otherwise look like a huge, and
+              // entirely real, scroll-down).
+              lastY = window.scrollY;
+            };
+            land();
+
+            const deadline = performance.now() + 1500;
+
+            const keepLanding = () => {
+              const now = performance.now();
+              if (now - lastGestureAt <= GESTURE_WINDOW_MS) {
+                // A visitor started scrolling for real during the landing
+                // window -- hand control over immediately rather than
+                // yanking the page back to the anchor underneath them.
+                return;
+              }
+              const offset = parseFloat(getComputedStyle(hashTarget).scrollMarginTop) || 0;
+              const top = hashTarget.getBoundingClientRect().top;
+              if (Math.abs(top - offset) > 2) land();
+              if (now < deadline) {
+                requestAnimationFrame(keepLanding);
+              }
+            };
+            requestAnimationFrame(keepLanding);
+          }
         }
       }
 
