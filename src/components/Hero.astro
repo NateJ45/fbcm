@@ -156,6 +156,33 @@ const effectiveImages = heroImageList.length > 0
   : (backgroundImage?.asset ? [backgroundImage] : []);
 const hasImage = effectiveImages.length > 0;
 
+// SPLIT-LAYOUT FRAME CROP (2026-09-20, final review of plan 2b).
+//
+// The split hero's frame is `object-cover` inside a tall column, so the browser
+// crops the photograph. Its default is object-position: 50% 50%, dead centre,
+// which on a group photograph taken from adult eye height takes the crop
+// through everyone's faces: on /visit the children in the arch frame lost the
+// tops of their heads.
+//
+// Two rules, in order.
+//   1. An editor's HOTSPOT wins. Sanity stores it as fractions of the image's
+//      width and height, which is exactly what object-position takes as
+//      percentages, so the point the editor picked in the Studio is the point
+//      that stays in frame at every viewport.
+//   2. With no hotspot, the default is the TOP of the image rather than its
+//      middle. Faces sit above centre in almost every photograph a church
+//      takes, and a top crop keeps them whole. It is a better default, not a
+//      substitute for the hotspot.
+//
+// Only the split layout does this. The full-bleed hero is a background behind
+// text and is handled by HeroBackground.astro.
+const splitFrame = effectiveImages[0];
+const splitHotspot = splitFrame?.hotspot;
+const splitObjectPosition =
+  typeof splitHotspot?.x === 'number' && typeof splitHotspot?.y === 'number'
+    ? `${(splitHotspot.x * 100).toFixed(2)}% ${(splitHotspot.y * 100).toFixed(2)}%`
+    : '50% 0%';
+
 // "tall" (homepage) fills the screen below the sticky header on first load.
 // The exact fill height comes from the .hero-fill class plus the measured
 // --header-h variable (see the inline script and scoped <style> below).
@@ -336,6 +363,7 @@ const wrapperHeight =
           fetchpriority="high"
           quality={75}
           class="h-full min-h-[16rem] w-full object-cover"
+          style={`object-position: ${splitObjectPosition};`}
         />
       </div>
     </div>

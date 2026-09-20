@@ -487,14 +487,20 @@ export async function getJournalEntryBySlug(slug: string) {
           ...,
           images[]${IMAGE_PROJECTION}
         }
-      },
-      // Explicit relatedPosts if set; otherwise auto-pick 3 most recent in the
-      // same primary category, excluding this post itself.
-      "relatedPosts": coalesce(
-        relatedPosts[]->${JOURNAL_CARD_PROJECTION},
-        *[_type == "journalEntry" && _id != ^._id && count(categories[@._ref in ^.^.categories[]._ref]) > 0]
-          | order(publishedAt desc)[0..2] ${JOURNAL_CARD_PROJECTION}
-      )
+      }
+      // NO relatedPosts HERE, deliberately (2026-09-20). This projection used
+      // to coalesce the editor's explicit relatedPosts with an auto-pick of the
+      // three most recent posts sharing a category: a whole second GROQ
+      // sub-query and a second card projection, on every one of 142 post
+      // builds, whose result nothing read. /post/[slug].astro draws its
+      // "related" band from seriesByTag() over the entries it already has
+      // (src/lib/blog-derive.ts), which is derived rather than stored and is
+      // what CLAUDE.md rule 15 asks for.
+      //
+      // The relatedPosts FIELD stays on the journalEntry schema. No entry sets
+      // it (checked live: 0 of 142), so nothing is orphaned, and removing a
+      // schema field is the change that puts the Studio's "Remove field" button
+      // in front of an editor (rule 1). Dropping the read is the whole fix.
     }`,
     { slug },
     null,

@@ -2,6 +2,7 @@
 // Page-builder block: a centered pull quote. Surface comes from
 // SectionRenderer. Safe to edit by hand.
 import { surfaceClass } from '@/lib/surfaces';
+import { splitStega } from '@/lib/preview-stega';
 
 interface Props {
   quote?: string;
@@ -12,6 +13,32 @@ interface Props {
 
 const { quote, attribution, detail, surface = 'background' } = Astro.props as Props;
 const bg = surfaceClass(surface);
+
+// LONG QUOTES STEP DOWN ONE SIZE.
+//
+// The block was drawn for a pull quote of a dozen words. The wedding page's
+// testimonial is 90, and at the display size that is thirteen lines of italic
+// centred type, which stops reading as an emphasis and starts reading as a
+// page of body copy that has lost its measure. Over roughly forty words the
+// type drops one step (h4/h3 instead of h3/h2) and the line height opens up,
+// which is enough to bring that quote back to eight lines without touching the
+// short ones.
+//
+// MEASURE THE CLEANED STRING, NEVER THE STEGA-ENCODED ONE (CLAUDE.md, the
+// preview section). Stega writes its payload in U+200B/C/D and U+FEFF, and
+// U+FEFF matches \s in a JavaScript regex, so splitting an encoded headline on
+// whitespace shatters it into dozens of fake words. splitStega() returns the
+// text with the payload removed, which is the only thing safe to count. The
+// visible string is untouched: only the CLASS depends on this.
+const LONG_QUOTE_WORDS = 40;
+const quoteWordCount = splitStega(quote ?? '')
+  .cleaned.trim()
+  .split(/\s+/)
+  .filter(Boolean).length;
+const isLongQuote = quoteWordCount > LONG_QUOTE_WORDS;
+const quoteTypeClass = isLongQuote
+  ? 'text-h4 leading-relaxed md:text-h3'
+  : 'text-h3 leading-snug md:text-h2';
 ---
 
 {
@@ -24,7 +51,12 @@ const bg = surfaceClass(surface);
         >
           ✺
         </span>
-        <blockquote class="mx-auto mt-m max-w-3xl font-display text-h3 leading-snug text-foreground italic md:text-h2">
+        <blockquote
+          class:list={[
+            'mx-auto mt-m max-w-3xl font-display text-foreground italic',
+            quoteTypeClass,
+          ]}
+        >
           {quote}
         </blockquote>
         {(attribution || detail) && (
