@@ -1,0 +1,95 @@
+{
+  "_createdAt": "2026-09-18T23:28:59Z",
+  "_id": "staff-cynthia-smith",
+  "_rev": "F5Duw02wR0YDcoTNSZm8WO",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T22:20:07Z",
+  "bio": [
+    {
+      "_key": "k18",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k19",
+          "_type": "span",
+          "marks": [],
+          "text": "A native of Tennessee, Cynthia L. Smith holds a Bachelor of Music in Vocal/General Music Education from Tennessee Tech University. Her Master of Music is in Performance from Western Carolina University in North Carolina. Cynthia earned her Doctor of Arts degree in Music Performance with a secondary in Music History and Musicology from Ball State University here in Muncie."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k20",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k21",
+          "_type": "span",
+          "marks": [],
+          "text": "Currently, Cynthia teaches as Assistant Teaching Professor of Music (Voice) at Ball State. Before 2021, she taught Western Music at KM Music Conservatory in Chennai, India. Prior to living in India, Cynthia was a researcher in Basel, Switzerland. She also taught K-12 music in North Carolina for several years."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k22",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k23",
+          "_type": "span",
+          "marks": [],
+          "text": "Cynthia has enjoyed over 20 years of marriage to Aaron Smith. They have two young children, Elinore and Adrian."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k24",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k25",
+          "_type": "span",
+          "marks": [],
+          "text": "In her free time, Cynthia is a tea connoisseur, book aficionado, and avid gardener. One of Cynthia’s favorite passages of Scripture is from Psalms."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k26",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k27",
+          "_type": "span",
+          "marks": [],
+          "text": "“Come, let us sing for joy to the Lord; let us shout aloud to the Rock of our salvation. Let us come before him with thanksgiving and extol him with music and song.” - Psalms 95:1-2 (NIV)"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "cynthia@fbcmuncie.org",
+  "group": "pastors",
+  "name": "Cynthia Smith",
+  "order": 40,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-cd6ae8bd9185ea8387b580821dc4cdd0263c1d4e-5000x4000-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Worship Arts Director",
+  "slug": {
+    "_type": "slug",
+    "current": "cynthia-smith"
+  }
+}

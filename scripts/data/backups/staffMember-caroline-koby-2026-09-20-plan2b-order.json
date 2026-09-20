@@ -1,0 +1,80 @@
+{
+  "_createdAt": "2026-09-18T23:28:49Z",
+  "_id": "staff-caroline-koby",
+  "_rev": "F5Duw02wR0YDcoTNSZm8WO",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T22:20:07Z",
+  "bio": [
+    {
+      "_key": "k0",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k1",
+          "_type": "span",
+          "marks": [],
+          "text": "Caroline is an intern in the areas of Children and Worship Ministry."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k2",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k3",
+          "_type": "span",
+          "marks": [],
+          "text": "She is a current Ball State University student studying in the area of Music Education."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k4",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k5",
+          "_type": "span",
+          "marks": [],
+          "text": "Caroline has specific learning goals in the areas of children and worship ministry and assists and leads in these areas as part of her internship."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k6",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k7",
+          "_type": "span",
+          "marks": [],
+          "text": "For inquiries about the internship program, please message worship [at] fbcmuncie [dot] org."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "group": "support",
+  "name": "Caroline Koby",
+  "order": 20,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-6073d896916b1f67d9c4f767a06bd7f5fadbe855-5000x4000-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Worship / Children's Ministry Intern",
+  "slug": {
+    "_type": "slug",
+    "current": "caroline-koby"
+  }
+}

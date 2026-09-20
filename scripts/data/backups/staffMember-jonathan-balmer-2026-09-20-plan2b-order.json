@@ -1,0 +1,151 @@
+{
+  "_createdAt": "2026-09-18T23:29:27Z",
+  "_id": "staff-jonathan-balmer",
+  "_rev": "F5Duw02wR0YDcoTNSZm8WO",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T22:20:07Z",
+  "bio": [
+    {
+      "_key": "k60",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k61",
+          "_type": "span",
+          "marks": [],
+          "text": "Jonathan is one of the Co-Pastors of First Baptist, alongside his wife Kendall Ellis. His Bachelor of Arts degree in English and History is from Georgetown College in Kentucky. Jonathan received his Master of Divinity from Truett Theological Seminary at Baylor University in 2020."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k62",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k63",
+          "_type": "span",
+          "marks": [],
+          "text": "Before serving as a pastor, Jonathan worked as a youth minister, taught high school English in the United States and middle school English as a Foreign Language in South Korea."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k64",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k65",
+          "_type": "span",
+          "marks": [],
+          "text": "Jonathan and Kendall have one daughter (born 2023), named Moira Jane."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k66",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k67",
+          "_type": "span",
+          "marks": [],
+          "text": "In his free time, Jonathan enjoys video games, podcasts, the Cincinnati Reds, and going to the movies. Jonathan’s favorite verse in Scripture are these words of Jesus in the Gospel of John."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k68",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k69",
+          "_type": "span",
+          "marks": [],
+          "text": "“I have told you these things, so that in me you may have peace. In this world you will have trouble. But take heart! I have overcome the world.” - John 16:33 (NIV)"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k70",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k71",
+          "_type": "span",
+          "marks": [],
+          "text": "Email: jonathan@fbcmuncie.org"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k72",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k73",
+          "_type": "span",
+          "marks": [],
+          "text": "Instagram: https://www.instagram.com/jonathancbalmer"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k74",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k75",
+          "_type": "span",
+          "marks": [],
+          "text": "Facebook: https://www.facebook.com/jonathan.balmer"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k76",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k77",
+          "_type": "span",
+          "marks": [],
+          "text": "Threads: https://www.threads.net/@jonathancbalmer"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "jonathan@fbcmuncie.org",
+  "group": "pastors",
+  "name": "Jonathan Balmer",
+  "order": 100,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-068ccf7e85d0d6e082d3c8f32cfa0c94fe8eecc4-3354x5030-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Co-Pastor",
+  "slug": {
+    "_type": "slug",
+    "current": "jonathan-balmer"
+  }
+}

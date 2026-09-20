@@ -1,0 +1,95 @@
+{
+  "_createdAt": "2026-09-18T23:28:54Z",
+  "_id": "staff-cheryl-flaherty",
+  "_rev": "F5Duw02wR0YDcoTNSZm8WO",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T22:20:07Z",
+  "bio": [
+    {
+      "_key": "k8",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k9",
+          "_type": "span",
+          "marks": [],
+          "text": "When did you become a member?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k10",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k11",
+          "_type": "span",
+          "marks": [],
+          "text": "What do you love about FBCM?:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k12",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k13",
+          "_type": "span",
+          "marks": [],
+          "text": "Hobbies:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k14",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k15",
+          "_type": "span",
+          "marks": [],
+          "text": "Something we should know:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k16",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k17",
+          "_type": "span",
+          "marks": [],
+          "text": "Favorite Scripture:"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "adult@fbcmuncie.org",
+  "group": "coordination",
+  "name": "Cheryl Flaherty",
+  "order": 30,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-f826eda6acdfa96e49a8969214a9a34f8bf410c0-3803x5720-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Adult Coordinator",
+  "slug": {
+    "_type": "slug",
+    "current": "cheryl-flaherty"
+  }
+}

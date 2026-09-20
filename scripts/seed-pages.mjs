@@ -38,6 +38,10 @@
 //     slug: 'visit',
 //     async build(ctx) { return { title, slug, pageBuilder: [...], ... } },
 //     newCopy: ['...'],              // every sentence that did not exist on Wix
+//     edits: ['...'],                // every clause that glosses or replaces a
+//                                    // word of the church's own text, and every
+//                                    // cut worth naming. NOT new sentences: the
+//                                    // words are still theirs, changed in place.
 //     photoConsent: ['hero-children'],  // page-images manifest keys of photos
 //                                    // with identifiable children in them
 //   };
@@ -322,6 +326,17 @@ function writeApprovalNote(mods, manifest) {
     if (newCopy.length === 0)
       lines.push('- (none: every sentence on this page is the church’s own)');
     else for (const s of newCopy) lines.push(`- ${s}`);
+    lines.push('');
+    // Edits are a SECOND list, after the new sentences, because they ask the
+    // church a different question. A new sentence asks "is this true and do you
+    // want it?"; an edit asks "we changed a word of yours, is that still what
+    // you meant?" Ruling P16: a page that glosses its own jargon, cuts a term,
+    // or de-genders a pledge has to say so here or the change is invisible.
+    lines.push('### Edits to the church’s own text');
+    lines.push('');
+    const edits = mod.edits ?? [];
+    if (edits.length === 0) lines.push('- (none: their text is cut, never reworded)');
+    else for (const e of edits) lines.push(`- ${e}`);
     lines.push('');
     lines.push('### Photos of children');
     lines.push('');

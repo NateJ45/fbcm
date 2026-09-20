@@ -14,6 +14,10 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - The tower, the oak pews and the stained glass have been in daily use for more than a century. (heritage band)
 - Gifts pay the staff, keep the building open and fund the work this church does in Muncie. (give band)
 
+### Edits to the church’s own text
+
+- (none: their text is cut, never reworded)
+
 ### Photos of children
 
 - hero-children: Children gathered under the sanctuary arch
@@ -26,6 +30,10 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Nursery care is in room 104 and the family room is 105. (timeline, the 10:45 row: the spec’s ruling on the two rooms, and on the church’s confirm list)
 - First Baptist Church Muncie gathers for worship at 10:45 am every Sunday at 309 East Adams Street in downtown Muncie. (search description)
 
+### Edits to the church’s own text
+
+- (none: their text is cut, never reworded)
+
 ### Photos of children
 
 - visit-children: Two girls in front of a stained glass window
@@ -36,6 +44,12 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### New sentences
 
 - Where to park, when to arrive, and what happens once you are inside. (link cards, Plan a visit)
+
+### Edits to the church’s own text
+
+- growth track: "We offer a growth track, a step by step path into the life of this church, to help us all..." (Our goals, The Way. The inserted clause explains the church’s own term, which the Wix site never does.)
+- deacon: "...connected with a deacon, a church member chosen to care for others, who offers prayer and support." (Our goals, The Way.)
+- Cut: the sentence naming Global Servants ("Kingdom Citizenship...") falls outside the Witness pillar and is not on the page.
 
 ### Photos of children
 

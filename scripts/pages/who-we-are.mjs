@@ -65,6 +65,17 @@ export default {
     'Where to park, when to arrive, and what happens once you are inside. (link cards, Plan a visit)',
   ],
 
+  // Edits to the church's own sentences (ruling P16): a clause inserted, a word
+  // replaced, or a term cut. The words are still theirs, so these are not
+  // `newCopy`; they go in their own list in the approval note, because they ask
+  // the church a different question. gloss() below makes the first two and
+  // throws if the sentence it is glossing has moved.
+  edits: [
+    'growth track: "We offer a growth track, a step by step path into the life of this church, to help us all..." (Our goals, The Way. The inserted clause explains the church’s own term, which the Wix site never does.)',
+    'deacon: "...connected with a deacon, a church member chosen to care for others, who offers prayer and support." (Our goals, The Way.)',
+    'Cut: the sentence naming Global Servants ("Kingdom Citizenship...") falls outside the Witness pillar and is not on the page.',
+  ],
+
   // No band on this page shows an identifiable child. The congregation photo
   // is adults, from behind, mid-hymn.
   photoConsent: [],

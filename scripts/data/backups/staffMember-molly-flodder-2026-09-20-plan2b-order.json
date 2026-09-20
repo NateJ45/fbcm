@@ -1,0 +1,95 @@
+{
+  "_createdAt": "2026-09-18T23:29:42Z",
+  "_id": "staff-molly-flodder",
+  "_rev": "F5Duw02wR0YDcoTNSZm8WO",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T22:20:07Z",
+  "bio": [
+    {
+      "_key": "k114",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k115",
+          "_type": "span",
+          "marks": [],
+          "text": "When did you become a member?: 1978"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k116",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k117",
+          "_type": "span",
+          "marks": [],
+          "text": "What do you love about FBCM?: the opportunity to love and be loved by other church families and the urgency many people have to reach out to others in need both physically and spiritually."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k118",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k119",
+          "_type": "span",
+          "marks": [],
+          "text": "Hobbies: boating, traveling, reading, interior decorating"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k120",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k121",
+          "_type": "span",
+          "marks": [],
+          "text": "Something we should know: I edit The Visitor, our quarterly feature publication, and share playing the organ with another member. I am a cancer survivor and co-direct the community choir, \"Survivor Voices.\""
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "k122",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k123",
+          "_type": "span",
+          "marks": [],
+          "text": "Favorite Scripture: I can do all this through him [Christ] who gives me strength. -Philippians 4:13"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "worship@fbcmuncie.org",
+  "group": "coordination",
+  "name": "Molly Flodder",
+  "order": 130,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-e82cb035beefbd37fd766d1ba64a8f17dfb93050-4000x6016-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Worship Coordinator",
+  "slug": {
+    "_type": "slug",
+    "current": "molly-flodder"
+  }
+}

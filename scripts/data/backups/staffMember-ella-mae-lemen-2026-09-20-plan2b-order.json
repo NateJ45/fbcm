@@ -1,0 +1,39 @@
+{
+  "_createdAt": "2026-09-18T23:29:14Z",
+  "_id": "staff-ella-mae-lemen",
+  "_rev": "F5Duw02wR0YDcoTNSZm8WO",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T22:20:07Z",
+  "bio": [
+    {
+      "_key": "k48",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k49",
+          "_type": "span",
+          "marks": [],
+          "text": "Ella Mae is a long-time member of First Baptist Church who also serves as our Wedding Coordinator. She is the appropriate person to contact if you are interested in celebrating a Christian wedding ceremony at First Baptist. For more information about wedding ceremonies at First Baptist, please see our Wedding page for more details."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "email": "wedding@fbcmuncie.org",
+  "group": "support",
+  "name": "Ella Mae Lemen",
+  "order": 70,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-753f6f9f5e9cd4ff8ba89578241df26c4c530e20-3632x5448-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Wedding Coordinator",
+  "slug": {
+    "_type": "slug",
+    "current": "ella-mae-lemen"
+  }
+}

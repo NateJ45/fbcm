@@ -1,0 +1,38 @@
+{
+  "_createdAt": "2026-09-19T22:20:07Z",
+  "_id": "staff-julie-kirklin",
+  "_rev": "F5Duw02wR0YDcoTNSZm8WO",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T22:20:07Z",
+  "bio": [
+    {
+      "_key": "k0",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "k1",
+          "_type": "span",
+          "marks": [],
+          "text": "The pianist/ organist helps lead us in worship. She is also often available for funerals and weddings. Julie has been a longtime member of FBCM."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "group": "support",
+  "name": "Julie Kirklin",
+  "order": 71,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-0f9f4ff21281a6e0eefe5331992a44c659451acc-4000x6016-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Pianist / Organist",
+  "slug": {
+    "_type": "slug",
+    "current": "julie-kirklin"
+  }
+}

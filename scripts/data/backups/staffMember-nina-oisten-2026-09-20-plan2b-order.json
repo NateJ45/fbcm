@@ -1,0 +1,23 @@
+{
+  "_createdAt": "2026-09-18T23:29:45Z",
+  "_id": "staff-nina-oisten",
+  "_rev": "F5Duw02wR0YDcoTNSZm8WO",
+  "_type": "staffMember",
+  "_updatedAt": "2026-09-19T22:20:07Z",
+  "email": "clerk@fbcmuncie.org",
+  "group": "coordination",
+  "name": "Nina Oisten",
+  "order": 140,
+  "photo": {
+    "_type": "image",
+    "asset": {
+      "_ref": "image-7fa4f643518666eca84700405582d08fdca93a23-588x600-jpg",
+      "_type": "reference"
+    }
+  },
+  "role": "Clerk",
+  "slug": {
+    "_type": "slug",
+    "current": "nina-oisten"
+  }
+}
