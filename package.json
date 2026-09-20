@@ -22,6 +22,8 @@
     "seed": "node scripts/seed-core.mjs",
     "seed-pages": "node scripts/seed-pages.mjs",
     "parity": "node scripts/page-parity.mjs",
+    "parity:capture": "node scripts/page-parity.mjs capture --exclude \"blog/page/**,blog/tag/**,blog/category/**/page/**\"",
+    "parity:compare": "node scripts/page-parity.mjs compare --exclude \"blog/page/**,blog/tag/**,blog/category/**/page/**\"",
     "cutover": "node scripts/cutover.mjs",
     "sync-check": "node scripts/sync-check.mjs",
     "free-dist": "node scripts/free-dist.mjs",
@@ -42,7 +44,8 @@
     "check:links": "linkinator ./dist/client --recurse --skip \"^https?://(?!(localhost|127[.]0[.]0[.]1)[:/])\" --skip \"/studio\" --skip \"/preview\" --skip \"/api/\"",
     "favicon": "node scripts/generate-favicons.mjs",
     "scaffold": "node scripts/scaffold.mjs",
-    "audit:studio": "node scripts/audit-studio.mjs"
+    "audit:studio": "node scripts/audit-studio.mjs",
+    "verify:redirects": "node scripts/verify-redirects.mjs --follow-script"
   },
   "dependencies": {
     "@astrojs/cloudflare": "14.2.4",

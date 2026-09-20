@@ -415,7 +415,7 @@ docs.push({
 // scaffold: journal
 // ── 16. journalEntry docs (2 items) ──────────────────────────────────────
 // Required fields: title, slug, excerpt, publishedAt, body (min 1 block)
-// Optional: coverImage, categories (refs), author, featured, updatedAt,
+// Optional: coverImage, categories (refs), author, updatedAt,
 //           seoTitle, seoDescription, relatedPosts
 
 docs.push({
@@ -427,7 +427,6 @@ docs.push({
     'This is a placeholder post. Replace it with your first real journal entry once the site is live.',
   author: 'Author name (replace me)',
   publishedAt: '2025-06-01T12:00:00.000Z',
-  featured: true,
   categories: [{ _type: 'reference', _key: key(), _ref: 'journal-category-two' }],
   body: [
     pt('This is a placeholder journal entry. Replace this content with your first real post.'),
@@ -453,7 +452,6 @@ docs.push({
     'Replace this with a real summary. The excerpt is what shows on the index page and in search results, so write it for a stranger.',
   author: 'Author name (replace me)',
   publishedAt: '2025-05-15T12:00:00.000Z',
-  featured: false,
   categories: [{ _type: 'reference', _key: key(), _ref: 'journal-category-two' }],
   body: [
     pt(

@@ -1183,7 +1183,6 @@ export type JournalEntry = {
   author?: string;
   publishedAt?: string;
   updatedAt?: string;
-  featured?: boolean;
   body?: Array<
     | {
         children?: Array<{

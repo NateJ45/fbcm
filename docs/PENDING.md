@@ -113,14 +113,91 @@ local gate today; `.github/workflows/ci.yml` carries the reason inline. To close
 capture on CI once, diff against the committed baselines, and wire the step in if they
 match.
 
-**The committed baselines are stale as of 2026-09-19** (plan 2b task 1). Every
-page-builder section now renders inside a `<div id="...">` so a link can jump to it
-(`src/lib/anchor.ts`), where the live render used to emit no wrapper at all. That is a
-deliberate, site-wide HTML change, so `npm run parity compare` reports a diff on every
-section-driven page until somebody runs `npm run parity capture` and commits the new
-baselines. Task 1 deliberately did not touch `scripts/.parity/`: recapturing mid-plan
-would throw away the one signal that says whether a LATER page task changed a render it
-did not mean to. Recapture once plan 2b's pages are in.
+**Recaptured 2026-09-20** (plan 2c task 7), once the eleven pages and Task 6's
+Lighthouse fixes had landed. `npm run parity:capture` / `npm run parity:compare` (both
+`scripts/page-parity.mjs capture|compare --exclude "blog/page/**,blog/tag/**,blog/category/**/page/**"`)
+now hold 162 baselines in `scripts/.parity/` (12 MB), one per template plus every
+distinct post and category page, with the generated pagination archive (`blog/page/N`,
+`blog/tag/*`, `blog/category/*/page/N`) excluded so a real diff cannot hide in hundreds
+of copies of the same DIFF line. `npm run parity compare` (or `npm run parity:compare`)
+is 162/162 PASS as of this recapture; it is **no longer intentionally red**. The
+`--exclude` flag and its `PARITY_EXCLUDE` env twin are general additions to
+`scripts/page-parity.mjs` (a PORTABLE file), documented in its header comment, with the
+glob matcher split into `scripts/lib/parity-glob.mjs` and unit-tested. **Upstream
+finding for PORTS.md:** the exclusion mechanism is a candidate port for any family
+member whose content grows a paginated archive (presacademy's events, for one) --
+capturing hundreds of near-identical archive pages was already a problem here at 142
+posts and five categories, and it only gets worse with more content.
+
+**Fixed 2026-09-20, plan 2c fix wave.** The baseline had fed Tailwind, so one recapture
+invalidated itself: `npm run parity:compare` on the task-8 tree reported **1/162 PASS**,
+and the only diff on every failing page was the inlined stylesheet's own byte count and
+hash. The cause was a loop: `scripts/.parity/*.html` is COMMITTED, so it is not
+gitignored, so Tailwind v4's automatic source detection scanned those 162 files and
+generated utilities for every class it found in them, feeding the NEXT build's
+stylesheet. Two stale utility classes existed in the pre-plan-2a baselines, existed in no
+file under `src/` at all, and generated about 100 bytes of dead CSS rules. Task 8 closed
+the loop on itself by naming those two classes in this very entry, since Tailwind scans
+Markdown too, and the compare went green for the wrong reason: a real measurement (the
+rules really were back in `dist/client/404.html`) that proved nothing about the render.
+
+The fix: `@source not "../../scripts/.parity";` right after the Tailwind import in
+`src/styles/globals.css`, excluding the baselines from Tailwind's source scan. Verified
+with a fixpoint measurement (largest inline `<style>` block on `/`): a build made right
+after adding the exclusion (baselines on disk still the pre-fix set, and this entry
+still naming the two classes) measured **125,406 bytes**; `npm run parity:capture` was
+then run to recapture 162 baselines under the exclusion, and a second build measured the
+identical **125,406 bytes**. Because a capture made under the exclusion cannot feed
+classes back into the scan via `scripts/.parity`, that identical number is the proof
+that specific loop is cut. `npm run parity:compare` was **162/162 PASS** on that
+recaptured set.
+
+That measurement still included the ~100 bytes from this entry's own prose, since
+`@source not` only excludes `scripts/.parity` and Tailwind still scans Markdown
+everywhere else. Removing the two class names from this entry and from the upstream
+card (below) dropped the sheet from 125,406 to **125,305 bytes** on the next build, and
+broke `npm run parity:compare` down to 1/162 PASS against the baselines captured a
+moment earlier, which still carried the old, larger stylesheet. A second recapture
+under the doc-fixed tree, followed by a rebuild, reached the true fixpoint: **125,305
+bytes** on two consecutive builds and `npm run parity:compare` **162/162 PASS**. The
+lesson the first pass missed: cutting the `scripts/.parity` leak does not by itself make
+a docs edit render-neutral when the docs edit is itself a Tailwind source; anywhere the
+class names are typed in prose has to be fixed and captured together, not treated as a
+free rewording after the "real" fix.
+
+**C4b, same session: the real scope was every tracked Markdown file, not just two class
+names in two files.** `scripts/.parity` and this entry's own prose were never the whole
+leak. `CLAUDE.md`, `PORTS.md`, `OPERATIONS.md`, `README.md` and everything under `docs/`
+are all tracked, non-gitignored, and full of utility-class names used as documentation
+examples (heading grammar, band colours, accent classes), because that is what a
+technical doc about a Tailwind codebase looks like. Every one of those names is a
+Tailwind source. Added two more exclusions next to the existing one in
+`src/styles/globals.css`: `@source not "../../docs";` for the whole docs tree, and
+`@source not "../../*.md";` for the four root Markdown files (`CLAUDE.md`, `PORTS.md`,
+`OPERATIONS.md`, `README.md`). Tailwind v4.3 (`tailwindcss` 4.3.3 here) accepts a glob in
+`@source not`: the build succeeded and the byte count moved, which is the proof it took
+effect, not just parsed. `.superpowers/` was deliberately left out of the exclusion list:
+it is already fully gitignored (its only contents live under `.superpowers/sdd/`, which
+carries its own `*` `.gitignore`), so Tailwind's default gitignore-based skipping already
+covers it and a redundant `@source not` would just be dead weight.
+
+Measured the same way: a build right after adding the two new exclusions (still against
+the doc-fixed 125,305-byte baseline set) dropped the sheet to **119,411 bytes**, a real
+5,894-byte cut, confirmed by diffing the raw CSS before and after and finding whole rule
+sets gone that exist nowhere under `src/`. `npm run parity:capture` recaptured all 162
+baselines under the new exclusions, and a second build measured the identical **119,411
+bytes**. `npm run parity:compare` is **162/162 PASS** on that set. Three fixpoints now,
+each one narrower than the last: `scripts/.parity` alone (125,406B), plus the two named
+classes out of prose (125,305B), plus the rest of the repo's own Markdown (119,411B).
+The pattern is the same each time: Tailwind's default scan is the whole non-gitignored
+tree, so anything checked in that names a utility class is a source, whether it is a
+rendered-HTML baseline, a paragraph explaining a fix, or a doc file's normal job of
+describing the design system in its own vocabulary.
+
+This is general, not FBCM's: every repo in the family commits `scripts/.parity`, ships a
+`CLAUDE.md` and `docs/` full of the same kind of class-naming prose, and
+`page-parity.mjs` is the library of record. Written up as card 6a in
+`docs/upstream/2026-09-20-starter-findings.md`.
 
 ### 3. `@astrojs/mdx` is installed but unused
 
@@ -317,10 +394,23 @@ leaves open, with what closes each.
   its expiry date is the thing to write down.
 - **A Cloudflare Web Analytics token** for the workers.dev host, pasted into `.env`
   as `PUBLIC_CF_ANALYTICS_TOKEN`. The API connector lacks the RUM scope. Nothing
-  breaks without it; the site reports nothing.
-- **`SANITY_TOKEN` as a Worker secret** for `/preview/**`. Card 45 records that
-  `wrangler secret put` trips an agent permission gate. Preview fails closed with a
-  503 naming it, by design.
+  breaks without it; the site reports nothing. **Deadline: before the domain
+  moves.** A rebuild does not inherit the old site's tag, and the loss is
+  invisible for weeks. The same applies to `PUBLIC_GA_ID` if the church had
+  Google Analytics on the Wix site. Setting the analytics token also flips the
+  privacy page's "this site runs no analytics" paragraph to the cookieless
+  counting sentence, so it is better set before the church reads that page.
+- ~~**`SANITY_TOKEN` as a Worker secret** for `/preview/**`.~~ Done 2026-09-20 (plan
+  2c task 3, by the controller): `wrangler secret put SANITY_TOKEN` against the
+  Worker `fbcm-site`, token piped from `.env` and never printed, and
+  `wrangler secret list` shows it. The deployed origin was already on the Sanity
+  CORS list. `/preview/visit` answers 200 instead of the 503 fail-closed, and the
+  cookie gate was checked rather than assumed: without the perspective cookie
+  `getPreviewClient(false)` uses perspective `published` with stega off
+  (`src/lib/cms-preview.ts:162-164`, read at `src/pages/preview/[...slug].astro:55`),
+  so an anonymous 200 carries published content only. **What is left is Nathan's
+  sign-in check** of the deployed Studio and its Preview tool, which needs a human
+  with a Sanity login and cannot be done from a branch.
 - ~~The tagline is the studio's wording, not the church's own.~~ Done
   2026-09-19 (Task 9 fix 1). `siteSettings.tagline` now reads "We're a
   Spirit-led people gathered to join Christ's presence in our community.",
@@ -431,15 +521,82 @@ now ties the schema max and the slice with a drift test.
 
 ---
 
+## Plan 2c landed (2026-09-20)
+
+Verification. Nothing on the site changed in plan 2c except one config line and
+one runtime guard; the rest of the work was proving what plan 2b built, against
+the deployed site rather than against `dist/`. What it closed is struck through
+in the sections above. What it leaves open, and who owns each:
+
+- **Task 16, `@portabletext/block-tools`, still waits on Nathan's approval.**
+  It is the one new dependency in the whole build, and until it lands all 142
+  post bodies are paragraphs only: headings, links, lists, blockquotes and
+  inline images are dropped by `bodyFromCapture()`. The captured `bodyHtml` in
+  `scripts/data/posts/*.json` is the source when it runs. Its own branch, with
+  the Task 16 brief.
+- **The hero-photo delivery decision is Nathan's, and it is the last thing
+  holding mobile performance down.** Mobile is 93 to 95 after Task 6's fix
+  (95 on `/visit`, the target); home mobile LCP is about 2.8 s local and
+  2.97 s on production against a 2.0 s target. Roughly 1.2 s of every mobile
+  LCP is transfer time for one photograph from `cdn.sanity.io`. Three options:
+  accept it, self-host the hero images at build time so they share the
+  document's connection, or put Cloudflare Images in front. This is a
+  build-pipeline change, not a tuning pass. Reasoning in
+  `docs/superpowers/notes/2026-09-20-lighthouse.md` section 6; also a `#nathan`
+  item in the vault.
+- **`PUBLIC_CF_ANALYTICS_TOKEN`, and `PUBLIC_GA_ID` if the church had GA, must
+  be set BEFORE the domain moves.** See "Waiting on a human" above.
+- **Search Console for the new host**, verified before the move, with the old
+  Wix property's numbers written down first so there is a before to compare
+  against.
+- **The church's photo day.** Four staff portraits are thumbnail-only (Jaden
+  Johnson, Andy Heimlich, Sally Butler, Nina Oisten) and `mapImage` on Contact
+  has no photograph at all.
+- **The church's confirm list**, nine items, in
+  `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md` and summarised
+  by name in `docs/superpowers/notes/2026-09-20-review-walkthrough.md`.
+- **Plan 3, the cutover.** The plan, the dry output of `scripts/cutover.mjs`,
+  the human prerequisites with an owner on each, and the after-the-move
+  verification are all in
+  `docs/superpowers/notes/2026-09-20-cutover-plan.md`. Two decisions in there
+  are worth pulling out because they bite on the morning: the script adds no
+  DNS records at all without `--zone-file`, which would take the church's mail
+  with it, and the script's step 5 asserts that www redirects to the apex while
+  `src/data/site.ts:26` and `astro.config.mjs:103` both make www canonical.
+  Reconcile them before `--write`.
+- **`npm run parity:compare` reports 162/162 PASS on this branch, but for the
+  wrong reason, and the harness needs a real fix.** `scripts/.parity/*.html` is
+  committed, so Tailwind scans it, so the baselines feed the next build's
+  stylesheet and a recapture invalidates itself. Full diagnosis, with the two
+  classes that prove it and the two-move fix in the order it has to happen, is
+  "Known gaps" item 2 above. Read it before trusting a green compare here.
+- **A production Lighthouse re-measure is owed once this branch merges and
+  deploys.** Everything in sections 4 and 6 of the Lighthouse note is the local
+  preview harness; section 7 names the six cells to re-run and the baseline to
+  compare them against.
+- **Recorded decision, not an open loop: every page now carries its own copy of
+  the CSS.** `astro.config.mjs` inlines the site stylesheet (about 22 KB
+  gzipped per page) so the first paint does not wait on a second round trip,
+  which bought a measured 150 to 220 ms of FCP. The cost is that the sheet is
+  no longer separately cacheable, so a reader moving between pages
+  re-downloads it, and with 142 posts that is the case that pays for it least.
+  Cold first paint from search is the number this site is judged on, so the
+  trade was taken deliberately. It is reversible in one line
+  (`build.inlineStylesheets: 'never'`), and the 131072-byte threshold that
+  keeps the Studio's 165 KB sheet external wants re-measuring after any
+  Tailwind or Sanity UI upgrade.
+
+Upstream findings from the whole of plan 2 are collected, card-shaped, in
+`docs/upstream/2026-09-20-starter-findings.md`. Nothing there is ported yet.
+
+---
+
 ## Plan 2b landed (2026-09-20)
 
 Eleven pages are live and composed from the page builder, every one of them
 seeded by an idempotent module under `scripts/pages/` and screenshotted in both
 themes at both viewports. What plan 2b deliberately leaves open:
 
-- `npm run parity compare` is still intentionally all-red: the baselines in
-  `scripts/.parity/` predate plan 2a's header and footer. Plan 2c recaptures
-  them once, after the pages stop moving. Do not recapture before then.
 - Task 16 (`@portabletext/block-tools`) is skipped, not done: Nathan never
   approved the new dependency. It would restore the headings, links, lists,
   blockquotes and inline images that `bodyFromCapture()` drops from all 142
@@ -450,9 +607,12 @@ themes at both viewports. What plan 2b deliberately leaves open:
   `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`, regenerated
   by the seeder on every run. The `#nathan` items are mirrored in the vault
   (`_vault/clients/fbcm.md`), which is where they get worked through.
-- `journalEntry.featured` is stored on all 142 posts and read by nothing: the
-  durable/preview split is derived from category instead. Retire the field with
-  a backup-then-delete script (CLAUDE.md rule 16), not a raw unset.
+- ~~`journalEntry.featured` is stored on all 142 posts and read by nothing.~~
+  Closed 2026-09-20 (plan 2c task 2). `scripts/retire-featured-flag.mjs` ran
+  dry first and found 0 of 142 live documents actually carrying the key, so
+  there was nothing to back up and nothing to delete; the field is gone from
+  the schema, the ordering, the badge, the projections, the blog-derive type
+  and the seed rows, and `npm run audit:studio` is clean.
 - `getJournalEntryBySlug` still fetches `relatedPosts`; nothing renders it. A
   dead read on every post page, safe to delete in the final wave.
 - Final-wave polish, all three cosmetic and none blocking: the anchor-under-
@@ -482,8 +642,10 @@ still open, all closing in plan 2b/2c:
 - `visual.yml`'s CI-stored `/styleguide` baseline is stale after Task 6's eight
   block fixtures; refresh it on CI with the workflow's own `update` input the
   next time it runs, not by regenerating `scripts/.parity` locally.
-- `public/favicon.svg` is still the starter's roundel, not the church's mark;
-  closes in plan 2c.
+- ~~`public/favicon.svg` is still the starter's roundel, not the church's mark.~~
+  Closed 2026-09-20 (plan 2c task 1): the icon set is the tower from the
+  church's own wordmark, on a navy plate, and `npm run favicon` regenerates
+  every size from that one SVG.
 - The `@portabletext/block-tools` dependency plan 2b needs for a real Portable
   Text converter is not installed yet; it is a new dependency and needs
   Nathan's approval first (CLAUDE.md: pause for confirmation before installing

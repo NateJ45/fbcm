@@ -23,7 +23,6 @@ interface Props {
     publishedAt?: string;
     coverImage?: any;
     categories?: Array<{ title?: string; slug?: { current?: string }; description?: string }>;
-    featured?: boolean;
   };
   featured?: boolean;
   /**
@@ -81,16 +80,6 @@ const titleClass = featured
       )
     }
     <div class="img-tint img-tint-light" aria-hidden="true"></div>
-    {
-      entry.featured && (
-        // Gold fill + navy text, not a navy fill: gold is a badge/fill colour
-        // in this design system, never text-on-paper (see the --color-gold
-        // comment in globals.css). 5.60:1, asserted in theme-tokens.test.ts.
-        <span class="absolute top-m left-m inline-flex items-center rounded-full bg-gold px-s py-1 text-[0.65rem] font-semibold tracking-[0.2em] text-primary uppercase">
-          ★ Featured
-        </span>
-      )
-    }
   </div>
   <div class:list={[featured ? 'p-section-md' : 'p-l']}>
     <div class="flex flex-wrap items-center gap-x-m gap-y-xs">

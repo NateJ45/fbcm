@@ -132,16 +132,6 @@ export const journalEntry = defineType({
         'Optional. Set this when you significantly revise a post so the BlogPosting JSON-LD shows the right date for SEO.',
       group: 'meta',
     }),
-    defineField({
-      name: 'featured',
-      title: 'Featured (pin to top)',
-      type: 'boolean',
-      description:
-        'If checked, this post appears first on the journal index regardless of publish date.',
-      group: 'meta',
-      initialValue: false,
-    }),
-
     // ---------- Content (the body) ----------
     defineField({
       name: 'body',
@@ -615,24 +605,21 @@ export const journalEntry = defineType({
     select: {
       title: 'title',
       publishedAt: 'publishedAt',
-      featured: 'featured',
       media: 'coverImage',
     },
-    prepare: ({ title, publishedAt, featured, media }) => ({
+    prepare: ({ title, publishedAt, media }) => ({
       title: title ?? 'Untitled post',
-      subtitle: `${featured ? '★ ' : ''}${publishedAt ? new Date(publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}`,
+      subtitle: publishedAt
+        ? new Date(publishedAt).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })
+        : '',
       media,
     }),
   },
   orderings: [
-    {
-      title: 'Newest first (with featured pinned)',
-      name: 'featuredThenDate',
-      by: [
-        { field: 'featured', direction: 'desc' },
-        { field: 'publishedAt', direction: 'desc' },
-      ],
-    },
     {
       title: 'Newest first',
       name: 'dateDesc',

@@ -487,11 +487,30 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           (header as any).__polishWired = true;
           let lastY = window.scrollY;
           let ticking = false;
+          // Task 4 (2026-09-20, plan 2c): a URL fragment (`#anchor`) makes the
+          // browser jump-scroll on load -- this script runs at the end of the
+          // body, BEFORE that jump happens, so lastY above is captured at 0 and
+          // the jump itself looks identical to a fast scroll-down to the
+          // heuristic below. Every retired-URL redirect that lands on an anchor
+          // (/beliefs#baptists, /visit#accessibility, ...) hid the header the
+          // instant it landed, which is backwards: the visitor never scrolled,
+          // they just arrived. `settled` blocks onScroll from acting until two
+          // animation frames after wiring, by which point any browser-native
+          // fragment jump has already happened, and lastY is re-baselined to
+          // wherever that landed -- so normal hide-on-scroll-down still works
+          // for scrolling the visitor actually does, starting from there.
+          let settled = false;
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              lastY = window.scrollY;
+              settled = true;
+            });
+          });
           const SHOW_THRESHOLD = 80; // small jitter buffer
           const HIDE_AFTER = 120;    // don't hide until past hero band
 
           const onScroll = () => {
-            if (ticking) return;
+            if (!settled || ticking) return;
             ticking = true;
             requestAnimationFrame(() => {
               const y = window.scrollY;

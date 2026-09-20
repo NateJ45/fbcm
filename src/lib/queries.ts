@@ -404,7 +404,6 @@ const JOURNAL_CARD_PROJECTION = `{
   slug,
   excerpt,
   publishedAt,
-  featured,
   tags,
   coverImage${IMAGE_PROJECTION},
   "categories": categories[]->{ _id, title, slug, description }
@@ -435,9 +434,12 @@ export async function getJournalPage() {
 
 // scaffold: journal
 export async function getAllJournalEntries() {
-  // Featured first, then newest first. Excerpt + cover only (no body).
+  // Newest first. Excerpt + cover only (no body). The durable/preview split
+  // that used to lean on a stored `featured` flag is derived from category
+  // at build time now (splitDurable in src/lib/blog-derive.ts, CLAUDE.md
+  // rule 15), so this query only needs to hand posts over in date order.
   return sanityFetch(
-    `*[_type == "journalEntry"] | order(featured desc, publishedAt desc) ${JOURNAL_CARD_PROJECTION}`,
+    `*[_type == "journalEntry"] | order(publishedAt desc) ${JOURNAL_CARD_PROJECTION}`,
     {},
     [],
   );
@@ -465,7 +467,7 @@ export async function getJournalEntryBySlug(slug: string) {
   // + sourceCard images + inline images all get the same treatment.
   return sanityFetch(
     `*[_type == "journalEntry" && slug.current == $slug][0]{
-      _id, title, slug, excerpt, author, publishedAt, updatedAt, featured,
+      _id, title, slug, excerpt, author, publishedAt, updatedAt,
       tags,
       seoTitle, seoDescription,
       coverImage${IMAGE_PROJECTION},

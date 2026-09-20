@@ -108,6 +108,40 @@ export default defineConfig({
   // binding with no namespace id fails the deploy. A fork that adds a login
   // turns this back on and creates the namespace deliberately.
   session: false,
+  build: {
+    // Inline the page stylesheet into the document instead of linking it.
+    //
+    // Measured 2026-09-20 (plan 2c task 6). Astro's default is 'auto', which
+    // inlines only stylesheets under about 4KB, so every page linked a single
+    // 125KB (24KB over the wire) /_astro/BaseLayout.<hash>.css. On Lighthouse's
+    // mobile throttle that link is a second network round trip before the first
+    // paint: `render-blocking-resources` named that one file on all six audited
+    // pages and costed it at 453 to 465ms, and because the whole gap between
+    // FCP and LCP was only half a second, the same 455ms sat in front of the
+    // largest paint too. TBT was already 0ms and CLS at most 0.034, so this was
+    // the only real lever.
+    //
+    // The trade is real and deliberate: the stylesheet is no longer a separate
+    // cacheable file, so every page carries its own copy (about 22KB gzipped)
+    // and a reader moving between pages re-downloads it. First paint on a cold
+    // mobile visit is the number this site is judged on, and almost every
+    // visitor arrives cold from search.
+    //
+    // 2026-09-20 correction (plan 2c task 7 step 0, "C2"): 'always' inlines
+    // EVERY page's stylesheet, and the embedded Sanity Studio at /studio has
+    // its own, much larger, stylesheet -- @sanity/ui's styled-components
+    // output plus the plugin CSS. 'always' inlined that one too, bloating
+    // every /studio response with CSS no visitor-facing page needed. Switched
+    // to 'auto', which inlines a stylesheet only when it is at or under
+    // `vite.build.assetsInlineLimit` (see below). Measured in a same-day build
+    // with this set to 'never': the site's BaseLayout sheet is 124,750 bytes
+    // raw and the Studio's largest (lib.<hash>.css, the @sanity/ui bundle) is
+    // 165,056 bytes. 131072 bytes (128 KiB) sits between them with margin on
+    // both sides, so 'auto' now inlines the site sheet and leaves the Studio's
+    // linked. Re-measure both files after any Tailwind or Sanity UI upgrade
+    // that could move either size past 131072.
+    inlineStylesheets: 'auto',
+  },
   // `imageService: 'compile'` tells @astrojs/cloudflare to process images
   // with Sharp at build time and ship plain static files — no Cloudflare
   // Images runtime, no per-transform fees, no Workers binding required.
@@ -162,6 +196,38 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // Drives Astro's `build.inlineStylesheets: 'auto'` above: a compiled
+      // stylesheet is inlined only when its raw size is at or under this
+      // limit, and it is also Vite's general asset-inlining threshold (any
+      // imported asset under the limit becomes a base64 data URI instead of
+      // a linked file). A plain number bit both jobs at once here: raising
+      // it enough to inline the 124,750-byte site sheet (BaseLayout.css)
+      // also let Vite base64-inline the @font-face url() references that
+      // sheet pulls in from @fontsource, since the largest font
+      // (inter-latin-ext-wght-normal.woff2) is only 85,068 bytes. That
+      // ballooned the "inlined" sheet to 671,042 bytes -- past the very
+      // limit meant to admit it -- so Astro's auto check then correctly
+      // decided NOT to inline it, and the page shipped a linked stylesheet
+      // six times its original size. Caught by re-checking
+      // `find dist/client/_astro -name "*.woff2"` after the first attempt,
+      // which came back empty (the fonts had disappeared into the CSS).
+      //
+      // Fixed by making this a function instead of a number: Astro and Vite
+      // both accept `(filePath, content) => boolean`. Font files are always
+      // kept external regardless of size (so @font-face URLs stay real,
+      // cacheable requests), and everything else -- including the compiled
+      // stylesheets this option was added for -- inlines under 131072 bytes
+      // (128 KiB), a limit chosen with margin between the measured site sheet
+      // (124,750 bytes) and the Studio's largest sheet, lib.<hash>.css
+      // (165,056 bytes, the @sanity/ui bundle). Re-verify both stylesheet
+      // sizes after any Tailwind or Sanity UI upgrade that could move either
+      // one past 131072, and re-run the woff2 check after any change here.
+      assetsInlineLimit: (filePath, content) => {
+        if (/\.(woff2?|ttf|otf|eot)$/i.test(filePath)) return false;
+        return content.length < 131072;
+      },
+    },
     // @sanity/ui ships an ESM build that Vite's dependency pre-bundler
     // mis-scans on this stack (MISSING_EXPORT errors for styled-components).
     // Excluding it from pre-bundling matches presacademy's working config; it
