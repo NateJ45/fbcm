@@ -154,7 +154,14 @@ export default {
               _type: 'timeItem',
               _key: 'time-2',
               label: 'Find us',
-              big: '309 East Adams',
+              // Derived, never typed (CLAUDE.md rule 15). streetLine is
+              // siteSettings.address's first line, "309 East Adams Street";
+              // the band's big line drops the word "Street" because the label
+              // above it already says "Find us" and the short form is what the
+              // church says out loud. A typed copy here would be a second
+              // source of truth for something Site settings already holds, and
+              // the typed one is the one that goes stale.
+              big: streetLine.replace(/\s+Street$/i, ''),
               body: 'Downtown, at the corner of Adams and Jefferson.',
             },
             {
@@ -252,7 +259,11 @@ export default {
       ],
 
       seoTitle: 'First Baptist Church Muncie | Sundays 10:45 am, downtown Muncie',
-      seoDescription: `${settings.tagline} 309 East Adams Street, Muncie, Indiana.`,
+      // The street comes from Site settings like everywhere else. "Muncie,
+      // Indiana" stays typed on purpose: the postal city line in the address
+      // is "Muncie, IN 47305", and the prose form of the state is not
+      // derivable from it without inventing an abbreviation table.
+      seoDescription: `${settings.tagline} ${streetLine}, Muncie, Indiana.`,
     };
   },
 };

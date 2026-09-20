@@ -300,7 +300,14 @@ export default {
               _type: 'timeItem',
               _key: 'time-2',
               label: 'Find us',
-              big: '309 East Adams',
+              // Derived, never typed (CLAUDE.md rule 15). streetLine is
+              // siteSettings.address's first line, "309 East Adams Street";
+              // the band's big line drops the word "Street" because the label
+              // above it already says "Find us" and the short form is what the
+              // church says out loud. A typed copy here would be a second
+              // source of truth for something Site settings already holds, and
+              // the typed one is the one that goes stale.
+              big: streetLine.replace(/\s+Street$/i, ''),
               // accessibility.txt line 3. The brief asked for "the parking
               // line" from that capture and there is none: accessibility.txt
               // is about the entrances, and the parking sentence lives in
@@ -323,8 +330,7 @@ export default {
       ],
 
       seoTitle: 'Contact | First Baptist Church Muncie',
-      seoDescription:
-        'Phone, email, address and office hours for First Baptist Church Muncie at 309 East Adams Street, plus how to share a life update and how to book time with a pastor.',
+      seoDescription: `Phone, email, address and office hours for First Baptist Church Muncie at ${streetLine}, plus how to share a life update and how to book time with a pastor.`,
     };
   },
 };

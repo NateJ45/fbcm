@@ -307,7 +307,14 @@ export default {
               _type: 'timeItem',
               _key: 'time-2',
               label: 'Find us',
-              big: '309 East Adams',
+              // Derived, never typed (CLAUDE.md rule 15). streetLine is
+              // siteSettings.address's first line, "309 East Adams Street";
+              // the band's big line drops the word "Street" because the label
+              // above it already says "Find us" and the short form is what the
+              // church says out loud. A typed copy here would be a second
+              // source of truth for something Site settings already holds, and
+              // the typed one is the one that goes stale.
+              big: streetLine.replace(/\s+Street$/i, ''),
               // what-to-expect.txt line 91, the church's own answer to "How do
               // I find the church?".
               body: 'Our parking lot is located on the Adams Street side.',
@@ -405,8 +412,7 @@ export default {
       ],
 
       seoTitle: 'Plan a visit | First Baptist Church Muncie',
-      seoDescription:
-        'First Baptist Church Muncie gathers for worship at 10:45 am every Sunday at 309 East Adams Street in downtown Muncie.',
+      seoDescription: `First Baptist Church Muncie gathers for worship at 10:45 am every Sunday at ${streetLine} in downtown Muncie.`,
     };
   },
 };
