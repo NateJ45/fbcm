@@ -61,6 +61,14 @@ const {
       )
     }
 
+    {
+      /* The page heading above is the h1 and every card title is an h3, so
+        without this the heading order jumps h1 -> h3 and axe fails the route.
+        It is the same visually-hidden rung the post grid on /blog gets from
+        that page's own "All posts" h2. */
+    }
+    <h2 class="sr-only">Posts</h2>
+
     <div class="mt-section-md">
       <PostGrid entries={entries} emptyMessage={emptyMessage} />
     </div>

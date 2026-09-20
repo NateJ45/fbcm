@@ -417,6 +417,16 @@ PORTABLE files here and marked in their headers for the sync session.
    prose, an unclearable finding for a church blog mentioning a $15 ticket.
    Generalised here to fire only when a structured price field is populated.
 
+7. **`playwright.config.ts` (PORTABLE) gives `webServer` 180 seconds**, and that
+   is the build, not the serve. This site now builds 377 pages in about three
+   minutes, so `npm test` times out before a single spec runs: locally you get
+   around it by building first and letting `reuseExistingServer` find the static
+   server on 4321, but CI sets `reuseExistingServer: false` and has no way
+   around it. It is general (any site the family grows past ~250 pages hits it)
+   and the fix is one number, but it puts every repo in the family into drift
+   until a sync session, so it wants a PORTS.md card rather than a quiet edit
+   here. **Open, and it will fail this repo's CI on the next push.**
+
 Also worth a note on card 8/`sanityFetch`: a GROQ parse error in one section's
 projection (`[0...limit]`, a field reference as a slice bound) failed the ENTIRE
 home page query and fell back to defaults on a green build. `DYNAMIC_LIST_MAX`
