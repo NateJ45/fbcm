@@ -313,6 +313,7 @@ The items below apply to any project built on this starter. Replace the angle-br
 - [ ] Contact form test submission reaches the correct inbox
 - [ ] All external links open in a new tab with correct `rel` attributes
 - [ ] Sitemap submitted to Google Search Console
+- [ ] `npm run verify:redirects -- --origin <deployed-url>` reports every rule OK (`scripts/verify-redirects.mjs`, plan 2c task 5). Reads the published `redirect` documents straight from Sanity and curls each one against the live site: real 301/302 to the right target, and the target itself resolves to 200. `--from-dist` reads `dist/client/_redirects` instead when no Sanity token is configured. Run again after the domain cutover against the final domain, not just the `*.workers.dev` URL.
 
 ---
 
