@@ -5,10 +5,11 @@
 // THE RULE THIS FILE EXISTS TO KEEP. 106 of the 142 imported posts are weekly
 // sermon previews that go stale by Monday; the other 36 are the ones worth
 // arriving at. Which pile a post is in is a fact about its CATEGORY, and it is
-// worked out here every build. `journalEntry.featured` is a stored boolean
-// sitting right next to it in the schema and NOTHING in the archive reads it
-// for ordering: a second source of truth for "which posts matter" is the one
-// that goes stale (CLAUDE.md rule 15).
+// worked out here every build. A stored `journalEntry.featured` boolean used
+// to sit right next to it in the schema; it was retired in plan 2c (task 2)
+// because a second source of truth for "which posts matter" is the one that
+// goes stale (CLAUDE.md rule 15). The archive never read it for ordering
+// even before the field was removed.
 //
 // STEGA. Every string below that is COMPARED (a category title, a tag) is
 // cleaned first. In the Studio preview each of those strings carries about a
@@ -47,8 +48,6 @@ export interface BlogEntry {
   coverImage?: unknown;
   categories?: BlogCategory[] | null;
   tags?: string[] | null;
-  /** Read by nothing in this module, on purpose. See the note at the top. */
-  featured?: boolean | null;
 }
 
 /**
