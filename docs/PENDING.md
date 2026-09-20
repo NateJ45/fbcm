@@ -336,10 +336,21 @@ leaves open, with what closes each.
   it is a failing test to make pass, not a surprise. The captured `bodyHtml` in
   `scripts/data/posts/*.json` is the source when a converter is added.
 - **Some redirect targets still 404**: `/visit`, `/who-we-are`, `/beliefs` and
-  `/ministries` landed in plan 2b (tasks 5, 7, 8 and 9); `/staff`, `/wedding`,
-  `/give` and `/history` do not exist yet. **Plan 3 precondition: no redirect
-  target may 404**, or the spec's "every retired URL keeps working" is false on
-  day one.
+  `/ministries` landed in plan 2b (tasks 5, 7, 8 and 9), `/staff` in task 10;
+  `/wedding`, `/give` and `/history` do not exist yet. **Plan 3 precondition: no
+  redirect target may 404**, or the spec's "every retired URL keeps working" is
+  false on day one.
+- **A fragment landing arrives under the sticky header.** Measured on `/staff`
+  (task 10, 1280x900, light): `#kendall-ellis` and `#loraine-garrett` put the
+  card's top edge at viewport y=112 (`scroll-mt-28` on the card in
+  `StaffGrid.astro`) and `#coordination` puts the section's top edge at y=0,
+  while the expanded header occupies the top ~172px. So a card anchor loses the
+  top of its portrait and a SECTION anchor loses the first line of its heading.
+  Both come from shared code, not from one page: the section wrapper in
+  `SectionRenderer.astro` carries no scroll-margin at all, and the card's 112px
+  is short of the header. It affects every anchor the retired URLs point at
+  (`/beliefs#baptists`, `/ministries#youth`, `/staff#*`), so the fix belongs in
+  those two components in one deliberate change, with a parity recapture.
 - `journalPage` singleton is unseeded; `/blog` renders the starter's defaults.
 - `seed-core.mjs` still seeds a service-business page set; the FBCM home page and
   the eight custom pages need seeding for this church.

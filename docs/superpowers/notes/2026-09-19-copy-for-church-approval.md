@@ -110,6 +110,22 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - ministries-children: Children gathered under the sanctuary arch
 - ministries-youth: Two teens speaking to the youth group on stage
 
+## /staff
+
+### New sentences
+
+- The staff and volunteers of First Baptist Church Muncie: our pastors, the Church Coordination Team, and our deacons. (SEO description, not shown on the page)
+
+### Edits to the church’s own text
+
+- Deacon chair address: "deaconchair[at]fbcmuncie.org" becomes a real mailto link to deaconchair@fbcmuncie.org, because a visitor cannot click "[at]". (Deacons band; spec 5.6 "Fixes".)
+- Em-dash to comma (site style): "...calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community." (A note from our pastors.)
+- Cut and re-cased: the scripture band is the closing sentence of the "Every Member of this Church" paragraph with its opening clause cut, so it reads "Every Christian is called to minister to others in some way." rather than "And, even if not currently serving in those particular capacities, every...".
+
+### Photos of children
+
+- (none)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.
