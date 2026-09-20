@@ -1,0 +1,50 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// The archive pager: "Newer / Page 3 of 12 / Older", one shape for all four
+// list routes (/blog, /blog/page/N, a category, a category page). Page 1 is
+// always the bare base path, never `/page/1/`, so /blog and /blog/page/1 are
+// not two URLs for one list.
+//
+// Renders nothing at all when there is only one page. A pager on a one-page
+// archive is furniture that says "there is more" when there is not.
+interface Props {
+  page: number;
+  pages: number;
+  /** '/blog' or '/blog/category/sermon-preview'. No trailing slash. */
+  basePath: string;
+}
+const { page, pages, basePath } = Astro.props as Props;
+
+const hrefFor = (n: number) => (n <= 1 ? `${basePath}/` : `${basePath}/page/${n}/`);
+const link =
+  'font-display text-[1.05rem] text-foreground underline-offset-4 hover:underline hover:text-primary-dark transition-colors';
+---
+
+{
+  pages > 1 && (
+    <nav class="mt-section-md border-t-2 border-gold pt-m" aria-label="Archive pages">
+      <div class="flex flex-wrap items-baseline justify-between gap-s">
+        {page > 1 ? (
+          <a href={hrefFor(page - 1)} class={link} rel="prev">
+            &larr; Newer posts
+          </a>
+        ) : (
+          <span aria-hidden="true" />
+        )}
+
+        <p class="text-xs font-semibold tracking-eyebrow text-brown-mid uppercase dark:text-gold">
+          Page {page} of {pages}
+        </p>
+
+        {page < pages ? (
+          <a href={hrefFor(page + 1)} class={link} rel="next">
+            Older posts &rarr;
+          </a>
+        ) : (
+          <span aria-hidden="true" />
+        )}
+      </div>
+    </nav>
+  )
+}

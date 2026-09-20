@@ -22,6 +22,13 @@ export const routes: string[] = [
   '/',
   '/contact',
   '/blog', // scaffold: journal
+  // The archive's other four shapes (plan 2b task 15). One of each, not all of
+  // them: 12 archive pages, 5 categories and 217 tags are one page with four
+  // titles, and a suite that screenshots 234 copies of it proves nothing extra.
+  '/blog/page/2', // scaffold: journal
+  '/blog/category/sermon-preview', // scaffold: journal
+  '/blog/category/sermon-preview/page/2', // scaffold: journal
+  '/blog/tag/advent', // scaffold: journal
   '/privacy',
   // The styleguide (Task 6, 2026-09-19): fixed-data wall the visual-regression
   // suite screenshots. Listed here so it also gets smoke, axe light/dark,

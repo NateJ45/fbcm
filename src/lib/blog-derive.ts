@@ -51,6 +51,13 @@ export interface BlogEntry {
   featured?: boolean | null;
 }
 
+/**
+ * Posts per page, everywhere. Spec 5.10 asks for 12, and it lives here rather
+ * than in each of the four list routes so /blog/page/2 can never start at a
+ * different post than /blog page 1 stopped at.
+ */
+export const PER_PAGE = 12;
+
 /** Cleaned of any stega payload, so it can be compared or measured. */
 export function clean(value: string | null | undefined): string {
   if (!value) return '';
@@ -156,6 +163,47 @@ export function seriesByTag<T extends BlogEntry>(
 
   scored.sort((a, b) => b.shared - a.shared || b.at - a.at);
   return scored.slice(0, Math.max(0, limit)).map((s) => s.entry);
+}
+
+/** One tag, its URL slug, and every post carrying it. */
+export interface TagGroup<T extends BlogEntry = BlogEntry> {
+  /** The URL segment: /blog/tag/<slug>/ */
+  slug: string;
+  /** The tag as the church typed it, the first spelling seen (newest post wins). */
+  label: string;
+  entries: T[];
+}
+
+/**
+ * Every tag across the archive, grouped by its URL slug, each group keeping the
+ * input's newest-first order. 217 of them on this site, which is why they are a
+ * route each and not a cloud on the index.
+ *
+ * Grouped by SLUG rather than by the raw string on purpose: "Holidays" and
+ * "holidays" are one page, and two spellings that slugify the same cannot build
+ * two routes with the same path (which is a build error, not a soft failure).
+ */
+export function tagIndex<T extends BlogEntry>(
+  entries: readonly T[],
+  slugify: (value: string) => string,
+): TagGroup<T>[] {
+  const groups = new Map<string, TagGroup<T>>();
+  for (const entry of entries ?? []) {
+    const seen = new Set<string>();
+    for (const raw of entry.tags ?? []) {
+      const label = clean(raw).trim();
+      if (!label) continue;
+      const slug = slugify(label);
+      if (!slug || seen.has(slug)) continue;
+      seen.add(slug);
+      const group = groups.get(slug);
+      if (group) group.entries.push(entry);
+      else groups.set(slug, { slug, label, entries: [entry] });
+    }
+  }
+  return [...groups.values()].sort((a, b) =>
+    a.label.localeCompare(b.label, 'en', { sensitivity: 'base' }),
+  );
 }
 
 /**

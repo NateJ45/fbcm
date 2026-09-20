@@ -1,14 +1,24 @@
 ---
 // scaffold-file: journal
 // Safe to edit by hand for copy + structure changes.
-// Journal index page. Hero, category chips (display-only for now), responsive
-// post grid, final CTA. Sanity-driven via getJournalPage() + getAllJournalEntries()
-// + getAllJournalCategories().
+// The blog index. Spec 5.10: the archive foregrounds the 36 durable posts
+// without hiding the 106 weekly sermon previews.
 //
-// First post gets the `featured` card treatment (spans 2 columns at lg, larger
-// type). If editors flag multiple posts as featured, the first by date wins
-// the big slot; others get normal cards.
-
+// Five bands, in this order:
+//   1. Hero, from the journalPage singleton (seeded by scripts/pages/blog.mjs).
+//   2. Featured: the newest six DURABLE posts. Which six is derived from the
+//      category every build (splitDurable), never from journalEntry.featured,
+//      which is a stored boolean nothing here reads (CLAUDE.md rule 15).
+//   3. This week: the newest sermon preview, one wide card, under an eyebrow
+//      that names the week it was written for.
+//   4. All posts: page 1 of 12, with the category chips and the pager.
+//   5. The singleton's additionalSections (this is where the #publications
+//      document list lives), then the closing CTA.
+//
+// The whole archive is static. There is no SSR outside /preview, so the
+// category filter is a ROUTE (/blog/category/<slug>/), not a querystring, and
+// the inline script at the top of <main> is what carries plan 1's six
+// /blog?category=... redirect targets onto it.
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import {
   getJournalPage,
@@ -19,12 +29,16 @@ import {
 import { getSectionVisibility } from '@/lib/sectionVisibility';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
+import { splitDurable, paginate, weekOfEyebrow, PER_PAGE } from '@/lib/blog-derive';
 
 import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import SectionRenderer from '@/components/SectionRenderer.astro';
 import JournalCard from '@/components/JournalCard.astro';
-import JournalCategoryChip from '@/components/JournalCategoryChip.astro';
+import PostGrid from '@/components/blog/PostGrid.astro';
+import Pager from '@/components/blog/Pager.astro';
+import CategoryChips from '@/components/blog/CategoryChips.astro';
 import FinalCta from '@/components/FinalCta.astro';
-import NewsletterSignup from '@/components/NewsletterSignup';
 
 const [page, entries, categories, siteSettings] = await Promise.all([
   getJournalPage().catch(() => null),
@@ -37,131 +51,151 @@ const [page, entries, categories, siteSettings] = await Promise.all([
 const visible = getSectionVisibility(siteSettings?.sectionVisibility);
 if (!visible.journal) return Astro.redirect('/');
 
-const title = page?.seoTitle ?? `Journal · ${site.name}`;
+const title = page?.seoTitle ?? `Blog | ${site.name}`;
 const description =
   page?.seoDescription ??
-  'Notes from the studio — project walkthroughs, style thinking, and the occasional opinion.';
+  'Sermon previews, church news and writing from the pastors of First Baptist Church Muncie.';
 
-const heroEyebrow = page?.heroEyebrow ?? 'The Journal.';
-const heroHeadline = page?.heroHeadline ?? 'Notes from the studio.';
-const heroSubhead =
-  page?.heroSubhead ??
-  'Project walkthroughs, design thinking, and the occasional opinion. Written between projects.';
+const heroEyebrow = page?.heroEyebrow ?? 'Blog';
+const heroHeadline = page?.heroHeadline ?? 'Writing from First Baptist.';
+const heroSubhead = page?.heroSubhead ?? undefined;
 
-// Categories with at least one post (filters out empty taxonomies).
-const usedCategories = (categories ?? []).filter((c: any) => (c.postCount ?? 0) > 0);
-
-// Posts have already come back sorted "featured desc, publishedAt desc" via the query.
-const list = entries ?? [];
+const all = (entries ?? []) as any[];
+const { durable, previews } = splitDurable(all);
+const featured = durable.slice(0, 6);
+const thisWeek = previews[0] ?? null;
+const firstPage = paginate(all, PER_PAGE, 1);
 
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Journal', url: `${site.url}/blog` },
+    { name: 'Blog', url: `${site.url}/blog` },
   ]),
 ];
 ---
 
 <BaseLayout {title} {description} {schemas} {siteSettings} seoImage={page?.seoImage}>
+  {
+    /* Plan 1 retired six Wix category listings to `/blog?category=<slug>` (see
+     BLOG_CATEGORIES in src/lib/fbcm-redirects.ts). This site is static, so the
+     index cannot read a querystring at build time; this hands the visitor on to
+     the built category page instead. `pianist` was a TAG on the old site, not a
+     category, so it goes to the tag route. `fbcm-events-1` is the legacy spelling
+     of `fbcm-events`. Anything else falls through and /blog just renders. */
+  }
+  <script is:inline>
+    (function () {
+      var slug = new URLSearchParams(location.search).get('category');
+      if (!slug) return;
+      var MOVED = { 'fbcm-events-1': 'fbcm-events' };
+      var TAGS = { pianist: 1 };
+      var s = MOVED[slug] || slug;
+      location.replace((TAGS[s] ? '/blog/tag/' : '/blog/category/') + encodeURIComponent(s) + '/');
+    })();
+  </script>
+
   {/* ------- 1. Hero --------------------------------------------------------- */}
   <Hero
     eyebrow={heroEyebrow}
     headline={heroHeadline}
     subhead={heroSubhead}
     backgroundImage={page?.heroImage}
-    headingId="journal-hero-heading"
+    headingId="blog-hero-heading"
     size="short"
-    scriptAccent={page?.heroScriptAccent ?? 'studio'}
+    layout="split"
   />
 
-  {/* ------- 2. Category chips (display-only for now) ----------------------- */}
+  {/* ------- 2. Featured: the newest six durable posts ---------------------- */}
   {
-    usedCategories.length > 0 && (
-      <section class="bg-background" aria-label="Journal categories">
-        <div class="mx-auto max-w-content px-m pt-l">
-          <ul class="flex list-none flex-wrap gap-xs p-0">
-            {usedCategories.map((cat: any) => (
-              <li>
-                <JournalCategoryChip
-                  title={cat.title}
-                  tooltip={
-                    cat.description ?? `${cat.postCount} ${cat.postCount === 1 ? 'post' : 'posts'}`
-                  }
-                />
-              </li>
-            ))}
-          </ul>
+    featured.length > 0 && (
+      <section class="bg-background" aria-labelledby="blog-featured-heading">
+        <div class="mx-auto max-w-content px-m py-section-lg">
+          <SectionHeading
+            eyebrow="Featured"
+            headline="Worth coming back for"
+            headingId="blog-featured-heading"
+            level="h2"
+            align="left"
+            tone="church"
+            rule
+          />
+          <div class="mt-section-md">
+            <PostGrid entries={featured} />
+          </div>
         </div>
       </section>
     )
   }
 
-  {/* ------- 3. Post grid --------------------------------------------------- */}
-  <section class="bg-background" aria-labelledby="journal-posts-heading">
-    <div class="mx-auto max-w-content px-m py-section-md">
-      {
-        /* Visually-hidden H2 — same reason as the portfolio grid: keeps the
-          heading hierarchy from skipping H1 directly to each card's H3. */
-      }
-      <h2 id="journal-posts-heading" class="sr-only">Recent posts</h2>
+  {
+    /* ------- 3. This week: the newest sermon preview, one wide card --------
+     The eyebrow names the week from the post's own publish date. It is the
+     band's eyebrow rather than the card's because there is exactly one card
+     here and the date IS the heading of this band. */
+  }
+  {
+    thisWeek && (
+      <section class="bg-muted" aria-labelledby="blog-this-week-heading">
+        <div class="mx-auto max-w-content px-m py-section-lg">
+          <SectionHeading
+            eyebrow={weekOfEyebrow(thisWeek.publishedAt)}
+            headline="This week"
+            headingId="blog-this-week-heading"
+            level="h2"
+            align="left"
+            tone="church"
+            rule
+          />
+          <div class="mt-section-md grid grid-cols-1 lg:grid-cols-2">
+            <JournalCard entry={thisWeek} featured />
+          </div>
+        </div>
+      </section>
+    )
+  }
 
-      {
-        list.length > 0 ? (
-          <div class="grid grid-cols-1 gap-l md:grid-cols-2 lg:grid-cols-3" data-stagger-grid>
-            {list.map((entry: any, i: number) => (
-              <JournalCard entry={entry} featured={i === 0 && entry.featured} />
-            ))}
-          </div>
-        ) : (
-          <div class="py-section-lg text-center">
-            <p class="mx-auto max-w-prose text-lg text-foreground/80">
-              The first journal entries are on their way.
-            </p>
-            <p class="mt-s text-muted-foreground">
-              In the meantime,{' '}
-              <a href="/services" class="text-link underline underline-offset-2">
-                see what we do
-              </a>{' '}
-              or
-              <a href="/contact" class="text-link underline underline-offset-2">
-                {' '}
-                start a conversation
-              </a>
-              .
-            </p>
-          </div>
-        )
-      }
+  {/* ------- 4. All posts: page 1 of the archive ---------------------------- */}
+  <section class="bg-background" aria-labelledby="blog-all-heading">
+    <div class="mx-auto max-w-content px-m py-section-lg">
+      <SectionHeading
+        eyebrow="The archive"
+        headline="All posts"
+        headingId="blog-all-heading"
+        level="h2"
+        align="left"
+        tone="church"
+        rule
+      />
+
+      <div class="mt-l">
+        <CategoryChips categories={(categories ?? []) as any} />
+      </div>
+
+      <div class="mt-section-md">
+        <PostGrid entries={firstPage.items} emptyMessage="The first posts are on their way." />
+      </div>
+
+      <Pager page={firstPage.page} pages={firstPage.pages} basePath="/blog" />
     </div>
   </section>
 
   {
-    /* ------- 4. Newsletter signup — between post grid and Final CTA.
-         Renders only when newsletter is enabled and configured in siteSettings.
-         Island hydrates when scrolled into view. */
+    /* ------- 5. Extra sections from the Studio ------------------------------
+     The #publications document list (The Visitor, and the two books) is one of
+     these, seeded by scripts/pages/blog.mjs. idPrefix keeps its generated
+     heading ids from colliding with the bands drawn above. */
   }
-  {
-    siteSettings?.newsletter?.enabled && (
-      <section class="bg-muted" aria-label="Newsletter signup">
-        <div class="mx-auto max-w-content px-m py-section-md">
-          <div class="mx-auto max-w-lg">
-            <NewsletterSignup
-              client:visible
-              newsletter={siteSettings.newsletter}
-              source="journal-index"
-            />
-          </div>
-        </div>
-      </section>
-    )
-  }
+  <SectionRenderer
+    sections={(page as any)?.additionalSections}
+    idPrefix="blog"
+    settings={siteSettings}
+  />
 
-  {/* ------- 5. Final CTA ---------------------------------------------------- */}
+  {/* ------- 6. Final CTA ---------------------------------------------------- */}
   <FinalCta
     headline={page?.finalCtaHeadline}
     subhead={page?.finalCtaSubhead}
     cta={page?.finalCta}
-    scriptAccent={page?.finalCtaScriptAccent}
     backgroundImage={page?.finalCtaBackgroundImage}
   />
 </BaseLayout>

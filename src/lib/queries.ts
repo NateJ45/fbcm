@@ -401,6 +401,7 @@ const JOURNAL_CARD_PROJECTION = `{
   excerpt,
   publishedAt,
   featured,
+  tags,
   coverImage${IMAGE_PROJECTION},
   "categories": categories[]->{ _id, title, slug, description }
 }`;
@@ -419,7 +420,8 @@ export async function getJournalPage() {
     stickyCtaLabel,
     finalCtaHeadline, finalCtaScriptAccent, finalCtaSubhead,
     finalCtaBackgroundImage${IMAGE_PROJECTION},
-    finalCta${CTA_PROJECTION}
+    finalCta${CTA_PROJECTION},
+    ${sectionsProjection('additionalSections')}
   }`,
     {},
     null,
@@ -460,6 +462,7 @@ export async function getJournalEntryBySlug(slug: string) {
   return sanityFetch(
     `*[_type == "journalEntry" && slug.current == $slug][0]{
       _id, title, slug, excerpt, author, publishedAt, updatedAt, featured,
+      tags,
       seoTitle, seoDescription,
       coverImage${IMAGE_PROJECTION},
       "categories": categories[]->{ _id, title, slug, description },

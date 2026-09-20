@@ -1,0 +1,32 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// The three-up card grid every blog list uses. One grid, one gap, one card, so
+// /blog, a category page and a tag page cannot drift into three grammars
+// (CLAUDE.md rule 17).
+//
+// Sermon previews get `preview` on the card, which swaps the category chip for
+// the "week of" eyebrow. Which posts those are is DERIVED here from the entry's
+// category, never read off a stored flag.
+import JournalCard from '@/components/JournalCard.astro';
+import { entryIsSermonPreview, type BlogEntry } from '@/lib/blog-derive';
+
+interface Props {
+  entries: BlogEntry[];
+  /** Copy for a list that came back empty. */
+  emptyMessage?: string;
+}
+const { entries, emptyMessage = 'Nothing here yet.' } = Astro.props as Props;
+---
+
+{
+  entries.length > 0 ? (
+    <div class="grid grid-cols-1 gap-l md:grid-cols-2 lg:grid-cols-3" data-stagger-grid>
+      {entries.map((entry) => (
+        <JournalCard entry={entry as any} preview={entryIsSermonPreview(entry)} />
+      ))}
+    </div>
+  ) : (
+    <p class="max-w-prose text-lg text-foreground/80">{emptyMessage}</p>
+  )
+}

@@ -4,11 +4,16 @@
 // Card for the /blog index grid. Cover image on top, primary category +
 // date eyebrow, title, excerpt. Whole card is clickable.
 //
-// `featured` style: when an entry has featured = true and it's the first one
-// in the grid, the index page renders a larger variant via the `featured` prop.
+// `featured` style: the wide two-column variant, asked for by the caller (the
+// index uses it for "this week").
+//
+// `preview` style: a weekly sermon preview. The chip+date line becomes the
+// "week of" eyebrow. The caller DERIVES that from the category (blog-derive.ts);
+// the card never reads journalEntry.featured for it.
 
 import SanityImage from '@/components/SanityImage.astro';
 import JournalCategoryChip from '@/components/JournalCategoryChip.astro';
+import { weekOfEyebrow } from '@/lib/blog-derive';
 
 interface Props {
   entry: {
@@ -21,9 +26,16 @@ interface Props {
     featured?: boolean;
   };
   featured?: boolean;
+  /**
+   * This entry is one of the weekly sermon previews. The caller derives it (see
+   * entryIsSermonPreview in src/lib/blog-derive.ts) rather than the card reading
+   * a stored flag, and it swaps the category chip for the "week of" eyebrow,
+   * which is the one thing a reader wants off a preview card: which Sunday.
+   */
+  preview?: boolean;
 }
 
-const { entry, featured = false } = Astro.props as Props;
+const { entry, featured = false, preview = false } = Astro.props as Props;
 const href = entry.slug?.current ? `/post/${entry.slug.current}` : '#';
 const primaryCategory = entry.categories?.[0];
 
@@ -83,21 +95,33 @@ const titleClass = featured
   <div class:list={[featured ? 'p-section-md' : 'p-l']}>
     <div class="flex flex-wrap items-center gap-x-m gap-y-xs">
       {
-        primaryCategory?.title && (
-          <JournalCategoryChip
-            title={primaryCategory.title}
-            tooltip={primaryCategory.description}
-          />
-        )
+        /* A sermon preview says which week it is for, and nothing else: the
+          category chip would read "Sermon Preview" on all 106 of them, and the
+          bare date does not tell a reader what the date is FOR. Everything
+          else keeps the chip + date it always had. */
       }
       {
-        dateLabel && (
-          <time
-            datetime={entry.publishedAt}
-            class="text-xs tracking-widest text-foreground/80 uppercase"
-          >
-            {dateLabel}
-          </time>
+        preview ? (
+          <p class="text-xs tracking-widest text-brown-mid uppercase dark:text-gold">
+            <time datetime={entry.publishedAt}>{weekOfEyebrow(entry.publishedAt)}</time>
+          </p>
+        ) : (
+          <>
+            {primaryCategory?.title && (
+              <JournalCategoryChip
+                title={primaryCategory.title}
+                tooltip={primaryCategory.description}
+              />
+            )}
+            {dateLabel && (
+              <time
+                datetime={entry.publishedAt}
+                class="text-xs tracking-widest text-foreground/80 uppercase"
+              >
+                {dateLabel}
+              </time>
+            )}
+          </>
         )
       }
     </div>

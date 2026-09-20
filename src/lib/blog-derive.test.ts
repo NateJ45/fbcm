@@ -17,8 +17,10 @@ import {
   paginate,
   seriesByTag,
   weekOfEyebrow,
+  tagIndex,
   type BlogEntry,
 } from './blog-derive.ts';
+import { slugify } from './slugify.ts';
 
 // ── Fixtures ────────────────────────────────────────────────────────────────
 // Six entries, two categories, overlapping tags. Newest first, the order every
@@ -202,4 +204,35 @@ test('the sermon-preview eyebrow names the week of a Wednesday post', () => {
 test('an unparseable date falls back to the plain eyebrow', () => {
   assert.equal(weekOfEyebrow('not a date'), 'Sermon preview');
   assert.equal(weekOfEyebrow(undefined), 'Sermon preview');
+});
+
+// ── tagIndex ────────────────────────────────────────────────────────────────
+
+test('tagIndex groups by url slug, newest first inside a group, sorted by label', () => {
+  const index = tagIndex(entries, slugify);
+  assert.deepEqual(
+    index.map((g) => g.slug),
+    ['advent', 'christmas', 'holidays', 'music'],
+  );
+  const advent = index.find((g) => g.slug === 'advent')!;
+  assert.deepEqual(titles(advent.entries), [
+    'Preview for the third Sunday',
+    'Ruminations on a long winter',
+    'Preview for the second Sunday',
+    'What we read in Advent',
+  ]);
+});
+
+test('two spellings of one tag are one page, not two routes with one path', () => {
+  const index = tagIndex(
+    [
+      { title: 'a', slug: { current: 'a' }, publishedAt: '2024-01-02', tags: ['Holidays'] },
+      { title: 'b', slug: { current: 'b' }, publishedAt: '2024-01-01', tags: ['holidays'] },
+    ],
+    slugify,
+  );
+  assert.equal(index.length, 1);
+  assert.equal(index[0].slug, 'holidays');
+  assert.equal(index[0].label, 'Holidays');
+  assert.equal(index[0].entries.length, 2);
 });

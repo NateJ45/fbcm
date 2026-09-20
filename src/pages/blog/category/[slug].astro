@@ -1,0 +1,86 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// One page per journalCategory: page 1 of that category's posts. Pages 2..N
+// live at /blog/category/<slug>/page/<n>/ (sermon-preview alone has 106 posts,
+// which is nine pages).
+//
+// These are the pages plan 1's six retired Wix category URLs land on, by way of
+// the querystring hand-off script on /blog.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Archive from '@/components/blog/Archive.astro';
+import FinalCta from '@/components/FinalCta.astro';
+import {
+  getAllJournalEntries,
+  getAllJournalCategories,
+  getJournalPage,
+  getSiteSettings,
+} from '@/lib/queries';
+import { getSectionVisibility } from '@/lib/sectionVisibility';
+import { breadcrumbSchema } from '@/lib/schemas';
+import { site } from '@/data/site';
+import { paginate, PER_PAGE, clean } from '@/lib/blog-derive';
+
+export async function getStaticPaths() {
+  const [categories, settings] = await Promise.all([
+    getAllJournalCategories().catch(() => []),
+    getSiteSettings().catch(() => null),
+  ]);
+  if (!getSectionVisibility(settings?.sectionVisibility).journal) return [];
+
+  return ((categories ?? []) as any[])
+    .filter((c) => c?.slug?.current && (c.postCount ?? 0) > 0)
+    .map((c) => ({ params: { slug: c.slug.current as string } }));
+}
+
+const { slug } = Astro.params;
+const [entries, categories, journalPage, siteSettings] = await Promise.all([
+  getAllJournalEntries().catch(() => []),
+  getAllJournalCategories().catch(() => []),
+  getJournalPage().catch(() => null),
+  getSiteSettings().catch(() => null),
+]);
+
+const category = ((categories ?? []) as any[]).find((c) => c?.slug?.current === slug);
+if (!category) return Astro.redirect('/blog');
+
+const inCategory = ((entries ?? []) as any[]).filter((e) =>
+  (e.categories ?? []).some((c: any) => clean(c?.slug?.current) === slug),
+);
+const slice = paginate(inCategory, PER_PAGE, 1);
+const label = clean(category.title) || String(slug);
+
+const title = `${label} | Blog | ${site.name}`;
+const description =
+  clean(category.description) ||
+  `Every post in ${label} from First Baptist Church Muncie, newest first.`;
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: site.url },
+    { name: 'Blog', url: `${site.url}/blog` },
+    { name: label, url: `${site.url}/blog/category/${slug}/` },
+  ]),
+];
+---
+
+<BaseLayout {title} {description} {schemas} {siteSettings}>
+  <Archive
+    eyebrow="Category"
+    heading={label}
+    intro={clean(category.description) || undefined}
+    entries={slice.items}
+    page={slice.page}
+    pages={slice.pages}
+    basePath={`/blog/category/${slug}`}
+    categories={(categories ?? []) as any}
+    activeSlug={String(slug)}
+    emptyMessage="No posts in this category yet."
+  />
+  <FinalCta
+    headline={journalPage?.finalCtaHeadline}
+    subhead={journalPage?.finalCtaSubhead}
+    cta={journalPage?.finalCta}
+    backgroundImage={journalPage?.finalCtaBackgroundImage}
+  />
+</BaseLayout>

@@ -1,0 +1,70 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// The body of every blog list that is not the index: /blog/page/N, a category,
+// a category's page N, and a tag. One heading, one chip row, one grid, one
+// pager, in that order, so the four routes are one page with four titles.
+//
+// The index has more on it (featured, this week, the publications list), so it
+// draws its own body and shares these same partials rather than this shell.
+import SectionHeading from '@/components/SectionHeading.astro';
+import PostGrid from '@/components/blog/PostGrid.astro';
+import Pager from '@/components/blog/Pager.astro';
+import CategoryChips from '@/components/blog/CategoryChips.astro';
+import type { BlogEntry } from '@/lib/blog-derive';
+
+interface Props {
+  eyebrow: string;
+  heading: string;
+  /** One plain sentence under the heading. Optional. */
+  intro?: string;
+  entries: BlogEntry[];
+  page: number;
+  pages: number;
+  basePath: string;
+  categories?: unknown[];
+  activeSlug?: string;
+  emptyMessage?: string;
+}
+const {
+  eyebrow,
+  heading,
+  intro,
+  entries,
+  page,
+  pages,
+  basePath,
+  categories = [],
+  activeSlug,
+  emptyMessage,
+} = Astro.props as Props;
+---
+
+<section class="bg-background" aria-labelledby="blog-archive-heading">
+  <div class="mx-auto max-w-content px-m py-section-lg">
+    <SectionHeading
+      eyebrow={eyebrow}
+      headline={heading}
+      subhead={intro}
+      headingId="blog-archive-heading"
+      level="h1"
+      align="left"
+      tone="church"
+      rule
+    />
+
+    {
+      categories.length > 0 && (
+        <div class="mt-l">
+          <CategoryChips categories={categories as any} activeSlug={activeSlug} />
+        </div>
+      )
+    }
+
+    <div class="mt-section-md">
+      <PostGrid entries={entries} emptyMessage={emptyMessage} />
+    </div>
+
+    <Pager page={page} pages={pages} basePath={basePath} />
+  </div>
+</section>

@@ -1,0 +1,51 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// The category row under the blog hero. Every chip is a real link to a built
+// page (/blog/category/<slug>/) rather than a querystring the static site could
+// not answer, and the one you are looking at is marked.
+//
+// "All posts" is first and is its own chip, because a filtered list needs a way
+// back that is not the browser button.
+import JournalCategoryChip from '@/components/JournalCategoryChip.astro';
+
+interface Category {
+  _id?: string;
+  title?: string | null;
+  slug?: { current?: string | null } | null;
+  description?: string | null;
+  postCount?: number | null;
+}
+
+interface Props {
+  categories: Category[];
+  /** The category slug of the page being shown, or undefined on /blog itself. */
+  activeSlug?: string;
+}
+const { categories, activeSlug } = Astro.props as Props;
+const used = categories.filter((c) => (c.postCount ?? 0) > 0 && c.slug?.current);
+---
+
+{
+  used.length > 0 && (
+    <nav aria-label="Post categories">
+      <ul class="flex list-none flex-wrap gap-xs p-0">
+        <li>
+          <JournalCategoryChip title="All posts" href="/blog/" active={!activeSlug} />
+        </li>
+        {used.map((cat) => (
+          <li>
+            <JournalCategoryChip
+              title={cat.title ?? ''}
+              href={`/blog/category/${cat.slug!.current}/`}
+              tooltip={
+                cat.description ?? `${cat.postCount} ${cat.postCount === 1 ? 'post' : 'posts'}`
+              }
+              active={activeSlug === cat.slug!.current}
+            />
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}

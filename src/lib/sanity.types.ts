@@ -1368,6 +1368,71 @@ export type JournalPage = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
+  additionalSections?: Array<
+    | ({
+        _key: string;
+      } & HeroSection)
+    | ({
+        _key: string;
+      } & RichTextSection)
+    | ({
+        _key: string;
+      } & ImageTextSection)
+    | ({
+        _key: string;
+      } & GallerySection)
+    | ({
+        _key: string;
+      } & QuoteSection)
+    | ({
+        _key: string;
+      } & StatSection)
+    | ({
+        _key: string;
+      } & CtaBandSection)
+    | ({
+        _key: string;
+      } & VideoSection)
+    | ({
+        _key: string;
+      } & SpacerSection)
+    | ({
+        _key: string;
+      } & LogoStripSection)
+    | ({
+        _key: string;
+      } & EmbedSection)
+    | ({
+        _key: string;
+      } & SundayTimesSection)
+    | ({
+        _key: string;
+      } & TimelineSection)
+    | ({
+        _key: string;
+      } & StaffGridSection)
+    | ({
+        _key: string;
+      } & FaqSection)
+    | ({
+        _key: string;
+      } & ScriptureBandSection)
+    | ({
+        _key: string;
+      } & HeritageBandSection)
+    | ({
+        _key: string;
+      } & GiveBandSection)
+    | ({
+        _key: string;
+      } & HoursSection)
+    | ({
+        _key: string;
+      } & DocumentListSection)
+    | ({
+        _key: string;
+      } & LinkCardsSection)
+  >;
 };
 
 export type HomePage = {

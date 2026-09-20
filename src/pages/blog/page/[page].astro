@@ -1,0 +1,78 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// Pages 2..N of the whole archive. Page 1 is /blog itself, which has the
+// featured band and this week's preview on it as well, so it is not built here.
+//
+// These are real archive pages and they are INDEXABLE on purpose: 142 posts at
+// 12 a page is 12 pages, and noindexing eleven of them would hide 130 posts
+// from search for no reason a reader would recognise.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Archive from '@/components/blog/Archive.astro';
+import FinalCta from '@/components/FinalCta.astro';
+import {
+  getAllJournalEntries,
+  getAllJournalCategories,
+  getJournalPage,
+  getSiteSettings,
+} from '@/lib/queries';
+import { getSectionVisibility } from '@/lib/sectionVisibility';
+import { breadcrumbSchema } from '@/lib/schemas';
+import { site } from '@/data/site';
+import { paginate, PER_PAGE } from '@/lib/blog-derive';
+
+export async function getStaticPaths() {
+  const [entries, settings] = await Promise.all([
+    getAllJournalEntries().catch(() => []),
+    getSiteSettings().catch(() => null),
+  ]);
+  if (!getSectionVisibility(settings?.sectionVisibility).journal) return [];
+
+  const all = (entries ?? []) as any[];
+  const { pages } = paginate(all, PER_PAGE, 1);
+  // From 2: page 1 is /blog. One URL per list, never two.
+  return Array.from({ length: Math.max(0, pages - 1) }, (_, i) => ({
+    params: { page: String(i + 2) },
+  }));
+}
+
+const pageNumber = Number(Astro.params.page);
+const [entries, categories, journalPage, siteSettings] = await Promise.all([
+  getAllJournalEntries().catch(() => []),
+  getAllJournalCategories().catch(() => []),
+  getJournalPage().catch(() => null),
+  getSiteSettings().catch(() => null),
+]);
+
+const slice = paginate((entries ?? []) as any[], PER_PAGE, pageNumber);
+
+const title = `All posts, page ${slice.page} | ${site.name}`;
+const description = `Page ${slice.page} of ${slice.pages} of the First Baptist Church Muncie archive: sermon previews, church news and writing from the pastors.`;
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: site.url },
+    { name: 'Blog', url: `${site.url}/blog` },
+    { name: `Page ${slice.page}`, url: `${site.url}/blog/page/${slice.page}/` },
+  ]),
+];
+---
+
+<BaseLayout {title} {description} {schemas} {siteSettings}>
+  <Archive
+    eyebrow="The archive"
+    heading="All posts"
+    intro={`Page ${slice.page} of ${slice.pages}.`}
+    entries={slice.items}
+    page={slice.page}
+    pages={slice.pages}
+    basePath="/blog"
+    categories={(categories ?? []) as any}
+  />
+  <FinalCta
+    headline={journalPage?.finalCtaHeadline}
+    subhead={journalPage?.finalCtaSubhead}
+    cta={journalPage?.finalCta}
+    backgroundImage={journalPage?.finalCtaBackgroundImage}
+  />
+</BaseLayout>
