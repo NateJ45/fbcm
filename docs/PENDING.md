@@ -668,8 +668,36 @@ blocks became 3,232 real ones, carrying 19 h2, 17 h3, 191 h4, 396 links, 438
 list items, 88 blockquotes and 89 inline images, with 0 images missing from the
 photo archive, one video embed (a Wix-hosted mp4, rendered as a link paragraph
 because `videoEmbed` cannot play it) and two tables (event schedules, flattened
-to one bullet per row because the schema has no table block). The 79 em-dashes
-in 34 posts are the church's own sentences and were counted, not rewritten. All
-142 live bodies are backed up verbatim in
-`scripts/data/backups/journalEntry-bodies-2026-09-20.json`, and a second
+to one bullet per row, see below). All 142 live bodies are backed up verbatim
+in `scripts/data/backups/journalEntry-bodies-2026-09-20.json`, and a second
 `--apply` reports 142 unchanged.
+
+- **Dashes: 153 rewritten, 0 em-dashes left.** CLAUDE.md rule 2 is absolute
+  for Sanity content, so `convert-body.ts` turns a dash between two words into
+  a comma and one space, drops one that opens a line or follows a quote that
+  ended a sentence, and leaves a range like `Eph. 4:15-16` or `2003-2020`
+  alone. `report.emDashes` means "em-dashes that survived" and must be 0.
+- **Two posts' event tables are bullet lists, not tables.**
+  `händel-s-messiah-sing-in-carols` (the Messiah programme) and
+  `upcoming-events-at-fbc-muncie-march-3-easter-2026` (the Lent and Easter
+  schedule) each held a real `<table>`; every cell is preserved, one bullet per
+  row with the cells joined, because `journalEntry.body` has no table block and
+  adding one inside an import would be a schema change nobody reviewed. **The
+  proper fix is a `table` block on `journalEntry.body`**, plus a renderer for
+  it and a converter branch; it is a small schema job, not a content one.
+- **`@portabletext/block-tools` needs a DOM at import time, and uses jsdom
+  transitively.** Node has no `DOMParser`, so `htmlToBlocks` takes a
+  `parseHtml` function; the only DOM in this tree is the jsdom that arrives
+  through `sanity`'s CLI, not as a dependency of ours. The converter takes
+  `parseHtml` as an argument, so no library code imports a parser: the callers
+  are the unit tests and the two import scripts, all import-time tooling that
+  never ships to a browser or a Worker, and `src/types/jsdom.d.ts` declares the
+  three lines we use rather than adding `@types/jsdom`. **Declaring `jsdom` as
+  a devDependency would be a second new package and awaits Nathan's approval**
+  (CLAUDE.md rule 8, and the block-tools approval covered one package). If npm
+  ever stops hoisting it, `npm run test:unit` fails loudly.
+- Five redirects were added from the restored in-body links, taking the set
+  from 44 to 49: `/about-us` -> `/who-we-are`, `/team/james-heimlich` ->
+  `/staff`, and `/blog/hashtags/{2,3,Barbenheimer}` -> `/blog`. They 404 on the
+  deployed build until this branch merges and deploys; `verify-redirects` is
+  49/49 OK against a local build.
