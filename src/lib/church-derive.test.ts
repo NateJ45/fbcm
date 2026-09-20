@@ -38,8 +38,9 @@ test('within a group, order wins and name breaks ties', () => {
   );
 });
 
-test('week-of label reads as a sentence with the day and month', () => {
-  assert.equal(weekOfLabel('2024-01-15T10:00:00.000Z'), 'Sermon preview, week of 15 January 2024');
+test('week-of label reads as a sentence with the month and day', () => {
+  // Month first, matching every other date the site prints (see weekOfLabel).
+  assert.equal(weekOfLabel('2024-01-15T10:00:00.000Z'), 'Sermon preview, week of January 15, 2024');
 });
 
 test('an unparseable date yields the plain eyebrow rather than "Invalid Date"', () => {

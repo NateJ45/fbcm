@@ -43,15 +43,21 @@ const MONTHS = [
 ];
 
 /**
- * "Sermon preview, week of 15 January 2024". Falls back to the bare eyebrow.
+ * "Sermon preview, week of January 17, 2024". Falls back to the bare eyebrow.
  *
- * Nothing imports this yet on purpose: it is the sermon eyebrow plan 2b draws.
- * Covered by church-derive.test.ts in the meantime, so it is carried, not dead.
+ * The one sermon eyebrow on the site: blog-derive.ts's weekOfEyebrow() cleans a
+ * stega payload off the date and hands it straight here, so the blog index, the
+ * category pages and the post page all read the same sentence.
+ *
+ * US date order (month first), because every other date on this site is written
+ * that way: JournalCard, the post header and the church bands all format with
+ * `toLocaleDateString('en-US')`. It read "15 January 2024" while nothing
+ * imported it, which is the moment to fix it rather than ship two orders.
  */
 export function weekOfLabel(publishedAt: string): string {
   const d = new Date(publishedAt);
   if (Number.isNaN(d.getTime())) return 'Sermon preview';
-  return `Sermon preview, week of ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+  return `Sermon preview, week of ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 }
 
 /** Newest year first; undated documents last; ties by title. Never mutates. */
