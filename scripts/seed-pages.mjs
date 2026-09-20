@@ -193,12 +193,74 @@ function canonical(value) {
 
 /** The comparable shape of a document: system keys dropped. */
 function comparable(doc) {
+  return canonical(comparableFields(doc));
+}
+
+/** The same shape as an object, so two documents can be diffed key by key. */
+function comparableFields(doc) {
   const out = {};
-  for (const k of Object.keys(doc)) {
+  for (const k of Object.keys(doc ?? {})) {
     if (SYSTEM_KEYS.has(k)) continue;
     out[k] = doc[k];
   }
-  return canonical(out);
+  return out;
+}
+
+// ── What differs ────────────────────────────────────────────────────────────
+// WHY THIS EXISTS. `comparable(live) === comparable(doc)` is the right
+// idempotence test, but on its own the dry plan an operator reads says only
+// "would be replaced". Once the church is editing copy in the Studio, which is
+// the whole point of seeding it there, a routine `--apply` throws those edits
+// away and the one word of warning does not say what is about to go. The
+// backup makes it recoverable; this makes it READABLE BEFORE it happens, which
+// is what CLAUDE.md rule 16 is actually asking for.
+//
+// Top-level fields first, then, because pageBuilder is where the copy lives
+// and a whole-array "differs" is useless, the block INDEXES that differ inside
+// it, each with its type and, when the type itself changed, both types.
+
+/** The top-level field names whose canonical value differs between two docs. */
+function changedFields(live, doc) {
+  const a = comparableFields(live);
+  const b = comparableFields(doc);
+  const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])].sort();
+  return keys
+    .filter((k) => canonical(a[k]) !== canonical(b[k]))
+    .map((k) => {
+      const inLive = k in a;
+      const inNew = k in b;
+      if (!inLive) return `${k} (new)`;
+      if (!inNew) return `${k} (dropped)`;
+      return k;
+    });
+}
+
+/** Human lines describing which pageBuilder blocks differ, by index. */
+function changedBlocks(live, doc) {
+  const a = Array.isArray(live?.pageBuilder) ? live.pageBuilder : [];
+  const b = Array.isArray(doc?.pageBuilder) ? doc.pageBuilder : [];
+  const lines = [];
+  if (a.length !== b.length) lines.push(`length ${a.length} -> ${b.length}`);
+  for (let i = 0; i < Math.max(a.length, b.length); i += 1) {
+    const x = a[i];
+    const y = b[i];
+    if (canonical(x) === canonical(y)) continue;
+    if (x === undefined) lines.push(`[${i}] added ${y?._type ?? '?'}`);
+    else if (y === undefined) lines.push(`[${i}] removed ${x?._type ?? '?'}`);
+    else if (x?._type !== y?._type) lines.push(`[${i}] ${x?._type} -> ${y?._type}`);
+    else lines.push(`[${i}] ${y?._type}`);
+  }
+  return lines;
+}
+
+/** Print the plan's "what differs" block, indented under the document line. */
+function printDifferences(live, doc) {
+  const fields = changedFields(live, doc);
+  if (fields.length === 0) return;
+  console.log(`    fields: ${fields.join(', ')}`);
+  if (!fields.some((f) => f.startsWith('pageBuilder'))) return;
+  const blocks = changedBlocks(live, doc);
+  if (blocks.length > 0) console.log(`    pageBuilder: ${blocks.join(', ')}`);
 }
 
 // ── Module loading ──────────────────────────────────────────────────────────
@@ -443,9 +505,16 @@ async function main() {
     const verb = live ? 'replaced' : 'created';
     if (!apply) {
       console.log(`  would be ${verb}`);
+      // A replacement overwrites whatever is live, so the plan names what it
+      // would overwrite. A creation has nothing to diff against.
+      if (live) printDifferences(live, doc);
       console.log('');
       continue;
     }
+
+    // The same field list the dry run prints, printed on the wet run too, so
+    // the terminal record of what was overwritten is as readable as the plan.
+    if (live) printDifferences(live, doc);
 
     // Backup first, always, and BEFORE the write.
     const backup = writeBackup(mod.id, live);
