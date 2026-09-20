@@ -1,0 +1,417 @@
+{
+  "_createdAt": "2026-09-20T02:29:50Z",
+  "_id": "page-staff",
+  "_rev": "QjI0kncFolotw4PTBj6mwl",
+  "_type": "page",
+  "_updatedAt": "2026-09-20T02:29:50Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "st-hero",
+      "_type": "heroSection",
+      "eyebrow": "Staff",
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "Kendall Ellis, Co-Pastor",
+          "asset": {
+            "_ref": "image-7c2f716730179bcbecc59a170ff97f8c39b39f25-2806x4209-jpg",
+            "_type": "reference"
+          }
+        }
+      ],
+      "headline": "The people who serve here.",
+      "layout": "split",
+      "primaryCta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "externalUrl": "/staff#kendall-ellis",
+        "label": "Pastors",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "/staff#coordination",
+        "label": "Church Coordination Team",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "size": "short"
+    },
+    {
+      "_key": "st-pastors",
+      "_type": "staffGridSection",
+      "eyebrow": "Pastors",
+      "group": "pastors",
+      "heading": "Our pastors and worship arts director",
+      "showBios": true
+    },
+    {
+      "_key": "st-letter",
+      "_type": "richTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "letter"
+      },
+      "body": [
+        {
+          "_key": "lt-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "If you’re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you’re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we’d love for you to join us for worship too!"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "After all, Jesus did not say to his first followers: “Figure it all out, and then get back to me.” He said to them, “Come and see” (John 1:39)."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Even so, we know people curious about a church wonder what a particular church, including its pastors, “are all about.”"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We love the Good News – the Gospel – that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He Ascended to heaven, and he will come again in glory to make all that is wrong right. That’s life-changing, and truly good, news. It’s news good enough to set all of us free."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We’re all about the church. This church is made up of people who are all imperfect, all of us with our own struggles, all of us failing, falling into our old selfish ways, and getting up again only by God’s grace. And those same people are also filled by God’s own Spirit, have a sincere desire to be “good news” people, and to serve one another as we grow in our love of Christ together."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-f-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-f-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We’re honored to serve as Co-Pastors here. And it’s not only because First Baptist decided to do something a little unusual in calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-g-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-g-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We love to serve here because we love being part of this Spirit-led people gathered to join Christ's presence in our community."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-h-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-h-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Finally, we would love for you to join us this Sunday, or anytime we’re gathered to encounter the same Christ who was, and is, and will come again – as we meet him in worship, the word, and the Lord’s table. “Come and see!”"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "A note from our pastors",
+      "heading": "From Kendall and Jonathan"
+    },
+    {
+      "_key": "st-coordination",
+      "_type": "staffGridSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "coordination"
+      },
+      "eyebrow": "Church Coordination Team",
+      "group": "coordination",
+      "heading": "The Church Coordination Team",
+      "showBios": true
+    },
+    {
+      "_key": "st-support",
+      "_type": "staffGridSection",
+      "eyebrow": "Support and volunteer roles",
+      "group": "support",
+      "heading": "Support and volunteer roles",
+      "showBios": true
+    },
+    {
+      "_key": "st-deacons",
+      "_type": "imageTextSection",
+      "body": [
+        {
+          "_key": "dc-lead-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-lead-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Current Deacons (left to right in photo):"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "dc-name-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-name-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Gayle Songer"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "dc-name-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-name-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Richard \"Dick\" Flaherty"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "dc-name-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-name-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "James \"Jim\" Butler*"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "dc-name-4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-name-4s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Aaron Smith"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "dc-name-5",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-name-5s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Janis Wright"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "dc-chair-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-chair-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "*Deacon chair: "
+            },
+            {
+              "_key": "dc-chair-1s2",
+              "_type": "span",
+              "marks": [
+                "dc-chair-1l1"
+              ],
+              "text": "deaconchair@fbcmuncie.org"
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "dc-chair-1l1",
+              "_type": "link",
+              "href": "mailto:deaconchair@fbcmuncie.org"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "dc-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Each active member or attendee is assigned a Deacon whom they can go to with questions, to get connected, or for pastoral care needs."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "dc-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "In the New Testament, deacons were chosen for acts of mercy and service in the church (1 Timothy 3:8-9; Romans 16:1-2)."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "dc-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "dc-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Following that example, Deacons assist at the Lord’s table and in baptism, in orienting and caring for members, and oversee the benevolence fund. A deacon serves a three-year term before rotating off for at least one year before they can be nominated again."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Deacons",
+      "heading": "Our deacons",
+      "image": {
+        "_type": "image",
+        "alt": "The 2026 deacons of First Baptist Church Muncie",
+        "asset": {
+          "_ref": "image-86ea34a0c404d24e71e4253242061def78b627c7-1600x800-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "left"
+    },
+    {
+      "_key": "st-scripture",
+      "_type": "scriptureBandSection",
+      "accentWord": "minister",
+      "verse": "Every Christian is called to minister to others in some way."
+    },
+    {
+      "_key": "st-cta",
+      "_type": "ctaBandSection",
+      "cta": {
+        "_key": "cta-3",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-contact",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Contact us",
+        "linkType": "internal"
+      },
+      "eyebrow": "Can't find who you need?",
+      "headline": "Ask the office.",
+      "secondaryCta": {
+        "_key": "cta-4",
+        "_type": "ctaBlock",
+        "externalUrl": "tel:7652847749",
+        "label": "Call the office",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "subhead": "309 East Adams Street. (765) 284-7749."
+    }
+  ],
+  "seoDescription": "The staff and volunteers of First Baptist Church Muncie: our pastors, the Church Coordination Team, and our deacons.",
+  "seoTitle": "Staff | First Baptist Church Muncie",
+  "slug": {
+    "_type": "slug",
+    "current": "staff"
+  },
+  "title": "Staff"
+}

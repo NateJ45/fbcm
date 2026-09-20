@@ -3,10 +3,10 @@
 // The Staff page, composed exactly as section 5.6 of
 // docs/superpowers/specs/2026-09-19-fbcm-plan2-pages-design.md describes it:
 // two Wix pages (ministers 1,162 words, team 213 words) plus sixteen separate
-// /team/<slug> profile pages become ONE page with three staff grids and one
-// deacons band.
+// /team/<slug> profile pages become ONE page with three staff grids, one
+// deacons band, and two bands of the church's own prose about how it is led.
 //
-// Six things about this file are deliberate.
+// Seven things about this file are deliberate.
 //
 // 1. NOT ONE PERSON IS TYPED HERE. Every name, role, email, portrait and bio on
 //    this page is read at BUILD time from the staffMember documents
@@ -51,7 +51,16 @@
 //    footnote asterisk that pairs the line with Jim Butler's name is kept on
 //    both, exactly as the church wrote it.
 //
-// 6. EVERY BLOCK IS READ OFF A CAPTURE. pick() and linesBetween() THROW when an
+// 6. THE GRIDS DO NOT EXPLAIN THEMSELVES, SO THE CHURCH DOES (ruling P22).
+//    Two richText bands carry four paragraphs of ministers.txt that the Wix
+//    page printed above its own lists and that the first draft of this page
+//    dropped: what a pastor is, why two of ours are married to each other,
+//    what the Worship Director does, and what the Church Coordination Team
+//    is. Each sits BEFORE the grid it explains. Neither carries an anchor,
+//    so `#coordination` stays on the grid and every redirect still lands on
+//    a person.
+//
+// 7. EVERY BLOCK IS READ OFF A CAPTURE. pick() and linesBetween() THROW when an
 //    anchor phrase moves, so a band that would have seeded empty, or
 //    half-empty, fails the run instead of shipping a hole.
 
@@ -73,6 +82,7 @@ export default {
     'Deacon chair address: "deaconchair[at]fbcmuncie.org" becomes a real mailto link to deaconchair@fbcmuncie.org, because a visitor cannot click "[at]". (Deacons band; spec 5.6 "Fixes".)',
     'Em-dash to comma (site style): "...calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community." (A note from our pastors.)',
     'Cut and re-cased: the scripture band is the closing sentence of the "Every Member of this Church" paragraph with its opening clause cut, so it reads "Every Christian is called to minister to others in some way." rather than "And, even if not currently serving in those particular capacities, every...".',
+    'Punctuation: "we also have a Worship Director. who coordinates and supports our worship leaders" becomes "...a Worship Director, who coordinates and supports our worship leaders". The full stop mid-sentence is a typo in scripts/data/pages/ministers.txt line 12; no word changes. ("How we are led.")',
   ],
 
   // No band on this page shows an identifiable child. Every portrait is an
@@ -256,6 +266,36 @@ export default {
       ...paragraphs(pick(whatAreDeacons, 'Following that example', 'ministers'), 'dc-c'),
     ];
 
+    // 2b. The church's own account of how it is led (ruling P22). Three
+    //     paragraphs of ministers.txt that the Wix page printed above its
+    //     pastor cards and that this page dropped on the way here: what a
+    //     pastor is, why two of them are married to each other, and what the
+    //     Worship Director does. They go BEFORE the pastors grid, because that
+    //     is where the church put them and because the grid means less
+    //     without them. The one edit is a full stop that should be a comma.
+    const howWeAreLed = [
+      ...paragraphs(line('ministers', 'under-shepherds'), 'hw-a'),
+      ...paragraphs(line('ministers', 'two Co-Pastors, a married couple'), 'hw-b'),
+      ...paragraphs(
+        swap(
+          line('ministers', 'we also have a Worship Director'),
+          'a Worship Director. who coordinates',
+          'a Worship Director, who coordinates',
+        ),
+        'hw-c',
+      ),
+    ];
+
+    // 4b. What the Church Coordination Team IS. One paragraph, ministers.txt
+    //     line 37, the church's own definition of the body whose eleven cards
+    //     follow it. No eyebrow: the grid below carries one, and two eyebrows
+    //     stacked would read as two sections rather than one explanation and
+    //     its list (CLAUDE.md rule 17).
+    const whatTheCctIs = paragraphs(
+      line('ministers', 'Members of the Church Coordination Team'),
+      'cct',
+    );
+
     // 3. The scripture band. The closing sentence of the church's "Every Member
     //    of this Church" paragraph, with its opening clause cut so the band can
     //    stand on its own, and "every" re-cased to start the sentence. No word
@@ -295,7 +335,17 @@ export default {
           secondaryCta: ctaAnchor('Church Coordination Team', '/staff#coordination'),
         },
 
-        // 2. The pastors. Three people today, not two: the two Co-Pastors and
+        // 2. How the church says it is led, in its own words, before the
+        //    faces. See the note beside `howWeAreLed` above.
+        {
+          _type: 'richTextSection',
+          _key: 'st-how-led',
+          eyebrow: 'Pastors and staff',
+          heading: 'How we are led',
+          body: howWeAreLed,
+        },
+
+        // 3. The pastors. Three people today, not two: the two Co-Pastors and
         //    the Worship Arts Director, who is filed in the same group. The
         //    heading says what the band actually draws, exactly as the same
         //    band on /who-we-are does. /staff#kendall-ellis, #jonathan-balmer
@@ -309,7 +359,7 @@ export default {
           showBios: true,
         },
 
-        // 3. Their letter, whole. /who-we-are carries three of these eight
+        // 4. Their letter, whole. /who-we-are carries three of these eight
         //    paragraphs and links to `#letter` for the rest, so this anchor may
         //    not be renamed without that link changing in the same commit.
         {
@@ -321,7 +371,17 @@ export default {
           body: letter,
         },
 
-        // 4. The Church Coordination Team. Eleven cards, bios expanding where
+        // 5. What the Church Coordination Team is, before the eleven faces.
+        //    It carries NO anchor: `#coordination` stays on the grid below, so
+        //    the hero button and the redirects still land on the people.
+        {
+          _type: 'richTextSection',
+          _key: 'st-cct-what',
+          heading: 'What the Church Coordination Team is',
+          body: whatTheCctIs,
+        },
+
+        // 6. The Church Coordination Team. Eleven cards, bios expanding where
         //    the church wrote one. /staff#loraine-garrett and #molly-flodder
         //    land on cards inside this grid, and the hero's second button
         //    points at `#coordination`.
@@ -335,7 +395,7 @@ export default {
           showBios: true,
         },
 
-        // 5. Support and volunteer roles: the intern, the wedding coordinator
+        // 7. Support and volunteer roles: the intern, the wedding coordinator
         //    and the pianist/organist. Bios are shown for the same reason as
         //    above, which is that all three have one.
         {
@@ -347,7 +407,7 @@ export default {
           showBios: true,
         },
 
-        // 6. The deacons, in their own words, beside the photograph their own
+        // 8. The deacons, in their own words, beside the photograph their own
         //    caption depends on.
         {
           _type: 'imageTextSection',
@@ -359,7 +419,7 @@ export default {
           body: deaconsBody,
         },
 
-        // 7. The sentence the whole page is for, on the indigo field.
+        // 9. The sentence the whole page is for, on the indigo field.
         {
           _type: 'scriptureBandSection',
           _key: 'st-scripture',
@@ -367,7 +427,7 @@ export default {
           accentWord: 'minister',
         },
 
-        // 8. Closing band, with both buttons (plan 2b ruling P13) and a subhead
+        // 10. Closing band, with both buttons (plan 2b ruling P13) and a subhead
         //    built from Site settings rather than retyped.
         {
           _type: 'ctaBandSection',

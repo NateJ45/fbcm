@@ -42,6 +42,15 @@
 //                                    // word of the church's own text, and every
 //                                    // cut worth naming. NOT new sentences: the
 //                                    // words are still theirs, changed in place.
+//     confirm: ['...'],              // facts THIS page had to force, or that
+//                                    // the church's own sources contradict each
+//                                    // other about. A third question, after the
+//                                    // new sentences and the edits: not "do you
+//                                    // want this?" and not "is this still what
+//                                    // you meant?" but "which of your two
+//                                    // answers is the true one?" Quote the
+//                                    // conflicting phrases with file:line so a
+//                                    // reader can check without hunting.
 //     photoConsent: ['hero-children'],  // page-images manifest keys of photos
 //                                    // with identifiable children in them
 //   };
@@ -338,6 +347,18 @@ function writeApprovalNote(mods, manifest) {
     if (edits.length === 0) lines.push('- (none: their text is cut, never reworded)');
     else for (const e of edits) lines.push(`- ${e}`);
     lines.push('');
+    // Ruling P20. The page-level companion to the whole-site confirm list at
+    // the foot of this note: a fact THIS page had to force because the
+    // church's own captures disagree, quoted with file:line so the reader can
+    // check it against the source without hunting for it. It sits after the
+    // edits because it is the question an edit raises and cannot answer.
+    const confirm = mod.confirm ?? [];
+    if (confirm.length > 0) {
+      lines.push('### Facts to confirm from this page');
+      lines.push('');
+      for (const c of confirm) lines.push(`- ${c}`);
+      lines.push('');
+    }
     lines.push('### Photos of children');
     lines.push('');
     const photos = mod.photoConsent ?? [];

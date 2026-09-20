@@ -97,6 +97,19 @@ export default {
     'Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now follows that page’s own redirect to /blog#publications.',
   ],
 
+  // Facts this page had to force, because the church's own captures give two
+  // answers for one room (ruling P20). Each one quotes both phrases with
+  // file:line, so the person who knows the building can settle it by reading
+  // the two lines rather than by walking the corridor. All four are about room
+  // numbers, and all four come from the same two files carrying the same
+  // ministry twice.
+  confirm: [
+    'The nursery and the family room, forced to 104 and 105. scripts/data/pages/what-to-expect.txt:53 says "Nursery Care (104)" and :57 says "Family Room (105)"; scripts/data/pages/children.txt:23 says "Nursery (Rm. 105) is available for infants through 3 years old." and :53 says "...are also welcome to use the Family Room (Rm. 104) to nurse, calm crying kids...". The same file then says the other thing at children.txt:33, "(Rm. 104) is available for infants through 3-year-olds." This page and /visit both say nursery 104, family room 105. Which is right?',
+    'Worship Arts Sunday School: B-03 or B-01? scripts/data/pages/what-to-expect.txt:38 says "Children’s Worship Arts Play and practice in music, choir, scripture reading, and more (B-03)."; scripts/data/pages/children.txt:41 says "(Rm. B-01) involves our whole children’s ministry in music, art, and reading for spiritual formation."',
+    'The Kids Center is given only once, at scripts/data/pages/children.txt:25: "Children Pre-K through 5th grade are invited to gather in the Kids Center (Rm. B01)...". Nothing else in the captures names that room, so there is nothing to check it against. Is B01 right, and is it the same room as B-01?',
+    'The Underground: B-03 or B01? scripts/data/pages/what-to-expect.txt:69 says "3rd - 5th grade: The Underground Children’s Church (B-03)"; scripts/data/pages/children.txt:71 says "The Underground (Rm. B01) for 3rd through 5th graders."',
+  ],
+
   // Bands with identifiable children in them, for the consent conversation.
   photoConsent: ['ministries-children', 'ministries-youth'],
 
