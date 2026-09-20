@@ -232,6 +232,113 @@ test('a table becomes one bullet per row rather than being dropped', async () =>
   assert.equal(items[1].children[0].text, 'Sat, March 7 · Lenten Breakfast');
 });
 
+// ── Dashes (CLAUDE.md rule 2, added in the task 16 fix wave) ───────────────
+
+test('an em-dash between two words becomes a comma and one space', async () => {
+  const { blocks, report } = await convertBody(
+    '<p>really pay attention to what is going on—with the loneliness</p>',
+    options().opts,
+  );
+  assert.equal(
+    (blocks[0] as ConvertedTextBlock).children[0].text,
+    'really pay attention to what is going on, with the loneliness',
+  );
+  assert.equal(report.emDashes, 0);
+  assert.equal(report.dashesNormalised, 1);
+
+  // Spaced, and spaced with an en-dash, read the same way.
+  const spaced = await convertBody(
+    '<p>Stash the Phone and Get Out — the same thing</p>',
+    options().opts,
+  );
+  assert.equal(
+    (spaced.blocks[0] as ConvertedTextBlock).children[0].text,
+    'Stash the Phone and Get Out, the same thing',
+  );
+  const enDash = await convertBody(
+    '<p>may look like anything but – but it is not a trick</p>',
+    options().opts,
+  );
+  assert.equal(
+    (enDash.blocks[0] as ConvertedTextBlock).children[0].text,
+    'may look like anything but, but it is not a trick',
+  );
+});
+
+test('a dash that opens a line, or follows a quote, is dropped and the space collapses', async () => {
+  const opening = await convertBody('<p>— Esau McCaulley</p>', options().opts);
+  assert.equal((opening.blocks[0] as ConvertedTextBlock).children[0].text, 'Esau McCaulley');
+
+  // The church's most common shape: a scripture attribution after a quote.
+  const attribution = await convertBody(
+    '<p>“The Lord is close to the brokenhearted.” — Psalm 34:18</p>',
+    options().opts,
+  );
+  assert.equal(
+    (attribution.blocks[0] as ConvertedTextBlock).children[0].text,
+    '“The Lord is close to the brokenhearted.” Psalm 34:18',
+  );
+  assert.equal(attribution.report.emDashes, 0);
+});
+
+test('a closing quote decides by what came before it, not by being a quote', async () => {
+  // A parenthesis closed by a quote is still a parenthesis: comma.
+  const parenthesis = await convertBody(
+    '<p>fanaticism disguised as “conviction”—we can see that</p>',
+    options().opts,
+  );
+  assert.equal(
+    (parenthesis.blocks[0] as ConvertedTextBlock).children[0].text,
+    'fanaticism disguised as “conviction”, we can see that',
+  );
+
+  // A quote that ENDED a sentence is an attribution: drop.
+  const attribution = await convertBody(
+    '<p>“Sorrowful, yet always rejoicing.” — 2 Corinthians 6:10</p>',
+    options().opts,
+  );
+  assert.equal(
+    (attribution.blocks[0] as ConvertedTextBlock).children[0].text,
+    '“Sorrowful, yet always rejoicing.” 2 Corinthians 6:10',
+  );
+
+  // An opening quote on the RIGHT still starts a word.
+  const opening = await convertBody(
+    '<p>American Baptist Identity Statement, 2005 — “We Are American Baptists”</p>',
+    options().opts,
+  );
+  assert.equal(
+    (opening.blocks[0] as ConvertedTextBlock).children[0].text,
+    'American Baptist Identity Statement, 2005, “We Are American Baptists”',
+  );
+});
+
+test('a numeric or scripture range keeps its dash exactly as typed', async () => {
+  const { blocks, report } = await convertBody(
+    '<p>From 2003–2020 and again in Eph. 4:15–16, and 2003- 2020 too.</p>',
+    options().opts,
+  );
+  assert.equal(
+    (blocks[0] as ConvertedTextBlock).children[0].text,
+    'From 2003–2020 and again in Eph. 4:15–16, and 2003- 2020 too.',
+  );
+  assert.equal(report.dashesNormalised, 0);
+});
+
+test('a dash that opens a SPAN still sees the word in the span before it', async () => {
+  // 14 of the corpus's 81 em-dashes sit straight after a tag, so the dash
+  // starts one span and the word before it ends the previous one. Read
+  // span-locally this looks like a line-opening dash, and dropping it would
+  // join the two words with nothing between them.
+  const { blocks } = await convertBody(
+    '<p>holding sorrow and hope <strong>together</strong>—because faith endures</p>',
+    options().opts,
+  );
+  const text = (blocks[0] as ConvertedTextBlock).children.map((c) => c.text).join('');
+  assert.equal(text, 'holding sorrow and hope together, because faith endures');
+  assert.ok(!text.includes('togetherbecause'));
+});
+
 test('the report counts what carried, and counts the em-dashes it did not add', async () => {
   const { report } = await convertBody(FIXTURE, options().opts);
   assert.equal(report.h2, 1);
@@ -243,9 +350,12 @@ test('the report counts what carried, and counts the em-dashes it did not add', 
   assert.equal(report.emDashes, 0);
 
   const dashed = await convertBody('<p>The church — ours — gathers.</p>', options().opts);
-  assert.equal(dashed.report.emDashes, 2);
-  // The church's own em-dash is left in their words, not silently rewritten.
-  assert.match((dashed.blocks[0] as ConvertedTextBlock).children[0].text, /—/);
+  assert.equal(dashed.report.emDashes, 0, 'rule 2: no em-dash may survive');
+  assert.equal(dashed.report.dashesNormalised, 2);
+  assert.equal(
+    (dashed.blocks[0] as ConvertedTextBlock).children[0].text,
+    'The church, ours, gathers.',
+  );
 });
 
 test('every style, list and decorator the converter emits is declared by the Studio schema', async () => {

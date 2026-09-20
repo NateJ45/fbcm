@@ -59,14 +59,23 @@ const liveById = new Map(live.map((doc) => [doc._id, doc]));
 console.log(`live journalEntry documents: ${live.length}`);
 
 // --- the uploader ------------------------------------------------------------
-// Real uploads write assets to Sanity, so a DRY run must not make any. It reuses
-// whatever scripts/.asset-map.json already holds and marks the rest pending, so
-// the dry plan still shows every picture that would be carried.
+// Real uploads write assets to Sanity, so a DRY run must not make any.
+//
+// It reads scripts/.asset-map.json directly rather than only through the
+// uploader, because a picture that is ALREADY uploaded has a real asset id and
+// the dry run must use it. Handing every image a placeholder id instead made
+// the first dry run of this fix wave report 78 posts changed where the apply
+// then changed 54: the 24 extra were posts whose only "difference" was the
+// placeholder standing in for an asset that was already there. A dry run that
+// overstates its own plan is a dry run people stop reading.
+const ASSET_MAP = resolve(ROOT, 'scripts/.asset-map.json');
+const assetMap = existsSync(ASSET_MAP) ? JSON.parse(readFileSync(ASSET_MAP, 'utf8')) : {};
 const uploader = makeUploader();
 const pending = new Set();
 const uploadImage = async (relPath) => {
   const absolute = resolve(ARCHIVE, relPath);
   if (APPLY) return uploader.upload(absolute);
+  if (assetMap[absolute]) return assetMap[absolute];
   pending.add(relPath);
   return 'image-not-yet-uploaded';
 };
@@ -102,6 +111,7 @@ const totals = {
   embeds: 0,
   tables: 0,
   emDashes: 0,
+  dashesNormalised: 0,
 };
 const missingImages = [];
 const emDashPosts = [];
@@ -131,12 +141,17 @@ for (const captured of captures) {
       'embeds',
       'tables',
       'emDashes',
+      'dashesNormalised',
     ]) {
       totals[k] += report[k];
     }
     totals.missingImages += report.missingImages.length;
     for (const src of report.missingImages) missingImages.push(`${captured.slug}: ${src}`);
-    if (report.emDashes) emDashPosts.push(`${captured.slug}: ${report.emDashes}`);
+    // emDashes must be 0 (CLAUDE.md rule 2). What is worth listing is where
+    // the normaliser had work to do, and anything it missed.
+    if (report.dashesNormalised) emDashPosts.push(`${captured.slug}: ${report.dashesNormalised}`);
+    if (report.emDashes)
+      console.log(`  !! ${captured.slug}: ${report.emDashes} em-dash(es) SURVIVED`);
   } else {
     totals.blocks += blocks.length;
   }
@@ -173,7 +188,7 @@ console.log(
     `(h2 ${totals.h2}, h3 ${totals.h3}, h4 ${totals.h4}, links ${totals.links}, ` +
     `lists ${totals.listItems}, quotes ${totals.quotes}, images ${totals.images}, ` +
     `missing-images ${totals.missingImages}, embeds ${totals.embeds}, tables ${totals.tables}, ` +
-    `em-dashes ${totals.emDashes})`,
+    `em-dashes ${totals.emDashes}, dashes-normalised ${totals.dashesNormalised})`,
 );
 if (missingImages.length) {
   console.log(`\nimages with no file in the archive: ${missingImages.length}`);

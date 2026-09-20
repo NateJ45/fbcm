@@ -89,8 +89,10 @@ export interface ConvertReport {
   missingImages: string[];
   embeds: number;
   tables: number;
-  /** Em-dashes in the church's own words. Counted, never rewritten. */
+  /** Em-dashes LEFT in the output. CLAUDE.md rule 2 means this must be 0. */
   emDashes: number;
+  /** Dashes the normaliser rewrote into a comma, or dropped. */
+  dashesNormalised: number;
 }
 
 export interface ConvertOptions {
@@ -342,6 +344,137 @@ function isPlayableEmbed(url: string): boolean {
   }
 }
 
+// ── Dashes ─────────────────────────────────────────────────────────────────
+// CLAUDE.md rule 2 is absolute for Sanity content, and the capture carries 81
+// em-dashes and 68 spaced en-dashes in the church's own sentences. They are
+// rewritten here, deterministically, rather than left for a human to find.
+//
+// THE ONE THING THAT MAKES THIS HARDER THAN A REPLACE. 14 of the 81 sit
+// immediately after a tag ("together</strong>—because faith"), so after
+// conversion the dash OPENS a span and the word before it lives in the
+// previous one. A per-span regex reads that dash as sentence-opening, drops
+// it, and joins "together" to "because" with nothing in between: a corruption
+// that reads like a typo and that no test would catch unless it was written
+// for this case. So the normaliser is given the block's text on either side of
+// the span and decides from the real neighbouring characters.
+
+/** Letters and digits, in any script. The church quotes Greek and Hebrew. */
+function isWordChar(ch: string): boolean {
+  return /[\p{L}\p{N}]/u.test(ch);
+}
+
+/**
+ * What counts as "a word starts here" on the RIGHT of a dash. An opening quote
+ * or bracket counts, because the church writes
+ * "American Baptist Identity Statement, 2005 — “We Are American Baptists”",
+ * and that wants a comma, not a dropped dash.
+ */
+function opensWord(ch: string): boolean {
+  return isWordChar(ch) || /[“‘"'([]/.test(ch);
+}
+
+/**
+ * What counts as "a word ends here" on the LEFT of a dash. A closing quote
+ * counts ONLY when the quoted text did not end a sentence, which is what
+ * separates the two shapes the church uses constantly:
+ *
+ *   ...disguised as “conviction”—we can see   -> a parenthesis: comma
+ *   ...brokenhearted.” — Psalm 34:18       -> an attribution: drop
+ *
+ * Without that test one of the two always reads wrong, and it is the
+ * attribution (a comma after a full stop and a quote) that reads worst.
+ */
+function closesWord(before: string): boolean {
+  const last = before.slice(-1);
+  if (isWordChar(last)) return true;
+  if (!/[”’")\]]/.test(last)) return false;
+  return !/[.!?]$/.test(before.slice(0, -1));
+}
+
+/**
+ * Rewrite the dashes in one span.
+ *
+ * - Between two words it becomes a comma and one space: "going on—with the
+ *   loneliness" -> "going on, with the loneliness".
+ * - Anywhere else (after a closing quote in an attribution, at the very start
+ *   of a block) it is dropped and the space around it collapses: "...
+ *   brokenhearted.” — Psalm 34:18" -> "... brokenhearted.” Psalm 34:18".
+ * - A U+2013 counts as a dash ONLY when it has whitespace on both sides, which
+ *   is what keeps a numeric or scripture range ("Eph. 4:15–16", "2003–2020")
+ *   exactly as the church typed it.
+ *
+ * `prevText` and `nextText` are the rest of the block, so a dash at a span edge
+ * still sees the characters around it.
+ */
+export function normalizeDashes(
+  text: string,
+  prevText = '',
+  nextText = '',
+): { text: string; changed: number } {
+  let out = '';
+  let changed = 0;
+  let i = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    const rawLeft = (prevText + out).slice(-1);
+    const rawRight = (text.slice(i + 1) + nextText).slice(0, 1);
+    const isDash = ch === '—' || (ch === '–' && /\s/.test(rawLeft) && /\s/.test(rawRight));
+    if (!isDash) {
+      out += ch;
+      i++;
+      continue;
+    }
+
+    // Absorb the whitespace on both sides of the dash, inside this span.
+    let start = i;
+    let end = i + 1;
+    while (start > 0 && /\s/.test(text[start - 1])) start--;
+    while (end < text.length && /\s/.test(text[end])) end++;
+    out = out.slice(0, out.length - (i - start));
+
+    const before = (prevText + out).replace(/\s+$/, '');
+    const after = (text.slice(end) + nextText).replace(/^\s+/, '');
+    if (before !== '' && after !== '' && closesWord(before) && opensWord(after.slice(0, 1))) {
+      out += ', ';
+    } else if (before === '' || after === '') {
+      out += '';
+    } else {
+      out += ' ';
+    }
+    changed++;
+    i = end;
+  }
+  return { text: out, changed };
+}
+
+/**
+ * Run the normaliser across one block, span by span, then tidy the two seams
+ * it can leave: a comma that starts a span whose predecessor ends in a space,
+ * and two spaces meeting at a span boundary. Neither is visible in the
+ * rendered HTML, but both are visible in the Studio and in a diff.
+ */
+function normalizeBlockDashes(block: ConvertedTextBlock): number {
+  let changed = 0;
+  const texts = block.children.map((c) => c.text);
+  for (let i = 0; i < texts.length; i++) {
+    const result = normalizeDashes(
+      texts[i],
+      texts.slice(0, i).join(''),
+      texts.slice(i + 1).join(''),
+    );
+    texts[i] = result.text;
+    changed += result.changed;
+  }
+  for (let i = 1; i < texts.length; i++) {
+    if (/^[,\s]/.test(texts[i]) && /\s$/.test(texts[i - 1])) {
+      texts[i - 1] = texts[i - 1].replace(/\s+$/, texts[i].startsWith(',') ? '' : ' ');
+      if (!texts[i].startsWith(',')) texts[i] = texts[i].replace(/^\s+/, '');
+    }
+  }
+  block.children = block.children.map((child, i) => ({ ...child, text: texts[i] }));
+  return changed;
+}
+
 // ── The conversion ─────────────────────────────────────────────────────────
 
 function textOf(block: ConvertedBlock): string {
@@ -392,6 +525,7 @@ export async function convertBody(
     embeds: 0,
     tables: 0,
     emDashes: 0,
+    dashesNormalised: 0,
   };
 
   const source = String(html ?? '').trim();
@@ -434,6 +568,24 @@ export async function convertBody(
     return textOf(block).replace(/\s| /g, '') !== '';
   });
 
+  // Dashes come out AFTER the blocks are assembled and BEFORE the keys are
+  // fixed, because the rule needs the whole block's text (see normalizeDashes)
+  // and because rekey is the last thing that touches a block.
+  for (const block of kept) {
+    if (block._type === 'block') {
+      report.dashesNormalised += normalizeBlockDashes(block as ConvertedTextBlock);
+      continue;
+    }
+    // A picture's alt and caption are the church's words too.
+    const object = block as ConvertedObjectBlock;
+    for (const field of ['alt', 'caption'] as const) {
+      if (typeof object[field] !== 'string') continue;
+      const result = normalizeDashes(object[field]);
+      object[field] = result.text;
+      report.dashesNormalised += result.changed;
+    }
+  }
+
   const blocks = kept.map((block, index) => rekey(block, `${keyPrefix(options.slug)}b${index}`));
 
   // The report is read off the FINAL blocks, so it describes what was written.
@@ -442,6 +594,8 @@ export async function convertBody(
     if (block._type !== 'block') continue;
     const text = block as ConvertedTextBlock;
     report.links += text.markDefs.filter((d) => d._type === 'link').length;
+    // Must be 0: this is the check on the normaliser, not a note about the
+    // source. A non-zero count means a dash escaped it.
     report.emDashes += (textOf(text).match(/—/g) ?? []).length;
     if (text.listItem) {
       report.listItems++;
