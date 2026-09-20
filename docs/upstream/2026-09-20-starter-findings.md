@@ -211,6 +211,8 @@ Likely next case in the family: presacademy's events archive.
 
 ## 6a. The parity baselines feed Tailwind, so a capture invalidates itself
 
+**Fixed 2026-09-20, plan 2c fix wave.**
+
 **What it is.** A loop between two things the starter ships and nobody had put
 side by side: `scripts/.parity/*.html` is COMMITTED (that is the whole point of
 a baseline), so it is not gitignored, so Tailwind v4's automatic source
@@ -223,15 +225,15 @@ the only diff on every failing page being the stylesheet's own byte count and
 hash: `- CSS 124630B 6f2f68b8` against `+ CSS 124529B efd6192e`, markup
 byte-identical.
 
-The proof, because "probably Tailwind" is not a diagnosis. Two classes,
-`hover:text-white` and `lg:justify-between`, appear in the pre-plan-2a
-baselines, appear in the post-recapture baselines nowhere, appear in no file
-under `src/` at all, and are absent from the current stylesheet. The two rules
-they generate come to about 100 bytes, against a measured delta of 101. The
-capture recorded a stylesheet built from the OLD baselines; the first rebuild
-after it legitimately produces a smaller one. Confirmed deterministic across
-two builds, and confirmed not to be the session's own new Markdown (moving
-three new notes out of the tree changed nothing).
+The proof, because "probably Tailwind" is not a diagnosis. Two stale utility
+classes appeared in the pre-plan-2a baselines, appeared in the post-recapture
+baselines nowhere, appeared in no file under `src/` at all, and were absent
+from the current stylesheet. The two rules they generated came to about 100
+bytes, against a measured delta of 101. The capture recorded a stylesheet built
+from the OLD baselines; the first rebuild after it legitimately produced a
+smaller one. Confirmed deterministic across two builds, and confirmed not to be
+the session's own new Markdown (moving three new notes out of the tree changed
+nothing).
 
 Two things kept this hidden until now, and both are worth the card:
 
@@ -242,13 +244,26 @@ Two things kept this hidden until now, and both are worth the card:
   link and the drift is invisible, which is worse, not better: the baselines
   were already unstable, and nothing said so.
 
-**And the loop then closed on the diagnosis itself.** Writing those two class
-names into `docs/PENDING.md` and into this file put them back into Tailwind's
-scan, because Markdown is scanned too. The next build regenerated exactly those
-two rules, the stylesheet went back to 124,750 bytes, and the compare returned
-162/162 PASS. Green because a note mentions two utilities. Keep that in the
-card: it is the cheapest possible demonstration that the harness's inputs and
-its outputs are the same files.
+**And the loop then closed on the diagnosis itself, briefly.** Naming those two
+stale utility classes in `docs/PENDING.md` and in an earlier draft of this file
+put them back into Tailwind's scan, because Markdown is scanned too. The next
+build regenerated exactly those two rules, the stylesheet went back to its
+leaked size, and the compare returned 162/162 PASS: green because a note
+mentioned two utilities, not because the render was proven correct. That
+demonstration is worth keeping as the cheapest possible proof that the
+harness's inputs and its outputs are the same files, which is why this card
+still describes it, just without repeating the class names.
+
+**The fix.** `@source not "../../scripts/.parity";` right after the Tailwind
+import in `src/styles/globals.css`, excluding the baselines from Tailwind's
+source scan. Verified with a fixpoint measurement of the largest inline
+`<style>` block on `/`: a build made immediately after adding the exclusion
+(with the pre-fix baselines still on disk) measured 125,406 bytes; the
+baselines were then recaptured under the exclusion and a second build measured
+the identical 125,406 bytes. A capture made under the exclusion cannot feed
+classes back into the scan, so that identical number is the proof the loop is
+cut, not just quiet this once. `npm run parity:compare` is 162/162 PASS on the
+recaptured set, for the right reason.
 
 **Canonical file here.** `scripts/page-parity.mjs` is PORTABLE and this affects
 every repo in the family that commits a `scripts/.parity` directory, which is

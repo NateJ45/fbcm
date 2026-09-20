@@ -129,51 +129,44 @@ member whose content grows a paginated archive (presacademy's events, for one) -
 capturing hundreds of near-identical archive pages was already a problem here at 142
 posts and five categories, and it only gets worse with more content.
 
-**The baselines feed Tailwind, so one recapture invalidates itself (found 2026-09-20,
-plan 2c task 8).** `npm run parity:compare` on the task-8 tree reports **1/162 PASS**,
-and the only diff on every failing page is the inlined stylesheet's own byte count and
-hash: `- CSS 124630B 6f2f68b8` against `+ CSS 124529B efd6192e` on `/404`, with the
-markup byte-identical. It is not a rendering change and it is not task 8's docs
-(proved: the three plan-2c notes were moved out of the tree and the build produced the
-same 124,649-byte sheet, twice, deterministically).
+**Fixed 2026-09-20, plan 2c fix wave.** The baseline had fed Tailwind, so one recapture
+invalidated itself: `npm run parity:compare` on the task-8 tree reported **1/162 PASS**,
+and the only diff on every failing page was the inlined stylesheet's own byte count and
+hash. The cause was a loop: `scripts/.parity/*.html` is COMMITTED, so it is not
+gitignored, so Tailwind v4's automatic source detection scanned those 162 files and
+generated utilities for every class it found in them, feeding the NEXT build's
+stylesheet. Two stale utility classes existed in the pre-plan-2a baselines, existed in no
+file under `src/` at all, and generated about 100 bytes of dead CSS rules. Task 8 closed
+the loop on itself by naming those two classes in this very entry, since Tailwind scans
+Markdown too, and the compare went green for the wrong reason: a real measurement (the
+rules really were back in `dist/client/404.html`) that proved nothing about the render.
 
-The cause is a loop. `scripts/.parity/*.html` is COMMITTED, so it is not gitignored, so
-Tailwind v4's automatic source detection scans those 162 files and generates utilities
-for every class it finds in them. The captured HTML therefore feeds the NEXT build's
-stylesheet. Two classes, `hover:text-white` and `lg:justify-between`, exist in the
-pre-plan-2a baselines, exist in no file under `src/` at all, and are absent from the
-current stylesheet; the two rules they generate
-(`.lg\:justify-between{justify-content:space-between}` and
-`.hover\:text-white:hover{color:var(--color-white)}`) come to about 100 bytes, which is
-the 101-byte delta. So the capture recorded a stylesheet built from the OLD baselines,
-and the first rebuild after the recapture legitimately produces a smaller one.
+The fix: `@source not "../../scripts/.parity";` right after the Tailwind import in
+`src/styles/globals.css`, excluding the baselines from Tailwind's source scan. Verified
+with a fixpoint measurement (largest inline `<style>` block on `/`): a build made right
+after adding the exclusion (baselines on disk still the pre-fix set, and this entry
+still naming the two classes) measured **125,406 bytes**; `npm run parity:capture` was
+then run to recapture 162 baselines under the exclusion, and a second build measured the
+identical **125,406 bytes**. Because a capture made under the exclusion cannot feed
+classes back into the scan via `scripts/.parity`, that identical number is the proof
+that specific loop is cut. `npm run parity:compare` was **162/162 PASS** on that
+recaptured set.
 
-Two things made this visible only now: the baselines had been intentionally red since
-plan 2a, so nobody rebuilt against a green set, and task 7 step 0 moved the stylesheet
-INTO every page, which put its byte count inside the compared markup.
-
-Closing it takes two moves, in this order, and neither belongs in task 8 (which must not
-touch `scripts/.parity` or the PORTABLE `scripts/page-parity.mjs`):
-
-1. Keep the baselines out of Tailwind's source scan, with `@source not` in
-   `globals.css` or by teaching the harness to write somewhere Tailwind ignores. Without
-   this the loop recurs on the next capture.
-2. Recapture once afterwards, then rebuild and compare a second time to prove the set
-   has reached a fixpoint. A recapture ALONE would go green once and then drift again
-   the next time a class stops being used.
-
-**And then the loop closed on the person diagnosing it, which is the proof.** Writing
-this entry put the strings `hover:text-white` and `lg:justify-between` into a Markdown
-file in the repo. Tailwind's automatic source detection scans Markdown too, so the next
-build regenerated exactly those two rules, the stylesheet went from 124,649 bytes back
-to 124,750, and `npm run parity:compare` returned **162/162 PASS**. That is the state
-this branch is committed in: parity is green because these notes name two utility
-classes. It is a real measurement (the two rules are in `dist/client/404.html` and the
-hash matches the baseline again) and it is not a fix. Delete the class names from this
-entry and the compare goes red again.
+That measurement still included the ~100 bytes from this entry's own prose, since
+`@source not` only excludes `scripts/.parity` and Tailwind still scans Markdown
+everywhere else. Removing the two class names from this entry and from the upstream
+card (below) dropped the sheet from 125,406 to **125,305 bytes** on the next build, and
+broke `npm run parity:compare` down to 1/162 PASS against the baselines captured a
+moment earlier, which still carried the old, larger stylesheet. A second recapture
+under the doc-fixed tree, followed by a rebuild, reached the true fixpoint: **125,305
+bytes** on two consecutive builds and `npm run parity:compare` **162/162 PASS**. The
+lesson the first pass missed: cutting the `scripts/.parity` leak does not by itself make
+a docs edit render-neutral when the docs edit is itself a Tailwind source; anywhere the
+class names are typed in prose has to be fixed and captured together, not treated as a
+free rewording after the "real" fix.
 
 This is general, not FBCM's: every repo in the family commits `scripts/.parity` and
-`page-parity.mjs` is the library of record. It is written up as a card in
+`page-parity.mjs` is the library of record. It is written up as card 6a in
 `docs/upstream/2026-09-20-starter-findings.md`.
 
 ### 3. `@astrojs/mdx` is installed but unused
