@@ -25,8 +25,10 @@
        12) and is deliberately not attempted here.
 
    Keep the path -> type map in sync with SINGLETON_PREVIEW_PATHS in
-   src/sanity/resolve.ts and FIRST_SEGMENT_PREVIEWABLE in
-   src/layouts/PreviewLayout.astro. noindex comes from PreviewLayout.
+   src/sanity/resolve.ts. There are TWO copies now, not three: the click
+   interceptor in src/layouts/PreviewLayout.astro no longer keeps a path list
+   of its own, because it treats every single-segment path as previewable
+   (2026-09-20). noindex comes from PreviewLayout.
    ============================================================================ */
 export const prerender = false;
 

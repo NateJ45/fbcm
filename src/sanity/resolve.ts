@@ -19,9 +19,11 @@
 //
 // The preview routes themselves live in the site app: src/pages/preview/.
 // SINGLETON_PREVIEW_PATHS is the SAME map as SINGLETON_BY_PATH in
-// src/pages/preview/[...slug].astro, and as FIRST_SEGMENT_PREVIEWABLE in
-// src/layouts/PreviewLayout.astro's click interceptor. Three places, one truth:
-// change one and change all three.
+// src/pages/preview/[...slug].astro. TWO places, one truth: change one and
+// change both. (Until 2026-09-20 there was a third, FIRST_SEGMENT_PREVIEWABLE
+// in src/layouts/PreviewLayout.astro's click interceptor. It was unreachable
+// dead code behind a blanket "any single segment is previewable" clause, and
+// had gone stale, so it was deleted rather than maintained.)
 // =============================================================================
 import {
   defineDocuments,

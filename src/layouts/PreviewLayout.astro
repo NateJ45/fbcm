@@ -207,16 +207,17 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
       //  - Standalone /preview tab: NEW TAB, so the preview surface is never
       //    hijacked.
       //
-      // THE ROUTE MAP IS PER-SITE. FIRST_SEGMENT_PREVIEWABLE mirrors
-      // SINGLETON_BY_PATH in src/pages/preview/[...slug].astro (plus: any
-      // single-segment path is a custom `page` slug, which /preview/<slug> also
-      // renders). Keep the two in sync.
-      const FIRST_SEGMENT_PREVIEWABLE = new Set([
-        'contact',
-        'blog', // scaffold: journal
-        'post', // scaffold: journal (no preview route of its own; kept here so this set agrees with SINGLETON_BY_PATH and SINGLETON_PREVIEW_PATHS)
-        'privacy',
-      ]);
+      // WHAT COUNTS AS PREVIEWABLE: the root, plus ANY single-segment path
+      // except the ones in NEVER_REMAP. /preview/<slug> resolves a fixed
+      // singleton first (SINGLETON_BY_PATH in src/pages/preview/[...slug].astro)
+      // and otherwise looks the segment up as a custom `page` slug, so every
+      // single segment either has a preview or 404s in the preview surface
+      // rather than escaping to the live site. This used to carry a second,
+      // explicit FIRST_SEGMENT_PREVIEWABLE allow-list; it was unreachable
+      // behind the blanket single-segment clause and had gone stale (it still
+      // named `contact` after contact became a `page` document), so it was
+      // deleted on 2026-09-20 rather than left as a registry that looks
+      // load-bearing and is not.
       const NEVER_REMAP = new Set(['api', 'studio', 'preview', '404']);
 
       document.addEventListener(
@@ -254,10 +255,7 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
           if (path === window.location.pathname && url.hash) return;
 
           const segments = path === '/' ? [] : path.slice(1).split('/');
-          const previewable =
-            path === '/' ||
-            (segments.length === 1 && !NEVER_REMAP.has(first)) ||
-            (segments.length === 1 && FIRST_SEGMENT_PREVIEWABLE.has(first));
+          const previewable = path === '/' || (segments.length === 1 && !NEVER_REMAP.has(first));
 
           event.preventDefault();
           if (previewable) {
