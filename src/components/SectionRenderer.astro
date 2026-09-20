@@ -143,7 +143,11 @@ const wrapAttrs = (key: string | undefined) =>
     <>
       {insertDividerBefore && <SectionDivider />}
 
-      <Wrap id={uniqueAnchor(s, headingId)} {...wrapAttrs((s as { _key?: string })._key)}>
+      <Wrap
+        id={uniqueAnchor(s, headingId)}
+        class="scroll-mt-[var(--header-offset)]"
+        {...wrapAttrs((s as { _key?: string })._key)}
+      >
         {s._type === 'heroSection' ? (
           <Hero
             eyebrow={s.eyebrow}

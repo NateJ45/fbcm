@@ -112,7 +112,7 @@ const NameTag = showGroups ? 'h4' : 'h3';
             data-stagger-grid
           >
             {section.people.map((person) => (
-              <article id={person.slug || undefined} class="scroll-mt-28">
+              <article id={person.slug || undefined} class="scroll-mt-[var(--header-offset)]">
                 {person.photo?.asset ? (
                   <div class="aspect-[4/5] w-full overflow-hidden border-t-2 border-gold">
                     <SanityImage

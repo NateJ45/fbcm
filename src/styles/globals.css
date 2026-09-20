@@ -532,6 +532,31 @@
   transition: transform 80ms linear;
 }
 
+/* ANCHOR OFFSET UNDER THE STICKY HEADER.
+   The header below is `position: sticky; top: 0`, so an in-page anchor scrolls
+   its target to y=0 and the header covers it. Every retired URL in plan 1's
+   redirect table that points at a fragment (/beliefs#baptists,
+   /staff#kendall-ellis, /visit#accessibility, ...) landed with the first line
+   of the heading, or the top of a portrait, hidden underneath.
+   One token, consumed by `scroll-mt-[var(--header-offset)]` on the
+   SectionRenderer band wrapper and on the StaffGrid card, so the two can never
+   disagree. Measured 2026-09-20 in Chromium against the production build:
+   .site-header getBoundingClientRect().height is 186px at 1280 (4px brand
+   stripe + 53px utility row + 129px main row) and 93px at 375, where the
+   utility row is display:none until md. The values below are those two
+   measurements rounded up to leave a little air above the heading, and the
+   breakpoint is md (768px), the same one the utility row appears at.
+   This is plain CSS, so reduced-motion sessions get the identical offset;
+   `scroll-margin-top` is not an animation. */
+:root {
+  --header-offset: 6.5rem; /* 104px, clears the 93px mobile header */
+}
+@media (min-width: 768px) {
+  :root {
+    --header-offset: 12.5rem; /* 200px, clears the 186px header with the utility row */
+  }
+}
+
 /* Sticky header behavior. The hide-on-scroll-down / show-on-scroll-up state
    is toggled by the script in BaseLayout via data-state. */
 .site-header {
