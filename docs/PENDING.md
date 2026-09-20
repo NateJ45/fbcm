@@ -335,11 +335,10 @@ leaves open, with what closes each.
   headings, links, lists, blockquotes and inline images. A unit test pins that so
   it is a failing test to make pass, not a surprise. The captured `bodyHtml` in
   `scripts/data/posts/*.json` is the source when a converter is added.
-- **Some redirect targets still 404**: `/visit`, `/who-we-are`, `/beliefs` and
-  `/ministries` landed in plan 2b (tasks 5, 7, 8 and 9), `/staff` in task 10,
-  `/history` in task 11; `/wedding` and `/give` do not exist yet. **Plan 3 precondition: no
-  redirect target may 404**, or the spec's "every retired URL keeps working" is
-  false on day one.
+- ~~Some redirect targets still 404.~~ Closed in plan 2b: all eleven pages
+  exist and `npm run check:links` is green. **Plan 3 precondition still
+  stands: no redirect target may 404**, and plan 2c proves it against the
+  deployed site rather than against `dist/`.
 - **A fragment landing arrives under the sticky header.** Measured on `/staff`
   (task 10, 1280x900, light): `#kendall-ellis` and `#loraine-garrett` put the
   card's top edge at viewport y=112 (`scroll-mt-28` on the card in
@@ -437,6 +436,45 @@ now ties the schema max and the slice with a drift test.
 
 ---
 
+## Plan 2b landed (2026-09-20)
+
+Eleven pages are live and composed from the page builder, every one of them
+seeded by an idempotent module under `scripts/pages/` and screenshotted in both
+themes at both viewports. What plan 2b deliberately leaves open:
+
+- `npm run parity compare` is still intentionally all-red: the baselines in
+  `scripts/.parity/` predate plan 2a's header and footer. Plan 2c recaptures
+  them once, after the pages stop moving. Do not recapture before then.
+- Task 16 (`@portabletext/block-tools`) is skipped, not done: Nathan never
+  approved the new dependency. It would restore the headings, links, lists,
+  blockquotes and inline images that `bodyFromCapture()` drops from all 142
+  post bodies; the captured `bodyHtml` in `scripts/data/posts/*.json` is still
+  the source when it runs, as its own follow-up branch with the Task 16 brief.
+- Every sentence the new site adds to the church's own words, every edit to
+  their text, and every `#nathan` fact that needs confirming is listed in
+  `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`, regenerated
+  by the seeder on every run. The `#nathan` items are mirrored in the vault
+  (`_vault/clients/fbcm.md`), which is where they get worked through.
+- `journalEntry.featured` is stored on all 142 posts and read by nothing: the
+  durable/preview split is derived from category instead. Retire the field with
+  a backup-then-delete script (CLAUDE.md rule 16), not a raw unset.
+- `getJournalEntryBySlug` still fetches `relatedPosts`; nothing renders it. A
+  dead read on every post page, safe to delete in the final wave.
+- Final-wave polish, all three cosmetic and none blocking: the anchor-under-
+  sticky-header offset (see the measured note under "Plan 2 must do"), the
+  split hero's top crop at 1280, and the long-quote type scale.
+- Four staff portraits are thumbnail-only and `mapImage` on Contact has no
+  photograph at all. Both wait on the church's photo day.
+- Upstream findings for PORTS.md cards, on top of the seven already listed
+  above: `scripts/audit-studio.mjs` parses shared constants out of the schema
+  files (generally useful, currently only here); `playwright.config.ts`'s
+  600-second `webServer` timeout; and the page-seeder pattern itself
+  (`scripts/seed-pages.mjs` + `scripts/lib/page-copy.mjs` +
+  `scripts/lib/page-images.mjs`) as a candidate port, since dry-by-default,
+  backup-first, idempotent page composition is not FBCM-specific.
+
+---
+
 ## Plan 2a landed (2026-09-19)
 
 Identity tokens, eight church blocks, hero frames, the church header/footer, and
@@ -449,10 +487,6 @@ still open, all closing in plan 2b/2c:
 - `visual.yml`'s CI-stored `/styleguide` baseline is stale after Task 6's eight
   block fixtures; refresh it on CI with the workflow's own `update` input the
   next time it runs, not by regenerating `scripts/.parity` locally.
-- `npm run check:links` is red on the one plan-2 route still to build
-  (`/wedding`, 303 links to it). `/visit`, `/who-we-are`, `/beliefs`,
-  `/ministries`, `/staff` and `/history` now answer 200. No other broken link
-  exists.
 - `public/favicon.svg` is still the starter's roundel, not the church's mark;
   closes in plan 2c.
 - The `@portabletext/block-tools` dependency plan 2b needs for a real Portable
@@ -475,12 +509,7 @@ still open, all closing in plan 2b/2c:
 - The Pages desk list orders `page` documents by nav position with a GROQ
   `select()` that has had no live `page` documents to run against; spot-check it
   in the Studio once plan 2b seeds them.
-- CI's `test` job has been red on `main` since plan 1 (runs 8da1578, 111373d,
-  124cd10, e43839a), always on one smoke test: `a post with a non-ASCII slug is
-served at its original URL` gets 404 on the Linux runner's static server while
-  the same suite passes locally on Windows (66/66) and production serves
-  `/post/h%C3%A4ndel-s-messiah-sing-in-carols` with 200 (after a 307 to the
-  trailing slash). So the URL-preservation goal is met on the deployed Worker and
-  the red is the CI server's handling of a percent-encoded path. Plan 2b's first
-  task decides the fix (serve from `wrangler dev` in CI, or decode the path in
-  the test's server) and does not change the slug.
+- ~~CI's `test` job red on the non-ASCII slug smoke test.~~ Resolved by Task 1
+  (2026-09-19): `ci.yml` now carries `PUBLIC_SANITY_PROJECT_ID` and
+  `PUBLIC_SANITY_DATASET` at job level, so the CI build has the 142 posts it
+  was missing; the 404 was an empty build, not percent-encoding.

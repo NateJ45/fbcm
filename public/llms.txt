@@ -5,14 +5,21 @@
 ## Pages that exist on this site today
 
 - [Home](https://www.fbcmuncie.org/): Who the church is, when it gathers, and how to visit
-- [Blog](https://www.fbcmuncie.org/blog/): Sermon previews, church news and reflections, newest first
-- [Individual posts](https://www.fbcmuncie.org/post/): Each post lives at /post/<slug>
+- [Visit](https://www.fbcmuncie.org/visit/): What a Sunday morning is like, where to park, the building, and accessibility
+- [Who we are](https://www.fbcmuncie.org/who-we-are/): The church's watchword, goals and pledge, in its own words
+- [What we believe](https://www.fbcmuncie.org/beliefs/): Basic beliefs, the confession, what being American Baptist means, and membership
+- [Ministries](https://www.fbcmuncie.org/ministries/): Worship, children, youth, adults and outreach, with who to ask about each
+- [Pastors and staff](https://www.fbcmuncie.org/staff/): The pastors, the staff, the Church Coordination Team and the deacons
+- [Our history](https://www.fbcmuncie.org/history/): The congregation's story from its founding, and the 1929 building
+- [Weddings](https://www.fbcmuncie.org/wedding/): Getting married here, the spaces, the documents and how to reserve the building
+- [Give](https://www.fbcmuncie.org/give/): Three ways to give and what a gift supports
 - [Contact](https://www.fbcmuncie.org/contact/): Phone, email, address, office and pastors' hours, and how to share a life update
+- [Blog](https://www.fbcmuncie.org/blog/): Sermon previews, church news, reflections and the Visitor quarterly, newest first
 - [Privacy policy](https://www.fbcmuncie.org/privacy/): How this site handles your information
 
-Nothing else is published yet. Do not infer pages for ministries, staff,
-beliefs, giving or events from the blog's contents: those pages are planned,
-not built, and a link to one today returns a 404.
+Individual posts live at /post/<slug>. The blog is also browsable by page
+(/blog/page/2), by category (/blog/category/<slug>) and by tag
+(/blog/tag/<tag>).
 
 ## Visiting
 
