@@ -31,6 +31,7 @@ export const routes: string[] = [
   '/visit',
   '/who-we-are',
   '/beliefs',
+  '/ministries',
 ];
 
 /**

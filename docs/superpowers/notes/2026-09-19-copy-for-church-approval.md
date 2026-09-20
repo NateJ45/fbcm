@@ -81,6 +81,35 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none)
 
+## /ministries
+
+### New sentences
+
+- Every age has a place here. (hero headline)
+- Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and the person to talk to about each one. (search description)
+- Contact the church office. (the end of a ministry’s contact line when the staff document for that role carries no email address, which today is only the children’s ministry; it links to the contact page)
+
+### Edits to the church’s own text
+
+- Room numbers, forced to one answer: scripts/data/pages/children.txt calls the nursery Rm. 105 and the family room Rm. 104 in three sentences, while the same file calls the nursery Rm. 104 in a fourth and scripts/data/pages/what-to-expect.txt calls it 104 throughout. This page carries both captures, and /visit already says 104, so the three sentences are swapped to Nursery (Rm. 104) and Family Room (Rm. 105). This is the disagreement the church still has to settle (fact 1 below).
+- Cut as a repeat: the "Nursery / (Rm. 104) is available for infants through 3-year-olds." card, which says the same thing as the nursery line in the Sunday School list above it.
+- Cut: "Dates and Times Vary" under Special Events, and the five ways to get event news that followed it. The events are listed under "Through the year" with no dates, and the newsletters and the app are in one place at the foot of the page.
+- Spelled out, once: "the Children’s Ministry CCT Leader" becomes "the Children’s Ministry Church Coordination Team leader". CCT was used as a role prefix on all five source pages and never expanded.
+- Re-pointed, so they still work: the three links inside the children’s questions. "contact the church office" and "our pastors" pointed at the Wix contact page and now point at /contact; "the Children’s Ministry Church Coordination Team leader" pointed at a Wix profile page for a third name again (Michelle Heimlich) and now points at /staff, where the role is listed once.
+- Joined: four Wix layout lines become one sentence. "Wednesdays During School Year" / "7:17 - 8:45 p.m." / "(FBCM Fellowship Hall/" / "Youth Center)" reads "Wednesdays during school year, 7:17 - 8:45 p.m. (FBCM Fellowship Hall / Youth Center)", and "Large Group Meeting" / "Every Sunday, 9:30-10:15 a.m." / "(FBCM Youth Center)" reads as one line the same way. The 7:17 is the church’s own and is kept exactly (fact 3 below).
+- Joined: each room card in the Sunday schedule, whose label and sentence are two lines in the capture, becomes one line ("Nursery Care (104): For children ages 3 and younger...").
+- Corrected: "Led by by Daniel Harris, the director of Charis student ministries" becomes "Led by Daniel Harris...".
+- Cut as a repeat: "If you’re interested in joining a small group, or are seeking more information, contact adult[at]fbcmuncie.org". The adult band ends with the adult coordinator’s name, role and address, read off her staff document.
+- Em-dash to comma (site style): "join Christ where he is already at work in our world—in Muncie and across the globe" becomes "...in our world, in Muncie and across the globe".
+- Linked: "Our website has links to our building use policy here" had no link behind it on the Wix site. "here" now points at /wedding#building-use.
+- Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band listing the whole Church Coordination Team.
+- Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now follows that page’s own redirect to /blog#publications.
+
+### Photos of children
+
+- ministries-children: Children gathered under the sanctuary arch
+- ministries-youth: Two teens speaking to the youth group on stage
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.
