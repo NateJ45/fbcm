@@ -8,8 +8,12 @@
       "startServerReadyTimeout": 20000,
       "url": [
         "http://localhost:4173/",
+        "http://localhost:4173/visit/",
+        "http://localhost:4173/staff/",
+        "http://localhost:4173/history/",
         "http://localhost:4173/contact/",
         "http://localhost:4173/blog/",
+        "http://localhost:4173/post/h%C3%A4ndel-s-messiah-sing-in-carols/",
         "http://localhost:4173/privacy/",
         "http://localhost:4173/404.html"
       ],

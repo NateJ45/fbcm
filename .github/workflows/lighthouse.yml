@@ -38,6 +38,13 @@ jobs:
       # emits dist/client (audited here) and dist/server (the SSR bundle for
       # /studio and /preview, which lhci never sees).
       - name: Build
+        # Public identifiers (they ship in every image URL). Without them
+        # sanityFetch returns fallbacks, the Sanity-backed pages (every page
+        # document since plan 2b, including /contact) are never emitted, and
+        # Lighthouse reports ERRORED_DOCUMENT_REQUEST on a 404 (2026-09-20).
+        env:
+          PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+          PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
         run: npm run build
 
       # Accessibility is a hard gate (minScore 1) in lighthouserc.json, as are
