@@ -5,6 +5,7 @@
 import SectionHeading from '@/components/SectionHeading.astro';
 import PortableText from '@/components/PortableText';
 import { surfaceClass } from '@/lib/surfaces';
+import { PROSE_MEASURE } from '@/lib/prose';
 
 interface Props {
   eyebrow?: string;
@@ -62,9 +63,13 @@ const bg = surfaceClass(surface);
 //
 // The `width` field stays in the schema and on existing documents; 'narrow' is
 // now an alias with no visual difference.
+//
+// The measure itself moved to src/lib/prose.ts on 2026-09-20 so /privacy, which
+// is a bespoke route rather than a builder page, can read the same one string
+// instead of carrying a second copy of it.
 const alignClass = align === 'center' ? 'text-center' : '';
 const proseClass = [
-  'text-foreground/85 text-lg leading-relaxed max-w-[52ch]',
+  PROSE_MEASURE,
   heading ? 'mt-l' : '',
   alignClass,
   // Centred prose has to be centred as a BOX as well as as text, or the 68ch

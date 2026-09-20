@@ -9,8 +9,9 @@
 // to static HTML copy for the period before the editor publishes the doc.
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
 import PortableTextStatic from '@/components/PortableTextStatic.astro';
+import { PROSE_MEASURE } from '@/lib/prose';
 import { getPrivacyPage, getSiteSettings } from '@/lib/queries';
 
 // What this build ACTUALLY ships, read from the same module that decides whether
@@ -72,132 +73,145 @@ const hasSanityBody = Boolean(page?.body);
 ---
 
 <BaseLayout {title} {description} {schemas} {siteSettings} seoImage={page?.seoImage}>
-  {/* Hero — text variant, short height. */}
-  <Hero
-    eyebrow={heroEyebrow}
-    headline={heroHeadline}
-    subhead={heroSubhead}
-    headingId="privacy-hero-heading"
-    size="short"
-  />
-
   {
-    /* The label has to differ from the hero's heading ("Privacy Policy"), which
-      labels the hero's own region landmark. Two region landmarks with the same
-      accessible name fail axe's landmark-unique rule and, more to the point,
-      give a screen-reader user two identically named stops in the landmark
-      list with no way to tell them apart. */
+    /* ONE GRAMMAR PER PAGE (CLAUDE.md rule 17, fixed 2026-09-20).
+      This page used to open on the starter's full-bleed <Hero> and then set its
+      policy text in `mx-auto max-w-3xl`, which put a second left edge about
+      280px in at 1280 and ran the body to roughly 90 characters a line. Every
+      other page on this site starts at the `max-w-content px-m` gutter and sets
+      its body in the measured 52ch from src/lib/prose.ts. So does this one now:
+      a SectionHeading h1 with the church's gold rule at the gutter, and the
+      policy directly beneath it on the same edge, in the same measure.
+
+      One <section>, so there is exactly one region landmark and it takes its
+      accessible name from the h1. (The old two-section shape needed a separate
+      aria-label on the body section precisely because the hero already used
+      the heading's name.) */
   }
-  <section class="bg-background" aria-label="Policy text">
-    <div class="mx-auto max-w-3xl px-m py-section-lg">
-      {
-        lastUpdated && (
-          <p class="mb-l text-xs tracking-eyebrow text-foreground/80 uppercase">
-            Last updated: {lastUpdated}
-          </p>
-        )
-      }
+  <section class="bg-background" aria-labelledby="privacy-hero-heading">
+    <div class="mx-auto max-w-content px-m py-section-lg">
+      <SectionHeading
+        eyebrow={heroEyebrow}
+        headline={heroHeadline}
+        subhead={heroSubhead}
+        headingId="privacy-hero-heading"
+        level="h1"
+        tone="church"
+        rule
+      />
 
-      {
-        hasSanityBody ? (
-          <PortableTextStatic value={page!.body} className="prose-friendly" />
-        ) : (
-          <div class="space-y-l leading-relaxed text-foreground">
-            <p class="text-foreground/80">
-              This is the privacy policy for {site.name}. The goal here is to be straightforward
-              about what information is collected and why.
+      <div class="mt-section-md">
+        {
+          lastUpdated && (
+            <p class="mb-l text-xs tracking-eyebrow text-foreground/80 uppercase">
+              Last updated: {lastUpdated}
             </p>
+          )
+        }
 
-            <div>
-              <h2 class="mb-s font-display text-h3 text-foreground">What gets collected</h2>
+        {
+          hasSanityBody ? (
+            <PortableTextStatic value={page!.body} className={`prose-friendly ${PROSE_MEASURE}`} />
+          ) : (
+            <div class:list={['space-y-l', PROSE_MEASURE]}>
               <p class="text-foreground/80">
-                When you fill out the contact form on this site, you share your name, email address,
-                and whatever details you include in your message. That information is used only to
-                respond to you and to help plan your project. Nothing else.
+                This is the privacy policy for {site.name}. The goal here is to be straightforward
+                about what information is collected and why.
               </p>
-              <p class="mt-s text-foreground/80">
-                If you subscribe to the newsletter, your email address goes to the email marketing
-                provider so occasional studio updates, room ideas, and project previews can reach
-                you. It is not shared with anyone else.
-              </p>
-            </div>
 
-            <div>
-              <h2 class="mb-s font-display text-h3 text-foreground">What doesn't happen</h2>
-              <ul class="list-disc space-y-1 pl-l text-foreground/80">
-                <li>Your information is never sold.</li>
-                <li>There is no ad targeting on this site.</li>
-              </ul>
-            </div>
+              <div>
+                <h2 class="mb-s font-display text-h3 text-foreground">What gets collected</h2>
+                <p class="text-foreground/80">
+                  When you fill out the contact form on this site, you share your name, email
+                  address, and whatever details you include in your message. That information is
+                  used only to respond to you and to help plan your project. Nothing else.
+                </p>
+                <p class="mt-s text-foreground/80">
+                  If you subscribe to the newsletter, your email address goes to the email marketing
+                  provider so occasional studio updates, room ideas, and project previews can reach
+                  you. It is not shared with anyone else.
+                </p>
+              </div>
 
-            {/*
+              <div>
+                <h2 class="mb-s font-display text-h3 text-foreground">What doesn't happen</h2>
+                <ul class="list-disc space-y-1 pl-l text-foreground/80">
+                  <li>Your information is never sold.</li>
+                  <li>There is no ad targeting on this site.</li>
+                </ul>
+              </div>
+
+              {/*
               Measurement, described from the build's real configuration rather
               than asserted. Each branch says what that tool actually does,
               including the cookie, because Google's own terms require a policy
               that discloses the use of Analytics and of cookies.
             */}
-            <div>
-              <h2 class="mb-s font-display text-h3 text-foreground">How traffic is measured</h2>
-              {!hasGa && !hasCfAnalytics && (
-                <p class="text-foreground/80">
-                  This site runs no analytics at all. Visits are not counted, and nothing is stored
-                  on your device for measurement.
-                </p>
-              )}
-              {hasCfAnalytics && (
-                <p class="text-foreground/80">
-                  Page visits are counted with Cloudflare Web Analytics, which sets no cookies and
-                  does not identify individual visitors.
-                </p>
-              )}
-              {hasGa && (
-                <p class="mt-s text-foreground/80">
-                  {/* "also" only reads right when the cookieless paragraph above it rendered. */}
-                  Page visits are {hasCfAnalytics ? 'also ' : ''}measured with Google Analytics,
-                  which does set cookies on your device (named <code>_ga</code> and{' '}
-                  <code>_ga_</code> followed by a stream id) so returning visits are recognised as
-                  the same session. It records which pages are opened, roughly where in the world
-                  the visit came from, and what kind of device was used. It is not used for
-                  advertising, and the data is not sold or shared beyond Google's own processing.
-                  You can block these cookies in your browser settings, or with any tracker-blocking
-                  extension, and the site will work exactly the same.
-                </p>
-              )}
-            </div>
+              <div>
+                <h2 class="mb-s font-display text-h3 text-foreground">How traffic is measured</h2>
+                {!hasGa && !hasCfAnalytics && (
+                  <p class="text-foreground/80">
+                    This site runs no analytics at all. Visits are not counted, and nothing is
+                    stored on your device for measurement.
+                  </p>
+                )}
+                {hasCfAnalytics && (
+                  <p class="text-foreground/80">
+                    Page visits are counted with Cloudflare Web Analytics, which sets no cookies and
+                    does not identify individual visitors.
+                  </p>
+                )}
+                {hasGa && (
+                  <p class="mt-s text-foreground/80">
+                    {/* "also" only reads right when the cookieless paragraph above it rendered. */}
+                    Page visits are {hasCfAnalytics ? 'also ' : ''}measured with Google Analytics,
+                    which does set cookies on your device (named <code>_ga</code> and{' '}
+                    <code>_ga_</code> followed by a stream id) so returning visits are recognised as
+                    the same session. It records which pages are opened, roughly where in the world
+                    the visit came from, and what kind of device was used. It is not used for
+                    advertising, and the data is not sold or shared beyond Google's own processing.
+                    You can block these cookies in your browser settings, or with any
+                    tracker-blocking extension, and the site will work exactly the same.
+                  </p>
+                )}
+              </div>
 
-            <div>
-              <h2 class="mb-s font-display text-h3 text-foreground">
-                Unsubscribing from the newsletter
-              </h2>
-              <p class="text-foreground/80">
-                Every email includes an unsubscribe link at the bottom. Click it and you're off the
-                list right away. If you run into any trouble, email directly and it'll be handled
-                promptly.
+              <div>
+                <h2 class="mb-s font-display text-h3 text-foreground">
+                  Unsubscribing from the newsletter
+                </h2>
+                <p class="text-foreground/80">
+                  Every email includes an unsubscribe link at the bottom. Click it and you're off
+                  the list right away. If you run into any trouble, email directly and it'll be
+                  handled promptly.
+                </p>
+              </div>
+
+              <div>
+                <h2 class="mb-s font-display text-h3 text-foreground">
+                  Questions or data requests
+                </h2>
+                <p class="text-foreground/80">
+                  If you have questions about how your information is handled, or want your data
+                  removed, reach out at{' '}
+                  <a
+                    href={`mailto:${contactEmail}`}
+                    class="text-link underline underline-offset-2 transition-colors hover:text-primary"
+                  >
+                    {contactEmail}
+                  </a>
+                  . You'll hear back within a few business days.
+                </p>
+              </div>
+
+              <p class="border-t border-border-soft pt-l text-xs text-foreground/80">
+                This policy was last reviewed in May 2026 and will be updated if anything meaningful
+                changes about how this site handles your data.
               </p>
             </div>
-
-            <div>
-              <h2 class="mb-s font-display text-h3 text-foreground">Questions or data requests</h2>
-              <p class="text-foreground/80">
-                If you have questions about how your information is handled, or want your data
-                removed, reach out at{' '}
-                <a
-                  href={`mailto:${contactEmail}`}
-                  class="text-link underline underline-offset-2 transition-colors hover:text-primary"
-                >
-                  {contactEmail}
-                </a>
-                . You'll hear back within a few business days.
-              </p>
-            </div>
-
-            <p class="border-t border-border-soft pt-l text-xs text-foreground/80">
-              This policy was last reviewed in May 2026 and will be updated if anything meaningful
-              changes about how this site handles your data.
-            </p>
-          </div>
-        )
-      }
+          )
+        }
+      </div>
     </div>
   </section>
 </BaseLayout>
