@@ -66,9 +66,9 @@ every current `font-mono` eyebrow and label becomes `font-ui`.
 
 Rules that bind the scale:
 
-- Exactly one element per page sits at `--text-display`: the home hero headline, the statement
-  band's h2 where a page has one, otherwise the interior hero h1 at `--text-h1`. Nothing else may
-  use either token.
+- Exactly one element per page sits at `--text-display`: the home hero headline, and on an
+  interior page nothing (its hero h1 sits at `--text-h1`). Statement bands use `--text-h1`.
+  Nothing else may use either token.
 - Section headings drop in size AND weight: `--text-h2` at weight 300. The starter's h2 at weight
   500 goes.
 - Every heading and numeral in Fraunces sets `font-variation-settings: 'SOFT' 40` and
