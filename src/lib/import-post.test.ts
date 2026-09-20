@@ -1,8 +1,10 @@
 // src/lib/import-post.test.ts
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { JSDOM } from 'jsdom';
 import {
   postDocId,
+  bodyFromCaptureRich,
   categoryDocId,
   isSermonPreview,
   postFromCapture,
@@ -128,14 +130,42 @@ test('postFromCapture puts the body on the document (journalEntry.body is requir
   assert.ok(doc.body.length >= 1, 'body must satisfy Rule.required().min(1)');
 });
 
-test('what the plain-text mapper does NOT carry, stated as a test (plan-2 work)', () => {
-  const body = bodyFromCapture(richFixture);
-  // The heading in bodyHtml arrives as an ordinary paragraph, not style h2.
-  assert.equal(body[0].style, 'normal');
-  // The link is text only: no markDefs, no marks on the span.
-  assert.deepEqual(body[1].markDefs, []);
-  assert.deepEqual(body[1].children[0].marks, []);
-  assert.ok(!body[1].children[0].text.includes('http'));
+// This used to be the plan-1 PIN: a test stating that the heading and the link
+// in `bodyHtml` did NOT carry, so that plan 2's converter arrived as a failing
+// test rather than a surprise. @portabletext/block-tools landed on 2026-09-20,
+// so the pin is flipped: the same fixture, asserting that they DO carry now.
+test('the rich mapper carries the heading and the link the plain one dropped', async () => {
+  const { blocks } = await bodyFromCaptureRich(richFixture, {
+    parseHtml: (html: string) => new JSDOM(html).window.document,
+  });
+  const heading = blocks[0] as { style?: string; children?: { text: string }[] };
+  assert.equal(heading.style, 'h2', 'the <h2> in bodyHtml is a heading, not a paragraph');
+  assert.equal(heading.children?.[0].text, 'Advent begins');
+
+  const para = blocks[1] as {
+    markDefs?: { _type: string; _key: string; href?: string }[];
+    children?: { text: string; marks: string[] }[];
+  };
+  assert.equal(para.markDefs?.length, 1);
+  assert.equal(para.markDefs?.[0]._type, 'link');
+  assert.equal(para.markDefs?.[0].href, 'https://www.fbcmuncie.org/visit');
+  assert.ok(para.children?.some((c) => c.marks.includes(para.markDefs![0]._key)));
+  // And the entity still decodes on the way through.
+  assert.ok(
+    blocks
+      .map((b) => JSON.stringify(b))
+      .join('')
+      .includes('bread & wine'),
+  );
+});
+
+test('a capture with no bodyHtml still falls back to the paragraph mapper', async () => {
+  const { blocks, report } = await bodyFromCaptureRich(
+    { ...richFixture, bodyHtml: '' },
+    { parseHtml: (html: string) => new JSDOM(html).window.document },
+  );
+  assert.equal(report, null, 'no HTML means no conversion report');
+  assert.deepEqual(blocks, bodyFromCapture({ ...richFixture, bodyHtml: '' }));
 });
 
 test('a post with no captured body produces an empty array rather than a fake block', () => {
