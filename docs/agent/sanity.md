@@ -218,3 +218,35 @@ The `page` document type carries three verbs and one extra field beyond its cont
 
 Page SINGLETONS deliberately get none of this: one-per-site means duplicating or archiving
 one would leave the site with a route and no document.
+
+## The imported post bodies (2026-09-20)
+
+The 142 posts came off the church's Wix site as JSON captures in
+`scripts/data/posts/`. Plan 1 built their bodies from `bodyText`, one paragraph
+per block, because no HTML converter was installed. `@portabletext/block-tools`
+5.2.0 was approved on 2026-09-20 and `src/lib/convert-body.ts` now builds them
+from `bodyHtml` instead: headings, links, lists, blockquotes and inline images.
+
+Four things to know before touching that path:
+
+1. The block-tools schema is **derived from `journalEntry.ts`**, not retyped.
+   `htmlToBlocks` will emit a style the Studio does not declare and the document
+   opens invalid while the build passes. `src/lib/convert-body.test.ts` asserts
+   the derived styles, lists, decorators and the `link` annotation.
+2. **`src/lib/import-post-rich.ts` must never be imported by anything the site
+   renders.** It reaches the Studio schema, which reaches the `sanity` package,
+   which the Cloudflare prerender worker refuses to evaluate at module scope
+   ("Disallowed operation called within global scope"). `src/lib/import-post.ts`
+   IS in the build graph, through `src/lib/blog-derive.ts`, so it stays free of
+   anything a Worker cannot run.
+3. `_key`s are deterministic, derived from the post slug and the block's final
+   index, so a re-import is byte-identical and
+   `scripts/reimport-post-bodies.mjs` can honestly report "unchanged".
+4. Body images are resolved through the CAPTURE's own `images` array, whose
+   `originalUrl` is the exact string the body's `<img src>` holds, and uploaded
+   through `makeUploader` so re-runs never re-upload. An image with no file in
+   the photo archive becomes a paragraph carrying its alt text, and is counted.
+
+Re-run with `node scripts/reimport-post-bodies.mjs` (dry) and `--apply`. It
+backs up all 142 live bodies before it patches anything, and it patches only
+`body`.

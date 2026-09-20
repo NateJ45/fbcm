@@ -420,11 +420,8 @@ leaves open, with what closes each.
 
 ### Plan 2 must do
 
-- **Post bodies are paragraphs only.** No Portable Text converter is installed, so
-  `bodyFromCapture()` carries all 95,016 words with paragraph breaks and drops
-  headings, links, lists, blockquotes and inline images. A unit test pins that so
-  it is a failing test to make pass, not a surprise. The captured `bodyHtml` in
-  `scripts/data/posts/*.json` is the source when a converter is added.
+- ~~**Post bodies are paragraphs only.**~~ Closed 2026-09-20 (task 16). See
+  the "Post bodies" note below.
 - ~~Some redirect targets still 404.~~ Closed in plan 2b: all eleven pages
   exist and `npm run check:links` is green. **Plan 3 precondition still
   stands: no redirect target may 404**, and plan 2c proves it against the
@@ -528,12 +525,9 @@ one runtime guard; the rest of the work was proving what plan 2b built, against
 the deployed site rather than against `dist/`. What it closed is struck through
 in the sections above. What it leaves open, and who owns each:
 
-- **Task 16, `@portabletext/block-tools`, still waits on Nathan's approval.**
-  It is the one new dependency in the whole build, and until it lands all 142
-  post bodies are paragraphs only: headings, links, lists, blockquotes and
-  inline images are dropped by `bodyFromCapture()`. The captured `bodyHtml` in
-  `scripts/data/posts/*.json` is the source when it runs. Its own branch, with
-  the Task 16 brief.
+- ~~**Task 16, `@portabletext/block-tools`, still waits on Nathan's
+  approval.**~~ Approved and done 2026-09-20. See the "Post bodies" note
+  below.
 - **The hero-photo delivery decision is Nathan's, and it is the last thing
   holding mobile performance down.** Mobile is 93 to 95 after Task 6's fix
   (95 on `/visit`, the target); home mobile LCP is about 2.8 s local and
@@ -597,11 +591,8 @@ Eleven pages are live and composed from the page builder, every one of them
 seeded by an idempotent module under `scripts/pages/` and screenshotted in both
 themes at both viewports. What plan 2b deliberately leaves open:
 
-- Task 16 (`@portabletext/block-tools`) is skipped, not done: Nathan never
-  approved the new dependency. It would restore the headings, links, lists,
-  blockquotes and inline images that `bodyFromCapture()` drops from all 142
-  post bodies; the captured `bodyHtml` in `scripts/data/posts/*.json` is still
-  the source when it runs, as its own follow-up branch with the Task 16 brief.
+- ~~Task 16 (`@portabletext/block-tools`) is skipped, not done.~~ Ran
+  2026-09-20 on its own branch. See the "Post bodies" note below.
 - Every sentence the new site adds to the church's own words, every edit to
   their text, and every `#nathan` fact that needs confirming is listed in
   `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`, regenerated
@@ -646,10 +637,9 @@ still open, all closing in plan 2b/2c:
   Closed 2026-09-20 (plan 2c task 1): the icon set is the tower from the
   church's own wordmark, on a navy plate, and `npm run favicon` regenerates
   every size from that one SVG.
-- The `@portabletext/block-tools` dependency plan 2b needs for a real Portable
-  Text converter is not installed yet; it is a new dependency and needs
-  Nathan's approval first (CLAUDE.md: pause for confirmation before installing
-  new dependencies).
+- ~~The `@portabletext/block-tools` dependency plan 2b needs for a real
+  Portable Text converter is not installed yet.~~ Installed 2026-09-20 at
+  5.2.0, exact. See the "Post bodies" note below.
 - The Studio's insert-menu and desk are unverified against the deployed
   origin's CORS-gated Sanity project (same family as item 1a above). That
   check is Nathan's after this branch merges: he signs in at the deployed URL,
@@ -670,3 +660,16 @@ still open, all closing in plan 2b/2c:
   (2026-09-19): `ci.yml` now carries `PUBLIC_SANITY_PROJECT_ID` and
   `PUBLIC_SANITY_DATASET` at job level, so the CI build has the 142 posts it
   was missing; the 404 was an empty build, not percent-encoding.
+
+### Post bodies (task 16, 2026-09-20)
+
+Converted 142 of 142 posts from the captured `bodyHtml`: 3,297 paragraph-only
+blocks became 3,232 real ones, carrying 19 h2, 17 h3, 191 h4, 396 links, 438
+list items, 88 blockquotes and 89 inline images, with 0 images missing from the
+photo archive, one video embed (a Wix-hosted mp4, rendered as a link paragraph
+because `videoEmbed` cannot play it) and two tables (event schedules, flattened
+to one bullet per row because the schema has no table block). The 79 em-dashes
+in 34 posts are the church's own sentences and were counted, not rewritten. All
+142 live bodies are backed up verbatim in
+`scripts/data/backups/journalEntry-bodies-2026-09-20.json`, and a second
+`--apply` reports 142 unchanged.
