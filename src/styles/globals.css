@@ -4,6 +4,14 @@
    carries everywhere the design system is referenced. */
 
 @import 'tailwindcss';
+
+/* The parity baselines are rendered HTML committed for scripts/page-parity.mjs.
+   Tailwind v4 scans every non-gitignored file as a class source, so an old
+   baseline would keep dead utility rules alive and make the compare pass for
+   the wrong reason (found 2026-09-20). Excluded here; path is relative to this
+   file. */
+@source not '../../scripts/.parity';
+
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource/libre-baskerville/400.css';
