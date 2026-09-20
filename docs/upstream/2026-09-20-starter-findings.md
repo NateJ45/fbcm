@@ -265,6 +265,8 @@ classes back into the scan, so that identical number is the proof the loop is
 cut, not just quiet this once. `npm run parity:compare` is 162/162 PASS on the
 recaptured set, for the right reason.
 
+**Caveat when porting:** `@source not "../../docs"` excludes the whole docs tree from Tailwind's class scan. That is right for prose that merely names utilities, but if a repo ever keeps a real component snippet under `docs/` whose classes must ship, those classes stop generating CSS silently. Keep shipped markup out of `docs/`, or narrow the exclusion to the prose folders.
+
 **The scope was bigger than one directory (found later the same session).**
 This card's own draft named the two leaking classes in prose, which put them
 back into Tailwind's scan the moment the card was written, since Markdown is
