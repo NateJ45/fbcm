@@ -125,12 +125,13 @@ const uniqueAnchor = (block: unknown, headingId: string): string => {
   return id;
 };
 
-// A page that OPENS on the brown band has no hero, so that band carries the
-// page's h1; everywhere else it is an h2, like every other band. /history is
-// the only page in the site built that way today, and without this it has no
-// h1 at all: axe reports page-has-heading-one and a screen reader is handed a
-// page with no title.
-const heritageLevel = (index: number): 'h1' | 'h2' => (index === 0 ? 'h1' : 'h2');
+// A page that OPENS on a band rather than a hero has no other h1, so that
+// band carries the page's h1; everywhere else it is an h2, like every other
+// band. /history opens on the brown heritageBandSection and /give opens on
+// the indigo giveBandSection; both read this the same way. Without it the
+// page has no h1 at all: axe reports page-has-heading-one and a screen reader
+// is handed a page with no title.
+const openingLevel = (index: number): 'h1' | 'h2' => (index === 0 ? 'h1' : 'h2');
 
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
@@ -307,7 +308,7 @@ const wrapAttrs = (key: string | undefined) =>
             body={s.body}
             image={s.image}
             cta={s.cta}
-            level={heritageLevel(blockIndex)}
+            level={openingLevel(blockIndex)}
             headingId={headingId}
           />
         ) : s._type === 'giveBandSection' ? (
@@ -316,6 +317,7 @@ const wrapAttrs = (key: string | undefined) =>
             body={s.body}
             buttonLabel={s.buttonLabel}
             buttonUrl={s.buttonUrl}
+            level={openingLevel(blockIndex)}
             headingId={headingId}
             settings={settings}
           />

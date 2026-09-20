@@ -201,6 +201,29 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none)
 
+## /give
+
+### New sentences
+
+- Support the work of this church. (give band heading)
+- Your gift keeps this church running and reaching Muncie. (give band body, one sentence)
+- You can give online through Church Center any time. (Ways to give, paragraph 1)
+- You can also give in person during Sunday worship, when the offering is taken. (Ways to give, paragraph 2)
+- Or mail a check to the church office. (Ways to give, paragraph 3, lead-in to the mailing address)
+- Give to First Baptist Church Muncie: give online through Church Center, in person on Sunday, or by mail. (search description)
+
+### Edits to the church’s own text
+
+- Dropped: the "Support – " label on who-we-are.txt line 90 ("Support – We give sacrificially to help those in need through regular offerings and donations."). The band already carries its own heading ("What your gift supports"), so repeating "Support" as a second label would say the same word twice; the sentence prints on its own, unchanged apart from the label and the en-dash that introduced it.
+
+### Facts to confirm from this page
+
+- Give page copy in their words, and whether to state anything about tax status: neither who-we-are.txt nor outreach.txt says anything about tax deductibility, and spec 5.9 asks for nothing about it either, so this page currently says nothing. The three "Ways to give" paragraphs are net-new copy (declared above) standing in for stewardship words the church has not written yet.
+
+### Photos of children
+
+- (none)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

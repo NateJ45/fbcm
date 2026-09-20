@@ -22,6 +22,14 @@ interface Props {
   body?: string;
   buttonLabel?: string;
   buttonUrl?: string;
+  /**
+   * The heading tag. 'h2' everywhere except when this band OPENS a page, in
+   * which case it is the page's only h1 and SectionRenderer passes 'h1'. This
+   * mirrors HeritageBand.astro's `level` prop: /give is the second page in
+   * the site (after /history) to open on a band rather than a hero, and a
+   * page with no h1 fails axe's page-has-heading-one.
+   */
+  level?: 'h1' | 'h2';
   headingId: string;
   /**
    * Site settings, handed down by SectionRenderer from the route that already
@@ -39,6 +47,7 @@ const {
   body,
   buttonLabel,
   buttonUrl,
+  level = 'h2',
   headingId,
   settings: settingsProp,
 } = Astro.props as Props;
@@ -66,7 +75,7 @@ const giveCta = href
       <SectionHeading
         headline={heading}
         headingId={headingId}
-        level="h2"
+        level={level}
         align="left"
         tone="band"
         rule

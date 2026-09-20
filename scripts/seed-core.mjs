@@ -226,6 +226,16 @@ docs.push({
       _type: 'footerColumn',
       _key: 'fcol-pages',
       title: 'Pages',
+      // Task 13 (2026-09-19): Give was added here, after History and before
+      // Blog (spec order: a visitor reads History then hears about giving
+      // before the blog). The links array has a schema max of 10
+      // (siteSettings.ts, footerColumns[].links, raised in plan 2a), and this
+      // column was already at 10, so Privacy came out to make room rather
+      // than pushing past the max: Footer.astro always renders its own
+      // "Privacy policy" link in the small-print bar at the very bottom
+      // (LEGAL_LINKS falls back to it when empty), so fcol-pages-privacy was
+      // a second link to the same page. Removing it is not a content loss,
+      // it removes a duplicate.
       links: [
         link('fcol-pages-visit', 'Visit', '/visit'),
         link('fcol-pages-who', 'Who We Are', '/who-we-are'),
@@ -233,10 +243,10 @@ docs.push({
         link('fcol-pages-ministries', 'Ministries', '/ministries'),
         link('fcol-pages-staff', 'Staff', '/staff'),
         link('fcol-pages-history', 'History', '/history'),
+        link('fcol-pages-give', 'Give', '/give'),
         link('fcol-pages-blog', 'Blog', '/blog'),
         link('fcol-pages-wedding', 'Weddings and Building Use', '/wedding'),
         link('fcol-pages-contact', 'Contact', '/contact'),
-        link('fcol-pages-privacy', 'Privacy', '/privacy'),
       ],
     },
     {
