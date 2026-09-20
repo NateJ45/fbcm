@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FBCM type specimen: five candidate systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Castoro+Titling&family=Castoro:ital@0;1&family=Sofia+Sans+Semi+Condensed:ital,wght@0,400;0,600;1,400&family=Eczar:wght@400;500;600;700;800&family=Martel:wght@300;400;600&family=Big+Shoulders:opsz,wght@10..72,400..700&family=Ibarra+Real+Nova:ital,wght@0,400..700;1,400..700&family=Golos+Text:wght@400..600&family=Brygada+1918:ital,wght@0,400..700;1,400..700&family=Geologica:wght@300..600&family=Bona+Nova:ital,wght@0,400;0,700;1,400&family=Bona+Nova+SC&family=Schibsted+Grotesk:ital,wght@0,400..700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #f4efe6;
+        --ink: #17151f;
+        --ink2: #514c58;
+        --gold: #d59b29;
+        --gold-ink: #8a5f0c;
+        --indigo: #292854;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: #0e0d14;
+        color: var(--ink);
+        font-size: 17px;
+        line-height: 1.7;
+      }
+      .sys {
+        width: 1280px;
+        margin: 0 auto 40px;
+      }
+      .tag {
+        font: 600 12px/1 system-ui;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #bbb;
+        padding: 14px 0 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .hero {
+        position: relative;
+        height: 560px;
+        background: url(img/tower.jpg) 62% 28% / cover;
+        color: var(--paper);
+        display: flex;
+        align-items: flex-end;
+        isolation: isolate;
+      }
+      .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+          linear-gradient(
+            to top,
+            rgba(23, 21, 31, 0.94),
+            rgba(23, 21, 31, 0.6) 34%,
+            rgba(23, 21, 31, 0.1) 62%,
+            transparent 80%
+          ),
+          linear-gradient(to right, rgba(23, 21, 31, 0.55), transparent 55%);
+      }
+      .hi {
+        padding: 0 64px 44px;
+        width: 100%;
+      }
+      .line {
+        font-size: 13px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        margin-bottom: 22px;
+      }
+      .line::before {
+        content: '';
+        width: 44px;
+        height: 1px;
+        background: var(--gold);
+      }
+      h1 {
+        font-size: 132px;
+        line-height: 0.92;
+        letter-spacing: -0.015em;
+        font-weight: 400;
+        max-width: 12ch;
+      }
+      .lede {
+        font-style: italic;
+        font-size: 26px;
+        line-height: 1.35;
+        margin-top: 22px;
+        max-width: 34ch;
+        font-weight: 300;
+      }
+      .facts {
+        display: flex;
+        gap: 56px;
+        margin-top: 34px;
+        padding-top: 22px;
+        border-top: 1px solid rgba(244, 239, 230, 0.2);
+      }
+      .facts b {
+        display: block;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: rgba(244, 239, 230, 0.7);
+        margin-bottom: 6px;
+      }
+      .facts span {
+        font-size: 24px;
+        line-height: 1.1;
+      }
+      .paper {
+        background: var(--paper);
+        padding: 56px 64px;
+        display: grid;
+        grid-template-columns: 1fr 1.6fr;
+        gap: 56px;
+      }
+      .paper .eb {
+        font-size: 13px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gold-ink);
+        font-weight: 600;
+        margin-bottom: 18px;
+      }
+      .num {
+        font-size: 120px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        font-weight: 400;
+        font-variant-numeric: oldstyle-nums;
+      }
+      .num i {
+        font-size: 0.28em;
+        vertical-align: 0.15em;
+        margin-left: 0.12em;
+      }
+      h2 {
+        font-size: 44px;
+        line-height: 1.05;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        margin-bottom: 18px;
+        max-width: 18ch;
+      }
+      .paper p {
+        max-width: 60ch;
+        color: var(--ink);
+      }
+      .paper p + p {
+        margin-top: 1em;
+      }
+      .btn {
+        display: inline-block;
+        margin-top: 26px;
+        background: var(--gold);
+        color: #1b1408;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 600;
+        padding: 16px 26px;
+        box-shadow:
+          inset 0 0 0 3px var(--gold),
+          inset 0 0 0 4px var(--indigo);
+      }
+      .navrow {
+        background: var(--paper);
+        border-top: 1px solid rgba(23, 21, 31, 0.16);
+        padding: 18px 64px;
+        display: flex;
+        gap: 34px;
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .navrow span:last-child {
+        margin-left: auto;
+        color: var(--gold-ink);
+        font-weight: 600;
+      }
+      /* systems */
+      .A .d {
+        font-family: 'Castoro Titling', serif;
+      }
+      .A .t,
+      .A .lede,
+      .A .facts span,
+      .A p {
+        font-family: 'Castoro', serif;
+      }
+      .A .u {
+        font-family: 'Sofia Sans Semi Condensed', sans-serif;
+      }
+      .A h1 {
+        font-family: 'Castoro Titling', serif;
+        letter-spacing: 0.005em;
+        font-size: 112px;
+      }
+      .B .d,
+      .B h1,
+      .B h2,
+      .B .num {
+        font-family: 'Eczar', serif;
+        font-weight: 500;
+      }
+      .B .lede,
+      .B .facts span,
+      .B p {
+        font-family: 'Martel', serif;
+      }
+      .B .u {
+        font-family: 'Big Shoulders', sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+      }
+      .C .d,
+      .C h1,
+      .C h2,
+      .C .num {
+        font-family: 'Ibarra Real Nova', serif;
+      }
+      .C .lede,
+      .C .facts span,
+      .C p {
+        font-family: 'Ibarra Real Nova', serif;
+      }
+      .C .u {
+        font-family: 'Golos Text', sans-serif;
+      }
+      .D .d,
+      .D h1,
+      .D h2,
+      .D .num {
+        font-family: 'Brygada 1918', serif;
+      }
+      .D .lede,
+      .D .facts span,
+      .D p {
+        font-family: 'Brygada 1918', serif;
+      }
+      .D .u {
+        font-family: 'Geologica', sans-serif;
+        font-weight: 400;
+      }
+      .E .d,
+      .E h1,
+      .E h2,
+      .E .num {
+        font-family: 'Bona Nova', serif;
+      }
+      .E .lede,
+      .E .facts span,
+      .E p {
+        font-family: 'Bona Nova', serif;
+      }
+      .E .u {
+        font-family: 'Schibsted Grotesk', sans-serif;
+      }
+      .E .eb,
+      .E .line {
+        font-family: 'Bona Nova SC', serif;
+        letter-spacing: 0.1em;
+        text-transform: none;
+      }
+      .line,
+      .facts b,
+      .eb,
+      .btn,
+      .navrow,
+      .u {
+        font-family: inherit;
+      }
+      .sys .line,
+      .sys .facts b,
+      .sys .eb,
+      .sys .btn,
+      .sys .navrow {
+        font-family: var(--u);
+      }
+      .A {
+        --u: 'Sofia Sans Semi Condensed', sans-serif;
+      }
+      .B {
+        --u: 'Big Shoulders', sans-serif;
+      }
+      .C {
+        --u: 'Golos Text', sans-serif;
+      }
+      .D {
+        --u: 'Geologica', sans-serif;
+      }
+      .E {
+        --u: 'Schibsted Grotesk', sans-serif;
+      }
+      .E .line,
+      .E .eb {
+        font-family: 'Bona Nova SC', serif;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="sys A" id="A">
+      <div class="tag">
+        <span>A · Castoro Titling + Castoro + Sofia Sans Semi Condensed</span
+        ><span>Tiro Typeworks (Iowa), after Bruce Rogers · free, self-hostable</span>
+      </div>
+      <div class="hero">
+        <div class="hi">
+          <p class="line">This Sunday, September 27 · Worship at 10:45 am</p>
+          <h1>Praise and proclaim.</h1>
+          <p class="lede">
+            We’re a Spirit-led people gathered to join Christ’s presence in our community.
+          </p>
+          <div class="facts">
+            <div><b>Sundays</b><span>10:45 am</span></div>
+            <div><b>Where</b><span>309 East Adams, at Jefferson</span></div>
+            <div><b>Online</b><span>Live on YouTube</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="paper">
+        <div>
+          <p class="eb">Sunday morning</p>
+          <div class="num d">10:45<i>am</i></div>
+        </div>
+        <div>
+          <h2 class="d">A Baptist church in the heart of downtown since 1859.</h2>
+          <p>
+            At each entrance, all ages are invited to check in with a greeter. The greeters can
+            direct you where you need to go, and answer questions you may have. Children will
+            receive a name tag for nursery or children’s church.
+          </p>
+          <p>For children ages 3 and younger, nursery care is available throughout the service.</p>
+          <a class="btn">Plan a visit</a>
+        </div>
+      </div>
+      <div class="navrow">
+        <span>Visit</span><span>Who We Are</span><span>Beliefs</span><span>Ministries</span
+        ><span>Staff</span><span>History</span><span>Blog</span><span>Give</span>
+      </div>
+    </section>
+
+    <section class="sys B" id="B">
+      <div class="tag">
+        <span>B · Eczar + Martel + Big Shoulders</span
+        ><span>Rosetta Type (Vaibhav Singh, Dan Reynolds) · Chicago civic sans · free</span>
+      </div>
+      <div class="hero">
+        <div class="hi">
+          <p class="line">This Sunday, September 27 · Worship at 10:45 am</p>
+          <h1>Praise and proclaim.</h1>
+          <p class="lede">
+            We’re a Spirit-led people gathered to join Christ’s presence in our community.
+          </p>
+          <div class="facts">
+            <div><b>Sundays</b><span>10:45 am</span></div>
+            <div><b>Where</b><span>309 East Adams, at Jefferson</span></div>
+            <div><b>Online</b><span>Live on YouTube</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="paper">
+        <div>
+          <p class="eb">Sunday morning</p>
+          <div class="num d">10:45<i>am</i></div>
+        </div>
+        <div>
+          <h2 class="d">A Baptist church in the heart of downtown since 1859.</h2>
+          <p>
+            At each entrance, all ages are invited to check in with a greeter. The greeters can
+            direct you where you need to go, and answer questions you may have. Children will
+            receive a name tag for nursery or children’s church.
+          </p>
+          <p>For children ages 3 and younger, nursery care is available throughout the service.</p>
+          <a class="btn">Plan a visit</a>
+        </div>
+      </div>
+      <div class="navrow">
+        <span>Visit</span><span>Who We Are</span><span>Beliefs</span><span>Ministries</span
+        ><span>Staff</span><span>History</span><span>Blog</span><span>Give</span>
+      </div>
+    </section>
+
+    <section class="sys C" id="C">
+      <div class="tag">
+        <span>C · Ibarra Real Nova + Golos Text</span
+        ><span>Spanish Royal Academy 1780 revival (Octavio Pardo) · free</span>
+      </div>
+      <div class="hero">
+        <div class="hi">
+          <p class="line">This Sunday, September 27 · Worship at 10:45 am</p>
+          <h1>Praise and proclaim.</h1>
+          <p class="lede">
+            We’re a Spirit-led people gathered to join Christ’s presence in our community.
+          </p>
+          <div class="facts">
+            <div><b>Sundays</b><span>10:45 am</span></div>
+            <div><b>Where</b><span>309 East Adams, at Jefferson</span></div>
+            <div><b>Online</b><span>Live on YouTube</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="paper">
+        <div>
+          <p class="eb">Sunday morning</p>
+          <div class="num d">10:45<i>am</i></div>
+        </div>
+        <div>
+          <h2 class="d">A Baptist church in the heart of downtown since 1859.</h2>
+          <p>
+            At each entrance, all ages are invited to check in with a greeter. The greeters can
+            direct you where you need to go, and answer questions you may have. Children will
+            receive a name tag for nursery or children’s church.
+          </p>
+          <p>For children ages 3 and younger, nursery care is available throughout the service.</p>
+          <a class="btn">Plan a visit</a>
+        </div>
+      </div>
+      <div class="navrow">
+        <span>Visit</span><span>Who We Are</span><span>Beliefs</span><span>Ministries</span
+        ><span>Staff</span><span>History</span><span>Blog</span><span>Give</span>
+      </div>
+    </section>
+
+    <section class="sys D" id="D">
+      <div class="tag">
+        <span>D · Brygada 1918 + Geologica</span
+        ><span>Polish interwar revival (Capitalics) · free</span>
+      </div>
+      <div class="hero">
+        <div class="hi">
+          <p class="line">This Sunday, September 27 · Worship at 10:45 am</p>
+          <h1>Praise and proclaim.</h1>
+          <p class="lede">
+            We’re a Spirit-led people gathered to join Christ’s presence in our community.
+          </p>
+          <div class="facts">
+            <div><b>Sundays</b><span>10:45 am</span></div>
+            <div><b>Where</b><span>309 East Adams, at Jefferson</span></div>
+            <div><b>Online</b><span>Live on YouTube</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="paper">
+        <div>
+          <p class="eb">Sunday morning</p>
+          <div class="num d">10:45<i>am</i></div>
+        </div>
+        <div>
+          <h2 class="d">A Baptist church in the heart of downtown since 1859.</h2>
+          <p>
+            At each entrance, all ages are invited to check in with a greeter. The greeters can
+            direct you where you need to go, and answer questions you may have. Children will
+            receive a name tag for nursery or children’s church.
+          </p>
+          <p>For children ages 3 and younger, nursery care is available throughout the service.</p>
+          <a class="btn">Plan a visit</a>
+        </div>
+      </div>
+      <div class="navrow">
+        <span>Visit</span><span>Who We Are</span><span>Beliefs</span><span>Ministries</span
+        ><span>Staff</span><span>History</span><span>Blog</span><span>Give</span>
+      </div>
+    </section>
+
+    <section class="sys E" id="E">
+      <div class="tag">
+        <span>E · Bona Nova (with true small caps) + Schibsted Grotesk</span
+        ><span>Polish 1971 revival (Capitalics) · Norwegian newspaper sans · free</span>
+      </div>
+      <div class="hero">
+        <div class="hi">
+          <p class="line">This Sunday, September 27 · Worship at 10:45 am</p>
+          <h1>Praise and proclaim.</h1>
+          <p class="lede">
+            We’re a Spirit-led people gathered to join Christ’s presence in our community.
+          </p>
+          <div class="facts">
+            <div><b>Sundays</b><span>10:45 am</span></div>
+            <div><b>Where</b><span>309 East Adams, at Jefferson</span></div>
+            <div><b>Online</b><span>Live on YouTube</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="paper">
+        <div>
+          <p class="eb">Sunday morning</p>
+          <div class="num d">10:45<i>am</i></div>
+        </div>
+        <div>
+          <h2 class="d">A Baptist church in the heart of downtown since 1859.</h2>
+          <p>
+            At each entrance, all ages are invited to check in with a greeter. The greeters can
+            direct you where you need to go, and answer questions you may have. Children will
+            receive a name tag for nursery or children’s church.
+          </p>
+          <p>For children ages 3 and younger, nursery care is available throughout the service.</p>
+          <a class="btn">Plan a visit</a>
+        </div>
+      </div>
+      <div class="navrow">
+        <span>Visit</span><span>Who We Are</span><span>Beliefs</span><span>Ministries</span
+        ><span>Staff</span><span>History</span><span>Blog</span><span>Give</span>
+      </div>
+    </section>
+  </body>
+</html>
