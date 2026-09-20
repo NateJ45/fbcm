@@ -335,10 +335,11 @@ leaves open, with what closes each.
   headings, links, lists, blockquotes and inline images. A unit test pins that so
   it is a failing test to make pass, not a surprise. The captured `bodyHtml` in
   `scripts/data/posts/*.json` is the source when a converter is added.
-- **All 42 redirect targets currently 404**: `/staff`, `/visit`, `/beliefs`,
-  `/ministries`, `/wedding`, `/give`, `/who-we-are`, `/history` do not exist yet.
-  Correct for plan 1. **Plan 3 precondition: no redirect target may 404**, or the
-  spec's "every retired URL keeps working" is false on day one.
+- **Some redirect targets still 404**: `/visit`, `/who-we-are` and `/beliefs`
+  landed in plan 2b (tasks 5, 7 and 8); `/staff`, `/ministries`, `/wedding`,
+  `/give` and `/history` do not exist yet. **Plan 3 precondition: no redirect
+  target may 404**, or the spec's "every retired URL keeps working" is false on
+  day one.
 - `journalPage` singleton is unseeded; `/blog` renders the starter's defaults.
 - `seed-core.mjs` still seeds a service-business page set; the FBCM home page and
   the eight custom pages need seeding for this church.
@@ -424,9 +425,9 @@ still open, all closing in plan 2b/2c:
 - `visual.yml`'s CI-stored `/styleguide` baseline is stale after Task 6's eight
   block fixtures; refresh it on CI with the workflow's own `update` input the
   next time it runs, not by regenerating `scripts/.parity` locally.
-- `npm run check:links` is red on the seven plan-2 routes (`/visit`,
-  `/who-we-are`, `/beliefs`, `/ministries`, `/staff`, `/history`, `/wedding`),
-  all 404 until plan 2b builds them. No other broken link exists.
+- `npm run check:links` is red on the four plan-2 routes still to build
+  (`/ministries`, `/staff`, `/history`, `/wedding`). `/visit`, `/who-we-are` and
+  `/beliefs` now answer 200. No other broken link exists.
 - `public/favicon.svg` is still the starter's roundel, not the church's mark;
   closes in plan 2c.
 - The `@portabletext/block-tools` dependency plan 2b needs for a real Portable

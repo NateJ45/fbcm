@@ -55,6 +55,32 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none)
 
+## /beliefs
+
+### New sentences
+
+- First Baptist Church Muncie is an American Baptist church in downtown Muncie: we hold to one triune God, to the Bible as our source for faith and practice, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself under the Lordship of Christ. (search description)
+
+### Edits to the church’s own text
+
+- Re-cased: the hero headline is the church’s own epigraph, Ephesians 4:5, set as a sentence. "One Lord, One Faith, One Baptism" becomes "One Lord, one faith, one baptism."
+- Merged heading: "Lordship of Christ" and "Freedom to Serve" become one section, "Lordship of Christ and freedom to serve". Every paragraph under both headings is unchanged and in its original order.
+- Cut connective: "Here are where the themes come together: The church is made up of believers..." begins at "The church is made up of believers...".
+- Corrected: "believers who have decided to follow the Jesus" becomes "believers who have decided to follow Jesus".
+- Cut connective: "At the same time, our own practice of baptism..." begins at "Our own practice of baptism...".
+- Cut: the footnote marker on "...to be (re-)baptized to become members.*" and its footnote, "*For more about membership, see our membership page." Membership is a section of this page now.
+- Em-dash to comma (site style): "service to God is crucial—but it must be service freely given", and "like being a citizen of a country—something you are because of where you are born".
+- De-gendered: "a person normally will present himself / herself for membership" becomes "people normally present themselves for membership".
+- De-gendered: "during the individual’s stay in Muncie and retain membership in his/her home church" becomes "during their stay in Muncie and retain membership in their home church".
+- De-gendered: "Such membership terminates upon completion of his/her temporary stay" becomes "...upon completion of their temporary stay".
+- Moved, so it is said once: the immersion sentence under Full Member ("Although Muncie First Baptist Church only baptizes believers by immersion...") now sits under Being Baptist, where the page reconciles all three sources. Its second sentence, about the confirmation class, stays under Full member.
+- Linked: "For more information see our Constitution and Bylaws" now links to the document list on this page.
+- Cut: "You can read the document split into two parts below" (the 2005 statement is summarised, not reproduced) and "For more on our church beliefs and the beliefs of our denomination, see our Beliefs page" (the reader is on it).
+
+### Photos of children
+
+- (none)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

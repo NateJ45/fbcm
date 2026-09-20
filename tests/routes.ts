@@ -30,6 +30,7 @@ export const routes: string[] = [
   // The plan-2b pages are listed here as they land.
   '/visit',
   '/who-we-are',
+  '/beliefs',
 ];
 
 /**

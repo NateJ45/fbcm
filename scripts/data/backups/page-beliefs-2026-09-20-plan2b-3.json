@@ -1,0 +1,1135 @@
+{
+  "_createdAt": "2026-09-20T00:32:52Z",
+  "_id": "page-beliefs",
+  "_rev": "QjI0kncFolotw4PTBiwJ3h",
+  "_type": "page",
+  "_updatedAt": "2026-09-20T00:39:08Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "beliefs-hero",
+      "_type": "heroSection",
+      "eyebrow": "What we believe",
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "Light through the sanctuary's stained glass window",
+          "asset": {
+            "_ref": "image-2b58911d5c3be2ec0c0f3af914530613167fb633-1600x2364-jpg",
+            "_type": "reference"
+          }
+        }
+      ],
+      "headline": "One Lord, one faith, one baptism.",
+      "layout": "split",
+      "primaryCta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "externalUrl": "/beliefs#baptists",
+        "label": "Being Baptist",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "/beliefs#membership",
+        "label": "Membership",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "size": "short"
+    },
+    {
+      "_key": "beliefs-basic",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "bb-1-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-1-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "There is One Triune God revealed to us as Father, Son, & Holy Spirit."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-2-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-2-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "God is Love."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-2-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-2-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "God is Spirit."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-2-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-2-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "God is Holy."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-3-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-3-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "God created heaven and earth, all things visible and invisible."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-4-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-4-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The world God created is good."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-5-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-5-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Humanity was created in God’s image. We rebelled and turned from God – insisting on our own way."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-6-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-6-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "This is called sin, and it corrupts all of creation."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-7-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-7-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Jesus came as the Holy One of Israel and the incarnation of God: he is fully human and fully God."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-8-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-8-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "He was born of the Virgin Mary."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-9-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-9-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Jesus lived a perfect life in complete love and obedience to the Father, walking in the power of the Holy Spirit."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-10-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-10-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "In him, the Kingdom of God has come."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-11-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-11-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "In his suffering death on the cross, and in his rising again on the third day, according to the Scriptures, Jesus completed our salvation and the redemption of the world."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-12-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-12-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Jesus ascended to the right hand of the Father, and will return again on the last day to judge the living and the dead and make all that is wrong right."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-13-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-13-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The Holy Spirit inspired the Bible, sanctifies believers, and calls and equips the church, the people of God, to spread the Good News of Jesus Christ and to make disciples of all nations."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-14-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-14-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Christian life begins with conversion to Christ, empowered by the prior work of the Holy Spirit to regenerate (give us a new birth). Faith in Christ is how we are justified and forgiven."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bb-15-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bb-15-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "There are two sacraments, or ordinances, which the Lord commanded the church to practice until he returns: Baptism and the Lord’s Supper (communion)."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Our basic beliefs",
+      "heading": "What we hold",
+      "width": "narrow"
+    },
+    {
+      "_key": "beliefs-baptists",
+      "_type": "richTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "baptists"
+      },
+      "body": [
+        {
+          "_key": "bp-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Lordship of Christ and freedom to serve"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "bp-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Baptists believe that Christ is head of his church. Each church is “autonomous,” but that shouldn’t mean we think “we’re the ones in charge.” It is Christ who is “in charge.” That’s what it means to say “Jesus is Lord.” And, as members of the body of Christ, each church member is empowered by the Spirit to discern His will in interpreting the Scriptures together."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Churches are each autonomous, directly under the Lordship of Christ, and we willingly and joyfully partner in ministry with other Christians and churches on mission. We each bring our unique Spirit-given gifts. We each benefit from one another."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Baptists, from the beginning, have also championed freedom for all people to worship according to conscience. That is, to worship, or not to worship, without being forced to do so or not to do so."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Even in times and places where those labeled heretics were punished by law, Baptists said right belief (while important) can’t be forced by the punishment of the state. Baptists are certain that service to God is crucial, but it must be service freely given. Thomas Helwys (1576-1616), one of the first Baptists, was even put in Newgate prison in London for this belief!"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-h2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-h2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Covenant Community"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "bp-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The church is a covenant community. A covenant is a promise. The Lord has saved us, shown us great mercy and love, and made us a new people. The church is the body of believers united to one another to live as followers of Christ in that newness of life. We gather to Worship him through hearing and proclaiming the word and celebrating the Lord’s Supper and Baptism as Jesus commanded. In living in Jesus’ new life, we learn to love and trust God and live well with one another, with mutual accountability and encouragement."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-f-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-f-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We each have responsibilities to minister to one another."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-h3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-h3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Church of Believers"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "bp-g-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-g-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "In different times and places, a common misunderstanding was that being Christian is something like being a citizen of a country, something you are because of where you are born, regardless of your beliefs or faith. Against this view, Baptists have consistently emphasized the importance of a church of “regenerate believers.” That is, being a Christian isn’t about what place you’re from, or what family you're born into. Being a Christian is about trusting Jesus as Lord and following him."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-h-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-h-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The church is made up of believers who have decided to follow Jesus and become part of the covenant community in baptism, united to freely serve, under the Lordship of Christ."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-i-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-i-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Our own practice of baptism is in accordance with what we believe the New Testament teaches. We baptize upon confession of faith in Jesus. We proclaim that decision to follow Jesus, and recognize God’s work of salvation, through Baptism in the name of the one true God: Father, Son, and Holy Spirit."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-j-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-j-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Although Muncie First Baptist Church only baptizes believers by immersion, the church accepts any member who was baptized in the name of the Father, Son, & Holy Spirit, and trusts in Christ as Lord and Savior."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bp-k-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bp-k-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We recognize there are many genuine Christians and faithful churches who do not practice confession and then baptism, in that order. FBCM does not require professing Christians, who were Baptized as infants in the name of the Father, Son, and Holy Spirit, to be (re-)baptized to become members."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Being Baptist",
+      "heading": "Four things Baptists hold to",
+      "width": "narrow"
+    },
+    {
+      "_key": "beliefs-scripture",
+      "_type": "scriptureBandSection",
+      "accentWord": "charity",
+      "verse": "In essentials, unity; in non-essentials, liberty; in all things, charity."
+    },
+    {
+      "_key": "beliefs-confessions",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "hc-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "hc-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Holy Scripture is our source for faith and practice. We recognize there will be diversity in views and interpretation among believers."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "hc-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "hc-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "As a guide to Christian teaching and to simply describe common beliefs in our community, FBCM adopted a historic confession as a congregation. As our by-laws & constitution say: “Recognizing and honoring the differences that exist among believers, this Church generally ascribes to the New Hampshire Confession of Faith 1833.”"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "hc-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "hc-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "When seeking to form a missionary society which we partner with to this day, a Baptist pastor and scholar named J. Newton Brown helped create a confession of belief with other believers. It came to be known as the New Hampshire Baptist Confession of Faith of 1833 (NHCF 1833), and has served as a framework for many later Baptist Confessions– especially here in the United States."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "hc-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "hc-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The General Board of the American Baptists Churches - USA released an identity statement in 2005. While not binding on congregations or individuals, this statement represents an expression of the faith of American Baptists in the 21st century."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Historic confessions",
+      "heading": "What we have signed our names to",
+      "width": "narrow"
+    },
+    {
+      "_key": "beliefs-documents",
+      "_type": "documentListSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "documents"
+      },
+      "docs": [
+        {
+          "_key": "doc-1",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-8a4e39e7d0e038f79acea16cb27eca57459ed62f-pdf",
+              "_type": "reference"
+            }
+          },
+          "note": "The confession in full",
+          "title": "New Hampshire Baptist Confession of Faith",
+          "year": 1833
+        },
+        {
+          "_key": "doc-2",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-6e7118a114a6e0c0c239f0b831aeec52c487957f-pdf",
+              "_type": "reference"
+            }
+          },
+          "note": "How this church governs itself",
+          "title": "Constitution and bylaws"
+        },
+        {
+          "_key": "doc-3",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-037437dfa0e498d44c7fcfd47c4a49d4822dd9f7-pdf",
+              "_type": "reference"
+            }
+          },
+          "note": "The manifesto",
+          "title": "Re-envisioning Baptist Identity: A Manifesto for Baptist Communities in North America"
+        }
+      ],
+      "eyebrow": "Read the documents",
+      "heading": "Three documents"
+    },
+    {
+      "_key": "beliefs-covenant",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "cv-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We, the members of this church, through the grace of God, humbly and solemnly undertake with His aid:"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To attend the worship and services of this church regularly, using them for the edification of our souls."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-b-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-b-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To contribute cheerfully and regularly to the financial support of the work of this church and its various beneficences."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-b-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-b-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To aid and assist prayerfully, loyally, and willingly, the minister and those who work with him [or her] in the witness of this church."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-b-4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-b-4s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To maintain, in all our relations with our fellow members, an attitude of spiritual integrity, sympathy, and love."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-b-5",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-b-5s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To cooperate with interest and earnestness in the redemptive, missionary, and social tasks of the Kingdom of God."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-b-6",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-b-6s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To cultivate by prayer and meditation a life of devotion and consecration to God and to our Savior, Jesus Christ."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-b-7",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-b-7s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To aspire, in our private lives, to character and conduct that shall be approved by God and our consciences."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-b-8",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-b-8s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To order the life in our homes so that they may be truly Christian and dwelling places of God."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-b-9",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-b-9s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To bear ourselves in our social and business interrelationships in accordance with the principles of Jesus Christ."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We enter this covenant inspired by devoted love to Him who gave Himself for our salvation. We seek that communion of our spirits with His, so graciously bestowed on us. We desire to serve Him and those who are in the work of His hand. We pray for Divine guidance and help in this our earnest endeavor."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "cv-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "cv-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We further engage that when we remove from this place, we will, as soon as possible, unite with some other Church where we can carry out the spirit of this Covenant and the principles of God’s word."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Our church covenant",
+      "heading": "The covenant we keep",
+      "width": "narrow"
+    },
+    {
+      "_key": "beliefs-membership",
+      "_type": "richTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "membership"
+      },
+      "body": [
+        {
+          "_key": "mb-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mb-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Full member"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "mb-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mb-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To join Muncie First Baptist Church people normally present themselves for membership by coming forward at the end of a worship service when the pastor invites people to join the church."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mb-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mb-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Any person who professes faith in Jesus Christ as Lord and Savior may be admitted for membership by making your profession of faith in Jesus Christ public and following that with baptism, by transferring your membership from another church or by stating that you are a Christian and have been a member of a church, but for some reason transfer of a letter from that church is unlikely."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mb-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mb-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "If you were baptized as an infant, our membership form may ask if you have taken any form of confirmation class."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mb-h2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mb-h2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Associate member"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "mb-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mb-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Any believer who is temporarily living in the Muncie community may unite with Muncie First Baptist Church during their stay in Muncie and retain membership in their home church."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mb-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mb-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Traditionally, college students have joined as associate members."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mb-f-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mb-f-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "An Associate Member has no vote on church matters and may not hold elected positions, but may attend church meetings, may assume some positions of leadership, and is invited to participate in all church activities. Such membership terminates upon completion of their temporary stay."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mb-g-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mb-g-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "For more information see "
+            },
+            {
+              "_key": "mb-g-1s2",
+              "_type": "span",
+              "marks": [
+                "mb-g-1l1"
+              ],
+              "text": "our Constitution and Bylaws"
+            },
+            {
+              "_key": "mb-g-1s3",
+              "_type": "span",
+              "marks": [],
+              "text": "."
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "mb-g-1l1",
+              "_type": "link",
+              "href": "#documents"
+            }
+          ],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Membership",
+      "heading": "Full and associate members",
+      "width": "narrow"
+    },
+    {
+      "_key": "beliefs-affiliation",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "af-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "af-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We are affiliated with the "
+            },
+            {
+              "_key": "af-a-1s2",
+              "_type": "span",
+              "marks": [
+                "af-a-1l1"
+              ],
+              "text": "American Baptist Churches - USA"
+            },
+            {
+              "_key": "af-a-1s3",
+              "_type": "span",
+              "marks": [],
+              "text": " and the "
+            },
+            {
+              "_key": "af-a-1s4",
+              "_type": "span",
+              "marks": [
+                "af-a-1l2"
+              ],
+              "text": "American Baptist Churches of Indiana and Kentucky"
+            },
+            {
+              "_key": "af-a-1s5",
+              "_type": "span",
+              "marks": [],
+              "text": "."
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "af-a-1l1",
+              "_type": "link",
+              "href": "https://www.abc-usa.org/"
+            },
+            {
+              "_key": "af-a-1l2",
+              "_type": "link",
+              "href": "https://abc-indiana.org/"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "af-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "af-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "American Baptists are a Christ-centered, biblically grounded, ethnically diverse people called to radical personal discipleship in Christ Jesus."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "af-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "af-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "American Baptists' commitment to Jesus propels us to nurture authentic relationships with one another; build healthy churches; transform our communities, our nations, and our world; engage every member in hands-on ministry; and speak the prophetic word in love."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Affiliation",
+      "heading": "American Baptist Churches USA",
+      "width": "narrow"
+    },
+    {
+      "_key": "beliefs-logos",
+      "_type": "logoStripSection",
+      "layout": "row",
+      "logos": [
+        {
+          "_key": "logo-1",
+          "_type": "image",
+          "alt": "American Baptist Churches USA logo",
+          "asset": {
+            "_ref": "image-ff4b7aed78095e0591db4eeb8783111d154746b0-800x800-png",
+            "_type": "reference"
+          }
+        },
+        {
+          "_key": "logo-2",
+          "_type": "image",
+          "alt": "American Baptist Churches of Indiana and Kentucky logo",
+          "asset": {
+            "_ref": "image-3a6427ecc6772621a518c18e114d7c4171452373-125x125-png",
+            "_type": "reference"
+          }
+        }
+      ]
+    },
+    {
+      "_key": "beliefs-cta",
+      "_type": "ctaBandSection",
+      "cta": {
+        "_key": "cta-3",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-contact",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Contact us",
+        "linkType": "internal"
+      },
+      "eyebrow": "Questions?",
+      "headline": "Ask us anything.",
+      "secondaryCta": {
+        "_key": "cta-4",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-visit",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Plan a visit",
+        "linkType": "internal"
+      },
+      "subhead": "Sundays at 10:45 am. 309 East Adams Street."
+    }
+  ],
+  "seoDescription": "First Baptist Church Muncie is an American Baptist church in downtown Muncie: we hold to one triune God, to the Bible as our source for faith and practice, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself under the Lordship of Christ.",
+  "seoTitle": "What we believe | First Baptist Church Muncie, an American Baptist church",
+  "slug": {
+    "_type": "slug",
+    "current": "beliefs"
+  },
+  "title": "What we believe"
+}
