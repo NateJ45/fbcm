@@ -18,6 +18,19 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - hero-children: Children gathered under the sanctuary arch
 
+## /visit
+
+### New sentences
+
+- Here is what a Sunday morning looks like, from the parking lot to the last hymn. (hero lead)
+- Nursery care is in room 104 and the family room is 105. (timeline, the 10:45 row: the spec’s ruling on the two rooms, and on the church’s confirm list)
+- First Baptist Church Muncie gathers for worship at 10:45 am every Sunday at 309 East Adams Street in downtown Muncie. (search description)
+
+### Photos of children
+
+- visit-children: Two girls in front of a stained glass window
+- ministries-children: Children gathered under the sanctuary arch
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.
