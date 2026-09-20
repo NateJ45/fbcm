@@ -3,9 +3,7 @@
 
 import { announcement } from './announcement';
 import { businessInfo } from './businessInfo';
-import { contactPage } from './contactPage';
 import { ctaBlock } from './ctaBlock';
-import { formQuestion } from './formQuestion';
 import { homePage } from './homePage';
 import { journalCategory } from './journalCategory'; // scaffold: journal
 import { journalEntry } from './journalEntry'; // scaffold: journal
@@ -29,8 +27,6 @@ export const schemaTypes = [
   ctaBlock,
   // Shared menu link (header menu, footer columns, small print, header button)
   navLink,
-  // One editor-written form question (contactPage.formFields).
-  formQuestion,
   // Page-builder section blocks (objects). Registered before the documents
   // whose pageBuilder arrays reference them.
   ...pageSectionSchemas,
@@ -40,7 +36,6 @@ export const schemaTypes = [
   siteSettings,
   businessInfo, // Content-side singleton: service areas, travel fees, availability, geo
   homePage,
-  contactPage,
   journalPage, // scaffold: journal
   notFoundPage,
   privacyPage,

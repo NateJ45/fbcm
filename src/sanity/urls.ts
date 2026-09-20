@@ -44,8 +44,6 @@ export function pathForDoc(schemaType: string, doc: any): string | null {
     // Core page singletons
     case 'homePage':
       return '/';
-    case 'contactPage':
-      return '/contact';
     // scaffold: journal
     case 'journalPage':
       return '/blog';

@@ -2,7 +2,7 @@
 #
 # Content-Security-Policy beyond frame-ancestors is intentionally NOT set here.
 # Getting it right needs real testing against this project's actual embeds
-# (Sanity CDN, Web3Forms POST, Calendly iframe, the Cloudflare Analytics beacon),
+# (Sanity CDN, the Church Center and YouTube embeds, the Cloudflare Analytics beacon),
 # and a half-right CSP silently breaks widgets rather than failing loudly. A
 # project that wants one should copy presacademy's block, which is a tested
 # example, and then verify every embed under `npm run preview` (wrangler dev) --

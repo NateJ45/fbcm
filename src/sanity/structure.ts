@@ -38,7 +38,6 @@ import {
   DocumentsIcon,
   DocumentTextIcon,
   EditIcon,
-  EnvelopeIcon,
   HeartIcon,
   HomeIcon,
   InfoOutlineIcon,
@@ -59,7 +58,6 @@ const SINGLETON_TYPES = [
   'businessInfo',
   // Core pages
   'homePage',
-  'contactPage',
   'journalPage', // scaffold: journal
   'notFoundPage',
   'privacyPage',
@@ -104,10 +102,13 @@ function singletonWithPreview(S: StructureBuilder, schemaType: string, title: st
 
 // ── Pages: order the church's own pages the way the header menu reads them ──
 //
-// Home and Contact are singletons (one document, always present). The rest of
-// the church's pages -- Visit, Who We Are, Beliefs, History -- are `page`
-// documents an editor built from the section library, and plan 2b creates
-// them. There is no field on `page` recording "where it sits in the nav": the
+// Home is the one page singleton left (always present). Every other page the
+// church has -- Visit, Who We Are, Beliefs, History, Contact -- is a `page`
+// document an editor built from the section library, and plan 2b creates
+// them. Contact joined them on 2026-09-20 when the starter's contactPage
+// singleton and its Web3Forms form retired (plan 2b task 14).
+//
+// There is no field on `page` recording "where it sits in the nav": the
 // nav itself (siteSettings.navItems, seeded in scripts/seed-core.mjs) is the
 // one place that order lives, so the desk reads it from there rather than
 // duplicating it onto every page document (CLAUDE.md rule 15: a second copy
@@ -118,7 +119,7 @@ function singletonWithPreview(S: StructureBuilder, schemaType: string, title: st
 // page whose slug isn't below (one plan 2b hasn't created yet, or a future
 // one added later) still shows up; it just sorts to the end until someone
 // gives it a nav slot.
-const NAV_PAGE_ORDER = ['visit', 'who-we-are', 'beliefs', 'history'];
+const NAV_PAGE_ORDER = ['visit', 'who-we-are', 'beliefs', 'history', 'contact'];
 
 const NAV_PAGE_RANK = `select(${NAV_PAGE_ORDER.map(
   (slug, i) => `slug.current == "${slug}" => ${i}`,
@@ -163,8 +164,6 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
             .title('Pages')
             .items([
               singletonWithPreview(S, 'homePage', 'Home', HomeIcon),
-              singletonWithPreview(S, 'contactPage', 'Contact', EnvelopeIcon),
-
               S.divider(),
 
               navOrderedPagesList(S),

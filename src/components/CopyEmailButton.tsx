@@ -4,7 +4,7 @@
 // copies the address to the clipboard for visitors who'd rather paste.
 //
 // Component name kept as CopyEmailButton for now so all import sites stay
-// stable — the behavior shifted, not the API. Used in Footer + Contact page.
+// stable — the behavior shifted, not the API. Used in the Footer.
 // Requires sonner <Toaster /> in BaseLayout for the copy confirmation toast.
 
 import { useState } from 'react';

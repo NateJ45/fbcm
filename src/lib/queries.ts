@@ -336,39 +336,6 @@ export async function getHomePage() {
   );
 }
 
-// ---- Contact page ---------------------------------------------------------
-
-export async function getContactPage() {
-  return sanityFetch(
-    `*[_type == "contactPage"][0]{
-    seoTitle,
-    seoDescription,
-    seoImage${IMAGE_PROJECTION},
-    heroEyebrow, heroHeadline, heroSubhead,
-    heroImage${IMAGE_PROJECTION},
-    heroScriptAccent,
-    formIntroNote,
-    formProjectTypeOptions,
-    formLocationOptions,
-    formBudgetOptions,
-    formTimelineOptions,
-    formSourceOptions,
-    formFields[]{ label, kind, options, required },
-    whatToExpectEyebrow,
-    whatToExpectHeadline,
-    whatToExpectContent,
-    postInquiryRoadmap[]{
-      title, body, timeEstimate
-    },
-    schedulingLink,
-    schedulingLinkLabel,
-    availabilityNote
-  }`,
-    {},
-    null,
-  );
-}
-
 // ---- 404 page -------------------------------------------------------------
 
 export async function getNotFoundPage() {

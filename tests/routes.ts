@@ -59,4 +59,4 @@ export const allRoutes: string[] = [...routes, ...hiddenRoutes];
  * enables the lead-magnet module gets a form on /guides/[slug]; add it here
  * once a guide is published and that route builds.
  */
-export const FORM_ROUTES: string[] = ['/contact'];
+export const FORM_ROUTES: string[] = [];

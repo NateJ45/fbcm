@@ -56,7 +56,6 @@ test('every reserved slug is a route this repo serves, a scaffolded one, or a bu
     'faq',
     'blog',
     'post',
-    'contact',
     'privacy',
     '404',
     // Served, but never for visitors: the fixed-data design-system wall the

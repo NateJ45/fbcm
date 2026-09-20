@@ -522,13 +522,6 @@ export type HomePageReference = {
   [internalGroqTypeReferenceTo]?: 'homePage';
 };
 
-export type ContactPageReference = {
-  _ref: string;
-  _type: 'reference';
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: 'contactPage';
-};
-
 export type JournalPageReference = {
   _ref: string;
   _type: 'reference';
@@ -554,12 +547,7 @@ export type NavLink = {
   _type: 'navLink';
   label?: string;
   linkType?: 'internal' | 'external';
-  internalPage?:
-    | HomePageReference
-    | ContactPageReference
-    | JournalPageReference
-    | PrivacyPageReference
-    | PageReference;
+  internalPage?: HomePageReference | JournalPageReference | PrivacyPageReference | PageReference;
   externalUrl?: string;
   href?: string;
 };
@@ -990,14 +978,6 @@ export type HeroSection = {
   size?: 'tall' | 'short';
 };
 
-export type FormQuestion = {
-  _type: 'formQuestion';
-  label?: string;
-  kind?: 'text' | 'email' | 'phone' | 'textarea' | 'select' | 'checkbox';
-  options?: Array<string>;
-  required?: boolean;
-};
-
 export type PrivacyPage = {
   _id: string;
   _type: 'privacyPage';
@@ -1059,12 +1039,7 @@ export type CtaBlock = {
   _type: 'ctaBlock';
   label?: string;
   linkType?: 'internal' | 'external' | 'email' | 'phone';
-  internalLink?:
-    | HomePageReference
-    | ContactPageReference
-    | JournalPageReference
-    | JournalEntryReference
-    | PageReference;
+  internalLink?: HomePageReference | JournalPageReference | JournalEntryReference | PageReference;
   externalUrl?: string;
   emailAddress?: string;
   phoneNumber?: string;
@@ -1382,74 +1357,6 @@ export type JournalPage = {
   };
 };
 
-export type ContactPage = {
-  _id: string;
-  _type: 'contactPage';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  seoTitle?: string;
-  seoDescription?: string;
-  seoImage?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: 'image';
-  };
-  heroEyebrow?: string;
-  heroHeadline?: string;
-  heroSubhead?: string;
-  heroImage?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: 'image';
-  };
-  heroScriptAccent?: string;
-  formIntroNote?: string;
-  formProjectTypeOptions?: Array<string>;
-  formLocationOptions?: Array<string>;
-  formBudgetOptions?: Array<string>;
-  formTimelineOptions?: Array<string>;
-  formSourceOptions?: Array<string>;
-  formFields?: Array<
-    {
-      _key: string;
-    } & FormQuestion
-  >;
-  whatToExpectEyebrow?: string;
-  whatToExpectHeadline?: string;
-  whatToExpectContent?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: 'span';
-      _key: string;
-    }>;
-    style?: 'normal';
-    listItem?: 'bullet' | 'number';
-    markDefs?: null;
-    level?: number;
-    _type: 'block';
-    _key: string;
-  }>;
-  postInquiryRoadmap?: Array<{
-    title?: string;
-    body?: string;
-    timeEstimate?: string;
-    _type: 'roadmapStep';
-    _key: string;
-  }>;
-  schedulingLink?: string;
-  schedulingLinkLabel?: string;
-  availabilityNote?: string;
-  note?: string;
-};
-
 export type HomePage = {
   _id: string;
   _type: 'homePage';
@@ -1662,7 +1569,6 @@ export type AllSanitySchemaTypes =
   | BusinessInfo
   | SiteSettings
   | HomePageReference
-  | ContactPageReference
   | JournalPageReference
   | PrivacyPageReference
   | PageReference
@@ -1689,7 +1595,6 @@ export type AllSanitySchemaTypes =
   | ImageTextSection
   | RichTextSection
   | HeroSection
-  | FormQuestion
   | PrivacyPage
   | JournalEntryReference
   | CtaBlock
@@ -1697,7 +1602,6 @@ export type AllSanitySchemaTypes =
   | JournalCategoryReference
   | JournalEntry
   | JournalPage
-  | ContactPage
   | HomePage
   | MediaTag
   | SanityImagePaletteSwatch

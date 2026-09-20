@@ -35,7 +35,6 @@ export const ctaBlock = defineType({
       type: 'reference',
       to: [
         { type: 'homePage' },
-        { type: 'contactPage' },
         { type: 'journalPage' }, // scaffold: journal
         { type: 'journalEntry' }, // scaffold: journal
         { type: 'page' },

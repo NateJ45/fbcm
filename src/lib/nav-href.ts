@@ -22,7 +22,6 @@
 /** Live route per path-mapped singleton. Mirrors SINGLETON_PREVIEW_PATHS. */
 export const SINGLETON_LIVE_PATHS: Record<string, string> = {
   homePage: '/',
-  contactPage: '/contact',
   journalPage: '/blog', // scaffold: journal
   privacyPage: '/privacy',
   notFoundPage: '/404',

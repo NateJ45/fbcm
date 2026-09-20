@@ -56,7 +56,6 @@ export const navLink = defineType({
       to: [
         // Page singletons — each resolves to a fixed route.
         { type: 'homePage' },
-        { type: 'contactPage' },
         { type: 'journalPage' }, // scaffold: journal
         { type: 'privacyPage' },
         // Pages built by the editor (slug-based route /[slug]).

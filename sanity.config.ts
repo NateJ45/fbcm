@@ -248,7 +248,6 @@ const SINGLETON_TYPES = new Set<string>([
   'processPage',
   'servicesPage',
   'faqPage',
-  'contactPage',
   'journalPage',
   'notFoundPage',
   'privacyPage',

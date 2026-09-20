@@ -7,7 +7,7 @@
 - [Home](https://www.fbcmuncie.org/): Who the church is, when it gathers, and how to visit
 - [Blog](https://www.fbcmuncie.org/blog/): Sermon previews, church news and reflections, newest first
 - [Individual posts](https://www.fbcmuncie.org/post/): Each post lives at /post/<slug>
-- [Contact](https://www.fbcmuncie.org/contact/): How to reach the church office
+- [Contact](https://www.fbcmuncie.org/contact/): Phone, email, address, office and pastors' hours, and how to share a life update
 - [Privacy policy](https://www.fbcmuncie.org/privacy/): How this site handles your information
 
 Nothing else is published yet. Do not infer pages for ministries, staff,

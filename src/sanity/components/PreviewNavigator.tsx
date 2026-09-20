@@ -73,7 +73,6 @@ const APIV = '2026-05-01';
 const MAIN_PAGES: { type: string; label: string }[] = [
   { type: 'homePage', label: 'Home' },
   { type: 'journalPage', label: 'Journal' }, // scaffold: journal
-  { type: 'contactPage', label: 'Contact' },
   { type: 'privacyPage', label: 'Privacy' },
   { type: 'notFoundPage', label: '404 page' },
 ];

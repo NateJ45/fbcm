@@ -133,15 +133,14 @@ describe('the registry matches the schema', () => {
   // The popover writes to these by path alone, with no type check, so a rename
   // in a page singleton would leave the card editing a field nobody reads.
   it('every hero text field still exists in a page schema', () => {
-    // 2026-09-18: contact and privacy only. This used to read faqPage.ts
-    // as well, and faqPage is now scaffold-removable, so the gate would have
-    // thrown on a fork that dropped the FAQ. Both files named here belong to
-    // pages the starter always serves.
+    // 2026-09-20: privacy only. This read faqPage.ts until 2026-09-18 (faqPage
+    // is scaffold-removable, so the gate would have thrown on a fork that
+    // dropped the FAQ) and contactPage.ts until plan 2b task 14 retired that
+    // singleton. Privacy is the one page left that still keeps its hero
+    // strings at document level.
     const all = readFileSync(
-      new URL('../sanity/schemaTypes/contactPage.ts', import.meta.url),
+      new URL('../sanity/schemaTypes/privacyPage.ts', import.meta.url),
       'utf8',
-    ).concat(
-      readFileSync(new URL('../sanity/schemaTypes/privacyPage.ts', import.meta.url), 'utf8'),
     );
     for (const field of Object.keys(HERO_TEXT_FIELDS)) {
       assert.ok(all.includes(`name: '${field}'`), `${field} is gone from the page singletons`);

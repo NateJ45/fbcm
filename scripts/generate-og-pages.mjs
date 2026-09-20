@@ -69,7 +69,6 @@ async function render(slug, tagline) {
 // additional page singletons you define in your Sanity schema.
 const SINGLETONS = [
   { type: 'homePage', slug: 'home', defaultTitle: 'Welcome' },
-  { type: 'contactPage', slug: 'contact', defaultTitle: 'Get in touch' },
   { type: 'journalPage', slug: 'blog', defaultTitle: 'Journal' },
   { type: 'privacyPage', slug: 'privacy', defaultTitle: 'Privacy policy' },
 ];

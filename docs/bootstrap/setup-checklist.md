@@ -19,8 +19,6 @@ is right and this one needs fixing.
       never expose it as a public var)
 - [ ] `SANITY_TOKEN` set as a Worker secret, so the live draft preview works:
       `npx wrangler secret put SANITY_TOKEN`, and in `.dev.vars` locally
-- [ ] `PUBLIC_WEB3FORMS_KEY` set if the contact form posts to Web3Forms
-- [ ] `PUBLIC_CALENDLY_URL` set if the discovery call embed is used
 - [ ] `PUBLIC_CF_ANALYTICS_TOKEN` set if Cloudflare Web Analytics is wanted
 - [ ] `SANITY_STUDIO_PREVIEW_URL` set to the production URL
 - [ ] No placeholder values remain in `src/data/site.ts` (`name`, `studio`,
@@ -159,7 +157,6 @@ Each of these is a command, so none of them is a judgement call.
 - [ ] `/studio` opened in a real browser with the console read. A 200 response
       is not verification
 - [ ] Contact form tested end to end, with a submission that actually arrives
-- [ ] Calendly embed loads and is interactive, if `PUBLIC_CALENDLY_URL` is set
 
 ---
 

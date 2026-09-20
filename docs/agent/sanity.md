@@ -8,7 +8,7 @@ The starter has two parallel content sources:
 
 ### `src/data/site.ts` — static identity (rare edits)
 
-Hardcoded constants that don't change between deploys: domain name, GitHub repo URL, Web3Forms access key reference, Calendly URL template, brand asset paths, the `localStorage` key prefix for the theme system. A developer edits these in code when something structural shifts.
+Hardcoded constants that don't change between deploys: domain name, GitHub repo URL, brand asset paths, the `localStorage` key prefix for the theme system. A developer edits these in code when something structural shifts.
 
 ```ts
 export const site = {
@@ -42,7 +42,7 @@ All publicly-visible content lives in Sanity, not in code or markdown files. San
 **Core page singletons (section-driven):**
 
 - `homePage`, `aboutPage`, `servicesPage`, `processPage` — each has a `pageBuilder` array field using its page-specific section type list, plus SEO fields. Renders from `src/data/defaultSections.ts` when `pageBuilder` is empty.
-- `faqPage`, `contactPage`, `journalPage` + `journalEntry` + `journalCategory`, `privacyPage`, `notFoundPage` — these pages keep their own structured fields (they are not fully section-driven).
+- `faqPage`, `journalPage` + `journalEntry` + `journalCategory`, `privacyPage`, `notFoundPage` — these pages keep their own structured fields (they are not fully section-driven). (`contactPage` retired in plan 2b: Contact is an ordinary `page` document now.)
 - `studioGuide`, `studioNotes` — in-Studio editor handbook singletons (protected, Canvas-excluded, plain text throughout). The prose handbook itself lives in `src/sanity/guides/content.ts` as repo data, not as documents.
 
 **Reusable collections:**

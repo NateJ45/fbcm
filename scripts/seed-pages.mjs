@@ -174,7 +174,6 @@ const SINGLETON_IDS = {
   privacyPage: 'privacyPage',
   notFoundPage: 'notFoundPage',
   journalPage: 'journalPage',
-  contactPage: 'contactPage',
 };
 
 // ── Stable compare ──────────────────────────────────────────────────────────

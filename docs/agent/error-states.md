@@ -14,13 +14,7 @@ Don't link "Search" (there isn't one). Don't dump a list of random pages.
 
 ### Form submission failure
 
-The contact form posts to Web3Forms. Three failure modes, each with a distinct user-visible message:
-
-- **Network failure** ("Couldn't send right now. Try again, or email us directly." -- link to the contact email from `siteSettings`.)
-- **Rate limit** (rare, Web3Forms free tier is 250/month): same message, direct email is the failsafe.
-- **Validation rejection** (missing required field, bad email format): inline per-field message, focus moves to the first invalid field, and the error container has `role="alert"` so screen readers announce.
-
-Don't show "Oops!" or "Something went wrong." Always tell the user what to do next.
+This site has no form of its own, so there is no submission to fail: every form a visitor meets is a Church Center form on the church's own Church Center site, which owns its error states. Plan 2b removed the starter's contact form, its `/api/contact` endpoint and the Web3Forms fallback. The rule that outlived them is worth keeping for anything that does post: never show "Oops!" or "Something went wrong." Always tell the visitor what to do next.
 
 ### Empty collection states
 

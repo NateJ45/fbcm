@@ -31,7 +31,6 @@ const FILES = [
   'process-page.json',
   'services-page.json',
   'faq-page.json',
-  'contact-page.json',
 ];
 
 function loadDocs(file) {

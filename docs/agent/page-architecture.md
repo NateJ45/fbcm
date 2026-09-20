@@ -16,7 +16,7 @@ The starter ships these routes (always on, not toggleable):
 | `/process`     | `src/pages/process.astro`     | Process — section-driven                                                                                    |
 | `/[slug]`      | `src/pages/[slug].astro`      | Custom pages created in the Studio; reserved slugs are filtered inside `getStaticPaths`                     |
 | `/faq`         | `src/pages/faq.astro`         | FAQ page + faqItem collection grouped by category                                                           |
-| `/contact`     | `src/pages/contact.astro`     | Contact page + Web3Forms form + Calendly embed                                                              |
+| `/contact`     | `src/pages/[slug].astro`      | Contact, a `page` document served by `[slug].astro` since plan 2b                                           |
 | `/blog`        | `src/pages/blog/index.astro`  | Post grid with category chips. Matches the live Wix site's URL (Task 6, 2026-09-18)                         |
 | `/post/[slug]` | `src/pages/post/[slug].astro` | Post detail: reading progress + header + cover + body + related. Matches the live Wix site's `/post/<slug>` |
 | `/privacy`     | `src/pages/privacy.astro`     | Privacy policy from singleton                                                                               |

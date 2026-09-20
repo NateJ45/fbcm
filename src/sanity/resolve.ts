@@ -32,7 +32,6 @@ import {
 /** Preview path per singleton type. */
 export const SINGLETON_PREVIEW_PATHS: Record<string, string> = {
   homePage: '/preview',
-  contactPage: '/preview/contact',
   journalPage: '/preview/blog', // scaffold: journal
   privacyPage: '/preview/privacy',
   notFoundPage: '/preview/404',
@@ -78,6 +77,6 @@ export const resolve: PresentationPluginOptions['resolve'] = {
     journalCategory: { locations: [{ title: 'Blog', href: '/preview/blog' }] }, // scaffold: journal
     announcement: { locations: [{ title: 'Home', href: '/preview' }] },
     siteSettings: { locations: [{ title: 'Home', href: '/preview' }] },
-    businessInfo: { locations: [{ title: 'Contact', href: '/preview/contact' }] },
+    businessInfo: { locations: [{ title: 'Home', href: '/preview' }] },
   },
 };

@@ -243,7 +243,7 @@ Core routes that ship with the starter:
 | `/process`           | Process — section-driven                                                        |
 | `/[slug]`            | Custom pages created in the Studio; reserved slugs filtered in `getStaticPaths` |
 | `/faq`               | FAQ grouped by category                                                         |
-| `/contact`           | Contact form + Calendly + post-inquiry roadmap                                  |
+| `/contact`           | Contact, a `page` document served by `[slug].astro` since plan 2b               |
 | `/blog`              | Journal/blog index. Matches the live Wix site's URL (Task 6, 2026-09-18)        |
 | `/post/[slug]`       | Post detail. Matches the live Wix site's `/post/<slug>` (Task 6, 2026-09-18)    |
 | `/blog/rss.xml`      | Journal RSS feed                                                                |
@@ -299,8 +299,6 @@ The items below apply to any project built on this starter. Replace the angle-br
 
 **Wire external services:**
 
-- [ ] Web3Forms: create a form, set the access key in the contact form component
-- [ ] Calendly: set `PUBLIC_CALENDLY_URL` env var to the real booking URL
 - [ ] Cloudflare Web Analytics: create a site, add the token to `wrangler.jsonc`
 
 **Seed + populate content:**
