@@ -108,6 +108,26 @@ export default defineConfig({
   // binding with no namespace id fails the deploy. A fork that adds a login
   // turns this back on and creates the namespace deliberately.
   session: false,
+  build: {
+    // Inline the page stylesheet into the document instead of linking it.
+    //
+    // Measured 2026-09-20 (plan 2c task 6). Astro's default is 'auto', which
+    // inlines only stylesheets under about 4KB, so every page linked a single
+    // 125KB (24KB over the wire) /_astro/BaseLayout.<hash>.css. On Lighthouse's
+    // mobile throttle that link is a second network round trip before the first
+    // paint: `render-blocking-resources` named that one file on all six audited
+    // pages and costed it at 453 to 465ms, and because the whole gap between
+    // FCP and LCP was only half a second, the same 455ms sat in front of the
+    // largest paint too. TBT was already 0ms and CLS at most 0.034, so this was
+    // the only real lever.
+    //
+    // The trade is real and deliberate: the stylesheet is no longer a separate
+    // cacheable file, so every page carries its own copy (about 22KB gzipped)
+    // and a reader moving between pages re-downloads it. First paint on a cold
+    // mobile visit is the number this site is judged on, and almost every
+    // visitor arrives cold from search.
+    inlineStylesheets: 'always',
+  },
   // `imageService: 'compile'` tells @astrojs/cloudflare to process images
   // with Sharp at build time and ship plain static files — no Cloudflare
   // Images runtime, no per-transform fees, no Workers binding required.
