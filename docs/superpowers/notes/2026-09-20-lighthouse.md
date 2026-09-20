@@ -112,3 +112,122 @@ matters is the before/after delta on the same harness.
 The local run reproduces the diagnosis exactly: the same single
 render-blocking `/_astro/BaseLayout.<hash>.css` at 454 ms.
 
+## 4. Fix 1: inline the render-blocking stylesheet
+
+`astro.config.mjs`, `build.inlineStylesheets: 'always'`. Commit `bdc6921`.
+
+Median of three, mobile, local preview:
+
+| Page | Metric | Before | After |
+| --- | --- | --- | --- |
+| `/` | FCP | 2114 ms | **1968 ms** |
+| `/` | LCP | 2645 ms | 2646 ms |
+| `/` | Performance | 95 | 95 |
+| `/visit/` | FCP | 2188 ms | **1964 ms** |
+| `/visit/` | LCP | 2718 ms | 2752 ms |
+| `/visit/` | Performance | 94 | 94 |
+
+CLS and TBT unchanged (0 and 0 ms); accessibility, best practices and SEO
+stayed at 100. `render-blocking-resources` went from a listed failure naming
+that one file to not appearing at all.
+
+So first paint is 150 to 220 ms earlier and the audit passes, but the
+performance SCORE did not move. FCP carries a weight of 10 against LCP's 25,
+and LCP is held by something else. Recorded plainly rather than dressed up.
+
+The trade is deliberate: the stylesheet is no longer separately cacheable, so
+every page carries its own copy (about 22 KB gzipped) and a reader moving
+between pages re-downloads it. Cold first paint from search is the number this
+site is judged on, and inlining wins that one.
+
+## 5. Fix 2: preconnect to the image CDN. Tried, measured, reverted.
+
+With the stylesheet inlined, the largest remaining LCP phase on every page was
+"load time" for the hero photo: 1253 ms of a 2742 ms LCP on `/visit/` for a
+40 KB image. A 40 KB transfer is about 200 ms at the mobile throttle, so the
+rest is DNS, TCP and TLS to `cdn.sanity.io`, a third-party origin whose
+handshake cannot start until the preload scanner reaches the `<img>` in the
+body, which the newly inlined 22 KB of CSS pushes later in the byte stream.
+The fix was one line in `src/layouts/BaseLayout.astro`, a
+`<link rel="preconnect" href="https://cdn.sanity.io" />` high in the head, no
+`crossorigin` (a plain `<img>` makes a no-CORS request and would not use a
+crossorigin-warmed connection).
+
+| Page | Metric | Before (fix 1) | After preconnect |
+| --- | --- | --- | --- |
+| `/` | LCP | 2646 ms | 2649 ms |
+| `/` | Performance | 95 | 95 |
+| `/visit/` | LCP | 2752 ms | 2748 ms |
+| `/visit/` | Performance | 94 | 94 |
+
+Nothing moved: both deltas are inside the run-to-run noise. Lighthouse's
+Lantern simulator does not model the benefit of a preconnect, so this harness
+cannot show a gain even if a real phone would see one, and an unmeasurable
+change to a foundation file is not one to keep. **Reverted, and per the
+two-strike rule this is where the fixing stops.** `BaseLayout.astro` is
+unchanged on this branch.
+
+## 6. Final local numbers, and what is still short
+
+Local preview (wrangler dev, gzip, 127.0.0.1:8787), median of three per cell,
+with fix 1 in and fix 2 out.
+
+| Page | Form factor | Perf | A11y | BP | SEO | FCP | LCP | CLS | TBT |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `/` | desktop | 99 | 100 | 100 | 100 | 472 ms | 806 ms | 0.046 | 0 ms |
+| `/` | mobile | 94 | 100 | 100 | 100 | 2038 ms | 2792 ms | 0.034 | 0 ms |
+| `/visit/` | desktop | 100 | 100 | 100 | 100 | 472 ms | 620 ms | 0.013 | 0 ms |
+| `/visit/` | mobile | 95 | 100 | 100 | 100 | 1964 ms | 2721 ms | 0.000 | 0 ms |
+| `/blog/` | desktop | 100 | 100 | 100 | 100 | 472 ms | 678 ms | 0.001 | 0 ms |
+| `/blog/` | mobile | 94 | 100 | 100 | 100 | 1967 ms | 2786 ms | 0.000 | 0 ms |
+| `/staff/` | desktop | 100 | 100 | 100 | 100 | 471 ms | 660 ms | 0.001 | 0 ms |
+| `/staff/` | mobile | 94 | 100 | 100 | 100 | 1966 ms | 2772 ms | 0.000 | 0 ms |
+| `/history/` | desktop | 100 | 100 | 100 | 100 | 512 ms | 658 ms | 0.005 | 0 ms |
+| `/history/` | mobile | 93 | 100 | 100 | 100 | 2190 ms | 2800 ms | 0.000 | 0 ms |
+| post | desktop | 100 | 100 | 100 | 100 | 470 ms | 699 ms | 0.004 | 0 ms |
+| post | mobile | 94 | 100 | 100 | 100 | 2043 ms | 2818 ms | 0.001 | 0 ms |
+
+Accessibility is 100 on all twelve cells, which is the one hard gate in
+`lighthouserc.json`. Best practices and SEO are 100 everywhere. TBT is 0 ms
+everywhere and CLS is well inside the 0.1 gate; the largest, 0.046 on the home
+page, is the hero cross-fade and it is the one point separating home desktop
+from 100 in this local harness (production measured the same page at CLS 0.003
+and performance 100).
+
+**Still short of the spec, honestly stated:**
+
+- **Mobile performance 95 is met on `/visit/` only.** The other five sit at
+  93 to 94. Home moves between 94 and 95 run to run, so it is on the line
+  rather than under it.
+- **Home mobile LCP under 2.0 s is not met** and is not close: 2.79 s local,
+  2.97 s on production.
+
+**Why, and what the next lever would be.** Every page's LCP is a photo from
+`cdn.sanity.io`, and the LCP phase tables put roughly 1.2 s of every mobile
+LCP into "load time" for that one image. Lighthouse's own estimate for the
+only remaining image lever, serving the split hero at a width that matches
+the rendered box instead of `w=800` (`uses-responsive-images`,
+`image-delivery-insight`), is 60 to 150 ms and 13 to 31 KB. Reaching a 95 on
+these pages needs roughly 400 ms off LCP, so image bytes alone will not do it;
+what would is moving the hero photos off the third-party CDN onto the site's
+own origin so they share the document's already-open connection. That is a
+build-pipeline change, not a tuning pass, and it belongs in its own planned
+session rather than in a verification task. Logged here rather than attempted.
+
+## 7. What still needs a production re-measure
+
+Everything in sections 4 and 6 is the LOCAL preview harness. This branch
+cannot deploy, so the production "after" arrives with the merge. Once
+`feat/plan2c-verification` is merged and deployed, re-run the section 1 table
+against `https://fbcm-site.nathanjnixon86.workers.dev` (or the live domain if
+cutover has happened) and record:
+
+- mobile performance and FCP for all six pages, against the section 1
+  baseline of 89 to 92, to confirm the inlined stylesheet lands the same 150
+  to 220 ms of FCP there that it landed locally;
+- desktop performance for `/`, `/visit/`, `/blog/`, `/staff/` and the post,
+  which were 99 to 100 before the change and must not regress;
+- home mobile LCP, which is expected to stay near 2.95 s and to remain the
+  open item above.
+
+Task 8 or plan 3 owns that re-measure.
