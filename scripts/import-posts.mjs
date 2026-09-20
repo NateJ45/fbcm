@@ -15,9 +15,11 @@
 //      import is supposed to honor.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { JSDOM } from 'jsdom';
 import { client, APPLY, makeUploader, ROOT } from './lib/sanity-lib.mjs';
 import {
   postFromCapture,
+  bodyFromCaptureRich,
   categoryDocId,
   categorySlug,
   coverAltFromCapture,
@@ -53,8 +55,18 @@ let withCover = 0;
 let noCoverInCapture = 0;
 const missingImages = [];
 
+// The body carries its structure since 2026-09-20 (@portabletext/block-tools).
+// Uploads are gated on APPLY for the same reason the cover's are: a dry run
+// that writes real assets to Sanity is not a dry run.
+const bodyOptions = {
+  parseHtml: (html) => new JSDOM(html).window.document,
+  uploadImage: async (relPath) =>
+    APPLY ? uploader.upload(resolve(ARCHIVE, relPath)) : 'image-not-yet-uploaded',
+};
+
 for (const captured of captures) {
-  const doc = postFromCapture(captured);
+  const { blocks } = await bodyFromCaptureRich(captured, bodyOptions);
+  const doc = postFromCapture(captured, blocks);
 
   const cover = captured.coverImage?.localFile;
   if (!cover) {
