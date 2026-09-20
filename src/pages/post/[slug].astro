@@ -1,10 +1,14 @@
 ---
 // scaffold-file: journal
 // Safe to edit by hand for copy + structure changes.
-// Journal post detail page. Hero (eyebrow with date + reading time + categories),
-// title + excerpt, cover image, body Portable Text (rich with custom blocks),
-// related posts grid, related project link if attached, prev/next navigation,
+// Blog post detail page. Eyebrow (the category, or "Sermon preview, week of
+// <date>" on the 106 weekly previews), title + excerpt, cover image, body
+// Portable Text, tag chips, "More from this series" by shared tag, prev/next,
 // final CTA. BreadcrumbList + BlogPosting JSON-LD.
+//
+// Every one of those derived bits comes from src/lib/blog-derive.ts, which
+// reads the post's own categories and tags. None of it reads
+// journalEntry.featured (CLAUDE.md rule 15).
 //
 // Static-site routing: getStaticPaths enumerates every journalEntry slug at
 // build time. The query is duplicated (once for paths, once for the full doc)
@@ -23,14 +27,16 @@ import {
 import { getSectionVisibility } from '@/lib/sectionVisibility';
 import { breadcrumbSchema, blogPostingSchema } from '@/lib/schemas';
 import { readingTimeFromPortableText, formatReadingTime } from '@/lib/reading-time';
+import { entryIsSermonPreview, weekOfEyebrow, seriesByTag, clean } from '@/lib/blog-derive';
+import { slugify } from '@/lib/slugify';
 import { extractHeadings } from '@/lib/portable-text-headings';
 import { site } from '@/data/site';
 import { urlFor } from '@/lib/sanity';
 
 import SanityImage from '@/components/SanityImage.astro';
 import JournalPortableText from '@/components/JournalPortableText';
-import JournalCard from '@/components/JournalCard.astro';
 import JournalCategoryChip from '@/components/JournalCategoryChip.astro';
+import PostGrid from '@/components/blog/PostGrid.astro';
 import ReadingProgress from '@/components/ReadingProgress.astro';
 import StickyCTAChip from '@/components/StickyCTAChip';
 import CaseStudyTOC from '@/components/CaseStudyTOC';
@@ -57,6 +63,10 @@ export async function getStaticPaths() {
         props: {
           prev: prev ? { title: prev.title, slug: prev.slug?.current } : null,
           next: next ? { title: next.title, slug: next.slug?.current } : null,
+          // "More from this series" is worked out per post from the shared tag
+          // vocabulary, so the whole card list travels with the path rather
+          // than being re-derived 142 times.
+          series: seriesByTag(e as any, entries as any[], 3),
         },
       };
     })
@@ -64,9 +74,10 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const { prev, next } = Astro.props as {
+const { prev, next, series } = Astro.props as {
   prev: { title?: string; slug?: string } | null;
   next: { title?: string; slug?: string } | null;
+  series: any[];
 };
 
 const [entry, siteSettings, journalPage] = await Promise.all([
@@ -99,6 +110,24 @@ const readMinutes = readingTimeFromPortableText(entry.body);
 // so we don't reserve a phantom 260 px sidebar slot.
 const headings = extractHeadings(entry.body);
 const hasToc = headings.length > 0;
+// THE EYEBROW. A weekly sermon preview says which week it is for; every other
+// post says its category. Which of the two it is, is derived from the category
+// itself (blog-derive.ts), never from a stored flag.
+const isPreview = entryIsSermonPreview(entry as any);
+const primaryCategory = (entry.categories ?? [])[0] as any;
+const eyebrowLabel = isPreview
+  ? weekOfEyebrow(entry.publishedAt)
+  : clean(primaryCategory?.title) || 'Blog';
+
+// Tag chips. Each one is a built page (/blog/tag/<slug>/), and the slug is the
+// same slugify() the tag route builds its paths with, so a chip cannot point at
+// a URL that does not exist.
+const tagChips = (((entry as any).tags ?? []) as string[])
+  .map((t) => clean(t).trim())
+  .filter(Boolean)
+  .map((label) => ({ label, slug: slugify(label) }))
+  .filter((t) => t.slug);
+
 const dateLabel = entry.publishedAt
   ? new Date(entry.publishedAt).toLocaleDateString('en-US', {
       month: 'long',
@@ -118,7 +147,7 @@ const updatedLabel =
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Journal', url: `${site.url}/blog` },
+    { name: 'Blog', url: `${site.url}/blog` },
     { name: entry.title ?? slug, url: `${site.url}/post/${slug}` },
   ]),
   blogPostingSchema(entry, coverOg ?? null),
@@ -142,9 +171,18 @@ const schemas = [
     <header class="bg-background">
       <div class="mx-auto max-w-3xl px-m pt-section-lg pb-l">
         <p class="mb-s text-xs tracking-widest text-foreground/80 uppercase">
-          <a href="/blog" class="transition-colors hover:text-primary-dark">Journal</a>
-          {dateLabel && <span class="mx-xs">·</span>}
-          {dateLabel && <time datetime={entry.publishedAt}>{dateLabel}</time>}
+          <a
+            href={isPreview || !primaryCategory?.slug?.current
+              ? '/blog'
+              : `/blog/category/${primaryCategory.slug.current}/`}
+            class="transition-colors hover:text-primary-dark">{eyebrowLabel}</a
+          >
+          {
+            /* A preview's eyebrow already names its date, so the date is not
+              printed a second time beside it. */
+          }
+          {!isPreview && dateLabel && <span class="mx-xs">·</span>}
+          {!isPreview && dateLabel && <time datetime={entry.publishedAt}>{dateLabel}</time>}
           {readMinutes > 0 && <span class="mx-xs">·</span>}
           {readMinutes > 0 && <span>{formatReadingTime(readMinutes)}</span>}
         </p>
@@ -159,7 +197,11 @@ const schemas = [
             <ul class="mt-l flex list-none flex-wrap gap-xs p-0">
               {entry.categories.map((cat: any) => (
                 <li>
-                  <JournalCategoryChip title={cat.title} tooltip={cat.description} />
+                  <JournalCategoryChip
+                    title={cat.title}
+                    href={cat.slug?.current ? `/blog/category/${cat.slug.current}/` : undefined}
+                    tooltip={cat.description}
+                  />
                 </li>
               ))}
             </ul>
@@ -171,6 +213,26 @@ const schemas = [
               By <span class="font-semibold text-foreground">{entry.author}</span>
               {updatedLabel && <span> · Updated {updatedLabel}</span>}
             </p>
+          )
+        }
+
+        {
+          /* Tags. This is the ONLY place the 217 tags are offered, and the
+            reason they are not a cloud on /blog: here a tag means "more like
+            the thing you are already reading", which is a question a reader
+            actually has. */
+        }
+        {
+          tagChips.length > 0 && (
+            <nav class="mt-l" aria-label="Tags on this post">
+              <ul class="flex list-none flex-wrap gap-xs p-0">
+                {tagChips.map((tag) => (
+                  <li>
+                    <JournalCategoryChip title={tag.label} href={`/blog/tag/${tag.slug}/`} />
+                  </li>
+                ))}
+              </ul>
+            </nav>
           )
         }
       </div>
@@ -267,19 +329,23 @@ const schemas = [
     </div>
   </article>
 
-  {/* ------- 4. Related posts --------------------------------------------- */}
   {
-    Array.isArray(entry.relatedPosts) && entry.relatedPosts.length > 0 && (
-      <section class="bg-muted" aria-labelledby="related-posts-heading">
+    /* ------- 4. More from this series --------------------------------------
+      The three posts sharing the most TAGS with this one, newest first
+      (seriesByTag in blog-derive.ts). It renders only when something really
+      does share a tag: the band this replaced fell back to "three recent posts
+      in the same category", which on 106 sermon previews meant three unrelated
+      previews under a heading promising a relationship, and a reader cannot
+      tell the two apart. Nothing is better than a claim that is not true. */
+  }
+  {
+    Array.isArray(series) && series.length > 0 && (
+      <section class="bg-muted" aria-labelledby="post-series-heading">
         <div class="mx-auto max-w-content px-m py-section-lg">
-          <h2 id="related-posts-heading" class="mb-l font-display text-h2 text-foreground">
-            Keep reading
+          <h2 id="post-series-heading" class="mb-l font-display text-h2 text-foreground">
+            More from this series
           </h2>
-          <div class="grid grid-cols-1 gap-l md:grid-cols-3">
-            {entry.relatedPosts.slice(0, 3).map((post: any) => (
-              <JournalCard entry={post} />
-            ))}
-          </div>
+          <PostGrid entries={series} />
         </div>
       </section>
     )
@@ -316,10 +382,15 @@ const schemas = [
   }
 
   {/* ------- 6. Final CTA -------------------------------------------------- */}
+  {
+    /* The closing band is the journalPage singleton's, the same one /blog and
+      every archive page carries. It used to be the starter's own studio copy
+      hard-coded here, on all 142 posts. */
+  }
   <FinalCta
-    headline="Working on a project of your own?"
-    subhead="The studio takes on a small handful of projects at a time. Get in touch and let's see if we're a fit."
-    fallbackCtaLabel="Start a Conversation"
+    headline={journalPage?.finalCtaHeadline}
+    subhead={journalPage?.finalCtaSubhead}
+    cta={journalPage?.finalCta}
     backgroundImage={journalPage?.finalCtaBackgroundImage}
   />
 

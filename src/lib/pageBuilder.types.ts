@@ -263,6 +263,16 @@ export interface ProjectedDynamicListItem {
   summary?: string | null;
   href?: string | null;
   coverImage?: ProjectedImage | null;
+  /**
+   * journal source only: the entry's categories, carried so the card can DERIVE
+   * whether it is a weekly sermon preview (and so the list can order the
+   * durable posts first). Never displayed.
+   */
+  categories?: Array<{
+    _id?: string;
+    title?: string | null;
+    slug?: { current?: string | null } | null;
+  }> | null;
   /** Reserved for a future source whose items carry a body/answer field. */
   answer?: any;
 }

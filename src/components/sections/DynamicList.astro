@@ -16,6 +16,7 @@ import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import type { ProjectedDynamicListSection } from '@/lib/pageBuilder.types';
 import { columnsClass } from '@/lib/layout-variants';
+import { splitDurable, entryIsSermonPreview, weekOfEyebrow } from '@/lib/blog-derive'; // scaffold: journal
 
 type Props = {
   eyebrow?: string;
@@ -60,13 +61,28 @@ const {
   headingId = 'dynamic-list-heading',
 } = Astro.props as Props;
 
+// scaffold: journal
+// DURABLE FIRST. The journal source hands back the newest DYNAMIC_LIST_MAX
+// posts, and on this site 106 of the 142 are weekly sermon previews, so the
+// newest three are almost always three previews that went stale on Monday.
+// Home's "From the blog" wants the posts worth arriving at. The split is
+// DERIVED from each post's category and the two piles are concatenated, so the
+// previews are still there, just behind the durable ones, and nothing about
+// this reads journalEntry.featured (CLAUDE.md rule 15).
+const durableFirst = (() => {
+  if (source !== 'journal') return items;
+  const { durable, previews } = splitDurable(items as any[]);
+  return [...durable, ...previews] as typeof items;
+})();
+// scaffold:end
+
 // The query fetches up to DYNAMIC_LIST_MAX items regardless of what the editor
 // asked for (GROQ can't slice by a field reference), so this is the one place
 // that trims the batch down to the editor's real `limit`. Without this, every
 // dynamicListSection would show up to DYNAMIC_LIST_MAX items no matter what an
 // editor typed into "How many to show".
 const visibleItems =
-  typeof limit === 'number' && Number.isFinite(limit) ? items.slice(0, limit) : items;
+  typeof limit === 'number' && Number.isFinite(limit) ? durableFirst.slice(0, limit) : durableFirst;
 
 const hasItems = Array.isArray(visibleItems) && visibleItems.length > 0;
 
@@ -138,9 +154,14 @@ const fallbackLabel: Record<string, string> = {
                       </div>
                     )}
                     <div class="p-m">
+                      {/* A sermon preview says which week it is for; everything
+                          else says its date. Same line, same size, one of two
+                          sentences, derived from the category. */}
                       {item.meta && (
                         <p class="mb-xs text-xs tracking-eyebrow text-foreground/70 uppercase">
-                          {formatDate(item.meta)}
+                          {entryIsSermonPreview(item as any)
+                            ? weekOfEyebrow(item.meta)
+                            : formatDate(item.meta)}
                         </p>
                       )}
                       <h3 class="line-clamp-2 font-display text-h4 leading-tight text-foreground transition-colors group-hover:text-primary-dark">
