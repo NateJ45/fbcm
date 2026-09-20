@@ -6,6 +6,24 @@
 // nearly whole and laid out as a timeline of seven eras with a period
 // photograph beside each one.
 //
+// Seven things about this file are deliberate, plus two later rulings (P23,
+// P24, 2026-09-19, task 12 step 0):
+//
+// P23. THE BUILDING ANCHOR MOVED TO THE PHOTOGRAPH. /history#building used to
+//   land on era 4's overflow richTextSection, three screens of prose below the
+//   heading and the period photograph a visitor actually wants when Home,
+//   Ministries or this page's own opening band sends them here. The anchor now
+//   sits on era 4's imageTextSection instead, so the fragment lands on the
+//   heading and the photograph together.
+//
+// P24. EVERY ERA'S PHOTOGRAPH BAND CARRIES ITS OWN ANCHOR, AND THE TIMELINE IS
+//   A TABLE OF CONTENTS THAT WORKS. Eras 1, 2, 3, 5, 6 and 7 now carry
+//   `era-1` ... `era-7` on their imageTextSection (era 4 keeps `building`
+//   instead, per P23, and its richText overflow band carries no anchor of its
+//   own). Each timeline row's body ends with a "Read this era" link back to
+//   its own band: `/history#era-N` for six of them, `/history#building` for
+//   era 4.
+//
 // Seven things about this file are deliberate.
 //
 // 1. NOT ONE SENTENCE IS TYPED FROM MEMORY. Every paragraph is read out of
@@ -99,7 +117,11 @@ export default {
 
   async build(ctx) {
     const { images, copy, settings } = ctx;
-    const { paragraphs, heading, ctaAnchor, ctaInternal, decodeEntities } = copy;
+    const { paragraphs, heading, ctaAnchor, ctaInternal, decodeEntities, link } = copy;
+
+    // P24 (2026-09-19): one "Read this era" link, appended to a timeline row's
+    // body, pointing at that era's photograph band.
+    const readThisEra = (n, href) => link('Read this era', href, `tl${n}-more`);
 
     if (!settings) {
       throw new Error(
@@ -393,11 +415,19 @@ export default {
     }
 
     /** One era's two bands (or one, when the era is short). */
-    const eraBands = (n, { years, name, lead, rest, imageSide, restAnchor }) => {
+    // P23/P24 (2026-09-19): each era's own photograph band, not its overflow
+    // text, is where a fragment should land. Every imageTextSection below now
+    // carries `era-N` (era 4 carries `building` instead, because /history#building
+    // is a load-bearing redirect target from Home, Ministries and History's own
+    // heritage band, and it has to land on the heading and the photograph, not
+    // three screens down in the tail prose). The richTextSection overflow band
+    // therefore carries NO anchor of its own any more.
+    const eraBands = (n, { years, name, lead, rest, imageSide, imageAnchor }) => {
       const bands = [
         {
           _type: 'imageTextSection',
           _key: `hs-era${n}`,
+          anchor: { _type: 'slug', current: imageAnchor ?? `era-${n}` },
           image: eraPhotos[n],
           imageSide,
           eyebrow: years,
@@ -409,7 +439,6 @@ export default {
         bands.push({
           _type: 'richTextSection',
           _key: `hs-era${n}-more`,
-          ...(restAnchor ? { anchor: { _type: 'slug', current: restAnchor } } : {}),
           body: rest,
         });
       }
@@ -438,7 +467,11 @@ export default {
         // 2. The seven eras as a table of contents. Every lead is a quotation;
         //    see note 4 at the top of this file. Only the 1921-1929 row
         //    carries an anchor, and it is `building-1929` so it cannot collide
-        //    with the `building` band below.
+        //    with the `building` band below. Every row's body now ends with a
+        //    "Read this era" link (P24) pointing at that era's own photograph
+        //    band, so the table of contents is also a table of contents: era 4's
+        //    link is `/history#building`, because that is where its band lands
+        //    (P23), and every other row links `/history#era-N`.
         {
           _type: 'timelineSection',
           _key: 'hs-eras',
@@ -451,28 +484,28 @@ export default {
               _key: 'era-1',
               marker: '1859 to 1862',
               title: 'Founding',
-              body: paragraphs(leads[1], 'tl1'),
+              body: [...paragraphs(leads[1], 'tl1'), readThisEra(1, '/history#era-1')],
             },
             {
               _type: 'timelineRow',
               _key: 'era-2',
               marker: '1862 to 1881',
               title: 'Struggle and Rairden',
-              body: paragraphs(leads[2], 'tl2'),
+              body: [...paragraphs(leads[2], 'tl2'), readThisEra(2, '/history#era-2')],
             },
             {
               _type: 'timelineRow',
               _key: 'era-3',
               marker: '1887 to 1917',
               title: 'The gas boom to the debt paid',
-              body: paragraphs(leads[3], 'tl3'),
+              body: [...paragraphs(leads[3], 'tl3'), readThisEra(3, '/history#era-3')],
             },
             {
               _type: 'timelineRow',
               _key: 'era-4',
               marker: '1921 to 1929',
               title: 'The Fighting Parson and the building',
-              body: paragraphs(leads[4], 'tl4'),
+              body: [...paragraphs(leads[4], 'tl4'), readThisEra(4, '/history#building')],
               anchor: { _type: 'slug', current: 'building-1929' },
             },
             {
@@ -480,21 +513,21 @@ export default {
               _key: 'era-5',
               marker: '1938 to 1939',
               title: 'Sold and bought back',
-              body: paragraphs(leads[5], 'tl5'),
+              body: [...paragraphs(leads[5], 'tl5'), readThisEra(5, '/history#era-5')],
             },
             {
               _type: 'timelineRow',
               _key: 'era-6',
               marker: '1950 to 1989',
               title: 'Postwar to Mattox',
-              body: paragraphs(leads[6], 'tl6'),
+              body: [...paragraphs(leads[6], 'tl6'), readThisEra(6, '/history#era-6')],
             },
             {
               _type: 'timelineRow',
               _key: 'era-7',
               marker: '1990 to 2022',
               title: 'Saunders to the co-pastors',
-              body: paragraphs(leads[7], 'tl7'),
+              body: [...paragraphs(leads[7], 'tl7'), readThisEra(7, '/history#era-7')],
             },
           ],
         },
@@ -530,14 +563,14 @@ export default {
           rest: era3Rest,
           imageSide: 'right',
         }),
-        // /history#building lands on this era's second band.
+        // /history#building lands on this era's photograph band (P23).
         ...eraBands(4, {
           years: '1921 to 1929',
           name: 'The Fighting Parson and the building',
           lead: era4Lead,
           rest: era4Rest,
           imageSide: 'left',
-          restAnchor: 'building',
+          imageAnchor: 'building',
         }),
         ...eraBands(5, {
           years: '1938 to 1939',
