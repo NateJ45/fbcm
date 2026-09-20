@@ -7,8 +7,6 @@
 // an editor a "kind" dropdown; that would be a second source of truth next to the
 // category, and the second one is the one that goes stale (CLAUDE.md rule 15).
 
-import { convertBody, type ConvertedBlock, type ConvertReport } from './convert-body.ts';
-
 export interface CapturedPost {
   slug: string;
   title: string;
@@ -22,16 +20,6 @@ export interface CapturedPost {
   bodyHtml?: string;
   /** The pictures inside the body. `originalUrl` is the body's `<img src>`. */
   images?: { originalUrl?: string; fullResUrl?: string; localFile?: string }[];
-}
-
-/** What bodyFromCaptureRich needs from its caller. A script supplies all three. */
-export interface RichBodyOptions {
-  /** A DOM parser. In Node: `(html) => new JSDOM(html).window.document`. */
-  parseHtml: (html: string) => Document;
-  /** Fallback lookup for a src the capture's own image list does not carry. */
-  resolveImage?: (src: string) => string | undefined;
-  /** Uploads an archive-relative path, returns the Sanity asset `_ref`. */
-  uploadImage?: (relPath: string) => Promise<string>;
 }
 
 /** One Portable Text span inside a body block. */
@@ -50,6 +38,12 @@ export interface SanityBlock {
   markDefs: never[];
   children: SanitySpan[];
 }
+
+/**
+ * Any block the body may hold. Deliberately structural rather than an import
+ * from convert-body.ts: see the note above bodyFromCapture below.
+ */
+export type BodyBlock = SanityBlock | { _type: string; _key: string; [field: string]: unknown };
 
 /** One `journalEntry.categories` array member: a keyed reference to a journalCategory doc. */
 export interface SanityCategoryReference {
@@ -74,7 +68,7 @@ export interface SanityPostDoc {
   // `journalEntry.body` is Rule.required().min(1), and the capture carries
   // 95,016 words that were simply never read. Built by bodyFromCaptureRich()
   // when the capture has `bodyHtml`, by bodyFromCapture() when it does not.
-  body: ConvertedBlock[];
+  body: BodyBlock[];
   // Deliberately no postKind / isSermonPreview field here. That distinction is
   // derived at render time from `categories` via isSermonPreview(), never stored.
 }
@@ -168,25 +162,27 @@ export function decodeEntities(value: string): string {
 }
 
 // ── The body ───────────────────────────────────────────────────────────────
-// WHICH CONVERTER, AND WHY. There are two, and the rich one is the default.
+// WHICH CONVERTER, AND WHY THE RICH ONE IS NOT IN THIS FILE.
 //
-// bodyFromCaptureRich() runs the capture's `bodyHtml` through
-// src/lib/convert-body.ts (@portabletext/block-tools, approved 2026-09-20) and
-// carries the headings, links, lists, blockquotes and inline images. It needs
-// a DOM parser and an image uploader, so only a script can call it.
+// The real converter is src/lib/import-post-rich.ts (@portabletext/block-tools,
+// approved 2026-09-20): it reads the capture's `bodyHtml` and carries the
+// headings, links, lists, blockquotes and inline images. It lives in its own
+// module because THIS file is in the SITE's build graph -- src/lib/blog-derive.ts
+// imports isSermonPreview() from here -- and the rich path reaches the Studio's
+// journalEntry schema, which reaches the `sanity` package. Importing that chain
+// from here fails the build with "Disallowed operation called within global
+// scope ... generating random values are not allowed within global scope",
+// thrown by the Cloudflare prerender worker while collecting static paths.
+// Keep this file free of anything a Worker cannot evaluate at module scope.
 //
-// bodyFromCapture() is the plan-1 fallback, kept because it needs NOTHING: it
-// splits `bodyText` on blank lines into one `normal` block per paragraph, the
-// same rule `toPT()` in scripts/lib/sanity-lib.mjs uses. A post whose capture
-// has no `bodyHtml` still gets its words, and the unit tests that pin the
-// mapper still have something pure to pin.
+// bodyFromCapture() below is the plan-1 fallback and needs NOTHING: it splits
+// `bodyText` on blank lines into one `normal` block per paragraph, the same
+// rule `toPT()` in scripts/lib/sanity-lib.mjs uses. A post whose capture has no
+// `bodyHtml` still gets its words, and the unit tests have a pure mapper to pin.
 //
-// Written here rather than called from sanity-lib.mjs for two reasons: that
-// module exits the process at import time when no Sanity project is
-// configured (so a unit test could not import it), and its `_key` generator is
-// a module-level counter, which is not pure. Keys here are derived from the
-// block's own index, so the same capture always produces byte-identical
-// blocks and `createOrReplace` is a genuine no-op on a re-run.
+// Keys here are derived from the block's own index, so the same capture always
+// produces byte-identical blocks and `createOrReplace` is a genuine no-op on a
+// re-run. (The rich converter derives its keys from the slug AND the index.)
 const MAX_EXCERPT = 220;
 
 /** The captured body as Portable Text: one `normal` block per paragraph. */
@@ -254,42 +250,11 @@ export function coverAltFromCapture(
 }
 
 /**
- * The capture's `bodyHtml` as real Portable Text. Falls back to the
- * paragraph-only mapper when the capture carries no HTML, so every post gets a
- * body whatever the capture holds.
- */
-export async function bodyFromCaptureRich(
-  captured: CapturedPost,
-  options: RichBodyOptions,
-): Promise<{ blocks: ConvertedBlock[]; report: ConvertReport | null }> {
-  const html = (captured.bodyHtml ?? '').trim();
-  if (!html) return { blocks: bodyFromCapture(captured), report: null };
-
-  // The capture carries its OWN image list, and its `originalUrl` is the exact
-  // string the body's `<img src>` holds -- so the src maps to an archive file
-  // without going near the site-wide manifest's rendered/full-res variants.
-  const byUrl = new Map<string, string>();
-  for (const image of captured.images ?? []) {
-    for (const url of [image.originalUrl, image.fullResUrl]) {
-      if (url && image.localFile) byUrl.set(url, image.localFile);
-    }
-  }
-
-  return convertBody(html, {
-    slug: captured.slug,
-    parseHtml: options.parseHtml,
-    resolveImage: (src) => byUrl.get(src) ?? options.resolveImage?.(src),
-    uploadImage: options.uploadImage,
-    fallbackAlt: decodeEntities(captured.title ?? '').trim() || undefined,
-  });
-}
-
-/**
  * `body` is passed in rather than computed here because the rich converter is
  * asynchronous (it uploads images) and this mapper is not. A caller with no
  * converter gets the paragraph-only fallback, which is what plan 1 shipped.
  */
-export function postFromCapture(captured: CapturedPost, body?: ConvertedBlock[]): SanityPostDoc {
+export function postFromCapture(captured: CapturedPost, body?: BodyBlock[]): SanityPostDoc {
   if (!captured.publishedDate || Number.isNaN(Date.parse(captured.publishedDate))) {
     throw new Error(`publishedDate missing or unparseable for post "${captured.slug}"`);
   }

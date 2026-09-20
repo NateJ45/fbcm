@@ -20,7 +20,8 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { resolve } from 'node:path';
 import { JSDOM } from 'jsdom';
 import { client, APPLY, makeUploader, ROOT } from './lib/sanity-lib.mjs';
-import { bodyFromCaptureRich, postDocId } from '../src/lib/import-post.ts';
+import { postDocId } from '../src/lib/import-post.ts';
+import { bodyFromCaptureRich } from '../src/lib/import-post-rich.ts';
 
 const POSTS = resolve(ROOT, 'scripts/data/posts');
 // The binaries are not in the repo. See ../fbcm-archive/README.md.

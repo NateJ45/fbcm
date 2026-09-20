@@ -2,9 +2,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
+import { bodyFromCaptureRich } from './import-post-rich.ts';
 import {
   postDocId,
-  bodyFromCaptureRich,
   categoryDocId,
   isSermonPreview,
   postFromCapture,

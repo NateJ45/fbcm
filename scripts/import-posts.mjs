@@ -19,11 +19,11 @@ import { JSDOM } from 'jsdom';
 import { client, APPLY, makeUploader, ROOT } from './lib/sanity-lib.mjs';
 import {
   postFromCapture,
-  bodyFromCaptureRich,
   categoryDocId,
   categorySlug,
   coverAltFromCapture,
 } from '../src/lib/import-post.ts';
+import { bodyFromCaptureRich } from '../src/lib/import-post-rich.ts';
 
 const POSTS = resolve(ROOT, 'scripts/data/posts');
 // The binaries are not in the repo. See ../fbcm-archive/README.md.
