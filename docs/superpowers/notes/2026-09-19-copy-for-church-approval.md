@@ -75,7 +75,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - De-gendered: "Such membership terminates upon completion of his/her temporary stay" becomes "...upon completion of their temporary stay".
 - Moved, so it is said once: the immersion sentence under Full Member ("Although Muncie First Baptist Church only baptizes believers by immersion...") now sits under Being Baptist, where the page reconciles all three sources. Its second sentence, about the confirmation class, stays under Full member.
 - Linked: "For more information see our Constitution and Bylaws" now links to the document list on this page.
-- Cut: "You can read the document split into two parts below" (the 2005 statement is summarised, not reproduced) and "For more on our church beliefs and the beliefs of our denomination, see our Beliefs page" (the reader is on it).
+- Cut: "You can read the document split into two parts below" (nothing on this page is split in two: the four beliefs the 2005 statement gathers under "THEREFORE" are quoted in full instead) and "For more on our church beliefs and the beliefs of our denomination, see our Beliefs page" (the reader is on it).
 
 ### Photos of children
 

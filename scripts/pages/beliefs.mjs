@@ -25,11 +25,16 @@
 //    membership band below therefore does NOT repeat it (CLAUDE.md rule 15
 //    applied to prose: one place says a thing and the others point at it).
 //
-// 3. THE ABC-USA STATEMENT IS SUMMARISED, NOT REPRODUCED. The 2005 identity
-//    statement runs to about 800 words in the capture, and the church's own
-//    lead-in sentence describes it ("While not binding on congregations or
-//    individuals..."). That sentence is the paragraph. Nothing of the
-//    statement's text is rewritten, because none of it is reproduced.
+// 3. THE ABC-USA STATEMENT IS QUOTED WHERE IT MATTERS, NOT SUMMARISED (ruling
+//    P18, 2026-09-19). The 2005 identity statement runs to about 800 words in
+//    the capture, and this band used to stand in for all of it with the
+//    church's own lead-in sentence ("While not binding on congregations or
+//    individuals..."). A summary of a doctrinal statement drops doctrine: the
+//    four things the statement gathers under THEREFORE are the part a reader
+//    came for, and they were not on the page at all. So the lead-in sentence
+//    stays as the attribution, and the statement's own two-sentence
+//    introduction and its four "we believe" clauses now follow it VERBATIM,
+//    read off the capture. Still nothing is rewritten.
 //
 // 4. THE THREE PDFS ARE UPLOADED, NOT LINKED TO WIX. makeUploader().uploadFile
 //    caches by archive-relative path in scripts/.asset-map.json, so the second
@@ -80,7 +85,7 @@ export default {
     'De-gendered: "Such membership terminates upon completion of his/her temporary stay" becomes "...upon completion of their temporary stay".',
     'Moved, so it is said once: the immersion sentence under Full Member ("Although Muncie First Baptist Church only baptizes believers by immersion...") now sits under Being Baptist, where the page reconciles all three sources. Its second sentence, about the confirmation class, stays under Full member.',
     'Linked: "For more information see our Constitution and Bylaws" now links to the document list on this page.',
-    'Cut: "You can read the document split into two parts below" (the 2005 statement is summarised, not reproduced) and "For more on our church beliefs and the beliefs of our denomination, see our Beliefs page" (the reader is on it).',
+    'Cut: "You can read the document split into two parts below" (nothing on this page is split in two: the four beliefs the 2005 statement gathers under "THEREFORE" are quoted in full instead) and "For more on our church beliefs and the beliefs of our denomination, see our Beliefs page" (the reader is on it).',
   ],
 
   // No band on this page shows a photograph of a person at all: the only image
@@ -280,6 +285,31 @@ export default {
       'New Hampshire Baptist Confession of Faith (1833)',
       'We Are American Baptists',
     );
+    // The 2005 statement's own text, from its heading to the end of the
+    // "THEREFORE" list. The four beliefs are one line each in the capture and
+    // are set as the list the statement itself sets them as; the count is
+    // checked, so a fifth clause (or a lost one) fails the run rather than
+    // seeding a statement that is not the one the church signed.
+    const abcLines = linesBetween(
+      'beliefs',
+      'We Are American Baptists',
+      'Within the larger Baptist family',
+    );
+    const ABC_LEAD_IN = 'With Baptist brothers and sisters around the world, we believe:';
+    const abcLeadIn = pick(abcLines, ABC_LEAD_IN, 'beliefs');
+    const abcAt = abcLines.findIndex((l) => l.includes(ABC_LEAD_IN));
+    const abcBeliefs = abcLines
+      .slice(abcAt + 1)
+      .map((l) => decodeEntities(l).trim())
+      .filter((l) => l.startsWith('That '));
+    if (abcBeliefs.length !== 4) {
+      throw new Error(
+        'beliefs.mjs: expected 4 "we believe" clauses after "' +
+          ABC_LEAD_IN +
+          '" in scripts/data/pages/beliefs.txt, found ' +
+          abcBeliefs.length,
+      );
+    }
     const confessions = [
       ...paragraphs(
         [
@@ -297,6 +327,8 @@ export default {
         'hc-b',
       ),
       ...paragraphs(pick(nhcfLines, 'J. Newton Brown', 'beliefs'), 'hc-c'),
+      // The attribution: whose statement this is, and what weight it carries.
+      // Its last clause is cut because nothing is split in two below any more.
       ...paragraphs(
         swap(
           pick(nhcfLines, 'released an identity statement in 2005', 'beliefs'),
@@ -305,6 +337,12 @@ export default {
         ),
         'hc-d',
       ),
+      // ...and then the statement's own words (ruling P18, note 3 above). Its
+      // two-sentence introduction, its lead-in line, and the four clauses it
+      // gathers under THEREFORE, verbatim off the capture.
+      ...paragraphs(pick(abcLines, 'a distinctive history and experience', 'beliefs'), 'hc-e'),
+      ...paragraphs(abcLeadIn, 'hc-f'),
+      ...bullets(abcBeliefs, 'hc-g'),
     ];
 
     // ── 4. The covenant ─────────────────────────────────────────────────────

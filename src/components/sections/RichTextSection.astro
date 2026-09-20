@@ -13,6 +13,11 @@ interface Props {
   /** One word of the heading in the brand accent colour. See SectionHeading. */
   headingAccent?: string;
   body?: any;
+  /**
+   * Kept for compatibility with documents that already carry it, and with the
+   * schema field editors still see. It has NO visual effect: see the ruling
+   * P19 note below. 'narrow' is an alias of 'normal'.
+   */
   width?: 'normal' | 'narrow';
   align?: 'left' | 'center';
   surface?: 'background' | 'muted';
@@ -25,7 +30,6 @@ const {
   scriptAccent,
   headingAccent,
   body,
-  width = 'normal',
   align = 'left',
   surface = 'background',
   headingId,
@@ -34,15 +38,45 @@ const {
 // Surface classes come from src/lib/surfaces.ts, where the contrast gate
 // measures this pair. Same strings as the ternary that was here (2026-08-28).
 const bg = surfaceClass(surface);
-const widthClass = width === 'narrow' ? 'max-w-prose' : 'max-w-content';
+
+// MEASURE IS THE BODY'S RULE, NOT THE BAND'S (plan 2b ruling P19, 2026-09-19).
+//
+// This band used to swap the whole CONTAINER to `max-w-prose` when `width` was
+// 'narrow', which pulled the eyebrow, the heading and the text inward to a
+// second left edge while every other band on the page started at the gutter.
+// One page, two left edges: exactly what CLAUDE.md rule 17 is about. The other
+// setting, 'normal', had the opposite fault: the body ran the full content
+// width, about 108 characters a line, which is past the point where a reader
+// loses the start of the next line.
+//
+// So the container is ALWAYS the page's `max-w-content px-m`, and the body
+// carries its own measure.
+//
+// The NUMBER is measured, not assumed. CSS `ch` is the advance width of the
+// digit zero, and this body face sets a zero far wider than its average
+// letter: at 1280 a `max-w-[68ch]` body came out 772px and fitted 88 to 93
+// real characters a line, which is barely narrower than the full content
+// width it was meant to fix. 52ch is 590px here and measures 65 to 69
+// characters on the Beliefs bands, which is the target. Re-measure in the
+// browser if the body font ever changes; do not convert this by arithmetic.
+//
+// The `width` field stays in the schema and on existing documents; 'narrow' is
+// now an alias with no visual difference.
 const alignClass = align === 'center' ? 'text-center' : '';
-const proseClass = ['text-foreground/85 text-lg leading-relaxed', heading ? 'mt-l' : '', alignClass]
+const proseClass = [
+  'text-foreground/85 text-lg leading-relaxed max-w-[52ch]',
+  heading ? 'mt-l' : '',
+  alignClass,
+  // Centred prose has to be centred as a BOX as well as as text, or the 68ch
+  // measure would sit against the left edge with its lines centred inside it.
+  align === 'center' ? 'mx-auto' : '',
+]
   .filter(Boolean)
   .join(' ');
 ---
 
 <section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class:list={['mx-auto px-m py-section-lg', widthClass]} data-reveal>
+  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
     {
       heading && (
         <SectionHeading
