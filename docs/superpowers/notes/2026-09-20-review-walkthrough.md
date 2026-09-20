@@ -308,6 +308,9 @@ Known gaps: none.
 
 ---
 
+
+**Blog post punctuation.** The site keeps a house rule of no em-dashes in anything a visitor reads, and the 142 imported posts were the one place it had not been applied. On 2026-09-20 the post importer began turning each em-dash into a comma, or dropping it where it opened a sentence, and 153 dashes across 78 posts changed that way. Nothing else in those posts was reworded, ranges such as 2003 to 2020 were left alone, and the original text is kept, so any post can be restored on request. If the church would rather keep its dashes in the blog, say so and the rule can be relaxed for posts.
+
 ## Facts the church must confirm
 
 These are collected in
