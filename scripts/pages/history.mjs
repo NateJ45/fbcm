@@ -60,6 +60,15 @@
 //    `building-1929` rather than `building`, so the row and the band cannot
 //    fight over the same fragment.
 //
+// P25 (2026-09-19, task 13 step 0). THE OPENING BAND STARTS WITH THE CHURCH'S
+//   OWN FIRST SENTENCE. history.txt:3 ("Founded in 1859, First Baptist Church
+//   of Muncie has a long history of serving God and our neighbor in the
+//   Muncie community.") is real prose, the church's own opening line for the
+//   whole page, and it sat unused: never seeded, never declared as cut. The
+//   opening heritageBandSection's body is now that sentence followed by the
+//   founding sentence it already carried (history.txt:11), two of the
+//   church's own sentences, verbatim.
+//
 // 6. THE PHOTOGRAPH MATCHES THE ERA. history-era-1 ... history-era-7 in
 //    scripts/data/page-images.json are seventeen period photographs narrowed
 //    to seven, one per era, and each alt was checked against the era text
@@ -460,7 +469,15 @@ export default {
           image: tower,
           eyebrow: 'Our history',
           heading: 'Since 1859.',
-          body: para('meeting at the county courthouse'),
+          // Two of the church's own sentences, verbatim, joined with a space.
+          // history.txt:3 is the church's own opening line for the whole page
+          // ("Founded in 1859, First Baptist Church of Muncie has a long
+          // history of serving God and our neighbor in the Muncie
+          // community."), never seeded or declared until now (Task 13 step
+          // 0, P25). history.txt:11 is the founding sentence this band
+          // already carried ("...meeting at the county courthouse, founded
+          // the first Baptist Church in Muncie.").
+          body: `${para('has a long history of serving God')} ${para('meeting at the county courthouse')}`,
           cta: ctaAnchor('Seven eras', '/history#eras'),
         },
 

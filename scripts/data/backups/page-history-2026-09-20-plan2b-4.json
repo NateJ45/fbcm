@@ -1,0 +1,1615 @@
+{
+  "_createdAt": "2026-09-20T02:52:23Z",
+  "_id": "page-history",
+  "_rev": "QjI0kncFolotw4PTBjFHZS",
+  "_type": "page",
+  "_updatedAt": "2026-09-20T03:21:22Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "hs-open",
+      "_type": "heritageBandSection",
+      "body": "On September 10, 1859 twelve Indiana residents, meeting at the county courthouse, founded the first Baptist Church in Muncie.",
+      "cta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "externalUrl": "/history#eras",
+        "label": "Seven eras",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "eyebrow": "Our history",
+      "heading": "Since 1859.",
+      "image": {
+        "_type": "image",
+        "alt": "The limestone bell tower of First Baptist Church against a blue sky",
+        "asset": {
+          "_ref": "image-1a41db0a8944c3ca0243432d2e1f6e4930537aab-2400x1596-jpg",
+          "_type": "reference"
+        }
+      }
+    },
+    {
+      "_key": "hs-eras",
+      "_type": "timelineSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "eras"
+      },
+      "eyebrow": "The church’s story",
+      "heading": "Seven eras",
+      "rows": [
+        {
+          "_key": "era-1",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "tl1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl1-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "On September 10, 1859, twelve Indiana residents, four men and eight women, became the charter members of the Baptist Church in Muncie, Indiana, a community of 1700 residents."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "tl1-more",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl1-mores1",
+                  "_type": "span",
+                  "marks": [
+                    "tl1-morel1"
+                  ],
+                  "text": "Read this era"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "tl1-morel1",
+                  "_type": "link",
+                  "href": "/history#era-1"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "marker": "1859 to 1862",
+          "title": "Founding"
+        },
+        {
+          "_key": "era-2",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "tl2-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl2-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Services were casual with members wearing homemade clothing and worshiping by candlelight."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "tl2-more",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl2-mores1",
+                  "_type": "span",
+                  "marks": [
+                    "tl2-morel1"
+                  ],
+                  "text": "Read this era"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "tl2-morel1",
+                  "_type": "link",
+                  "href": "/history#era-2"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "marker": "1862 to 1881",
+          "title": "Struggle and Rairden"
+        },
+        {
+          "_key": "era-3",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "tl3-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl3-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "The Gas Boom of the 1880s and 90s brought many new residents to the country and large increases in church membership."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "tl3-more",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl3-mores1",
+                  "_type": "span",
+                  "marks": [
+                    "tl3-morel1"
+                  ],
+                  "text": "Read this era"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "tl3-morel1",
+                  "_type": "link",
+                  "href": "/history#era-3"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "marker": "1887 to 1917",
+          "title": "The gas boom to the debt paid"
+        },
+        {
+          "_key": "era-4",
+          "_type": "timelineRow",
+          "anchor": {
+            "_type": "slug",
+            "current": "building-1929"
+          },
+          "body": [
+            {
+              "_key": "tl4-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl4-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "The preaching and personality of pastor William Graham Everson brought hundreds of new members to First Baptist and eventually caused the congregation to agree that a newer and larger church building was needed."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "tl4-more",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl4-mores1",
+                  "_type": "span",
+                  "marks": [
+                    "tl4-morel1"
+                  ],
+                  "text": "Read this era"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "tl4-morel1",
+                  "_type": "link",
+                  "href": "/history#building"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "marker": "1921 to 1929",
+          "title": "The Fighting Parson and the building"
+        },
+        {
+          "_key": "era-5",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "tl5-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl5-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "The new building was sold during the great depression when the membership was unable to make the mortgage payments."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "tl5-more",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl5-mores1",
+                  "_type": "span",
+                  "marks": [
+                    "tl5-morel1"
+                  ],
+                  "text": "Read this era"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "tl5-morel1",
+                  "_type": "link",
+                  "href": "/history#era-5"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "marker": "1938 to 1939",
+          "title": "Sold and bought back"
+        },
+        {
+          "_key": "era-6",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "tl6-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl6-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "The 1950s brought growth, increased staff, and wider outreach including the acquisition of the Baptist House."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "tl6-more",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl6-mores1",
+                  "_type": "span",
+                  "marks": [
+                    "tl6-morel1"
+                  ],
+                  "text": "Read this era"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "tl6-morel1",
+                  "_type": "link",
+                  "href": "/history#era-6"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "marker": "1950 to 1989",
+          "title": "Postwar to Mattox"
+        },
+        {
+          "_key": "era-7",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "tl7-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl7-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Partially due to the leadership of pastor George Saunders, Muncie experienced improved inter-racial harmony in the late 1990s."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "tl7-more",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "tl7-mores1",
+                  "_type": "span",
+                  "marks": [
+                    "tl7-morel1"
+                  ],
+                  "text": "Read this era"
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "tl7-morel1",
+                  "_type": "link",
+                  "href": "/history#era-7"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "marker": "1990 to 2022",
+          "title": "Saunders to the co-pastors"
+        }
+      ]
+    },
+    {
+      "_key": "hs-era1",
+      "_type": "imageTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "era-1"
+      },
+      "body": [
+        {
+          "_key": "e1-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e1-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "On September 10, 1859, twelve Indiana residents, four men and eight women, became the charter members of the Baptist Church in Muncie, Indiana, a community of 1700 residents. The small town boasted three other churches at the time: Methodist, Presbyterian, and Universalist. The organizational meeting for the Baptist Church had been held in the county courthouse, and for the next two and a half years the church continued to hold its services there using only one courtroom and having services once a month."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e1-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e1-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Finally in June, 1862, the tiny congregation moved into their new church building. Measuring 48’ by 34’, the new structure cost $2131.80."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "1859 to 1862",
+      "heading": "Founding",
+      "image": {
+        "_type": "image",
+        "alt": "Beginnings, 1859",
+        "asset": {
+          "_ref": "image-8d94e286e6447a5c5de98789aee63a72f5a29c7d-1640x1640-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "right"
+    },
+    {
+      "_key": "hs-era2",
+      "_type": "imageTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "era-2"
+      },
+      "body": [
+        {
+          "_key": "e2-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Services were casual with members wearing homemade clothing and worshiping by candlelight."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e2-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Typical of that era, people went to church in wagons drawn by oxen, on horseback, or by foot. They normally dressed in their homemade attire, which was flannel and jeans in winter and homemade linens in summer. Ladies wore sunbonnets, which in the summer they doubled and used as fans during the service. Men went in their shirt-sleeves, and children often came barefoot. Small churches like the one in Muncie had no electric lights, natural gas, or even kerosene lamps to furnish light. What they had was the dim light of the candle."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "1862 to 1881",
+      "heading": "Struggle and Rairden",
+      "image": {
+        "_type": "image",
+        "alt": "The first church building, built in 1862",
+        "asset": {
+          "_ref": "image-0e69b38aeeb37f73d184fbee0cc5124bd97e46e8-1585x1585-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "left"
+    },
+    {
+      "_key": "hs-era2-more",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "e2-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Slow Growth"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e2-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Financial pledges were honored or ignored depending on the member’s opinion of the pastor."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e2-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Growth was slow and somewhat painful during the first two decades. The largest expense for the church was the salary of the minister. Whenever a new pastor was asked to come, members pledged to pay a certain sum of money over a specific period of time, usually twelve months. Pledges were not always paid, however. Economic hardships sometimes caused members to fall behind. Then too, if individuals became dissatisfied with the pastor they sometimes intentionally neglected to contribute their agreed-on sum. If enough persons did this, the pastor would of economic necessity be forced to resign."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e2-h2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-h2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Bickering"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e2-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Bickering among members nearly caused the church to disband in the 1870s."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e2-f-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-f-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Bickering among members was not uncommon. (After all, this is a Baptist Church.) The name-calling and animosity led to the resignation of one pastor in the late 1870s. Eventually the situation became so bad that in 1880 there was a motion in a business meeting to disband the church. Fortunately, the motion did not pass."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e2-h3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-h3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "N.B. Rairden - 1881"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e2-g-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-g-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Harmony came to the congregation during the pastorate of N. B. Rairden and his wife leading to the church officially being named The First Baptist Church of Muncie, Indiana."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e2-h-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e2-h-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The coming of pastor N.B. Rairden in 1881 marked a turning point for the fledgling congregation. He and his wife were both young and energetic, and they stayed at the church for nearly four years. No pastor prior to Rairden had stayed as long as two and a half years. Their contribution was primarily that of uniting and harmonizing a church with a history of disharmony. Never again would the members discuss disbanding. It was also during the Rairden pastorate that the church officially adopted the name First Baptist Church of Muncie, Indiana. Previously the church was referred to as the Regular Baptist Church or simply as the Muncie Baptist Church."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "_key": "hs-quote-1",
+      "_type": "quoteSection",
+      "attribution": "From the church’s own history",
+      "quote": "Never again would the members discuss disbanding."
+    },
+    {
+      "_key": "hs-era3",
+      "_type": "imageTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "era-3"
+      },
+      "body": [
+        {
+          "_key": "e3-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The Gas Boom of the 1880s and 90s brought many new residents to the country and large increases in church membership."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The arrival of Loren Clevenger as pastor in 1887 coincided with the beginning of a gas boom in Muncie and Delaware County that brought thousands of new residents to the area. This rise in population and prosperity did wonders for the Muncie churches, including First Baptist. In the three years from 1887 to 1890, membership at First Baptist rose from 67 to 141. The old church simply could not hold that many people, and so the congregation eventually moved into a new building on July 20, 1890. Phenomenal growth followed, with the membership soaring to 500 in 1900."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "1887 to 1917",
+      "heading": "The gas boom to the debt paid",
+      "image": {
+        "_type": "image",
+        "alt": "The second church building, built in 1890",
+        "asset": {
+          "_ref": "image-dcd168e01d2dfdf6bd55252daac625a0e192989e-1638x1622-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "right"
+    },
+    {
+      "_key": "hs-era3-more",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "e3-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Second Building - 1890"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e3-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Overcrowded conditions led the congregation to move into a new and much larger church in 1890."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-h2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-h2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "State Convention"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e3-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "No longer a small and insignificant congregation, Muncie First Baptist hosted the annual meeting of the Indiana Baptist Convention in 1890."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The congregation was so pleased with the new structure that the Indiana Baptist Convention was invited to hold its annual meeting at Muncie First Baptist Church later in 1890. That was the first time the convention had ever been held in Muncie. Since then the convention has been at Muncie First Baptist five additional times: 1902, 1931, 1948, 1954, and 1967."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-h3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-h3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Cassius M. Carter"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e3-f-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-f-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The prominence of Pastor Cassius M. Carter brought recognition to the Muncie Church never previously enjoyed."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-g-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-g-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Much of the progress the church experienced during the first three decades of the twentieth century can be closely associated with the men who were pastors at the time. Cassius M. Carter became pastor in 1898 and remained pastor for twelve and a half years, the longest pastorate in the history of First Baptist until Dan Mattox seven decades later. Three-time president of the Indiana Baptist Convention, Dr. Carter was asked to preach, lecture, and conduct revivals across this country and Europe. His prominence brought to the Muncie church a recognition not enjoyed previously."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-h4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-h4s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Institutional Church"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e3-h-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-h-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "First Baptist became an “Institutional Church” offering athletic programs, reading and social rooms, and a gym for young men and women."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-i-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-i-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "During the early part of the century there was a trend in America to adapt downtown churches into what became known as “institutional churches.” They supplemented the ordinary methods of spreading the gospel such as preaching, prayer meetings, Sunday School, and pastoral visitation with what one historian called “organized kindness.” These churches became hives of activity with athletic programs, gymnasiums, reading rooms, day nurseries, medical clinics, sewing classes, lecture series, choral societies, and drama clubs. During Carter’s pastorate, Muncie First Baptist never became a full-blown institutional church, but it did begin to offer some of the programs associated with such churches. In 1900 the church added an $18,000 institutional annex to the main building. That addition housed a gymnasium, reading room, study, social room, club room for young men, and club room for young women. The annex was kept open for long hours during the day but not twenty-four hours a day."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-h5",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-h5s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Debt is Paid - 1913"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e3-j-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-j-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "After years of indebtedness, a highly successful financial campaign allowed the church to liquidate the entire debt, highlighted by a note-burning ceremony on December 24, 1917."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-k-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-k-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "In October, 1913, John Falconer Fraser became pastor. According to the church records, Fraser baptized more than 400 persons during this seven-and-a-half-year ministry. Baptists in the state recognized his leadership abilities and three times elected him president of the Indiana Baptist Convention (1917, 1918, 1919). But his crowning achievement at Muncie First Baptist was liquidating the church debt. When Fraser arrived, the church still owed money on the 1887 church building and the annex that was added in 1900. During 1914, the church spent more than it took in and so went further into debt."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-l-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-l-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "A fund-raising canvass in 1915 failed to reverse the trend. The church was having so much difficulty paying its bills that Fraser authorized the church secretary to withhold the pastor’s salary for a few weeks in order to fund these expenditures. Once again the church had to borrow money in 1915 and found itself further in debt ($8410 by the end of 1915). Another financial campaign in 1916 led to more than 500 people signing pledge cards. Getting members to sign a pledge was one thing; getting them to pay the pledge proved more difficult. Only 150 people paid their entire pledge, while 50 individuals paid nothing at all. Expenditures were cut, yet the church was unable to pay the pastor nor the custodian all that was owed them at the end of the year."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-m-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-m-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "In 1917, the financial picture brightened. More people paid their pledges, and several individuals gave regularly who had not pledged at all. The economy was improving and incomes were rising. The church announced at the end of the fiscal year in 1917 that church income had risen more than 50 percent over the previous year."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e3-n-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e3-n-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Fraser believed the time was right for paying off the church debt. One by one he called church members into his study and talked to them about their donations. Sunday School classes were urged to contribute, and even prominent citizens of Muncie who did not attend First Baptist were invited to help. The whole effort was an overwhelming success. On December 24, 1917, the total church indebtedness of $8413.80 was paid in full. To celebrate this momentous occasion, the church had a special note-burning ceremony on December 30."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "_key": "hs-era4",
+      "_type": "imageTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "building"
+      },
+      "body": [
+        {
+          "_key": "e4-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e4-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The preaching and personality of pastor William Graham Everson brought hundreds of new members to First Baptist and eventually caused the congregation to agree that a newer and larger church building was needed."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e4-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e4-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Fraser’s contributions paved the way for the next pastor, a man with a grandiose vision, to challenge the church to even greater accomplishments. William Graham Everson stepped into the pulpit as pastor for the first time in March, 1921. An enlisted soldier during the Spanish-American War, he had risen to the rank of lieutenant colonel during World War I and had commanded troops in Italy and Austria. Since he was already an ordained minister when he accomplished these military feats, he was nicknamed “The Fighting Parson.”"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "1921 to 1929",
+      "heading": "The Fighting Parson and the building",
+      "image": {
+        "_type": "image",
+        "alt": "Pastor William Graham Everson, the Fighting Parson, 1921",
+        "asset": {
+          "_ref": "image-6e3eb891425a58f6359386371e5f54e36c6a0503-1140x1425-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "left"
+    },
+    {
+      "_key": "hs-era4-more",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "e4-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e4-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "In Muncie, his boundless energy, untiring zeal, and powerful sermons soon attracted large crowds to the church. The church sanctuary could hold between 450 and 500 people. By the fall of 1921 it was no longer large enough to accommodate the worshipers. An overflow area was opened. Yet sometimes people had to stand, and on some occasions, people were turned away."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e4-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e4-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "This was particularly true of Sunday evening services. Some of the other Muncie churches did not have Sunday evening services, so many of those members came to hear “The Fighting Parson.” Hundreds were baptized during his ministry; once he baptized twenty-five in one service. A man of action more than a man of theory, Everson was an excellent leader, and nowhere was that leadership more evident and more tested than in the church’s decision to construct a new building."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e4-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e4-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Visualizing a beautiful new church is one thing; convincing the members that the time was at hand for constructing such a building was quite another matter; and raising the funds for such an undertaking was a staggering task. Yet, had Everson not pushed for the construction when he did, the building would not have been erected for many years to come. Certainly it would not have been constructed during the Depression, and with the United States entering World War II in 1941, it is quite possible the task would have been postponed at least until after 1945."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e4-f-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e4-f-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "After numerous delays and much indecision, a site was purchased and construction of the new building in downtown Muncie began. Everson was active in promoting numerous fund-raising programs, and finally on May 12, 1929, 1200 people marched from the old church to the new one on the corner of Jefferson and Adams streets. The new church cost $338,000. The congregation had raised enough funds that the mortgage on the new building was only $166,000. That was a large sum, larger than the members had hoped for; but given the church’s financial giving the past few years, the sum seemed very manageable."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "_key": "hs-era5",
+      "_type": "imageTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "era-5"
+      },
+      "body": [
+        {
+          "_key": "e5-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e5-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The new building was sold during the great depression when the membership was unable to make the mortgage payments. Never giving up, the members found a way to buy it back."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e5-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e5-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Few members could have predicted the stock market crash that came only a few months later, nor the seriousness of the depression that followed. In four years, the church’s income dropped nearly 70 percent, going from $35,000 to less than $11,000. Because of the Depression and difficult times everywhere, the church’s creditors were patient with the congregation. But as the economic skies began to brighten, the bondholders grew less tolerant with First Baptist’s inability to pay."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "1938 to 1939",
+      "heading": "Sold and bought back",
+      "image": {
+        "_type": "image",
+        "alt": "The church building sold at auction during the Depression, 1938",
+        "asset": {
+          "_ref": "image-1376cdf23ef0e1ca58f5cf41db3d1aab3849220f-1616x1586-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "right"
+    },
+    {
+      "_key": "hs-era5-more",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "e5-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e5-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Eventually Mercantile Trust Company of St. Louis filed suit to foreclose the mortgage. Mercantile Trust claimed the church still owed $144,000 in principal and interest, but since the church could not pay this amount or make satisfactory arrangements with the bondholder, the church was put up for sale at auction in Indianapolis on July 21, 1938. Only one bid was entered and that was by Mercantile Trust. The trust company bid $55,250, and thus bought the church for less than half the principal bonded indebtedness. By terms of the sale, Mercantile Trust now owned the church building, but the congregation was given the right to occupy the building for one year (until July 21, 1939)."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e5-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e5-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The bondholders, of course, did not want the building. They wanted to sell it to the church or to someone else to recoup some of their losses on the loan. Mercantile Trust offered to settle with the church in full for $88,400. Muncie First Baptist officials worked with the trust company for an entire year trying to negotiate the sale of the building. And eventually, one year and one week after the sale of the building, Muncie First Baptist bought it back for $70,000. Because of this experience, people who joined the church later noticed a strong resistance by older members of the congregation to permit the church to borrow money ever again. During World War II, the members of First Baptist demonstrated that they were not pacifists."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e5-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e5-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "During the Civil War a large number of the church family had joined the war effort, a number that was 30 percent higher than the county in general. Even the pastor resigned during the Civil War in order to fight for the Union cause. During World War I, pastor John Fraser had volunteered his services to help the men in uniform. After the war, the church called “The Fighting Parson” as their pastor. He preached that any man who says that Christianity stands for pacifism is a liar. Then in World War II, pastor J. Marion Smith preached patriotism. The church opened its doors to the servicemen and servicewomen in the city, and 140 members joined the armed forces."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "_key": "hs-quote-2",
+      "_type": "quoteSection",
+      "attribution": "From the church’s own history",
+      "quote": "Never giving up, the members found a way to buy it back."
+    },
+    {
+      "_key": "hs-era6",
+      "_type": "imageTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "era-6"
+      },
+      "body": [
+        {
+          "_key": "e6-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e6-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The 1950s brought growth, increased staff, and wider outreach including the acquisition of the Baptist House."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e6-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e6-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "During the 1950s there were signs of a religious revival taking shape in the United States. Muncie First Baptist experienced this religious renewal as well. Sunday School attendance, which had been declining since the Depression, increased. Financial contributions went up as well. The professional staff of the church increased by the addition of a full-time minister of music and a full-time Christian Education director. The church also helped to establish the Baptist Student Foundation at Ball State Teachers College."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "1950 to 1989",
+      "heading": "Postwar to Mattox",
+      "image": {
+        "_type": "image",
+        "alt": "The congregation in the 1950s",
+        "asset": {
+          "_ref": "image-4a92c827f8241a67995c6b5bb3bc56e0008a14bf-2400x1686-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "left"
+    },
+    {
+      "_key": "hs-era6-more",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "e6-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e6-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "1960s"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e6-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e6-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The 1960s was a decade in which Muncie First Baptist demonstrated more than its usual concern for others in the community. First, the church helped establish Riverside Baptist Church (pictured, right) with financial support and by encouraging several of its families who lived on the west side to join this new Baptist church. First Baptist was also instrumental in the founding of the Gateway Christian Center in the heart of a nearly all-black area of Muncie. It was hoped that such a center would help lessen racial tensions in the city. The center offered Bible study classes, a Vacation Bible School, grooming, crafts, and recreation. A branch of the Muncie public library was established in the center, as was a medical clinic, staffed freely by area physicians and nurses. First Baptist contributed $1000 per year, plus many members of the church contributed financially on their own and served on various committees at the center."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e6-h2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e6-h2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Dan Mattox"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e6-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e6-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The much-loved Dan Mattox was pastor for fifteen years, the longest tenure in the history of First Baptist."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e6-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e6-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The fifteen-year pastorate of Dan Mattox (1974–1989) brought stability to First Baptist Church and perhaps a sense of complacency. Extremely well-loved by the congregation, Mattox proved to be an excellent pastor. He claimed he had only one sermon; he just dressed it up in different ways. That sermon was that we all “are the servants of God, and we have the work of the ministry to do.” Sunday School attendance and church worship attendance both remained consistent. Full-time staff members in Christian Education and music provided excellent leadership as well. Although challenged to be ministers of the gospel, the congregation may have experienced a sense of complacency as things seemed to be going quite well."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "_key": "hs-era7",
+      "_type": "imageTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "era-7"
+      },
+      "body": [
+        {
+          "_key": "e7-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Partially due to the leadership of pastor George Saunders, Muncie experienced improved inter-racial harmony in the late 1990s."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Following a very popular pastor is usually difficult, as George Saunders learned when he became pastor in 1990. Attendance for both the worship service and Sunday School dropped during his nine-year pastorate, with Sunday School dropping over 20 percent to a low of 168 in 1999."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "1990 to 2022",
+      "heading": "Saunders to the co-pastors",
+      "image": {
+        "_type": "image",
+        "alt": "The congregation in the 1990s",
+        "asset": {
+          "_ref": "image-39c0f7159183eee86b9cf49f29ad4ac30db11f6e-1121x1401-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "right"
+    },
+    {
+      "_key": "hs-era7-more",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "e7-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Nevertheless, the church engaged in very active programming. Seminars and programs to help members be better shepherds and relate better to others were held. Care groups were started. Marriage enrichment retreats were held. The musical Liberty was performed to the delight of the whole community several different years. Pastor Saunders was always interested in good relations with other churches, and with the help and leadership of several First Baptist men, a unity service was held in April, 1998, with Union Baptist Church, a mostly Black church. That went so well that another unity service was planned for August. This time many churches joined the effort, with the result that an estimated 5000 people attended the service held in Worthen Arena at Ball State University. It was an enormous interracial success, and a third service was held the next April. Again some 5000 attended, and in recognition of George Saunders’s contribution to the movement, he was asked to be the speaker."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "2000s"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e7-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "“Worship Wars” led to serious problems for several years but eventually gave way to more harmonious support."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Although the controversy over what kind of worship service to have began while Saunders was pastor, it was not until the pastorate of Woody Noblitt that the “worship wars” really broke out at First Baptist Church. Should First Baptist have a traditional and a contemporary worship service, or should the church have one blended service? Solomon, in all his wisdom, would have had difficulty navigating these turbulent waters. When Noblitt first arrived, the church had one blended worship service. Then the church voted to have two services: a blended/traditional service first and a contemporary service later."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-f-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-f-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "After two years, the church decided to return to one blended service; but that seemed to please almost no one, and two months later the church agreed to return to two services. Starting times for the two services also were changed several times before settling on 9:15 for the traditional/blended service and 11:15 for the contemporary service. During all this, many members left First Baptist, some because they were unhappy with the services being offered and some simply because they were tired of all the changes and controversy. Accompanying this controversy was a significant drop in attendance both in Sunday School and in the morning worship services."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-g-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-g-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Despite this decline, those who remained showed signs of renewal. The church had a successful “Forty Days of Purpose” program in 2004, with the goal of unifying the church’s purposes and bringing on spiritual renewal. The outreach ministry sponsored fall carnivals in the parking lot for neighboring children with as many as 150 attending. A shelter was constructed in the parking lot for the church and anyone in the area to use."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-h-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-h-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Members opened their pockets to purchase a projection system for the sanctuary, a new organ (at a cost of nearly $130,000), an improvement in the sanctuary sound system, and construction of a permanent extension to the pulpit area. And the very successful Christmas musical, A Time for Christmas, was presented in 2003 and 2004. With a cast of 120 (almost all members of FBC), the musical was performed three nights in 2003 and four nights in 2004 to a full house each night. One estimate was that 1300 people saw the musical in 2004."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-i-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-i-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "During this time, the worship-style controversy virtually ended, and a spirit of harmony and support is much more apparent."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-h2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-h2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "2010s"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e7-j-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-j-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Pastor Allen and the church celebrated a monumental sabbatical after which the members loosened their purse strings and raised over $300,000 for church renewal and renovation."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-k-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-k-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "In January of 2010 Fred Schulz retired as church organist after thirty-eight years of service to First Baptist. No other staff member had served the church that long. Fred Retired and in 2014 Clif Davis came on staff to serve as interim part-time Director of Church Worship. Today, Clif is still part-time but with some different responsibilities and a different title: Worship Arts Pastor. Both Wade and Clif earned doctoral degrees in their fields of study during this time period."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-l-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-l-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "First Baptist and Wade were awarded a Eli Lily Clergy Renewal Grant for the Summer of 2017. The grant of nearly $41,000 allowed Wade to be away from First Baptist for fifteen weeks. He was to use the time primarily to rest and relax, and also to do research on a topic of his choice. The time was designed to be a time of reflection and rebirth for the local church in the pastor’s absence. First Baptist filled the pulpit with some eight different speakers and focused on the theme of “Joining God in the Neighborhood.”"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-m-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-m-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Later that same year the church launched what was called The Legacy Capital Campaign. The campaign focused on renovating, restoring, and remodeling the church’s nearly ninety-year-old building. The campaign was to raise $300,000, a goal that eventually was surpassed. The finds were used primarily to tuck point, clean, and seal the stone exterior; to carpet and vinyl plank the sanctuary; and to improve the signage both inside and outside the building."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-n-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-n-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The last major project of Wade’s ministry was called the Story Project. It was a years-long endeavor to collect and organize in book form the writings of dozens of members and attendees that related God has been in work in their lives. The finished book, entitled “We are the Clay” consists of thirty-five articles and was edited by Julie Davis."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-o-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-o-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The membership was shocked when Wade announced in December, 2020, that he was leaving our church to become a pastor of a church in the finger-lake region of New York. When he Preached his last sermon in February 2021, Wade’s pastorate totaled 12 ½ years, the second longest tenure in the long history of First Baptist Muncie."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-h3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-h3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "2020s"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "e7-p-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-p-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The 2020 pandemic presented challenges for First Baptist and every church, not only in the nation, but the world. When the church began resuming services in-person, in addition to the ongoing live stream offerings, the interim pastor, Dr. David Hinson, encouraged the church to expand its giving with the Vision 2022 campaign. Its goals included making the internship program part of the normal church budget, and to raise money in hopes of funding a part-time youth minister."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-q-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-q-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The Pastoral search team’s efforts to find a pastor resulted in the church calling not just one pastor, but two: Jonathan Balmer and Kendall Ellis (a married couple) were called by the congregation in May of 2022 to serve as Co-Pastors – a first for the congregation."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-r-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-r-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Jonathan and Kendall each preach, alternating responsibilities between pulpit and youth ministries – in addition to being involved with other areas of ministry alongside the Church Coordination Team."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "e7-s-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "e7-s-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Kendall, having received a Masters of Social Work in addition to a Master of Divinity from Baylor University, is keenly interested in community ministry. Jonathan has a strong interest in discipleship and theology for the sake of the church. Their gifts, they and the congregation hope, will complement one another as First Baptist Muncie continues to discern God’s will to serve in a new-era in the life of Muncie and this community of believers in Christ Jesus."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "_key": "hs-books",
+      "_type": "documentListSection",
+      "docs": [
+        {
+          "_key": "book-1",
+          "_type": "listedDocument",
+          "note": "Written by Dr. William G. Eidson. We have several copies in our church library.",
+          "title": "Journey Down Jefferson Street"
+        },
+        {
+          "_key": "book-2",
+          "_type": "listedDocument",
+          "note": "Edited by Julie Downey Davis. The book can be purchased online.",
+          "title": "We Are the Clay",
+          "url": "https://www.amazon.com/We-Are-Clay-Molding-Baptist/dp/1087276802",
+          "year": 2019
+        }
+      ],
+      "eyebrow": "Read more",
+      "heading": "Two books"
+    },
+    {
+      "_key": "hs-cta",
+      "_type": "ctaBandSection",
+      "cta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-who-we-are",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Who we are",
+        "linkType": "internal"
+      },
+      "eyebrow": "Today",
+      "headline": "The story continues on Sunday.",
+      "secondaryCta": {
+        "_key": "cta-3",
+        "_type": "ctaBlock",
+        "externalUrl": "/wedding#building-use",
+        "label": "The building today",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "subhead": "Sundays at 10:45 am. 309 East Adams Street."
+    }
+  ],
+  "seoDescription": "First Baptist Church Muncie was founded by twelve people in 1859 and has worshipped in downtown Muncie ever since.",
+  "seoTitle": "History of First Baptist Church Muncie, 1859 to today",
+  "slug": {
+    "_type": "slug",
+    "current": "history"
+  },
+  "title": "Our history"
+}
