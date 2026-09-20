@@ -12,6 +12,18 @@
    file. */
 @source not '../../scripts/.parity';
 
+/* The repo's own prose (CLAUDE.md, PORTS.md, OPERATIONS.md, README.md and
+   everything under docs/) names dozens of utility classes as documentation
+   examples, and Tailwind v4 scans Markdown as a class source same as any
+   other tracked file (found 2026-09-20, same session as the .parity leak
+   above). Excluded here so writing about a class does not keep it alive in
+   the shipped stylesheet. .superpowers/ is not listed: it is already fully
+   gitignored (its only contents live under .superpowers/sdd, which carries
+   its own `*` .gitignore), so Tailwind's default gitignore-based skipping
+   already covers it. */
+@source not '../../docs';
+@source not '../../*.md';
+
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource/libre-baskerville/400.css';

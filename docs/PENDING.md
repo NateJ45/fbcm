@@ -165,8 +165,38 @@ a docs edit render-neutral when the docs edit is itself a Tailwind source; anywh
 class names are typed in prose has to be fixed and captured together, not treated as a
 free rewording after the "real" fix.
 
-This is general, not FBCM's: every repo in the family commits `scripts/.parity` and
-`page-parity.mjs` is the library of record. It is written up as card 6a in
+**C4b, same session: the real scope was every tracked Markdown file, not just two class
+names in two files.** `scripts/.parity` and this entry's own prose were never the whole
+leak. `CLAUDE.md`, `PORTS.md`, `OPERATIONS.md`, `README.md` and everything under `docs/`
+are all tracked, non-gitignored, and full of utility-class names used as documentation
+examples (heading grammar, band colours, accent classes), because that is what a
+technical doc about a Tailwind codebase looks like. Every one of those names is a
+Tailwind source. Added two more exclusions next to the existing one in
+`src/styles/globals.css`: `@source not "../../docs";` for the whole docs tree, and
+`@source not "../../*.md";` for the four root Markdown files (`CLAUDE.md`, `PORTS.md`,
+`OPERATIONS.md`, `README.md`). Tailwind v4.3 (`tailwindcss` 4.3.3 here) accepts a glob in
+`@source not`: the build succeeded and the byte count moved, which is the proof it took
+effect, not just parsed. `.superpowers/` was deliberately left out of the exclusion list:
+it is already fully gitignored (its only contents live under `.superpowers/sdd/`, which
+carries its own `*` `.gitignore`), so Tailwind's default gitignore-based skipping already
+covers it and a redundant `@source not` would just be dead weight.
+
+Measured the same way: a build right after adding the two new exclusions (still against
+the doc-fixed 125,305-byte baseline set) dropped the sheet to **119,411 bytes**, a real
+5,894-byte cut, confirmed by diffing the raw CSS before and after and finding whole rule
+sets gone that exist nowhere under `src/`. `npm run parity:capture` recaptured all 162
+baselines under the new exclusions, and a second build measured the identical **119,411
+bytes**. `npm run parity:compare` is **162/162 PASS** on that set. Three fixpoints now,
+each one narrower than the last: `scripts/.parity` alone (125,406B), plus the two named
+classes out of prose (125,305B), plus the rest of the repo's own Markdown (119,411B).
+The pattern is the same each time: Tailwind's default scan is the whole non-gitignored
+tree, so anything checked in that names a utility class is a source, whether it is a
+rendered-HTML baseline, a paragraph explaining a fix, or a doc file's normal job of
+describing the design system in its own vocabulary.
+
+This is general, not FBCM's: every repo in the family commits `scripts/.parity`, ships a
+`CLAUDE.md` and `docs/` full of the same kind of class-naming prose, and
+`page-parity.mjs` is the library of record. Written up as card 6a in
 `docs/upstream/2026-09-20-starter-findings.md`.
 
 ### 3. `@astrojs/mdx` is installed but unused

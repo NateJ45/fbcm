@@ -265,9 +265,36 @@ classes back into the scan, so that identical number is the proof the loop is
 cut, not just quiet this once. `npm run parity:compare` is 162/162 PASS on the
 recaptured set, for the right reason.
 
+**The scope was bigger than one directory (found later the same session).**
+This card's own draft named the two leaking classes in prose, which put them
+back into Tailwind's scan the moment the card was written, since Markdown is
+scanned too, and the compare went green again for the wrong reason before it
+was caught. Removing the class names from this card and from `docs/PENDING.md`
+dropped the sheet again, to 125,305 bytes, requiring one more
+capture-rebuild-compare pass to reach a real fixpoint. That, in turn, exposed
+the actual size of the problem: `CLAUDE.md`, `PORTS.md`, `OPERATIONS.md`,
+`README.md` and every file under `docs/` are tracked, non-gitignored, and name
+dozens of utility classes as documentation examples, because a technical doc
+about a Tailwind codebase is written in that vocabulary. Two more exclusions
+next to the first: `@source not "../../docs";` for the docs tree, and
+`@source not "../../*.md";` for the four root Markdown files, confirmed to
+accept a glob on `tailwindcss` 4.3.3 (the build succeeds and the byte count
+moves, which is stronger proof than a successful parse). `.superpowers/` was
+deliberately left off the list: it is already fully gitignored, so Tailwind's
+default gitignore-based skipping already excludes it. Measured: 125,305 to
+119,411 bytes on the first build under the new exclusions, confirmed identical
+on 119,411 bytes after a third `parity:capture` + rebuild, `parity:compare`
+162/162 PASS. Three narrowing fixpoints in one session: baselines alone
+(125,406B), plus prose class names (125,305B), plus the rest of the repo's own
+Markdown (119,411B).
+
 **Canonical file here.** `scripts/page-parity.mjs` is PORTABLE and this affects
 every repo in the family that commits a `scripts/.parity` directory, which is
-all of them.
+all of them. The `docs`/`*.md` exclusions are equally general: every repo in
+the family ships a `CLAUDE.md` and a `docs/` tree written in the same
+class-naming vocabulary, so the same two lines belong in every sibling's
+`globals.css`, with the glob adjusted only if a repo's root Markdown file list
+differs.
 
 **What to adapt.** The fix is two moves and the ORDER matters. First keep the
 baselines out of Tailwind's source scan (`@source not` in the repo's
