@@ -80,3 +80,69 @@ test('reduced motion: /beliefs#baptists still lands below the sticky header', as
   expect(targetTop).toBeGreaterThanOrEqual(headerBottom - 1);
   expect(targetTop).toBeLessThanOrEqual(headerBottom + 64);
 });
+
+// =============================================================================
+// Keyboard and scrollbar gestures count as "a user scroll" too
+// =============================================================================
+// The gesture gate in BaseLayout's sticky-header script originally listened to
+// wheel/touchstart/touchmove only. That missed two real ways a visitor scrolls:
+// arrow keys / Space / Page Down / Home / End, and dragging the scrollbar
+// thumb (a `pointerdown` with no wheel or touch event behind it). Without
+// `keydown`/`pointerdown` in the gesture list, a keyboard visitor's own
+// scroll would never hide or re-show the header, and worse, `keepLanding`
+// (which re-asserts the fragment's landing position for up to 1500ms) would
+// have kept yanking the page back to the anchor out from under someone who
+// started pressing ArrowDown the moment the page loaded. These two checks
+// prove both halves are fixed.
+// =============================================================================
+
+test('a keyboard scroll right after a fragment landing is not undone', async ({ page }) => {
+  await page.goto('/beliefs#baptists', { waitUntil: 'load' });
+
+  // Five ArrowDown presses, back to back, well inside both the 600ms gesture
+  // window and the 1500ms landing-correction window -- exactly the scenario
+  // that would have been fought by keepLanding before keydown counted as a
+  // gesture.
+  for (let i = 0; i < 5; i++) {
+    await page.keyboard.press('ArrowDown');
+  }
+  const afterPresses = await page.evaluate(() => window.scrollY);
+  expect(
+    afterPresses,
+    'ArrowDown should have moved the page down from the anchor landing',
+  ).toBeGreaterThan(0);
+
+  // Give keepLanding's correction loop, which polls every animation frame,
+  // every chance to snap the page back to the anchor if it were going to.
+  await page.waitForTimeout(800);
+  const afterWait = await page.evaluate(() => window.scrollY);
+
+  expect(
+    afterWait,
+    `scrollY should hold near where the keyboard left it (${afterPresses}), not snap back toward the anchor`,
+  ).toBeGreaterThanOrEqual(afterPresses - 5);
+});
+
+test('keyboard End hides the sticky header, Home shows it again', async ({ page }) => {
+  // /history is the ~33,000px page: End always lands well past HIDE_AFTER
+  // regardless of viewport height, and Home always lands at y=0.
+  await page.goto('/history', { waitUntil: 'load' });
+  await page.waitForTimeout(300); // let the polish script's initial landing settle (no hash here, so this is just wiring)
+
+  await page.keyboard.press('End');
+  await page.waitForTimeout(500); // past the header's 300ms CSS transition
+  const hiddenState = await page.evaluate(() =>
+    document.querySelector('header.site-header')?.getAttribute('data-state'),
+  );
+  expect(hiddenState, 'End should hide the header, same as scrolling down for real').toBe('hidden');
+
+  await page.keyboard.press('Home');
+  await page.waitForTimeout(500);
+  const shownState = await page.evaluate(() =>
+    document.querySelector('header.site-header')?.getAttribute('data-state'),
+  );
+  expect(
+    shownState,
+    'Home should show the header again, same as scrolling to the top for real',
+  ).toBeNull();
+});

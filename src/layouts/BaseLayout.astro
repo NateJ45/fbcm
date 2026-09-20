@@ -520,7 +520,8 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           // So this drops the size/timing guessing entirely and gates on
           // WHY the scroll happened instead: hide-on-scroll only ever acts
           // on a scroll that was directly preceded by a real input gesture
-          // (wheel or touch). A browser's native fragment jump, and any
+          // (wheel, touch, keyboard, or a pointer down that could be a
+          // scrollbar drag). A browser's native fragment jump, and any
           // corrective pass it makes afterwards, fires `scroll` with no
           // such gesture behind it, so it is invisible to the heuristic no
           // matter how large or how late it is -- literally "a fragment
@@ -529,6 +530,18 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           // it produces, including the tail of a momentum/inertia scroll on
           // touch, without being so long that an old gesture could still be
           // "current" when an unrelated later scroll happens.
+          //
+          // `keydown` (any key -- cheaper than filtering to the ones that
+          // actually scroll, e.g. arrows/space/PageDown/Home/End, and a
+          // false positive here only widens the gesture window slightly)
+          // and `pointerdown` (covers a scrollbar drag, which fires no
+          // wheel or touch event at all) were added after the first
+          // version of this shipped with only wheel/touch: without them, a
+          // keyboard visitor's real scroll never hid or re-showed the
+          // header (a silent regression from the pre-fix behavior), and
+          // worse, `keepLanding` below would spend up to 1500ms yanking
+          // the page back to the anchor out from under someone who started
+          // pressing ArrowDown the moment the page loaded.
           let lastGestureAt = -Infinity;
           const GESTURE_WINDOW_MS = 600;
           const markGesture = () => {
@@ -537,6 +550,8 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           window.addEventListener('wheel', markGesture, { passive: true });
           window.addEventListener('touchstart', markGesture, { passive: true });
           window.addEventListener('touchmove', markGesture, { passive: true });
+          window.addEventListener('keydown', markGesture, { passive: true });
+          window.addEventListener('pointerdown', markGesture, { passive: true });
 
           const SHOW_THRESHOLD = 80; // small jitter buffer
           const HIDE_AFTER = 120;    // don't hide until past hero band
