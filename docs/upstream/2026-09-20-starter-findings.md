@@ -209,6 +209,62 @@ Likely next case in the family: presacademy's events archive.
 
 ---
 
+## 6a. The parity baselines feed Tailwind, so a capture invalidates itself
+
+**What it is.** A loop between two things the starter ships and nobody had put
+side by side: `scripts/.parity/*.html` is COMMITTED (that is the whole point of
+a baseline), so it is not gitignored, so Tailwind v4's automatic source
+detection scans those files and generates a utility for every class it finds in
+them. The captured HTML is therefore a SOURCE for the next build's stylesheet.
+
+**The bug that produced it.** On the FBCM tree, `npm run parity:compare` went
+from 162/162 PASS at the recapture to 1/162 PASS on the very next build, with
+the only diff on every failing page being the stylesheet's own byte count and
+hash: `- CSS 124630B 6f2f68b8` against `+ CSS 124529B efd6192e`, markup
+byte-identical.
+
+The proof, because "probably Tailwind" is not a diagnosis. Two classes,
+`hover:text-white` and `lg:justify-between`, appear in the pre-plan-2a
+baselines, appear in the post-recapture baselines nowhere, appear in no file
+under `src/` at all, and are absent from the current stylesheet. The two rules
+they generate come to about 100 bytes, against a measured delta of 101. The
+capture recorded a stylesheet built from the OLD baselines; the first rebuild
+after it legitimately produces a smaller one. Confirmed deterministic across
+two builds, and confirmed not to be the session's own new Markdown (moving
+three new notes out of the tree changed nothing).
+
+Two things kept this hidden until now, and both are worth the card:
+
+- A baseline set that is intentionally red during a redesign is never rebuilt
+  against while green, so the loop has nowhere to show itself.
+- Inlining the stylesheet (card 7 below) moves its byte count INSIDE the
+  compared markup. With an external sheet the harness compares a normalized
+  link and the drift is invisible, which is worse, not better: the baselines
+  were already unstable, and nothing said so.
+
+**And the loop then closed on the diagnosis itself.** Writing those two class
+names into `docs/PENDING.md` and into this file put them back into Tailwind's
+scan, because Markdown is scanned too. The next build regenerated exactly those
+two rules, the stylesheet went back to 124,750 bytes, and the compare returned
+162/162 PASS. Green because a note mentions two utilities. Keep that in the
+card: it is the cheapest possible demonstration that the harness's inputs and
+its outputs are the same files.
+
+**Canonical file here.** `scripts/page-parity.mjs` is PORTABLE and this affects
+every repo in the family that commits a `scripts/.parity` directory, which is
+all of them.
+
+**What to adapt.** The fix is two moves and the ORDER matters. First keep the
+baselines out of Tailwind's source scan (`@source not` in the repo's
+`globals.css`, or have the harness write somewhere Tailwind ignores, which is
+the better home for it since it fixes every repo at once). Then recapture, then
+rebuild and compare a second time to prove the set has reached a fixpoint. A
+recapture on its own goes green once and drifts the next time a class stops
+being used, which is exactly the failure that teaches a team to ignore the
+tool.
+
+---
+
 ## 7. Inlining the site stylesheet without inlining the Studio's, or the fonts
 
 **What it is.** `build.inlineStylesheets: 'auto'` plus a FUNCTION-form

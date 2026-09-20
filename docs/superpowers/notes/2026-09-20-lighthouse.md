@@ -131,6 +131,14 @@ CLS and TBT unchanged (0 and 0 ms); accessibility, best practices and SEO
 stayed at 100. `render-blocking-resources` went from a listed failure naming
 that one file to not appearing at all.
 
+The measured gain, 150 to 220 ms, is smaller than the 453 to 465 ms the
+`render-blocking-resources` audit estimated in section 2, and that is expected
+rather than a discrepancy: Lighthouse's "estimated savings" is a Lantern
+simulation of removing the resource entirely from the critical path, an upper
+bound that assumes nothing else moves, whereas inlining does not delete those
+22 KB, it moves them into the document, so the HTML is larger and part of the
+saved round trip is spent transferring the same bytes earlier.
+
 So first paint is 150 to 220 ms earlier and the audit passes, but the
 performance SCORE did not move. FCP carries a weight of 10 against LCP's 25,
 and LCP is held by something else. Recorded plainly rather than dressed up.
