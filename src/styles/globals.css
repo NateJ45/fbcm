@@ -967,6 +967,17 @@
   --section-accent: var(--color-gold);
 }
 
+/* The same pin on the indigo field, which is where the closing CTA band moved
+   in the art-direction pass (2026-09-21). --color-indigo-field holds its own
+   value in both themes for the same reason --color-accent-dark does, so an
+   accent word on it must be pinned rather than theme-aware. Gold measures
+   4.90:1 on the light-theme indigo field (recorded beside --color-gold above
+   and gated in theme-tokens.test.ts) and better on the darker .dark value, so
+   it clears AA at any size. */
+.bg-indigo-field {
+  --section-accent: var(--color-gold);
+}
+
 /* Tactile press on primary CTAs. Tap/click depresses ~1px so the press
    registers physically — common Apple-Material trick. */
 .press-tactile {

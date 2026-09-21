@@ -36,6 +36,7 @@ import DocumentList from '@/components/sections/DocumentList.astro';
 import LinkCards from '@/components/sections/LinkCards.astro';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
+import { splitStega } from '@/lib/preview-stega';
 import { assignSpareImages } from '@/lib/spare-images';
 import type { PageBuilderBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
@@ -177,6 +178,82 @@ const openingLevel = (index: number): 'h1' | 'h2' => (index === 0 && !hasHero ? 
 const afterFullBleed = (index: number): boolean =>
   spares.statementIndex !== null && index === spares.statementIndex + 1;
 
+// THE HERO'S FIRST FRAME, by asset ref, or null when the page has no hero.
+//
+// HeritageBand's detail strip drops the band's own photograph when it is this
+// one: the first frame is the LCP image, the one picture a visitor has
+// certainly seen, and showing it again two screens down at a different crop
+// reads as a mistake. The comparison is done in the band (it also has to know
+// whether dropping would empty the strip); this is only the lookup, and it is
+// null-safe on both sides because a projection that carries no ref must never
+// compare equal to one that does.
+const heroBlock = rows.find(({ block }) => (block as { _type?: string })._type === 'heroSection')
+  ?.block as { frames?: unknown[]; backgroundImage?: unknown } | undefined;
+const heroFirstFrame = (() => {
+  const frames = Array.isArray(heroBlock?.frames) ? heroBlock.frames : [];
+  return frames.length > 0 ? frames[0] : heroBlock?.backgroundImage;
+})();
+const heroFirstRef: string | null =
+  ((heroFirstFrame as { asset?: { _ref?: string; _id?: string } } | undefined)?.asset?._ref ??
+    (heroFirstFrame as { asset?: { _ref?: string; _id?: string } } | undefined)?.asset?._id) ||
+  null;
+
+// THE HERITAGE BAND'S NUMERALS, DERIVED (CLAUDE.md rule 15).
+//
+// The brown band shows up to three dated numerals, and nothing stores them:
+// they are the FIRST timeline block's first row, its middle row and its last,
+// so the numerals and the timeline on the same page cannot drift apart. The
+// strings are cleaned through splitStega BEFORE they are trimmed or compared,
+// because the stega payload is written in characters that a regex counts as
+// whitespace (CLAUDE.md, the preview rules).
+const timelineRows = (() => {
+  const block = rows.find(({ block: b }) => (b as { _type?: string })._type === 'timelineSection')
+    ?.block as { rows?: unknown[] } | undefined;
+  return Array.isArray(block?.rows) ? block.rows : [];
+})();
+const heritageYears = (() => {
+  if (timelineRows.length === 0) return [];
+  // First, middle, last. Deduped by index, so a timeline of one or two rows
+  // yields one or two numerals rather than the same row twice.
+  const picks = [0, Math.floor((timelineRows.length - 1) / 2), timelineRows.length - 1];
+  const seen = new Set<number>();
+  const out: { year: string; label: string }[] = [];
+  for (const i of picks) {
+    if (seen.has(i)) continue;
+    seen.add(i);
+    const row = timelineRows[i] as { marker?: unknown; title?: unknown };
+    const year = typeof row?.marker === 'string' ? splitStega(row.marker).cleaned.trim() : '';
+    const label = typeof row?.title === 'string' ? splitStega(row.title).cleaned.trim() : '';
+    if (year) out.push({ year, label });
+  }
+  return out;
+})();
+
+// IS THE ROW AT THIS INDEX A DARK BAND?
+//
+// The give band asks, because the spec's rule is that two dark surfaces never
+// touch and it is the one block whose surface is allowed to change. The list
+// is the set of blocks that paint dark whatever the cadence says: the hero
+// only when it actually carries a photograph (a text hero is paper), the
+// statement band only when it received a borrowed frame, and the Sunday band
+// never, whatever else it does. Everything else is a paper band.
+const isDarkBand = (block: unknown, index: number): boolean => {
+  const b = block as { _type?: string; frames?: unknown[]; backgroundImage?: unknown };
+  switch (b._type) {
+    case 'heroSection':
+      return (Array.isArray(b.frames) && b.frames.length > 0) || !!b.backgroundImage;
+    case 'ctaBandSection':
+    case 'scriptureBandSection':
+    case 'faqSection':
+    case 'heritageBandSection':
+      return true;
+    case 'linkCardsSection':
+      return index === spares.statementIndex;
+    default:
+      return false;
+  }
+};
+
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
 ---
@@ -249,7 +326,9 @@ const wrapAttrs = (key: string | undefined) =>
           />
         ) : s._type === 'imageTextSection' ? (
           <ImageText
-            image={spares.replacements.has(blockIndex) ? spares.replacements.get(blockIndex) : s.image}
+            image={
+              spares.replacements.has(blockIndex) ? spares.replacements.get(blockIndex) : s.image
+            }
             imageSide={s.imageSide}
             eyebrow={s.eyebrow}
             heading={s.heading}
@@ -358,6 +437,9 @@ const wrapAttrs = (key: string | undefined) =>
             body={s.body}
             image={s.image}
             cta={s.cta}
+            extraImages={spares.strip.slice(0, 2)}
+            heroFirstRef={heroFirstRef}
+            years={heritageYears}
             level={openingLevel(blockIndex)}
             headingId={headingId}
           />
@@ -367,6 +449,8 @@ const wrapAttrs = (key: string | undefined) =>
             body={s.body}
             buttonLabel={s.buttonLabel}
             buttonUrl={s.buttonUrl}
+            lastBeforeFooter={blockIndex === rows.length - 1}
+            prevIsDark={blockIndex > 0 && isDarkBand(rows[blockIndex - 1].block, blockIndex - 1)}
             level={openingLevel(blockIndex)}
             headingId={headingId}
             settings={settings}

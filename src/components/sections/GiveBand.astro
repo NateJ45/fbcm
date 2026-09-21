@@ -1,16 +1,31 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: the giving band on the indigo field. Seven columns of words
-// and one gold button; the right five columns are empty ON PURPOSE, because the
-// band's job is to be quiet and unmissable at once, and a second object in it would
-// give the eye somewhere else to go.
+// Page-builder block: the giving band, redrawn for the art-direction pass
+// (2026-09-21, spec section 5, the prototype's `.give` block). Seven columns of
+// heading on the left, the paragraph and one gold button on the right five.
+//
+// IT IS SOFT PAPER BY DEFAULT, AND INDIGO ONLY WHEN THE PAGE CAN AFFORD IT.
+// The spec's rule is that two dark surfaces never touch. SectionRenderer works
+// out both halves of that and passes them down: `lastBeforeFooter` (the footer
+// is a fixed indigo-deep field, so an indigo band immediately above it would
+// read as one tall dark block) and `prevIsDark` (the band above). The fill is
+// indigo only when neither is true. Nothing here decides its own surface from
+// its own content, which is the same reason blocks carry no colour field
+// (CLAUDE.md rule 9).
+//
+// THE PAPER FILL IS `bg-surface-soft`, NOT `bg-bg-soft`. --color-bg-soft is a
+// LIGHT-ONLY token: theme-tokens.test.ts forbids .dark from redeclaring it, so
+// a band painted with it stays cream under .dark while --foreground flips to
+// paper-white and the heading disappears. --surface-soft is the same value in
+// light and a real dark counterpart (#262548), and it is what the cadence's
+// own alternating band already uses (src/lib/surfaces.ts, the "muted" entry).
 //
 // The button goes to the block's own link when the editor typed one, and otherwise
 // to the giving address in Site settings, so the church can move its giving page in
 // one place. Church Center is somebody else's site, so the link opens in a new tab.
 //
-// SELF_CONTAINED: dark by type, and the ink on it is text-bg (paper-white in both
+// SELF_CONTAINED: when it IS dark, the ink on it is text-bg (paper-white in both
 // themes) rather than text-cream (which flips to ink under .dark).
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
@@ -40,6 +55,10 @@ interface Props {
    * nothing (the styleguide, and the code-defined default sections).
    */
   settings?: SectionSiteSettings | null;
+  /** True when this block is the last row of the page builder. See the note above. */
+  lastBeforeFooter?: boolean;
+  /** True when the row immediately above this one paints a dark surface. */
+  prevIsDark?: boolean;
 }
 
 const {
@@ -50,7 +69,12 @@ const {
   level = 'h2',
   headingId,
   settings: settingsProp,
+  lastBeforeFooter = false,
+  prevIsDark = false,
 } = Astro.props as Props;
+
+// The one surface decision, stated once. See the note at the top of the file.
+const dark = !lastBeforeFooter && !prevIsDark;
 
 const settings: SectionSiteSettings | null =
   settingsProp !== undefined ? settingsProp : await getSiteSettings();
@@ -66,32 +90,45 @@ const giveCta = href
   : null;
 ---
 
-<section class="bg-indigo-field" aria-labelledby={heading ? headingId : undefined}>
+<section
+  class={dark ? 'bg-indigo-field text-bg' : 'bg-surface-soft'}
+  aria-labelledby={heading ? headingId : undefined}
+>
   <div
-    class="mx-auto grid max-w-content grid-cols-1 gap-l px-m py-section-lg md:grid-cols-12 md:gap-section-md"
+    class="mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] px-gutter py-section-lg"
     data-reveal
   >
-    <div class="md:col-span-7">
+    <div class="col-span-12 lg:col-span-7">
       <SectionHeading
         headline={heading}
         headingId={headingId}
         level={level}
         align="left"
-        tone="band"
-        rule
+        tone={dark ? 'band' : 'default'}
       />
+    </div>
 
-      {body && <p class="mt-m text-lg leading-relaxed text-bg/85">{body}</p>}
+    <div class="col-span-12 mt-6 self-center lg:col-span-5 lg:col-start-8 lg:mt-0">
+      {
+        body && (
+          <p
+            class:list={[
+              'max-w-[38ch] font-body text-[1.125rem] leading-[1.72]',
+              dark ? 'text-bg/80' : 'text-muted-foreground',
+            ]}
+          >
+            {body}
+          </p>
+        )
+      }
 
       {
         giveCta && (
-          <div class="mt-l">
-            <CtaLink cta={giveCta} variant="gold" onDark />
+          <div class="mt-6">
+            <CtaLink cta={giveCta} variant="gold" onDark={dark} />
           </div>
         )
       }
     </div>
-
-    {/* The right five columns stay empty. See the note at the top of this file. */}
   </div>
 </section>

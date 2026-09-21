@@ -1,17 +1,52 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: the brown band. The second of the two darks, reserved for the
-// history and the building: text on the left across seven columns, the photograph on
-// the right across five, carrying the 2px gold top rule every contained picture on
-// this site carries. On a phone the picture stacks under the words.
+// Page-builder block: the brown band, redrawn for the art-direction pass
+// (2026-09-21, spec section 5, the prototype's `.building` block).
 //
-// SELF_CONTAINED: brown in both themes (globals.css does not move the browns), so
-// the ink on it is text-bg, which is paper-white in both themes, rather than
-// text-cream, which flips to ink under .dark.
+// It was a 7/5 text-and-picture split with a gold rule under the heading, which
+// is the layout every other band on the page was already drawing. The shape now
+// is the prototype's: a DETAIL STRIP of up to three photographs running edge to
+// edge above the band, then the brown field carrying the h2 on the left six
+// columns, the paragraph and its text link on the right five, and a row of
+// dated numerals under the heading.
+//
+// Four things are worth knowing before editing it.
+//
+// 1. THE STRIP IS BORROWED, AND THE BAND'S OWN PICTURE GOES LAST.
+//    SectionRenderer hands down `extraImages` (the first two entries of the
+//    page's spare-image pool, src/lib/spare-images.ts) and the block's own
+//    `image` is appended AFTER them, because the extras are the pictures
+//    nothing else on the page is showing and the strip reads best with the
+//    familiar one at the end.
+//
+// 2. THE BAND'S OWN PICTURE IS DROPPED WHEN THE HERO ALREADY SHOWS IT.
+//    SectionRenderer also passes `heroFirstRef`, the asset ref of the first
+//    frame of the page's first hero. That frame is the LCP image and is the
+//    one picture a visitor has certainly seen, so repeating it two screens
+//    later at a different crop reads as a mistake rather than as two
+//    distances. The drop is skipped when it would leave the strip empty: a
+//    band with no strip at all is a worse outcome than one repeat.
+//
+// 3. THE NUMERAL ROW IS DERIVED, NEVER TYPED (CLAUDE.md rule 15). The years
+//    come from the page's first `timelineSection`: its first row, its middle
+//    row and its last. Nothing is stored twice, so the board and the timeline
+//    cannot disagree. A page with no timeline renders no numeral row.
+//
+// 4. SELF_CONTAINED: brown in both themes (globals.css moves --color-brown only
+//    to a darker brown under .dark), so the ink on it is text-bg, which is
+//    paper-white in both themes, rather than text-cream, which flips to ink
+//    under .dark.
 import SectionHeading from '@/components/SectionHeading.astro';
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
+import type { SanityImageObject } from '@/lib/pageBuilder.types';
+
+/** One dated numeral: the timeline row's marker over its title. */
+export interface HeritageYear {
+  year: string;
+  label: string;
+}
 
 interface Props {
   eyebrow?: string;
@@ -19,6 +54,18 @@ interface Props {
   body?: string;
   image?: any;
   cta?: any;
+  /**
+   * Up to two photographs from elsewhere on the page, in page order, chosen by
+   * SectionRenderer from the shared spare-image pool. They lead the strip.
+   */
+  extraImages?: SanityImageObject[];
+  /**
+   * The asset ref of the first frame of the page's first hero, or null. See
+   * note 2: the band's own picture is dropped from the strip when it matches.
+   */
+  heroFirstRef?: string | null;
+  /** Up to three derived numerals. Empty or absent renders no row. See note 3. */
+  years?: HeritageYear[];
   /**
    * The heading tag. 'h2' everywhere except when this band OPENS a page, in
    * which case it is the page's only h1 and SectionRenderer passes 'h1'.
@@ -29,15 +76,114 @@ interface Props {
   headingId: string;
 }
 
-const { eyebrow, heading, body, image, cta, level = 'h2', headingId } = Astro.props as Props;
+const {
+  eyebrow,
+  heading,
+  body,
+  image,
+  cta,
+  extraImages = [],
+  heroFirstRef = null,
+  years = [],
+  level = 'h2',
+  headingId,
+} = Astro.props as Props;
+
+// THE STRIP. Extras first, the block's own picture last (note 1).
+//
+// The identity of a picture is its asset ref, never the object: two blocks
+// pointing at one photograph are two different objects, and /history proved it
+// by putting the tower in cell one and again in cell three.
+const refOf = (img: unknown): string | null => {
+  const asset = (img as { asset?: { _ref?: string; _id?: string } } | undefined)?.asset;
+  return asset?._ref ?? asset?._id ?? null;
+};
+const seenRefs = new Set<string>();
+const extras = (extraImages ?? []).filter((img) => {
+  if (!img?.asset) return false;
+  const ref = refOf(img);
+  if (ref && seenRefs.has(ref)) return false;
+  if (ref) seenRefs.add(ref);
+  return true;
+});
+const ownRef: string | null = refOf(image);
+// Null-safe on both sides: a page with no hero passes null, and a projection
+// that carries no ref at all must never compare equal to one that does.
+const ownIsHeroFirst = !!ownRef && !!heroFirstRef && ownRef === heroFirstRef;
+// Keep the band's own picture unless the hero already shows it, and keep it
+// anyway when dropping it would leave nothing at all (note 2).
+// ...and never when one of the extras is already the same photograph.
+const ownIsDuplicate = !!ownRef && seenRefs.has(ownRef);
+const keepOwn = !!image?.asset && !ownIsDuplicate && (!ownIsHeroFirst || extras.length === 0);
+const strip: SanityImageObject[] = keepOwn ? [...extras, image] : extras;
+
+// The strip's column rhythm follows how many pictures there are. One is a
+// single full-width band-height photograph; two split 5/3; three take the
+// prototype's 5/3/4. On a phone every strip is two columns of 44vw rows with
+// the first picture spanning both, which is the prototype's own breakpoint.
+const stripCols =
+  strip.length >= 3
+    ? 'md:grid-cols-[5fr_3fr_4fr]'
+    : strip.length === 2
+      ? 'md:grid-cols-[5fr_3fr]'
+      : 'md:grid-cols-1';
+
+// `md:grid-rows-1` is load-bearing, and the reason is worth writing down. The
+// strip's height is on the CONTAINER; the row was left implicit and auto-sized,
+// which means it takes the photograph's natural height and the picture then
+// spills out of the band and slides under the words. `grid-rows-1` is
+// `repeat(1, minmax(0, 1fr))`, so the one row is exactly the container's
+// height, `h-full` on the image resolves against something definite, and
+// `overflow-hidden` on each cell is the belt to that pair of braces.
+
+// One picture fills the width, so it is served at full width; two or three
+// share it and never need more than half.
+const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100vw';
 ---
 
-<section class="bg-brown" aria-labelledby={heading ? headingId : undefined}>
+<section class="bg-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
+  {
+    /* The detail strip, edge to edge and OUTSIDE the container on purpose: it
+      is a band of photograph, not a figure inside a column. */
+  }
+  {
+    strip.length > 0 && (
+      <div
+        class:list={[
+          'grid h-auto auto-rows-[44vw] grid-cols-2 gap-1.5 md:h-[clamp(320px,52vw,680px)] md:grid-rows-1',
+          stripCols,
+        ]}
+      >
+        {strip.map((img, i) => (
+          <div
+            class:list={[
+              'min-h-0 overflow-hidden',
+              // On a phone the grid is two columns of 44vw. The FIRST picture
+              // always spans both, which is the prototype's own breakpoint;
+              // so does the second when there are only two, because a lone
+              // half-width cell leaves an empty half-band of brown beside it.
+              (i === 0 || strip.length === 2) && 'col-span-2 md:col-span-1',
+            ]}
+          >
+            <SanityImage
+              source={img}
+              width={1200}
+              sizes={stripSizes}
+              quality={72}
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   <div
-    class="mx-auto grid max-w-content grid-cols-1 items-center gap-l px-m py-section-lg md:grid-cols-12 md:gap-section-md"
+    class="mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] px-gutter py-section-lg"
     data-reveal
   >
-    <div class="md:col-span-7">
+    <div class="col-span-12 lg:col-span-6">
       <SectionHeading
         eyebrow={eyebrow}
         headline={heading}
@@ -45,30 +191,38 @@ const { eyebrow, heading, body, image, cta, level = 'h2', headingId } = Astro.pr
         level={level}
         align="left"
         tone="band"
-        rule
       />
+    </div>
 
-      {body && <p class="mt-m text-lg leading-relaxed text-bg/85">{body}</p>}
+    <div class="col-span-12 mt-8 self-end lg:col-span-5 lg:col-start-8 lg:mt-0">
+      {
+        body && (
+          <p class="max-w-[42ch] font-body text-[1.125rem] leading-[1.72] text-bg/80">{body}</p>
+        )
+      }
 
       {
         cta?.label && (
-          <div class="mt-l">
-            <CtaLink cta={cta} variant="outline" onDark />
+          <div class="mt-7">
+            <CtaLink cta={cta} variant="link" onDark />
           </div>
         )
       }
     </div>
 
     {
-      image?.asset && (
-        <div class="md:col-span-5">
-          <SanityImage
-            source={image}
-            width={720}
-            sizes="(min-width: 768px) 40vw, 100vw"
-            quality={75}
-            class="h-auto w-full border-t-2 border-gold"
-          />
+      /* The derived numerals (note 3). Old-style figures, because these are
+        dates set beside prose rather than a scoreboard. */
+    }
+    {
+      years.length > 0 && (
+        <div class="col-span-12 mt-8 flex flex-wrap gap-10 lg:col-span-6">
+          {years.map((y) => (
+            <div class="border-l border-bg/18 pl-4">
+              <div class="font-body text-4xl font-normal text-bg oldstyle">{y.year}</div>
+              <div class="mt-1.5 font-ui text-sm text-bg/70">{y.label}</div>
+            </div>
+          ))}
         </div>
       )
     }

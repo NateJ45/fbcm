@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface StatItem {
   number: number;
@@ -59,7 +59,7 @@ function AnimatedNumber({
   return (
     <span>
       {value}
-      {suffix && <span className="align-super text-[0.6em] text-secondary">{suffix}</span>}
+      {suffix && <span className="align-super text-[0.5em] text-muted-foreground">{suffix}</span>}
     </span>
   );
 }
@@ -85,39 +85,32 @@ export default function StatsCounter({ stats }: Props) {
   }, []);
 
   return (
+    // divide-x divide-hair rather than a row of hand-drawn <div> rules: the
+    // divider is then a property of the row, so a stat added or removed can
+    // never leave a rule with nothing on one side of it.
     <div
       ref={ref}
-      className="flex flex-wrap justify-center gap-8 md:gap-12"
+      className="flex flex-wrap gap-y-8 divide-x divide-hair"
       aria-label="Studio statistics"
     >
-      {stats.map((stat, i) => (
-        <React.Fragment key={stat.label}>
-          {i > 0 && (
-            <div className="my-2 hidden w-px self-stretch bg-border md:block" aria-hidden="true" />
-          )}
-          <div className="text-center">
-            {/* text-[color:var(--primary)], NOT text-primary. The Tailwind utility
-                maps to the @theme brand token, which is ONE constant for both
-                themes by design; the shadcn --primary is the theme-aware one
-                and .dark already lightens it. These numbers sit on the page
-                ground, which flips, so the brand constant measured 2.97:1 here
-                in dark mode, just under the 3:1 large text requires. Caught by
-                tests/contrast.spec.ts (PORTS card 43) on its first CI run.
-                Any component rendering brand-coloured TEXT on a surface that
-                flips needs the theme-aware token. */}
-            <span className="block font-display text-[clamp(2.5rem,6vw,3.5rem)] leading-none font-normal text-[color:var(--primary)]">
-              <AnimatedNumber
-                target={stat.number}
-                suffix={stat.suffix}
-                duration={1800}
-                run={visible}
-              />
-            </span>
-            <span className="mt-2 block text-[0.62rem] tracking-eyebrow text-muted-foreground uppercase">
-              {stat.label}
-            </span>
-          </div>
-        </React.Fragment>
+      {stats.map((stat) => (
+        <div key={stat.label} className="px-[clamp(20px,3vw,44px)] first:pl-0 last:pr-0">
+          {/* text-foreground, not a brand colour. The numerals used to be
+                --primary, which is ONE constant for both themes and measured
+                2.97:1 on the dark page ground (caught by tests/contrast.spec.ts,
+                PORTS card 43). The art-direction pass gives a numeral its weight
+                from the face and the size, so it takes the page's own ink and
+                the contrast question stops being a question. */}
+          <span className="block font-body text-h1 leading-none font-normal text-foreground oldstyle">
+            <AnimatedNumber
+              target={stat.number}
+              suffix={stat.suffix}
+              duration={1800}
+              run={visible}
+            />
+          </span>
+          <span className="mt-3 block font-ui text-ui text-muted-foreground">{stat.label}</span>
+        </div>
       ))}
     </div>
   );

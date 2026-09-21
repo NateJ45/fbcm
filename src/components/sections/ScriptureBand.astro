@@ -1,18 +1,31 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: a scripture band. One verse, centred, on the indigo field,
-// with a single word picked out in gold italic and the reference beneath it in
-// small caps. This is the one place the spec allows a centred heading, and the only
-// block with no heading field at all: the words are the heading.
+// Page-builder block: a scripture band on the indigo field, redrawn for the
+// art-direction pass (2026-09-21, spec section 5).
 //
-// The gold accent goes through splitHeadingAccent(), the same splitter the heading
-// accents use, so it is case-insensitive, first-occurrence-only and stega-safe.
-// `accentWord` is deliberately NOT in the in-canvas accent registry (see the note
-// at the top of churchSections.ts), so it is split here directly.
+// The verse is set at --text-h1 in Castoro ITALIC, not in the display face:
+// Castoro Titling is capitals-only and has no italic, and a verse set in
+// capitals reads as a slogan. One word may be picked out in gold, and the
+// reference sits under it as a font-ui label.
 //
-// SELF_CONTAINED: the band is dark by type.
+// Behind the right half of the band, at 18% under mix-blend-mode: luminosity,
+// is the alpha-and-omega window from src/assets/menu-window.jpg, masked so it
+// fades out before it reaches the words. It is the same photograph the mobile
+// menu and the footer carry, which is the point: one texture, three places.
+// Decorative, so it is aria-hidden with an empty alt and loads lazily.
+//
+// The gold accent goes through splitHeadingAccent(), the same splitter the
+// heading accents use, so it is case-insensitive, first-occurrence-only and
+// stega-safe. `accentWord` is deliberately NOT in the in-canvas accent registry
+// (see the note at the top of churchSections.ts), so it is split here directly.
+//
+// SELF_CONTAINED: the band is dark by type, so the ink on it is text-bg
+// (paper-white in both themes) rather than text-cream (which flips to ink
+// under .dark).
+import { getImage } from 'astro:assets';
 import { splitHeadingAccent } from '@/lib/heading-accent';
+import menuWindowAsset from '@/assets/menu-window.jpg';
 
 interface Props {
   verse?: string;
@@ -23,6 +36,19 @@ interface Props {
 
 const { verse, reference, accentWord, headingId } = Astro.props as Props;
 const { found, before, word, after } = splitHeadingAccent(verse, accentWord);
+
+// The texture. 1200w at quality 60 is generous for something that renders at
+// 18% opacity under a luminosity blend and a left-fading mask. Real dimensions
+// go on the tag even though CSS sizes it absolutely: the numbers cost nothing
+// and the file keeps the habit.
+const texture = await getImage({
+  src: menuWindowAsset,
+  width: 1200,
+  quality: 60,
+  format: 'jpg',
+});
+const textureWidth = texture.options.width ?? 1200;
+const textureHeight = Math.round(textureWidth * (menuWindowAsset.height / menuWindowAsset.width));
 ---
 
 {
@@ -33,16 +59,28 @@ const { found, before, word, after } = splitHeadingAccent(verse, accentWord);
 }
 {
   verse && (
-    <section class="bg-indigo-field" aria-labelledby={reference ? headingId : undefined}>
-      <div class="mx-auto max-w-content px-m py-section-lg text-center" data-reveal>
-        {/* text-bg, never text-cream: --color-cream flips to ink under .dark
-            while --color-bg stays paper-white, and this band is dark in both
-            themes (see the .dark block in globals.css). */}
-        <blockquote class="mx-auto max-w-3xl font-display text-[1.875rem] leading-snug text-bg">
+    <section
+      class="relative isolate overflow-hidden bg-indigo-field text-bg"
+      aria-labelledby={reference ? headingId : undefined}
+    >
+      <img
+        src={texture.src}
+        alt=""
+        aria-hidden="true"
+        width={textureWidth}
+        height={textureHeight}
+        loading="lazy"
+        decoding="async"
+        class="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 object-cover opacity-[.18] mix-blend-luminosity"
+        style="mask-image: linear-gradient(to left, #000, transparent); -webkit-mask-image: linear-gradient(to left, #000, transparent);"
+      />
+
+      <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
+        <blockquote class="max-w-[20ch] font-body text-h1 leading-[1.08] font-normal text-bg italic">
           {found ? (
             <>
               {before}
-              <em class="text-gold italic">{word}</em>
+              <span class="text-gold">{word}</span>
               {after}
             </>
           ) : (
@@ -51,7 +89,7 @@ const { found, before, word, after } = splitHeadingAccent(verse, accentWord);
         </blockquote>
 
         {reference && (
-          <p id={headingId} class="mt-m text-xs font-semibold tracking-eyebrow text-gold uppercase">
+          <p id={headingId} class="mt-6 font-ui text-ui text-gold">
             {reference}
           </p>
         )}

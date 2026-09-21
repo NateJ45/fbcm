@@ -1,10 +1,19 @@
 ---
 // Safe to edit by hand
 // The full-bleed call-to-action section that closes every interior page (and the home page).
-// Charcoal Dark panel with editorial headline, optional subhead, and a Bronze CTA pill.
-// This is intentionally the only section on the page that uses the dark brand panel:
-// it punctuates the read and points at the next step, which for this church is
+// Redrawn for the art-direction pass (2026-09-21, spec section 5): the indigo
+// field, the headline in the titling capitals at --text-h1 held to 16ch so it
+// breaks as a poster line, the subhead as a lede, and the gold button.
+// It punctuates the read and points at the next step, which for this church is
 // planning a first visit.
+//
+// THREE ORNAMENTS CAME OFF IT. The 2px bronze stripe across the top, the cream
+// hairline under the eyebrow, and the centred axis. The first two were the
+// starter's brand signature drawn on every band (the same rule SectionHeading
+// retired on 2026-09-20), and the stripe was navy-on-indigo here, which is an
+// ornament nobody can see. The third is CLAUDE.md rule 17: one left edge per
+// page, and this band was the only thing on an interior page running down the
+// middle.
 //
 // scriptAccent: optional single word/phrase from the headline to render in handwritten
 // the script accent font via the `.font-script` utility. Inherits the heading color (text-bg) so
@@ -62,7 +71,7 @@ interface Props {
    * The COLOUR sibling of the script accent (PORTS.md card 26). One word from
    * the headline, set in the section accent. Skipped when a script accent is
    * already in play: one accent per heading. On this panel the accent is pinned
-   * by `.bg-accent-dark` in globals.css, because the band is the same near-black
+   * by `.bg-indigo-field` in globals.css, because the band is the same indigo
    * whatever theme the reader is in.
    */
   headingAccent?: string;
@@ -119,7 +128,7 @@ const richSubhead = hasInlineRich(subheadRich);
 ---
 
 <section
-  class:list={['bg-accent-dark text-bg', hasBackground && 'relative overflow-hidden']}
+  class:list={['bg-indigo-field text-bg', hasBackground && 'relative overflow-hidden']}
   aria-labelledby={headingId}
 >
   {
@@ -140,33 +149,19 @@ const richSubhead = hasInlineRich(subheadRich);
           alt=""
           class="h-full w-full object-cover"
         />
-        <div class="absolute inset-0 bg-accent-dark/70" />
+        <div class="absolute inset-0 bg-indigo-field/70" />
       </div>
     )
   }
 
-  {
-    /* Bronze accent stripe, same 2px brand signature used at the top of the
-      site header, mobile menu, footer, and every marketing card. Softens the
-      transition from the previous (usually light) section into this dark
-      panel and ties the close-of-page back into the brand vocabulary. */
-  }
-  <div class:list={['h-0.5 bg-primary', hasBackground && 'relative z-10']} aria-hidden="true"></div>
-
   <div
-    class:list={[
-      'mx-auto max-w-content px-m py-section-lg text-center',
-      hasBackground && 'relative z-10',
-    ]}
+    class:list={['mx-auto max-w-content px-gutter py-section-lg', hasBackground && 'relative z-10']}
   >
-    {eyebrow && <p class="text-xs tracking-[0.22em] text-bg/75 uppercase">{eyebrow}</p>}
-    {
-      /* Cream hairline accent beneath the eyebrow that matches SectionHeading's
-        inverse-tone treatment so headings carry the same editorial signature
-        on both light and dark surfaces. */
-    }
-    {eyebrow && <div class="mx-auto mt-s mb-m h-px w-12 bg-bg/40" aria-hidden="true" />}
-    <h2 id={headingId} class="font-display text-h1 leading-tight text-bg">
+    {eyebrow && <p class="mb-5 font-ui text-ui text-gold">{eyebrow}</p>}
+    <h2
+      id={headingId}
+      class="max-w-[16ch] font-display text-h1 leading-none font-normal tracking-[0.01em] text-bg uppercase"
+    >
       {
         scriptFound ? (
           <>
@@ -187,12 +182,12 @@ const richSubhead = hasInlineRich(subheadRich);
     </h2>
     {
       (subhead || richSubhead) && (
-        <p class="mx-auto mt-m max-w-2xl text-lg text-bg/85">
+        <p class="mt-6 max-w-[46ch] font-body text-lede font-normal text-bg/85">
           {richSubhead ? <InlineRich value={subheadRich} /> : subhead}
         </p>
       )
     }
-    <div class="mt-l flex flex-wrap justify-center gap-s">
+    <div class="mt-10 flex flex-wrap items-center gap-x-9 gap-y-5">
       <CtaLink
         cta={cta}
         variant="gold"
@@ -200,7 +195,7 @@ const richSubhead = hasInlineRich(subheadRich);
         fallbackHref={fallbackCtaHref}
         fallbackLabel={fallbackCtaLabel}
       />
-      {secondaryCta && <CtaLink cta={secondaryCta} variant="outline" onDark />}
+      {secondaryCta && <CtaLink cta={secondaryCta} variant="link" onDark />}
     </div>
   </div>
 </section>

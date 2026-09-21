@@ -1,4 +1,10 @@
 ---
+// Safe to edit by hand
+// The stat band. Redrawn for the art-direction pass (2026-09-21, spec section
+// 5): numerals at --text-h1 in Castoro old-style figures, labels in font-ui,
+// and hairline dividers between them rather than a row of floating rules. The
+// markup and the counting live in StatsCounter.tsx, which is the island; this
+// file owns the surface and the container.
 import StatsCounter from './StatsCounter';
 
 interface StatItem {
@@ -17,7 +23,7 @@ const { stats } = Astro.props as Props;
 {
   stats.length > 0 && (
     <section class="bg-background" aria-label="Studio stats">
-      <div class="mx-auto max-w-content px-m py-section-md">
+      <div class="mx-auto max-w-content px-gutter py-section-md">
         <StatsCounter stats={stats} client:visible />
       </div>
     </section>
