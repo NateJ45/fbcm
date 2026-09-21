@@ -98,3 +98,48 @@ test('only the first eligible consumer of each kind is served', () => {
   assert.equal(out.door, b);
   assert.deepEqual(out.strip, [c]);
 });
+
+// ── Portraits stay out of the pool (fix round 1, 2026-09-21) ───────────────
+// A borrowed picture is always drawn wide: the Sunday band's frame is a 4:3
+// crop and the statement band is a full-width backdrop. A portrait cropped to
+// 4:3 is a face with the top of its head cut off, which is how /contact came
+// to borrow a staff headshot. The dimensions are in the asset ref, so the pool
+// can tell before it hands anything out.
+const sized = (id: string, w: number, h: number) => ({
+  _type: 'image',
+  asset: { _ref: `image-${id}-${w}x${h}-jpg` },
+  alt: id,
+});
+
+test('a portrait picture is not borrowed', () => {
+  const portrait = sized('headshot', 1200, 1800);
+  const landscape = sized('nave', 2000, 1500);
+  const out = assignSpareImages([
+    { _type: 'imageTextSection', image: portrait },
+    { _type: 'sundayTimesSection' },
+    { _type: 'heritageBandSection', image: landscape },
+  ]);
+  assert.equal(out.door, landscape);
+  assert.deepEqual(out.strip, []);
+});
+
+test('a picture whose dimensions cannot be read is kept', () => {
+  // No WxH in the ref (and the older projections that only carry `_id`), so
+  // there is nothing to judge it on. Keeping it is the safer default: the
+  // alternative empties the pool on any dataset whose refs do not parse.
+  const unknown = { _type: 'image', asset: { _ref: 'image-mystery-jpg' } };
+  const out = assignSpareImages([
+    { _type: 'imageTextSection', image: unknown },
+    { _type: 'sundayTimesSection' },
+  ]);
+  assert.equal(out.door, unknown);
+});
+
+test('a square picture is landscape enough to borrow', () => {
+  const square = sized('square', 1200, 1200);
+  const out = assignSpareImages([
+    { _type: 'imageTextSection', image: square },
+    { _type: 'sundayTimesSection' },
+  ]);
+  assert.equal(out.door, square);
+});

@@ -18,6 +18,11 @@
 //
 // Unit-tested in spare-images.test.ts.
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
+// Relative, with the extension, because this module is unit-tested under
+// `node --test`, which resolves neither the `@/` alias nor an extensionless
+// path. The parser lives apart from the Sanity client for the same reason:
+// src/lib/sanity.ts reads import.meta.env at module scope.
+import { parseSanityAssetDimensions } from './sanity-asset.ts';
 
 /** The shape this reads: a page-builder row, loosely typed. */
 export interface SpareImageRow {
@@ -47,10 +52,35 @@ const hasAsset = (value: unknown): value is SanityImageObject =>
   !!value && typeof value === 'object' && !!(value as { asset?: unknown }).asset;
 
 /**
+ * PORTRAITS ARE NOT BORROWED (2026-09-21).
+ *
+ * Every consumer of this pool draws its picture WIDE: the Sunday band's frame
+ * is a 4:3 crop, the statement band is a full-width backdrop. A portrait put
+ * through either is a face with the top of its head cut off, which is exactly
+ * what /contact did on the first pass, where the only picture on the page is a
+ * staff headshot.
+ *
+ * The dimensions come out of the asset ref (`image-<id>-<W>x<H>-<ext>`), so
+ * this costs no query. An image whose ref does not parse is KEPT: the
+ * alternative empties the pool on any dataset whose refs are shaped
+ * differently, and a wrongly-shaped picture is a smaller failure than a band
+ * with no picture at all.
+ */
+const isPortrait = (image: SanityImageObject): boolean => {
+  const size = parseSanityAssetDimensions(image);
+  return !!size && size.height > size.width;
+};
+
+/** In the pool: points at an asset, and is not taller than it is wide. */
+const borrowable = (value: unknown): value is SanityImageObject =>
+  hasAsset(value) && !isPortrait(value);
+
+/**
  * Build the page's spare-image pool and hand it out.
  *
  * POOL, in array order: `imageTextSection.image`, each of
- * `gallerySection.images`, and `heritageBandSection.image`.
+ * `gallerySection.images`, and `heritageBandSection.image`, minus any
+ * portrait (see isPortrait below).
  *
  * CONSUMERS, in this order: the first `linkCardsSection` that has a non-empty
  * heading takes pool[0] as its statement backdrop, then the first
@@ -66,12 +96,12 @@ export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
     switch (row._type) {
       case 'imageTextSection':
       case 'heritageBandSection': {
-        if (hasAsset(row.image)) pool.push(row.image);
+        if (borrowable(row.image)) pool.push(row.image);
         break;
       }
       case 'gallerySection': {
         const images = Array.isArray(row.images) ? row.images : [];
-        for (const image of images) if (hasAsset(image)) pool.push(image);
+        for (const image of images) if (borrowable(image)) pool.push(image);
         break;
       }
       case 'linkCardsSection': {

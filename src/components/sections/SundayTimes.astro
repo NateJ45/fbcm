@@ -110,6 +110,13 @@ const addressLines: string[] = [
   .filter(Boolean)
   .map((line, i) => (i === 0 ? reattachStega(line, addressSplit.encoded) : line));
 
+// With a frame in the right door the map PICTURE stays out (one photograph per
+// door), but the address and the directions link come back as a ruled row
+// under the heading, because on a page with a spare image that row is the only
+// place the address appears. `showMap` still governs it: an editor who turned
+// the map off gets no row either.
+const showAddressRow = hasFrame && showMap !== false && addressLines.length > 0;
+
 const validItems = items.filter((i) => i?.label || i?.big || i?.body);
 const validDoors = doors.filter((d) => d?.name || d?.body);
 
@@ -272,10 +279,31 @@ const directionsCta = directionsUrl
       }
 
       {
-        directionsCta && (
-          <div class="mt-5">
-            <CtaLink cta={directionsCta} variant="link" />
+        /* THE ADDRESS SURVIVES A BORROWED FRAME (fix round 1, 2026-09-21).
+          One photograph per door, so the map PICTURE stays out when a frame is
+          present, but the address itself must not leave with it: on /visit and
+          /contact the map card was the only place on the page that said where
+          the church is. So a frame brings a compact ruled row instead, the
+          address on the left and the directions link on the right. Without a
+          frame nothing changes: the map or the address card renders as before,
+          with the link under it. */
+      }
+      {
+        showAddressRow ? (
+          <div class="mt-6 grid grid-cols-[1fr_auto] items-baseline gap-6 border-t border-hair pt-4">
+            <div>
+              {addressLines.map((line) => (
+                <p class="font-body text-body text-muted-foreground oldstyle">{line}</p>
+              ))}
+            </div>
+            {directionsCta && <CtaLink cta={directionsCta} variant="link" />}
           </div>
+        ) : (
+          directionsCta && (
+            <div class="mt-5">
+              <CtaLink cta={directionsCta} variant="link" />
+            </div>
+          )
         )
       }
     </div>
