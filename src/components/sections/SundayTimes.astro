@@ -1,21 +1,36 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: Sunday times and location. Three columns carry the facts a
-// first-time visitor needs (time, length, what to wear), then a location band pairs
-// the map from Site settings with the doors and parking notes. SELF_CONTAINED: it
-// paints its own paper surface, because the church blocks are light or dark BY TYPE
-// (see SELF_CONTAINED_TYPES in src/lib/sectionCadence.ts).
+// Page-builder block: Sunday times, drawn as TWO DOORS (art-direction pass,
+// 2026-09-20, spec section 5).
 //
-// The map, the address and the directions link all come from Site settings, so the
-// church types them once. When the editor turns the map off, or no map picture has
-// been uploaded yet, the left cell becomes a cream address card rather than an empty
-// box: the address is the one thing this band must never fail to show.
-import SectionHeading from '@/components/SectionHeading.astro';
+// The left door is the service time at poster scale. It is the one place on
+// the site where `text-display` is used outside a hero, and the numeral is
+// Castoro ROMAN, not the display face: `font-display` is Castoro Titling,
+// which is capitals only and has no figures worth reading. So the big line is
+// `font-body oldstyle`, which is the same family at its text weight with
+// old-style figures. Under it the first item's text is the lede, and every
+// remaining item, plus every door, is one row of a ruled schedule.
+//
+// The right door is a photograph when the page can spare one, and the map and
+// address when it cannot. The photograph is BORROWED: this block has no image
+// field and no schema change was made for one, so SectionRenderer hands it
+// `frame` from the page's shared spare-image pool (src/lib/spare-images.ts).
+// The picture is not taken away from the block that owns it; the building
+// shows at two distances on purpose.
+//
+// SELF_CONTAINED: it paints its own paper surface, because the church blocks
+// are light or dark BY TYPE (see SELF_CONTAINED_TYPES in src/lib/sectionCadence.ts).
+//
+// The map, the address and the directions link all come from Site settings, so
+// the church types them once. When there is no photograph to borrow and the
+// editor has turned the map off, or no map picture has been uploaded yet, the
+// right door becomes a cream address card rather than an empty box: the
+// address is the one thing this band must never fail to show.
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import { getSiteSettings } from '@/lib/queries';
-import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
+import type { SectionSiteSettings, SanityImageObject } from '@/lib/pageBuilder.types';
 import { site } from '@/data/site';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
 
@@ -40,6 +55,13 @@ interface Props {
   showMap?: boolean;
   headingId: string;
   /**
+   * A photograph borrowed from elsewhere on the page for the right door. Null
+   * (the default) falls back to the map and address card. SectionRenderer
+   * computes it once per page with assignSpareImages(), so two bands on the
+   * same page can never be handed the same picture.
+   */
+  frame?: SanityImageObject | null;
+  /**
    * Site settings, handed down by SectionRenderer from the route that already
    * fetched them. In /preview/** that is the DRAFT client, so an editor
    * changing the map, the address or the directions link sees it; calling
@@ -58,6 +80,7 @@ const {
   doors = [],
   showMap,
   headingId,
+  frame = null,
   settings: settingsProp,
 } = Astro.props as Props;
 
@@ -68,6 +91,7 @@ const settings: SectionSiteSettings | null =
   settingsProp !== undefined ? settingsProp : await getSiteSettings();
 const mapImage = settings?.mapImage;
 const directionsUrl: string | undefined = settings?.directionsUrl ?? undefined;
+const hasFrame = !!frame?.asset;
 const showTheMap = showMap !== false && !!mapImage?.asset;
 
 // The address card's lines. `address` is a plain string in Site settings and may
@@ -89,6 +113,41 @@ const addressLines: string[] = [
 const validItems = items.filter((i) => i?.label || i?.big || i?.body);
 const validDoors = doors.filter((d) => d?.name || d?.body);
 
+// ── The left door ──────────────────────────────────────────────────────────
+// The first item is the service time: its big line becomes the numeral and its
+// text becomes the lede. Everything after it drops into the schedule.
+const lead = validItems[0];
+
+// Split a trailing "am" / "pm" off the numeral so it can be set small and
+// italic against the figures, the way a clock face carries it.
+//
+// splitStega FIRST, and put the payload back on the part that keeps the
+// meaning. A stega payload is written in U+200B/C/D and U+FEFF, and U+FEFF
+// matches `\s` in a JavaScript regex, so running this match over the raw string
+// would tear the payload in half and click-to-edit would stop resolving on the
+// service time, in the preview only (CLAUDE.md, the preview rules).
+const bigSplit = splitStega(lead?.big ?? '');
+const meridiem = bigSplit.cleaned.match(/^(.*?)\s*(am|pm)\s*$/i);
+const numeral = reattachStega(meridiem ? meridiem[1] : bigSplit.cleaned, bigSplit.encoded);
+const numeralSuffix = meridiem ? meridiem[2] : '';
+
+// The schedule: every item after the first, then every door. A door has no
+// time of its own, so its first cell is empty and its name carries the row.
+const scheduleRows: { key: string; big?: string; label?: string; body?: string }[] = [
+  ...validItems.slice(1).map((item, i) => ({
+    key: item._key ?? `item-${i}`,
+    big: item.big,
+    label: item.label,
+    body: item.body,
+  })),
+  ...validDoors.map((door, i) => ({
+    key: door._key ?? `door-${i}`,
+    big: undefined,
+    label: door.name,
+    body: door.body,
+  })),
+];
+
 const directionsCta = directionsUrl
   ? {
       label: 'Open in Google Maps',
@@ -100,101 +159,123 @@ const directionsCta = directionsUrl
 ---
 
 <section class="bg-background" aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
-    <SectionHeading
-      eyebrow={eyebrow}
-      headline={heading}
-      headingId={headingId}
-      level="h2"
-      align="left"
-      tone="church"
-      rule
-    />
-
-    {
-      validItems.length > 0 && (
-        <dl class="mt-section-md grid grid-cols-1 gap-l md:grid-cols-3 md:gap-section-md">
-          {validItems.map((item) => (
-            <div>
-              {item.label && (
-                <dt class="text-xs font-semibold tracking-eyebrow text-brown-mid uppercase dark:text-gold">
-                  {item.label}
-                </dt>
-              )}
-              <dd class="mt-s">
-                {item.big && (
-                  <p class="font-display text-[2.5rem] leading-none text-foreground">{item.big}</p>
-                )}
-                {item.body && (
-                  <p class="mt-s text-[0.9375rem] leading-relaxed text-foreground/85">
-                    {item.body}
-                  </p>
-                )}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      )
-    }
-
-    <div class="mt-section-md grid grid-cols-1 gap-l md:grid-cols-2 md:gap-section-md">
-      <div>
-        {
-          showTheMap ? (
-            <SanityImage
-              source={mapImage}
-              width={720}
-              sizes="(min-width: 768px) 45vw, 100vw"
-              quality={75}
-              alt="Map of the streets around the church"
-              class="h-auto w-full border-t-2 border-gold"
-            />
-          ) : (
-            <div class="border-t-2 border-gold bg-surface-soft p-l">
-              <p class="font-display text-xl text-foreground">{settings?.title ?? site.name}</p>
-              {addressLines.map((line) => (
-                <p class="mt-xs text-[0.9375rem] leading-relaxed text-foreground/85">{line}</p>
-              ))}
-            </div>
-          )
-        }
-
-        {
-          directionsCta && (
-            <div class="mt-m">
-              <CtaLink cta={directionsCta} variant="outline" />
-            </div>
-          )
-        }
-      </div>
+  <div
+    class="mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] gap-y-14 px-gutter py-section-lg"
+    data-reveal
+  >
+    {/* ── Left door: the time, the lede, the schedule ─────────────────── */}
+    <div class="col-span-12 lg:col-span-5">
+      <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow || 'Sunday morning'}</p>
 
       {
-        validDoors.length > 0 && (
-          <ol class="space-y-l" role="list">
-            {validDoors.map((door, i) => (
-              <li class="flex gap-m">
-                {/* bg-indigo + text-cream is the one pair that INVERTS together:
-                    globals.css flips indigo to paper and cream to ink in dark
-                    mode, so the disc reads in both themes without a variant. */}
-                <span
-                  aria-hidden="true"
-                  class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo text-sm font-semibold text-cream"
-                >
-                  {i + 1}
+        numeral && (
+          <div class="-ml-[.04em] font-body text-display leading-none font-normal oldstyle">
+            {numeral}
+            {numeralSuffix && (
+              <span class="ml-[.15em] align-[.1em] text-[.28em] font-normal italic">
+                {numeralSuffix}
+              </span>
+            )}
+          </div>
+        )
+      }
+
+      {
+        lead?.body && (
+          <p class="mt-2.5 max-w-[26ch] text-lede font-normal text-muted-foreground">{lead.body}</p>
+        )
+      }
+
+      {
+        scheduleRows.length > 0 && (
+          <ul class="mt-9 border-t border-hair">
+            {/* The first cell is a FIXED track, because a per-row `auto` track
+                would give the second column a ragged left edge down the list.
+                The spec drew it at 7ch, the width of a time, and every big line
+                in the prototype was one. The real content is not: /visit says
+                "Available" and / says "309 East Adams". A grid item wider than
+                a fixed track does not push the next column along, it draws ON
+                TOP of it, and measured in the built page "Available" is 98px
+                against a 7ch track of 67px, so it overlapped the sentence
+                beside it by more than the 20px gap. 11ch is 105px, which holds
+                the longest single word the three pages carry, and the
+                break-word below is the safety net for anything longer: it never
+                fires on a word that fits. */}
+            {scheduleRows.map((row) => (
+              <li class="grid grid-cols-[11ch_1fr] items-baseline gap-5 border-b border-hair py-4">
+                <span class="min-w-0 font-body text-2xl font-normal [overflow-wrap:break-word] oldstyle">
+                  {row.big}
                 </span>
-                <div>
-                  {door.name && (
-                    <h3 class="font-display text-xl leading-snug text-foreground">{door.name}</h3>
-                  )}
-                  {door.body && (
-                    <p class="mt-xs text-[0.9375rem] leading-relaxed text-foreground/85">
-                      {door.body}
-                    </p>
-                  )}
-                </div>
+                <span class="font-body text-body">
+                  {row.label}
+                  {row.label && row.body ? ' ' : ''}
+                  {row.body && <em class="text-muted-foreground">{row.body}</em>}
+                </span>
               </li>
             ))}
-          </ol>
+          </ul>
+        )
+      }
+    </div>
+
+    {/* ── Right door: the photograph, or the map and address ──────────── */}
+    <div class="col-span-12 lg:col-span-6 lg:col-start-7">
+      {
+        hasFrame ? (
+          <figure class="bleed-right">
+            <SanityImage
+              source={frame}
+              width={1800}
+              sizes="(min-width:1024px) 55vw, 100vw"
+              quality={75}
+              class="aspect-[4/3] w-full object-cover"
+            />
+            {frame?.alt && (
+              <figcaption class="mt-3.5 flex justify-between gap-5 font-ui text-[0.75rem] tracking-[.06em] text-muted-foreground">
+                <span>{frame.alt}</span>
+              </figcaption>
+            )}
+          </figure>
+        ) : showTheMap ? (
+          <figure class="bleed-right">
+            <SanityImage
+              source={mapImage}
+              width={1800}
+              sizes="(min-width:1024px) 55vw, 100vw"
+              quality={75}
+              alt="Map of the streets around the church"
+              class="w-full"
+            />
+          </figure>
+        ) : (
+          <div class="border-t border-hair bg-surface-soft p-l">
+            <p class="font-body text-h3 text-foreground">{settings?.title ?? site.name}</p>
+            {addressLines.map((line) => (
+              <p class="mt-1 font-body text-body text-muted-foreground oldstyle">{line}</p>
+            ))}
+          </div>
+        )
+      }
+
+      {
+        /* The band's heading sits on the right door, under the picture. It is
+          an <h2> ELEMENT at the h3 SIZE: the page's hero already carries the
+          h1, and dropping a real <h3> in here would skip a level and fail
+          axe's heading-order rule. The size is the one the spec asks for. */
+      }
+      {
+        heading && (
+          <h2 id={headingId} class="mt-8 max-w-[24ch] font-body text-h3">
+            {heading}
+          </h2>
+        )
+      }
+
+      {
+        directionsCta && (
+          <div class="mt-5">
+            <CtaLink cta={directionsCta} variant="link" />
+          </div>
         )
       }
     </div>

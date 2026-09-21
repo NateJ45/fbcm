@@ -36,6 +36,7 @@ import DocumentList from '@/components/sections/DocumentList.astro';
 import LinkCards from '@/components/sections/LinkCards.astro';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
+import { assignSpareImages } from '@/lib/spare-images';
 import type { PageBuilderBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
@@ -82,6 +83,23 @@ interface Props {
 
 const { sections = [], idPrefix = 'section', editDoc, settings } = Astro.props as Props;
 const rows = classifySections<PageBuilderBlock>(sections as PageBuilderBlock[], idPrefix);
+
+// THE SPARE-IMAGE POOL, computed ONCE for the whole page.
+//
+// Three bands in the art-direction pass show a photograph they do not own (the
+// Sunday band's right door is the first of them), and none of them has an image
+// field: adding one was ruled out. So the pictures are borrowed from the blocks
+// that do carry them, and the sharing has to be decided in one place. Three
+// components each scanning for "the first image after me" would hand the SAME
+// photograph to two bands on a page that only has one, and no build would say
+// so. assignSpareImages() builds the pool in array order and hands each
+// consumer the next unused entry; the indexes it returns are ROW indexes, so
+// the loop below can ask "is this the block that gets it" rather than
+// re-deriving "the first one". Pure and unit-tested in spare-images.test.ts.
+//
+// A borrowed picture stays in its own block as well: the building shows at two
+// distances on purpose.
+const spares = assignSpareImages(rows.map(({ block }) => block as unknown as { _type: string }));
 
 // The section wrapper. It is a real block-level element on EVERY render now,
 // live and preview alike, because it carries the anchor id (2026-09-19, plan 2b
@@ -281,6 +299,7 @@ const wrapAttrs = (key: string | undefined) =>
             items={s.items ?? []}
             doors={s.doors ?? []}
             showMap={s.showMap}
+            frame={blockIndex === spares.doorIndex ? spares.door : null}
             headingId={headingId}
             settings={settings}
           />
