@@ -1,17 +1,31 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: a timeline. One marker column (a time like "9:30" or a year
-// like "1859") beside a bordered body column, which is the same shape whether the
-// page is running a Sunday morning or a hundred and sixty years of history.
+// Page-builder block: a timeline. One ruled row per entry: the marker (a time
+// like "9:30" or a year like "1859") set large in old-style figures on the
+// left, the entry beside it, and a hairline across the top of each row.
+//
+// THE CONNECTOR LINE IS GONE (art-direction pass, 2026-09-21, task 10). The
+// rows used to hang off a 2px gold vertical rule, which drew a diagram of a
+// list that the list already was: the marker column and the hairlines say
+// "these are in order" without a second device saying it again. The numerals
+// carry the band now, which is why they are set at h2 in oldstyle figures
+// rather than at body size in the display face.
+//
+// ALTERNATION. A row that carries a picture puts it on the OUTSIDE edge, and
+// the side alternates by index: even rows on the right, odd rows on the left,
+// where it bleeds to the edge of the screen. Nothing in the schema gives a row
+// an image today, so on the live site every row takes the default columns; the
+// grammar lives here so a row that gains one does not have to invent it.
 //
 // Each row carries the id its `anchor` slug generated, so a link like
-// /visit#accessibility lands on the row rather than the top of the band. `scroll-mt`
-// keeps the sticky header from covering the row it just jumped to.
+// /visit#accessibility lands on the row rather than the top of the band.
+// `scroll-mt` keeps the sticky header from covering the row it just jumped to.
 //
 // A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
 import SectionHeading from '@/components/SectionHeading.astro';
 import PortableText from '@/components/PortableText';
+import SanityImage from '@/components/SanityImage.astro';
 import { surfaceClass } from '@/lib/surfaces';
 
 interface TimelineRow {
@@ -21,6 +35,8 @@ interface TimelineRow {
   body?: any;
   note?: string;
   anchor?: string;
+  /** Optional, and no schema field feeds it yet. See the ALTERNATION note. */
+  image?: any;
 }
 
 interface Props {
@@ -37,7 +53,7 @@ const validRows = rows.filter((r) => r?.marker || r?.title);
 ---
 
 <section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+  <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
     <SectionHeading
       eyebrow={eyebrow}
       headline={heading}
@@ -45,39 +61,73 @@ const validRows = rows.filter((r) => r?.marker || r?.title);
       level="h2"
       align="left"
       tone="church"
-      rule
     />
 
     {
       validRows.length > 0 && (
         <div class="mt-section-md">
-          {validRows.map((row) => (
-            <div
-              id={row.anchor || undefined}
-              class="grid scroll-mt-28 grid-cols-[96px_1fr] md:grid-cols-[120px_1fr]"
-            >
-              <p class="font-display text-[1.625rem] leading-tight text-foreground">{row.marker}</p>
+          {validRows.map((row, i) => {
+            // A picture on the left is the odd row's asymmetry. Without one,
+            // the row keeps the default columns whatever its index is, so a
+            // band with no pictures reads as one straight column of numerals.
+            const hasImage = !!row.image?.asset;
+            const imageLeft = hasImage && i % 2 === 1;
 
-              <div class="border-l-2 border-gold pb-l pl-m">
-                {row.title && (
-                  <h3 class="font-display text-[1.125rem] leading-snug text-foreground">
-                    {row.title}
-                  </h3>
-                )}
-                {row.body && (
-                  <PortableText
-                    value={row.body}
-                    className="mt-s text-base leading-relaxed text-foreground/85"
-                  />
-                )}
-                {row.note && (
-                  <p class="mt-s text-xs font-semibold tracking-eyebrow text-brown-mid uppercase dark:text-gold">
-                    {row.note}
-                  </p>
+            const markerCols = imageLeft ? 'lg:col-start-4 lg:col-span-3' : 'lg:col-span-3';
+            const bodyCols = imageLeft
+              ? 'lg:col-start-7 lg:col-span-6'
+              : 'lg:col-start-4 lg:col-span-6';
+            const imageCols = imageLeft
+              ? 'lg:col-start-1 lg:col-span-3 bleed-left'
+              : 'lg:col-start-10 lg:col-span-3';
+
+            return (
+              <div
+                id={row.anchor || undefined}
+                class="grid scroll-mt-[var(--header-offset)] grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] border-t border-hair py-10"
+              >
+                {/* Every column is pinned to row 1 on a desktop, so the DOM can
+                    stay in reading order (marker, entry, picture) while the
+                    picture sits to the LEFT of both on an odd row. Without it
+                    the grid's auto-placement would push a col-start-1 item that
+                    comes last in the DOM onto a second line. */}
+                <p
+                  class:list={[
+                    'col-span-12 font-body text-h2 leading-none font-normal text-foreground oldstyle lg:row-start-1',
+                    markerCols,
+                  ]}
+                >
+                  {row.marker}
+                </p>
+
+                <div class:list={['col-span-12 mt-4 lg:row-start-1 lg:mt-0', bodyCols]}>
+                  {row.title && (
+                    <h3 class="font-body text-h3 leading-snug font-normal text-foreground">
+                      {row.title}
+                    </h3>
+                  )}
+                  {row.body && (
+                    <PortableText
+                      value={row.body}
+                      className="mt-3 max-w-[58ch] font-body text-body [&>p+p]:mt-4 [&>p]:my-0 [&_p]:text-muted-foreground"
+                    />
+                  )}
+                  {row.note && <p class="mt-4 font-ui text-ui text-gold-ink">{row.note}</p>}
+                </div>
+
+                {hasImage && (
+                  <div class:list={['col-span-12 mt-6 lg:row-start-1 lg:mt-0', imageCols]}>
+                    <SanityImage
+                      source={row.image}
+                      width={520}
+                      sizes="(min-width: 1024px) 24vw, 100vw"
+                      class="aspect-[4/5] w-full object-cover"
+                    />
+                  </div>
                 )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )
     }

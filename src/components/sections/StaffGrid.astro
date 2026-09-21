@@ -1,17 +1,23 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: the staff grid. Three cards across, each a 4:5 portrait under
-// a 2px gold top rule, the name in the serif, the role in brown-mid and the email as
-// a real mailto link, because the commonest reason anyone opens a staff page is to
-// write to one person.
+// Page-builder block: the staff, as an editorial list rather than a grid of
+// cards. The art-direction pass (2026-09-21, task 10) took the plate off: the
+// gold top rule over every portrait and the bordered box around it are gone,
+// and what is left is the photograph, a hairline over each person, the name in
+// Castoro roman, the role as a gold-ink label and the email as a real mailto
+// link, because the commonest reason anyone opens a staff page is to write to
+// one person.
 //
-// Every card carries the person's slug as its id, so /staff#pastor-name lands on the
-// card. When the block is set to "Everyone" the three groups are drawn in
-// STAFF_GROUPS order with a serif subhead each, and an empty group is skipped rather
+// THE PAGE GRAMMAR (the same one the prose bands took in task 8): the heading
+// sits in the narrow left column and STICKS while the portraits scroll past it
+// on the right. A staff page is one long run of faces, and a heading that
+// scrolls away leaves a tall empty column that reads as a mistake.
+//
+// Every person carries their slug as an id, so /staff#pastor-name lands on
+// them. When the block is set to "Everyone" the three groups are drawn in
+// STAFF_GROUPS order with a subhead each, and an empty group is skipped rather
 // than left as a heading over nothing.
-//
-// The bio is a native <details>, so it costs no JavaScript and the keyboard works.
 //
 // A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
 import SectionHeading from '@/components/SectionHeading.astro';
@@ -19,7 +25,6 @@ import SanityImage from '@/components/SanityImage.astro';
 import PortableText from '@/components/PortableText';
 import { surfaceClass } from '@/lib/surfaces';
 import { groupStaff, STAFF_GROUPS, type StaffGroup } from '@/lib/church-derive';
-import { plain } from '@/lib/nav-href';
 
 interface StaffMember {
   _id?: string;
@@ -66,105 +71,128 @@ const GROUP_LABELS: Record<StaffGroup, string> = {
 const named = members.filter((m) => m?.name);
 const grouped = groupStaff(named);
 
-// "Everyone" draws all three groups with a subhead each; any other choice draws one
-// unlabelled run of cards, because the section heading has already said who they are.
+// "Everyone" draws all three groups with a subhead each; any other choice draws
+// one unlabelled run of people, because the heading has already said who they
+// are. A block that picked ONE group and typed no heading of its own borrows
+// that group's name for the narrow column, which is the only thing that would
+// have gone there anyway.
 const showGroups = group === 'all';
+const groupHeading = !showGroups ? GROUP_LABELS[group as StaffGroup] : undefined;
+const bandHeading = heading || groupHeading;
+
 const shown: { key: StaffGroup; label: string; people: StaffMember[] }[] = showGroups
   ? STAFF_GROUPS.map((g) => ({ key: g, label: GROUP_LABELS[g], people: grouped[g] })).filter(
       (g) => g.people.length > 0,
     )
   : [{ key: 'support' as StaffGroup, label: '', people: named }];
 
-// Names arrive stega-encoded in the Studio preview, and the payload is written in
-// characters that a regex reads as whitespace, so splitting a raw name on whitespace
-// shatters it into dozens of fake words. plain() strips the payload first.
-const firstName = (name: string) => plain(name).split(/\s+/)[0] || plain(name);
-
-// Group subheads are h3, so a card name under one is h4; with no subheads the card
-// name is the h3 directly beneath the section's h2. Heading order is never skipped.
+// Group subheads are h3, so a person's name under one is h4; with no subheads
+// the name is the h3 directly beneath the section's h2. Heading order is never
+// skipped.
 const NameTag = showGroups ? 'h4' : 'h3';
+
+// THE CROP. These portraits are shot against the glass and are portrait
+// already, so the 4:5 frame is close to the picture's own shape and the only
+// question left is where the head sits in it. An editor who MOVED the hotspot
+// has answered that; everyone else gets `object-top`, which is right for a
+// standing figure and wrong for nothing. The hotspot is not applied by the CDN
+// here (SanityImage crops only when a caller passes an explicit height), so it
+// is translated into an object-position instead.
+function cropFor(photo: any): { style?: string; className: string } {
+  const x = photo?.hotspot?.x;
+  const y = photo?.hotspot?.y;
+  if (typeof x === 'number' && typeof y === 'number') {
+    return {
+      style: `object-position: ${(x * 100).toFixed(2)}% ${(y * 100).toFixed(2)}%;`,
+      className: 'h-full w-full object-cover',
+    };
+  }
+  return { className: 'h-full w-full object-cover object-top' };
+}
 ---
 
-<section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
-    <SectionHeading
-      eyebrow={eyebrow}
-      headline={heading}
-      headingId={headingId}
-      level="h2"
-      align="left"
-      tone="church"
-      rule
-    />
+<section class={bg} aria-labelledby={bandHeading ? headingId : undefined}>
+  <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
+    <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)]">
+      <div
+        class="col-span-12 self-start lg:sticky lg:top-[calc(var(--header-offset)+1rem)] lg:col-span-4"
+      >
+        <SectionHeading
+          eyebrow={eyebrow}
+          headline={bandHeading}
+          headingId={headingId}
+          level="h2"
+          align="left"
+          tone="church"
+        />
+      </div>
 
-    {
-      shown.map((section) => (
-        <div class="mt-section-md">
-          {section.label && (
-            <h3 class="font-display text-h3 leading-tight text-foreground">{section.label}</h3>
-          )}
+      <div class="col-span-12 mt-9 lg:col-span-8 lg:col-start-5 lg:mt-0">
+        {
+          shown.map((section, sectionIndex) => (
+            <div class={sectionIndex === 0 ? '' : 'mt-section-md'}>
+              {section.label && (
+                <h3 class="mb-8 font-body text-h3 font-normal text-foreground">{section.label}</h3>
+              )}
 
-          <div
-            class:list={[
-              'grid grid-cols-1 gap-l sm:grid-cols-2 md:grid-cols-3',
-              section.label ? 'mt-l' : '',
-            ]}
-            data-stagger-grid
-          >
-            {section.people.map((person) => (
-              <article id={person.slug || undefined} class="scroll-mt-[var(--header-offset)]">
-                {person.photo?.asset ? (
-                  <div class="aspect-[4/5] w-full overflow-hidden border-t-2 border-gold">
-                    <SanityImage
-                      source={person.photo}
-                      width={480}
-                      sizes="(min-width: 768px) 30vw, (min-width: 640px) 45vw, 100vw"
-                      quality={78}
-                      class="h-full w-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div
-                    class="aspect-[4/5] w-full border-t-2 border-gold bg-surface-soft"
-                    aria-hidden="true"
-                  />
-                )}
+              <div class="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3" data-stagger-grid>
+                {section.people.map((person) => {
+                  const crop = cropFor(person.photo);
+                  return (
+                    <article
+                      id={person.slug || undefined}
+                      class="scroll-mt-[var(--header-offset)] border-t border-hair pt-6"
+                    >
+                      {person.photo?.asset ? (
+                        <div class="aspect-[4/5] w-full overflow-hidden">
+                          <SanityImage
+                            source={person.photo}
+                            width={480}
+                            sizes="(min-width: 1024px) 18vw, (min-width: 768px) 22vw, 45vw"
+                            quality={78}
+                            class={crop.className}
+                            style={crop.style}
+                          />
+                        </div>
+                      ) : (
+                        <div class="aspect-[4/5] w-full bg-surface-soft" aria-hidden="true" />
+                      )}
 
-                <NameTag class="mt-m font-display text-xl leading-snug text-foreground">
-                  {person.name}
-                </NameTag>
+                      <NameTag class="mt-4 font-body text-2xl leading-snug font-normal text-foreground">
+                        {person.name}
+                      </NameTag>
 
-                {person.role && (
-                  <p class="mt-xs text-sm text-brown-mid dark:text-gold">{person.role}</p>
-                )}
+                      {person.role && (
+                        <p class="mt-1 font-ui text-ui text-gold-ink">{person.role}</p>
+                      )}
 
-                {person.email && (
-                  <a
-                    href={`mailto:${person.email}`}
-                    class="mt-xs inline-block text-sm text-link underline-offset-4 hover:underline"
-                  >
-                    {person.email}
-                  </a>
-                )}
+                      {person.email && (
+                        <a
+                          href={`mailto:${person.email}`}
+                          class="mt-2 inline-block font-body text-sm break-words text-foreground underline decoration-gold underline-offset-4"
+                        >
+                          {person.email}
+                        </a>
+                      )}
 
-                {person.phone && <p class="mt-xs text-sm text-foreground/75">{person.phone}</p>}
+                      {person.phone && (
+                        <p class="mt-2 font-body text-sm text-muted-foreground">{person.phone}</p>
+                      )}
 
-                {showBios !== false && person.bio && (
-                  <details class="group mt-s">
-                    <summary class="cursor-pointer list-none text-xs font-semibold tracking-eyebrow text-brown-mid uppercase underline-offset-4 hover:underline dark:text-gold [&::-webkit-details-marker]:hidden">
-                      About {firstName(person.name)}
-                    </summary>
-                    <PortableText
-                      value={person.bio}
-                      className="mt-s text-[0.9375rem] leading-relaxed text-foreground/85"
-                    />
-                  </details>
-                )}
-              </article>
-            ))}
-          </div>
-        </div>
-      ))
-    }
+                      {showBios !== false && person.bio && (
+                        <PortableText
+                          value={person.bio}
+                          className="mt-3 font-body text-base break-words [&>p+p]:mt-4 [&>p]:my-0 [&_p]:text-muted-foreground"
+                        />
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </section>

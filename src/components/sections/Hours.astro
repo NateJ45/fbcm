@@ -1,8 +1,8 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: the hours band. Three columns, all of them READ FROM SITE
-// SETTINGS rather than typed into the block.
+// Page-builder block: the hours band. Three ruled rows, all of them READ FROM
+// SITE SETTINGS rather than typed into the block.
 //
 // THE BLOCK STORES NO HOURS, AND THAT IS THE POINT (CLAUDE.md rule 15). The
 // office hours, the pastors' hours and the street address are each typed once,
@@ -11,6 +11,13 @@
 // week the office changes its Friday closing time. The editor gets the eyebrow
 // and the heading, which are about THIS page; the hours themselves stay where
 // every other surface reads them from.
+//
+// THE SHAPE (art-direction pass, 2026-09-21, task 10). Three columns of small
+// grey type became three ruled rows: the label on the left in the UI face at
+// gold-ink, the hours themselves on the right at h3 in old-style figures, a
+// hairline over each row. A time is the thing a visitor came for, so it is set
+// as the largest type on the band, and old-style figures keep a row of numbers
+// from standing up like capitals in the middle of a page of Castoro.
 //
 // Surface (background / muted) is assigned by SectionRenderer, so the band
 // takes its place in the page cadence like any other content block.
@@ -71,41 +78,49 @@ interface PtBlock {
 
 const officeHours = (settings?.officeHours ?? null) as PtBlock[] | null;
 const pastoralHours = (settings?.pastoralHours ?? null) as PtBlock[] | null;
+
+// The one row grammar, written once: label left, value right, hairline over.
+const ROW = 'grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] border-t border-hair py-6';
+const LABEL = 'col-span-12 font-ui text-ui text-gold-ink lg:col-span-3';
+const VALUE =
+  'col-span-12 mt-2 font-body text-h3 leading-snug text-foreground oldstyle lg:col-span-8 lg:col-start-5 lg:mt-0 [&_p]:my-0';
 ---
 
 <section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
-    <SectionHeading eyebrow={eyebrow} headline={heading} headingId={headingId} align="left" rule />
+  <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
+    <SectionHeading
+      eyebrow={eyebrow}
+      headline={heading}
+      headingId={headingId}
+      level="h2"
+      align="left"
+      tone="church"
+    />
 
-    <div class="mt-l grid grid-cols-1 gap-l md:grid-cols-3 md:gap-section-md">
+    <div class="mt-section-md">
       {
         officeHours && (
-          <div>
-            <h3 class="text-xs tracking-eyebrow text-foreground/80 uppercase">Church office</h3>
-            <PortableTextStatic value={officeHours} className="mt-s space-y-2 text-foreground/85" />
+          <div class={ROW}>
+            <h3 class={LABEL}>Church office</h3>
+            <PortableTextStatic value={officeHours} className={`${VALUE} space-y-1`} />
           </div>
         )
       }
 
       {
         pastoralHours && (
-          <div>
-            <h3 class="text-xs tracking-eyebrow text-foreground/80 uppercase">
-              Pastors, by appointment
-            </h3>
-            <PortableTextStatic
-              value={pastoralHours}
-              className="mt-s space-y-2 text-foreground/85"
-            />
+          <div class={ROW}>
+            <h3 class={LABEL}>Pastors, by appointment</h3>
+            <PortableTextStatic value={pastoralHours} className={`${VALUE} space-y-1`} />
           </div>
         )
       }
 
       {
         addressLines.length > 0 && (
-          <div>
-            <h3 class="text-xs tracking-eyebrow text-foreground/80 uppercase">Where to find us</h3>
-            <address class="mt-s space-y-1 text-foreground/85 not-italic">
+          <div class={ROW}>
+            <h3 class={LABEL}>Where to find us</h3>
+            <address class:list={[VALUE, 'space-y-1 not-italic']}>
               {addressLines.map((line) => (
                 <span class="block">{line}</span>
               ))}

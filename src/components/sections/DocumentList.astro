@@ -2,19 +2,25 @@
 // Safe to edit by hand
 // scaffold-file: church
 // Page-builder block: documents to download. Newsletters, annual reports, the
-// constitution. Each row is a gold top rule, a serif title that is the link, the
-// year in small caps and an optional note, which is the plainest thing that can
-// carry a list somebody scans for one year and then leaves.
+// constitution. Since the art-direction pass (2026-09-21, task 10) the rows
+// are the same editorial list the blog archive took in task 8: the year on the
+// left in the UI face, the title as the link in Castoro roman, the note under
+// it, and a hairline under each row. The 2px gold rule that used to sit over
+// every row is gone; one hairline per row is the division, and the year group
+// headings are what give the list its landmarks.
 //
-// Rows are sorted newest first by sortDocsByYearDesc() in church-derive.ts (undated
-// rows last, ties by title), so the order is derived, never typed twice. A row
-// pointing at an uploaded file gets the `download` attribute; a row pointing at
-// somebody else's page must not, because you cannot download a website.
+// Rows are sorted newest first by sortDocsByYearDesc() in church-derive.ts
+// (undated rows last, ties by title), so the order is derived, never typed
+// twice. A row pointing at an uploaded file gets the `download` attribute; a
+// row pointing at somebody else's page must not, because you cannot download a
+// website.
 //
 // When the sorted list spans two or more distinct years, groupDocsByYear()
-// (same module) partitions it into year subheadings, descending, undated
-// last. A single-year or undated-only list comes back as one ungrouped
-// group (heading: null), so it renders exactly as it always has.
+// (same module) partitions it into year subheadings, descending, undated last.
+// A single-year or undated-only list comes back as one ungrouped group
+// (heading: null), so it renders as one straight run of rows. The year
+// headings are set in old-style figures at h2, which is the one place a
+// numeral is allowed to be the largest thing on a band.
 //
 // A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
 import SectionHeading from '@/components/SectionHeading.astro';
@@ -41,8 +47,8 @@ interface Props {
 const { eyebrow, heading, docs = [], surface = 'background', headingId } = Astro.props as Props;
 const bg = surfaceClass(surface);
 
-// sortDocsByYearDesc needs a title on every row, so rows without one are dropped
-// first: a document nobody can name is not a row a visitor can use.
+// sortDocsByYearDesc needs a title on every row, so rows without one are
+// dropped first: a document nobody can name is not a row a visitor can use.
 const sorted = sortDocsByYearDesc(
   docs.filter((d): d is ListedDocument & { title: string } => !!d?.title),
 );
@@ -50,7 +56,7 @@ const groups = groupDocsByYear(sorted);
 ---
 
 <section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+  <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
     <SectionHeading
       eyebrow={eyebrow}
       headline={heading}
@@ -58,7 +64,6 @@ const groups = groupDocsByYear(sorted);
       level="h2"
       align="left"
       tone="church"
-      rule
     />
 
     {
@@ -67,13 +72,12 @@ const groups = groupDocsByYear(sorted);
           {
             /* Only rendered when the list spans two or more distinct years
                (groupDocsByYear returns a single ungrouped entry otherwise).
-               Plain serif h3, same left edge as everything else on the page,
-               no gold rule of its own: the section's own SectionHeading
-               already carries that. */
+               Castoro roman in old-style figures, on the same left edge as
+               everything else on the page. */
             group.heading && (
               <h3
                 class:list={[
-                  'font-display text-h4 text-foreground',
+                  'font-body text-h2 leading-none font-normal text-foreground oldstyle',
                   i === 0 ? 'mt-section-md' : 'mt-section-lg',
                 ]}
               >
@@ -81,37 +85,43 @@ const groups = groupDocsByYear(sorted);
               </h3>
             )
           }
-          <ul class:list={[group.heading ? 'mt-m' : 'mt-section-md']} role="list">
+          <ul class:list={[group.heading ? 'mt-8' : 'mt-section-md']} role="list">
             {group.docs.map((doc) => {
               const href = doc.fileUrl || doc.url;
               const isFile = !!doc.fileUrl;
               return (
-                <li class="border-t-2 border-gold py-m">
-                  <div class="flex flex-wrap items-baseline justify-between gap-s">
+                <li class="grid grid-cols-12 items-baseline gap-x-[clamp(16px,2.5vw,40px)] border-b border-hair py-6">
+                  <span class="col-span-12 font-ui text-[0.8125rem] tracking-[.06em] text-muted-foreground md:col-span-2">
+                    {/* The year is the row's left-hand meta, exactly as the
+                        date is on the blog list. Inside a YEAR GROUP it would
+                        be the group's own heading repeated on every row, so it
+                        is left blank there and the column keeps the indent. */}
+                    {!group.heading && typeof doc.year === 'number' ? doc.year : ''}
+                  </span>
+
+                  <span class="col-span-12 md:col-span-9 md:col-start-3">
                     {href ? (
                       <a
                         href={href}
                         download={isFile ? true : undefined}
                         target={isFile ? undefined : '_blank'}
                         rel={isFile ? undefined : 'noopener noreferrer'}
-                        class="font-display text-[1.125rem] leading-snug text-foreground underline-offset-4 hover:underline"
+                        class="block font-body text-h3 leading-snug font-normal text-foreground transition-colors hover:text-gold-ink"
                       >
                         {doc.title}
                       </a>
                     ) : (
-                      <p class="font-display text-[1.125rem] leading-snug text-foreground">
+                      <span class="block font-body text-h3 leading-snug font-normal text-foreground">
                         {doc.title}
-                      </p>
-                    )}
-
-                    {typeof doc.year === 'number' && (
-                      <span class="text-xs font-semibold tracking-eyebrow text-brown-mid uppercase dark:text-gold">
-                        {doc.year}
                       </span>
                     )}
-                  </div>
 
-                  {doc.note && <p class="mt-xs text-sm text-foreground/75">{doc.note}</p>}
+                    {doc.note && (
+                      <span class="mt-2.5 block max-w-[56ch] font-body text-body text-muted-foreground">
+                        {doc.note}
+                      </span>
+                    )}
+                  </span>
                 </li>
               );
             })}

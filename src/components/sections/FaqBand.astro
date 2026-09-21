@@ -1,23 +1,33 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: questions and answers on the indigo field. Native <details>
-// elements, so the keyboard works, find-in-page finds a closed answer, and no
-// JavaScript ships. The first question opens by default so the band never reads as
-// a stack of closed doors.
+// Page-builder block: questions and answers on the indigo field. Native
+// <details> elements, so the keyboard works, find-in-page finds a closed
+// answer, and no JavaScript ships. The first question opens by default so the
+// band never reads as a stack of closed doors.
 //
-// SELF_CONTAINED: the band is dark by type. Everything on it uses text-bg rather
-// than text-cream, because --color-cream flips to ink under .dark while --color-bg
-// stays paper-white in both themes, and this band stays dark in both.
+// The heading sits in the narrow left column and the questions run down the
+// right, which is the grammar every other band on these pages took in task 8.
 //
-// THE ANSWER'S COLOUR IS AN OVERRIDE, and it has to be. PortableText.tsx hard-codes
-// text-foreground on every paragraph, list and list item, which is right on paper
-// and invisible on this band: in light mode text-foreground is the dark ink the band
-// is already painted with, so the answers rendered as blank space. Passing a colour
-// on the wrapper does not help, because the class on the <p> beats the class on its
-// parent. The arbitrary descendant variants below ([&_p]:...) generate
-// `.wrapper p { ... }`, which outranks a single class, so they win without anyone
-// having to edit the shared PortableText component and re-render every other page.
+// The only ornament is the plus sign, which rotates 45 degrees into a cross
+// when its question opens. It is the one thing on the band that has to say
+// "this opens", so it is in the UI face, in gold, at the size of the question
+// it belongs to.
+//
+// SELF_CONTAINED: the band is dark by type. Everything on it uses text-bg
+// rather than text-cream, because --color-cream flips to ink under .dark
+// (globals.css) while --color-bg stays paper-white, and this band stays dark
+// in both themes.
+//
+// THE ANSWER'S COLOUR IS AN OVERRIDE, and it has to be. PortableText.tsx
+// hard-codes text-foreground on every paragraph, list and list item, which is
+// right on paper and invisible on this band: in light mode text-foreground is
+// the dark ink the band is already painted with, so the answers rendered as
+// blank space. Passing a colour on the wrapper does not help, because the
+// class on the <p> beats the class on its parent. The arbitrary descendant
+// variants below ([&_p]:...) generate `.wrapper p { ... }`, which outranks a
+// single class, so they win without anyone having to edit the shared
+// PortableText component and re-render every other page.
 import SectionHeading from '@/components/SectionHeading.astro';
 import PortableText from '@/components/PortableText';
 
@@ -38,42 +48,47 @@ const { eyebrow, heading, items = [], headingId } = Astro.props as Props;
 const validItems = items.filter((i) => i?.question);
 ---
 
-<section class="bg-indigo-field" aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
-    <SectionHeading
-      eyebrow={eyebrow}
-      headline={heading}
-      headingId={headingId}
-      level="h2"
-      align="left"
-      tone="band"
-      rule
-    />
+<section class="bg-indigo-field text-bg" aria-labelledby={heading ? headingId : undefined}>
+  <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
+    <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)]">
+      <div
+        class="col-span-12 self-start lg:sticky lg:top-[calc(var(--header-offset)+1rem)] lg:col-span-4"
+      >
+        <SectionHeading
+          eyebrow={eyebrow}
+          headline={heading}
+          headingId={headingId}
+          level="h2"
+          align="left"
+          tone="band"
+        />
+      </div>
 
-    {
-      validItems.length > 0 && (
-        <div class="mt-section-md border-t border-taupe/25">
-          {validItems.map((item, i) => (
-            <details class="group border-b border-taupe/25" open={i === 0}>
-              <summary class="flex cursor-pointer list-none items-start justify-between gap-m py-m font-display text-[1.1875rem] leading-snug text-bg [&::-webkit-details-marker]:hidden">
-                <span>{item.question}</span>
-                <span
-                  aria-hidden="true"
-                  class="mt-1 shrink-0 text-lg leading-none text-gold transition-transform duration-200 group-open:rotate-45"
-                >
-                  +
-                </span>
-              </summary>
-              {item.answer && (
-                <PortableText
-                  value={item.answer}
-                  className="pb-m text-[0.9375rem] leading-relaxed text-bg/85 [&_a]:text-gold [&_li]:text-bg/85 [&_p]:text-bg/85 [&_strong]:text-bg [&_ul]:text-bg/85"
-                />
-              )}
-            </details>
-          ))}
-        </div>
-      )
-    }
+      {
+        validItems.length > 0 && (
+          <div class="col-span-12 mt-9 lg:col-span-8 lg:col-start-5 lg:mt-0">
+            {validItems.map((item, i) => (
+              <details class="group" open={i === 0}>
+                <summary class="flex cursor-pointer list-none justify-between gap-6 border-b border-bg/15 py-5 font-body text-[1.375rem] leading-snug font-normal text-bg [&::-webkit-details-marker]:hidden">
+                  <span>{item.question}</span>
+                  <span
+                    aria-hidden="true"
+                    class="shrink-0 font-ui text-2xl leading-none text-gold transition-transform duration-200 group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                {item.answer && (
+                  <PortableText
+                    value={item.answer}
+                    className="max-w-[62ch] pb-6 font-body text-body text-bg/80 [&_a]:text-gold [&_li]:text-bg/80 [&_p]:text-bg/80 [&_strong]:text-bg [&_ul]:text-bg/80"
+                  />
+                )}
+              </details>
+            ))}
+          </div>
+        )
+      }
+    </div>
   </div>
 </section>
