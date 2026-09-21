@@ -13,11 +13,19 @@
 // decorative. Reduced-motion users get a single static image (the CSS
 // animation is disabled in that media query).
 //
-// There is NO script in this file any more. The pause button and the dot
-// indicators went with the art-direction pass (plan 3 task 6): the hero is a
-// photograph under a gradient, not a carousel with controls. Hovering or
-// focusing inside the frame still pauses both animations, and reduced-motion
-// visitors still get one static frame.
+// The dot indicators went with the art-direction pass (plan 3 task 6): the hero
+// is a photograph under a gradient, not a carousel with a position readout.
+//
+// THE PAUSE CONTROL STAYS, and it is a WCAG requirement rather than a taste
+// call. A five-frame cross-fade auto-advances for far longer than five seconds
+// beside other content, so 2.2.2 (Pause, Stop, Hide) asks for a mechanism the
+// visitor can OPERATE. Hovering the frame pauses it and reduced-motion freezes
+// it, but neither is a control: one needs a pointer held still, the other is a
+// system preference. So the button came back in the new grammar, drawn as the
+// `link` CTA variant is (a rule under the label, no box, no icon) and sitting
+// on the hero's own bottom-right gutter. It renders only when there is more
+// than one frame, and it hides under reduced motion, where there is nothing
+// moving to stop. The script below is the only one in this file.
 
 import SanityImage from '@/components/SanityImage.astro';
 import { frameAnimationDelays } from '@/lib/hero-frames';
@@ -88,5 +96,51 @@ const fewFrames = slides.length <= 3;
       style="background: linear-gradient(to top, rgba(23,21,31,.94) 0%, rgba(23,21,31,.62) 34%, rgba(23,21,31,.12) 62%, rgba(23,21,31,0) 80%), linear-gradient(to right, rgba(23,21,31,.55) 0%, rgba(23,21,31,0) 55%);"
       aria-hidden="true"
     ></div>
+
+    {/* Deliberately OUTSIDE the .hero-entry-stagger content wrapper (it is not
+        even in the same subtree), so it does not fade up with the words: a
+        control that arrives half a second late is a control the visitor cannot
+        reach yet. It is rendered after the overlay so it paints on top of it
+        and receives the click. */}
+    {isSlideshow && (
+      <button
+        type="button"
+        data-hero-pause
+        aria-pressed="false"
+        class="font-ui text-ui font-semibold text-bg/80 hover:text-bg border-b border-current pb-1 focus-visible:ring-2 focus-visible:ring-bg absolute right-gutter bottom-[clamp(20px,4vh,40px)] z-10 motion-reduce:hidden"
+      >
+        Pause
+      </button>
+    )}
   </>
+)}
+
+{isSlideshow && (
+  <script is:inline>
+    (function () {
+      // Toggles .is-paused on the [data-hero-fade] wrapper, which the CSS uses
+      // to pause BOTH animations at once (animation-play-state with no
+      // per-animation value stops every animation on the element). Bound the
+      // same idempotent way the site's other inline scripts are, so Astro View
+      // Transitions cannot double-bind it or leave it wired to a detached
+      // button.
+      function initHeroPause() {
+        var box = document.querySelector('[data-hero-fade]');
+        if (!box) return;
+        var button = document.querySelector('[data-hero-pause]');
+        if (!button || button.dataset.wired === '1') return;
+        button.dataset.wired = '1';
+        button.addEventListener('click', function () {
+          var paused = box.classList.toggle('is-paused');
+          button.setAttribute('aria-pressed', paused ? 'true' : 'false');
+          button.textContent = paused ? 'Play' : 'Pause';
+        });
+      }
+      initHeroPause();
+      if (!window.__heroPauseBound) {
+        window.__heroPauseBound = true;
+        document.addEventListener('astro:page-load', initHeroPause);
+      }
+    })();
+  </script>
 )}
