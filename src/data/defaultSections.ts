@@ -12,13 +12,13 @@
 //
 // Each block carries a _key for parity with Sanity-seeded pageBuilder arrays.
 // The seed script (scripts/seed-core.mjs) imports from this file so these
-// arrays are the single source of truth â€” a fresh clone renders the same copy
+// arrays are the single source of truth: a fresh clone renders the same copy
 // that a seeded project receives as its first content.
 
 import { site } from './site';
 import type { PageBuilderBlock } from '@/lib/pageBuilder.types';
 
-// â”€â”€ Home page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ---- Home page ------------------------------------------------------------
 
 export const DEFAULT_HOME_SECTIONS: PageBuilderBlock[] = [
   {
@@ -27,7 +27,7 @@ export const DEFAULT_HOME_SECTIONS: PageBuilderBlock[] = [
     eyebrow: 'Your City, Your State.',
     headline: 'Design That Feels Like Home.',
     subhead:
-      'We help people create spaces that work as hard as they do â€” and feel good to come home to.',
+      'We help people create spaces that work as hard as they do, and feel good to come home to.',
     size: 'tall',
     primaryCta: { _type: 'ctaBlock', label: 'Start a Conversation', href: '/contact' },
     secondaryCta: { _type: 'ctaBlock', label: 'See Our Work', href: '/portfolio' },
@@ -119,9 +119,9 @@ export const DEFAULT_HOME_SECTIONS: PageBuilderBlock[] = [
   },
 ];
 
-// â”€â”€ About page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ---- About page ------------------------------------------------------------
 
-// â”€â”€ Services page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ---- Services page ------------------------------------------------------------
 
 export const DEFAULT_SERVICES_SECTIONS: PageBuilderBlock[] = [
   {
@@ -185,7 +185,7 @@ export const DEFAULT_SERVICES_SECTIONS: PageBuilderBlock[] = [
   },
 ];
 
-// â”€â”€ Process page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ---- Process page ------------------------------------------------------------
 
 export const DEFAULT_PROCESS_SECTIONS: PageBuilderBlock[] = [
   {
@@ -210,7 +210,7 @@ export const DEFAULT_PROCESS_SECTIONS: PageBuilderBlock[] = [
           {
             _type: 'span',
             _key: 'default-process-overview-p1-s1',
-            text: 'Add your process steps in Sanity Studio under Process Steps. Once seeded, this page will display your full step-by-step workflow in detailed cards. No guesswork, no surprises â€” you will always know exactly where things stand.',
+            text: 'Add your process steps in Sanity Studio under Process Steps. Once seeded, this page will display your full step-by-step workflow in detailed cards. No guesswork, no surprises. You will always know exactly where things stand.',
           },
         ],
       },

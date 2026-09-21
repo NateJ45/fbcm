@@ -1398,40 +1398,6 @@ a:focus-visible .zoom-img img,
   margin-top: 0.5rem;
 }
 
-/* ---- Image zoom + warm tint hover treatment.
-   Apply .img-zoom to the overflow:hidden image wrapper div.
-   Add .img-tint (project cards) or .img-tint.img-tint-light (journal cards)
-   as a child div inside the wrapper. ---- */
-@media (prefers-reduced-motion: no-preference) {
-  .img-zoom img,
-  .img-zoom .img-zoom-target {
-    transition: transform 1500ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .img-tint {
-    transition: background 400ms ease;
-  }
-}
-.img-tint {
-  position: absolute;
-  inset: 0;
-  background: rgba(var(--tint-rgb), 0);
-  pointer-events: none;
-}
-.group:hover .img-zoom img,
-.group:hover .img-zoom .img-zoom-target,
-.img-zoom:hover img,
-.img-zoom:hover .img-zoom-target {
-  transform: scale(1.06);
-}
-.group:hover .img-zoom .img-tint,
-.img-zoom:hover .img-tint {
-  background: rgba(var(--tint-rgb), 0.15);
-}
-.group:hover .img-zoom .img-tint.img-tint-light,
-.img-zoom:hover .img-tint.img-tint-light {
-  background: rgba(var(--tint-rgb), 0.08);
-}
-
 /* ---- Grid stagger entrance. Add data-stagger-grid to any card grid container.
    The BaseLayout observer adds .is-staggered on intersection. ---- */
 [data-stagger-grid] > * {

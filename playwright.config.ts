@@ -1,4 +1,3 @@
-// PORTABLE: canonical copy - ncs-astro-sanity-starter is the library of record for this file
 import { defineConfig, devices } from '@playwright/test';
 
 // =============================================================================

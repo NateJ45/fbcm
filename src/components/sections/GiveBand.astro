@@ -27,8 +27,14 @@
 //
 // SELF_CONTAINED: when it IS dark, the ink on it is text-bg (paper-white in both
 // themes) rather than text-cream (which flips to ink under .dark).
+import { getImage } from 'astro:assets';
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
+// The same photograph the mobile menu sheet, the footer and ScriptureBand use.
+// When this band paints indigo it is a dark FIELD with nothing in it but words,
+// and the church's own window under it is what keeps the field theirs rather
+// than a flat brand colour. See the note on the render below.
+import menuWindowAsset from '@/assets/menu-window.jpg';
 import { getSiteSettings } from '@/lib/queries';
 import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
 
@@ -76,6 +82,24 @@ const {
 // The one surface decision, stated once. See the note at the top of the file.
 const dark = !lastBeforeFooter && !prevIsDark;
 
+// THE INDIGO GIVE FIELD CARRIES THE WINDOW (art-direction pass, task 13).
+//
+// The paper form of this band sits between photographs and needs no ground of
+// its own. The indigo form does: on /give it opens the page, so it is the
+// first thing a visitor sees, and a flat indigo rectangle with a headline on
+// it is the one composition on this site that could belong to any church.
+// Masked into the right of the band at 10%, exactly the treatment Footer.astro
+// gives the same file, so the two dark fields read as the same room.
+//
+// Decorative: no alt text, hidden from the tree, and eager only in as much as
+// the browser decides, because it is never the LCP element at 10% opacity.
+// 900w at quality 60 is what the footer measured as generous for this.
+const texture = dark
+  ? await getImage({ src: menuWindowAsset, width: 900, quality: 60, format: 'jpg' })
+  : null;
+const textureWidth = texture?.options.width ?? 900;
+const textureHeight = Math.round(textureWidth * (menuWindowAsset.height / menuWindowAsset.width));
+
 const settings: SectionSiteSettings | null =
   settingsProp !== undefined ? settingsProp : await getSiteSettings();
 const href: string | undefined = buttonUrl || settings?.givingUrl || undefined;
@@ -91,11 +115,29 @@ const giveCta = href
 ---
 
 <section
-  class={dark ? 'bg-indigo-field text-bg' : 'bg-surface-soft'}
+  class:list={[
+    'relative isolate overflow-hidden',
+    dark ? 'bg-indigo-field text-bg' : 'bg-surface-soft',
+  ]}
   aria-labelledby={heading ? headingId : undefined}
 >
+  {
+    texture && (
+      <img
+        src={texture.src}
+        alt=""
+        aria-hidden="true"
+        width={textureWidth}
+        height={textureHeight}
+        loading="lazy"
+        decoding="async"
+        class="pointer-events-none absolute top-0 right-0 h-full w-2/3 object-cover opacity-10"
+        style="mask-image: radial-gradient(ellipse at top right, #000, transparent 72%); -webkit-mask-image: radial-gradient(ellipse at top right, #000, transparent 72%);"
+      />
+    )
+  }
   <div
-    class="mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] px-gutter py-section-lg"
+    class="relative mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] px-gutter py-section-lg"
   >
     <div class="col-span-12 lg:col-span-7">
       <SectionHeading
