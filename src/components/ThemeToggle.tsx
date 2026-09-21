@@ -43,7 +43,36 @@ export default function ThemeToggle() {
       if ((localStorage.getItem(KEY) ?? 'system') === 'system') applyTheme('system');
     };
     mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
+
+    // THE PAGE CARRIES MORE THAN ONE OF THESE. Since plan 3 the control sits
+    // both at the end of the header row and in the footer's base rail, and each
+    // instance holds its own copy of the theme in React state. Without this the
+    // one you did not click keeps drawing the previous icon until the next page
+    // load: the applied theme is right (both read and write the same
+    // localStorage key), but the two icons disagree, which reads as a bug.
+    //
+    // `theme:change` is our own event, fired by cycle() below, and covers the
+    // instances on THIS page. `storage` is the browser's, fires only in OTHER
+    // tabs, and covers the same site open twice. Neither re-applies the theme,
+    // because whoever fired it already did; they only sync the icon.
+    const onThemeChange = (e: Event) => {
+      const next = (e as CustomEvent<{ theme: Theme }>).detail?.theme;
+      if (next) setTheme(next);
+    };
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== KEY) return;
+      const next = (e.newValue as Theme | null) ?? 'system';
+      setTheme(next);
+      applyTheme(next);
+    };
+    window.addEventListener('theme:change', onThemeChange);
+    window.addEventListener('storage', onStorage);
+
+    return () => {
+      mq.removeEventListener('change', onChange);
+      window.removeEventListener('theme:change', onThemeChange);
+      window.removeEventListener('storage', onStorage);
+    };
   }, []);
 
   const cycle = () => {
@@ -51,6 +80,9 @@ export default function ThemeToggle() {
     setTheme(next);
     localStorage.setItem(KEY, next);
     applyTheme(next);
+    // Tell every other instance on the page. The listener above only sets
+    // state, so this cannot loop.
+    window.dispatchEvent(new CustomEvent('theme:change', { detail: { theme: next } }));
   };
 
   const label =

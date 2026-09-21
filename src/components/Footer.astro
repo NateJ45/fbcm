@@ -90,6 +90,11 @@ const footerTexture = await getImage({
   quality: 60,
   format: 'jpg',
 });
+// Real dimensions on the tag, the same rule the wordmark below states. This one
+// is absolutely positioned and sized in CSS so it cannot shrink-wrap or shift
+// layout, but the numbers cost nothing and the file keeps one habit.
+const textureWidth = footerTexture.options.width ?? 900;
+const textureHeight = Math.round(textureWidth * (menuWindowAsset.height / menuWindowAsset.width));
 
 interface NewsletterConfig {
   enabled?: boolean;
@@ -274,6 +279,8 @@ const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold up
     src={footerTexture.src}
     alt=""
     aria-hidden="true"
+    width={textureWidth}
+    height={textureHeight}
     loading="lazy"
     decoding="async"
     class="pointer-events-none absolute top-0 right-0 h-[60%] w-1/2 object-cover opacity-10"
@@ -309,7 +316,7 @@ const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold up
           {posterTime}
         </p>
         {streetLine && (
-          <p class="mt-[clamp(12px,1.8vh,20px)] font-body text-lede text-bg/75 italic">
+          <p class="mt-[clamp(12px,1.8vh,20px)] font-body text-lede font-normal text-bg/75 italic">
             {streetLine}
           </p>
         )}
