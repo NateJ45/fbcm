@@ -49,16 +49,16 @@
 //     not emphasis, and the script accent is the older, louder device.
 //   - Unset or not found, `headline` renders exactly the string it always did.
 //
-// Gold rule (Plan 2a, Task 5):
-//   - rule?: draws the 56x2px gold rule BENEATH the heading. The church
-//     identity (spec section 2.3) gives every heading that rule, and the
-//     church blocks all ask for it, so it is drawn HERE once rather than in
-//     eight components. It defaults to false, so no existing caller changes a
-//     single byte of rendered HTML (npm run parity compare is the gate).
-//   - It REPLACES the hairline under the eyebrow. Drawing both puts two rules
-//     inside one heading block, which is decoration, not structure, and the
-//     church spec asks for exactly one (spec 2.3). So `rule` suppresses the
-//     older hairline rather than sitting beside it.
+// Gold rule (RETIRED 2026-09-20, plan 3 task 2):
+//   - `rule?` is still ACCEPTED and now IGNORED. The 56x2px gold bar beneath a
+//     heading, and the bronze hairline beneath the eyebrow it used to replace,
+//     are both gone: the art-direction pass gives a heading its authority from
+//     the face, the size and the space around it, not from an ornament under
+//     every one of them. Two rules inside one block was already decoration
+//     rather than structure; one rule under every heading on the site was the
+//     same argument at page scale.
+//   - The prop survives so the ~dozen existing callers that pass `rule` keep
+//     compiling. Do not pass it in new code; Task 13 removes the callers.
 //
 // Rich subhead (same card):
 //   - subheadRich?: the optional portable-text twin of `subhead`, allowing bold
@@ -94,7 +94,7 @@ interface Props {
    * already in play: one accent per heading.
    */
   headingAccent?: string;
-  /** Draw the 56x2px gold rule beneath the heading (church identity). */
+  /** Accepted and ignored since 2026-09-20. See the note in the header. */
   rule?: boolean;
   class?: string;
 }
@@ -114,6 +114,10 @@ const {
   class: extraClass = '',
 } = Astro.props as Props;
 
+// `rule` is destructured only so a caller passing it does not land in the
+// rest object; nothing reads it any more. See the header note.
+void rule;
+
 // Split the headline around the script-accent word when provided.
 // When not found or not set, `found` is false and we render `headline` plain.
 const {
@@ -130,12 +134,18 @@ const colour = scriptFound
 
 const richSubhead = hasInlineRich(subheadRich);
 
+// The art-direction heading system (2026-09-20, plan 3 task 2).
+// h1 is the TITLING face: Castoro Titling is capitals-only at one weight, so
+// the utility sets the casing rather than trusting the copy. h2 and h3 are
+// Castoro roman at the same single weight, which is why every level is
+// font-normal: there is no weight axis to reach for, and `font-light` would
+// silently fall back to the 400 face while telling a maintainer otherwise.
 const headingClass =
   level === 'h1'
-    ? 'font-display text-h1 leading-headline-tight tracking-[-0.02em]'
+    ? 'font-display uppercase text-h1 leading-none tracking-[0.01em] font-normal'
     : level === 'h2'
-      ? 'font-display text-h2 leading-tight'
-      : 'font-display text-h3 leading-tight';
+      ? 'font-body text-h2 leading-[1.05] font-normal max-w-[22ch]'
+      : 'font-body text-h3 leading-[1.15] font-normal';
 
 const wrapperAlign = align === 'center' ? 'text-center mx-auto' : 'text-left';
 // text-bg, never text-cream, on anything that sits on a FIXED dark band:
@@ -145,38 +155,16 @@ const toneHeadline = tone === 'default' || tone === 'church' ? 'text-foreground'
 // Default tone swapped from text-secondary (Warm Taupe, fails AA at 12px) to
 // text-foreground/80 (4.77:1 on Cream). Inverse tone (used on FinalCta's
 // dark Charcoal panel) keeps cream-on-dark.
-const toneEyebrow =
-  tone === 'band'
-    ? 'text-gold'
-    : tone === 'church'
-      ? 'text-brown-mid dark:text-gold'
-      : tone === 'inverse'
-        ? 'text-bg/75'
-        : 'text-foreground/80';
-const toneSub =
-  tone === 'band' ? 'text-taupe' : tone === 'inverse' ? 'text-bg/80' : 'text-foreground/80';
-
-// Bronze hairline accent beneath the eyebrow. Matches the brand-stripe
-// signature now repeating on every marketing card so section headings read
-// with the same editorial vocabulary. On inverse tone (dark FinalCta panel)
-// the hairline switches to lifted cream so it stays visible.
-const accentColor = tone === 'default' || tone === 'church' ? 'bg-primary/60' : 'bg-bg/40';
-const accentAlign = align === 'center' ? 'mx-auto' : '';
+// Eyebrow colour. On paper (default / church) the eyebrow is the darkened
+// gold that carries a label at AA; on a dark band or an inverse panel it is
+// the brand gold itself, which is a fill and an on-dark ink.
+const toneEyebrow = tone === 'band' || tone === 'inverse' ? 'text-gold' : 'text-gold-ink';
+// Subhead colour: full-strength foreground on paper, lifted paper on dark.
+const toneSub = tone === 'band' || tone === 'inverse' ? 'text-bg/85' : 'text-foreground';
 ---
 
 <div class:list={[wrapperAlign, 'max-w-3xl', extraClass]}>
-  {
-    eyebrow && (
-      <>
-        <p class:list={['text-xs tracking-eyebrow uppercase', toneEyebrow]}>{eyebrow}</p>
-        {rule ? (
-          <div class="mb-m" />
-        ) : (
-          <div class:list={['mt-s mb-m h-px w-12', accentAlign, accentColor]} aria-hidden="true" />
-        )}
-      </>
-    )
-  }
+  {eyebrow && <p class:list={['mb-5 font-ui text-ui font-medium', toneEyebrow]}>{eyebrow}</p>}
   {
     headline &&
       (level === 'h1' ? (
@@ -235,10 +223,9 @@ const accentAlign = align === 'center' ? 'mx-auto' : '';
         </h3>
       ))
   }
-  {rule && <div class:list={['mt-m h-0.5 w-14 bg-gold', accentAlign]} aria-hidden="true" />}
   {
     (subhead || richSubhead) && (
-      <p class:list={['mt-m text-lg', toneSub]}>
+      <p class:list={['lede mt-5 font-body text-lede font-normal italic', toneSub]}>
         {richSubhead ? <InlineRich value={subheadRich} /> : subhead}
       </p>
     )

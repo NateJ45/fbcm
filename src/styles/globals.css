@@ -678,28 +678,59 @@
   translate: 0 0;
 }
 
-/* Animated active-link underline. Used in the primary nav: an underline that
-   slides in from the center on hover and stays full-width when the link is
-   the active page. */
+/* Animated active-link underline. Used in the primary nav.
+   Redrawn 2026-09-20 (plan 3, task 2): a 1px gold rule that wipes in from the
+   LEFT, so it starts where the word starts and reads like a rule being drawn
+   rather than a bar growing out of the middle. It animates `right` from 100%
+   to 0 rather than a transform: a scaled 2px line renders at a fractional
+   device pixel mid-animation and shimmers, and a transform on the ::after also
+   fights the letterform's own left edge. `right` keeps the line 1px the whole
+   way across. */
 .nav-underline {
   position: relative;
 }
 .nav-underline::after {
   content: '';
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 100%;
   bottom: -0.35rem;
-  height: 2px;
-  width: 100%;
-  background-color: var(--primary);
-  transform: translateX(-50%) scaleX(0);
-  transform-origin: center;
-  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  height: 1px;
+  background: var(--color-gold);
+  transition: right 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .nav-underline:hover::after,
 .nav-underline:focus-visible::after,
 .nav-underline[aria-current='page']::after {
-  transform: translateX(-50%) scaleX(1);
+  right: 0;
+}
+
+/* Full-bleed to the viewport edge on ONE side, from inside the page container.
+   A band that runs its picture off the right edge of the screen while its text
+   stays on the shared left edge is the art-direction pass's main asymmetry, and
+   this is the one place the arithmetic lives. The margin is the larger pull of
+   two: the gutter itself (when the viewport is narrower than the container), or
+   the gutter plus the leftover half-margin either side of a centred container
+   (when it is wider). `min()` picks the more negative of the two.
+   Under 900px there is no leftover margin and a one-sided bleed reads as a
+   mistake, so both collapse to a plain symmetrical gutter pull. */
+.bleed-right {
+  margin-right: min(
+    calc(-1 * var(--spacing-gutter)),
+    calc((100vw - var(--container-content)) / -2 - var(--spacing-gutter))
+  );
+}
+.bleed-left {
+  margin-left: min(
+    calc(-1 * var(--spacing-gutter)),
+    calc((100vw - var(--container-content)) / -2 - var(--spacing-gutter))
+  );
+}
+@media (max-width: 900px) {
+  .bleed-right,
+  .bleed-left {
+    margin-inline: calc(-1 * var(--spacing-gutter));
+  }
 }
 
 /* Reading progress bar. Fixed thin bronze track + an inner fill that scales
@@ -773,12 +804,16 @@
   transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   transition-duration: 440ms;
 }
+/* 2026-09-20 (plan 3, task 2): the drop shadow is gone. The art-direction pass
+   has no cards, so nothing should be floating off the paper; the class stays
+   only so the callers still compile until Task 13 removes them. The lift is
+   kept because it costs nothing and reads as a press, not as depth. */
 .card-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 34px -18px rgba(42, 45, 49, 0.22);
+  box-shadow: none;
 }
 .dark .card-lift:hover {
-  box-shadow: 0 16px 34px -18px rgba(0, 0, 0, 0.6);
+  box-shadow: none;
 }
 
 /* Slower lift for image cards. The home Featured Work / Featured Journal cards
@@ -914,10 +949,13 @@
    considered editorial composition rather than a hard cut-in.
    Reduced-motion users get the final state instantly — no animation, no
    stagger, content visible at full opacity. */
+/* Retimed 2026-09-20 (plan 3, task 2): slower, further, and further apart, so
+   the hero resolves line by line the way a title sequence does rather than
+   arriving all at once with a small hop. */
 @keyframes hero-fade-up {
   from {
     opacity: 0;
-    transform: translateY(0.5rem);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
@@ -926,22 +964,22 @@
 }
 .hero-entry-stagger > * {
   opacity: 0;
-  animation: hero-fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: hero-fade-up 1000ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
 }
 .hero-entry-stagger > *:nth-child(1) {
   animation-delay: 0ms;
 }
 .hero-entry-stagger > *:nth-child(2) {
-  animation-delay: 120ms;
+  animation-delay: 150ms;
 }
 .hero-entry-stagger > *:nth-child(3) {
-  animation-delay: 240ms;
+  animation-delay: 300ms;
 }
 .hero-entry-stagger > *:nth-child(4) {
-  animation-delay: 360ms;
+  animation-delay: 450ms;
 }
 .hero-entry-stagger > *:nth-child(5) {
-  animation-delay: 480ms;
+  animation-delay: 600ms;
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-entry-stagger > * {

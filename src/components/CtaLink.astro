@@ -16,8 +16,9 @@
 //     label on it clears AA either way.
 //   - "outline" — indigo outline on light; under onDark, a white outline,
 //     which is what the indigo and brown bands ask for.
-//   - "link" — NOT a button. A plain text link in --link with the shared
-//     nav-underline hover, for a place where a row of buttons would be four
+//   - "link" — NOT a button. A plain text link in --link, underlined on the
+//     baseline, with a trailing arrow that nudges 4px on hover. For a place
+//     where a row of buttons would be four
 //     buttons shouting at once (the link-cards band). Added 2026-09-19 so that
 //     ctaBlock href resolution stays in ONE file: a component drawing its own
 //     <a> would have had to re-implement resolveHref() below, and the second
@@ -39,7 +40,9 @@
 // Write gold/outline in new code. The aliases are for callers that have not
 // been visited yet, not a second family wearing the first one's clothes.
 //
-// All variants share generous padding, uppercase tracking, and a 44×44 minimum tap target.
+// All variants are set in the UI face at the shared label size, and the two
+// button variants share the inset double rule, em-based padding and a 44x44
+// minimum tap target.
 
 interface CtaBlock {
   label?: string;
@@ -127,16 +130,21 @@ const newTab = cta?.openInNewTab ?? isExternal;
 
 // Focus ring offset uses --background by default, but under onDark we offset
 // against transparent so the ring still reads on the photographic surface.
-// The text-link look shares nothing with the button base: no pill padding, no
-// uppercase tracking, no 44px floor (WCAG 2.5.8 exempts a link in a block of
-// text, and this one sits at the foot of a card's prose).
+// The text-link look shares nothing with the button base: no plate, no
+// em padding, no 44px floor (WCAG 2.5.8 exempts a link in a block of text, and
+// this one sits at the foot of a card's prose).
+// The text link is the UI face, underlined on the baseline, with a trailing
+// arrow that nudges on hover. `group` is on the <a> so the arrow can react to
+// the link's hover without a second hover target.
 const linkClasses = onDark
-  ? 'nav-underline inline-block text-sm font-semibold text-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
-  : 'nav-underline inline-block text-sm font-semibold text-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+  ? 'group font-ui text-ui font-semibold border-b border-current pb-1 inline-flex gap-2 items-center text-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+  : 'group font-ui text-ui font-semibold border-b border-current pb-1 inline-flex gap-2 items-center text-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
+// The button plate. Padding is in em so it tracks the label's own size, and
+// the 44px floor stays for the tap target.
 const baseClasses = onDark
-  ? 'press-tactile inline-flex items-center justify-center min-h-[44px] px-l py-s text-xs font-semibold uppercase tracking-[0.18em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
-  : 'press-tactile inline-flex items-center justify-center min-h-[44px] px-l py-s text-xs font-semibold uppercase tracking-[0.18em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+  ? 'press-tactile inline-flex items-center justify-center min-h-[44px] font-ui text-ui font-semibold px-[1.6em] py-[1.05em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+  : 'press-tactile inline-flex items-center justify-center min-h-[44px] font-ui text-ui font-semibold px-[1.6em] py-[1.05em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 // The two looks, and the two aliases that resolve into them. The aliases are
 // resolved HERE, in one expression, rather than at each call site: that is the
@@ -145,16 +153,28 @@ const baseClasses = onDark
 // classes, not a bronze button sitting on indigo.
 const resolved = variant === 'primary' ? 'gold' : variant === 'secondary' ? 'outline' : variant;
 
+// THE PLATE SIGNATURE (2026-09-20, plan 3 task 2). Every button carries an
+// inset double rule: a 3px band of its own fill, then a 1px line of its label
+// colour drawn just inside the edge. It is two inset box-shadows rather than a
+// border plus a pseudo-element, so the rule costs no extra box and cannot fall
+// out of sync with a rounded corner.
 const variantClasses = (() => {
   if (resolved === 'gold') {
-    return 'bg-gold text-indigo-field hover:bg-gold/90';
+    return 'bg-gold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] hover:-translate-y-px';
   }
   // outline. text-bg, not text-cream: --color-cream FLIPS to ink in dark mode
   // (see globals.css .dark), while --color-bg stays paper-white in both, which
   // is what a fixed dark band needs.
+  // onDark draws the same double rule with a pseudo-element instead of the
+  // two inset shadows. The shadow trick needs the BUTTON'S OWN background as
+  // the covering layer, and an onDark outline button has none: it sits on a
+  // fixed indigo or brown band whose colour this component cannot know, and
+  // --color-foreground flips between themes while the band does not. The
+  // pseudo-element draws the 1px line 3px inside the edge over whatever is
+  // behind it, in both themes, on every band.
   return onDark
-    ? 'border border-bg/70 text-bg hover:bg-bg/10 hover:border-bg'
-    : 'border border-indigo text-indigo hover:bg-indigo/5';
+    ? 'relative border border-bg text-bg before:pointer-events-none before:absolute before:inset-[3px] before:rounded-[1px] before:border before:border-current hover:bg-bg/10'
+    : 'border border-foreground text-foreground shadow-[inset_0_0_0_3px_var(--color-bg),inset_0_0_0_4px_var(--color-foreground)]';
 })();
 ---
 
@@ -167,4 +187,14 @@ const variantClasses = (() => {
   rel={newTab ? 'noopener noreferrer' : undefined}
 >
   {label}
+  {
+    resolved === 'link' && (
+      <span
+        aria-hidden="true"
+        class="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+      >
+        &#8594;
+      </span>
+    )
+  }
 </a>

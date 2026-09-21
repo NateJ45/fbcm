@@ -1,50 +1,27 @@
 ---
 // Safe to edit by hand
-// Optional ornament divider between sections that share a background color
-// and need a visual break. Reserved for moments where the alternating
-// bg-background / bg-muted color cadence ISN'T doing the work — most section
-// transitions don't need this, color change is enough.
+// A hairline between two sections that share a background colour and need a
+// visual break. Most transitions do not need it: the alternating paper /
+// bg-soft cadence is usually enough on its own.
 //
-// Three variants:
-//   - `ornament` (default): small bronze ✺ glyph, generous vertical space
-//   - `line`:               hairline rule with bronze accent dot in the middle
-//   - `dots`:               three bronze dots, looser and quieter
+// 2026-09-20 (plan 3, task 2): the sun glyph, the accent dot and the three
+// dots are gone. The art-direction pass draws every division on this site with
+// the same hairline, so a divider is a RULE, not an ornament, and it sits
+// inside the page container on the shared left edge rather than floating in
+// the middle of the band (CLAUDE.md rule 17, one grammar per page).
 //
-// Visual reference: matches the journal post divider treatment so the
-// pattern reads as a consistent brand mark rather than generic editorial chrome.
+// `variant` is still accepted and ignored so the existing callers compile.
 
 interface Props {
+  /** Accepted and ignored since 2026-09-20. Every divider is the hairline. */
   variant?: 'ornament' | 'line' | 'dots';
   /** Override the default fluid vertical padding. */
   class?: string;
 }
 
-const { variant = 'ornament', class: extraClass = '' } = Astro.props as Props;
+const { class: extraClass = '' } = Astro.props as Props;
 ---
 
-<div class:list={['mx-auto max-w-content px-m py-m text-center', extraClass]} aria-hidden="true">
-  {
-    variant === 'ornament' && (
-      <span class="font-display text-2xl tracking-[0.6em] text-link select-none">✺</span>
-    )
-  }
-
-  {
-    variant === 'line' && (
-      <div class="relative mx-auto flex max-w-md items-center justify-center">
-        <span class="block h-px w-full bg-border-soft" aria-hidden="true" />
-        <span class="absolute inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-      </div>
-    )
-  }
-
-  {
-    variant === 'dots' && (
-      <span class="inline-flex items-center gap-3 text-link/70 select-none" aria-hidden="true">
-        <span class="inline-block h-1 w-1 rounded-full bg-current" />
-        <span class="inline-block h-1 w-1 rounded-full bg-current" />
-        <span class="inline-block h-1 w-1 rounded-full bg-current" />
-      </span>
-    )
-  }
+<div class:list={['mx-auto max-w-content px-gutter', extraClass]} aria-hidden="true">
+  <hr class="border-0 border-t border-hair" />
 </div>
