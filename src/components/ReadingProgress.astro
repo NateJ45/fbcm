@@ -1,7 +1,9 @@
 ---
 // Safe to edit by hand
-// Reading-progress bar. Fixed thin bronze track + an inner fill that scales
-// horizontally (0 → 1) as the user scrolls through the article body.
+// Reading-progress bar. A fixed 2px gold hairline that scales horizontally
+// (0 → 1) as the user scrolls through the article body. The height and the
+// colour live in globals.css (.reading-progress / .reading-progress__bar);
+// `bg-gold h-[2px]` is what those two rules resolve to.
 //
 // Why scale instead of width: scale animates on the GPU and avoids the layout
 // thrash that animating width would cause on every scroll tick.

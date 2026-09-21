@@ -21,12 +21,12 @@ const { entries, emptyMessage = 'Nothing here yet.' } = Astro.props as Props;
 
 {
   entries.length > 0 ? (
-    <div class="grid grid-cols-1 gap-l md:grid-cols-2 lg:grid-cols-3" data-stagger-grid>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3" data-stagger-grid>
       {entries.map((entry) => (
         <JournalCard entry={entry as any} preview={entryIsSermonPreview(entry)} />
       ))}
     </div>
   ) : (
-    <p class="max-w-prose text-lg text-foreground/80">{emptyMessage}</p>
+    <p class="max-w-[62ch] text-body text-muted-foreground">{emptyMessage}</p>
   )
 }

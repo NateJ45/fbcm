@@ -7,7 +7,11 @@
 //   - bullet and numbered lists
 //   - strong, em, and link marks (external links get rel="noopener")
 //
-// Visual classes mirror PortableText.tsx so output is visually identical.
+// Visual classes mirror PortableText.tsx so output is visually identical. Both
+// were redrawn in the art-direction pass (PortableText.tsx in task 8, this one
+// in task 11) and they have to be changed together: the headings are Castoro
+// ROMAN, because the display face is capitals-only and was setting the privacy
+// policy's sub-heads in full caps at h2.
 // Does NOT handle inlineImage, pullQuote, or other journal-specific custom types.
 // Use PortableText.tsx (React island) for content with those blocks.
 
@@ -113,23 +117,23 @@ const items: RenderedItem[] = value.map((block) => {
     return {
       kind: 'listItem',
       listType: block.listItem,
-      html: `<li class="text-foreground">${inner}</li>`,
+      html: `<li>${inner}</li>`,
     };
   }
 
   const style = block.style ?? 'normal';
   let html: string;
   if (style === 'h2') {
-    html = `<h2 class="mt-section-md mb-m font-display text-h2 text-foreground scroll-mt-24">${inner}</h2>`;
+    html = `<h2 class="mt-14 mb-5 font-body text-h2 font-normal text-foreground scroll-mt-24">${inner}</h2>`;
   } else if (style === 'h3') {
-    html = `<h3 class="mt-l mb-s font-display text-h3 text-foreground scroll-mt-24">${inner}</h3>`;
+    html = `<h3 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground scroll-mt-24">${inner}</h3>`;
   } else if (style === 'h4') {
-    html = `<h4 class="mt-m mb-s font-display text-h4 text-foreground scroll-mt-24">${inner}</h4>`;
+    html = `<h4 class="mt-8 mb-2 font-body text-h4 font-normal text-foreground scroll-mt-24">${inner}</h4>`;
   } else if (style === 'blockquote') {
-    html = `<blockquote class="my-l border-l-4 border-primary pl-m italic text-foreground/90">${inner}</blockquote>`;
+    html = `<blockquote class="my-10 border-l border-gold pl-6 font-body text-h3 font-normal italic text-foreground">${inner}</blockquote>`;
   } else {
     // normal (and any unrecognised style)
-    html = `<p class="my-m text-foreground">${inner}</p>`;
+    html = `<p class="my-5 font-body text-body leading-[1.72] text-foreground/90">${inner}</p>`;
   }
   return { kind: 'html', html };
 });
@@ -144,8 +148,8 @@ while (i < items.length) {
     const tag = listType === 'bullet' ? 'ul' : 'ol';
     const cls =
       listType === 'bullet'
-        ? 'my-m list-disc pl-l space-y-1 text-foreground'
-        : 'my-m list-decimal pl-l space-y-1 text-foreground';
+        ? 'my-5 list-disc pl-6 space-y-2 font-body text-body leading-[1.72] text-foreground/90 marker:text-gold'
+        : 'my-5 list-decimal pl-6 space-y-2 font-body text-body leading-[1.72] text-foreground/90 marker:text-gold';
     let inner = item.html;
     i += 1;
     while (i < items.length) {

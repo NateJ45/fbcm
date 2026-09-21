@@ -4,6 +4,15 @@
 // When `href` is provided, renders as a link; otherwise as a static badge.
 // Since plan 2b task 15 the category routes exist (/blog/category/<slug>/), so
 // the chips on /blog are real links and one of them is the page you are on.
+//
+// THE PILL IS GONE (art-direction pass, 2026-09-20, task 11). It was a filled,
+// rounded, bordered capsule at 0.7rem with 0.18em tracking, one of four chip
+// shapes the site had. What is left is a square-cornered box drawn in a single
+// hairline, set in the UI face at the shared label size, which is the same
+// rule-and-label grammar the ruled bands and the pager use. The chip for the
+// list on screen inverts to ink-on-paper rather than taking a gold fill: gold
+// carries the eyebrows on this site, and a gold chip beside a gold eyebrow
+// reads as two of the same thing.
 
 interface Props {
   title?: string;
@@ -22,16 +31,13 @@ interface Props {
 const { title, href, tooltip, tone = 'default', active = false } = Astro.props as Props;
 if (!title) return null;
 
-const base =
-  'inline-flex items-center px-s py-1 text-[0.7rem] font-semibold uppercase tracking-[0.18em] rounded-full';
-// Gold fill + navy text for the active chip, never gold text on cream: gold is
-// a fill colour in this design system (see the --color-gold note in globals.css
-// and the contrast assertions in theme-tokens.test.ts).
+const base = 'inline-flex items-center font-ui text-ui px-3 py-2 rounded-sm border';
+// Ink-on-paper for the chip you are standing on, a hairline box for the rest.
 const toneClass = active
-  ? 'bg-gold text-primary border border-gold'
+  ? 'bg-foreground text-background border-foreground'
   : tone === 'inverse'
-    ? 'bg-bg/15 text-bg border border-bg/25'
-    : 'bg-muted text-foreground/80 border border-border-soft';
+    ? 'border-bg/30 text-bg'
+    : 'border-hair text-foreground/80';
 ---
 
 {
@@ -41,7 +47,7 @@ const toneClass = active
       class:list={[
         base,
         toneClass,
-        active ? '' : 'transition-colors hover:bg-accent hover:text-foreground',
+        active ? '' : 'transition-colors hover:border-gold hover:text-foreground',
       ]}
       title={tooltip}
       aria-current={active ? 'page' : undefined}

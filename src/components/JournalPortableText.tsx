@@ -70,32 +70,35 @@ function videoEmbedSrc(url: string): string | null {
 
 function makeComponents(): PortableTextComponents {
   const seen = new Map<string, number>();
-  let firstNormalRendered = false;
 
   return {
     block: {
-      // Default paragraph — drop cap on the first paragraph only, via CSS ::first-letter.
-      normal: ({ children }) => {
-        const isFirst = !firstNormalRendered;
-        firstNormalRendered = true;
-        return (
-          <p
-            className={`my-m leading-relaxed text-foreground/90 text-lg${isFirst ? 'prose-drop-cap' : ''}`}
-          >
-            {children}
-          </p>
-        );
-      },
-      // Lead paragraph — slightly larger, lighter weight, italic-feeling intro.
+      // THE POST BODY (art-direction pass, 2026-09-20, task 11).
+      // Every heading in here is Castoro ROMAN (font-body), never the titling
+      // face: Castoro Titling is capitals-only, so `font-display` on a body
+      // heading would shout a sentence-case sub-head in full caps. The one
+      // titling line on a post is its <h1>, in the page header.
+      //
+      // The drop cap that used to ride on the first paragraph is gone. It had
+      // never actually rendered: the class was interpolated with no separating
+      // space (`text-lg${isFirst ? 'prose-drop-cap' : ''}`), so the first
+      // paragraph of all 142 posts carried one dead class named
+      // `text-lgprose-drop-cap` and lost its size into the bargain. A device
+      // nobody has ever seen on this site is not a device worth restoring.
+      normal: ({ children }) => (
+        <p className="my-5 font-body text-body leading-[1.72] text-foreground/90">{children}</p>
+      ),
+      // Lead paragraph — the standfirst size, italic, same as a lede anywhere
+      // else on the site. Never font-light: Castoro has one weight.
       lead: ({ children }) => (
-        <p className="my-l text-[1.35rem] leading-relaxed font-light text-foreground first:mt-0">
+        <p className="my-6 font-body text-lede font-normal text-foreground italic first:mt-0">
           {children}
         </p>
       ),
       h2: ({ children }) => (
         <h2
           id={makeHeadingId(seen, children)}
-          className="mt-section-lg mb-m scroll-mt-24 font-display text-h2 text-foreground"
+          className="mt-14 mb-5 scroll-mt-24 font-body text-h2 font-normal text-foreground"
         >
           {children}
         </h2>
@@ -103,7 +106,7 @@ function makeComponents(): PortableTextComponents {
       h3: ({ children }) => (
         <h3
           id={makeHeadingId(seen, children)}
-          className="mt-section-md mb-s scroll-mt-24 font-display text-h3 text-foreground"
+          className="mt-10 mb-3 scroll-mt-24 font-body text-h3 font-normal text-foreground"
         >
           {children}
         </h3>
@@ -111,24 +114,29 @@ function makeComponents(): PortableTextComponents {
       h4: ({ children }) => (
         <h4
           id={makeHeadingId(seen, children)}
-          className="mt-l mb-s scroll-mt-24 font-display text-h4 text-foreground"
+          className="mt-8 mb-2 scroll-mt-24 font-body text-h4 font-normal text-foreground"
         >
           {children}
         </h4>
       ),
+      // A quotation inside the body: the gold rule down its left edge is the
+      // same hairline-and-accent device the bands use, so the quote belongs to
+      // the page rather than arriving from the starter's prose stylesheet.
       blockquote: ({ children }) => (
-        <blockquote className="prose-blockquote">{children}</blockquote>
+        <blockquote className="my-10 border-l border-gold pl-6 font-body text-h3 font-normal text-foreground italic">
+          {children}
+        </blockquote>
       ),
     },
 
     list: {
       bullet: ({ children }) => (
-        <ul className="my-m list-disc space-y-2 pl-l text-lg leading-relaxed text-foreground/90">
+        <ul className="my-5 list-disc space-y-2 pl-6 font-body text-body leading-[1.72] text-foreground/90 marker:text-gold">
           {children}
         </ul>
       ),
       number: ({ children }) => (
-        <ol className="my-m list-decimal space-y-2 pl-l text-lg leading-relaxed text-foreground/90">
+        <ol className="my-5 list-decimal space-y-2 pl-6 font-body text-body leading-[1.72] text-foreground/90 marker:text-gold">
           {children}
         </ol>
       ),
@@ -213,15 +221,17 @@ function makeComponents(): PortableTextComponents {
         //     centered, regardless of the editor's chosen size (standard /
         //     wide / full) — width-bleed treatments only make sense for
         //     landscape compositions.
+        //
+        // FULL MEASURE, every size (art-direction pass, task 11). The editor's
+        // standard/wide/full choice used to mean three different widths, one
+        // of which broke out of the reading column with negative margins. A
+        // picture inside a post now sits on the same left edge and the same
+        // measure as the words around it, which is the page's one grammar
+        // (CLAUDE.md rule 17); a portrait shot still caps so it cannot run
+        // taller than the viewport.
         const dims = parseSanityAssetDimensions(value);
         const isPortrait = dims ? dims.height > dims.width : false;
-        const wrapperClass = isPortrait
-          ? 'my-section-md mx-auto max-w-[600px]'
-          : size === 'full'
-            ? '-mx-m md:-mx-section-lg lg:-mx-[8vw] my-section-md'
-            : size === 'wide'
-              ? 'my-section-md'
-              : 'my-l max-w-2xl mx-auto';
+        const wrapperClass = isPortrait ? 'my-10 max-w-[420px]' : 'my-10';
         return (
           <figure className={wrapperClass}>
             <img
@@ -232,10 +242,10 @@ function makeComponents(): PortableTextComponents {
               alt={value.alt ?? ''}
               loading="lazy"
               decoding="async"
-              className="h-auto w-full rounded-md"
+              className="h-auto w-full"
             />
             {value.caption && (
-              <figcaption className="mt-s text-center text-sm text-muted-foreground italic">
+              <figcaption className="mt-3 font-body text-sm text-muted-foreground italic">
                 {value.caption}
               </figcaption>
             )}
@@ -397,7 +407,7 @@ function makeComponents(): PortableTextComponents {
               })}
             </div>
             {value.caption && (
-              <figcaption className="mt-s text-center text-sm text-muted-foreground italic">
+              <figcaption className="mt-3 font-body text-sm text-muted-foreground italic">
                 {value.caption}
               </figcaption>
             )}
@@ -443,7 +453,7 @@ function makeComponents(): PortableTextComponents {
               ></iframe>
             </div>
             {value.caption && (
-              <figcaption className="mt-s text-center text-sm text-muted-foreground italic">
+              <figcaption className="mt-3 font-body text-sm text-muted-foreground italic">
                 {value.caption}
               </figcaption>
             )}

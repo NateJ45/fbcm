@@ -7,6 +7,11 @@
 //
 // Reuses PortableText for the body when Sanity content is present; falls back
 // to static HTML copy for the period before the editor publishes the doc.
+//
+// The sub-heads in that fallback are Castoro ROMAN (font-body), never the
+// titling face: Castoro Titling is capitals-only, so `font-display` here set
+// "What gets collected" in full caps on a page of plain prose. The one
+// titling line on this page is the h1 that SectionHeading draws.
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
@@ -78,7 +83,7 @@ const hasSanityBody = Boolean(page?.body);
       This page used to open on the starter's full-bleed <Hero> and then set its
       policy text in `mx-auto max-w-3xl`, which put a second left edge about
       280px in at 1280 and ran the body to roughly 90 characters a line. Every
-      other page on this site starts at the `max-w-content px-m` gutter and sets
+      other page on this site starts at the `max-w-content px-gutter` gutter and sets
       its body in the measured 52ch from src/lib/prose.ts. So does this one now:
       a SectionHeading h1 with the church's gold rule at the gutter, and the
       policy directly beneath it on the same edge, in the same measure.
@@ -89,7 +94,7 @@ const hasSanityBody = Boolean(page?.body);
       the heading's name.) */
   }
   <section class="bg-background" aria-labelledby="privacy-hero-heading">
-    <div class="mx-auto max-w-content px-m py-section-lg">
+    <div class="mx-auto max-w-content px-gutter py-section-lg">
       <SectionHeading
         eyebrow={heroEyebrow}
         headline={heroHeadline}
@@ -97,15 +102,12 @@ const hasSanityBody = Boolean(page?.body);
         headingId="privacy-hero-heading"
         level="h1"
         tone="church"
-        rule
       />
 
       <div class="mt-section-md">
         {
           lastUpdated && (
-            <p class="mb-l text-xs tracking-eyebrow text-foreground/80 uppercase">
-              Last updated: {lastUpdated}
-            </p>
+            <p class="mb-l font-ui text-ui text-gold-ink">Last updated: {lastUpdated}</p>
           )
         }
 
@@ -120,7 +122,9 @@ const hasSanityBody = Boolean(page?.body);
               </p>
 
               <div>
-                <h2 class="mb-s font-display text-h3 text-foreground">What gets collected</h2>
+                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
+                  What gets collected
+                </h2>
                 <p class="text-foreground/80">
                   When you fill out the contact form on this site, you share your name, email
                   address, and whatever details you include in your message. That information is
@@ -134,8 +138,10 @@ const hasSanityBody = Boolean(page?.body);
               </div>
 
               <div>
-                <h2 class="mb-s font-display text-h3 text-foreground">What doesn't happen</h2>
-                <ul class="list-disc space-y-1 pl-l text-foreground/80">
+                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
+                  What doesn't happen
+                </h2>
+                <ul class="list-disc space-y-1 pl-6 text-foreground/80 marker:text-gold">
                   <li>Your information is never sold.</li>
                   <li>There is no ad targeting on this site.</li>
                 </ul>
@@ -148,7 +154,9 @@ const hasSanityBody = Boolean(page?.body);
               that discloses the use of Analytics and of cookies.
             */}
               <div>
-                <h2 class="mb-s font-display text-h3 text-foreground">How traffic is measured</h2>
+                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
+                  How traffic is measured
+                </h2>
                 {!hasGa && !hasCfAnalytics && (
                   <p class="text-foreground/80">
                     This site runs no analytics at all. Visits are not counted, and nothing is
@@ -177,7 +185,7 @@ const hasSanityBody = Boolean(page?.body);
               </div>
 
               <div>
-                <h2 class="mb-s font-display text-h3 text-foreground">
+                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
                   Unsubscribing from the newsletter
                 </h2>
                 <p class="text-foreground/80">
@@ -188,7 +196,7 @@ const hasSanityBody = Boolean(page?.body);
               </div>
 
               <div>
-                <h2 class="mb-s font-display text-h3 text-foreground">
+                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
                   Questions or data requests
                 </h2>
                 <p class="text-foreground/80">
@@ -204,7 +212,7 @@ const hasSanityBody = Boolean(page?.body);
                 </p>
               </div>
 
-              <p class="border-t border-border-soft pt-l text-xs text-foreground/80">
+              <p class="border-t border-hair pt-l font-ui text-[0.8125rem] text-muted-foreground">
                 This policy was last reviewed in May 2026 and will be updated if anything meaningful
                 changes about how this site handles your data.
               </p>

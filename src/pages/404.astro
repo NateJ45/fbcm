@@ -1,9 +1,12 @@
 ---
 // Safe to edit by hand
-// Custom 404. Warm, on-brand, two clear paths back. No search (there isn't one).
+// Custom 404. Warm, on-brand, three clear paths back. No search (there isn't one).
 //
-// Layout: two-column on desktop (text + photograph), stacked on mobile. The
-// photo is sourced from Sanity (the notFoundPage singleton's heroImage) and
+// Layout: the interior image hero. The photograph is full-bleed under the two
+// gradients in HeroBackground with the words on the bottom-left gutter, which
+// is what every other hero on this site does, and the header overlays it the
+// same way. The photo is sourced from Sanity (the notFoundPage singleton's
+// heroImage) and
 // pipes through the same SanityImage CDN/transform pipeline as every other
 // photo on the site. There is no code-drawn fallback photo any more (rule
 // 11: the previous fallback was a leftover Reid Design asset ref, "Studio
@@ -13,7 +16,8 @@
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getNotFoundPage, getSiteSettings } from '@/lib/queries';
-import SanityImage from '@/components/SanityImage.astro';
+import HeroBackground from '@/components/HeroBackground.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
 
 const [notFoundPage, siteSettings] = await Promise.all([
@@ -56,63 +60,86 @@ const tertiaryCta = asCta(
 );
 
 const photo = notFoundPage?.heroImage ?? null;
-const caption = notFoundPage?.heroImage?.caption ?? '';
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription} siteSettings={siteSettings} noindex>
-  <section
-    class:list={[
-      'mx-auto grid max-w-content grid-cols-1 items-center gap-section-md px-m py-section-lg',
-      photo && 'md:grid-cols-[1fr_1.1fr]',
-    ]}
-    aria-labelledby="not-found-heading"
-  >
-    {
-      /* Text column. Two clear paths back — no search (there isn't one).
-        Centered on mobile so the lone-element page reads as a sympathetic
-        "you're off-path" moment; left-aligned on desktop where the
-        two-column layout needs the text anchored beside the photo column. */
-    }
-    <div class="text-center md:text-left">
-      <p class="mb-s text-xs tracking-eyebrow text-foreground/80 uppercase">{eyebrow}</p>
-      <h1
-        id="not-found-heading"
-        class="font-display text-h1 leading-headline-tight text-foreground"
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+  siteSettings={siteSettings}
+  overlayHeader={!!photo}
+  noindex
+>
+  {
+    /* THE 404 IS A HERO NOW (art-direction pass, 2026-09-20, task 11).
+      It used to be a two-column band: words in a centred column on mobile,
+      the tower photograph beside them in a rounded panel, with the caption
+      set in an uppercase label under it. So the one page on this site whose
+      job is to look like the site looked like nothing else on it.
+      It is the interior hero instead: the photograph full-bleed under the
+      same two gradients every other hero uses, the words on the bottom-left
+      gutter, the headline in the titling capitals. Same component
+      (HeroBackground), same gradient, same left edge.
+
+      The caption is dropped with the panel. A credit line over a photograph
+      the visitor is reading an apology on is furniture, and the alt text on
+      the image still describes it. */
+  }
+  {
+    photo ? (
+      <section
+        class="relative isolate flex min-h-[72svh] flex-col justify-end overflow-hidden bg-accent-dark text-bg"
+        aria-labelledby="not-found-heading"
       >
-        {headline}
-      </h1>
-      <p class="mx-auto mt-m max-w-xl text-lg leading-relaxed text-foreground/80 md:mx-0">
-        {body}
-      </p>
+        <HeroBackground images={[photo]} />
 
-      <div class="mt-l flex flex-wrap justify-center gap-m md:justify-start">
-        <CtaLink cta={primaryCta} variant="gold" />
-        <CtaLink cta={secondaryCta} variant="outline" />
-        <CtaLink cta={tertiaryCta} variant="outline" />
-      </div>
-    </div>
+        <div class="relative mx-auto w-full max-w-content px-gutter pt-[clamp(72px,12vh,128px)] pb-[clamp(40px,7vh,72px)]">
+          <p class="mb-[clamp(18px,3vh,32px)] inline-flex items-center gap-3.5 font-ui text-ui font-medium">
+            <span class="h-px w-11 bg-gold" aria-hidden="true" />
+            <span>{eyebrow}</span>
+          </p>
 
-    {
-      /* Photo column. Stacks above the text on mobile (md:order-2 swaps it on
-        desktop so the eye lands on text first, photo balances right). Renders
-        only when the singleton has an image: there is no code-drawn fallback
-        photo any more (see the top-of-file note). */
-      photo && (
-        <figure class="order-first md:order-2">
-          <SanityImage
-            source={photo}
-            width={1200}
-            sizes="(min-width: 768px) 50vw, 100vw"
-            quality={75}
-            class="h-auto w-full rounded-md"
-          />
-          {caption && (
-            <figcaption class="mt-s text-right text-xs tracking-eyebrow text-foreground/80 uppercase">
-              {caption}
-            </figcaption>
-          )}
-        </figure>
-      )
-    }
-  </section>
+          <h1
+            id="not-found-heading"
+            class="max-w-[12ch] font-display text-h1 leading-none font-normal tracking-[0.01em] text-bg uppercase"
+          >
+            {headline}
+          </h1>
+
+          <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[44ch] font-body text-lede font-normal text-bg italic">
+            {body}
+          </p>
+
+          <div class="mt-[clamp(26px,4vh,40px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
+            {/* One gold button and two text links: the way back to Sunday is
+                the loud one, the other two are quieter and should look it. */}
+            <CtaLink cta={primaryCta} variant="gold" onDark />
+            <CtaLink cta={secondaryCta} variant="link" onDark />
+            <CtaLink cta={tertiaryCta} variant="link" onDark />
+          </div>
+        </div>
+      </section>
+    ) : (
+      /* No photograph in the singleton: the text hero, drawn by the same
+         SectionHeading every other page opener on this site uses. */
+      <section class="bg-background" aria-labelledby="not-found-heading">
+        <div class="mx-auto flex min-h-[42svh] max-w-content items-end px-gutter py-section-lg md:min-h-[52svh]">
+          <div>
+            <SectionHeading
+              eyebrow={eyebrow}
+              headline={headline}
+              subhead={body}
+              headingId="not-found-heading"
+              level="h1"
+              tone="church"
+            />
+            <div class="mt-[clamp(26px,4vh,40px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
+              <CtaLink cta={primaryCta} variant="gold" />
+              <CtaLink cta={secondaryCta} variant="link" />
+              <CtaLink cta={tertiaryCta} variant="link" />
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>

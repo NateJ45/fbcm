@@ -17,13 +17,16 @@ interface Props {
 const { page, pages, basePath } = Astro.props as Props;
 
 const hrefFor = (n: number) => (n <= 1 ? `${basePath}/` : `${basePath}/page/${n}/`);
-const link =
-  'font-display text-[1.05rem] text-foreground underline-offset-4 hover:underline hover:text-primary-dark transition-colors';
+// The whole pager is the UI face at label size now, and the gold is the
+// nav-underline that wipes in under a link rather than a 2px bar across the
+// top of the band. Same device the header nav and the `link` CTA use, so the
+// archive's two controls come from one family (CLAUDE.md rule 17).
+const link = 'nav-underline font-ui text-ui text-foreground transition-colors hover:text-gold-ink';
 ---
 
 {
   pages > 1 && (
-    <nav class="mt-section-md border-t-2 border-gold pt-m" aria-label="Archive pages">
+    <nav class="mt-section-md border-t border-hair-strong pt-6" aria-label="Archive pages">
       <div class="flex flex-wrap items-baseline justify-between gap-s">
         {page > 1 ? (
           <a href={hrefFor(page - 1)} class={link} rel="prev">
@@ -33,7 +36,7 @@ const link =
           <span aria-hidden="true" />
         )}
 
-        <p class="text-xs font-semibold tracking-eyebrow text-brown-mid uppercase dark:text-gold">
+        <p class="font-ui text-ui text-muted-foreground">
           Page {page} of {pages}
         </p>
 

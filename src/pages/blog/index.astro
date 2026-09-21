@@ -140,7 +140,7 @@ const schemas = [
   {
     featured.length > 0 && (
       <section class="bg-background" aria-labelledby="blog-featured-heading">
-        <div class="mx-auto max-w-content px-m py-section-lg">
+        <div class="mx-auto max-w-content px-gutter py-section-lg">
           <SectionHeading
             eyebrow="Featured"
             headline="Worth coming back for"
@@ -148,7 +148,6 @@ const schemas = [
             level="h2"
             align="left"
             tone="church"
-            rule
           />
           <div class="mt-section-md">
             <PostGrid entries={featured} />
@@ -167,7 +166,7 @@ const schemas = [
   {
     thisWeek && (
       <section class="bg-muted" aria-labelledby="blog-this-week-heading">
-        <div class="mx-auto max-w-content px-m py-section-lg">
+        <div class="mx-auto max-w-content px-gutter py-section-lg">
           <SectionHeading
             eyebrow={weekOfEyebrow(thisWeek.publishedAt)}
             headline="This week"
@@ -175,7 +174,6 @@ const schemas = [
             level="h2"
             align="left"
             tone="church"
-            rule
           />
           <div class="mt-section-md grid grid-cols-1 lg:grid-cols-2">
             <JournalCard entry={thisWeek} featured />
@@ -187,7 +185,7 @@ const schemas = [
 
   {/* ------- 4. All posts: page 1 of the archive ---------------------------- */}
   <section class="bg-background" aria-labelledby="blog-all-heading">
-    <div class="mx-auto max-w-content px-m py-section-lg">
+    <div class="mx-auto max-w-content px-gutter py-section-lg">
       <SectionHeading
         eyebrow="The archive"
         headline="All posts"
@@ -195,7 +193,6 @@ const schemas = [
         level="h2"
         align="left"
         tone="church"
-        rule
       />
 
       <div class="mt-l">

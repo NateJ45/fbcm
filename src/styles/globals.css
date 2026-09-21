@@ -748,15 +748,19 @@
   }
 }
 
-/* Reading progress bar. Fixed thin bronze track + an inner fill that scales
-   horizontally with the article's scroll progress (driven by the script in
-   ReadingProgress.astro). Sits above the header so it never gets clipped. */
+/* Reading progress bar. A 2px gold hairline that scales horizontally with the
+   article's scroll progress (driven by the script in ReadingProgress.astro).
+   Sits above the header so it never gets clipped.
+   Art-direction pass (2026-09-20, task 11): 3px of indigo became 2px of gold.
+   Indigo is the header's own ground, so the old bar read as a thickening of
+   the header rather than a measure of the article; gold is the accent every
+   other rule and eyebrow on a post already uses. */
 .reading-progress {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   background-color: transparent;
   z-index: 60;
   pointer-events: none;
@@ -764,7 +768,7 @@
 .reading-progress__bar {
   height: 100%;
   width: 100%;
-  background-color: var(--primary);
+  background-color: var(--color-gold);
   transform-origin: left center;
   transform: scaleX(0);
   transition: transform 80ms linear;

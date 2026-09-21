@@ -31,12 +31,12 @@ import { entryIsSermonPreview, weekOfEyebrow, seriesByTag, clean } from '@/lib/b
 import { slugify } from '@/lib/slugify';
 import { extractHeadings } from '@/lib/portable-text-headings';
 import { site } from '@/data/site';
-import { urlFor } from '@/lib/sanity';
+import { urlFor, parseSanityAssetDimensions } from '@/lib/sanity';
+import { PROSE_MEASURE } from '@/lib/prose';
 
 import SanityImage from '@/components/SanityImage.astro';
 import JournalPortableText from '@/components/JournalPortableText';
 import JournalCategoryChip from '@/components/JournalCategoryChip.astro';
-import PostGrid from '@/components/blog/PostGrid.astro';
 import ReadingProgress from '@/components/ReadingProgress.astro';
 import StickyCTAChip from '@/components/StickyCTAChip';
 import CaseStudyTOC from '@/components/CaseStudyTOC';
@@ -149,6 +149,17 @@ const updatedLabel =
       })
     : '';
 
+// THE COVER'S SHAPE DECIDES ITS FRAME (art-direction pass, task 11).
+// A landscape cover runs off the right edge of the screen, which is this
+// pass's one asymmetry and the same device the split hero and the image-text
+// bands use. A PORTRAIT cover cannot: bled to the edge it would stand taller
+// than the viewport and push the first line of the post off the bottom of the
+// screen, so it sits in the reading measure instead. No dimensions on the
+// asset ref (an upload from before Sanity recorded them) is treated as
+// landscape, which is what 139 of the 142 covers are.
+const coverDims = entry.coverImage?.asset ? parseSanityAssetDimensions(entry.coverImage) : null;
+const coverIsPortrait = coverDims ? coverDims.height > coverDims.width : false;
+
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
@@ -168,125 +179,112 @@ const schemas = [
   ogType="article"
   ogArticle={{ publishedAt: entry.publishedAt, author: entry.author }}
 >
-  {/* Thin bronze progress bar tracking scroll through the article. */}
+  {/* 2px gold hairline tracking scroll through the article. */}
   <ReadingProgress />
 
   {/* ------- 1. Article header --------------------------------------------- */}
   <article>
+    {
+      /* THE POST OPENER (art-direction pass, task 11). One category line in
+        the UI face, the title in the titling capitals at h1, the excerpt as
+        the lede, then the facts about the post on one ruled row. It used to
+        be six stacked lines of small type (eyebrow + date + reading time,
+        then category chips, then a byline, then a tag cloud) above the
+        title's own weight, which read as a form rather than a masthead.
+        The category chips are gone because the line above the title already
+        names the category and links to it; the tags moved to the foot of the
+        article, where "more like this" is a question the reader has. */
+    }
     <header class="bg-background">
-      <div class="mx-auto max-w-3xl px-m pt-section-lg pb-l">
-        <p class="mb-s text-xs tracking-widest text-foreground/80 uppercase">
+      <div class="mx-auto max-w-content px-gutter pt-section-lg pb-l">
+        <p class="font-ui text-ui text-gold-ink">
           <a
             href={isPreview || !primaryCategory?.slug?.current
               ? '/blog'
               : `/blog/category/${primaryCategory.slug.current}/`}
-            class="transition-colors hover:text-primary-dark">{eyebrowLabel}</a
+            class="nav-underline transition-colors hover:text-foreground">{eyebrowLabel}</a
           >
-          {
-            /* A preview's eyebrow already names its date, so the date is not
-              printed a second time beside it. */
-          }
-          {!isPreview && dateLabel && <span class="mx-xs">·</span>}
-          {!isPreview && dateLabel && <time datetime={entry.publishedAt}>{dateLabel}</time>}
-          {readMinutes > 0 && <span class="mx-xs">·</span>}
-          {readMinutes > 0 && <span>{formatReadingTime(readMinutes)}</span>}
         </p>
-        <h1 class="font-display text-h1 leading-tight text-foreground">{entry.title}</h1>
+        <h1
+          class="mt-5 max-w-[18ch] font-display text-h1 leading-none font-normal tracking-[0.01em] text-foreground uppercase"
+        >
+          {entry.title}
+        </h1>
         {
           entry.excerpt && (
-            <p class="mt-m text-xl leading-relaxed text-foreground/80">{entry.excerpt}</p>
-          )
-        }
-        {
-          Array.isArray(entry.categories) && entry.categories.length > 0 && (
-            <ul class="mt-l flex list-none flex-wrap gap-xs p-0">
-              {entry.categories.map((cat: any) => (
-                <li>
-                  <JournalCategoryChip
-                    title={cat.title}
-                    href={cat.slug?.current ? `/blog/category/${cat.slug.current}/` : undefined}
-                    tooltip={cat.description}
-                  />
-                </li>
-              ))}
-            </ul>
-          )
-        }
-        {
-          entry.author && (
-            <p class="mt-l text-sm text-muted-foreground">
-              By <span class="font-semibold text-foreground">{entry.author}</span>
-              {updatedLabel && <span> · Updated {updatedLabel}</span>}
+            <p class="lede mt-6 max-w-[46ch] font-body text-lede font-normal text-foreground/80 italic">
+              {entry.excerpt}
             </p>
           )
         }
 
         {
-          /* Tags. This is the ONLY place the 217 tags are offered, and the
-            reason they are not a cloud on /blog: here a tag means "more like
-            the thing you are already reading", which is a question a reader
-            actually has. */
+          /* The facts about the post, on one hairline-ruled row: when it was
+            written, who wrote it, how long it takes. A weekly preview's
+            category line already names its Sunday, so the date is not printed
+            a second time beside it. */
         }
-        {
-          tagChips.length > 0 && (
-            <nav class="mt-l" aria-label="Tags on this post">
-              <ul class="flex list-none flex-wrap gap-xs p-0">
-                {tagChips.map((tag) => (
-                  <li>
-                    <JournalCategoryChip title={tag.label} href={`/blog/tag/${tag.slug}/`} />
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )
-        }
+        <div
+          class="mt-10 flex flex-wrap gap-6 border-y border-hair py-3 font-ui text-[0.8125rem] text-muted-foreground"
+        >
+          {
+            !isPreview && dateLabel && (
+              <time datetime={entry.publishedAt} class="oldstyle">
+                {dateLabel}
+              </time>
+            )
+          }
+          {entry.author && <span>{entry.author}</span>}
+          {readMinutes > 0 && <span class="oldstyle">{formatReadingTime(readMinutes)}</span>}
+          {updatedLabel && <span class="oldstyle">Updated {updatedLabel}</span>}
+        </div>
       </div>
     </header>
 
     {
       /* ------- 2. Cover image ----------------------------------------------
-        Same editorial cap as the portfolio hero: max-w-4xl (~896 px) so the
-        photo reads as a feature image rather than a billboard. Sanity
-        request width matches at 1800 so we're not requesting a 1920 px
-        file for a slot that maxes around 900 px even at 2× retina. */
+        Landscape runs off the right edge of the screen; portrait stays in the
+        reading measure. See the note beside coverIsPortrait in the frontmatter
+        for why the two shapes cannot share one frame. */
     }
     {
       entry.coverImage?.asset && (
-        <figure class="mx-auto max-w-4xl px-m">
-          <SanityImage
-            source={entry.coverImage}
-            width={1800}
-            loading="eager"
-            sizes="(min-width: 920px) 896px, 100vw"
-            class="h-auto w-full rounded-md"
-          />
-          {entry.coverImage.caption && (
-            <figcaption class="mt-s text-center text-sm text-foreground/80 italic">
-              {entry.coverImage.caption}
-            </figcaption>
-          )}
-        </figure>
+        <div class="mx-auto max-w-content px-gutter">
+          <figure class:list={[coverIsPortrait ? 'max-w-[62ch]' : 'bleed-right']}>
+            <SanityImage
+              source={entry.coverImage}
+              width={coverIsPortrait ? 1000 : 2000}
+              loading="eager"
+              sizes={coverIsPortrait ? '(min-width: 920px) 62ch, 100vw' : '100vw'}
+              class="h-auto w-full"
+            />
+            {entry.coverImage.caption && (
+              <figcaption class="mt-3 max-w-[62ch] font-body text-sm text-muted-foreground italic">
+                {entry.coverImage.caption}
+              </figcaption>
+            )}
+          </figure>
+        </div>
       )
     }
 
     {
       /* ------- 3. Body + TOC ------------------------------------------------
-        Same grid structure as the portfolio case-study body: 260 px TOC
-        sidebar on lg+ when the post has h2/h3/h4 headings, single article
-        column otherwise. `lg:justify-center` centers the pair within the
-        section so empty space splits evenly. The article column is sized
-        at minmax(0, 48rem) which matches the previous max-w-3xl reading
-        width the posts were written for. */
+        The prose keeps the PAGE's left edge, at PROSE_MEASURE, and the TOC
+        sits to its right. It used to be the other way round with
+        `lg:justify-center`, which centred the pair and so gave the post a
+        second left edge about 200px in from the one the header, the cover and
+        every band below were drawn on (CLAUDE.md rule 17). The TOC is
+        `hidden lg:block` in its own component, so below lg this is a single
+        column either way. */
     }
     <div
       class:list={[
-        'mx-auto grid max-w-content grid-cols-1 gap-section-md px-m py-section-lg lg:justify-center',
-        hasToc ? 'lg:grid-cols-[260px_minmax(0,48rem)]' : 'lg:grid-cols-[minmax(0,48rem)]',
+        'mx-auto grid max-w-content grid-cols-1 gap-x-16 gap-y-section-md px-gutter py-section-lg',
+        hasToc ? 'lg:grid-cols-[minmax(0,68ch)_minmax(0,1fr)]' : 'lg:grid-cols-1',
       ]}
     >
-      {hasToc && <CaseStudyTOC client:idle headings={headings} />}
-
-      <div>
+      <div class:list={[PROSE_MEASURE]}>
         {
           /* `client:visible` defers Sanity client + the journal-specific renderers
             (inline images, before/after slider, source cards, galleries) until
@@ -330,7 +328,31 @@ const schemas = [
             </aside>
           )
         }
+
+        {
+          /* Tags, at the FOOT of the article. This is the ONLY place the 217
+            tags are offered, and the reason they are not a cloud on /blog:
+            here a tag means "more like the thing you just read", which is a
+            question a reader actually has, and asking it before they have
+            read anything is furniture. */
+        }
+        {
+          tagChips.length > 0 && (
+            <nav class="mt-section-md border-t border-hair pt-8" aria-label="Tags on this post">
+              <p class="mb-4 font-ui text-ui text-gold-ink">Tagged</p>
+              <ul class="flex list-none flex-wrap gap-2 p-0">
+                {tagChips.map((tag) => (
+                  <li>
+                    <JournalCategoryChip title={tag.label} href={`/blog/tag/${tag.slug}/`} />
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )
+        }
       </div>
+
+      {hasToc && <CaseStudyTOC client:idle headings={headings} />}
     </div>
   </article>
 
@@ -341,16 +363,56 @@ const schemas = [
       does share a tag: the band this replaced fell back to "three recent posts
       in the same category", which on 106 sermon previews meant three unrelated
       previews under a heading promising a relationship, and a reader cannot
-      tell the two apart. Nothing is better than a claim that is not true. */
+      tell the two apart. Nothing is better than a claim that is not true.
+
+      It is drawn as the RULED LIST the home page's blog band uses (date left,
+      title and excerpt in the middle, category right, a hairline under each
+      row) rather than three cover cards. Three cards directly under a post
+      that has just ended is a second gallery; a list reads as a footnote,
+      which is what this is. */
   }
   {
     Array.isArray(series) && series.length > 0 && (
-      <section class="bg-muted" aria-labelledby="post-series-heading">
-        <div class="mx-auto max-w-content px-m py-section-lg">
-          <h2 id="post-series-heading" class="mb-l font-display text-h2 text-foreground">
-            More from this series
-          </h2>
-          <PostGrid entries={series} />
+      <section class="bg-background" aria-labelledby="post-series-heading">
+        <div class="mx-auto max-w-content px-gutter py-section-lg">
+          <div class="flex items-baseline justify-between gap-6 border-b border-hair-strong pb-4">
+            <h2 id="post-series-heading" class="font-ui text-ui text-gold-ink">
+              More from this series
+            </h2>
+          </div>
+          {series.map((item: any) => (
+            <a
+              href={`/post/${item.slug?.current ?? ''}`}
+              class="group grid grid-cols-12 items-baseline gap-x-[clamp(16px,2.5vw,40px)] border-b border-hair py-8"
+            >
+              <span class="col-span-12 font-ui text-[0.8125rem] tracking-[.06em] text-muted-foreground oldstyle md:col-span-2">
+                {entryIsSermonPreview(item)
+                  ? weekOfEyebrow(item.publishedAt)
+                  : item.publishedAt
+                    ? new Date(item.publishedAt).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })
+                    : ''}
+              </span>
+
+              <span class="col-span-12 md:col-span-6 md:col-start-3">
+                <span class="block font-body text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] leading-[1.15] font-normal text-foreground transition-colors group-hover:text-gold-ink">
+                  {item.title}
+                </span>
+                {item.excerpt && (
+                  <span class="mt-2.5 block max-w-[56ch] text-muted-foreground">
+                    {item.excerpt}
+                  </span>
+                )}
+              </span>
+
+              <span class="col-span-12 mt-2.5 font-ui text-ui text-muted-foreground md:col-span-3 md:col-start-10 md:mt-0 md:justify-self-end">
+                {item.categories?.[0]?.title}
+              </span>
+            </a>
+          ))}
         </div>
       </section>
     )
@@ -359,13 +421,13 @@ const schemas = [
   {/* ------- 5. Next / previous post -------------------------------------- */}
   {
     (prev || next) && (
-      <nav class="border-t border-border-soft bg-background" aria-label="More journal posts">
-        <div class="mx-auto grid max-w-content grid-cols-1 gap-m px-m py-l md:grid-cols-2">
+      <nav class="border-t border-hair bg-background" aria-label="More journal posts">
+        <div class="mx-auto grid max-w-content grid-cols-1 gap-m px-gutter py-l md:grid-cols-2">
           {prev ? (
             <a href={`/post/${prev.slug}`} class="group">
-              <p class="mb-xs text-xs tracking-widest text-foreground/80 uppercase">Newer post</p>
-              <p class="font-display text-h4 text-foreground transition-colors group-hover:text-primary-dark">
-                ← {prev.title}
+              <p class="mb-2 font-ui text-ui text-gold-ink">Newer post</p>
+              <p class="font-body text-h3 font-normal text-foreground transition-colors group-hover:text-gold-ink">
+                &larr; {prev.title}
               </p>
             </a>
           ) : (
@@ -373,9 +435,9 @@ const schemas = [
           )}
           {next ? (
             <a href={`/post/${next.slug}`} class="group md:text-right">
-              <p class="mb-xs text-xs tracking-widest text-foreground/80 uppercase">Older post</p>
-              <p class="font-display text-h4 text-foreground transition-colors group-hover:text-primary-dark">
-                {next.title} →
+              <p class="mb-2 font-ui text-ui text-gold-ink">Older post</p>
+              <p class="font-body text-h3 font-normal text-foreground transition-colors group-hover:text-gold-ink">
+                {next.title} &rarr;
               </p>
             </a>
           ) : (
