@@ -873,9 +873,6 @@
 .site-header[data-overlay]:not([data-scrolled]) :where(a, button, summary):not(.header-give) {
   color: inherit;
 }
-.site-header[data-overlay]:not([data-scrolled]) .nav-underline {
-  color: inherit;
-}
 .site-header[data-state='hidden'] {
   transform: translateY(-100%);
 }

@@ -601,6 +601,34 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           const SHOW_THRESHOLD = 80; // small jitter buffer
           const HIDE_AFTER = 120;    // don't hide until past hero band
 
+          // ---- data-scrolled ---------------------------------------------
+          // Independent of the hide/show heuristic below it, and deliberately
+          // NOT gated on the gesture flag: "has this page moved off the top"
+          // is true however the page got there (a fragment landing, a restored
+          // scroll position, a real gesture), and the overlay header's whole
+          // job is to stop being transparent the moment the picture starts
+          // leaving the top of the screen. 8px is small enough to feel
+          // immediate and large enough to ignore rubber-banding. The custom
+          // event lets the header's own inline logo-swap script re-run without
+          // it having to watch the DOM for the attribute.
+          //
+          // It is a named function, and it is CALLED ONCE AT WIRING TIME as
+          // well as from the scroll handler, because a page can become
+          // interactive already scrolled and then fire no scroll event at all:
+          // native back/forward scroll restoration, a View Transitions
+          // navigation onto a restored position, and a fragment landing all
+          // do exactly that. Wired from the scroll handler alone, an overlay
+          // header in that situation stays transparent with paper lettering
+          // over opaque page content until the visitor happens to scroll.
+          const syncScrolled = (y: number) => {
+            const scrolled = y > 8;
+            if (scrolled !== header.hasAttribute('data-scrolled')) {
+              if (scrolled) header.setAttribute('data-scrolled', '');
+              else header.removeAttribute('data-scrolled');
+              window.dispatchEvent(new CustomEvent('header:scrolled'));
+            }
+          };
+
           const onScroll = () => {
             if (ticking) return;
             ticking = true;
@@ -608,22 +636,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
               const y = window.scrollY;
               const dy = y - lastY;
 
-              // ---- data-scrolled -------------------------------------------
-              // Independent of everything below it, and deliberately NOT gated
-              // on the gesture flag: "has this page moved off the top" is true
-              // however the page got there (a fragment landing, a restored
-              // scroll position, a real gesture), and the overlay header's
-              // whole job is to stop being transparent the moment the picture
-              // starts leaving the top of the screen. 8px is small enough to
-              // feel immediate and large enough to ignore rubber-banding.
-              // The custom event lets the header's own inline logo-swap script
-              // re-run without it having to watch the DOM for the attribute.
-              const scrolled = y > 8;
-              if (scrolled !== header.hasAttribute('data-scrolled')) {
-                if (scrolled) header.setAttribute('data-scrolled', '');
-                else header.removeAttribute('data-scrolled');
-                window.dispatchEvent(new CustomEvent('header:scrolled'));
-              }
+              syncScrolled(y);
 
               const isUserScroll = performance.now() - lastGestureAt <= GESTURE_WINDOW_MS;
               if (isUserScroll) {
@@ -642,6 +655,13 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
             });
           };
           window.addEventListener('scroll', onScroll, { passive: true });
+
+          // Seed the attribute from wherever the page already is. `lastY` was
+          // initialised from window.scrollY when this block started, so this
+          // reuses it rather than reading the scroll position a second time.
+          // Every astro:page-load re-wire runs this block again on the swapped
+          // -in header, so a restored position is covered on navigation too.
+          syncScrolled(lastY);
 
           // ---- Land on the fragment ourselves ------------------------------
           // The gesture gate above stops a fragment landing from hiding the
