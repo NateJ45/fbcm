@@ -14,8 +14,15 @@
 // on the right. A staff page is one long run of faces, and a heading that
 // scrolls away leaves a tall empty column that reads as a mistake.
 //
+// THE BIO STAYS BEHIND A DISCLOSURE (fix round 1, 2026-09-21). Set inline it
+// made /staff 13,101px of unbroken text, which is a wall rather than a list of
+// people. It is a native <details> again, closed by default, opened by a
+// "Read more" in the site's own link style. No JavaScript, and the keyboard
+// works for free.
+//
 // Every person carries their slug as an id, so /staff#pastor-name lands on
-// them. When the block is set to "Everyone" the three groups are drawn in
+// them, and an anchored person's bio opens with the jump (the script at the
+// foot of this file). When the block is set to "Everyone" the three groups are drawn in
 // STAFF_GROUPS order with a subhead each, and an empty group is skipped rather
 // than left as a heading over nothing.
 //
@@ -180,10 +187,21 @@ function cropFor(photo: any): { style?: string; className: string } {
                       )}
 
                       {showBios !== false && person.bio && (
-                        <PortableText
-                          value={person.bio}
-                          className="mt-3 font-body text-base break-words [&>p+p]:mt-4 [&>p]:my-0 [&_p]:text-muted-foreground"
-                        />
+                        <details class="group mt-3">
+                          <summary class="inline-flex cursor-pointer list-none gap-2 border-b border-current pb-1 font-ui text-ui font-semibold text-link focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+                            Read more
+                            <span
+                              aria-hidden="true"
+                              class="transition-transform group-open:rotate-90"
+                            >
+                              →
+                            </span>
+                          </summary>
+                          <PortableText
+                            value={person.bio}
+                            className="mt-3 font-body text-base break-words [&>p+p]:mt-4 [&>p]:my-0 [&_p]:text-muted-foreground"
+                          />
+                        </details>
                       )}
                     </article>
                   );
@@ -196,3 +214,24 @@ function cropFor(photo: any): { style?: string; className: string } {
     </div>
   </div>
 </section>
+
+{
+  /* A link like /staff#kendall-ellis names one person, so that person's bio
+    opens with the jump. Without this the anchor lands on a name and a closed
+    "Read more", which is the one case where the disclosure hides exactly what
+    the visitor asked for. Everything else stays closed. The script runs on
+    load and again on hashchange, and it is inert on a page with no hash. */
+}
+<script>
+  function openAnchoredBio() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const article = document.getElementById(id);
+    const details = article?.querySelector('details');
+    if (details) details.open = true;
+  }
+  openAnchoredBio();
+  window.addEventListener('hashchange', openAnchoredBio);
+  // View Transitions swap the document, so the handler re-runs per page.
+  document.addEventListener('astro:page-load', openAnchoredBio);
+</script>
