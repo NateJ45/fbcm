@@ -3,6 +3,9 @@
 // schemes, each page walked top to bottom first so [data-reveal] fires and
 // lazy images load (the vault gotcha fullpage-screenshot-skips-scroll-reveal).
 // Usage: node scripts/shoot-pages.mjs <outDir> [route ...]   (routes default to the eleven pages)
+// On Git Bash / Windows, a bare "/" route argument gets mangled by MSYS path
+// conversion. Invoke with MSYS_NO_PATHCONV=1 node scripts/shoot-pages.mjs ...
+// or run this from PowerShell instead.
 import { chromium } from '@playwright/test';
 import http from 'node:http';
 import fs from 'node:fs';
@@ -47,7 +50,21 @@ const srv = http
     let p = decodeURIComponent(q.url.split('?')[0]);
     let f = path.join(root, p);
     if (fs.existsSync(f) && fs.statSync(f).isDirectory()) f = path.join(f, 'index.html');
-    if (!fs.existsSync(f)) f = path.join(root, '404.html');
+    if (!fs.existsSync(f)) {
+      // Only an HTML navigation (no extension, or an explicit .html path) falls
+      // back to the built 404 page. Anything else missing (css/js/font/image/etc)
+      // is a broken asset reference, and silently serving 404.html for it with a
+      // 200 would produce a plausible-looking screenshot that hides the breakage.
+      const ext = path.extname(p);
+      if (ext === '' || ext === '.html') {
+        f = path.join(root, '404.html');
+      } else {
+        console.error(`missing asset: ${p}`);
+        r.writeHead(404);
+        r.end();
+        return;
+      }
+    }
     r.writeHead(200, { 'content-type': types[path.extname(f)] || 'application/octet-stream' });
     fs.createReadStream(f).pipe(r);
   })
