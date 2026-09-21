@@ -1,12 +1,13 @@
 ---
 // Foundation, edit with care
-// Site footer, in the church's own grammar (Plan 2a, Task 9).
+// Site footer, in the church's own grammar (Plan 2a task 9; redrawn by the
+// art-direction pass, plan 3 task 5).
 //
 // It is ONE DARK BAND on the indigo field, in both themes. That is deliberate,
 // not an oversight: the footer is the closing surface of every page, and the
-// church identity ends a page the way it opens one, on indigo. In `.dark` the
-// --color-indigo-field token moves to #2a2950, so the band deepens with the
-// rest of the page rather than staying put.
+// church identity ends a page the way it opens one, on indigo. The band is
+// --color-indigo-deep, the deeper of the two indigos, so gold labels and taupe
+// body copy clear AA on it (both pairs are asserted in theme-tokens.test.ts).
 //
 // Because the band is fixed-dark, the ink on it is text-bg, never text-cream:
 // --color-cream FLIPS to ink under .dark (see globals.css) while --color-bg
@@ -16,19 +17,24 @@
 // themes and carries no data-theme-logo attribute: there is nothing to swap.
 //
 // Gold is used for exactly two things, and both sit on the indigo ground where
-// it clears AA: the tagline, and the small column headings. Gold on cream is
+// it clears AA: the poster eyebrow, and the row numbers. Gold on cream is
 // 2.37:1 and is never used for text anywhere in this build.
 //
 // Structure (top to bottom):
-//   1. Gold hairline, the same rule the section headings draw
+//   1. The window texture, masked into the top-right corner at 10%
 //   2. Optional newsletter signup (only when siteSettings.newsletter.enabled)
-//   3. Four columns on one left edge, sharing the max-w-content px-m container
-//      the header and every church block use:
+//   3. THE POSTER ROW: the live dated line, the service time at poster scale,
+//      the street line as the lede, and the gold Give button. This is the one
+//      moment in the footer, and it is the same promise the hero opens with,
+//      which is what makes the header and the footer read as one object.
+//   4. Four columns on one left edge, sharing the max-w-content px-gutter
+//      container the header and every church block use:
 //        a. the wordmark, the tagline, the phone, the social marks
-//        b. + c. the editor's footer link columns (Pages, Elsewhere)
+//        b. + c. the editor's footer link columns, as NUMBERED rows (the same
+//           device the mobile menu draws, so the two link lists rhyme)
 //        d. Office — the office hours and the street address, drawn in code
 //           because it is prose, not a link list
-//   4. Thin bottom bar: auto-year copyright, small-print links, optional credit
+//   5. Thin base rail: auto-year copyright, small print, the theme control
 //
 // Tailwind v4 gotcha: max-w-xs/s/m/l are shadowed by this project's custom
 // --spacing-* tokens (they resolve to a few px, not the container scale). Use
@@ -48,6 +54,7 @@ import {
 } from '@tabler/icons-react';
 import { Mail, Phone } from 'lucide-react';
 import NewsletterSignup from '@/components/NewsletterSignup';
+import ThemeToggle from '@/components/ThemeToggle';
 // THE SVG, NOT A PNG, and the same files the header uses.
 //
 // Until 2026-09-08 this imported logo-{light,dark}.png, which were a REAL
@@ -61,14 +68,28 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 // this is the failure mode. The footer picks the DARK-MODE file of the pair in
 // both themes, because the band under it is dark in both themes.
 import logoDarkAsset from '@/assets/logo-dark.svg';
+// The same photograph the mobile menu sheet uses, so the two dark surfaces are
+// obviously the same room. Narrower here (900w) because it only ever covers a
+// corner of the band.
+import menuWindowAsset from '@/assets/menu-window.jpg';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
 import { telHref } from '@/lib/phone';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
+import { staticSunday, timeOnly } from '@/lib/live-sunday';
 
 // Passed through Astro's pipeline for a cache-busted URL. No width variants and
 // no webp conversion: this is an SVG, so one file is sharp at every size and
 // asking the optimizer to rasterise it would be a downgrade.
 const footerLogo = await getImage({ src: logoDarkAsset });
+
+// The texture. 900w at quality 60 is generous for something that renders at
+// 10% opacity under a radial mask.
+const footerTexture = await getImage({
+  src: menuWindowAsset,
+  width: 900,
+  quality: 60,
+  format: 'jpg',
+});
 
 interface NewsletterConfig {
   enabled?: boolean;
@@ -100,6 +121,8 @@ interface Props {
         email?: string;
         phone?: string;
         address?: string;
+        /** "Sundays at 10:45 am". Drives the poster row; absent means no row. */
+        serviceTime?: string;
         officeHours?: PortableTextBlock[] | null;
         socialInstagram?: string;
         socialFacebook?: string;
@@ -151,6 +174,33 @@ const addressLines: string[] = addressSplit.cleaned
   .map((line) => line.trim())
   .filter(Boolean)
   .map((line, i) => (i === 0 ? reattachStega(line, addressSplit.encoded) : line));
+
+// The poster row's third line: the whole address on ONE line, because there it
+// is a caption under the time rather than a postal block. Joined, never split
+// again, so the payload rejoined above survives.
+const streetLine = addressLines.join(', ');
+
+// THE LIVE DATED LINE, exactly as the tall hero draws it (src/components/
+// Hero.astro). The SERVER renders the dateless form, which is true whenever
+// the page is served and true with JavaScript off; data-live-sunday carries
+// the bare time for the upgrade script in BaseLayout, which rewrites the text
+// from the VISITOR's clock. serviceTime is CLEANED of its stega payload first:
+// both functions measure and rewrite the string, and the payload's U+FEFF
+// matches `\s` in a regex, so an encoded value would smuggle invisible
+// characters into an attribute (CLAUDE.md, the preview rules).
+const serviceTimeClean = siteSettings?.serviceTime
+  ? splitStega(siteSettings.serviceTime).cleaned.trim()
+  : '';
+const showPoster = serviceTimeClean.length > 0;
+const posterEyebrow = showPoster ? staticSunday(serviceTimeClean) : '';
+// The big line is the TIME only: the eyebrow above it already says Sundays,
+// and a poster does not say the same word twice.
+const posterTime = showPoster ? timeOnly(serviceTimeClean) : '';
+
+// The Give button. The same resolved CTA the header draws, so the two cannot
+// disagree about where giving lives or what it is called.
+const footerCta = chrome.headerCta;
+const footerCtaIsExternal = /^https?:\/\//i.test(footerCta.href);
 
 // Social links: prefer the socialLinks array; fall back to the legacy
 // socialInstagram / socialFacebook fields so existing datasets keep working.
@@ -211,12 +261,24 @@ const LEGAL_LINKS = chrome.legalNav;
 // apart. Paper-white at 85%, gold on hover, one focus ring.
 const bandLink =
   'text-bg/85 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm';
-const columnHeading = 'mb-s font-mono text-[0.75rem] tracking-eyebrow text-gold uppercase';
+const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold uppercase';
 ---
 
-<footer class="bg-indigo-field text-bg">
-  {/* The gold rule, the same device every section heading draws. */}
-  <div class="h-1 bg-gold" aria-hidden="true"></div>
+<footer class="relative isolate overflow-hidden bg-indigo-deep text-bg">
+  {
+    /* The window, masked into the top-right corner so it never crosses the
+       poster line. Decorative: no alt text, hidden from the tree, and lazy,
+       because it is the last thing on the page and the least important. */
+  }
+  <img
+    src={footerTexture.src}
+    alt=""
+    aria-hidden="true"
+    loading="lazy"
+    decoding="async"
+    class="pointer-events-none absolute top-0 right-0 h-[60%] w-1/2 object-cover opacity-10"
+    style="mask-image: radial-gradient(ellipse at top right, #000, transparent 70%); -webkit-mask-image: radial-gradient(ellipse at top right, #000, transparent 70%);"
+  />
 
   {
     /* Newsletter signup — renders only when siteSettings.newsletter.enabled is
@@ -224,7 +286,7 @@ const columnHeading = 'mb-s font-mono text-[0.75rem] tracking-eyebrow text-gold 
   }
   {
     siteSettings?.newsletter?.enabled && (
-      <div class="mx-auto max-w-content px-m pt-l">
+      <div class="relative mx-auto max-w-content px-gutter pt-l">
         <div class="max-w-md">
           <NewsletterSignup client:visible newsletter={siteSettings.newsletter} source="footer" />
         </div>
@@ -232,127 +294,181 @@ const columnHeading = 'mb-s font-mono text-[0.75rem] tracking-eyebrow text-gold 
     )
   }
 
-  <div class="mx-auto max-w-content px-m pt-section-md pb-l">
-    <div class="grid grid-cols-1 gap-l md:grid-cols-2 lg:grid-cols-4">
-      {/* --- 1. The wordmark, the tagline, and how to reach a person. --- */}
-      <div>
-        <a
-          href="/"
-          aria-label={`${brandName} home`}
-          class="inline-block transition-opacity hover:opacity-80"
-        >
-          {
-            /* Sized by HEIGHT, with real width/height attributes at the
-              wordmark's own 249.45:97.06 aspect (NOT the old 280x60 lockup). An unloaded lazy image with width:auto shrink-wraps to
-              0x0, never intersects the viewport and so never loads, which is a
-              real bug this family has hit more than once. Give it real
-              dimensions. */
-          }
-          <img
-            src={footerLogo.src}
-            alt={brandName}
-            width={257}
-            height={100}
-            class="h-16 w-auto"
-            loading="lazy"
-            decoding="async"
-          />
-        </a>
+  {
+    /* THE POSTER ROW. Not a heading: the page's own h1 already says what the
+       page is, and this line is a standing promise rather than a section of
+       content, so it is set as type without taking a heading level. */
+  }
+  {
+    showPoster && (
+      <div class="relative mx-auto max-w-content px-gutter py-section-md">
+        <p class="font-ui text-ui text-gold" data-live-sunday={posterTime}>
+          {posterEyebrow}
+        </p>
+        <p class="mt-[clamp(10px,1.4vh,18px)] font-display text-[clamp(2rem,5.2vw,3.25rem)] leading-none font-normal tracking-[0.01em] uppercase">
+          {posterTime}
+        </p>
+        {streetLine && (
+          <p class="mt-[clamp(12px,1.8vh,20px)] font-body text-lede text-bg/75 italic">
+            {streetLine}
+          </p>
+        )}
+        {footerCta.show && (
+          <a
+            href={footerCta.href}
+            target={footerCtaIsExternal ? '_blank' : undefined}
+            rel={footerCtaIsExternal ? 'noopener noreferrer' : undefined}
+            class="press-tactile mt-[clamp(22px,3vh,34px)] inline-flex min-h-[44px] items-center justify-center rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-deep shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-deep)] hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-deep focus-visible:outline-none"
+          >
+            {footerCta.label}
+          </a>
+        )}
+      </div>
+    )
+  }
 
-        {tagline && <p class="mt-m max-w-[28rem] font-display text-lg text-gold">{tagline}</p>}
+  <div class:list={['relative', showPoster && 'border-t border-bg/15']}>
+    <div class="mx-auto max-w-content px-gutter pt-section-md pb-l">
+      <div class="grid grid-cols-1 gap-l md:grid-cols-2 lg:grid-cols-4">
+        {/* --- 1. The wordmark, the tagline, and how to reach a person. --- */}
+        <div>
+          <a
+            href="/"
+            aria-label={`${brandName} home`}
+            class="inline-block transition-opacity hover:opacity-80"
+          >
+            {
+              /* Sized by HEIGHT, with real width/height attributes at the
+                wordmark's own 249.45:97.06 aspect (NOT the old 280x60 lockup).
+                An unloaded lazy image with width:auto shrink-wraps to 0x0,
+                never intersects the viewport and so never loads, which is a
+                real bug this family has hit more than once. Give it real
+                dimensions. */
+            }
+            <img
+              src={footerLogo.src}
+              alt={brandName}
+              width={257}
+              height={100}
+              class="h-16 w-auto"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
 
-        <div class="mt-m space-y-1 text-sm">
           {
-            phone && (
-              <p>
-                <a href={telHref(phone)} class:list={['inline-flex items-center gap-xs', bandLink]}>
-                  <Phone size={14} aria-hidden="true" />
-                  {phone}
-                </a>
+            tagline && (
+              <p class="mt-m max-w-[26ch] font-body text-lede font-normal text-bg/75 italic">
+                {tagline}
               </p>
             )
           }
+
+          <div class="mt-m space-y-1 font-body text-bg/80">
+            {
+              phone && (
+                <p>
+                  <a
+                    href={telHref(phone)}
+                    class:list={['inline-flex items-center gap-xs', bandLink]}
+                  >
+                    <Phone size={14} aria-hidden="true" />
+                    {phone}
+                  </a>
+                </p>
+              )
+            }
+            {
+              email && (
+                <p>
+                  <a
+                    href={`mailto:${email}`}
+                    class:list={['inline-flex items-center gap-xs', bandLink]}
+                  >
+                    <Mail size={14} aria-hidden="true" />
+                    {email}
+                  </a>
+                </p>
+              )
+            }
+          </div>
+
           {
-            email && (
-              <p>
-                <a
-                  href={`mailto:${email}`}
-                  class:list={['inline-flex items-center gap-xs', bandLink]}
-                >
-                  <Mail size={14} aria-hidden="true" />
-                  {email}
-                </a>
-              </p>
+            socialLinksToRender.length > 0 && (
+              <ul class="mt-m flex list-none gap-s p-0">
+                {socialLinksToRender.map((link) => {
+                  const Icon = socialIcon(link.platform);
+                  const ariaLabel = link.label ?? link.platform ?? 'Social link';
+                  return (
+                    <li>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={ariaLabel}
+                        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-bg/30 text-bg transition-colors hover:border-gold hover:text-gold"
+                      >
+                        <Icon size={20} stroke={1.5} />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
             )
           }
         </div>
 
         {
-          socialLinksToRender.length > 0 && (
-            <ul class="mt-m flex list-none gap-s p-0">
-              {socialLinksToRender.map((link) => {
-                const Icon = socialIcon(link.platform);
-                const ariaLabel = link.label ?? link.platform ?? 'Social link';
-                return (
-                  <li>
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={ariaLabel}
-                      class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-bg/30 text-bg transition-colors hover:border-gold hover:text-gold"
-                    >
-                      <Icon size={20} stroke={1.5} />
+          /* --- 2 and 3. The editor's link columns, NUMBERED. An ordered list
+             because the numbers carry meaning: they are the order of the
+             column, the same device the mobile menu sheet draws. The count
+             restarts in each column, so two short lists read as two lists
+             rather than one long one broken in half. --- */
+        }
+        {
+          sanityFooterColumns.map((col, colIdx) => (
+            <nav aria-labelledby={`footer-col-${colIdx}`}>
+              <p id={`footer-col-${colIdx}`} class={columnHeading}>
+                {col.title}
+              </p>
+              <ol class="m-0 list-none p-0">
+                {col.links.map((link, i) => (
+                  <li class="border-b border-bg/12 py-2">
+                    <a href={link.href} class:list={['flex items-baseline gap-4', bandLink]}>
+                      <span class="font-ui text-[0.75rem] tracking-[0.14em] text-gold">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span class="font-body text-[1.25rem] font-normal">{link.label}</span>
                     </a>
                   </li>
-                );
-              })}
-            </ul>
-          )
-        }
-      </div>
-
-      {/* --- 2 and 3. The editor's link columns (Pages, Elsewhere). --- */}
-      {
-        sanityFooterColumns.map((col, colIdx) => (
-          <nav aria-labelledby={`footer-col-${colIdx}`}>
-            <p id={`footer-col-${colIdx}`} class={columnHeading}>
-              {col.title}
-            </p>
-            <ul class="list-none space-y-2 p-0 text-sm">
-              {col.links.map((link) => (
-                <li>
-                  <a href={link.href} class={bandLink}>
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ))
-      }
-
-      {/* --- 4. Office. Prose, not a link list, so it is drawn here. --- */}
-      <div>
-        <p class={columnHeading}>Office</p>
-        <div class="space-y-1 text-sm text-bg/85">
-          {officeLines.map((line) => <p>{line}</p>)}
-          {
-            addressLines.length > 0 && (
-              <address class="mt-m space-y-1 not-italic">
-                {addressLines.map((line) => (
-                  <p>{line}</p>
                 ))}
-              </address>
-            )
-          }
+              </ol>
+            </nav>
+          ))
+        }
+
+        {/* --- 4. Office. Prose, not a link list, so it is drawn here. --- */}
+        <div>
+          <p class={columnHeading}>Office</p>
+          <div class="space-y-1 font-body text-bg/80">
+            {officeLines.map((line) => <p>{line}</p>)}
+            {
+              addressLines.length > 0 && (
+                <address class="mt-m space-y-1 not-italic">
+                  {addressLines.map((line) => (
+                    <p>{line}</p>
+                  ))}
+                </address>
+              )
+            }
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   {
-    /* Thin bottom bar — copyright, small print, optional credit on one line so
+    /* The base rail — copyright, small print, the theme control, on one line so
        they don't add a tall block to a footer column.
 
        The extra `sm:pr-20`: BackToTop is `fixed right-6 bottom-6` and 44px
@@ -363,9 +479,9 @@ const columnHeading = 'mb-s font-mono text-[0.75rem] tracking-eyebrow text-gold 
        chip's own behaviour changes, and the row's LEFT edge still lines up
        with the four columns above it. */
   }
-  <div class="border-t border-bg/15">
+  <div class="relative border-t border-bg/15">
     <div
-      class="mx-auto flex max-w-content flex-col gap-xs px-m py-m text-xs text-bg/75 sm:flex-row sm:items-center sm:justify-between sm:pr-20"
+      class="mx-auto flex max-w-content flex-col gap-xs px-gutter py-m font-ui text-[0.8125rem] text-bg/70 sm:flex-row sm:items-center sm:justify-between sm:pr-20"
     >
       <p>&copy; {currentYear} {brandName}</p>
       <div class="flex items-center gap-m">
@@ -397,7 +513,29 @@ const columnHeading = 'mb-s font-mono text-[0.75rem] tracking-eyebrow text-gold 
               <span>{siteCredit}</span>
             ))
         }
+        {
+          /* The theme control. It lives down here because task 3 took it off
+             the header bar below lg and this rail is where the small print
+             lives on every page. */
+        }
+        <span class="footer-theme inline-flex">
+          <ThemeToggle client:idle />
+        </span>
       </div>
     </div>
   </div>
 </footer>
+
+<style>
+  /* The ThemeToggle island paints itself `text-foreground` and hovers to
+     `bg-accent`, both of which are theme-aware. This band is not: it is indigo
+     in both themes, so in the light theme the island would draw a near-black
+     icon on a near-black ground. Repaint it here rather than in the island,
+     which the header and the mobile sheet also use on their own surfaces. */
+  .footer-theme :global(button) {
+    color: var(--color-bg);
+  }
+  .footer-theme :global(button:hover) {
+    background-color: color-mix(in srgb, var(--color-bg) 14%, transparent);
+  }
+</style>
