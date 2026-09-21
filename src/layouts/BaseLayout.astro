@@ -322,11 +322,13 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
     <Header siteSettings={siteSettings} overlay={overlayHeader} />
 
     {/* --header-h: the sticky header's measured height, published as a custom
-        property. Two things read it, and neither one is on the home page
-        alone, which is why this lives here rather than in Hero.astro where it
-        started: the full-height home hero (`.hero-fill` in Hero.astro, which
-        subtracts it from 100svh) and overlay mode's negative margin-bottom in
-        globals.css, which pulls an image hero up underneath the bar.
+        property. Overlay mode's negative margin-bottom in globals.css reads
+        it, to pull an image hero up underneath the bar, and so do the
+        `scroll-mt-[var(--header-offset)]` anchor landings. It lives here
+        rather than in Hero.astro, where it started, because neither consumer
+        is on the home page alone: task 6 deleted `.hero-fill`, the one reader
+        that was (the hero is now a plain 100svh, because the bar sits ON it
+        and subtracts nothing).
         Runs inline, immediately after the header is parsed, so the value is
         set before first paint and neither consumer shifts. The CSS carries an
         88px fallback for the frame before this runs and for no-JS sessions. */}
@@ -752,6 +754,48 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
       // Run on first load and after every View Transitions navigation.
       initPolish();
       document.addEventListener('astro:page-load', initPolish);
+    </script>
+
+    {/* THE LIVE DATED LINE. Every [data-live-sunday] element is server-rendered
+        with the dateless form ("Sundays · Worship at 10:45 am"), which is true
+        at any moment and is what a no-JS visitor keeps. This rewrites it from
+        the VISITOR's clock, so the hero can say "Today" on a Sunday morning and
+        name the date the rest of the week. It has to happen here rather than at
+        build time: the page is static and cached, and a baked date would be
+        wrong for everyone after the following Sunday.
+
+        The two functions are hand-inlined copies of src/lib/live-sunday.ts,
+        which is where the unit tests are. An `is:inline` script cannot import,
+        and this one must stay inline so the line settles before paint instead
+        of flickering a week later. Twelve lines is the price; keep the two in
+        step. It runs under prefers-reduced-motion too, because this is text,
+        not motion. */}
+    <script is:inline>
+      (function () {
+        function timeOnly(t) {
+          return t.replace(/^Sundays?\s+at\s+/i, '').trim();
+        }
+        function formatLiveSunday(now, t) {
+          var add = (7 - now.getDay()) % 7;
+          if (add === 0) return 'Today · Worship at ' + timeOnly(t);
+          var s = new Date(now);
+          s.setDate(now.getDate() + add);
+          var label = s.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+          return 'This Sunday, ' + label + ' · Worship at ' + timeOnly(t);
+        }
+        function upgradeSunday() {
+          var nodes = document.querySelectorAll('[data-live-sunday]');
+          for (var i = 0; i < nodes.length; i++) {
+            var t = nodes[i].getAttribute('data-live-sunday');
+            if (t) nodes[i].textContent = formatLiveSunday(new Date(), t);
+          }
+        }
+        upgradeSunday();
+        if (!window.__liveSundayBound) {
+          window.__liveSundayBound = true;
+          document.addEventListener('astro:page-load', upgradeSunday);
+        }
+      })();
     </script>
   </body>
 </html>

@@ -454,6 +454,14 @@ export interface SectionSiteSettings {
   title?: string;
   /** Where the give band's button points when the block has no link of its own. */
   givingUrl?: string;
+  /**
+   * "Sundays at 10:45 am". The hero's live dated line is derived from it
+   * (src/lib/live-sunday.ts), so the one setting drives the header, the menu,
+   * the footer and the hero rather than four typed copies (CLAUDE.md rule 15).
+   * The GROQ projection in queries.ts already selects it; this is a TypeScript
+   * addition only, no schema change.
+   */
+  serviceTime?: string;
   /** Street address, possibly multi-line, for the Sunday-times address card. */
   address?: string;
   city?: string;

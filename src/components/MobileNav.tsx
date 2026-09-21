@@ -59,6 +59,7 @@ import { useState, type CSSProperties } from 'react';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import ThemeToggle from './ThemeToggle';
 import { telHref } from '@/lib/phone';
+import { timeOnly } from '@/lib/live-sunday';
 import { site } from '@/data/site';
 
 // ---- Types ------------------------------------------------------------------
@@ -300,7 +301,11 @@ export default function MobileNav({
             <div className="relative mt-10 grid grid-cols-2 gap-6 border-t border-bg/15 pt-6 font-ui text-sm">
               <div>
                 <p className="mb-2 text-ui tracking-[0.14em] text-gold uppercase">Sundays</p>
-                {serviceTime && <p>{serviceTime}</p>}
+                {/* The label above already says Sundays, so the value shows the
+                    time alone: "Sundays / 10:45 am", not "Sundays / Sundays at
+                    10:45 am". timeOnly() is the same helper the hero's dated
+                    line uses, so the two can never phrase it differently. */}
+                {serviceTime && <p>{timeOnly(serviceTime)}</p>}
                 {street && <p className="text-bg/70">{street}</p>}
               </div>
               <div className="flex flex-col items-end gap-2">

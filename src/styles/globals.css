@@ -1286,44 +1286,6 @@
 .hero-fade.is-paused .hero-frame {
   animation-play-state: paused;
 }
-/* Pause button, bottom-right corner of the hero image. Small, quiet, always
-   reachable by keyboard. */
-.hero-pause {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 10;
-  padding: 0.375rem 0.75rem;
-  font-size: 0.75rem;
-  border-radius: 9999px;
-  color: var(--color-bg);
-  background: rgba(var(--tint-rgb), 0.25);
-  border: 1px solid rgba(var(--tint-rgb), 0.4);
-}
-.hero-pause:hover {
-  background: rgba(var(--tint-rgb), 0.4);
-}
-.hero-pause:focus-visible {
-  outline: 2px solid var(--color-bg);
-  outline-offset: 2px;
-}
-/* Dot indicators, decorative (aria-hidden) -- the pause button is the only
-   interactive control the slideshow needs. */
-.hero-dots {
-  position: absolute;
-  bottom: 1.125rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: flex;
-  gap: 0.375rem;
-}
-.hero-dots > span {
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: 9999px;
-  background: rgba(var(--tint-rgb), 0.45);
-}
 @media (prefers-reduced-motion: reduce) {
   .hero-frame {
     transition: none;

@@ -169,6 +169,7 @@ const wrapAttrs = (key: string | undefined) =>
             primaryCta={s.primaryCta}
             secondaryCta={s.secondaryCta}
             size={s.size ?? 'short'}
+            serviceTime={settings?.serviceTime}
             headingId={headingId}
           />
         ) : s._type === 'ctaBandSection' ? (

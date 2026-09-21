@@ -1,25 +1,38 @@
 ---
 // Safe to edit by hand
 // Page hero. Three shapes:
-//   1) "image, full" hero (home, optionally Process/Services if a hero photo is added)
-//      — full-bleed Sanity background image with a dark scrim, h1 + subhead + CTAs overlay.
-//   2) "image, split" hero (layout="split", Task 7) — cream two-column band:
-//      words on the left (eyebrow, headline, subhead, facts, buttons), the
-//      first photo on the right with a gold left rule. 7:5 columns at lg,
-//      stacked with the photo first on mobile.
-//   3) "text" hero (About, Contact, FAQ, Process by default)
-//      — clean editorial heading on Soft Linen with eyebrow + headline + subhead.
+//   1) "image, full" hero (home and any interior page with a hero photo) —
+//      the photograph fills the viewport (100svh on the home hero, 72svh on an
+//      interior one) under the two gradients in HeroBackground, with the words
+//      sitting bottom-left over it.
+//   2) "image, split" hero (layout="split") — cream two-column band: words on
+//      the left (eyebrow, headline, lede, facts, buttons), the photo on the
+//      right bleeding to the viewport edge. 7:5 columns at lg, stacked with
+//      the photo first on mobile.
+//   3) "text" hero (interior pages with no photograph) — clean editorial
+//      heading on paper with eyebrow + headline + subhead.
 //
-// The image hero is the LCP element on the homepage. SanityImage is set to loading="eager"
-// in that case and the headline uses font-display (Cormorant Garamond), which BaseLayout
-// preloads inline. Don't add layout-shift animations to this section.
+// THE HEADER OVERLAYS THIS SECTION (plan 3 task 3). On a page that opens with
+// an image hero the bar is transparent and is pulled down onto the picture by
+// a negative margin-bottom (globals.css, .site-header[data-overlay]), so the
+// hero IS the viewport and subtracts nothing for the header. That is why the
+// tall hero is a plain `min-h-[100svh]` and why the old `.hero-fill` class,
+// its --header-h arithmetic and the scroll cue that measured the same variable
+// are all gone: there is no longer a header-shaped strip above the picture for
+// any of them to reason about.
+//
+// The image hero is the LCP element on the homepage. SanityImage is set to
+// loading="eager" in that case and the headline uses font-display (Castoro
+// Titling), which BaseLayout preloads inline. Don't add layout-shift
+// animations to this section.
 
 import HeroBackground from '@/components/HeroBackground.astro';
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { splitHeadingAccent } from '@/lib/heading-accent';
-import { ChevronDown } from 'lucide-react';
+import { splitStega } from '@/lib/preview-stega';
+import { staticSunday, timeOnly } from '@/lib/live-sunday';
 
 interface CtaBlock {
   label?: string;
@@ -33,7 +46,7 @@ interface CtaBlock {
 
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
-/** One fact under the hero words (Task 7): a short label/value pair like
+/** One fact under the hero words: a short label/value pair like
     "Sundays" / "10:45 am". Up to three, schema-capped. */
 interface HeroFact {
   _key?: string;
@@ -60,26 +73,26 @@ interface Props {
   primaryCta?: CtaBlock | null;
   secondaryCta?: CtaBlock | null;
   headingId: string;
-  /** "tall" = fills the viewport below the header on first load (homepage), "short" = generous but not full screen (interior pages). */
+  /** "tall" = fills the viewport (homepage), "short" = generous but not full
+      screen (interior pages). */
   size?: 'tall' | 'short';
   /**
-   * Optional list of words to cycle through in place of the FIRST word of the
-   * headline. Animates once on first visit per session, then locks back to
-   * the original. Honors prefers-reduced-motion. Pass undefined to skip.
+   * siteSettings.serviceTime, passed down by SectionRenderer. When it is
+   * present on a TALL hero it replaces the eyebrow with the live dated line
+   * ("This Sunday, September 27 · Worship at 10:45 am"), whose date the
+   * BaseLayout upgrade script computes from the visitor's own clock. Interior
+   * heroes keep their eyebrow.
    */
-  rotatingWords?: string[];
+  serviceTime?: string;
   /**
    * Optional single word/phrase in the headline to render in script
    * (the script accent font). One per hero — the editorial-signature flourish.
    * The first occurrence in the headline string is wrapped. If the word
    * isn't found, the headline renders unchanged.
    *
-   * Don't combine with `rotatingWords` — they may target the same first
-   * word; pick one effect per hero. If both are passed, rotatingWords wins.
-   *
-   * heroSection (the page-builder block) no longer offers this field (Task 7
-   * dropped it from that schema); it is kept here because the singleton hero
-   * fields on other pages (blog index, contact, the preview route) still pass
+   * heroSection (the page-builder block) no longer offers this field (plan 2
+   * task 7 dropped it from that schema); it is kept here because the singleton
+   * hero fields on other pages (blog index, the preview route) still pass
    * their own scriptAccent value through to this component.
    */
   scriptAccent?: string;
@@ -97,44 +110,42 @@ const {
   secondaryCta,
   headingId,
   size = 'short',
-  rotatingWords,
+  serviceTime,
   scriptAccent,
 } = Astro.props as Props;
 
 const heroFacts = (facts ?? []).filter((f) => f?.label || f?.value).slice(0, 3);
 
-// Split the headline into a first word + the rest, so the rotator can swap
-// the first word in place without touching the rest of the line. Matches
-// alphanumerics + apostrophes; falls back to the whole headline if the regex
-// doesn't catch (e.g., headline starts with punctuation).
-const rotateEnabled = Array.isArray(rotatingWords) && rotatingWords.length > 1;
-const firstWordMatch = rotateEnabled ? headline.match(/^([\w'’]+)(.*)$/s) : null;
-const headlineFirst = firstWordMatch ? firstWordMatch[1] : headline;
-const headlineRest = firstWordMatch ? firstWordMatch[2] : '';
-const rotatingPayload = rotateEnabled ? JSON.stringify([headlineFirst, ...rotatingWords!]) : '';
-
 // Script accent: split the headline around the accent word so it can be
-// rendered in three pieces (before / accent-span / after). Only fires when
-// rotatingWords isn't active — the two flourishes shouldn't compete.
-// Delegates to the shared splitHeadingAccent helper so Hero, SectionHeading and
-// FinalCta use identical logic.
-//
-// The headline argument used to read `rotateEnabled ? headline : headline`,
-// which is the same value on both branches and so did nothing. Only the ACCENT
-// is conditional, and always was: when the rotator owns the first word there is
-// no accent to apply, so the accent argument goes undefined and the helper
-// returns found:false. Simplified to say exactly that.
+// rendered in three pieces (before / accent-span / after). Delegates to the
+// shared splitHeadingAccent helper so Hero, SectionHeading and FinalCta use
+// identical logic.
 const {
   found: scriptFound,
   before: scriptBefore,
   word: scriptWord,
   after: scriptAfter,
-} = splitHeadingAccent(headline, rotateEnabled ? undefined : scriptAccent);
+} = splitHeadingAccent(headline, scriptAccent);
+
+// THE LIVE DATED LINE. Two strings come out of one setting:
+//   - `sundayStatic` is what the SERVER renders. It carries no date, so it is
+//     true whenever the page is served and true with JavaScript off.
+//   - `sundayTime` rides along in data-live-sunday for the upgrade script,
+//     which rewrites the text with the visitor's clock on load.
+// serviceTime is CLEANED of its stega payload first. Both functions measure
+// and rewrite the string, and the payload's U+FEFF matches `\s` in a regex,
+// so an encoded value would smuggle invisible characters into an attribute
+// and into the rewritten line (CLAUDE.md, the preview rules).
+const serviceTimeClean = serviceTime ? splitStega(serviceTime).cleaned.trim() : '';
+const showLiveSunday = size === 'tall' && serviceTimeClean.length > 0;
+const sundayStatic = showLiveSunday ? staticSunday(serviceTimeClean) : '';
+const sundayTime = showLiveSunday ? timeOnly(serviceTimeClean) : '';
 
 // Subhead emphasis: parse markdown-style _word_ markers into <em> spans so
 // editors can italicize a key word in the Sanity subhead without HTML.
-// Example: "Pick the tier that fits _where you are_." → italic on "where you are".
-// Falls back to plain text when no markers are present.
+// Example: "Pick the tier that fits _where you are_." → emphasis on "where you
+// are". The lede is set in italic throughout now, so an emphasised run flips
+// back to roman, which is how type has always marked emphasis inside italics.
 function parseSubhead(s?: string): Array<{ type: 'text' | 'em'; value: string }> {
   if (!s) return [];
   const parts = s.split(/(_[^_]+_)/g);
@@ -151,9 +162,8 @@ const subheadParts = parseSubhead(subhead);
 const heroImageList = (Array.isArray(backgroundImages) ? backgroundImages : []).filter(
   (img) => !!img?.asset,
 );
-const effectiveImages = heroImageList.length > 0
-  ? heroImageList
-  : (backgroundImage?.asset ? [backgroundImage] : []);
+const effectiveImages =
+  heroImageList.length > 0 ? heroImageList : backgroundImage?.asset ? [backgroundImage] : [];
 const hasImage = effectiveImages.length > 0;
 
 // SPLIT-LAYOUT FRAME CROP (2026-09-20, final review of plan 2b).
@@ -183,121 +193,35 @@ const splitObjectPosition =
     ? `${(splitHotspot.x * 100).toFixed(2)}% ${(splitHotspot.y * 100).toFixed(2)}%`
     : '50% 0%';
 
-// "tall" (homepage) fills the screen below the sticky header on first load.
-// The exact fill height comes from the .hero-fill class plus the measured
-// --header-h variable (see the inline script and scoped <style> below).
-// "short" stays a generous editorial band for interior pages.
-const wrapperHeight =
+// The image hero's height. The header overlays it, so these are the whole
+// viewport (home) and a deep interior band, with nothing subtracted.
+const imageHeroHeight = size === 'tall' ? 'min-h-[100svh]' : 'min-h-[72svh]';
+
+// The headline's one scale decision: poster scale on the home hero, h1
+// everywhere else. Both are the titling face, capitals only.
+const displayHeadlineClass =
   size === 'tall'
-    ? 'hero-fill'
-    : 'min-h-[42svh] md:min-h-[52svh]';
+    ? 'font-display uppercase tracking-[0.01em] font-normal text-display max-w-[12ch]'
+    : 'font-display uppercase tracking-[0.01em] font-normal text-h1 leading-none max-w-[12ch]';
 ---
-
-{/* Home hero scroll cue (size="tall" only): glide past the hero to the band
-    below it. --header-h, which this reads to know where the hero ends, is
-    measured and published by the inline script in BaseLayout, right after the
-    header, so it is set on every page rather than only on this one. */}
-{size === 'tall' && (
-  <script is:inline>
-    (function () {
-      function wireCue() {
-        var cue = document.querySelector('[data-scroll-cue]');
-        if (!cue || cue.dataset.wired === '1') return;
-        cue.dataset.wired = '1';
-        cue.addEventListener('click', function () {
-          var hero = cue.closest('section');
-          if (!hero) return;
-          var hh = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
-          var top = hero.offsetTop + hero.offsetHeight - hh;
-          if (window.lenis && typeof window.lenis.scrollTo === 'function') {
-            window.lenis.scrollTo(top);
-          } else {
-            window.scrollTo({ top: top, behavior: 'smooth' });
-          }
-        });
-      }
-      wireCue();
-      if (!window.__heroLayoutBound) {
-        window.__heroLayoutBound = true;
-        document.addEventListener('astro:page-load', wireCue);
-      }
-    })();
-  </script>
-)}
-
-{/* Rotating-word animator. Runs once per session: cycles the wrapped word
-    through alternates every 850ms for ~5 seconds, then locks back to the
-    original. Skipped under prefers-reduced-motion or when sessionStorage
-    already holds the seen flag. Inline + idempotent so View Transitions
-    don't re-trigger on every navigation. */}
-{rotateEnabled && (
-  <script is:inline>
-    (function () {
-      try {
-        if (sessionStorage.getItem('hero-word-rotated') === '1') return;
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      } catch (_) { /* ignore */ }
-
-      function init() {
-        const el = document.querySelector('[data-rotating-word]');
-        if (!el || el.dataset.rotated === '1') return;
-        el.dataset.rotated = '1';
-        let words;
-        try { words = JSON.parse(el.dataset.rotatingWords || '[]'); } catch (_) { return; }
-        if (!Array.isArray(words) || words.length < 2) return;
-
-        const original = words[0];
-        const intervalMs = 850;
-        // words.length ticks lands us on the original at the final cycle
-        // because words[length % length] === words[0] === original. The
-        // earlier `length + 1` produced one redundant tick that flashed the
-        // original word twice in a row at the end of the sequence.
-        const totalCycles = words.length;
-        let count = 0;
-
-        const id = setInterval(() => {
-          count += 1;
-          const target = count >= totalCycles ? original : words[count % words.length];
-          el.style.transition = 'opacity 200ms ease-out';
-          el.style.opacity = '0';
-          setTimeout(() => {
-            el.textContent = target;
-            el.style.opacity = '1';
-          }, 200);
-
-          if (count >= totalCycles) {
-            clearInterval(id);
-            try { sessionStorage.setItem('hero-word-rotated', '1'); } catch (_) {}
-          }
-        }, intervalMs);
-      }
-      init();
-      document.addEventListener('astro:page-load', init);
-    })();
-  </script>
-)}
 
 {hasImage && layout === 'split' ? (
   <section class="bg-background text-foreground" aria-labelledby={headingId}>
-    {/* Split hero (Task 7): words left, photo right, 7:5 at lg. Stacked with
-        the photo first on mobile so the page doesn't open on a wall of text.
-        Shares the site's left edge and container (max-w-content px-m) with
-        every other band on the page (CLAUDE.md rule 17: one grammar per page). */}
-    <div class="mx-auto grid max-w-content grid-cols-1 items-stretch gap-0 px-m lg:grid-cols-12">
+    {/* Split hero: words left, photo right, 7:5 at lg. Stacked with the photo
+        first on mobile so the page doesn't open on a wall of text. The words
+        share the site's left edge and container with every other band on the
+        page (CLAUDE.md rule 17: one grammar per page); the picture breaks that
+        container and bleeds to the viewport edge, which is the art-direction
+        pass's rule for any photograph beside words. */}
+    <div class="mx-auto grid max-w-content grid-cols-1 items-stretch gap-0 px-gutter lg:grid-cols-12">
       <div class="order-2 flex flex-col justify-center py-section-md lg:order-1 lg:col-span-7 lg:pr-l">
         <div class="hero-entry-stagger max-w-2xl">
-          {/* One grammar per page (CLAUDE.md rule 17). The eyebrow is the shared
-              mono style every church band draws, and the headline carries the
-              same 56x2 gold rule SectionHeading gives every other heading.
-              On this cream ground the eyebrow is text-foreground/80, which is
-              SectionHeading's own default tone. */}
           {eyebrow && (
-            <p class="font-mono text-[0.75rem] uppercase tracking-eyebrow text-foreground/80">{eyebrow}</p>
+            <p class="font-ui text-ui font-medium mb-[clamp(18px,3vh,32px)] text-foreground/80">
+              {eyebrow}
+            </p>
           )}
-          <h1
-            id={headingId}
-            class="mt-xs font-display text-h1 leading-headline-tight tracking-[-0.02em] text-foreground"
-          >
+          <h1 id={headingId} class:list={[displayHeadlineClass, 'text-foreground']}>
             {scriptFound ? (
               <>
                 {scriptBefore}<span class="font-script">{scriptWord}</span>{scriptAfter}
@@ -306,49 +230,43 @@ const wrapperHeight =
               headline
             )}
           </h1>
-          <div class="mt-m h-0.5 w-14 bg-gold" aria-hidden="true"></div>
           {subhead && (
-            <p class="mt-m max-w-2xl text-lg text-muted-foreground">
+            <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body italic font-normal text-lede text-foreground/80">
               {subheadParts.map((part) =>
-                part.type === 'em'
-                  ? <em class="italic font-display text-foreground">{part.value}</em>
-                  : part.value
+                part.type === 'em' ? <em class="not-italic">{part.value}</em> : part.value,
               )}
             </p>
           )}
           {heroFacts.length > 0 && (
-            <dl class="mt-l flex flex-wrap gap-l">
+            <dl class="mt-[clamp(28px,5vh,48px)] flex max-w-[960px] flex-wrap gap-[clamp(24px,4vw,64px)] border-t border-hair pt-[clamp(20px,3vh,28px)]">
               {heroFacts.map((fact) => (
                 <div>
                   {fact.label && (
-                    <dt class="font-mono text-[0.75rem] tracking-eyebrow uppercase text-muted-foreground">
-                      {fact.label}
-                    </dt>
+                    <dt class="font-ui text-ui mb-1.5 text-foreground/70">{fact.label}</dt>
                   )}
                   {fact.value && (
-                    <dd class="mt-1 font-display text-h4 text-foreground">{fact.value}</dd>
+                    <dd class="font-body text-[clamp(1.25rem,1rem+.9vw,1.625rem)] leading-tight">
+                      {fact.value}
+                    </dd>
                   )}
                 </div>
               ))}
             </dl>
           )}
           {(primaryCta || secondaryCta) && (
-            <div class="mt-l flex flex-wrap gap-s">
-              {/* The church pair, the same one the header's Give button and every
-                  band below use: gold fill with an indigo-field label (4.90:1,
-                  gated in theme-tokens.test.ts), outlined indigo beside it. */}
+            <div class="mt-[clamp(26px,4vh,40px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
               {primaryCta && <CtaLink cta={primaryCta} variant="gold" />}
-              {secondaryCta && <CtaLink cta={secondaryCta} variant="outline" />}
+              {secondaryCta && <CtaLink cta={secondaryCta} variant="link" />}
             </div>
           )}
         </div>
       </div>
-      <div class="order-1 border-l-4 border-gold lg:order-2 lg:col-span-5">
+      <div class="bleed-right order-1 lg:order-2 lg:col-span-5">
         <SanityImage
           source={effectiveImages[0]}
           width={1200}
           height={900}
-          sizes="(min-width: 1024px) 40vw, 100vw"
+          sizes="(min-width: 1024px) 45vw, 100vw"
           loading="eager"
           fetchpriority="high"
           quality={75}
@@ -361,118 +279,86 @@ const wrapperHeight =
 ) : hasImage ? (
   <section
     class:list={[
-      'relative overflow-hidden bg-accent-dark text-bg flex flex-col justify-end',
-      wrapperHeight,
+      'relative isolate flex flex-col justify-end overflow-hidden bg-accent-dark text-bg',
+      imageHeroHeight,
     ]}
     aria-labelledby={headingId}
   >
     {/* Background: single static image or a cross-fading slideshow (2+ images),
-        plus the readability overlays. See HeroBackground.astro. */}
+        plus the one readability gradient. See HeroBackground.astro. */}
     <HeroBackground images={effectiveImages} />
 
     {/* Content sits at the bottom of the section thanks to justify-end on the
-        section itself. Avoids the h-full-on-flex-item brittleness that left
-        content floating mid-hero on min-height containers. */}
-    <div class="relative mx-auto w-full max-w-content px-m pb-section-lg pt-section-md">
-      {/*
-        hero-entry-stagger triggers the global page-load fade-up animation
-        defined in globals.css. Each direct child of this wrapper fades up
-        with a small per-child delay (eyebrow → hairline → h1 → subhead →
-        CTAs). Reduced-motion users get the final composition instantly.
-
-        Cream hairline beneath the eyebrow mirrors the SectionHeading
-        inverse-tone treatment so heroes carry the same editorial signature
-        as every interior section heading.
-      */}
-      <div class="hero-entry-stagger max-w-3xl">
-        {/* Same grammar as the split layout above and as every band below: mono
-            eyebrow, then the gold rule under the headline rather than a cream
-            hairline over it.
-
-            The eyebrow is CREAM here, not gold, and that is a departure from
-            the dark bands on purpose. Gold clears AA against the flat
-            --color-accent-dark band those use, but this hero's ground is a
-            PHOTOGRAPH under an overlay, and on the bright-sky frames the gold
-            line was the weakest text on the page. text-bg/90 is the same paper
-            white as the headline at 90%, so the eyebrow reads on every one of
-            the five frames. The gold rule below the headline keeps the brand
-            colour in the band. */}
-        {eyebrow && (
-          <p class="font-mono text-[0.75rem] uppercase tracking-eyebrow text-bg/90">{eyebrow}</p>
-        )}
-        <h1 id={headingId} class="mt-xs font-display text-h1 leading-headline-tight tracking-[-0.02em] text-bg">
-          {rotateEnabled ? (
-            <>
-              <span data-rotating-word data-rotating-words={rotatingPayload}>
-                {headlineFirst}
-              </span>{headlineRest}
-            </>
-          ) : scriptFound ? (
-            <>
-              {scriptBefore}<span class="font-script">{scriptWord}</span>{scriptAfter}
-            </>
-          ) : (
-            headline
-          )}
-        </h1>
-        <div class="mt-m h-0.5 w-14 bg-gold" aria-hidden="true"></div>
-        {subhead && (
-          <p class="mt-m max-w-2xl text-lg text-bg/90">
-            {subheadParts.map((part) =>
-              part.type === 'em'
-                ? <em class="italic font-display text-bg/95">{part.value}</em>
-                : part.value
-            )}
+        section itself. hero-entry-stagger rides on this wrapper, so its direct
+        children (the line, the headline, the lede, the facts, the buttons)
+        rise in sequence at 0/150/300/450/600ms. Reduced-motion users get the
+        final composition instantly. */}
+    <div class="hero-entry-stagger relative mx-auto w-full max-w-content px-gutter pt-[clamp(72px,12vh,128px)] pb-[clamp(40px,7vh,72px)]">
+      {showLiveSunday ? (
+        // The dated line, with the gold dash that marks it as the live one.
+        // The server text carries no date; the upgrade script in BaseLayout
+        // rewrites the inner span from data-live-sunday and the visitor's clock.
+        <p class="font-ui text-ui font-medium inline-flex items-center gap-3.5 mb-[clamp(18px,3vh,32px)]">
+          <span class="h-px w-11 bg-gold" aria-hidden="true"></span>
+          <span data-live-sunday={sundayTime}>{sundayStatic}</span>
+        </p>
+      ) : (
+        eyebrow && (
+          <p class="font-ui text-ui font-medium inline-flex items-center gap-3.5 mb-[clamp(18px,3vh,32px)]">
+            <span>{eyebrow}</span>
           </p>
+        )
+      )}
+      <h1 id={headingId} class:list={[displayHeadlineClass, 'text-bg']}>
+        {scriptFound ? (
+          <>
+            {scriptBefore}<span class="font-script">{scriptWord}</span>{scriptAfter}
+          </>
+        ) : (
+          headline
         )}
-        {heroFacts.length > 0 && (
-          <dl class="mt-l flex flex-wrap gap-l">
-            {heroFacts.map((fact) => (
-              <div>
-                {fact.label && (
-                  <dt class="font-mono text-[0.75rem] tracking-eyebrow uppercase text-bg/80">
-                    {fact.label}
-                  </dt>
-                )}
-                {fact.value && (
-                  <dd class="mt-1 font-display text-h4 text-bg">{fact.value}</dd>
-                )}
-              </div>
-            ))}
-          </dl>
-        )}
-        {(primaryCta || secondaryCta) && (
-          <div class="mt-l flex flex-wrap gap-s">
-            {/* Gold primary, white-outlined secondary: CtaLink's onDark outline.
-                The starter's bronze primary/secondary pair sat here, directly
-                under a gold Give button in the header. */}
-            {primaryCta && <CtaLink cta={primaryCta} variant="gold" onDark />}
-            {secondaryCta && <CtaLink cta={secondaryCta} variant="outline" onDark />}
-          </div>
-        )}
-      </div>
+      </h1>
+      {subhead && (
+        <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body italic font-normal text-lede text-bg">
+          {subheadParts.map((part) =>
+            part.type === 'em' ? <em class="not-italic">{part.value}</em> : part.value,
+          )}
+        </p>
+      )}
+      {heroFacts.length > 0 && (
+        <dl class="mt-[clamp(28px,5vh,48px)] flex max-w-[960px] flex-wrap gap-[clamp(24px,4vw,64px)] border-t border-bg/18 pt-[clamp(20px,3vh,28px)]">
+          {heroFacts.map((fact) => (
+            <div>
+              {fact.label && <dt class="font-ui text-ui mb-1.5 text-bg/70">{fact.label}</dt>}
+              {fact.value && (
+                <dd class="font-body text-[clamp(1.25rem,1rem+.9vw,1.625rem)] leading-tight">
+                  {fact.value}
+                </dd>
+              )}
+            </div>
+          ))}
+        </dl>
+      )}
+      {(primaryCta || secondaryCta) && (
+        <div class="mt-[clamp(26px,4vh,40px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
+          {/* One gold button and one text link with an arrow, not two buttons:
+              the second action is quieter than the first and should look it. */}
+          {primaryCta && <CtaLink cta={primaryCta} variant="gold" onDark />}
+          {secondaryCta && <CtaLink cta={secondaryCta} variant="link" onDark />}
+        </div>
+      )}
     </div>
-
-    {/* Soft pulsing scroll cue at the bottom-center of the hero. Tells
-        visitors there is more below; clicking it glides past the hero.
-        Static under prefers-reduced-motion (see the scoped <style>). */}
-    {size === 'tall' && (
-      <button
-        type="button"
-        data-scroll-cue
-        aria-label="Scroll down to see more"
-        class="scroll-cue absolute bottom-4 left-1/2 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full text-bg/85 hover:text-bg hover:bg-bg/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bg/70"
-      >
-        <ChevronDown size={28} strokeWidth={1.5} aria-hidden="true" />
-      </button>
-    )}
   </section>
 ) : (
   <section class="bg-background" aria-labelledby={headingId}>
-    <div class:list={['mx-auto max-w-content px-m py-section-lg flex items-end', wrapperHeight]}>
-      {/* The text-only hero speaks the same grammar as the two above: the
-          church eyebrow tone (brown-mid on paper, gold in dark mode) and the
-          gold rule under the headline. */}
+    <div
+      class:list={[
+        'mx-auto flex max-w-content items-end px-gutter py-section-lg',
+        size === 'tall' ? 'min-h-[100svh]' : 'min-h-[42svh] md:min-h-[52svh]',
+      ]}
+    >
+      {/* The text-only hero speaks the same grammar as the two above; the type
+          itself lives in SectionHeading, which the primitives pass redrew. */}
       <SectionHeading
         eyebrow={eyebrow}
         headline={headline}
@@ -480,47 +366,7 @@ const wrapperHeight =
         headingId={headingId}
         level="h1"
         tone="church"
-        rule
       />
     </div>
   </section>
 )}
-
-<style>
-  /* Full-viewport home hero. Fill the screen below the sticky header on first
-     load. --header-h is measured by the inline script above; the per-breakpoint
-     fallback covers the brief pre-measure window and the no-JS case (mobile
-     header ~7rem, desktop with the eyebrow strip ~9.5rem). svh keeps the hero
-     within the initially-visible viewport on mobile (address bar shown) so it
-     never forces an immediate scroll; the vh line is the pre-svh fallback. */
-  .hero-fill {
-    min-height: calc(100vh - var(--header-h, 7rem));
-    min-height: calc(100svh - var(--header-h, 7rem));
-  }
-  @media (min-width: 1024px) {
-    .hero-fill {
-      min-height: calc(100vh - var(--header-h, 9.5rem));
-      min-height: calc(100svh - var(--header-h, 9.5rem));
-    }
-  }
-
-  /* Scroll cue: a soft down-bob plus opacity pulse so it reads as "there is
-     more below" without shouting. Centered with translateX(-50%) (the keyframe
-     re-applies it each step). Reduced-motion users get a static, clearly
-     visible chevron instead. */
-  .scroll-cue {
-    transform: translateX(-50%);
-    animation: scroll-cue-bob 2.4s ease-in-out infinite;
-  }
-  @keyframes scroll-cue-bob {
-    0%, 100% { transform: translate(-50%, 0); opacity: 0.55; }
-    50%      { transform: translate(-50%, 0.4rem); opacity: 1; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .scroll-cue {
-      animation: none;
-      opacity: 0.85;
-      transform: translateX(-50%);
-    }
-  }
-</style>

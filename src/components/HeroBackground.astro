@@ -13,11 +13,11 @@
 // decorative. Reduced-motion users get a single static image (the CSS
 // animation is disabled in that media query).
 //
-// The only script left here is the pause button: it toggles .is-paused on the
-// slideshow wrapper, which pauses BOTH animations (crossfade and Ken Burns)
-// via animation-play-state. It is bound the same idempotent way the hero's
-// other inline scripts are, so it survives Astro View Transitions without
-// double-binding.
+// There is NO script in this file any more. The pause button and the dot
+// indicators went with the art-direction pass (plan 3 task 6): the hero is a
+// photograph under a gradient, not a carousel with controls. Hovering or
+// focusing inside the frame still pauses both animations, and reduced-motion
+// visitors still get one static frame.
 
 import SanityImage from '@/components/SanityImage.astro';
 import { frameAnimationDelays } from '@/lib/hero-frames';
@@ -63,14 +63,6 @@ const fewFrames = slides.length <= 3;
             style={`--frames:${slides.length}; --frame-s:${SECONDS_PER_FRAME}; animation-delay:${delays[i]}s`}
           />
         ))}
-        <button type="button" class="hero-pause" aria-pressed="false">
-          Pause
-        </button>
-        <div class="hero-dots" aria-hidden="true">
-          {slides.map(() => (
-            <span></span>
-          ))}
-        </div>
       </div>
     ) : (
       <SanityImage
@@ -84,41 +76,17 @@ const fewFrames = slides.length <= 3;
       />
     )}
 
-    {/* Uniform overlay, minimum readability across the whole image. */}
-    <div class="absolute inset-0 bg-accent-dark/25" aria-hidden="true"></div>
-    {/* Bottom-weighted gradient, extra darkening behind the text area. */}
+    {/* ONE overlay, two gradients (plan 3 task 6, the prototype's hero).
+        Bottom-up it reaches 94% ink where the words sit and is clear by 80% of
+        the way up, so the sky stays sky; left-right it adds 55% at the left
+        edge and nothing past the middle, which is where the headline and the
+        lede live. The flat 25% scrim that used to sit under this is gone: a
+        uniform wash greys the whole photograph to buy contrast the gradient
+        already buys only where it is needed. */}
     <div
-      class="absolute inset-0 bg-gradient-to-t from-accent-dark/85 via-accent-dark/45 to-transparent"
+      class="absolute inset-0"
+      style="background: linear-gradient(to top, rgba(23,21,31,.94) 0%, rgba(23,21,31,.62) 34%, rgba(23,21,31,.12) 62%, rgba(23,21,31,0) 80%), linear-gradient(to right, rgba(23,21,31,.55) 0%, rgba(23,21,31,0) 55%);"
       aria-hidden="true"
     ></div>
   </>
-)}
-
-{isSlideshow && (
-  <script is:inline>
-    (function () {
-      // Toggles .is-paused on the [data-hero-fade] wrapper, which the CSS
-      // uses to pause both the crossfade and the Ken Burns zoom together
-      // (animation-play-state with no per-animation value pauses all of an
-      // element's animations at once). Bound once, guarded against Astro
-      // View Transitions re-running this script on a detached button.
-      function initHeroPause() {
-        var box = document.querySelector('[data-hero-fade]');
-        if (!box) return;
-        var button = box.querySelector('.hero-pause');
-        if (!button || button.dataset.wired === '1') return;
-        button.dataset.wired = '1';
-        button.addEventListener('click', function () {
-          var paused = box.classList.toggle('is-paused');
-          button.setAttribute('aria-pressed', paused ? 'true' : 'false');
-          button.textContent = paused ? 'Play' : 'Pause';
-        });
-      }
-      initHeroPause();
-      if (!window.__heroPauseBound) {
-        window.__heroPauseBound = true;
-        document.addEventListener('astro:page-load', initHeroPause);
-      }
-    })();
-  </script>
 )}
