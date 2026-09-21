@@ -6,7 +6,7 @@
 
 **Architecture:** The prototype at `prototypes/home/index.html` is the reference implementation: its CSS blocks are the code each task transcribes into Tailwind utilities and `@theme` tokens. Tokens and fonts change first through `brand.config.json` + `apply-brand`; then the shared primitives (SectionHeading, CtaLink, SectionDivider, utilities); then the chrome (header with overlay mode, a drop-from-top mobile menu, a poster footer); then the section components in the order the home page needs them, then the rest; then the blog and post template; then a motion pass; then a per-page review, parity recapture, visual baseline and deploy.
 
-**Tech Stack:** Astro 7, Tailwind 4 (`@theme` tokens in `src/styles/globals.css`), React 19 islands (MobileNav only), fontsource variable packages (Fraunces, Newsreader, Archivo), Playwright, node --test.
+**Tech Stack:** Astro 7, Tailwind 4 (`@theme` tokens in `src/styles/globals.css`), React 19 islands (MobileNav only), fontsource variable packages (Castoro Titling, Castoro, Sofia Sans Semi Condensed), Playwright, node --test.
 
 **Spec:** `docs/superpowers/specs/2026-09-20-fbcm-art-direction-design.md`. Brief: `docs/superpowers/notes/2026-09-20-design-research.md`. Reference render: `prototypes/home/index.html` (open it in a browser and keep it open while implementing).
 
@@ -17,7 +17,7 @@
 - No em-dashes in any string a visitor reads. The strings "about an hour" and "Hymns, the choir, and a sermon, then coffee in the fellowship hall" are NOT shipped in this pass.
 - Light AND dark on every UI change, at 1440 and 390, screenshots walked so reveals fire (the shooter in Task 0 does this).
 - Desktop nav stays server-rendered. The Lenis reset and the sticky-header gesture gate in `BaseLayout.astro` are not changed.
-- Dependencies: exactly three additions, `@fontsource-variable/fraunces@5.3.0`, `@fontsource-variable/newsreader@5.3.0`, `@fontsource-variable/archivo@5.3.0`. Nothing else is installed or bumped. Never `npm audit fix --force`.
+- Dependencies: exactly three additions, `@fontsource/castoro-titling@5.3.0`, `@fontsource/castoro@5.3.0`, `@fontsource-variable/sofia-sans-semi-condensed@5.3.0`. Nothing else is installed or bumped. Never `npm audit fix --force`.
 - Any component that parses a string from Sanity calls `splitStega()` (`src/lib/preview-stega.ts`) first.
 - Rule 17: one left edge per page, one button family (CtaLink), one heading system (SectionHeading). Each band may break the container at most once, by an image.
 - Exactly one element per page at `--text-display`.
@@ -116,40 +116,40 @@ git commit -m "chore: page shooter for the art-direction pass"
 - Modify: `package.json` (three fontsource packages), `brand/brand.config.json`, `src/styles/globals.css` (imports, `@theme`, `:root`, `.dark`), `src/lib/prose.ts`, `src/lib/theme-tokens.test.ts`, `sanity.config.ts` (via apply-brand), `scripts/generate-og-default.mjs` (via apply-brand), `public/og-default.png` (via `npm run og`)
 
 **Interfaces:**
-- Produces tokens every later task uses: `--font-display` (Fraunces), `--font-body` (Newsreader), `--font-ui` (Archivo) and the utility `font-ui`; `--text-display`, `--text-h1`, `--text-h2`, `--text-h3`, `--text-lede`; `--color-bg #f4efe6`, `--color-bg-soft #ebe4d8`, `--foreground #17151f`, `--muted-foreground #514c58`, `--color-gold-ink #8a5f0c`, `--hair`; `--container-content: 87.5rem`; `--spacing-gutter: clamp(20px, 5vw, 72px)`; `--radius: 2px`.
+- Produces tokens every later task uses: `--font-display` (Castoro Titling), `--font-body` (Castoro), `--font-ui` (Sofia Sans Semi Condensed) and the utility `font-ui`; `--text-display`, `--text-h1`, `--text-h2`, `--text-h3`, `--text-lede`; `--color-bg #f4efe6`, `--color-bg-#ebe4d8`, `--foreground #17151f`, `--muted-foreground #514c58`, `--color-gold-ink #8a5f0c`, `--hair`; `--container-content: 87.5rem`; `--spacing-gutter: clamp(20px, 5vw, 72px)`; `--radius: 2px`.
 - `PROSE_MEASURE` becomes `'text-foreground/90 text-body leading-[1.72] max-w-[62ch]'`.
 
 - [ ] **Step 1: Install the three faces**
 
 ```bash
-npm install @fontsource-variable/fraunces@5.3.0 @fontsource-variable/newsreader@5.3.0 @fontsource-variable/archivo@5.3.0 --save-exact
+npm install @fontsource/castoro-titling@5.3.0 @fontsource/castoro@5.3.0 @fontsource-variable/sofia-sans-semi-condensed@5.3.0 --save-exact
 ```
 
 Expected: `package-lock.json` gains exactly three packages; `find node_modules -path "*@sanity/ui/package.json" | wc -l` still prints 1.
 
 - [ ] **Step 2: Update `brand/brand.config.json`**
 
-Set `fonts.display.familyValue` to `"\"Fraunces Variable\", Georgia, serif"`, `fonts.display.ogFontStack` to `"Fraunces, Georgia, serif"`, `fonts.display.imports` to `["@fontsource-variable/fraunces"]`; `fonts.body.familyValue` to `"\"Newsreader Variable\", Georgia, serif"`, `ogFontStack` `"Newsreader, Georgia, serif"`, `imports` `["@fontsource-variable/newsreader"]`. Palette `theme`: `--color-bg` `#F4EFE6`, `--color-bg-soft` `#EBE4D8`, `--color-cream` `#F4EFE6`, `--color-secondary` `#B5ABA3`, `--color-tertiary` `#B5ABA3`, `--color-border-soft` `#DCD5C9`. Palette `light`: `--background #F4EFE6`, `--foreground #17151F`, `--card #F4EFE6`, `--popover #F4EFE6`, `--primary #292854`, `--primary-foreground #F4EFE6`, `--secondary #EBE4D8`, `--muted #EBE4D8`, `--muted-foreground #514C58`, `--accent #EBE4D8`, `--accent-foreground #17151F`, `--border #DCD5C9`, `--input #DCD5C9`, `--ring #292854`, `--link #17151F`, `--tint-rgb "41, 40, 84"`, `--primary-accent #1C1B3A`, `--outline #292854`, sidebar values matching. Palette `dark`: `--background #14121B`, `--foreground #F1ECE3`, `--card #1C1926`, `--popover #1C1926`, `--primary #F1ECE3`, `--primary-foreground #14121B`, `--secondary #1C1926`, `--muted #1C1926`, `--muted-foreground #C2BCC9`, `--accent #26222f`, `--accent-foreground #F1ECE3`, `--border oklch(1 0 0 / 14%)`, `--ring #D59B29`, `--link #F1ECE3`, `--tint-rgb "213, 155, 41"`. `radius` `"0.125rem"`. `studio.fonts` display/body to the new stacks.
+Set `fonts.display.familyValue` to `"\"Castoro Titling Variable\", Georgia, serif"`, `fonts.display.ogFontStack` to `"Castoro Titling, Georgia, serif"`, `fonts.display.imports` to `["@fontsource/castoro-titling"]`; `fonts.body.familyValue` to `"\"Castoro Variable\", Georgia, serif"`, `ogFontStack` `"Castoro, Georgia, serif"`, `imports` `["@fontsource/castoro"]`. Palette `theme`: `--color-bg` `#F4EFE6`, `--color-bg-soft` `#EBE4D8`, `--color-cream` `#F4EFE6`, `--color-secondary` `#B5ABA3`, `--color-tertiary` `#B5ABA3`, `--color-border-soft` `#DCD5C9`. Palette `light`: `--background #F4EFE6`, `--foreground #17151F`, `--card #F4EFE6`, `--popover #F4EFE6`, `--primary #292854`, `--primary-foreground #F4EFE6`, `--secondary #EBE4D8`, `--muted #EBE4D8`, `--muted-foreground #514C58`, `--accent #EBE4D8`, `--accent-foreground #17151F`, `--border #DCD5C9`, `--input #DCD5C9`, `--ring #292854`, `--link #17151F`, `--tint-rgb "41, 40, 84"`, `--primary-accent #1C1B3A`, `--outline #292854`, sidebar values matching. Palette `dark`: `--background #14121B`, `--foreground #F1ECE3`, `--card #1C1926`, `--popover #1C1926`, `--primary #F1ECE3`, `--primary-foreground #14121B`, `--secondary #1C1926`, `--muted #1C1926`, `--muted-foreground #C2BCC9`, `--accent #26222f`, `--accent-foreground #F1ECE3`, `--border oklch(1 0 0 / 14%)`, `--ring #D59B29`, `--link #F1ECE3`, `--tint-rgb "213, 155, 41"`. `radius` `"0.125rem"`. `studio.fonts` display/body to the new stacks.
 
 - [ ] **Step 3: Apply the brand and add what apply-brand does not own**
 
 Run: `npm run apply-brand`
 Then edit `src/styles/globals.css` by hand:
 
-1. Add after the two fontsource imports: `@import '@fontsource-variable/archivo';`
+1. Add after the two fontsource imports: `@import '@fontsource-variable/sofia-sans-semi-condensed';`
 2. In `@theme`, add:
 
 ```css
-  --font-ui: 'Archivo Variable', system-ui, sans-serif;
+  --font-ui: 'Sofia Sans Semi Condensed Variable', system-ui, sans-serif;
   --color-gold-ink: #8a5f0c; /* gold as a LABEL on paper: 7.0:1 on #f4efe6, gated */
   --color-indigo-deep: #1b1a3a; /* the footer field */
-  --text-display: clamp(3.4rem, 1rem + 10.5vw, 9.75rem);
+  --text-display: clamp(2.9rem, 1rem + 8.4vw, 8rem);
   --text-lede: clamp(1.25rem, 1rem + 1vw, 1.75rem);
   --text-body: 1.0625rem;
   --text-ui: 0.8125rem;
   --spacing-gutter: clamp(20px, 5vw, 72px);
   --leading-display: 0.95;
-  --tracking-display: -0.018em;
+  --tracking-display: 0.01em;
 ```
 
 and change: `--text-h1: clamp(2.6rem, 1rem + 5.4vw, 6rem); --text-h2: clamp(2rem, 1.2rem + 2.6vw, 3.25rem); --text-h3: clamp(1.375rem, 1rem + 1vw, 1.75rem); --container-content: 87.5rem; --tracking-eyebrow: 0.14em;`.
@@ -159,16 +159,16 @@ and change: `--text-h1: clamp(2.6rem, 1rem + 5.4vw, 6rem); --text-h2: clamp(2rem
 5. Add utilities:
 
 ```css
-@utility font-ui { font-family: var(--font-ui); font-stretch: 88%; }
+@utility font-ui { font-family: var(--font-ui); font-stretch: 100%; }
 @utility text-display { font-size: var(--text-display); line-height: var(--leading-display); letter-spacing: var(--tracking-display); }
 @utility text-lede { font-size: var(--text-lede); line-height: 1.35; }
 @utility text-body { font-size: var(--text-body); }
 @utility text-ui { font-size: var(--text-ui); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
-@utility soft { font-variation-settings: 'SOFT' 40; }
+@utility { }
 @utility oldstyle { font-variant-numeric: oldstyle-nums proportional-nums; }
 ```
 
-6. In the base layer where `h1..h6` get `font-family: var(--font-display); font-weight: 500;` change the weight to 300 for h1 and h2, 400 for h3 and below, and add `font-variation-settings: 'SOFT' 40; text-wrap: balance;`. Body gets `font-size: var(--text-body); line-height: 1.7; font-optical-sizing: auto;`.
+6. In the base layer where `h1..h6` get `font-family: var(--font-display); font-weight: 500;` h1 keeps `var(--font-display)` and gains `text-transform: uppercase; letter-spacing: 0.01em; font-weight: 400;`; h2 to h6 switch to `var(--font-body)` at weight 400; all gain `text-wrap: balance;`. Body gets `font-size: var(--text-body); line-height: 1.7; font-optical-sizing: auto;`.
 
 - [ ] **Step 4: Retoken the prose measure**
 
@@ -176,12 +176,12 @@ In `src/lib/prose.ts` set `PROSE_MEASURE = 'text-foreground/90 text-body leading
 
 - [ ] **Step 5: Update the contrast gate to the new pairs, then run it to see it fail first**
 
-In `src/lib/theme-tokens.test.ts`: update every expected hex the test reads by name (`--color-bg` etc. are read from the CSS, so most tests follow automatically), then ADD to `CHURCH_PAIRS_AA`: `['color-gold-ink', 'color-bg', 'gold as a label on paper']`, `['color-gold-ink', 'color-bg-soft', 'gold label on the soft band']`, `['color-accent', 'color-bg', 'ink on paper']`, `['color-gold', 'color-indigo-deep', 'gold labels on the footer field']`, `['color-taupe', 'color-indigo-deep', 'muted text on the footer field']`. Keep `CHURCH_PAIRS_FORBIDDEN` (gold on cream, taupe on cream still fail). Run: `npm run test:unit`. Expected: any failure is a pair that genuinely fails; fix the TOKEN (never the assertion) until green. Record every measured ratio in the report.
+In `src/lib/theme-tokens.test.ts`: update every expected hex the test reads by name (`--color-bg` etc. are read from the CSS, so most tests follow automatically), then ADD to `CHURCH_PAIRS_AA`: `['color-gold-ink', 'color-bg', 'gold as a label on paper']`, `['color-gold-ink', 'color-bg-soft', 'gold label on the band']`, `['color-accent', 'color-bg', 'ink on paper']`, `['color-gold', 'color-indigo-deep', 'gold labels on the footer field']`, `['color-taupe', 'color-indigo-deep', 'muted text on the footer field']`. Keep `CHURCH_PAIRS_FORBIDDEN` (gold on cream, taupe on cream still fail). Run: `npm run test:unit`. Expected: any failure is a pair that genuinely fails; fix the TOKEN (never the assertion) until green. Record every measured ratio in the report.
 
 - [ ] **Step 6: Regenerate the OG image and build**
 
 Run: `npm run og && npm run build && npm run check && npm run test:unit`
-Expected: all green; the built stylesheet lists Fraunces, Newsreader and Archivo `@font-face` rules and no Inter or Libre Baskerville.
+Expected: all green; the built stylesheet lists Castoro Titling, Castoro and Sofia Sans Semi Condensed `@font-face` rules and no Inter or Libre Baskerville.
 
 - [ ] **Step 7: Screenshot home in all four states and commit**
 
@@ -190,7 +190,7 @@ Expected: the page renders in the new faces on warm paper; layout otherwise unch
 
 ```bash
 git add -A
-git commit -m "feat(theme): Fraunces, Newsreader and Archivo; paper-and-ink chrome tokens; contrast gate updated"
+git commit -m "feat(theme): Castoro Titling, Castoro and Sofia Sans Semi Condensed; paper-and-ink chrome tokens; contrast gate updated"
 ```
 
 ---
@@ -201,14 +201,14 @@ git commit -m "feat(theme): Fraunces, Newsreader and Archivo; paper-and-ink chro
 - Modify: `src/components/SectionHeading.astro`, `src/components/CtaLink.astro`, `src/components/SectionDivider.astro`, `src/styles/globals.css` (nav-underline, bleed utilities, button plate)
 
 **Interfaces:**
-- Produces: `SectionHeading` renders eyebrow (`font-ui text-ui text-gold-ink` on paper, `text-gold` on band/inverse), headline at `text-h1|h2|h3` with `soft` and weight 300 (h1, h2) / 400 (h3), subhead as `.lede` (`font-body italic font-light text-lede`), no rule and no hairline. `rule` prop accepted and ignored.
+- Produces: `SectionHeading` renders eyebrow (`font-ui text-ui text-gold-ink` on paper, `text-gold` on band/inverse), headline at : h1 in , h2 and h3 in , subhead as `.lede` (`font-body italic font-normal text-lede`), no rule and no hairline. `rule` prop accepted and ignored.
 - `CtaLink` variants: `gold` (fill gold, label `text-indigo-field`, `font-ui text-ui font-semibold`, `px-[1.6em] py-[1.05em] rounded-sm`, and the plate signature: a 1px indigo-field line drawn 3px inside the edge with `shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)]`), `outline`, `link` (`font-ui text-ui font-semibold border-b border-current pb-1 inline-flex gap-2` with a trailing `→` span that translates 4px on hover). Aliases `primary`/`secondary` kept.
 - Utilities: `.bleed-right { margin-right: min(calc(-1 * var(--spacing-gutter)), calc((100vw - var(--container-content)) / -2 - var(--spacing-gutter))) }`, `.bleed-left` mirror, both collapsing to `margin-inline: calc(-1 * var(--spacing-gutter))` under `max-width: 900px`.
 - `.nav-underline::after`: `left: 0; right: 100%; height: 1px; background: var(--color-gold); transition: right 300ms cubic-bezier(.2,.7,.2,1)`; hover/focus/current `right: 0`. No `transform`.
 
 - [ ] **Step 1: SectionHeading**
 
-Rewrite the class computations: `headingClass` = h1 `font-display soft text-h1 leading-none tracking-[-0.012em] font-light`, h2 `font-display soft text-h2 leading-[1.05] tracking-[-0.012em] font-light max-w-[22ch]`, h3 `font-display text-h3 leading-[1.15] font-normal`. Eyebrow `p` gets `font-ui text-ui font-medium mb-5` and the tone colours: default/church `text-gold-ink`, band/inverse `text-gold`. Delete both rule branches (the `mb-m` spacer, the hairline, the gold bar). Subhead `p` gets `lede mt-5 font-body italic font-light text-lede` with `text-foreground` (paper) or `text-bg/85` (dark). Keep the accent-splitting logic untouched.
+Rewrite the class computations: `headingClass` = h1 `font-display uppercase text-h1 leading-none tracking-[0.01em] font-normal`, h2 `font-body text-h2 leading-[1.05] font-normal max-w-[22ch]`, h3 `font-body text-h3 leading-[1.15] font-normal`. Eyebrow `p` gets `font-ui text-ui font-medium mb-5` and the tone colours: default/church `text-gold-ink`, band/inverse `text-gold`. Delete both rule branches (the `mb-m` spacer, the hairline, the gold bar). Subhead `p` gets `lede mt-5 font-body italic font-normal text-lede` with `text-foreground` (paper) or `text-bg/85` (dark). Keep the accent-splitting logic untouched.
 
 - [ ] **Step 2: CtaLink**
 
@@ -225,7 +225,7 @@ Redraw `.nav-underline`, add `.bleed-right`/`.bleed-left`, and replace `.card-li
 - [ ] **Step 5: Build, unit, screenshots, commit**
 
 Run: `npm run check && npm run test:unit && npm run build && node scripts/shoot-pages.mjs .superpowers/sdd/2026-09-20-fbcm-art-direction/shots-t2 / /visit/`
-Expected: every heading is Fraunces 300 with no gold bar; buttons carry the inset double rule; `section-fields.test.ts` still green.
+Expected: h1s are in the titling capitals, h2s in Castoro roman, none with a gold bar; buttons carry the inset double rule; `section-fields.test.ts` still green.
 
 ```bash
 git add -A && git commit -m "feat(primitives): heading system, button plate, hairline divider, bleed utilities"
@@ -267,7 +267,7 @@ Run: `npm run check && npm run build && npm test -- tests/anchors.spec.ts && nod
 Expected: on home the header is transparent over the tower with paper text and becomes paper after 8px of scroll; on /beliefs (text hero) it is paper from the start; anchors land below it.
 
 ```bash
-git add -A && git commit -m "feat(header): one row, Archivo nav, gold underline, overlay mode over image heroes"
+git add -A && git commit -m "feat(header): one row, Sofia Sans Semi Condensed nav, gold underline, overlay mode over image heroes"
 ```
 
 ---
@@ -301,7 +301,7 @@ git add -A && git commit -m "feat(header): one row, Archivo nav, gold underline,
           <a href={item.href} onClick={close} aria-current={current ? 'page' : undefined}
              className="group flex items-baseline gap-5 py-4">
             <span className="font-ui text-[0.75rem] tracking-[0.14em] text-gold">{String(i + 1).padStart(2, '0')}</span>
-            <span className="font-display soft text-[clamp(2.25rem,8vw,3.5rem)] font-light leading-none nav-underline">{item.label}</span>
+            <span className="font-display uppercase tracking-[0.02em] text-[clamp(1.75rem,6.4vw,2.75rem)] font-normal leading-none nav-underline">{item.label}</span>
           </a>
         </li>
       ))}
@@ -354,7 +354,7 @@ git add -A && git commit -m "feat(menu): drop-from-top indigo menu with numbered
 
 - [ ] **Step 1: Markup**
 
-Band `bg-indigo-deep text-bg`. Remove the 4px gold rule. Top poster row inside the container, `py-section-md`: a `p` in `font-ui text-ui text-gold` reading "This Sunday" (client-side upgraded to the dated line by the live-sunday script, see Task 6), an `h2`-less `p` in `font-display soft font-light text-[clamp(2rem,5.2vw,3.25rem)] leading-none` reading the service time exactly as `siteSettings.serviceTime` gives it ("Sundays at 10:45 am"), a `p` in `font-body italic text-lede text-bg/75` with the street line, and the gold Give button. Then a `border-t border-bg/15`. Then the four columns: brand (wordmark `h-16`, tagline in `font-body italic font-light text-lede text-bg/75 max-w-[26ch]`), the two editor columns as `<ol>` with numbered rows (`font-ui text-[0.75rem] text-gold` number, `font-display text-[1.25rem] font-normal` label, `border-b border-bg/12 py-2`), Office as prose in `font-body text-bg/80`. Base rail: copyright, legal links, `ThemeToggle client:idle`, `font-ui text-[0.8125rem] text-bg/70`.
+Band `bg-indigo-deep text-bg`. Remove the 4px gold rule. Top poster row inside the container, `py-section-md`: a `p` in `font-ui text-ui text-gold` reading "This Sunday" (client-side upgraded to the dated line by the live-sunday script, see Task 6), an `h2`-less `p` in `font-display uppercase tracking-[0.01em] font-normal text-[clamp(2rem,5.2vw,3.25rem)] leading-none` reading the service time exactly as `siteSettings.serviceTime` gives it ("Sundays at 10:45 am"), a `p` in `font-body italic text-lede text-bg/75` with the street line, and the gold Give button. Then a `border-t border-bg/15`. Then the four columns: brand (wordmark `h-16`, tagline in `font-body italic font-normal text-lede text-bg/75 max-w-[26ch]`), the two editor columns as `<ol>` with numbered rows (`font-ui text-[0.75rem] text-gold` number, `font-body text-[1.25rem] font-normal` label, `border-b border-bg/12 py-2`), Office as prose in `font-body text-bg/80`. Base rail: copyright, legal links, `ThemeToggle client:idle`, `font-ui text-[0.8125rem] text-bg/70`.
 - Texture: an absolutely positioned `<img>` of `src/assets/menu-window.jpg` at `opacity-10` in the top-right quarter, `mask-image: radial-gradient(ellipse at top right, #000, transparent 70%)`, `aria-hidden`, `loading="lazy"`.
 
 - [ ] **Step 2: Gates, screenshots, commit**
@@ -435,8 +435,8 @@ Run the test again. Expected: PASS.
 - `HeroBackground.astro`: replace the flat `bg-accent-dark/25` and the gradient div with ONE overlay: `background: linear-gradient(to top, rgba(23,21,31,.94) 0%, rgba(23,21,31,.62) 34%, rgba(23,21,31,.12) 62%, rgba(23,21,31,0) 80%), linear-gradient(to right, rgba(23,21,31,.55) 0%, rgba(23,21,31,0) 55%)`. Keep the cross-fade; delete the pause button and the dots.
 - Content wrapper: `relative mx-auto w-full max-w-content px-gutter pt-[clamp(72px,12vh,128px)] pb-[clamp(40px,7vh,72px)] hero-entry-stagger`.
 - Line 1: when `size === 'tall'` and `serviceTime` is present, `<p class="font-ui text-ui font-medium inline-flex items-center gap-3.5 mb-[clamp(18px,3vh,32px)]"><span class="h-px w-11 bg-gold" aria-hidden /><span data-live-sunday={timeOnlyClean}>{staticSunday(clean)}</span></p>`; otherwise the eyebrow in the same classes without the gold dash. `clean = splitStega(serviceTime).cleaned`.
-- h1: `font-display soft font-light text-display text-bg max-w-[12ch]` for tall, `text-h1 leading-none` for short.
-- Subhead: `lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body italic font-light text-lede text-bg`.
+- h1: `font-display uppercase tracking-[0.01em] font-normal text-display text-bg max-w-[12ch]` for tall, `text-h1 leading-none` for short.
+- Subhead: `lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body italic font-normal text-lede text-bg`.
 - Facts: `<dl class="mt-[clamp(28px,5vh,48px)] flex max-w-[960px] flex-wrap gap-[clamp(24px,4vw,64px)] border-t border-bg/18 pt-[clamp(20px,3vh,28px)]">`, `dt` `font-ui text-ui text-bg/70 mb-1.5`, `dd` `font-body text-[clamp(1.25rem,1rem+.9vw,1.625rem)] leading-tight`.
 - CTAs: primary `<CtaLink variant="gold" onDark>`, secondary `<CtaLink variant="link" onDark>`.
 
@@ -469,11 +469,11 @@ git add -A && git commit -m "feat(hero): full-bleed gradient hero at display sca
 
 - [ ] **Step 1: Left door**
 
-Eyebrow (`SectionHeading` with `eyebrow` only is not enough; render inline): `p.font-ui.text-ui.text-gold-ink.mb-5`; `div.font-display.soft.oldstyle.font-light.text-display.leading-none.-ml-[.04em]` holding the first item's `big` with any trailing ` am|pm` wrapped in `<span class="text-[.28em] italic font-light align-[.1em] ml-[.15em]">`; the first item's `body` as the lede (`max-w-[26ch]`); then `<ul class="mt-9 border-t border-hair">` where every item AFTER the first, and every `door` if the block has doors, renders `<li class="grid grid-cols-[7ch_1fr] gap-5 py-4 border-b border-hair items-baseline"><span class="font-display oldstyle font-light text-2xl">{big}</span><span class="font-body text-body">{label} <em class="text-muted-foreground">{body}</em></span></li>`.
+Eyebrow (`SectionHeading` with `eyebrow` only is not enough; render inline): `p.font-ui.text-ui.text-gold-ink.mb-5`; `div.font-body.oldstyle.font-normal.text-display.leading-none.-ml-[.04em]` (the numeral is Castoro roman, the one place `text-display` is used outside a hero) holding the first item's `big` with any trailing ` am|pm` wrapped in `<span class="text-[.28em] italic font-normal align-[.1em] ml-[.15em]">`; the first item's `body` as the lede (`max-w-[26ch]`); then `<ul class="mt-9 border-t border-hair">` where every item AFTER the first, and every `door` if the block has doors, renders `<li class="grid grid-cols-[7ch_1fr] gap-5 py-4 border-b border-hair items-baseline"><span class="font-body oldstyle font-normal text-2xl">{big}</span><span class="font-body text-body">{label} <em class="text-muted-foreground">{body}</em></span></li>`.
 
 - [ ] **Step 2: Right door and grid**
 
-Wrapper `mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] gap-y-14 px-gutter py-section-lg`; left door `col-span-12 lg:col-span-5`; right `col-span-12 lg:col-start-7 lg:col-span-6`. Frame: `<figure class="bleed-right"><SanityImage ... class="aspect-[4/3] w-full object-cover" sizes="(min-width:1024px) 55vw, 100vw" width={1800} /><figcaption class="mt-3.5 flex justify-between gap-5 font-ui text-[0.75rem] tracking-[.06em] text-muted-foreground"><span>{alt}</span></figcaption></figure>`. Under it the block's `heading` as h3 (`font-display text-h3 mt-8 max-w-[24ch]`) and, when the block has an `intro`/second-item body, one paragraph, then the CTA if present as `variant="link"`.
+Wrapper `mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] gap-y-14 px-gutter py-section-lg`; left door `col-span-12 lg:col-span-5`; right `col-span-12 lg:col-start-7 lg:col-span-6`. Frame: `<figure class="bleed-right"><SanityImage ... class="aspect-[4/3] w-full object-cover" sizes="(min-width:1024px) 55vw, 100vw" width={1800} /><figcaption class="mt-3.5 flex justify-between gap-5 font-ui text-[0.75rem] tracking-[.06em] text-muted-foreground"><span>{alt}</span></figcaption></figure>`. Under it the block's `heading` as h3 (`font-body text-h3 mt-8 max-w-[24ch]`) and, when the block has an `intro`/second-item body, one paragraph, then the CTA if present as `variant="link"`.
 
 - [ ] **Step 3: SectionRenderer**
 
@@ -496,9 +496,9 @@ git add -A && git commit -m "feat(sunday): the service time as the page's numera
 
 - [ ] **Step 1: LinkCards → ruled row**
 
-Delete the card wrapper and the gold top border. Render `<div class="grid grid-cols-1 md:grid-cols-3 border-t border-hair">` with each card as `<a class="group py-7 pr-[clamp(16px,2vw,32px)] md:border-r md:border-hair md:mr-[clamp(16px,2vw,32px)] last:border-r-0 last:mr-0 border-b md:border-b-0 border-hair">` containing eyebrow (`font-ui text-ui text-gold-ink mb-3`), title (`font-display text-h3 font-normal`), body (`mt-2.5 font-body text-base leading-[1.55] max-w-[34ch] text-muted-foreground`), and the link as `<span class="mt-3.5 inline-block font-body italic">{label} →</span>`. The band keeps `surface` for its background. New prop `onDark?: boolean` switches ink to paper, eyebrows to gold and hairlines to `bg/18`.
+Delete the card wrapper and the gold top border. Render `<div class="grid grid-cols-1 md:grid-cols-3 border-t border-hair">` with each card as `<a class="group py-7 pr-[clamp(16px,2vw,32px)] md:border-r md:border-hair md:mr-[clamp(16px,2vw,32px)] last:border-r-0 last:mr-0 border-b md:border-b-0 border-hair">` containing eyebrow (`font-ui text-ui text-gold-ink mb-3`), title (`font-body text-h3 font-normal`), body (`mt-2.5 font-body text-base leading-[1.55] max-w-[34ch] text-muted-foreground`), and the link as `<span class="mt-3.5 inline-block font-body italic">{label} →</span>`. The band keeps `surface` for its background. New prop `onDark?: boolean` switches ink to paper, eyebrows to gold and hairlines to `bg/18`.
 
-**The statement band, with no new block type.** `LinkCards` gains `frame?: SanityImageObject | null`. SectionRenderer passes the page's SECOND spare image (the first spare goes to SundayTimes in Task 7; "spare" = any `imageTextSection.image` or `gallerySection` item later in the array), and only when the block has a `heading`. With a frame the block renders as the prototype's statement: `relative isolate flex min-h-[88svh] flex-col justify-end text-bg`, the frame as an absolutely positioned `SanityImage` (`object-cover object-[50%_40%]`, `sizes="100vw"`, `width={2400}`), the Task 6 bottom-up gradient, the heading at `font-display soft font-light text-h1 max-w-[15ch]`, then the ruled row above with `onDark`. Without a frame it renders the light ruled row under a normal SectionHeading. The frame image is NOT removed from its own later block.
+**The statement band, with no new block type.** `LinkCards` gains `frame?: SanityImageObject | null`. SectionRenderer passes the page's SECOND spare image (the first spare goes to SundayTimes in Task 7; "spare" = any `imageTextSection.image` or `gallerySection` item later in the array), and only when the block has a `heading`. With a frame the block renders as the prototype's statement: `relative isolate flex min-h-[88svh] flex-col justify-end text-bg`, the frame as an absolutely positioned `SanityImage` (`object-cover object-[50%_40%]`, `sizes="100vw"`, `width={2400}`), the Task 6 bottom-up gradient, the heading at `font-display uppercase tracking-[0.01em] font-normal text-h1 max-w-[15ch]`, then the ruled row above with `onDark`. Without a frame it renders the light ruled row under a normal SectionHeading. The frame image is NOT removed from its own later block.
 
 - [ ] **Step 2: ImageText → asymmetric**
 
@@ -506,11 +506,11 @@ Grid `grid-cols-12`: heading block `col-span-12 lg:col-span-4` (eyebrow, h2 `max
 
 - [ ] **Step 3: RichTextSection**
 
-With a heading: `grid-cols-12`, heading `lg:col-span-4`, prose `lg:col-start-6 lg:col-span-6` with `PROSE_MEASURE`. Without: prose alone at `PROSE_MEASURE`. PortableText styles: h2 `font-display soft font-light text-h2 mt-12 mb-4`, h3 `font-display text-h3 mt-8 mb-3`, lists `font-body`, links `underline decoration-gold underline-offset-4`, blockquote `font-display italic font-light text-h3 border-l border-gold pl-6`.
+With a heading: `grid-cols-12`, heading `lg:col-span-4`, prose `lg:col-start-6 lg:col-span-6` with `PROSE_MEASURE`. Without: prose alone at `PROSE_MEASURE`. PortableText styles: h2 `font-body font-normal text-h2 mt-12 mb-4`, h3 `font-body text-h3 mt-8 mb-3`, lists `font-body`, links `underline decoration-gold underline-offset-4`, blockquote `font-body italic font-normal text-h3 border-l border-gold pl-6`.
 
 - [ ] **Step 4: DynamicList and JournalCard**
 
-DynamicList (journal mode): header row `flex justify-between items-baseline border-b border-hair-strong pb-4` with eyebrow left and "All posts →" `link` right; each post `<a class="post grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] items-baseline py-8 border-b border-hair group">`: date `col-span-12 md:col-span-2 font-ui text-[0.8125rem] tracking-[.06em] text-muted-foreground`, title+excerpt `col-span-12 md:col-start-3 md:col-span-6` (title `font-display text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] font-normal group-hover:text-gold-ink transition-colors`, excerpt `mt-2.5 text-muted-foreground max-w-[56ch]`), category `md:col-start-10 md:col-span-3 justify-self-end font-ui text-ui text-muted-foreground`. JournalCard (used by the blog index grid): drop the 2px top bar, the tint overlay, the border and the shadow; image `aspect-[4/3] object-cover`, category in `font-ui text-ui text-gold-ink mt-4`, title `font-display text-h3 mt-2`, date `font-ui text-[0.8125rem] text-muted-foreground mt-2`. Keep the hover as `group-hover:text-gold-ink` on the title and `scale-[1.02] duration-[1200ms]` on the image.
+DynamicList (journal mode): header row `flex justify-between items-baseline border-b border-hair-strong pb-4` with eyebrow left and "All posts →" `link` right; each post `<a class="post grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] items-baseline py-8 border-b border-hair group">`: date `col-span-12 md:col-span-2 font-ui text-[0.8125rem] tracking-[.06em] text-muted-foreground`, title+excerpt `col-span-12 md:col-start-3 md:col-span-6` (title `font-body text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] font-normal group-hover:text-gold-ink transition-colors`, excerpt `mt-2.5 text-muted-foreground max-w-[56ch]`), category `md:col-start-10 md:col-span-3 justify-self-end font-ui text-ui text-muted-foreground`. JournalCard (used by the blog index grid): drop the 2px top bar, the tint overlay, the border and the shadow; image `aspect-[4/3] object-cover`, category in `font-ui text-ui text-gold-ink mt-4`, title `font-body text-h3 mt-2`, date `font-ui text-[0.8125rem] text-muted-foreground mt-2`. Keep the hover as `group-hover:text-gold-ink` on the title and `scale-[1.02] duration-[1200ms]` on the image.
 
 - [ ] **Step 5: Gates, screenshots, commit**
 
@@ -529,7 +529,7 @@ git add -A && git commit -m "feat(bands): ruled link row, asymmetric image-text,
 
 - [ ] **Step 1: HeritageBand**
 
-New props `extraImages?: SanityImageObject[]` (SectionRenderer collects, in page order, the images of every `gallerySection` item and `imageTextSection` on the page EXCEPT the one SundayTimes borrowed, and passes the first two) and `years?: { year: string; label: string }[]` (from the page's `timelineSection` rows: the first, the middle and the last, `year` = the row's `marker` field, which is the year or era string the timeline shows, `label` = its `title`, max three; skipped entirely when the page has no timeline block). Render: the detail strip `grid grid-cols-2 md:grid-cols-[5fr_3fr_4fr] gap-1.5 h-auto md:h-[clamp(320px,52vw,680px)]` edge to edge (outside the container) with the block image first then the extras, each `object-cover h-full w-full`; then the container on `bg-brown text-bg`: h2 `lg:col-span-6`, paragraph + `link` CTA `lg:col-start-8 lg:col-span-5 self-end`, and when `years` is present the numeral row `lg:col-span-6 mt-8 flex gap-10 flex-wrap` with each `border-l border-bg/18 pl-4` holding `font-display oldstyle font-light text-4xl` and `font-ui text-sm text-bg/70`.
+New props `extraImages?: SanityImageObject[]` (SectionRenderer collects, in page order, the images of every `gallerySection` item and `imageTextSection` on the page EXCEPT the one SundayTimes borrowed, and passes the first two) and `years?: { year: string; label: string }[]` (from the page's `timelineSection` rows: the first, the middle and the last, `year` = the row's `marker` field, which is the year or era string the timeline shows, `label` = its `title`, max three; skipped entirely when the page has no timeline block). Render: the detail strip `grid grid-cols-2 md:grid-cols-[5fr_3fr_4fr] gap-1.5 h-auto md:h-[clamp(320px,52vw,680px)]` edge to edge (outside the container) with the block image first then the extras, each `object-cover h-full w-full`; then the container on `bg-brown text-bg`: h2 `lg:col-span-6`, paragraph + `link` CTA `lg:col-start-8 lg:col-span-5 self-end`, and when `years` is present the numeral row `lg:col-span-6 mt-8 flex gap-10 flex-wrap` with each `border-l border-bg/18 pl-4` holding `font-body oldstyle font-normal text-4xl` and `font-ui text-sm text-bg/70`.
 
 - [ ] **Step 2: GiveBand**
 
@@ -537,11 +537,11 @@ New props `extraImages?: SanityImageObject[]` (SectionRenderer collects, in page
 
 - [ ] **Step 3: ScriptureBand**
 
-`bg-indigo-field text-bg relative isolate overflow-hidden`; verse `font-display soft italic font-light text-h1 max-w-[20ch]`, reference `font-ui text-ui text-gold mt-6`; texture `<img src={menu-window} class="absolute inset-y-0 right-0 w-1/2 object-cover opacity-[.18] mix-blend-luminosity" aria-hidden loading="lazy" />` masked with `mask-image: linear-gradient(to left, #000, transparent)`.
+`bg-indigo-field text-bg relative isolate overflow-hidden`; verse `font-body italic font-normal text-h1 max-w-[20ch]`, reference `font-ui text-ui text-gold mt-6`; texture `<img src={menu-window} class="absolute inset-y-0 right-0 w-1/2 object-cover opacity-[.18] mix-blend-luminosity" aria-hidden loading="lazy" />` masked with `mask-image: linear-gradient(to left, #000, transparent)`.
 
 - [ ] **Step 4: FinalCta and StatsRow**
 
-FinalCta: `bg-indigo-field`, h2 `font-display soft font-light text-h1 max-w-[16ch]`, subhead as lede, gold button + `link`. StatsRow: numerals `font-display oldstyle font-light text-h1`, labels `font-ui text-ui text-muted-foreground`, `divide-x divide-hair`.
+FinalCta: `bg-indigo-field`, h2 `font-display uppercase tracking-[0.01em] font-normal text-h1 max-w-[16ch]`, subhead as lede, gold button + `link`. StatsRow: numerals `font-body oldstyle font-normal text-h1`, labels `font-ui text-ui text-muted-foreground`, `divide-x divide-hair`.
 
 - [ ] **Step 5: Gates, screenshots, commit**
 
@@ -560,19 +560,19 @@ git add -A && git commit -m "feat(bands): detail-strip heritage band, quiet give
 
 - [ ] **Step 1: StaffGrid**
 
-Heading block in the narrow column (`lg:col-span-4`), grid `lg:col-start-5 lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12`. Each member: portrait `aspect-[4/5] object-cover object-top w-full`, name `font-display text-2xl font-normal mt-4`, role `font-ui text-ui text-gold-ink mt-1`, email `font-body text-sm underline decoration-gold underline-offset-4 mt-2`, bio (when `showBios`) `font-body text-base text-muted-foreground mt-3`. No card, no border, no shadow, no rounded corners. Rows get `border-t border-hair pt-6` via the grid item.
+Heading block in the narrow column (`lg:col-span-4`), grid `lg:col-start-5 lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12`. Each member: portrait `aspect-[4/5] object-cover object-top w-full`, name `font-body text-2xl font-normal mt-4`, role `font-ui text-ui text-gold-ink mt-1`, email `font-body text-sm underline decoration-gold underline-offset-4 mt-2`, bio (when `showBios`) `font-body text-base text-muted-foreground mt-3`. No card, no border, no shadow, no rounded corners. Rows get `border-t border-hair pt-6` via the grid item.
 
 - [ ] **Step 2: Timeline**
 
-Each row `grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] py-10 border-t border-hair`: year `col-span-12 lg:col-span-3 font-display oldstyle font-light text-h2 leading-none`, content `col-span-12 lg:col-start-4 lg:col-span-6` (title `font-display text-h3`, body `font-body text-body mt-3`), image when present `col-span-12 lg:col-start-10 lg:col-span-3 aspect-[4/5] object-cover` on even rows and `lg:col-start-1 lg:col-span-3 bleed-left` on odd rows with the year moving to `lg:col-start-4`. Delete the connector line.
+Each row `grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] py-10 border-t border-hair`: year `col-span-12 lg:col-span-3 font-body oldstyle font-normal text-h2 leading-none`, content `col-span-12 lg:col-start-4 lg:col-span-6` (title `font-body text-h3`, body `font-body text-body mt-3`), image when present `col-span-12 lg:col-start-10 lg:col-span-3 aspect-[4/5] object-cover` on even rows and `lg:col-start-1 lg:col-span-3 bleed-left` on odd rows with the year moving to `lg:col-start-4`. Delete the connector line.
 
 - [ ] **Step 3: FaqBand and FaqAccordion**
 
-Band `bg-indigo-field text-bg`; trigger `font-display text-[1.375rem] font-normal py-5 border-b border-bg/15 flex justify-between gap-6`, icon a `+` in `font-ui text-gold` rotating 45deg when open (`data-state=open`), content `font-body text-body text-bg/80 pb-6 max-w-[62ch]`.
+Band `bg-indigo-field text-bg`; trigger `font-body text-[1.375rem] font-normal py-5 border-b border-bg/15 flex justify-between gap-6`, icon a `+` in `font-ui text-gold` rotating 45deg when open (`data-state=open`), content `font-body text-body text-bg/80 pb-6 max-w-[62ch]`.
 
 - [ ] **Step 4: QuoteBlock, DocumentList, Hours**
 
-QuoteBlock: no quote marks; quote `font-display soft italic font-light text-h2 max-w-[24ch]`, attribution `font-ui text-ui text-gold-ink mt-6`. DocumentList: the blog-list grammar from Task 8 (year group heading `font-display oldstyle text-h2 font-light`, rows with date left, title Fraunces, description Newsreader, hairlines). Hours: label `font-ui text-ui text-gold-ink`, times `font-display oldstyle text-h3`, hairlines.
+QuoteBlock: no quote marks; quote `font-body italic font-normal text-h2 max-w-[24ch]`, attribution `font-ui text-ui text-gold-ink mt-6`. DocumentList: the blog-list grammar from Task 8 (year group heading `font-body oldstyle text-h2 font-normal`, rows with date left, title Castoro Titling, description Castoro, hairlines). Hours: label `font-ui text-ui text-gold-ink`, times `font-body oldstyle text-h3`, hairlines.
 
 - [ ] **Step 5: Gates, screenshots, commit**
 
@@ -591,11 +591,11 @@ git add -A && git commit -m "feat(bands): editorial staff grid, numeral timeline
 
 - [ ] **Step 1: Index and archives**
 
-Page opener: h1 `font-display soft font-light text-h1`, lede. Category chips: `font-ui text-ui px-3 py-2 border border-hair rounded-sm`, active `bg-foreground text-background`. Grid `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14` of the Task 8 JournalCard. Pagination in `font-ui text-ui` with the gold underline.
+Page opener: h1 `font-display uppercase tracking-[0.01em] font-normal text-h1`, lede. Category chips: `font-ui text-ui px-3 py-2 border border-hair rounded-sm`, active `bg-foreground text-background`. Grid `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14` of the Task 8 JournalCard. Pagination in `font-ui text-ui` with the gold underline.
 
 - [ ] **Step 2: Post**
 
-Header: category `font-ui text-ui text-gold-ink`, title `font-display soft font-light text-h1 max-w-[18ch]`, excerpt as lede, meta row (date, author, reading time) `font-ui text-[0.8125rem] text-muted-foreground border-y border-hair py-3 flex gap-6`. Cover `bleed-right lg:col-start-5` or full-measure when portrait. Body column at `PROSE_MEASURE` with JournalPortableText styles: h2 `font-display soft font-light text-h2 mt-14 mb-5`, h3 `text-h3 mt-10 mb-3`, p `font-body text-body leading-[1.72]`, figure full-measure, figcaption `font-body italic text-sm text-muted-foreground mt-3`, blockquote `font-display italic font-light text-h3 border-l border-gold pl-6 my-10`, lists with gold markers. Reading progress bar `bg-gold h-[2px]`. Related posts as the Task 8 list.
+Header: category `font-ui text-ui text-gold-ink`, title `font-display uppercase tracking-[0.01em] font-normal text-h1 max-w-[18ch]`, excerpt as lede, meta row (date, author, reading time) `font-ui text-[0.8125rem] text-muted-foreground border-y border-hair py-3 flex gap-6`. Cover `bleed-right lg:col-start-5` or full-measure when portrait. Body column at `PROSE_MEASURE` with JournalPortableText styles: h2 `font-body font-normal text-h2 mt-14 mb-5`, h3 `text-h3 mt-10 mb-3`, p `font-body text-body leading-[1.72]`, figure full-measure, figcaption `font-body italic text-sm text-muted-foreground mt-3`, blockquote `font-body italic font-normal text-h3 border-l border-gold pl-6 my-10`, lists with gold markers. Reading progress bar `bg-gold h-[2px]`. Related posts as the Task 8 list.
 
 - [ ] **Step 3: 404 and privacy**
 

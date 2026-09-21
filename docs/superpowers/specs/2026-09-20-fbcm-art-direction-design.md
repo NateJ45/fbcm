@@ -43,9 +43,9 @@ stacks in `sanity.config.ts` and regenerates the OG image.
 
 | Role | Face | Package | Where |
 |---|---|---|---|
-| Display | Fraunces, opsz 9..144, wght 300..600, SOFT axis | `@fontsource-variable/fraunces` | h1, h2, big numerals, blog titles, nav rows in the mobile menu, footer poster line |
-| Reading | Newsreader, opsz 6..72, wght 300..500, italic | `@fontsource-variable/newsreader` | body copy, post bodies, ledes (italic 300), captions in italic |
-| Furniture | Archivo, wdth 75..100, wght 400..600 | `@fontsource-variable/archivo` | nav, eyebrows, labels, buttons, dates, small print |
+| Display | Castoro Titling, one weight, capitals only | `@fontsource/castoro-titling` | h1, h2, big numerals, blog titles, nav rows in the mobile menu, footer poster line |
+| Reading | Castoro, roman and italic, one weight | `@fontsource/castoro` | body copy, post bodies, ledes (italic), captions in italic |
+| Furniture | Sofia Sans Semi Condensed, variable weight | `@fontsource-variable/sofia-sans-semi-condensed` | nav, eyebrows, labels, buttons, dates, small print |
 
 Inter and Libre Baskerville are removed from `globals.css` imports and from `brand.config.json`.
 `--font-display`, `--font-body` and a NEW `--font-ui` token carry the three. `--font-mono` stays
@@ -55,25 +55,23 @@ every current `font-mono` eyebrow and label becomes `font-ui`.
 **Scale, as tokens in `@theme`:**
 
 ```
---text-display: clamp(3.4rem, 1rem + 10.5vw, 9.75rem);   /* the page's one moment, line-height .95 */
+--text-display: clamp(2.9rem, 1rem + 8.4vw, 8rem);   /* the page's one moment, line-height .95 */
 --text-h1:      clamp(2.6rem, 1rem + 5.4vw, 6rem);       /* statement bands, interior heroes, line-height 1 */
---text-h2:      clamp(2rem, 1.2rem + 2.6vw, 3.25rem);    /* section headings, weight 300, line-height 1.05 */
+--text-h2:      clamp(2rem, 1.2rem + 2.6vw, 3.25rem);    /* section headings, Castoro roman, line-height 1.05 */
 --text-h3:      clamp(1.375rem, 1rem + 1vw, 1.75rem);    /* weight 400 */
---text-lede:    clamp(1.25rem, 1rem + 1vw, 1.75rem);     /* Newsreader italic 300, line-height 1.35 */
+--text-lede:    clamp(1.25rem, 1rem + 1vw, 1.75rem);     /* Castoro italic, line-height 1.35 */
 --text-body:    1.0625rem; line-height 1.7                /* 17px, the reading size */
---text-ui:      0.8125rem; letter-spacing .14em; uppercase; font-stretch 88%
+--text-ui:      0.8125rem; letter-spacing .14em; uppercase; font-stretch 100%
 ```
 
 Rules that bind the scale:
 
-- Exactly one element per page sits at `--text-display`: the home hero headline, and on an
-  interior page nothing (its hero h1 sits at `--text-h1`). Statement bands use `--text-h1`.
+- Exactly one element per page sits at `--text-display`: the home hero headline, or on a page with
+  no tall hero the Sunday numeral. Interior hero h1s sit at `--text-h1`. Statement bands use `--text-h1` in the titling capitals.
   Nothing else may use either token.
-- Section headings drop in size AND weight: `--text-h2` at weight 300. The starter's h2 at weight
-  500 goes.
-- Every heading and numeral in Fraunces sets `font-variation-settings: 'SOFT' 40` and
-  `letter-spacing` between -0.012em and -0.03em. Numerals use `font-variant-numeric: oldstyle-nums`.
-- The lede class (`.lede`) is the italic Newsreader standfirst under a heading. It replaces the
+- The titling face is capitals only and carries exactly four things: the  and  tokens, the mobile menu rows and the footer poster line. Everything from h2 down is Castoro roman at weight 400, so the hierarchy is carried by capitals against lowercase and by size, not by weight. The starter's h2 at weight 500 goes.
+- Every heading and numeral in Castoro Titling sets positive tracking (0.005em to 0.02em) when set in the titling capitals, and none in Castoro roman. Numerals use `font-variant-numeric: oldstyle-nums`.
+- The lede class (`.lede`) is the italic Castoro standfirst under a heading. It replaces the
   `subhead` paragraph in SectionHeading and Hero.
 - The eyebrow becomes rare. SectionHeading keeps its `eyebrow` prop, but the page modules stop
   passing one except on page openers (the hero) and the three orienting labels the prototype
@@ -87,7 +85,7 @@ Chrome is paper and ink. The brand colours are accents.
 | Token | Light | Dark | Role |
 |---|---|---|---|
 | `--color-bg` (paper) | `#f4efe6` | `#14121b` | page ground |
-| `--color-bg-soft` | `#ebe4d8` | `#1c1926` | the alternating soft band, the give band |
+| `--color-bg-soft` | `#ebe4d8` | `#1c1926` | the alternating band, the give band |
 | `--foreground` (ink) | `#17151f` | `#f1ece3` | headings and body |
 | `--muted-foreground` | `#514c58` | `#c2bcc9` | secondary text |
 | `--color-indigo` / `-field` | unchanged | `#22214a` | the pastors band, the footer, the mobile menu |
@@ -127,7 +125,7 @@ Each entry says what the component becomes. Props are unchanged unless stated. "
 the prototype's negative-margin break to the viewport edge on the image side only.
 
 **SectionHeading.astro.** Eyebrow in `font-ui` and `--gold-ink` (gold on dark). Headline in
-Fraunces at the level's token, weight 300 for h2, 400 for h3. The lede replaces the subhead
+Castoro Titling (uppercase, tracking 0.01em) for h1; Castoro roman for h2 and h3. The lede replaces the subhead
 paragraph (same `subhead`/`subheadRich` props, new class). No rule, no hairline. `max-w-3xl`
 becomes `max-w-[22ch]` for h2 so headings wrap tight and tall.
 
@@ -140,7 +138,7 @@ becomes `max-w-[22ch]` for h2 so headings wrap tight and tall.
   `siteSettings.serviceTime` after `splitStega()`; the server render carries "Sundays · Worship at
   10:45 am" so the no-JS and pre-hydration states are true. Interior full heroes keep their
   eyebrow. Headline at `--text-display` (home) or `--text-h1` (interior). The lede. The facts row
-  on a hairline, values in Newsreader at 1.25 to 1.625rem. Gold button plus a text link with an
+  on a hairline, values in Castoro at 1.25 to 1.625rem. Gold button plus a text link with an
   arrow (CtaLink `link` variant, onDark) instead of two buttons. The scroll cue and the pause
   button go.
 - `split`: the photograph column bleeds to the viewport edge; the gold left rule goes; the words
@@ -149,7 +147,7 @@ becomes `max-w-[22ch]` for h2 so headings wrap tight and tall.
 
 **SundayTimes.astro.** Becomes the two doors. Left: the eyebrow, the service time as a
 `--text-display` old-style numeral with the meridiem as a small italic, the body line as a lede,
-then the items as a ruled schedule (time in Fraunces 1.5rem, label, optional italic note). Right:
+then the items as a ruled schedule (time in Castoro Titling 1.5rem, label, optional italic note). Right:
 the map card is replaced by the page's first `imageTextSection` photograph when the page has one
 (home, visit, contact all do) as a bleeding frame with a caption line, otherwise the static map
 stays. The three "big" items keep their data; only the first drives the numeral, the other two
@@ -165,7 +163,7 @@ columns 6 to 11 at 17px/1.72, the photograph below spanning columns 5 to 12 and 
 (or columns 1 to 8 bleeding left when `imageSide` is left). The hotspot rule from plan 2b stays.
 
 **RichTextSection.astro.** When it has a heading: heading in the narrow left column, prose in the
-right half at `PROSE_MEASURE` (re-tokened to Newsreader 17px, 62ch). Without a heading: a single
+right half at `PROSE_MEASURE` (re-tokened to Castoro 17px, 62ch). Without a heading: a single
 centred-on-the-left-edge measure. Bullets, links and blockquotes restyled in the same voice.
 
 **HeritageBand.astro.** The detail strip: the block's image plus up to two more taken from the
@@ -178,29 +176,28 @@ and a row of up to three dated numerals derived from the page's timeline block w
 when the band is the last block before the footer and the previous block is light (so two indigo
 surfaces never touch).
 
-**ScriptureBand.astro.** Dark indigo, the verse as a `--text-h1` Fraunces italic 300 with the
+**ScriptureBand.astro.** Dark indigo, the verse as a `--text-h1` Castoro italic (the titling face has no italic) with the
 reference in `font-ui`, the alpha-and-omega window photograph masked behind at 18% under
 `mix-blend-mode: luminosity` when the page provides no image (asset shipped in `src/assets/`).
 
 **StaffGrid.astro.** Editorial grid: portraits at 4:5, no rounded corners, no card. Name in
-Fraunces 1.5rem, role in `font-ui`, email as a plain link. Hairline above each row. The grouped
+Castoro Titling 1.5rem, role in `font-ui`, email as a plain link. Hairline above each row. The grouped
 lists keep their headings as the narrow-column h2.
 
 **Timeline.astro.** Years as `--text-h2` old-style numerals in the left column, the entry beside;
 the connector becomes a hairline. Images bleed left on alternate entries.
 
-**FaqBand.astro.** Stays dark indigo. Question text in Fraunces 1.375rem, the chevron becomes a
-plus that rotates to a cross, answers in Newsreader.
+**FaqBand.astro.** Stays dark indigo. Question text in Castoro Titling 1.375rem, the chevron becomes a
+plus that rotates to a cross, answers in Castoro.
 
-**QuoteBlock.astro.** The long-quote scale stays; quote marks removed; quote in Fraunces italic
-300, attribution in `font-ui`.
+**QuoteBlock.astro.** The long-quote scale stays; quote marks removed; quote in Castoro italic, attribution in `font-ui`.
 
 **DocumentList.astro, Hours.astro, DynamicList.astro.** Ruled lists in the blog-list grammar:
-date or label in `font-ui` left, title in Fraunces, description in Newsreader, hairlines between
+date or label in `font-ui` left, title in Castoro Titling, description in Castoro, hairlines between
 rows, no cards. DynamicList (home's blog three) becomes exactly the prototype's editorial list.
 
-**FinalCta.astro (ctaBandSection) and StatsRow.astro.** FinalCta: h2 at `--text-h1` weight 300 on
-indigo, subhead as a lede, gold button plus text link. StatsRow: numerals in Fraunces old-style at
+**FinalCta.astro (ctaBandSection) and StatsRow.astro.** FinalCta: h2 at  in the titling capitals on
+indigo, subhead as a lede, gold button plus text link. StatsRow: numerals in Castoro Titling old-style at
 `--text-h1`, labels in `font-ui`, hairline dividers.
 
 **SectionDivider.astro.** The sun glyph is deleted. A divider is a hairline inside the container
@@ -214,16 +211,16 @@ dark) border with the same inset hairline. `link` is `font-ui` uppercase with a 
 an arrow that nudges 4px on hover. The `primary`/`secondary` aliases stay.
 
 **JournalCard.astro, blog index, category, tag and post pages.** The index keeps its grid but the
-card is a bare image with the title in Fraunces below, no border, no shadow. The post page: title at
-`--text-h1`, a lede from the excerpt, meta in `font-ui`, body in Newsreader at 17px/1.72 and 62ch,
-h2 in Fraunces 300, figures full-measure with italic captions, the reading progress bar in gold.
+card is a bare image with the title in Castoro Titling below, no border, no shadow. The post page: title at
+`--text-h1`, a lede from the excerpt, meta in `font-ui`, body in Castoro at 17px/1.72 and 62ch,
+h2 in Castoro roman, figures full-measure with italic captions, the reading progress bar in gold.
 
 **404 and privacy.** Take the new type through the shared components; no layout work.
 
 ## 6. Chrome
 
 **Header.** One row, 88px desktop, 74px mobile, no utility strip: the phone and Contact move to
-the mobile menu's foot and the footer. Wordmark left at 56px. Nav in Archivo 0.9375rem 500 with a
+the mobile menu's foot and the footer. Wordmark left at 56px. Nav in Sofia Sans Semi Condensed 0.9375rem 500 with a
 1px gold underline that draws from the left on hover and stays drawn on the current page (the
 `nav-underline` rule is redrawn: left origin, gold, 1px). Give is the gold button. The theme
 toggle moves into the mobile menu and the footer's base rail; on desktop it sits at the far right
@@ -235,12 +232,12 @@ scroll-down behaviour and its gesture gate stay exactly as shipped. `--header-of
 and the anchor suite reasserts it.
 
 **Desktop dropdowns.** Mechanics unchanged. Panel restyled: paper, hairline border, no shadow,
-items in Archivo.
+items in Sofia Sans Semi Condensed.
 
 **Mobile menu.** The distinctive piece. It keeps the Radix Sheet (focus trap, scroll lock, Escape,
 `client:idle`) but opens `side="top"` at `h-dvh`: the menu DROPS over the page on indigo. Inside,
 from top: the wordmark at left and a paper close plate at right exactly where the trigger was;
-the nav as numbered rows (01 to 08) in Fraunces at `clamp(2.25rem, 8vw, 3.5rem)` weight 300, each
+the nav as numbered rows (01 to 08) in Castoro Titling at , each
 row rising into place with a 70ms stagger (`translateY(24px)` and opacity, 480ms, the brand
 curve), the current page's row carrying a gold hairline; below the rows a two-column foot in
 `font-ui`: the service time and street on the left, phone, Contact and the theme toggle on the
@@ -251,10 +248,10 @@ hairline drawing. The trigger is the word MENU in `font-ui` beside a two-line gl
 hamburger icon.
 
 **Footer.** Indigo field, and it is where the site ends with a poster moment: a top band with
-"This Sunday · 10:45 am" set in Fraunces at `clamp(2rem, 5.2vw, 3.25rem)` (the same live line as
+"This Sunday · 10:45 am" set in Castoro Titling at `clamp(2rem, 5.2vw, 3.25rem)` (the same live line as
 the hero, same derivation, same server fallback), the street on the next line, and the gold Give
 button; a hairline; then the wordmark and tagline at left, the two editor columns as NUMBERED
-rows in Fraunces 1.25rem (the Stone Steps device in the church's face), and the Office column as
+rows in Castoro Titling 1.25rem (the Stone Steps device in the church's face), and the Office column as
 prose; a base rail with copyright, legal links and the theme toggle. The 4px gold top rule goes;
 the arch of the window photograph, masked, sits at 10% in the top right corner of the band as the
 footer's texture.
