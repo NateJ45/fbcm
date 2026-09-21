@@ -533,6 +533,21 @@
   --color-indigo-field: #22214a;
   --color-brown: #2b1b16;
 
+  /* Gold-ink flips to the brand gold. --color-gold-ink is the DARKENED gold
+     that carries a label on paper, and it was defined for paper only: at
+     #805709 it measures 2.90:1 on the dark page and 2.70:1 on the dark card,
+     so every `text-gold-ink` on a theme-aware surface failed AA the moment the
+     page went dark (34 axe-dark failures, all of them this one token). On a
+     dark ground the darkening is not only unnecessary, it is the problem, so
+     the token returns to the brand gold, which is what an eyebrow on a FIXED
+     dark band already uses. Measured 2026-09-20 with src/lib/contrast.ts:
+       gold-ink on --background (#14121b) .......... 7.55:1  PASSES AA
+       gold-ink on --muted / --card (#1c1926) ...... 7.03:1  PASSES AA
+     Both pairs are asserted in theme-tokens.test.ts. The fix is the token
+     flip, not a `dark:text-gold` at each call site: the call sites are the
+     thing that would drift. */
+  --color-gold-ink: #d59b29;
+
   /* The alternating "muted" surface's real dark value. Unlike --color-bg-soft
      (which this gate forbids .dark from touching), --surface-soft is a plain
      shadcn-style semantic token, so overriding it here is the normal move

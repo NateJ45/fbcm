@@ -60,6 +60,17 @@ function token(name: string): string {
   return readBrand(`--${name}`);
 }
 
+/** The whole dark theme as it resolves on the page: the palette and the
+    shadcn semantics together, with .dark's overrides winning. A pair marked
+    'dark' below is read through this, so a token that flips is measured at the
+    value a reader on the dark theme actually sees. */
+const darkTokens = { ...tokensIn(css, LIGHT_SCOPE), ...tokensIn(css, DARK_SCOPE) };
+const readDark = scopeReader(darkTokens);
+function darkToken(name: string): string {
+  assert.ok(darkTokens[`--${name}`], `globals.css declares --${name} in neither light nor .dark`);
+  return readDark(`--${name}`);
+}
+
 // The pairs the design system actually renders: text tokens on surface tokens.
 const TEXT_ON_SURFACE: Array<[string, string]> = [
   ['color-accent', 'color-bg'], // headings + body on paper
@@ -203,7 +214,13 @@ for (const [fg, bg] of GOLD_PAIRS) {
 // forbidden pairs are asserted FAILING so nobody can ship them by accident.
 // ---------------------------------------------------------------------------
 
-const CHURCH_PAIRS_AA: Array<[string, string, string]> = [
+// A church pair is measured in the LIGHT palette unless it says otherwise. The
+// optional fourth element switches BOTH tokens to their dark-theme resolution
+// (the .dark declaration when there is one, the @theme value when there is
+// not), which is the only honest way to assert a token that flips: measuring
+// the light value and calling it a dark pair is exactly the silent pass
+// css-tokens.ts exists to prevent.
+const CHURCH_PAIRS_AA: Array<[string, string, string] | [string, string, string, 'dark']> = [
   ['color-indigo', 'color-cream', 'ink on paper'],
   ['color-brown', 'color-cream', 'brown ink on paper'],
   ['color-brown-mid', 'color-cream', 'eyebrows on paper'],
@@ -231,6 +248,11 @@ const CHURCH_PAIRS_AA: Array<[string, string, string]> = [
   ['color-accent', 'color-bg', 'ink on paper'],
   ['color-gold', 'color-indigo-deep', 'gold labels on the footer field'],
   ['color-taupe', 'color-indigo-deep', 'muted text on the footer field'],
+  // The two dark-theme pairs, added 2026-09-20 with the gold-ink flip: the
+  // paper-only gold-ink measured 2.90:1 and 2.70:1 on these two surfaces and
+  // produced 34 axe-dark failures, so .dark now points it at the brand gold.
+  ['color-gold-ink', 'background', 'gold label on the dark page', 'dark'],
+  ['color-gold-ink', 'muted', 'gold label on the dark card and muted band', 'dark'],
 ];
 const CHURCH_PAIRS_FORBIDDEN: Array<[string, string, string]> = [
   ['color-gold', 'color-cream', 'gold text on paper'],
@@ -240,8 +262,9 @@ const CHURCH_PAIRS_FORBIDDEN: Array<[string, string, string]> = [
 ];
 
 test('every church pair that ships clears AA body text', (t) => {
-  for (const [fg, bg, why] of CHURCH_PAIRS_AA) {
-    const r = contrastRatio(token(fg), token(bg));
+  for (const [fg, bg, why, scope] of CHURCH_PAIRS_AA) {
+    const read = scope === 'dark' ? darkToken : token;
+    const r = contrastRatio(read(fg), read(bg));
     // Printed as well as asserted: a gate that only says "pass" cannot tell you
     // a pair has drifted from 5.6 to 4.6 and is one nudge from failing.
     t.diagnostic(`${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
