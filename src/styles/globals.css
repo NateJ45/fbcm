@@ -1703,3 +1703,77 @@ body::before {
     font-family: var(--font-body);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   The mobile menu (src/components/MobileNav.tsx), art-direction pass task 4.
+   --------------------------------------------------------------------------- */
+
+/* The trigger's glyph: two 18px hairlines in the inherited colour, so it reads
+   paper over an image hero and ink on the ordinary bar. Two borders on one box
+   rather than two elements, because the gap between them is then a single
+   height value to tune. */
+.menu-glyph {
+  display: inline-block;
+  width: 18px;
+  height: 7px;
+  border-top: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+}
+
+/* The current page's row draws its gold rule locked open. The shared rule in
+   the .nav-underline block above fires on the element that CARRIES
+   aria-current, and here that is the <a> (the row's address), while
+   .nav-underline is on the label span inside it, so the menu needs this one
+   bridge. Scoped to .menu-row so the desktop nav renders byte-identically. */
+.menu-row a[aria-current='page'] .nav-underline::after {
+  right: 0;
+}
+
+/* The window texture behind the top of the sheet. Masked to nothing by the
+   bottom of its own box so it never fights the rows for contrast, held at 22%
+   so the indigo stays the surface, and drifting 12px over 40 seconds so the
+   sheet is not dead still while a visitor reads it. */
+.menu-window {
+  background-size: cover;
+  background-position: 50% 45%;
+  opacity: 0.22;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+  animation: menu-drift 40s ease-in-out infinite alternate;
+}
+@keyframes menu-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-12px, -6px, 0);
+  }
+}
+
+/* Each row rises into place 70ms after the one above it. `forwards` is what
+   leaves them at rest: the rule below starts them at opacity 0, so a row whose
+   animation never ran would be invisible, which is why the reduced-motion
+   branch sets the resting state explicitly rather than only cancelling. */
+.menu-row {
+  opacity: 0;
+  translate: 0 24px;
+  animation: menu-rise 480ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  animation-delay: calc(140ms + var(--i) * 70ms);
+}
+@keyframes menu-rise {
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-window {
+    animation: none;
+  }
+  .menu-row {
+    animation: none;
+    opacity: 1;
+    translate: none;
+  }
+}

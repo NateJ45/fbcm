@@ -47,6 +47,8 @@ import MobileNav from './MobileNav';
 import { ChevronDown } from 'lucide-react';
 import logoLightAsset from '@/assets/logo-light.svg';
 import logoDarkAsset from '@/assets/logo-dark.svg';
+import menuWindowAsset from '@/assets/menu-window.jpg';
+import { splitStega } from '@/lib/preview-stega';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
 import { urlFor } from '@/lib/sanity';
 
@@ -62,6 +64,17 @@ const logoDarkSrcset = logoDarkImg.src;
 const logoLightWebpMobile = logoLightImg;
 const logoDarkWebpMobile = logoDarkImg;
 
+// The stained-glass window behind the top of the mobile menu. 1200w covers a
+// 430px-wide phone at 2x with room to spare, and quality 70 is plenty for a
+// picture that renders at 22% opacity under a mask. Built here rather than in
+// the island because a React component cannot call Astro's image pipeline.
+const menuWindowImg = await getImage({
+  src: menuWindowAsset,
+  width: 1200,
+  quality: 70,
+  format: 'jpg',
+});
+
 interface Props {
   /** True when this page opens with an image hero, so the bar sits ON the
    *  picture until the visitor scrolls. Set by BaseLayout's `overlayHeader`. */
@@ -73,6 +86,8 @@ interface Props {
         tagline?: string;
         email?: string;
         phone?: string;
+        serviceTime?: string;
+        address?: string;
       })
     | null;
 }
@@ -102,6 +117,22 @@ const logoSrcset = logo
 // site, so it opens in a new tab. An internal destination (the built-in
 // fallback, or an editor who repoints it at a page here) stays in this tab.
 const ctaIsExternal = /^https?:\/\//i.test(headerCta.href);
+
+// The two facts the mobile menu's foot states: when the church meets, and the
+// street it meets on. Both are cleaned of their stega payload before they are
+// handed to the island. The service time is only DISPLAYED, but the address is
+// SPLIT on newlines, and the payload is written in zero-width characters of
+// which U+FEFF matches \s in a JavaScript regex, so splitting an encoded
+// string shatters the payload into fake lines (CLAUDE.md, the preview rules).
+// Footer.astro does the same split the same way.
+const serviceTime = splitStega(
+  typeof siteSettings?.serviceTime === 'string' ? siteSettings.serviceTime : '',
+).cleaned;
+const street =
+  splitStega(typeof siteSettings?.address === 'string' ? siteSettings.address : '')
+    .cleaned.split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)[0] ?? undefined;
 
 // Subset of siteSettings the mobile menu needs. Pass as a plain object so the
 // React island doesn't try to serialize the whole Sanity document graph.
@@ -345,6 +376,9 @@ function isGroupActive(items: { href: string }[]) {
       siteSettings={mobileNavSettings}
       logoLightUrl={logoLightWebpMobile.src}
       logoDarkUrl={logoDarkWebpMobile.src}
+      serviceTime={serviceTime || undefined}
+      street={street}
+      windowUrl={menuWindowImg.src}
       {...mobileCtaProps}
     />
   </div>
