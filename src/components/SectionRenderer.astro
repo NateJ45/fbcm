@@ -161,6 +161,18 @@ const uniqueAnchor = (block: unknown, headingId: string): string => {
 const hasHero = rows.some(({ block }) => (block as { _type?: string })._type === 'heroSection');
 const openingLevel = (index: number): 'h1' | 'h2' => (index === 0 && !hasHero ? 'h1' : 'h2');
 
+// NO HAIRLINE UNDER A FULL-BLEED PHOTOGRAPH (art-direction pass, task 8).
+//
+// A divider is drawn between two content blocks whose surfaces differ, which is
+// the right rule for two bands of paper. The statement band is neither: when it
+// has a borrowed photograph it is a dark picture running edge to edge, and the
+// cadence still counts it as a content block, so the block after it would open
+// with a stray rule floating on the paper an inch below the photograph. The
+// divider is suppressed for exactly that one position. Without a frame the
+// statement is an ordinary light band and nothing changes.
+const afterFullBleed = (index: number): boolean =>
+  spares.statementIndex !== null && index === spares.statementIndex + 1;
+
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
 ---
@@ -168,7 +180,7 @@ const wrapAttrs = (key: string | undefined) =>
 {
   rows.map(({ block: s, surface, insertDividerBefore, headingId }, blockIndex) => (
     <>
-      {insertDividerBefore && <SectionDivider />}
+      {insertDividerBefore && !afterFullBleed(blockIndex) && <SectionDivider />}
 
       <Wrap
         id={uniqueAnchor(s, headingId)}
@@ -378,6 +390,7 @@ const wrapAttrs = (key: string | undefined) =>
             intro={s.intro}
             cards={s.cards ?? []}
             surface={surface ?? 'background'}
+            frame={blockIndex === spares.statementIndex ? spares.statement : null}
             headingId={headingId}
           />
         ) : /* scaffold:end */ s._type === 'dynamicListSection' ? (

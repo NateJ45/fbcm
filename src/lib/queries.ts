@@ -84,9 +84,10 @@ export function sectionsProjection(field = 'pageBuilder'): string {
         source == "journal" => *[_type == "journalEntry"] | order(publishedAt desc)[0...${DYNAMIC_LIST_MAX}]{
           _id, "title": title, "meta": publishedAt, "summary": excerpt,
           "href": "/post/" + slug.current,
-          // The card's eyebrow and the durable-first ordering are both derived
+          // The row's eyebrow and the durable-first ordering are both derived
           // from the category (src/lib/blog-derive.ts), so the category has to
-          // travel with the item. Nothing on the card displays it.
+          // travel with the item. Since the art-direction pass the journal list
+          // also PRINTS the first one, in the right-hand rubric column.
           "categories": categories[]->{ _id, title, slug },
           "coverImage": coverImage${IMAGE_PROJECTION}
         },

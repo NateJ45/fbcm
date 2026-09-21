@@ -5,14 +5,19 @@
 // the source and a limit. Each source belongs to a scaffold capability; this
 // fork keeps only journal (see the "source" prop doc below).
 //
-// Sources and their card shape:
-//   journal      - Cover image + title + excerpt + publish date. Links to the
+// Sources and their shape:
+//   journal      - an editorial LIST (art-direction pass, 2026-09-20): a ruled
+//                  row per post, the date in the first column, the title and
+//                  excerpt in the middle, the category on the right. It was a
+//                  grid of cover-image cards; three photographs stacked beside
+//                  each other said less about the posts than their titles do,
+//                  and the band now reads as a contents page. Links to the
 //                  journal entry at /post/<slug>.
+//   anything else - the generic card grid at the foot of this file.
 //
 // SELF_CONTAINED: manages its own surface. Never receives a surface prop.
 // Empty state: renders nothing when items is empty or absent (graceful absence).
 import SectionHeading from '@/components/SectionHeading.astro';
-import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import type { ProjectedDynamicListSection } from '@/lib/pageBuilder.types';
 import { columnsClass } from '@/lib/layout-variants';
@@ -119,123 +124,128 @@ const fallbackLabel: Record<string, string> = {
 
 {
   hasItems && (
-    <section class="bg-muted" aria-labelledby={headingId}>
-      <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
-        <SectionHeading
-          eyebrow={eyebrow}
-          headline={headline}
-          subhead={subhead}
-          subheadRich={subheadRich}
-          headingId={headingId}
-        />
-
+    <section class="bg-background" aria-labelledby={headingId}>
+      <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
         {/* scaffold: journal */}
-        {/* ── Journal cards ────────────────────────────────────────────── */}
+        {/* ── The journal, as an editorial list ─────────────────────────── */}
         {source === 'journal' && (
-          <ul
-            class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}
-            data-stagger-grid
-          >
+          <Fragment>
+            {/* The band's name and its way out, on one ruled line. The <h2> is
+                set in the UI face at label size on purpose: it is a rubric over
+                a list, not a headline, and the posts' own titles are the type
+                on this band. It stays a real heading so the section's
+                aria-labelledby points at something. */}
+            <div class="flex items-baseline justify-between gap-6 border-b border-hair-strong pb-4">
+              <h2 id={headingId} class="font-ui text-ui text-gold-ink">
+                {eyebrow || headline}
+              </h2>
+              <CtaLink
+                cta={cta}
+                variant="link"
+                fallbackHref={fallbackHref[source]}
+                fallbackLabel={fallbackLabel[source]}
+              />
+            </div>
+
+            {subhead && (
+              <p class="mt-6 max-w-[46ch] text-lede font-normal text-muted-foreground">{subhead}</p>
+            )}
+
             {visibleItems.map((item) => (
-              <li>
-                {item.href ? (
-                  <a
-                    href={item.href}
-                    class="card-lift group block h-full overflow-hidden rounded-md border border-border-soft bg-card no-underline transition-colors hover:border-primary/40"
-                  >
-                    {item.coverImage?.asset && (
-                      <div class="aspect-[16/9] overflow-hidden bg-muted">
-                        <SanityImage
-                          source={item.coverImage}
-                          width={800}
-                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                          class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                        />
-                      </div>
-                    )}
-                    <div class="p-m">
-                      {/* A sermon preview says which week it is for; everything
-                          else says its date. Same line, same size, one of two
-                          sentences, derived from the category. */}
-                      {item.meta && (
-                        <p class="mb-xs text-xs tracking-eyebrow text-foreground/70 uppercase">
-                          {entryIsSermonPreview(item as any)
-                            ? weekOfEyebrow(item.meta)
-                            : formatDate(item.meta)}
-                        </p>
-                      )}
-                      <h3 class="line-clamp-2 font-display text-h4 leading-tight text-foreground transition-colors group-hover:text-primary-dark">
-                        {item.title}
-                      </h3>
-                      {item.summary && (
-                        <p class="mt-xs line-clamp-3 text-sm leading-relaxed text-foreground/80">
-                          {item.summary}
-                        </p>
-                      )}
-                    </div>
-                  </a>
-                ) : (
-                  <div class="h-full rounded-md border border-border-soft bg-card p-m">
-                    <h3 class="font-display text-h4 text-foreground">{item.title}</h3>
-                    {item.summary && (
-                      <p class="mt-xs text-sm leading-relaxed text-foreground/80">{item.summary}</p>
-                    )}
-                  </div>
-                )}
-              </li>
+              <a
+                href={item.href ?? '/blog'}
+                class="group grid grid-cols-12 items-baseline gap-x-[clamp(16px,2.5vw,40px)] border-b border-hair py-8"
+              >
+                {/* A sermon preview says which week it is for; everything else
+                    says its date. Same line, same size, one of two sentences,
+                    derived from the category (CLAUDE.md rule 15). */}
+                <span class="col-span-12 font-ui text-[0.8125rem] tracking-[.06em] text-muted-foreground md:col-span-2">
+                  {item.meta
+                    ? entryIsSermonPreview(item as any)
+                      ? weekOfEyebrow(item.meta)
+                      : formatDate(item.meta)
+                    : ''}
+                </span>
+
+                <span class="col-span-12 md:col-span-6 md:col-start-3">
+                  <span class="block font-body text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] leading-[1.15] font-normal text-foreground transition-colors group-hover:text-gold-ink">
+                    {item.title}
+                  </span>
+                  {item.summary && (
+                    <span class="mt-2.5 block max-w-[56ch] text-muted-foreground">
+                      {item.summary}
+                    </span>
+                  )}
+                </span>
+
+                {/* The category travelled with the item for the ordering and
+                    the eyebrow above; on this list it also EARNS its place as
+                    the right-hand rubric, which is what the prototype's `.tag`
+                    column is. */}
+                <span class="col-span-12 mt-2.5 font-ui text-ui text-muted-foreground md:col-span-3 md:col-start-10 md:mt-0 md:justify-self-end">
+                  {item.categories?.[0]?.title}
+                </span>
+              </a>
             ))}
-          </ul>
+          </Fragment>
         )}
         {/* scaffold:end */}
 
-        {/* ── Any other source ──────────────────────────────────────────────
-            Every branch above belongs to a scaffold capability and can be
-            removed; this one belongs to none and is what is left when they
-            have been. It renders the flat shape the GROQ projection normalises
-            every source into (title, meta, summary, optional href), so a new
-            source works the day it is added and before anyone writes cards for
-            it, and the block keeps a real grid to lay out however many of its
-            sources a fork has kept. Added 2026-09-18.
+        {/* ── Any other source ────────────────────────────────────────────
+              Every branch above belongs to a scaffold capability and can be
+              removed; this one belongs to none and is what is left when they
+              have been. It renders the flat shape the GROQ projection
+              normalises every source into (title, meta, summary, optional
+              href), so a new source works the day it is added and before
+              anyone writes cards for it, and the block keeps a real grid to
+              lay out however many of its sources a fork has kept.
 
-            It is also what keeps `colClass` interpolated somewhere in this
-            file, which layout-variants.test.ts reads off disk to confirm the
-            registry's `baseColumns` has not gone stale. Remove every marked
-            branch without this one and that gate fails on a component that was
-            doing exactly what it was asked to. */}
+              It is also what keeps `colClass` interpolated somewhere in this
+              file, which layout-variants.test.ts reads off disk to confirm the
+              registry's `baseColumns` has not gone stale. */}
         {!KNOWN_SOURCES.includes(source) && (
-          <ul
-            class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}
-            data-stagger-grid
-          >
-            {visibleItems.map((item) => (
-              <li>
-                <div class="h-full rounded-md border border-border-soft bg-card p-m">
-                  <h3 class="font-display text-h4 text-foreground">{item.title}</h3>
-                  {item.meta && (
-                    <p class="mt-xs text-xs font-semibold tracking-eyebrow text-link uppercase">
-                      {item.meta}
-                    </p>
-                  )}
-                  {item.summary && (
-                    <p class="mt-s line-clamp-3 text-sm leading-relaxed text-foreground/80">
-                      {item.summary}
-                    </p>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+          <Fragment>
+            <SectionHeading
+              eyebrow={eyebrow}
+              headline={headline}
+              subhead={subhead}
+              subheadRich={subheadRich}
+              headingId={headingId}
+            />
 
-        {/* CTA button */}
-        <div class="mt-section-lg flex justify-center">
-          <CtaLink
-            cta={cta}
-            variant="secondary"
-            fallbackHref={fallbackHref[source]}
-            fallbackLabel={fallbackLabel[source]}
-          />
-        </div>
+            <ul
+              class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}
+              data-stagger-grid
+            >
+              {visibleItems.map((item) => (
+                <li>
+                  <div class="h-full rounded-md border border-border-soft bg-card p-m">
+                    <h3 class="font-display text-h4 text-foreground">{item.title}</h3>
+                    {item.meta && (
+                      <p class="mt-xs text-xs font-semibold tracking-eyebrow text-link uppercase">
+                        {item.meta}
+                      </p>
+                    )}
+                    {item.summary && (
+                      <p class="mt-s line-clamp-3 text-sm leading-relaxed text-foreground/80">
+                        {item.summary}
+                      </p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div class="mt-section-lg flex justify-center">
+              <CtaLink
+                cta={cta}
+                variant="secondary"
+                fallbackHref={fallbackHref[source]}
+                fallbackLabel={fallbackLabel[source]}
+              />
+            </div>
+          </Fragment>
+        )}
       </div>
     </section>
   )

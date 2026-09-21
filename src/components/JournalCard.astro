@@ -1,18 +1,18 @@
 ---
 // scaffold-file: journal
 // Safe to edit by hand
-// Card for the /blog index grid. Cover image on top, primary category +
-// date eyebrow, title, excerpt. Whole card is clickable.
+// Card for the /blog index grid. Cover image on top, then the category in
+// gold, the title and the date. Whole card is clickable.
 //
 // `featured` style: the wide two-column variant, asked for by the caller (the
 // index uses it for "this week").
 //
-// `preview` style: a weekly sermon preview. The chip+date line becomes the
-// "week of" eyebrow. The caller DERIVES that from the category (blog-derive.ts);
-// the card never reads journalEntry.featured for it.
+// `preview` style: a weekly sermon preview. The category line becomes the
+// "week of" eyebrow, and the date under the title goes with it, because on a
+// preview the two would say the same thing twice. The caller DERIVES it from
+// the category (blog-derive.ts); the card never reads journalEntry.featured.
 
 import SanityImage from '@/components/SanityImage.astro';
-import JournalCategoryChip from '@/components/JournalCategoryChip.astro';
 import { weekOfEyebrow } from '@/lib/blog-derive';
 
 interface Props {
@@ -46,23 +46,23 @@ function formatDate(d?: string): string {
 }
 const dateLabel = formatDate(entry.publishedAt);
 
-// Featured card spans 2 columns on lg and uses a wider hero aspect.
-// Resting shadow matches the rest of the card grammar (ProjectCard) —
-// soft warm 4px ambient depth.
-const wrapperClass = featured
-  ? 'card-lift card-lift-slow group block bg-card border border-border-soft rounded-md overflow-hidden hover:border-primary/40 transition-colors lg:col-span-2 shadow-[0_4px_18px_-14px_rgba(61,61,61,0.18)]'
-  : 'card-lift card-lift-slow group block bg-card border border-border-soft rounded-md overflow-hidden hover:border-primary/40 transition-colors shadow-[0_4px_18px_-14px_rgba(61,61,61,0.18)]';
+// THE PLATE IS GONE (art-direction pass, 2026-09-20, task 8). The card was a
+// bordered, rounded, shadowed panel with a 2px gold bar across the top and a
+// tint wash over the photograph: five devices doing the work of one. What is
+// left is the photograph, the category in gold, the title and the date, with
+// the whole thing still one link. The grid's own gaps are what separate the
+// cards now, which is the same division the ruled bands use.
+//
+// The hover survives, because it is the one thing that told a reader the card
+// was clickable: the title goes gold-ink and the photograph takes a slow 1.02
+// scale.
+const wrapperClass = featured ? 'group block lg:col-span-2' : 'group block';
 const aspectClass = featured ? 'aspect-[16/9]' : 'aspect-[4/3]';
-const titleClass = featured
-  ? 'font-display text-h2 text-foreground'
-  : 'font-display text-h3 text-foreground';
+const titleClass = featured ? 'font-body text-h2 font-normal' : 'font-body text-h3 font-normal';
 ---
 
 <a href={href} class:list={[wrapperClass]}>
-  {/* Brand accent stripe — matches every other marketing card. */}
-  <div class="h-0.5 bg-primary" aria-hidden="true"></div>
-
-  <div class:list={[aspectClass, 'img-zoom relative overflow-hidden bg-muted']}>
+  <div class:list={[aspectClass, 'overflow-hidden bg-muted']}>
     {
       entry.coverImage?.asset ? (
         <SanityImage
@@ -73,61 +73,52 @@ const titleClass = featured
               ? '(min-width: 1024px) 66vw, 100vw'
               : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
           }
-          class="h-full w-full object-cover"
+          class="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-[1.02]"
         />
       ) : (
         <div class="h-full w-full" aria-hidden="true" />
       )
     }
-    <div class="img-tint img-tint-light" aria-hidden="true"></div>
   </div>
-  <div class:list={[featured ? 'p-section-md' : 'p-l']}>
-    <div class="flex flex-wrap items-center gap-x-m gap-y-xs">
-      {
-        /* A sermon preview says which week it is for, and nothing else: the
-          category chip would read "Sermon Preview" on all 106 of them, and the
-          bare date does not tell a reader what the date is FOR. Everything
-          else keeps the chip + date it always had. */
-      }
-      {
-        preview ? (
-          <p class="text-xs tracking-widest text-brown-mid uppercase dark:text-gold">
-            <time datetime={entry.publishedAt}>{weekOfEyebrow(entry.publishedAt)}</time>
-          </p>
-        ) : (
-          <>
-            {primaryCategory?.title && (
-              <JournalCategoryChip
-                title={primaryCategory.title}
-                tooltip={primaryCategory.description}
-              />
-            )}
-            {dateLabel && (
-              <time
-                datetime={entry.publishedAt}
-                class="text-xs tracking-widest text-foreground/80 uppercase"
-              >
-                {dateLabel}
-              </time>
-            )}
-          </>
-        )
-      }
-    </div>
-    <h3 class:list={[titleClass, 'mt-s transition-colors group-hover:text-primary-dark']}>
-      {entry.title}
-    </h3>
-    {
-      entry.excerpt && (
-        <p
-          class:list={[
-            featured ? 'mt-m text-base' : 'mt-s text-sm',
-            'leading-relaxed text-foreground/80',
-          ]}
-        >
-          {entry.excerpt}
-        </p>
+
+  {
+    /* A sermon preview says which week it is for, and nothing else: the
+      category chip would read "Sermon Preview" on all 106 of them, and the
+      bare date does not tell a reader what the date is FOR. Everything else
+      says its category, then its date, on two quiet lines. */
+  }
+  {
+    preview ? (
+      <p class="mt-4 font-ui text-ui text-gold-ink">
+        <time datetime={entry.publishedAt}>{weekOfEyebrow(entry.publishedAt)}</time>
+      </p>
+    ) : (
+      primaryCategory?.title && (
+        <p class="mt-4 font-ui text-ui text-gold-ink">{primaryCategory.title}</p>
       )
-    }
-  </div>
+    )
+  }
+
+  <h3 class:list={[titleClass, 'mt-2 text-foreground transition-colors group-hover:text-gold-ink']}>
+    {entry.title}
+  </h3>
+
+  {
+    !preview && dateLabel && (
+      <time
+        datetime={entry.publishedAt}
+        class="mt-2 block font-ui text-[0.8125rem] text-muted-foreground"
+      >
+        {dateLabel}
+      </time>
+    )
+  }
+
+  {
+    entry.excerpt && (
+      <p class:list={[featured ? 'mt-m text-base' : 'mt-s text-sm', 'text-muted-foreground']}>
+        {entry.excerpt}
+      </p>
+    )
+  }
 </a>

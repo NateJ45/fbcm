@@ -20,9 +20,10 @@
 //     baseline, with a trailing arrow that nudges 4px on hover. For a place
 //     where a row of buttons would be four
 //     buttons shouting at once (the link-cards band). Added 2026-09-19 so that
-//     ctaBlock href resolution stays in ONE file: a component drawing its own
-//     <a> would have had to re-implement resolveHref() below, and the second
-//     copy is the one that forgets /post/<slug>.
+//     ctaBlock href resolution stays in ONE place: a component drawing its own
+//     <a> would have had to re-implement the mapping, and the second copy is
+//     the one that forgets /post/<slug>. That mapping now lives in
+//     src/lib/cta-href.ts, which this file and the statement band both import.
 //   - `onDark` toggle — for CTAs sitting over a dark surface (hero image
 //     overlay, a fixed indigo or brown band). Passing a `class` override to
 //     recolor does not work: Tailwind v4 generates utilities alphabetically, so
@@ -44,15 +45,7 @@
 // button variants share the inset double rule, em-based padding and a 44x44
 // minimum tap target.
 
-interface CtaBlock {
-  label?: string;
-  linkType?: 'internal' | 'external' | 'email' | 'phone';
-  internalLink?: { _type?: string; slug?: string } | null;
-  externalUrl?: string;
-  emailAddress?: string;
-  phoneNumber?: string;
-  openInNewTab?: boolean;
-}
+import { resolveCtaHref, type CtaBlock } from '@/lib/cta-href';
 
 interface Props {
   cta?: CtaBlock | null;
@@ -80,44 +73,10 @@ const {
   class: extraClass = '',
 } = Astro.props as Props;
 
-// Map Sanity document _type to its route. Mirrors the routes in src/pages/.
-// Singletons go to a fixed path; journalEntry uses {slug} for the dynamic
-// /post/[slug] route.
-const TYPE_TO_PATH: Record<string, string> = {
-  homePage: '/',
-  journalPage: '/blog', // scaffold: journal
-};
-
-function resolveHref(c?: CtaBlock | null): string {
-  if (!c?.linkType) return fallbackHref;
-  switch (c.linkType) {
-    case 'internal': {
-      const t = c.internalLink?._type;
-      if (!t) return fallbackHref;
-      // Slug-based types need the slug appended. Singletons use a fixed path.
-      // scaffold: journal
-      if (t === 'journalEntry' && c.internalLink?.slug) {
-        return `/post/${c.internalLink.slug}`;
-      }
-      // scaffold:end
-      // Custom pages (type 'page') route via /[slug].astro.
-      if (t === 'page' && c.internalLink?.slug) {
-        return `/${c.internalLink.slug}`;
-      }
-      return TYPE_TO_PATH[t] ?? fallbackHref;
-    }
-    case 'external':
-      return c.externalUrl ?? fallbackHref;
-    case 'email':
-      return c.emailAddress ? `mailto:${c.emailAddress}` : fallbackHref;
-    case 'phone':
-      return c.phoneNumber ? `tel:${c.phoneNumber.replace(/[^\d+]/g, '')}` : fallbackHref;
-    default:
-      return fallbackHref;
-  }
-}
-
-const href = resolveHref(cta);
+// The ctaBlock -> href mapping lives in src/lib/cta-href.ts, so the statement
+// band's ruled row (whose whole card is the <a>) can resolve the same hrefs
+// without a second copy of it. See the note at the top of that file.
+const href = resolveCtaHref(cta, fallbackHref);
 const label = cta?.label ?? fallbackLabel;
 const isExternal = cta?.linkType === 'external';
 // An explicit `openInNewTab: false` is now honoured, even on an external link.

@@ -1,40 +1,55 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: two to four short cards, each a door into another part
-// of the site. The spec asks for a "three-up" on Home (5.1 item 4) and again
-// on Who We Are (5.3 item 7), and before this block existed the only way to
-// draw one was a richTextSection with three h3 leads, which renders as a
-// stacked list, not a row.
+// Page-builder block: two to four short doors into the rest of the site, drawn
+// as a RULED ROW (art-direction pass, 2026-09-20, spec section 5).
+//
+// It has two forms, and the difference is one prop.
+//
+// THE STATEMENT. With a `frame` the band is the prototype's statement: a
+// photograph at 88svh under a bottom-up gradient, the heading at display scale
+// in capitals, and the ruled row sitting on the picture in paper ink. The
+// photograph is BORROWED. This block has no image field and no schema change
+// was made for one, so SectionRenderer hands it the page's spare image from
+// src/lib/spare-images.ts, which is computed ONCE per page: two bands can never
+// be handed the same picture, and the picture is not taken away from the block
+// that owns it.
+//
+// THE LIGHT ROW. With no frame the band keeps the cadence surface it was given
+// and draws the same ruled row under an ordinary SectionHeading. The row is
+// written ONCE below and both forms render it: only the ink, the eyebrow colour
+// and the hairline colour move, which is what `onDark` switches.
 //
 // Three decisions worth keeping.
 //
-// 1. THE CTA IS A TEXT LINK, NEVER A BUTTON. A row of four cards each with a
-//    button is four buttons competing with the page's real calls to action.
-//    CLAUDE.md rule 17 says buttons come from one family and the page picks
-//    where they go: here that is the hero and the closing band. The card's
-//    link goes through CtaLink's `link` variant so ctaBlock href resolution
-//    still lives in exactly one file.
+// 1. THE WHOLE CARD IS THE LINK, and the arrow line is a <span>. An <a> cannot
+//    contain another <a>, so the card cannot hold a CtaLink. It resolves its
+//    href through src/lib/cta-href.ts instead, which is the same function
+//    CtaLink itself uses, so there is still exactly one place that knows a
+//    journalEntry link is /post/<slug>.
 //
-// 2. THE COLUMN COUNT COMES FROM THE CARD COUNT. Two cards make two columns,
-//    four make four. The classes are written out as literals in COLUMNS below
-//    rather than built from a variable, because Tailwind's scanner reads
-//    SOURCE TEXT: `lg:grid-cols-${n}` generates no CSS at all and the grid
-//    would quietly render as one column at every width.
+// 2. THE CARD'S GOLD LINE IS A NUMERAL. The prototype gives each card a short
+//    gold label above its title, and there is no field for one: `linkCard`
+//    carries a title, a body and a link, and this pass changed no schema. So
+//    the slot takes the card's POSITION, set in the UI face the same way the
+//    footer columns and the menu rows are numbered. It is derived, never typed,
+//    so it cannot go stale when an editor reorders the cards (CLAUDE.md
+//    rule 15).
 //
-// 3. THE CARD GROUND IS THE OPPOSITE OF THE SECTION GROUND. The cadence
-//    (src/lib/sectionCadence.ts) hands this block `background` or `muted`, and
-//    a card painted the same colour as the band it sits on is not a card. On
-//    the page ground the cards take the soft surface; on the soft ground they
-//    take the page surface. Both pairs are measured in
-//    src/lib/surfaces.test.ts.
+// 3. NO PLATES, NO SHADOW, NO COLUMN TABLE. The row is drawn with hairlines
+//    only: one rule across the top, one between each pair on desktop, one under
+//    each card on a phone. That is the division the rest of the site uses, and
+//    it is why the old COLUMNS lookup is gone: `md:grid-cols-3` is the row the
+//    spec asks for on both pages that carry this block, and two or four cards
+//    share it rather than redrawing the band.
 //
 // A CONTENT block: the alternating surface arrives as a prop from
-// SectionRenderer.
+// SectionRenderer, and is ignored in the statement form, which paints its own.
 import SectionHeading from '@/components/SectionHeading.astro';
-import CtaLink from '@/components/CtaLink.astro';
+import SanityImage from '@/components/SanityImage.astro';
 import { surfaceClass } from '@/lib/surfaces';
-import type { ProjectedLinkCard } from '@/lib/pageBuilder.types';
+import { resolveCtaHref } from '@/lib/cta-href';
+import type { ProjectedLinkCard, SanityImageObject } from '@/lib/pageBuilder.types';
 
 interface Props {
   eyebrow?: string;
@@ -43,6 +58,18 @@ interface Props {
   cards?: ProjectedLinkCard[];
   surface?: 'background' | 'muted';
   headingId: string;
+  /**
+   * The borrowed photograph that turns this band into the statement. Null (the
+   * default) is the light ruled row. SectionRenderer decides, once per page.
+   */
+  frame?: SanityImageObject | null;
+  /**
+   * Paper ink, gold eyebrows and paper hairlines, for a row sitting on a dark
+   * surface. Unset it follows the frame, which is the only thing that makes
+   * this band dark today; it is a prop so a future dark caller can say so
+   * without owning a picture.
+   */
+  onDark?: boolean;
 }
 
 const {
@@ -52,63 +79,137 @@ const {
   cards = [],
   surface = 'background',
   headingId,
+  frame = null,
+  onDark,
 } = Astro.props as Props;
 
 const bg = surfaceClass(surface);
+const hasFrame = !!frame?.asset;
+const dark = onDark ?? hasFrame;
 
 // A card with no title is a card nobody can read, so it never renders.
 const shown = cards.filter((c) => c?.title);
 
-// Written out, never interpolated: see note 2 in the header. Keys are the card
-// counts the schema allows (min 2, max 4); anything outside that falls back to
-// three, which is the shape the spec asks for on both pages that use this.
-const COLUMNS: Record<number, string> = {
-  2: 'sm:grid-cols-2',
-  3: 'sm:grid-cols-2 lg:grid-cols-3',
-  4: 'sm:grid-cols-2 lg:grid-cols-4',
-};
-const colClass = COLUMNS[shown.length] ?? COLUMNS[3];
+// The row's ink, named once so the two forms cannot drift apart.
+const ruleInk = dark ? 'border-bg/18' : 'border-hair';
+const labelInk = dark ? 'text-gold' : 'text-gold-ink';
+const titleInk = dark ? 'text-bg' : 'text-foreground';
+const bodyInk = dark ? 'text-bg/75' : 'text-muted-foreground';
+const arrowInk = dark ? 'text-bg' : 'text-link';
 
-// See note 3. surfaceClass() is not used for the card, because `card` in that
-// registry is the starter's raised white panel and this design wants the
-// church's own two grounds trading places.
-const cardBg = surface === 'muted' ? 'bg-background' : 'bg-surface-soft';
+// Each card's href, resolved once. `/` is the honest fallback for a card whose
+// link an editor has not filled in yet: it goes somewhere rather than nowhere.
+const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? null, '/');
 ---
 
 {
   shown.length > 0 && (
-    <section class={bg} aria-labelledby={heading ? headingId : undefined}>
-      <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
-        <SectionHeading
-          eyebrow={eyebrow}
-          headline={heading}
-          subhead={intro}
-          headingId={headingId}
-          level="h2"
-          align="left"
-          tone="church"
-          rule
+    <section
+      class:list={
+        hasFrame ? ['relative isolate flex min-h-[88svh] flex-col justify-end text-bg'] : [bg]
+      }
+      aria-labelledby={heading ? headingId : undefined}
+    >
+      {hasFrame && (
+        <SanityImage
+          source={frame}
+          width={2400}
+          sizes="100vw"
+          quality={70}
+          loading="lazy"
+          class="absolute inset-0 -z-20 h-full w-full object-cover object-[50%_40%]"
         />
+      )}
 
-        <div class:list={['mt-section-md grid grid-cols-1 gap-l', colClass]} data-stagger-grid>
-          {shown.map((card) => (
-            <article
-              class:list={['card-lift flex h-full flex-col border-t-2 border-gold p-m', cardBg]}
+      {/* ONE overlay, the hero's bottom-up gradient RE-WEIGHTED for this band.
+          MEASURED, not guessed. The hero's own stops (.94 / .62 / .12 / 0) are
+          tuned for a headline sitting in the bottom third of the frame. This
+          band's display line is four lines of capitals reaching from 11% to 54%
+          DOWN from the top, and on the nave photograph that zone is the white
+          arch and the sunlit windows: under the hero ramp the overlay there is
+          about 12% ink, so paper-white type over a 255-level arch measured
+          about 1.6:1 and the middle two lines were unreadable in the capture.
+          The floor here is .62, which puts a pixel of that arch at roughly 116
+          and the type at about 4.6:1, clear of AA for any size. The photograph
+          still reads: a .62 wash darkens the nave, it does not erase it. If the
+          statement ever gets a dark photograph these stops can come back down,
+          but they have to be re-measured against the new picture, not reasoned
+          about. */}
+      {hasFrame && (
+        <div
+          class="absolute inset-0 -z-10"
+          aria-hidden="true"
+          style="background: linear-gradient(to top, rgba(23,21,31,.94) 0%, rgba(23,21,31,.84) 32%, rgba(23,21,31,.72) 62%, rgba(23,21,31,.62) 100%);"
+        />
+      )}
+
+      <div
+        class:list={[
+          'mx-auto w-full max-w-content px-gutter',
+          hasFrame ? 'py-[clamp(56px,9vw,120px)]' : 'py-section-lg',
+        ]}
+        data-reveal
+      >
+        {hasFrame ? (
+          <Fragment>
+            {heading && (
+              <h2
+                id={headingId}
+                class="max-w-[15ch] font-display text-h1 font-normal tracking-[0.01em] uppercase"
+              >
+                {heading}
+              </h2>
+            )}
+            {intro && <p class="mt-6 max-w-[42ch] text-lede font-normal text-bg/80">{intro}</p>}
+          </Fragment>
+        ) : (
+          <SectionHeading
+            eyebrow={eyebrow}
+            headline={heading}
+            subhead={intro}
+            headingId={headingId}
+            level="h2"
+            align="left"
+            tone="church"
+          />
+        )}
+
+        <div
+          class:list={[
+            'mt-[clamp(40px,6vw,72px)] grid grid-cols-1 border-t md:grid-cols-3',
+            ruleInk,
+          ]}
+        >
+          {shown.map((card, i) => (
+            <a
+              href={hrefFor(card)}
+              class:list={[
+                'group border-b py-7 pr-[clamp(16px,2vw,32px)] last:mr-0 last:border-r-0 last:border-b-0 md:mr-[clamp(16px,2vw,32px)] md:border-r md:border-b-0',
+                ruleInk,
+              ]}
             >
-              <h3 class="font-display text-h4 leading-snug text-foreground">{card.title}</h3>
-
+              <span class:list={['mb-3 block font-ui text-ui', labelInk]}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span class:list={['block font-body text-h3 font-normal', titleInk]}>
+                {card.title}
+              </span>
               {card.body && (
-                <p class="mt-s text-[0.9375rem] leading-relaxed text-muted-foreground">
+                <span
+                  class:list={[
+                    'mt-2.5 block max-w-[34ch] font-body text-base leading-[1.55]',
+                    bodyInk,
+                  ]}
+                >
                   {card.body}
-                </p>
+                </span>
               )}
-
               {card.cta?.label && (
-                <p class="mt-auto pt-m">
-                  <CtaLink cta={card.cta} variant="link" />
-                </p>
+                <span class:list={['mt-3.5 inline-block font-body italic', arrowInk]}>
+                  {card.cta.label} &#8594;
+                </span>
               )}
-            </article>
+            </a>
           ))}
         </div>
       </div>

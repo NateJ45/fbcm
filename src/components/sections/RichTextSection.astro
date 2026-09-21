@@ -50,7 +50,7 @@ const bg = surfaceClass(surface);
 // width, about 108 characters a line, which is past the point where a reader
 // loses the start of the next line.
 //
-// So the container is ALWAYS the page's `max-w-content px-m`, and the body
+// So the container is ALWAYS the page's `max-w-content px-gutter`, and the body
 // carries its own measure.
 //
 // The NUMBER is measured, not assumed. CSS `ch` is the advance width of the
@@ -67,10 +67,22 @@ const bg = surfaceClass(surface);
 // The measure itself moved to src/lib/prose.ts on 2026-09-20 so /privacy, which
 // is a bespoke route rather than a builder page, can read the same one string
 // instead of carrying a second copy of it.
+//
+// THE HEADING SITS BESIDE THE PROSE, NOT ABOVE IT (art-direction pass, task 8).
+//
+// A band that has a heading is a twelve-column grid: the heading in the first
+// four columns, the reading starting at column six. The measure below is what
+// makes that work, because a 62ch column inside six of twelve columns is the
+// same line length it was at full width. A band with NO heading keeps the
+// single column it always had, so the prose still starts at the page's own
+// left edge rather than indenting itself to where a missing heading would be.
+//
+// The old `mt-l` that separated the heading from the prose went with it: in the
+// two-column form there is nothing above the prose to separate it from, and on
+// a phone the body column carries its own `mt-9`.
 const alignClass = align === 'center' ? 'text-center' : '';
 const proseClass = [
   PROSE_MEASURE,
-  heading ? 'mt-l' : '',
   alignClass,
   // Centred prose has to be centred as a BOX as well as as text, or the 68ch
   // measure would sit against the left edge with its lines centred inside it.
@@ -81,20 +93,28 @@ const proseClass = [
 ---
 
 <section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+  <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
     {
-      heading && (
-        <SectionHeading
-          eyebrow={eyebrow}
-          headline={heading}
-          headingId={headingId}
-          align={align}
-          scriptAccent={scriptAccent}
-          headingAccent={headingAccent}
-          class={align === 'center' ? 'mx-auto' : ''}
-        />
+      heading ? (
+        <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)]">
+          <div class="col-span-12 lg:col-span-4">
+            <SectionHeading
+              eyebrow={eyebrow}
+              headline={heading}
+              headingId={headingId}
+              align={align}
+              scriptAccent={scriptAccent}
+              headingAccent={headingAccent}
+              class={align === 'center' ? 'mx-auto' : ''}
+            />
+          </div>
+          <div class="col-span-12 mt-9 lg:col-span-6 lg:col-start-6 lg:mt-0">
+            {body && <PortableText value={body} className={proseClass} />}
+          </div>
+        </div>
+      ) : (
+        body && <PortableText value={body} className={proseClass} />
       )
     }
-    {body && <PortableText value={body} className={proseClass} />}
   </div>
 </section>
