@@ -43,6 +43,11 @@ interface Props {
   ogType?: 'website' | 'article';
   /** Article metadata. Only used when ogType is 'article'. */
   ogArticle?: { publishedAt?: string; author?: string };
+  /** True when this page opens with an IMAGE hero, so the header should sit on
+   *  the picture (transparent, paper lettering, hero pulled up underneath)
+   *  until the visitor scrolls 8px. The routes that can know this compute it
+   *  from their first pageBuilder block; see src/lib/heroOverlay.ts. */
+  overlayHeader?: boolean;
 }
 
 const {
@@ -55,6 +60,7 @@ const {
   noindex = false,
   ogType = 'website',
   ogArticle,
+  overlayHeader = false,
 } = Astro.props as Props;
 
 const canonical = new URL(Astro.url.pathname, site.url).toString();
@@ -239,8 +245,20 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           const imgs = document.querySelectorAll('img[data-theme-logo]');
           for (let i = 0; i < imgs.length; i++) {
             const img = imgs[i];
-            const nextSrc = dark ? img.dataset.logoDarkSrc : img.dataset.logoLightSrc;
-            const nextSrcset = dark ? img.dataset.logoDarkSrcset : img.dataset.logoLightSrcset;
+            // Overlay mode (the header sitting on an image hero before the
+            // first scroll) wants the DARK file in either theme, because the
+            // lettering is on a photograph. Without this check the swap below
+            // would undo the header's own inline script on every View
+            // Transitions navigation onto a page with an image hero.
+            const hdr = img.closest ? img.closest('header.site-header') : null;
+            const onPicture = !!(
+              hdr &&
+              hdr.hasAttribute('data-overlay') &&
+              !hdr.hasAttribute('data-scrolled')
+            );
+            const wantDark = dark || onPicture;
+            const nextSrc = wantDark ? img.dataset.logoDarkSrc : img.dataset.logoLightSrc;
+            const nextSrcset = wantDark ? img.dataset.logoDarkSrcset : img.dataset.logoLightSrcset;
             if (nextSrc && img.src !== nextSrc) img.src = nextSrc;
             if (nextSrcset && img.srcset !== nextSrcset) img.srcset = nextSrcset;
           }
@@ -301,7 +319,34 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
       </div>
     )}
 
-    <Header siteSettings={siteSettings} />
+    <Header siteSettings={siteSettings} overlay={overlayHeader} />
+
+    {/* --header-h: the sticky header's measured height, published as a custom
+        property. Two things read it, and neither one is on the home page
+        alone, which is why this lives here rather than in Hero.astro where it
+        started: the full-height home hero (`.hero-fill` in Hero.astro, which
+        subtracts it from 100svh) and overlay mode's negative margin-bottom in
+        globals.css, which pulls an image hero up underneath the bar.
+        Runs inline, immediately after the header is parsed, so the value is
+        set before first paint and neither consumer shifts. The CSS carries an
+        88px fallback for the frame before this runs and for no-JS sessions. */}
+    <script is:inline>
+      (function () {
+        function setHeaderH() {
+          var header = document.querySelector('header.site-header');
+          if (header) {
+            document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+          }
+        }
+        setHeaderH();
+        if (!window.__headerHBound) {
+          window.__headerHBound = true;
+          window.addEventListener('resize', setHeaderH, { passive: true });
+          window.addEventListener('load', setHeaderH);
+          document.addEventListener('astro:page-load', setHeaderH);
+        }
+      })();
+    </script>
 
     <main id="main" class="flex-1">
       <slot />
@@ -562,6 +607,24 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
             requestAnimationFrame(() => {
               const y = window.scrollY;
               const dy = y - lastY;
+
+              // ---- data-scrolled -------------------------------------------
+              // Independent of everything below it, and deliberately NOT gated
+              // on the gesture flag: "has this page moved off the top" is true
+              // however the page got there (a fragment landing, a restored
+              // scroll position, a real gesture), and the overlay header's
+              // whole job is to stop being transparent the moment the picture
+              // starts leaving the top of the screen. 8px is small enough to
+              // feel immediate and large enough to ignore rubber-banding.
+              // The custom event lets the header's own inline logo-swap script
+              // re-run without it having to watch the DOM for the attribute.
+              const scrolled = y > 8;
+              if (scrolled !== header.hasAttribute('data-scrolled')) {
+                if (scrolled) header.setAttribute('data-scrolled', '');
+                else header.removeAttribute('data-scrolled');
+                window.dispatchEvent(new CustomEvent('header:scrolled'));
+              }
+
               const isUserScroll = performance.now() - lastGestureAt <= GESTURE_WINDOW_MS;
               if (isUserScroll) {
                 if (reduceMotion) {

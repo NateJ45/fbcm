@@ -763,31 +763,103 @@
    of the heading, or the top of a portrait, hidden underneath.
    One token, consumed by `scroll-mt-[var(--header-offset)]` on the
    SectionRenderer band wrapper and on the StaffGrid card, so the two can never
-   disagree. Measured 2026-09-20 in Chromium against the production build:
-   .site-header getBoundingClientRect().height is 186px at 1280 (4px brand
-   stripe + 53px utility row + 129px main row) and 93px at 375, where the
-   utility row is display:none until md. The values below are those two
-   measurements rounded up to leave a little air above the heading, and the
-   breakpoint is md (768px), the same one the utility row appears at.
+   disagree.
+   Re-measured 2026-09-20 (art-direction pass, task 3), against the production
+   build, after the header collapsed from three stacked rows to ONE: the 4px
+   brand stripe and the utility row are gone, so
+   .site-header getBoundingClientRect().height is now a flat 75px below lg and
+   89px from lg up: the row's own `h-[74px] lg:h-[88px]` plus the 1px bottom
+   hairline. Measured in Chromium at 375 and at 1440 against the production
+   build (scripts/shoot-scrolled.mjs prints both), and the anchor suite proves
+   the result on Chromium and WebKit alike.
+   The two values below are those heights plus a little air above the heading,
+   and the breakpoint moved from md (768px) to lg (1024px) because that is
+   where the row itself changes height now.
    This is plain CSS, so reduced-motion sessions get the identical offset;
    `scroll-margin-top` is not an animation. */
 :root {
-  --header-offset: 6.5rem; /* 104px, clears the 93px mobile header */
+  --header-offset: 5.5rem; /* 88px, clears the 75px header below lg */
 }
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   :root {
-    --header-offset: 12.5rem; /* 200px, clears the 186px header with the utility row */
+    --header-offset: 6.5rem; /* 104px, clears the 89px header from lg up */
   }
 }
 
-/* Sticky header behavior. The hide-on-scroll-down / show-on-scroll-up state
-   is toggled by the script in BaseLayout via data-state. */
+/* Sticky header behavior.
+   Two independent state attributes ride on this element, both written by the
+   polish script in BaseLayout:
+     data-state="hidden"  the gesture-gated hide-on-scroll-down (unchanged)
+     data-scrolled        set the moment scrollY > 8, removed at the top
+   and one written at render time by the layout:
+     data-overlay         this page opens with an IMAGE hero, so the header
+                          should sit ON the picture rather than above it.
+   Overlay mode is the art-direction pass's one piece of theatre: over the
+   tower photo the bar has no background, no rule, and paper lettering, and it
+   becomes the ordinary paper bar after 8px of scroll. The negative
+   margin-bottom is what lets the hero start underneath: the header still takes
+   part in layout (it is sticky, not fixed), so without it the picture would
+   begin below the bar and there would be nothing to overlay.
+   `color` is var(--color-bg) rather than a theme token on purpose: --color-bg
+   is paper in BOTH themes (`.dark` never redeclares it), and the lettering
+   here sits on a dark photograph either way. The base background, by
+   contrast, IS theme-aware (--background), because that bar is the page's own
+   surface. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--background);
+  border-bottom: 1px solid var(--hair);
+  transition:
+    transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    background 300ms,
+    border-color 300ms,
+    color 300ms;
   will-change: transform;
+}
+.site-header[data-overlay]:not([data-scrolled]) {
+  background: transparent;
+  border-bottom-color: transparent;
+  color: var(--color-bg);
+  margin-bottom: calc(-1 * var(--header-h, 88px));
+}
+/* THE SCRIM, and why a transparent bar still needs one.
+   tests/contrast.spec.ts measures the text against the PIXELS behind it, which
+   is the check axe cannot make (it gives up and reports nothing when it cannot
+   name a background colour). Over the tower photograph the paper nav links
+   landed at 3.80:1, 3.92:1, 4.06:1 and 4.36:1 against the bright cloud on the
+   right of the frame: four real AA failures that the page would have shipped
+   looking fine. A photograph is not a background colour, so no palette change
+   can fix this. The fix is to darken the top of the picture just enough,
+   which is what every full-bleed hero with words on it does.
+   It is a gradient rather than a flat wash so there is no visible edge where
+   it ends, it runs to 1.9x the header's own height so it has faded to nothing
+   well below the lettering, and it only exists in overlay mode before the
+   first scroll. Measured after: 6.09:1 at the worst link, the whole page
+   clean in both themes. z-index -1 keeps it behind the bar's own contents and
+   inside the header's stacking context, so it never touches the page below. */
+.site-header[data-overlay]:not([data-scrolled])::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(var(--header-h, 88px) * 1.9);
+  background: linear-gradient(to bottom, rgba(20, 18, 27, 0.62), rgba(20, 18, 27, 0));
+  pointer-events: none;
+  z-index: -1;
+}
+/* Everything in the bar follows that paper colour while it is over the
+   picture. The nav links, the dropdown summaries, the hamburger and the theme
+   toggle all carry a `text-foreground`-family utility, and a utility lives in
+   @layer utilities, so this unlayered rule wins without an !important.
+   The Give button is the one exception: it keeps its gold fill and its
+   indigo-field label in every state, which is why it carries .header-give and
+   is excluded here. */
+.site-header[data-overlay]:not([data-scrolled]) :where(a, button, summary):not(.header-give) {
+  color: inherit;
+}
+.site-header[data-overlay]:not([data-scrolled]) .nav-underline {
+  color: inherit;
 }
 .site-header[data-state='hidden'] {
   transform: translateY(-100%);

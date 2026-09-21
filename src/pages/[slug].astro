@@ -14,6 +14,7 @@ import SectionRenderer from '@/components/SectionRenderer.astro';
 import { getPage, getAllPageSlugs, getSiteSettings } from '@/lib/queries';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
+import { shouldOverlayHeader } from '@/lib/heroOverlay';
 
 export async function getStaticPaths() {
   // Defined inside getStaticPaths, and it has to be: CLAUDE.md rule 10. Astro
@@ -56,6 +57,10 @@ const seoImage = (pageDoc as any).seoImage ?? undefined;
 // switch is the sitemap filter in astro.config.mjs, which drops the same page.
 const noindex = (pageDoc as any).hideFromSearch === true;
 
+// The header sits ON the picture when this page opens with an image hero.
+// One predicate, shared with index.astro, so the two routes cannot disagree.
+const overlayHeader = shouldOverlayHeader((pageDoc as any).pageBuilder);
+
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
@@ -64,7 +69,15 @@ const schemas = [
 ];
 ---
 
-<BaseLayout {title} {description} {schemas} {siteSettings} {noindex} seoImage={seoImage}>
+<BaseLayout
+  {title}
+  {description}
+  {schemas}
+  {siteSettings}
+  {noindex}
+  {overlayHeader}
+  seoImage={seoImage}
+>
   <SectionRenderer
     sections={(pageDoc as any).pageBuilder}
     idPrefix="page"

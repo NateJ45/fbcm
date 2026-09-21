@@ -10,6 +10,7 @@ import SectionRenderer from '@/components/SectionRenderer.astro';
 import { getHomePage, getSiteSettings } from '@/lib/queries';
 import { site } from '@/data/site';
 import { DEFAULT_HOME_SECTIONS } from '@/data/defaultSections';
+import { shouldOverlayHeader } from '@/lib/heroOverlay';
 
 const [page, siteSettings] = await Promise.all([
   getHomePage().catch(() => null),
@@ -22,8 +23,12 @@ const description =
   "We're a Spirit-led people gathered to join Christ's presence in our community.";
 
 const sections = page?.pageBuilder?.length ? page.pageBuilder : DEFAULT_HOME_SECTIONS;
+
+// The header sits ON the picture when this page opens with an image hero.
+// One predicate, shared with [slug].astro, so the two routes cannot disagree.
+const overlayHeader = shouldOverlayHeader(sections as any);
 ---
 
-<BaseLayout {title} {description} {siteSettings} seoImage={page?.seoImage}>
+<BaseLayout {title} {description} {siteSettings} {overlayHeader} seoImage={page?.seoImage}>
   <SectionRenderer {sections} idPrefix="home" settings={siteSettings} />
 </BaseLayout>

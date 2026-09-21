@@ -1,29 +1,37 @@
 ---
 // Foundation, edit with care
-// Site header, in the church's own grammar (Plan 2a, Task 9).
+// Site header, in the church's own grammar.
 //
-//   ┌─────────────────────────────────────── 4px indigo accent stripe
-//   │ ─────────────────────────────────────── utility row (md and up)
-//   │   (765) 284-7749                     Contact  ·  theme
-//   ├─────────────────────────────────────── main row
-//   │   [wordmark]        Visit Who We Are ... Blog   [ GIVE ]
-//   └───────────────────────────────────────
+// Redrawn 2026-09-20 (art-direction pass, task 3) from three stacked rows to
+// ONE. What came off: the 4px indigo accent stripe and the whole utility row
+// (phone, Contact, theme toggle). The phone and the Contact link now live in
+// the mobile menu and the footer, which is where a visitor looks for them;
+// repeating them across the top of every page bought nothing but 57px of
+// chrome above the wordmark.
 //
-// Three things about the layout are deliberate.
+//   +-----------------------------------------------+  74px, 88px from lg
+//   | [wordmark]   Visit  Who We Are ... Blog  [ GIVE ]  (*)
+//   +-----------------------------------------------+
 //
-//   1. ONE LEFT EDGE. Both rows use the same `max-w-content px-m` container the
-//      church blocks and the footer use (CLAUDE.md rule 17), so the phone, the
+// Four things about the layout are deliberate.
+//
+//   1. ONE LEFT EDGE. The row uses the same `max-w-content px-gutter`
+//      container the page bands and the footer use (CLAUDE.md rule 17), so the
 //      wordmark and every heading down the page share a left edge.
-//   2. The utility row appears at md, and the main row switches from the
-//      centred-logo phone layout to logo-left at md too, so the phone number
-//      sits directly above the wordmark rather than above nothing. The NAV
-//      still waits for lg: seven links plus the Give button need the room.
-//   3. ONE BUTTON FAMILY. Give is the only button in the header, and it is the
-//      exact pair CtaLink's `gold` variant draws: a gold fill with an
-//      indigo-FIELD label. Not text-indigo: --color-indigo flips to paper white
-//      under .dark (globals.css), which puts 2.37:1 white-on-gold on the button
-//      in dark mode only. --color-indigo-field stays dark in both themes.
-//      There is no second button style up here.
+//   2. ONE BUTTON FAMILY. Give is the only button in the header, and it draws
+//      exactly what CtaLink's `gold` variant draws: a gold fill with an
+//      indigo-FIELD label and the gold/indigo inset keyline. Not text-indigo:
+//      --color-indigo flips to paper white under .dark (globals.css), which
+//      would put 2.37:1 white-on-gold on the button in dark mode only.
+//      --color-indigo-field stays dark in both themes.
+//   3. OVERLAY MODE. When the page opens with an image hero the layout passes
+//      `overlay`, which puts `data-overlay` on this element; the rules in
+//      globals.css then strip the background and the rule, turn the lettering
+//      paper, and pull the hero up underneath with a negative margin. The
+//      polish script in BaseLayout adds `data-scrolled` past 8px and the bar
+//      becomes ordinary paper. The logo swap below follows the same state.
+//   4. The theme toggle is a 28px icon button at the row's end, desktop only.
+//      Below lg it lives in the mobile menu, so it is not duplicated here.
 //
 // The seven links and the Give button both come from Sanity (Site Settings ->
 // Navigation). Desktop nav is SERVER-RENDERED (CLAUDE.md rule 4): real <a>
@@ -34,14 +42,12 @@
 
 import { getImage } from 'astro:assets';
 import { site } from '@/data/site';
-import { Phone } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import MobileNav from './MobileNav';
 import { ChevronDown } from 'lucide-react';
 import logoLightAsset from '@/assets/logo-light.svg';
 import logoDarkAsset from '@/assets/logo-dark.svg';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
-import { telHref } from '@/lib/phone';
 import { urlFor } from '@/lib/sanity';
 
 // SVG logos are passed through Astro's image pipeline for cache-busted URLs.
@@ -57,6 +63,9 @@ const logoLightWebpMobile = logoLightImg;
 const logoDarkWebpMobile = logoDarkImg;
 
 interface Props {
+  /** True when this page opens with an image hero, so the bar sits ON the
+   *  picture until the visitor scrolls. Set by BaseLayout's `overlayHeader`. */
+  overlay?: boolean;
   siteSettings?:
     | (RawChromeSettings & {
         siteName?: string;
@@ -68,7 +77,7 @@ interface Props {
     | null;
 }
 
-const { siteSettings } = Astro.props as Props;
+const { siteSettings, overlay = false } = Astro.props as Props;
 
 const brandName = siteSettings?.siteName ?? siteSettings?.title ?? site.name;
 
@@ -93,10 +102,6 @@ const logoSrcset = logo
 // site, so it opens in a new tab. An internal destination (the built-in
 // fallback, or an editor who repoints it at a page here) stays in this tab.
 const ctaIsExternal = /^https?:\/\//i.test(headerCta.href);
-
-// The phone number in the utility row. Blank in Sanity means the row carries
-// the Contact link alone, which is why the markup guards on it.
-const phone = siteSettings?.phone ?? '';
 
 // Subset of siteSettings the mobile menu needs. Pass as a plain object so the
 // React island doesn't try to serialize the whole Sanity document graph.
@@ -148,59 +153,15 @@ function isGroupActive(items: { href: string }[]) {
 }
 ---
 
-<header class="site-header bg-background">
+<header class="site-header" data-overlay={overlay ? '' : undefined}>
   {
-    /* Brand accent stripe — same visual signature used at the top of the
-      mobile menu drawer. Visible on every viewport. */
-  }
-  <div class="h-1 bg-primary" aria-hidden="true"></div>
-
-  {
-    /* Utility row (md and up). Phone on the left, on the wordmark's own left
-      edge; Contact and the theme toggle on the right. Phones get the same two
-      links at the foot of the drawer instead. */
-  }
-  <div class="hidden border-b border-border-soft bg-surface-soft md:block">
-    <div class="mx-auto flex max-w-content items-center justify-between px-m py-2">
-      {
-        phone ? (
-          <a
-            href={telHref(phone)}
-            class="inline-flex items-center gap-xs font-mono text-[0.75rem] tracking-eyebrow text-muted-foreground uppercase transition-colors hover:text-link"
-          >
-            <Phone size={12} aria-hidden="true" />
-            {phone}
-          </a>
-        ) : (
-          <span />
-        )
-      }
-      <div class="flex items-center gap-m">
-        <a
-          href="/contact"
-          class="font-mono text-[0.75rem] tracking-eyebrow text-muted-foreground uppercase transition-colors hover:text-link"
-        >
-          Contact
-        </a>
-        {
-          /* Hydrate when idle, not on load — the anti-FOUC inline script in
-            BaseLayout already applies the correct theme class before first
-            paint, so this React island only needs to be live by the time the
-            visitor moves to click it. Demoting from client:load shaves real
-            TBT off mobile Lighthouse runs. */
-        }
-        <ThemeToggle client:idle />
-      </div>
-    </div>
-  </div>
-
-  {
-    /* Main nav row. Phones centre the logo with the hamburger pinned right;
-      from md the logo goes left so it lines up with the utility row above it;
-      from lg the seven links and the Give button join it on the right. */
+    /* ONE row. `relative` is load-bearing: MobileNav's trigger positions
+      itself absolutely against this box. The fixed height (rather than
+      vertical padding) is what lets --header-offset and the overlay mode's
+      negative margin both be a single known number. */
   }
   <div
-    class="relative mx-auto flex max-w-content items-center justify-center border-b border-border px-m py-m md:justify-between"
+    class="relative mx-auto flex h-[74px] max-w-content items-center justify-between px-gutter lg:h-[88px]"
   >
     <a
       href="/"
@@ -210,19 +171,15 @@ function isGroupActive(items: { href: string }[]) {
       {
         /*
         Single theme-aware logo. The img ships with NO src/srcset so the
-        browser doesn't start fetching anything; the inline script below
-        sets the right variant synchronously before paint based on the
-        current html.dark state, then re-applies on theme-toggle and
-        astro:after-swap (handled in the anti-FOUC script in BaseLayout).
-        Net result: only one logo file is ever fetched per page load, and
-        Lighthouse no longer sees a dark-variant in light-mode DOM (or
-        vice-versa).
+        browser doesn't start fetching anything; the inline script below sets
+        the right variant synchronously before paint from the current
+        html.dark state AND the header's overlay state, then re-applies on
+        theme-toggle, on the header:scrolled event, and on astro:after-swap
+        (handled in the anti-FOUC script in BaseLayout). Net result: only one
+        logo file is ever fetched per page load.
 
-        Dimensions and aspect ratio match the wordmark's own 249.45:97.06,
-        so the browser reserves the right layout box before the file lands —
-        no CLS. This is NOT the old 280:60 lockup: the church's mark is a
-        tower beside two words and is nearly three times as tall for its
-        width, so the numbers here move with the file.
+        Dimensions and aspect ratio match the wordmark's own 249.45:97.06, so
+        the browser reserves the right layout box before the file lands. No CLS.
       */
       }
       {
@@ -235,7 +192,7 @@ function isGroupActive(items: { href: string }[]) {
             srcset={logoSrcset}
             sizes="280px"
             alt={logo.alt || brandName}
-            class="h-12 w-auto"
+            class="h-12 w-auto lg:h-14"
             loading="eager"
             decoding="async"
           />
@@ -244,7 +201,7 @@ function isGroupActive(items: { href: string }[]) {
             alt={brandName}
             width={257}
             height={100}
-            class="h-14 w-auto lg:h-20"
+            class="h-12 w-auto lg:h-14"
             loading="eager"
             decoding="async"
             data-theme-logo
@@ -257,29 +214,34 @@ function isGroupActive(items: { href: string }[]) {
       }
     </a>
     {
-      /* Synchronous inline setup — runs immediately after the img element
-        is parsed, so the src is set before the browser begins any image
-        fetch. Re-applied across View Transitions navs by the anti-FOUC
-        listener in BaseLayout. */
+      /* Synchronous inline setup, right after the img element is parsed, so the
+        src is set before the browser begins any image fetch.
+
+        Overlay mode reads the DARK file (paper lettering) whatever the theme
+        is, because the bar is sitting on a dark photograph. Once the polish
+        script adds data-scrolled the bar is ordinary paper again and the logo
+        goes back to following the theme, which is what the `header:scrolled`
+        listener is for. Re-applied across View Transitions navs by the
+        anti-FOUC listener in BaseLayout, which makes the same overlay check. */
     }
     <script is:inline>
       (function () {
-        const img = document.querySelector('header img[data-theme-logo]');
+        const header = document.querySelector('header.site-header');
+        const img = header && header.querySelector('img[data-theme-logo]');
         if (!img) return;
-        const dark = document.documentElement.classList.contains('dark');
-        img.src = dark ? img.dataset.logoDarkSrc : img.dataset.logoLightSrc;
-        img.srcset = dark ? img.dataset.logoDarkSrcset : img.dataset.logoLightSrcset;
+        function applyLogo() {
+          const onPicture =
+            header.hasAttribute('data-overlay') && !header.hasAttribute('data-scrolled');
+          const dark = onPicture || document.documentElement.classList.contains('dark');
+          img.src = dark ? img.dataset.logoDarkSrc : img.dataset.logoLightSrc;
+          img.srcset = dark ? img.dataset.logoDarkSrcset : img.dataset.logoLightSrcset;
+        }
+        applyLogo();
+        window.addEventListener('header:scrolled', applyLogo);
       })();
     </script>
 
-    {
-      /* Nav + Give grouped on the right (lg+ only).
-
-        The gaps tighten at lg and open back up at xl. Measured: seven links
-        plus the button need about 585px of the 983px a 1024-wide viewport
-        leaves inside the container, so the row fits on one line with room to
-        spare and the utility row keeps its full phone number. */
-    }
+    {/* Nav, Give and the theme toggle grouped on the right (lg+ only). */}
     <div class="hidden items-center gap-m lg:flex xl:gap-l">
       <nav class="site-nav flex items-center gap-5 xl:gap-l" aria-label="Primary">
         {
@@ -288,10 +250,8 @@ function isGroupActive(items: { href: string }[]) {
               <a
                 href={item.href}
                 class:list={[
-                  'nav-underline text-sm tracking-wide transition-colors',
-                  isActive(item.href)
-                    ? 'font-semibold text-link'
-                    : 'text-foreground hover:text-link',
+                  'nav-underline py-1 font-ui text-[0.9375rem] font-medium tracking-[0.01em] transition-colors',
+                  isActive(item.href) ? 'text-link' : 'text-foreground hover:text-link',
                 ]}
                 aria-current={isActive(item.href) ? 'page' : undefined}
               >
@@ -300,18 +260,16 @@ function isGroupActive(items: { href: string }[]) {
             ) : (
               <details class="site-nav__group relative">
                 {/* <summary> is the disclosure toggle. It carries .nav-underline
-                  so it gets the same underline as flat links, and
-                  aria-current="page" (which locks the underline wide) when one
-                  of its children is the active route. role/aria-expanded are
+                  so it gets the same gold rule as flat links, and
+                  aria-current="page" (which locks the rule wide) when one of
+                  its children is the active route. role/aria-expanded are
                   managed natively by <details>. */}
                 <summary
                   class:list={[
-                    'nav-underline text-sm tracking-wide transition-colors',
+                    'nav-underline py-1 font-ui text-[0.9375rem] font-medium tracking-[0.01em] transition-colors',
                     'inline-flex cursor-pointer list-none items-center gap-0.5 select-none',
                     'rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                    isGroupActive(item.items)
-                      ? 'font-semibold text-link'
-                      : 'text-foreground hover:text-link',
+                    isGroupActive(item.items) ? 'text-link' : 'text-foreground hover:text-link',
                   ]}
                   aria-current={isGroupActive(item.items) ? 'page' : undefined}
                 >
@@ -324,13 +282,14 @@ function isGroupActive(items: { href: string }[]) {
                 </summary>
 
                 {/* Menu panel. Absolutely positioned under the summary so it
-                  doesn't shift layout. */}
-                <div class="site-nav__menu absolute top-full left-0 z-50 mt-2 min-w-[200px] rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10">
+                  doesn't shift layout. A hairline and a flat surface, no
+                  shadow: this pass draws depth with rules, not drop shadows. */}
+                <div class="site-nav__menu absolute top-full left-0 z-50 mt-2 min-w-[200px] rounded-sm border border-hair bg-background p-1 text-popover-foreground">
                   {item.items.map((sub) => (
                     <a
                       href={sub.href}
                       class:list={[
-                        'block rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                        'block rounded-sm px-2.5 py-1.5 font-ui text-[0.9375rem] transition-colors',
                         'outline-none hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground',
                         isActive(sub.href) ? 'font-semibold text-link' : 'text-foreground',
                       ]}
@@ -351,12 +310,24 @@ function isGroupActive(items: { href: string }[]) {
             href={headerCta.href}
             target={ctaIsExternal ? '_blank' : undefined}
             rel={ctaIsExternal ? 'noopener noreferrer' : undefined}
-            class="press-tactile inline-flex min-h-[44px] items-center rounded-sm bg-gold px-m py-2 text-xs font-semibold tracking-eyebrow text-indigo-field uppercase transition-colors hover:bg-gold/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
+            class="header-give press-tactile inline-flex items-center rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] transition-transform hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
           >
             {headerCta.label}
           </a>
         )
       }
+      {
+        /* Theme toggle, 28px, desktop only. The island itself draws a 36px
+          button because the mobile drawer wants a comfortable tap target; here
+          it is an afterthought at the end of the row, so the wrapper below
+          squeezes it. Below lg it is not here at all: the drawer carries it.
+          Hydrates when idle, not on load, because the anti-FOUC inline script
+          in BaseLayout already applies the right theme class before first
+          paint. */
+      }
+      <span class="header-theme hidden lg:inline-flex">
+        <ThemeToggle client:idle />
+      </span>
     </div>
 
     {
@@ -364,8 +335,9 @@ function isGroupActive(items: { href: string }[]) {
         Dialog) server-renders its trigger button fine, and the portal mounts
         nothing until the drawer opens, so the hamburger is in the server HTML
         and React arrives behind requestIdleCallback rather than on the
-        critical path. An Astro comment, not an HTML one, so it does not ship
-        on every page. See docs/agent/components.md. */
+        critical path. Its trigger inherits `color`, so it reads as paper over
+        an image hero and as ink on the ordinary bar. An Astro comment, not an
+        HTML one, so it does not ship on every page. */
     }
     <MobileNav
       client:idle
@@ -406,6 +378,18 @@ function isGroupActive(items: { href: string }[]) {
   }
   .site-nav__group[open] > .site-nav__menu {
     display: block;
+  }
+
+  /* Squeeze the ThemeToggle island down to a 28px icon button, for the header
+     row only. :global() because the button is rendered by React and carries no
+     Astro scope attribute; the wrapper does, so this still scopes to here. */
+  .header-theme :global(button) {
+    height: 28px;
+    width: 28px;
+  }
+  .header-theme :global(svg) {
+    height: 16px;
+    width: 16px;
   }
 </style>
 
