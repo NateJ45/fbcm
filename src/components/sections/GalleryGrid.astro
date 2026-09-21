@@ -42,14 +42,11 @@ const colClass = columnsClass('gallerySection', columns);
       aria-labelledby={heading ? headingId : undefined}
       aria-label={!heading ? 'Photo gallery' : undefined}
     >
-      <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+      <div class="mx-auto max-w-content px-m py-section-lg">
         {heading && <SectionHeading headline={heading} headingId={headingId} />}
-        <div
-          class:list={['grid grid-cols-1 gap-m', colClass, heading && 'mt-section-md']}
-          data-stagger-grid
-        >
+        <div class:list={['grid grid-cols-1 gap-m', colClass, heading && 'mt-section-md']}>
           {pics.map((img) => (
-            <figure class="overflow-hidden rounded-md">
+            <figure class="overflow-hidden rounded-md" data-reveal>
               <SanityImage
                 source={img}
                 width={800}

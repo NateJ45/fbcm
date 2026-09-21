@@ -98,7 +98,6 @@ const figureClass =
 <section class={bg} aria-labelledby={heading ? headingId : undefined}>
   <div
     class="mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] px-gutter py-section-lg"
-    data-reveal
   >
     <div class="col-span-12 lg:col-span-4">
       {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
@@ -136,7 +135,7 @@ const figureClass =
 
     {
       image?.asset && (
-        <figure class:list={[figureClass, 'mt-[clamp(56px,7vw,96px)]']}>
+        <figure class:list={[figureClass, 'mt-[clamp(56px,7vw,96px)]']} data-reveal>
           <SanityImage
             source={image}
             width={1800}

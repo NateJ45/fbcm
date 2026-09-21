@@ -55,14 +55,17 @@ const dateLabel = formatDate(entry.publishedAt);
 //
 // The hover survives, because it is the one thing that told a reader the card
 // was clickable: the title goes gold-ink and the photograph takes a slow 1.02
-// scale.
+// scale. That zoom is the site's ONE image hover now (.zoom-img in
+// globals.css, plan 3 task 12), not a per-card pair of Tailwind utilities, so
+// every picture that sits inside a link moves the same way and at the same
+// speed.
 const wrapperClass = featured ? 'group block lg:col-span-2' : 'group block';
 const aspectClass = featured ? 'aspect-[16/9]' : 'aspect-[4/3]';
 const titleClass = featured ? 'font-body text-h2 font-normal' : 'font-body text-h3 font-normal';
 ---
 
 <a href={href} class:list={[wrapperClass]}>
-  <div class:list={[aspectClass, 'overflow-hidden bg-muted']}>
+  <div class:list={[aspectClass, 'zoom-img', 'overflow-hidden bg-muted']} data-reveal>
     {
       entry.coverImage?.asset ? (
         <SanityImage
@@ -73,7 +76,7 @@ const titleClass = featured ? 'font-body text-h2 font-normal' : 'font-body text-
               ? '(min-width: 1024px) 66vw, 100vw'
               : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
           }
-          class="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-[1.02]"
+          class="h-full w-full object-cover"
         />
       ) : (
         <div class="h-full w-full" aria-hidden="true" />

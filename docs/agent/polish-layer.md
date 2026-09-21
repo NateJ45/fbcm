@@ -1,6 +1,6 @@
 # Polish layer
 
-> Custom CSS utilities and JS behaviors layered on Tailwind: brand stripe, card-lift, surface-warm, reading-progress, sticky-header, nav-underline, paper-grain, and print stylesheet.
+> Custom CSS utilities and JS behaviors layered on Tailwind: brand stripe, image zoom, surface-warm, reading-progress, sticky-header, nav-underline, paper-grain, and print stylesheet.
 
 Animation behaviors (Lenis, scroll reveals, stagger grid, hero entry, view transitions, Ken Burns slideshow, script accent opt-in) are documented separately in `animation.md`.
 
@@ -20,15 +20,23 @@ A 2px brand-color line -- `<div class="h-0.5 bg-primary" aria-hidden="true"></di
 
 If you add a new card-like component or section that should feel part of the brand, include this stripe at the top edge. The repetition is what makes the site read as one designed object.
 
-### Card resting + hover shadow
+### Image zoom on a link (`.zoom-img`)
 
-All marketing cards share a soft resting shadow that deepens on hover via `.card-lift`:
+`.card-lift` and `.card-lift-slow` were deleted on 2026-09-21 (plan 3, task 12, the motion pass). The art-direction pass had already taken their shadow away, which left a 2px hover nudge with nothing to explain it, and the cards they hung on are gone. Anything you find still naming them in an older doc or plan is history.
+
+The site now has exactly three hover moves, and a picture is the only thing that scales:
 
 ```html
-<article class="card-lift shadow-[0_4px_18px_-14px_rgba(42,45,49,0.18)] ..."></article>
+<a href="/post/something" class="group block">
+  <div class="zoom-img aspect-[4/3] overflow-hidden">
+    <img ... />
+  </div>
+</a>
 ```
 
-The `card-lift` utility class lives in `globals.css`. Defines `:hover { translateY(-2px); box-shadow: 0 16px 34px -18px ... }`. Always-on-card components opt in via the class.
+`.zoom-img` goes on the `overflow: hidden` wrapper, not on the image. The rule lives in `globals.css` and takes the image to `scale(1.02)` over 1200ms on the brand curve, matching on an ancestor `a:hover` as well as on the wrapper's own hover, so it works whether the link is outside the wrapper or is the wrapper. It is deliberately NOT nested inside a `prefers-reduced-motion: no-preference` query: the global reduced-motion reset zeroes every transition duration, and a rule hidden behind `no-preference` could never be turned back on from there.
+
+The other two are the `link` CTA variant's arrow nudge and the button lift below. Everything else eases on the brand curve through the base-layer rule in `globals.css` so nothing snaps.
 
 ### Tactile button press
 

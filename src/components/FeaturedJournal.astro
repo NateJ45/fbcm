@@ -84,7 +84,7 @@ const heroDate = formatDate(hero?.publishedAt);
 {
   hasEntries && (
     <section class="surface-warm bg-muted" aria-labelledby={headingId}>
-      <div data-reveal class="mx-auto max-w-content px-m py-section-lg">
+      <div class="mx-auto max-w-content px-m py-section-lg">
         <SectionHeading
           eyebrow={eyebrow}
           headline={headline}
@@ -106,7 +106,7 @@ const heroDate = formatDate(hero?.publishedAt);
             Same treatment as the Work hero so the two sections feel paired. */}
           <a
             href={heroHref}
-            class="card-lift card-lift-slow group relative block overflow-hidden rounded-md border border-border-soft bg-card shadow-[0_4px_18px_-14px_rgba(61,61,61,0.18)] transition-colors hover:border-primary/40 lg:h-full"
+            class="group relative block overflow-hidden rounded-md border border-border-soft bg-card shadow-[0_4px_18px_-14px_rgba(61,61,61,0.18)] transition-colors hover:border-primary/40 lg:h-full"
           >
             <div class="absolute top-0 right-0 left-0 z-20 h-0.5 bg-primary" aria-hidden="true" />
 
@@ -200,7 +200,7 @@ const heroDate = formatDate(hero?.publishedAt);
             held-together unit. Fills the grid-stretched column on lg+ and
             distributes rows with `lg:flex-1` so it lines up with the hero. */}
           {hasCompanions && (
-            <div class="card-lift card-lift-slow flex flex-col overflow-hidden rounded-md border border-border-soft bg-card shadow-[0_4px_18px_-14px_rgba(61,61,61,0.18)] lg:h-full">
+            <div class="flex flex-col overflow-hidden rounded-md border border-border-soft bg-card shadow-[0_4px_18px_-14px_rgba(61,61,61,0.18)] lg:h-full">
               {/* One brand accent stripe for the whole panel. */}
               <div class="h-0.5 bg-primary" aria-hidden="true" />
 

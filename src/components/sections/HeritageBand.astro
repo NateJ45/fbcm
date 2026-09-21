@@ -153,6 +153,7 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
           'grid h-auto auto-rows-[44vw] grid-cols-2 gap-1.5 md:h-[clamp(320px,52vw,680px)] md:grid-rows-1',
           stripCols,
         ]}
+        data-reveal
       >
         {strip.map((img, i) => (
           <div
@@ -181,7 +182,6 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
 
   <div
     class="mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] px-gutter py-section-lg"
-    data-reveal
   >
     <div class="col-span-12 lg:col-span-6">
       <SectionHeading
@@ -216,7 +216,7 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
     }
     {
       years.length > 0 && (
-        <div class="col-span-12 mt-8 flex flex-wrap gap-10 lg:col-span-6">
+        <div class="col-span-12 mt-8 flex flex-wrap gap-10 lg:col-span-6" data-reveal>
           {years.map((y) => (
             <div class="border-l border-bg/18 pl-4">
               <div class="font-body text-4xl font-normal text-bg oldstyle">{y.year}</div>

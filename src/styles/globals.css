@@ -881,44 +881,38 @@
   transform: translateY(-100%);
 }
 
-/* Card lift on hover. Marketing cards (project, journal, service) opt in via
-   .card-lift; pairs with the existing border + image scale transitions. */
-.card-lift {
-  /* Longhand (not the `transition` shorthand) so a co-located Tailwind utility
-     like `transition-colors` is not silently reset to a single property. The
-     border color, shadow, and lift all ease together, so the card never
-     half-snaps (the border used to jump while the lift eased). */
-  transition-property: box-shadow, transform, border-color, color, background-color;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  transition-duration: 440ms;
-}
-/* 2026-09-20 (plan 3, task 2): the drop shadow is gone. The art-direction pass
-   has no cards, so nothing should be floating off the paper; the class stays
-   only so the callers still compile until Task 13 removes them. The lift is
-   kept because it costs nothing and reads as a press, not as depth. */
-.card-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: none;
-}
-.dark .card-lift:hover {
-  box-shadow: none;
-}
+/* THE CARD LIFT IS GONE (2026-09-21, plan 3 task 12, the motion pass).
+   `.card-lift` and `.card-lift-slow` were the last of the card grammar: a
+   2px translate on hover that the art-direction pass had already stripped of
+   its shadow, leaving a nudge with nothing to explain it. The site now has
+   exactly THREE hover moves, and a picture is the only thing that scales:
 
-/* Slower lift for image cards. The home Featured Work / Featured Journal cards
-   pair the lift with a 1.5s image zoom; matching the lift, shadow, and border to
-   that duration keeps the whole hover one cohesive, unhurried motion instead of
-   a quick lift over a slow zoom. Opt in alongside .card-lift. */
-.card-lift-slow {
-  transition-duration: 1500ms;
-}
+     .zoom-img   a photograph inside a link takes a 1.02 zoom (below)
+     .link       the CTA arrow nudges right (CtaLink's `link` variant)
+     .press-tactile / the button lift (below)
 
-/* Stagger-grid image cards (the portfolio + journal grids) get their hover
-   timing from the [data-stagger-grid] > * rule, which outranks .card-lift. Match
-   that rule's five-property shape so only the hover properties slow to 1.5s; the
-   entrance (opacity + translate) stays at 600ms. Order matches that rule:
-   opacity, translate, transform, box-shadow, border-color. */
-[data-stagger-grid] > .card-lift-slow {
-  transition-duration: 600ms, 600ms, 1500ms, 1500ms, 1500ms;
+   Anything else eases on the brand curve through the base-layer rule further
+   down, so nothing snaps without anything moving that should not. */
+
+/* Image zoom on a link. ONE image hover for the whole site. Put .zoom-img on
+   the overflow:hidden wrapper around the picture; the wrapper is usually
+   inside the <a>, so both the ancestor-hover and the self-hover selector are
+   listed. 1200ms on the entry curve, which is slow enough to read as the
+   photograph settling rather than as a control responding. It is deliberately
+   NOT inside a prefers-reduced-motion query: the global reduced-motion reset
+   zeroes every transition-duration, and a rule hidden behind no-preference
+   could never be overridden back on. */
+.zoom-img img,
+.zoom-img .zoom-img-target {
+  transition: transform 1200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+a:hover .zoom-img img,
+a:hover .zoom-img .zoom-img-target,
+a:focus-visible .zoom-img img,
+.zoom-img:hover img,
+.zoom-img:hover .zoom-img-target {
+  transform: scale(1.02);
 }
 
 /* Warm-textured surface. An opt-in utility for sections that need a hint of
@@ -997,7 +991,7 @@
 /* Baseline interaction easing for bare interactive elements. Anything that can
    be hovered, focused, or pressed but carries no explicit `transition-*` utility
    still eases its state changes instead of snapping. Scoped to the `base` layer
-   so any Tailwind transition utility, or the .card-lift / .press-tactile classes
+   so any Tailwind transition utility, or the .zoom-img / .press-tactile classes
    above, takes precedence; this only fills the gap where nothing else applies.
    prefers-reduced-motion zeroes it out via the global reset below. */
 @layer base {
@@ -1085,6 +1079,59 @@
     opacity: 1 !important;
     animation: none !important;
     transform: none !important;
+  }
+}
+
+/* ---- Hero overlay, and its breathe (2026-09-21, plan 3 task 12).
+   The gradient pair used to live in a `style=` attribute on HeroBackground's
+   overlay div. It is a class now for one reason: a CSS animation cannot drive
+   a value inside an inline style, and this overlay breathes.
+
+   Bottom-up it reaches --hero-stop ink where the words sit and is clear by 80%
+   of the way up, so the sky stays sky; left-right it adds 55% at the left edge
+   and nothing past the middle, which is where the headline and the lede live.
+
+   --hero-stop is a REGISTERED custom property, and registering it is what makes
+   the breathe possible at all: an unregistered `var()` is an untyped token that
+   CSS can only swap, not interpolate, so the animation would jump between 94%
+   and 90% once every 7 seconds instead of easing across it. With
+   `syntax: '<percentage>'` the engine knows it is a number with a unit and
+   tweens it. The amplitude is four points of alpha over seven seconds each way,
+   which is a change nobody watches happen and everybody would miss: it keeps
+   the photograph from reading as a flat plate behind the words.
+
+   Gated on prefers-reduced-motion: no-preference, so a visitor who asked for
+   stillness gets the static 94% initial value and no animation object at all
+   (tests/motion.spec.ts asserts exactly that). ---- */
+@property --hero-stop {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 94%;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgb(23 21 31 / var(--hero-stop, 94%)) 0%,
+      rgb(23 21 31 / 62%) 34%,
+      rgb(23 21 31 / 12%) 62%,
+      rgb(23 21 31 / 0%) 80%
+    ),
+    linear-gradient(to right, rgb(23 21 31 / 55%) 0%, rgb(23 21 31 / 0%) 55%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-overlay {
+    animation: hero-breathe 7s ease-in-out infinite alternate;
+  }
+  @keyframes hero-breathe {
+    from {
+      --hero-stop: 94%;
+    }
+    to {
+      --hero-stop: 90%;
+    }
   }
 }
 
@@ -1655,8 +1702,7 @@ body::before {
   h4 {
     page-break-after: avoid;
   }
-  figure,
-  .card-lift {
+  figure {
     page-break-inside: avoid;
   }
 

@@ -125,7 +125,7 @@ const fallbackLabel: Record<string, string> = {
 {
   hasItems && (
     <section class="bg-background" aria-labelledby={headingId}>
-      <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
+      <div class="mx-auto max-w-content px-gutter py-section-lg">
         {/* scaffold: journal */}
         {/* ── The journal, as an editorial list ─────────────────────────── */}
         {source === 'journal' && (
@@ -213,10 +213,7 @@ const fallbackLabel: Record<string, string> = {
               headingId={headingId}
             />
 
-            <ul
-              class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}
-              data-stagger-grid
-            >
+            <ul class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}>
               {visibleItems.map((item) => (
                 <li>
                   <div class="h-full rounded-md border border-border-soft bg-card p-m">

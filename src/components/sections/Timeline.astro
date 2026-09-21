@@ -53,7 +53,7 @@ const validRows = rows.filter((r) => r?.marker || r?.title);
 ---
 
 <section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-gutter py-section-lg" data-reveal>
+  <div class="mx-auto max-w-content px-gutter py-section-lg">
     <SectionHeading
       eyebrow={eyebrow}
       headline={heading}
@@ -96,6 +96,7 @@ const validRows = rows.filter((r) => r?.marker || r?.title);
                     'col-span-12 font-body text-h2 leading-none font-normal text-foreground oldstyle lg:row-start-1',
                     markerCols,
                   ]}
+                  data-reveal
                 >
                   {row.marker}
                 </p>
@@ -116,7 +117,10 @@ const validRows = rows.filter((r) => r?.marker || r?.title);
                 </div>
 
                 {hasImage && (
-                  <div class:list={['col-span-12 mt-6 lg:row-start-1 lg:mt-0', imageCols]}>
+                  <div
+                    class:list={['col-span-12 mt-6 lg:row-start-1 lg:mt-0', imageCols]}
+                    data-reveal
+                  >
                     <SanityImage
                       source={row.image}
                       width={520}

@@ -50,7 +50,7 @@ const validMembers = members.filter((m) => m?.name);
 {
   validMembers.length > 0 && (
     <section class="bg-background" aria-labelledby={headingId}>
-      <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+      <div class="mx-auto max-w-content px-m py-section-lg">
         <SectionHeading
           eyebrow={eyebrow}
           headline={headline}
@@ -59,14 +59,11 @@ const validMembers = members.filter((m) => m?.name);
           headingId={headingId}
         />
 
-        <div
-          class="mt-section-lg grid grid-cols-1 gap-l sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-          data-stagger-grid
-        >
+        <div class="mt-section-lg grid grid-cols-1 gap-l sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {validMembers.map((member) => (
             <article class="flex flex-col items-center text-center">
               {member.photo?.asset ? (
-                <div class="mb-m aspect-square w-full overflow-hidden rounded-full">
+                <div class="mb-m aspect-square w-full overflow-hidden rounded-full" data-reveal>
                   <SanityImage
                     source={member.photo}
                     width={400}

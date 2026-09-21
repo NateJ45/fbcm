@@ -84,18 +84,15 @@ const fewFrames = slides.length <= 3;
       />
     )}
 
-    {/* ONE overlay, two gradients (plan 3 task 6, the prototype's hero).
-        Bottom-up it reaches 94% ink where the words sit and is clear by 80% of
-        the way up, so the sky stays sky; left-right it adds 55% at the left
-        edge and nothing past the middle, which is where the headline and the
-        lede live. The flat 25% scrim that used to sit under this is gone: a
-        uniform wash greys the whole photograph to buy contrast the gradient
-        already buys only where it is needed. */}
-    <div
-      class="absolute inset-0"
-      style="background: linear-gradient(to top, rgba(23,21,31,.94) 0%, rgba(23,21,31,.62) 34%, rgba(23,21,31,.12) 62%, rgba(23,21,31,0) 80%), linear-gradient(to right, rgba(23,21,31,.55) 0%, rgba(23,21,31,0) 55%);"
-      aria-hidden="true"
-    ></div>
+    {/* ONE overlay, two gradients (plan 3 task 6, the prototype's hero). The
+        gradients themselves moved into `.hero-overlay` in globals.css on
+        2026-09-21 (task 12) so the motion pass could animate the bottom
+        gradient's first stop: an inline style cannot be a keyframe target.
+        Read that rule for what the stops do and why --hero-stop is registered.
+        The flat 25% scrim that used to sit under this is gone: a uniform wash
+        greys the whole photograph to buy contrast the gradient already buys
+        only where it is needed. */}
+    <div class="hero-overlay" aria-hidden="true"></div>
 
     {/* Deliberately OUTSIDE the .hero-entry-stagger content wrapper (it is not
         even in the same subtree), so it does not fade up with the words: a

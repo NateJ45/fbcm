@@ -47,7 +47,7 @@ const src = embedUrl(url);
       aria-labelledby={heading ? headingId : undefined}
       aria-label={!heading ? 'Video' : undefined}
     >
-      <div class="mx-auto max-w-content px-m py-section-lg" data-reveal>
+      <div class="mx-auto max-w-content px-m py-section-lg">
         {heading && <SectionHeading headline={heading} headingId={headingId} />}
         <div class:list={['mx-auto max-w-4xl', heading && 'mt-section-md']}>
           <div class="relative w-full overflow-hidden rounded-md" style="aspect-ratio: 16 / 9;">

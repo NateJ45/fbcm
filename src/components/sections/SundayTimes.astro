@@ -168,7 +168,6 @@ const directionsCta = directionsUrl
 <section class="bg-background" aria-labelledby={heading ? headingId : undefined}>
   <div
     class="mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] gap-y-14 px-gutter py-section-lg"
-    data-reveal
   >
     {/* ── Left door: the time, the lede, the schedule ─────────────────── */}
     <div class="col-span-12 lg:col-span-5">
@@ -176,7 +175,10 @@ const directionsCta = directionsUrl
 
       {
         numeral && (
-          <div class="-ml-[.04em] font-body text-display leading-none font-normal oldstyle">
+          <div
+            class="-ml-[.04em] font-body text-display leading-none font-normal oldstyle"
+            data-reveal
+          >
             {numeral}
             {numeralSuffix && (
               <span class="ml-[.15em] align-[.1em] text-[.28em] font-normal italic">
@@ -229,7 +231,7 @@ const directionsCta = directionsUrl
     <div class="col-span-12 lg:col-span-6 lg:col-start-7">
       {
         hasFrame ? (
-          <figure class="bleed-right">
+          <figure class="bleed-right" data-reveal>
             <SanityImage
               source={frame}
               width={1800}
@@ -244,7 +246,7 @@ const directionsCta = directionsUrl
             )}
           </figure>
         ) : showTheMap ? (
-          <figure class="bleed-right">
+          <figure class="bleed-right" data-reveal>
             <SanityImage
               source={mapImage}
               width={1800}

@@ -18,12 +18,15 @@ interface Props {
   title?: string;
   href?: string;
   tooltip?: string;
-  /** "default" (soft Cream pill) or "inverse" (used on dark hero overlays). */
+  /**
+   * "default" draws the hairline box on the page's own paper; "inverse" draws
+   * it in paper ink for a dark ground (a hero overlay, the indigo bands).
+   */
   tone?: 'default' | 'inverse';
   /**
-   * The chip for the list currently on screen. It keeps the same pill shape and
-   * gains the gold fill plus `aria-current="page"`, so the state is announced
-   * and not only coloured (colour alone is not a state a screen reader hears).
+   * The chip for the list currently on screen. It inverts to ink-on-paper and
+   * gains `aria-current="page"`, so the state is announced and not only
+   * coloured (colour alone is not a state a screen reader hears).
    */
   active?: boolean;
 }

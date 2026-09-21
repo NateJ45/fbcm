@@ -2,7 +2,7 @@
 
 > Lenis smooth scroll, scroll reset on navigation, Motion integration, scroll-triggered reveals, hero entry stagger, Ken Burns slideshow, view-transition cross-fade, and the opt-in script accent.
 
-Non-animation polish (brand stripe, card-lift, surface-warm, reading-progress, sticky-header, paper-grain, print stylesheet) is covered in `polish-layer.md`.
+Non-animation polish (brand stripe, image zoom, surface-warm, reading-progress, sticky-header, paper-grain, print stylesheet) is covered in `polish-layer.md`.
 
 ## Lenis smooth scroll
 
@@ -41,7 +41,17 @@ Any element marked `data-reveal` starts at `opacity: 0; transform: translateY(0.
 
 Apply selectively to section blocks. Don't add `data-reveal` to above-the-fold content -- it defeats the purpose and hides content from users with slow connections before the observer fires.
 
+**On this site the list of what may carry it is closed** (plan 3, task 12). Every band used to reveal as a whole, so scrolling the page was a continuous ripple of prose sliding up, and a reveal that happens to everything reads as a page that is slow rather than as a page that is composed. What reveals now is only what a reader would notice arriving:
+
+- a `<figure>` or a `SanityImage` wrapper inside a band
+- the big numerals: the SundayTimes service time, the StatsRow band, the Timeline year markers, the HeritageBand years
+- the JournalCard cover image
+
+Headings, prose, lists and CTAs are painted, not revealed. If you are about to add `data-reveal` to a heading, the answer is no.
+
 ### Grid stagger entrance (`[data-stagger-grid]` / `.is-staggered`)
+
+**No component in this repo opts into it as of 2026-09-21.** Task 12 took it off the blog grid, the staff grid, the gallery and the team grid, because it staggered whole CARDS (title, date, excerpt and all) where the reveal rule above wants the picture and nothing else. The engine stays because it is generic and the family shares it; if you bring it back, bring it back on a grid of pictures.
 
 Card grids fade their children up in sequence as the grid crosses the viewport. Add `data-stagger-grid` to a grid container; the BaseLayout observer adds `.is-staggered` on intersection, and per-`nth-child` `transition-delay`s (0 / 100 / 200 / 300ms, capped at 400ms for item 5+) sequence the reveal.
 
@@ -57,7 +67,20 @@ A surface-colored panel (`color: var(--background)`) scales away from the top ed
 
 ## Hero entry stagger (`.hero-entry-stagger`)
 
-The hero's content column wraps in `<div class="hero-entry-stagger">`. Each direct child fades up with a 120ms staggered delay on first paint (eyebrow -> decorative hairline -> h1 -> subhead -> CTAs). Animation lives in `globals.css`. Reduced-motion users get the final composition instantly via the global media-query reset.
+The hero's content column wraps in `<div class="hero-entry-stagger">`. Each direct child fades up on first paint, in sequence. Retimed on 2026-09-20 to 1000ms on `cubic-bezier(.2,.7,.2,1)` from `translateY(22px)`, with delays of 0 / 150 / 300 / 450 / 600ms, so the hero resolves line by line the way a title sequence does. Animation lives in `globals.css`. Reduced-motion users get the final composition instantly via the global media-query reset.
+
+**The load choreography is hero-only.** Nothing else on the page animates on arrival; everything below the fold either paints or, if it is on the closed list above, reveals as it is scrolled to.
+
+## Hero overlay breathe (`.hero-overlay` / `--hero-stop`)
+
+Added 2026-09-21 (plan 3, task 12). The hero's readability gradient eases its bottom stop between 94% and 90% ink over 7 seconds, alternating forever, so a photograph under a still overlay never sets into a flat plate behind the words. The amplitude is four points of alpha: nobody watches it happen and everybody would miss it.
+
+Two things make it work, and both are easy to undo by accident:
+
+1. **`--hero-stop` is a registered `@property`** with `syntax: '<percentage>'`. An unregistered custom property is an untyped token, so CSS can only swap it at the keyframe boundary; the animation would jump once every 7 seconds instead of easing. Register it or it is not a breathe.
+2. **The gradient lives in a class, not an inline `style=`.** An inline style cannot be a keyframe target, which is why `HeroBackground.astro` stopped carrying the gradient string and now renders `<div class="hero-overlay">`.
+
+The whole animation sits inside `@media (prefers-reduced-motion: no-preference)`, so a visitor who asked for stillness gets the static 94% initial value and no animation object at all. `tests/motion.spec.ts` asserts exactly that: under `reducedMotion: 'reduce'` nothing on `/` is in the `running` play state.
 
 Don't apply this class to other components -- the per-child delays are tuned for the hero's specific 4-5-element composition.
 

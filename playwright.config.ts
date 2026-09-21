@@ -55,7 +55,19 @@ export default defineConfig({
       // anchors.spec.ts added 2026-09-20 (plan 2c task 4): the sticky-header
       // offset is a CSS value, and WebKit's own anchor-scroll timing is exactly
       // the kind of thing Chromium alone would not catch, so it runs here too.
-      testMatch: /(smoke|a11y|a11y-dark|anchors)\.spec\.ts$/,
+      //
+      // menu + motion added 2026-09-21 (plan 3 task 12). Both are engine
+      // questions before they are layout questions: the menu sheet is a Radix
+      // dialog whose focus trap and entrance WebKit drives differently, and
+      // motion.spec.ts reads getAnimations(), where Safari's timeline is the
+      // one most likely to disagree with Chromium about what is still running.
+      //
+      // header.spec.ts is deliberately NOT here, for the same reason
+      // reflow.spec.ts is not: it pins an explicit 1440 viewport to exercise
+      // the DESKTOP header, and an explicit width fights device emulation. On
+      // a phone the Give button lives in the menu sheet and the header has no
+      // overlay state to seed, so there is nothing for this profile to check.
+      testMatch: /(smoke|a11y|a11y-dark|anchors|menu|motion)\.spec\.ts$/,
     },
   ],
   webServer: {
