@@ -46,11 +46,11 @@ export const site = {
     primaryDark: '#1C1B3A', // Navy Dark
     accent: '#292854', // Navy ink (headings/body) — same navy family as primary, see globals.css
     accentDark: '#1C1B3A', // Navy Dark ink (dark surfaces)
-    secondary: '#AAB0B8', // Cool Gray
-    tertiary: '#9DB0A6', // Muted Sage
-    bg: '#FBFBFA', // Paper
-    bgSoft: '#F0EEEC', // Soft Paper
-    border: '#E6E7E5', // Faint dividers
+    secondary: '#B5ABA3', // Taupe
+    tertiary: '#B5ABA3', // Taupe
+    bg: '#F4EFE6', // Paper
+    bgSoft: '#EBE4D8', // Soft Paper
+    border: '#DCD5C9', // Faint dividers
   },
 
   // Static asset paths under public/

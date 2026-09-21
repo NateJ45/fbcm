@@ -69,9 +69,9 @@ export const SECTION_SURFACES: SurfacePair[] = [
     title: 'Paper',
     hint: 'The ordinary page surface. Every other surface is a step away from it.',
     className: 'bg-background',
-    dot: '#FBFBFA',
-    dotDark: '#17191C',
-    dotInk: '#2A2D31',
+    dot: '#F4EFE6',
+    dotDark: '#14121B',
+    dotInk: '#17151F',
     inCadence: true,
     tokens: { bg: '--background', text: '--foreground', heading: '--foreground', link: '--link' },
   },
@@ -89,9 +89,9 @@ export const SECTION_SURFACES: SurfacePair[] = [
     // real dark value (#262548) without redeclaring --color-bg-soft itself,
     // which the palette gate in theme-tokens.test.ts forbids in .dark.
     className: 'bg-surface-soft',
-    dot: '#F0EEEC',
+    dot: '#EBE4D8',
     dotDark: '#262548',
-    dotInk: '#2A2D31',
+    dotInk: '#17151F',
     inCadence: true,
     tokens: {
       bg: '--color-surface-soft',
@@ -105,9 +105,9 @@ export const SECTION_SURFACES: SurfacePair[] = [
     title: 'Card',
     hint: 'The raised surface inside a grid. Never a whole band on its own.',
     className: 'bg-card',
-    dot: '#FFFFFF',
-    dotDark: '#202327',
-    dotInk: '#2A2D31',
+    dot: '#F4EFE6',
+    dotDark: '#1C1926',
+    dotInk: '#17151F',
     tokens: {
       bg: '--card',
       text: '--card-foreground',
@@ -122,7 +122,7 @@ export const SECTION_SURFACES: SurfacePair[] = [
     className: 'bg-accent-dark text-bg',
     dot: '#1C1B3A',
     dotDark: '#1C1B3A',
-    dotInk: '#FBFBFA',
+    dotInk: '#F4EFE6',
     themeStatic: true,
     tokens: {
       bg: '--color-accent-dark',
@@ -159,8 +159,8 @@ export const HEADING_ACCENT = {
   /** Theme-aware token the accent word reads on the theme-following surfaces. */
   token: '--primary',
   /** Literal light/dark values of `token`, asserted against globals.css. */
-  light: '#586577',
-  dark: '#8A96A6',
+  light: '#292854',
+  dark: '#F1ECE3',
   /** Pinned colour on the fixed ink band, where a theme-aware token would flip.
    *  FBCM: the church's own live-site gold (#D59B29) clears AA body text
    *  (6.75:1, since --color-accent-dark is real navy again as of 2026-09-18)

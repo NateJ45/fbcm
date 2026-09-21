@@ -26,9 +26,18 @@
 
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
-@import '@fontsource/libre-baskerville/400.css';
-@import '@fontsource/libre-baskerville/700.css';
-@import '@fontsource-variable/inter';
+@import '@fontsource/castoro-titling';
+@import '@fontsource/castoro';
+@import '@fontsource/castoro/400-italic.css';
+
+/* The UI face, and it is imported BELOW the blank line above on purpose.
+   `npm run apply-brand` rebuilds the @fontsource import block from
+   brand/brand.config.json's fonts.display.imports + fonts.body.imports, and
+   its pattern matches a run of CONSECUTIVE @import lines. Sofia is neither a
+   display nor a body face, so it is not in that config; left inside the run
+   it would be silently deleted by the next `npm run apply-brand`. The blank
+   line ends the run and keeps this import out of the rewrite. */
+@import '@fontsource-variable/sofia-sans-semi-condensed';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -51,11 +60,11 @@
      church did not choose those colours. */
   --color-accent: #292854; /* Navy — headings + body ink */
   --color-accent-dark: #1c1b3a; /* Navy Dark — ink on dark surfaces, incl. the closing CTA band */
-  --color-secondary: #aab0b8; /* Cool Gray — borders, eyebrows */
-  --color-tertiary: #9db0a6; /* Muted Sage — sparingly */
-  --color-bg: #fbfbfa; /* Paper — primary surface */
-  --color-bg-soft: #f0eeec; /* Soft Paper — a 16% taupe tint over cream, see theme-tokens.test.ts */
-  --color-border-soft: #e6e7e5; /* Faint dividers */
+  --color-secondary: #b5aba3; /* Taupe — borders, eyebrows */
+  --color-tertiary: #b5aba3; /* Taupe — sparingly */
+  --color-bg: #f4efe6; /* Paper — primary surface */
+  --color-bg-soft: #ebe4d8; /* Soft Paper — a 16% taupe tint over cream, see theme-tokens.test.ts */
+  --color-border-soft: #dcd5c9; /* Faint dividers */
   --color-white-pure: #ffffff;
   /* Gold — the church's second brand colour, a FILL and an on-dark ink, never
      a paper ink. Measured with src/lib/contrast.ts against the surfaces it
@@ -88,27 +97,68 @@
   --color-brown: #39251e; /* Brown — the heritage band surface */
   --color-brown-mid: #724f43; /* Brown Mid — eyebrows on paper */
   --color-taupe: #b5aba3; /* Taupe — muted text on the dark and heritage bands only */
-  --color-cream: #fbfbfa; /* Cream — paper, same value as --color-bg */
+  --color-cream: #f4efe6; /* Cream — paper, same value as --color-bg */
 
-  /* Fonts */
-  --font-display: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
-  --font-body: 'Inter Variable', system-ui, -apple-system, sans-serif;
+  /* Gold, darkened until it can carry a LABEL on paper. --color-gold above is
+     a fill and an on-dark ink and cannot do this (2.14:1 on the new paper),
+     and the forbidden-pairs list in theme-tokens.test.ts asserts that it still
+     fails, so nobody can quietly promote it. Measured 2026-09-20 with
+     src/lib/contrast.ts:
+       gold-ink on --color-bg (#f4efe6) ............ 5.58:1  PASSES AA
+       gold-ink on --color-bg-soft (#ebe4d8) ....... 5.06:1  PASSES AA
+     The art-direction brief proposed #8a5f0c for this slot on the strength of
+     a 7.0:1 figure that does not hold: measured, #8a5f0c is 4.93:1 on paper
+     and 4.46:1 on the band, so it FAILED AA on the alternating surface. The
+     brief's own rule is to fix the token, never the assertion, so the value
+     moved to the nearest shade of the same gold-brown that clears AA with
+     real headroom on BOTH paper surfaces. Both pairs are asserted. */
+  --color-gold-ink: #805709;
+  /* The footer field: a deeper indigo than --color-indigo-field, so gold
+     labels and taupe body copy read on it. Measured 2026-09-20: gold 6.81:1,
+     taupe 7.42:1. Both asserted in theme-tokens.test.ts. */
+  --color-indigo-deep: #1b1a3a;
+
+  /* Fonts. Three faces, and the family names are exactly what the installed
+     @fontsource packages declare. No " Variable" suffix on either Castoro:
+     @fontsource/castoro-titling and @fontsource/castoro both ship STATIC 400
+     faces, and a family name that matches nothing falls silently through to
+     Georgia. Only Sofia is a variable font, so only Sofia carries the suffix.
+     Castoro Titling is CAPITALS ONLY at one weight, which is why it is the
+     display face and why h1 below sets text-transform: uppercase rather than
+     relying on the copy. Castoro is the reading face (roman + italic, one
+     weight each). Sofia Sans Semi Condensed is the UI face: eyebrows, labels,
+     nav, buttons. */
+  --font-display: 'Castoro Titling', Georgia, serif;
+  --font-body: 'Castoro', Georgia, serif;
+  --font-ui: 'Sofia Sans Semi Condensed Variable', system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
   --font-script: 'Snell Roundhand', 'Apple Chancery', cursive;
 
-  /* Fluid heading sizes */
+  /* Fluid heading sizes. The art-direction pass (2026-09-20) widened the
+     range at the top of the scale and pulled the bottom in, so the page has
+     one loud voice and several quiet ones rather than five middling ones. */
   --text-h6: 1rem;
   --text-h5: clamp(1.125rem, 1.5vw, 1.25rem);
   --text-h4: clamp(1.25rem, 2vw, 1.5rem);
-  --text-h3: clamp(1.5rem, 2.5vw, 2rem);
-  --text-h2: clamp(2rem, 4vw, 3rem);
-  --text-h1: clamp(2.5rem, 6vw, 5rem);
+  --text-h3: clamp(1.375rem, 1rem + 1vw, 1.75rem);
+  --text-h2: clamp(2rem, 1.2rem + 2.6vw, 3.25rem);
+  --text-h1: clamp(2.6rem, 1rem + 5.4vw, 6rem);
+  /* Bigger than h1: the one poster-scale line a page is allowed. */
+  --text-display: clamp(2.9rem, 1rem + 8.4vw, 8rem);
+  /* The standfirst under a hero heading. */
+  --text-lede: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  /* Reading size. Castoro runs small for its em, so body sits above 1rem. */
+  --text-body: 1.0625rem;
+  /* The UI face's label size: small, tracked out, always uppercase. */
+  --text-ui: 0.8125rem;
 
   /* Typographic micro-rules. Codified so usage stays consistent across
      components — drift from ad-hoc arbitrary values (tracking-[0.22em],
      leading-[1.05]) into shared tokens. */
   --leading-headline-tight: 1.05; /* Hero H1 and any oversized display type */
-  --tracking-eyebrow: 0.18em; /* Uppercase eyebrow labels above headings */
+  --leading-display: 0.95; /* Poster-scale type sets tighter still */
+  --tracking-display: 0.01em; /* Castoro Titling is caps-only; caps want air */
+  --tracking-eyebrow: 0.14em; /* Uppercase eyebrow labels above headings */
 
   /* Fluid spacing.
      Note: the larger section-padding sizes use a `--spacing-section-*`
@@ -125,8 +175,12 @@
   --spacing-l: clamp(2rem, 4vw, 3rem);
   --spacing-section-md: clamp(3rem, 6vw, 5rem); /* was --spacing-xl */
   --spacing-section-lg: clamp(4rem, 8vw, 7rem); /* was --spacing-2xl */
+  /* The page's one side margin. Every full-bleed band insets its content by
+     this, so one number moves the whole page's left edge (CLAUDE.md rule 17,
+     one grammar per page). */
+  --spacing-gutter: clamp(20px, 5vw, 72px);
 
-  --container-content: 82.5rem;
+  --container-content: 87.5rem;
 
   /* Default interaction motion. Tailwind transition utilities (transition,
      transition-colors, transition-transform, etc.) read these when no explicit
@@ -167,6 +221,14 @@
      --surface-soft declarations in :root / .dark for why this exists instead
      of a plain --color-bg-soft reference. */
   --color-surface-soft: var(--surface-soft);
+  /* The rules the page is drawn with. Two weights, both derived from the ink
+     colour rather than from a grey, so a hairline reads as the same ink at low
+     opacity in either theme instead of as a separate colour. --hair is the
+     ordinary divider; --hair-strong is the one that carries structure (a band
+     edge, a table head). Declared in :root / .dark below. They are alpha
+     colours, so the palette gate does not measure them: they are never text. */
+  --color-hair: var(--hair);
+  --color-hair-strong: var(--hair-strong);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-primary-foreground: var(--primary-foreground);
   --color-popover-foreground: var(--popover-foreground);
@@ -242,6 +304,51 @@
   letter-spacing: var(--tracking-eyebrow);
 }
 
+/* The art-direction type system (2026-09-20). Five utilities, each one a
+   NAMED ROLE rather than a size, so a component asks for "the lede" and not
+   for "1.5rem". Tailwind v4 generates font-size utilities from --text-* on its
+   own, but only the size; these carry the leading, tracking and casing that
+   belong to the role, which is what keeps one grammar across a page. */
+
+/* The UI face. font-stretch is pinned because Sofia Sans Semi Condensed
+   Variable carries a width axis and a browser that guesses would render
+   labels at a different width from one another. */
+@utility font-ui {
+  font-family: var(--font-ui);
+  font-stretch: 100%;
+}
+
+/* Poster scale. One per page at most. */
+@utility text-display {
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+/* The standfirst under a hero heading. */
+@utility text-lede {
+  font-size: var(--text-lede);
+  line-height: 1.35;
+}
+
+/* Reading size. */
+@utility text-body {
+  font-size: var(--text-body);
+}
+
+/* The UI label: eyebrows, nav, buttons, meta. Always uppercase and tracked. */
+@utility text-ui {
+  font-size: var(--text-ui);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+/* Old-style figures for dates and numbers set inside running prose, where
+   lining figures stand up like capitals and shout. */
+@utility oldstyle {
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
 /* Script accent (OPT-IN) — no script font is loaded by default; the accent
    falls back to a system cursive (Snell Roundhand / Apple Chancery / cursive).
    To enable an editorial script accent for a project: (1) add a @fontsource
@@ -263,33 +370,33 @@
 
 :root {
   /* Surfaces */
-  --background: #fbfbfa;
-  --foreground: #2a2d31;
-  --card: #ffffff;
-  --card-foreground: #2a2d31;
-  --popover: #ffffff;
-  --popover-foreground: #2a2d31;
+  --background: #f4efe6;
+  --foreground: #17151f;
+  --card: #f4efe6;
+  --card-foreground: #17151f;
+  --popover: #f4efe6;
+  --popover-foreground: #17151f;
 
   /* Brand */
-  --primary: #586577;
-  --primary-foreground: #ffffff;
-  --secondary: #aab0b8;
-  --secondary-foreground: #2a2d31;
+  --primary: #292854;
+  --primary-foreground: #f4efe6;
+  --secondary: #ebe4d8;
+  --secondary-foreground: #17151f;
 
   /* Quiet surfaces / muted text */
-  --muted: #f3f4f2;
-  --muted-foreground: #5f6469; /* ~5.6:1 on #FBFBFA — passes AA */
+  --muted: #ebe4d8;
+  --muted-foreground: #514c58; /* 7.26:1 on #f4efe6 — passes AA */
 
   /* Accent */
-  --accent: #e8e9e7;
-  --accent-foreground: #2a2d31;
+  --accent: #ebe4d8;
+  --accent-foreground: #17151f;
 
   /* States */
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #e6e7e5;
-  --input: #e6e7e5;
-  --ring: #586577;
-  --link: #434e5c; /* ~8:1 on #FBFBFA — passes AA */
+  --border: #dcd5c9;
+  --input: #dcd5c9;
+  --ring: #292854;
+  --link: #17151f; /* 15.76:1 on #f4efe6 — passes AA */
 
   /* Charts (kept neutral, not used at launch) */
   --chart-1: oklch(0.87 0 0);
@@ -298,25 +405,25 @@
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
 
-  --radius: 0.5rem;
+  --radius: 0.125rem;
 
   /* Sidebar (reserved for Studio-style admin contexts, not used on site) */
-  --sidebar: #fbfbfa;
-  --sidebar-foreground: #2a2d31;
-  --sidebar-primary: #586577;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f3f4f2;
-  --sidebar-accent-foreground: #2a2d31;
-  --sidebar-border: #e6e7e5;
-  --sidebar-ring: #586577;
+  --sidebar: #f4efe6;
+  --sidebar-foreground: #17151f;
+  --sidebar-primary: #292854;
+  --sidebar-primary-foreground: #f4efe6;
+  --sidebar-accent: #ebe4d8;
+  --sidebar-accent-foreground: #17151f;
+  --sidebar-border: #dcd5c9;
+  --sidebar-ring: #292854;
 
-  --tint-rgb: 88, 101, 119;
+  --tint-rgb: 41, 40, 84;
 
   /* Starwind UI extra semantic tokens — not in shadcn's default set.
        Values are harmonized to the existing neutral palette so the starter
        renders sensibly out of the box. apply-brand rewrites these. */
-  --primary-accent: #434e5c; /* darker shade of --primary for hover states */
-  --secondary-accent: #2a2d31; /* dark ink — active/pressed secondary */
+  --primary-accent: #1c1b3a; /* darker shade of --primary for hover states */
+  --secondary-accent: #17151f; /* dark ink — active/pressed secondary */
   --info: #93c5fd; /* soft blue, harmonized with slate primary */
   --info-foreground: #1e3a5f; /* deep blue for text on info surfaces */
   --success: #86efac; /* soft green */
@@ -325,7 +432,7 @@
   --warning-foreground: #713f12; /* deep amber for text on warning surfaces */
   --error: oklch(0.577 0.245 27.325); /* matches --destructive */
   --error-foreground: #ffffff;
-  --outline: #586577; /* matches --ring */
+  --outline: #292854; /* matches --ring */
 
   /* The alternating "muted" section surface's soft band, semantically indirect
      for the same reason --color-accent points at var(--accent): the palette
@@ -333,6 +440,11 @@
      and fails if .dark ever redeclares it, so dark mode's soft surface can't
      be a second declaration of --color-bg-soft. This token is the detour. */
   --surface-soft: var(--color-bg-soft);
+
+  /* Hairlines: the light ink at 16% and 34%. See the --color-hair mapping in
+     `@theme inline` above for what each weight is for. */
+  --hair: rgba(23, 21, 31, 0.16);
+  --hair-strong: rgba(23, 21, 31, 0.34);
 }
 
 /* ---------- Dark mode --------------------------------------------------
@@ -340,29 +452,29 @@
    Slate and Ink hold their identity; surfaces flip to deep cool grays. */
 
 .dark {
-  --background: #17191c;
-  --foreground: #f2f3f2;
-  --card: #202327;
-  --card-foreground: #f2f3f2;
-  --popover: #202327;
-  --popover-foreground: #f2f3f2;
+  --background: #14121b;
+  --foreground: #f1ece3;
+  --card: #1c1926;
+  --card-foreground: #f1ece3;
+  --popover: #1c1926;
+  --popover-foreground: #f1ece3;
 
-  --primary: #8a96a6;
-  --primary-foreground: #17191c;
-  --secondary: #5a6068;
-  --secondary-foreground: #f2f3f2;
+  --primary: #f1ece3;
+  --primary-foreground: #14121b;
+  --secondary: #1c1926;
+  --secondary-foreground: #f1ece3;
 
-  --muted: #202327;
-  --muted-foreground: #aab0b8;
+  --muted: #1c1926;
+  --muted-foreground: #c2bcc9;
 
-  --accent: #2c3036;
-  --accent-foreground: #f2f3f2;
+  --accent: #26222f;
+  --accent-foreground: #f1ece3;
 
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: #8a96a6;
-  --link: #8a96a6;
+  --border: oklch(1 0 0 / 14%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: #d59b29;
+  --link: #f1ece3;
 
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -370,20 +482,20 @@
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
 
-  --sidebar: #202327;
-  --sidebar-foreground: #f2f3f2;
-  --sidebar-primary: #8a96a6;
-  --sidebar-primary-foreground: #17191c;
-  --sidebar-accent: #2c3036;
-  --sidebar-accent-foreground: #f2f3f2;
-  --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: #8a96a6;
+  --sidebar: #1c1926;
+  --sidebar-foreground: #f1ece3;
+  --sidebar-primary: #f1ece3;
+  --sidebar-primary-foreground: #14121b;
+  --sidebar-accent: #26222f;
+  --sidebar-accent-foreground: #f1ece3;
+  --sidebar-border: oklch(1 0 0 / 14%);
+  --sidebar-ring: #d59b29;
 
-  --tint-rgb: 138, 150, 166;
+  --tint-rgb: 213, 155, 41;
 
   /* Starwind UI extra semantic tokens — dark mode variants. */
-  --primary-accent: #8a96a6; /* lifted primary for dark hover states */
-  --secondary-accent: #f2f3f2; /* near-white for dark active secondary */
+  --primary-accent: #f1ece3; /* lifted primary for dark hover states */
+  --secondary-accent: #f1ece3; /* near-white for dark active secondary */
   --info: #93c5fd; /* same soft blue works on dark surfaces */
   --info-foreground: #1e3a5f;
   --success: #86efac;
@@ -392,7 +504,7 @@
   --warning-foreground: #713f12;
   --error: oklch(0.704 0.191 22.216); /* matches dark --destructive */
   --error-foreground: #ffffff;
-  --outline: #8a96a6; /* matches dark --ring */
+  --outline: #d59b29; /* matches dark --ring */
 
   /* Dark mode: indigo becomes paper, cream becomes ink. Gold and the browns do not move.
      --color-bg-soft is deliberately NOT redeclared here even though the task brief that
@@ -403,13 +515,23 @@
      follow-up work, tracked in the task-1 report rather than done here. */
   --color-cream: #1c1b3a;
   --color-indigo: #fbfbfa;
-  --color-indigo-field: #2a2950;
+  /* Indigo-field already moved in dark; brown did not, and a heritage band
+     that stays #39251e against a #14121b page reads as a smudge rather than a
+     band. Both are surfaces, not text, so the light-only palette gate does not
+     assert them (the pairs painted ON them are covered by surfaces.test.ts). */
+  --color-indigo-field: #22214a;
+  --color-brown: #2b1b16;
 
   /* The alternating "muted" surface's real dark value. Unlike --color-bg-soft
      (which this gate forbids .dark from touching), --surface-soft is a plain
      shadcn-style semantic token, so overriding it here is the normal move
      the whole :root / .dark block already makes for every other surface. */
   --surface-soft: #262548;
+
+  /* Hairlines, dark: the dark ink (which is paper-coloured) at the same two
+     weights, so a rule keeps its relationship to the text either way. */
+  --hair: rgba(241, 236, 227, 0.16);
+  --hair-strong: rgba(241, 236, 227, 0.34);
 }
 
 /* ---------- Base resets and defaults ---------------------------------- */
@@ -426,6 +548,11 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-size: var(--text-body);
+    line-height: 1.7;
+    /* Harmless on the static Castoros, correct the day either gains an
+       optical-size axis, and it is what a serif reading face wants. */
+    font-optical-sizing: auto;
   }
   /* HEADINGS INHERIT THEIR COLOUR. Do not pin them to a token.
      This said `color: var(--color-accent)` with a `.dark` override until
@@ -442,18 +569,44 @@
      paragraphs are legible on every surface in both themes, because each
      surface sets its own text colour. Headings had simply opted out.
      Anything that genuinely wants a brand-coloured heading should ask for it
-     with a class, not get it by default. */
+     with a class, not get it by default.
+
+     THE TWO FACES SPLIT AT h1/h2 (2026-09-20, art-direction pass). The
+     display face, Castoro Titling, is CAPITALS ONLY and ships one weight, so
+     it cannot set a subhead: lowercase in it renders as small caps of the
+     wrong size, and font-weight: 500 asks for a weight that does not exist
+     and gets a synthesised bold. So h1 keeps the display face, states the
+     casing it needs rather than relying on the copy being typed in capitals,
+     and sits at the one weight the face has. h2 to h6 use the reading face,
+     Castoro, also at its one real weight. Anything that wants the display
+     face below h1 asks for it with `font-display` explicitly. */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-family: var(--font-display);
-    font-weight: 500;
+    font-weight: 400;
     color: inherit;
     line-height: 1.1;
     letter-spacing: -0.01em;
+    /* Headings are short; let the browser even out the rag rather than
+       leaving one orphaned word on the last line. */
+    text-wrap: balance;
+  }
+  h1 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    font-weight: 400;
+  }
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-body);
+    font-weight: 400;
   }
 }
 

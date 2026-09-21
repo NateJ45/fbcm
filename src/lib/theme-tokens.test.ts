@@ -221,6 +221,16 @@ const CHURCH_PAIRS_AA: Array<[string, string, string]> = [
   ['color-indigo', 'color-gold', 'primary button label (light theme resolution)'],
   ['color-indigo-field', 'color-gold', 'the gold button label, as shipped'],
   ['color-cream', 'color-brown', 'body on the heritage band'],
+  // Art-direction pass, 2026-09-20. Paper turned warm (#f4efe6) and two new
+  // roles arrived with it, so both get measured here rather than eyeballed.
+  // --color-gold-ink is the only gold allowed to carry a label on paper; the
+  // FORBIDDEN list below still holds --color-gold to its old failing pairs, so
+  // the two cannot be confused.
+  ['color-gold-ink', 'color-bg', 'gold as a label on paper'],
+  ['color-gold-ink', 'color-bg-soft', 'gold label on the band'],
+  ['color-accent', 'color-bg', 'ink on paper'],
+  ['color-gold', 'color-indigo-deep', 'gold labels on the footer field'],
+  ['color-taupe', 'color-indigo-deep', 'muted text on the footer field'],
 ];
 const CHURCH_PAIRS_FORBIDDEN: Array<[string, string, string]> = [
   ['color-gold', 'color-cream', 'gold text on paper'],

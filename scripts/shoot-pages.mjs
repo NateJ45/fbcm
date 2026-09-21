@@ -47,7 +47,7 @@ const types = {
 };
 const srv = http
   .createServer((q, r) => {
-    let p = decodeURIComponent(q.url.split('?')[0]);
+    const p = decodeURIComponent(q.url.split('?')[0]);
     let f = path.join(root, p);
     if (fs.existsSync(f) && fs.statSync(f).isDirectory()) f = path.join(f, 'index.html');
     if (!fs.existsSync(f)) {

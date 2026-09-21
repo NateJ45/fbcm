@@ -43,5 +43,10 @@ export const TOOL: ToolTheme = {
   muted: '#586577',
   line: 'rgba(42, 45, 49, 0.14)',
   shadow: '0 6px 20px rgba(42, 45, 49, 0.22), 0 1px 2px rgba(42, 45, 49, 0.16)',
-  font: '"Inter Variable", system-ui, -apple-system, sans-serif',
+  // The UI face, stated as a literal like everything else in this file. It was
+  // "Inter Variable" until the art-direction pass (2026-09-20) and that stopped
+  // resolving the moment Inter came out of globals.css: these controls render
+  // INSIDE the preview iframe, so they see the site's fonts and nothing else,
+  // and the label text was quietly falling through to system-ui.
+  font: '"Sofia Sans Semi Condensed Variable", system-ui, -apple-system, sans-serif',
 };

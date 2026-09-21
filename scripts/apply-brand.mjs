@@ -620,22 +620,36 @@ function rewriteSanityConfig(config) {
 
 function rewriteOgDefault(config) {
   rewriteFile(resolve(root, 'scripts/generate-og-default.mjs'), function (text, filePath) {
-    // Escape single quotes in tagline to avoid breaking the JS single-quoted string
-    const safeTagline = config.tagline.replace(/'/g, "\\'");
     const name = config.name;
+    // EITHER QUOTE STYLE, same root cause as the site.ts and globals.css
+    // patterns above and found the same way (2026-09-20). Both literals were
+    // matched as single-quoted only, but Prettier writes a DOUBLE-quoted
+    // literal whenever the string contains an apostrophe, and this church's
+    // tagline contains two. So `npm run apply-brand` failed with
+    // `token "tagline" not found`, and because the script is all-or-nothing
+    // per file it then exited 1 WITHOUT regenerating the OG image at all.
+    // The backreference matches whichever quote opened the literal, and the
+    // escaper below escapes that same character, so either style round-trips.
+    const escapeFor = function (value, quote) {
+      return value
+        .split('\\')
+        .join('\\\\')
+        .split(quote)
+        .join('\\' + quote);
+    };
     const subs = [
       {
         label: 'wordmark',
-        pattern: /(wordmark:\s*')((?:[^'\\]|\\.)*)(')/,
-        replacer: function (_, g1, _quote, g3) {
-          return g1 + name + g3;
+        pattern: /(wordmark:\s*(['"]))(?:(?!\2)[^\\]|\\.)*(\2)/,
+        replacer: function (_, g1, quote, g3) {
+          return g1 + escapeFor(name, quote) + g3;
         },
       },
       {
         label: 'tagline',
-        pattern: /(tagline:\s*\[')((?:[^'\\]|\\.)*)('\])/,
-        replacer: function (_, g1, _quote, g3) {
-          return g1 + safeTagline + g3;
+        pattern: /(tagline:\s*\[(['"]))(?:(?!\2)[^\\]|\\.)*(\2\])/,
+        replacer: function (_, g1, quote, g3) {
+          return g1 + escapeFor(config.tagline, quote) + g3;
         },
       },
     ];

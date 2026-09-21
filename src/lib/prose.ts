@@ -17,5 +17,15 @@
 // Tailwind scans this file like any other source file, so the utilities named
 // in the string are generated.
 
-/** Body copy: colour, size, leading and the measured 52ch line length. */
-export const PROSE_MEASURE = 'text-foreground/85 text-lg leading-relaxed max-w-[52ch]';
+/** Body copy: colour, size, leading and the measured line length.
+ *
+ * Retokened 2026-09-20 in the art-direction pass. The body face changed from
+ * Inter to Castoro, so the `ch` measurement above no longer describes this
+ * face: Castoro's zero is much closer to its average letter than Inter's, so
+ * 62ch here is about the same number of real characters a line that 52ch gave
+ * before. Size comes from `text-body` (the one reading size, --text-body)
+ * rather than Tailwind's generic `text-lg`, and the leading is stated as a
+ * number because `leading-relaxed` was tuned for a sans. Re-measure in the
+ * browser if the body font changes again; do not convert it by arithmetic.
+ */
+export const PROSE_MEASURE = 'text-foreground/90 text-body leading-[1.72] max-w-[62ch]';
