@@ -14,7 +14,8 @@ export default function StudioLogo() {
         fontSize: '0.875rem',
         fontWeight: 600,
         letterSpacing: '0.04em',
-        color: '#FBFBFA',
+        // The dark theme's paper ink. Was the retired cool white #FBFBFA.
+        color: '#F1ECE3',
         whiteSpace: 'nowrap',
       }}
     >

@@ -39,10 +39,14 @@ export interface ToolTheme {
 
 export const TOOL: ToolTheme = {
   paper: '#FFFFFF',
-  ink: '#2A2D31',
-  muted: '#586577',
-  line: 'rgba(42, 45, 49, 0.14)',
-  shadow: '0 6px 20px rgba(42, 45, 49, 0.22), 0 1px 2px rgba(42, 45, 49, 0.16)',
+  // Retoken 2026-09-20: these three were the STARTER's cool greys (#2A2D31
+  // ink, #586577 muted, rgba(42,45,49) rules), which no longer exist anywhere
+  // in this project's palette. They are now the light theme's real ink and
+  // muted ink. Measured on the fixed white card: ink 18.05:1, muted 8.32:1.
+  ink: '#17151F',
+  muted: '#514C58',
+  line: 'rgba(23, 21, 31, 0.14)',
+  shadow: '0 6px 20px rgba(23, 21, 31, 0.22), 0 1px 2px rgba(23, 21, 31, 0.16)',
   // The UI face, stated as a literal like everything else in this file. It was
   // "Inter Variable" until the art-direction pass (2026-09-20) and that stopped
   // resolving the moment Inter came out of globals.css: these controls render

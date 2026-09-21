@@ -154,11 +154,11 @@ describe('the soft alternating surface reads in both themes (Task 1, fix round 1
   // --color-cream swap LITERAL values between themes (see the "Dark mode:
   // indigo becomes paper, cream becomes ink" comment in globals.css) so that
   // whichever token plays the INK role keeps playing it: --color-indigo is
-  // the ink role (navy in light, #FBFBFA near-white in dark), so it is the
-  // token to read for ink in either theme. Reading --color-cream in the DARK
-  // scope instead would return its dark override, #1C1B3A -- a dark navy,
-  // which is the PAPER role's dark value, not an ink colour, and pairs at
-  // 1.14:1 against #262548. That is not a typo to fix; it is why this test
+  // the ink role (navy in light, #f1ece3 warm off-white in dark), so it is
+  // the token to read for ink in either theme. Reading --color-cream in the
+  // DARK scope instead would return its dark override, #14121b -- the dark
+  // page colour, which is the PAPER role's dark value, not an ink colour, and
+  // pairs at 1.27:1 against #262548. That is not a typo to fix; it is why this
   // reads --color-indigo for both rows instead.
   it('indigo ink on the light soft surface clears AA', () => {
     const ratio = contrastRatio(

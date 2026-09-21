@@ -104,7 +104,7 @@ function PathCard({ items, link }: { items: string[]; link?: PathLink }) {
         aria-hidden
         style={{
           background: 'var(--card-badge-primary-bg-color, #e8eaee)',
-          color: 'var(--card-link-fg-color, #586577)',
+          color: 'var(--card-link-fg-color, #292854)',
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -126,7 +126,7 @@ function PathCard({ items, link }: { items: string[]; link?: PathLink }) {
             <Text
               size={1}
               weight="semibold"
-              style={{ color: 'var(--card-link-fg-color, #586577)' }}
+              style={{ color: 'var(--card-link-fg-color, #292854)' }}
             >
               Take me there →
             </Text>
@@ -203,7 +203,7 @@ function BlockView({ block }: { block: GuideBlock }) {
                 aria-hidden
                 style={{
                   background: 'var(--card-badge-primary-bg-color, #e8eaee)',
-                  color: 'var(--card-link-fg-color, #586577)',
+                  color: 'var(--card-link-fg-color, #292854)',
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -296,7 +296,7 @@ export function makeGuideView(slug: string): ComponentType {
               aria-hidden
               style={{
                 background: 'var(--card-badge-primary-bg-color, #e8eaee)',
-                color: 'var(--card-link-fg-color, #586577)',
+                color: 'var(--card-link-fg-color, #292854)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',

@@ -69,7 +69,7 @@
   /* Gold — the church's second brand colour, a FILL and an on-dark ink, never
      a paper ink. Measured with src/lib/contrast.ts against the surfaces it
      would need to work on as text:
-       gold on cream (--color-bg, #FBFBFA) ........ 2.37:1  FAILS AA body text
+       gold on cream (--color-bg, #f4efe6) ........ 2.14:1  FAILS AA body text
        white on gold ............................... 2.46:1  FAILS AA body text
      So it never carries body text on a light surface, and white never sits on
      it. What DOES clear AA body text, and is what this token is actually used
@@ -512,9 +512,20 @@
      theme-tokens.test.ts's scope-premise test ("`.dark` does not redeclare a palette
      token this gate asserts as light") explicitly forbids redeclaring in `.dark`, and
      that assertion is not to be weakened. Giving `bg-soft` a real dark-mode value is
-     follow-up work, tracked in the task-1 report rather than done here. */
-  --color-cream: #1c1b3a;
-  --color-indigo: #fbfbfa;
+     follow-up work, tracked in the task-1 report rather than done here.
+
+     The two values below moved onto the new palette in the art-direction pass
+     (2026-09-20, fix round 1). The SEMANTICS are unchanged, which is the whole
+     point: --color-cream is the surface token and it still flips to the dark
+     page colour here, --color-indigo is the ink token and it still flips to
+     the paper colour, which is what the outline buttons and the header read to
+     stay legible on a dark page. Only the hexes changed, from the retired cool
+     white (#fbfbfa) and the old near-black (#1c1b3a) to this palette's actual
+     dark page (#14121b, the same value as .dark --background) and its actual
+     paper ink (#f1ece3, the same value as .dark --foreground). Leaving them
+     was how the one retired cool-white in the stylesheet survived the reskin. */
+  --color-cream: #14121b;
+  --color-indigo: #f1ece3;
   /* Indigo-field already moved in dark; brown did not, and a heritage band
      that stays #39251e against a #14121b page reads as a smudge rather than a
      band. Both are surfaces, not text, so the light-only palette gate does not
@@ -618,10 +629,18 @@
   top: 0;
   z-index: 100;
   padding: 0.75rem 1.25rem;
-  /* Use --primary-dark (Bronze Dark) instead of --primary (Warm Bronze) so
-     white-on-bronze contrast lands at 5.5:1 instead of 4.06:1. The skip-link
-     is small semibold text, which falls under the AA 4.5:1 body-text rule. */
-  background: var(--primary-dark, #434e5c);
+  /* --color-primary-dark, the navy that is the same in both themes, so white
+     on it is 16.57:1 and the skip link cannot land on a ground that flipped
+     underneath it. The skip link is small semibold text, so it is AA body text
+     at 4.5:1, not large text at 3:1.
+     It read `var(--primary-dark, #434e5c)` until 2026-09-20, and BOTH halves
+     of that were wrong. There is no `--primary-dark` custom property anywhere
+     in this stylesheet (the Tailwind utility `text-primary-dark` resolves
+     `--color-primary-dark`, a different name), so the fallback was what
+     actually painted, and the fallback was the starter's retired cool slate
+     that survived two rebrands untouched. The comment beside it still talked
+     about bronze. */
+  background: var(--color-primary-dark, #1c1b3a);
   color: #ffffff;
   text-decoration: none;
   font-weight: 600;
