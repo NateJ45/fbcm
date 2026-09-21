@@ -97,8 +97,12 @@ const rows = classifySections<PageBuilderBlock>(sections as PageBuilderBlock[], 
 // the loop below can ask "is this the block that gets it" rather than
 // re-deriving "the first one". Pure and unit-tested in spare-images.test.ts.
 //
-// A borrowed picture stays in its own block as well: the building shows at two
-// distances on purpose.
+// A borrowed picture no longer stays in its own block (fix round 1,
+// 2026-09-21): home showed the nave full-bleed behind the statement and again
+// at nearly the same crop in the image-and-text band two screens earlier. So
+// assignSpareImages also returns `replacements`, a row index -> the picture
+// that row should draw INSTEAD of its own (or null for no figure at all), and
+// the ImageText call below asks it before reading the block's own image.
 const spares = assignSpareImages(rows.map(({ block }) => block as unknown as { _type: string }));
 
 // The section wrapper. It is a real block-level element on EVERY render now,
@@ -245,7 +249,7 @@ const wrapAttrs = (key: string | undefined) =>
           />
         ) : s._type === 'imageTextSection' ? (
           <ImageText
-            image={s.image}
+            image={spares.replacements.has(blockIndex) ? spares.replacements.get(blockIndex) : s.image}
             imageSide={s.imageSide}
             eyebrow={s.eyebrow}
             heading={s.heading}

@@ -96,7 +96,18 @@ test('only the first eligible consumer of each kind is served', () => {
   assert.equal(out.doorIndex, 5);
   assert.equal(out.statement, a);
   assert.equal(out.door, b);
-  assert.deepEqual(out.strip, [c]);
+  // `c` is not in the strip any more: the first image+text band lent `a` to the
+  // statement, so the duplicate pass (below) gives that band `c` to draw
+  // instead, and the second band, whose `b` went to the door, finds the pool
+  // empty and draws no figure. Both are what the page should show; the strip is
+  // what is left after that, which is nothing.
+  assert.deepEqual(out.strip, []);
+  assert.equal(out.replacements.get(0), c);
+  assert.equal(out.replacements.get(1), null);
+  // And the third band, whose `c` is now drawn by the first, draws none either:
+  // "a block that lent its picture does not also draw it" holds however the
+  // picture was lent, as the statement's backdrop or as someone's replacement.
+  assert.equal(out.replacements.get(2), null);
 });
 
 // ── Portraits stay out of the pool (fix round 1, 2026-09-21) ───────────────
@@ -142,4 +153,131 @@ test('a square picture is landscape enough to borrow', () => {
     { _type: 'sundayTimesSection' },
   ]);
   assert.equal(out.door, square);
+});
+
+// ── Hero frames feed the pool, and duplicates are replaced ─────────────────
+// (fix round 1, 2026-09-21). Two defects showed up on the built home page.
+//
+// (1) The pool only ever held pictures from BANDS, so a page whose photographs
+// are mostly in the hero's cross-fade had almost nothing to lend. Every frame
+// after the first is a photograph nobody else on the page is using, and the
+// FIRST is never borrowed: it is the LCP image, and a second copy of it at a
+// different crop is a second decode on the slowest paint of the page.
+//
+// (2) A block that LENT its picture still drew it, so home showed the nave
+// full-bleed in the statement band and again, at almost the same crop, in the
+// image-and-text band two screens earlier. It read as a mistake, not as two
+// distances. So an imageTextSection whose own image was handed out is given a
+// replacement instead: the next unused picture, or nothing at all.
+
+test('the hero lends every frame after the first, and never the first', () => {
+  const tower = img('tower');
+  const sanctuary = img('sanctuary');
+  const children = img('children');
+  const out = assignSpareImages([
+    { _type: 'heroSection', frames: [tower, sanctuary, children] },
+    { _type: 'linkCardsSection', heading: 'Statement' },
+    { _type: 'sundayTimesSection' },
+  ]);
+  assert.equal(out.statement, sanctuary);
+  assert.equal(out.door, children);
+  assert.deepEqual(out.strip, []);
+  // The LCP frame is never borrowed, at any position.
+  assert.ok(![out.statement, out.door, ...out.strip].includes(tower));
+});
+
+test('backgroundImages is read the same way as frames', () => {
+  const one = img('one');
+  const two = img('two');
+  const out = assignSpareImages([
+    { _type: 'heroSection', backgroundImages: [one, two] },
+    { _type: 'sundayTimesSection' },
+  ]);
+  assert.equal(out.door, two);
+});
+
+test('the hero frames come before the bands own pictures', () => {
+  const tower = img('tower');
+  const sanctuary = img('sanctuary');
+  const band = img('band');
+  const out = assignSpareImages([
+    { _type: 'heroSection', frames: [tower, sanctuary] },
+    { _type: 'imageTextSection', image: band },
+    { _type: 'linkCardsSection', heading: 'Statement' },
+  ]);
+  assert.equal(out.statement, sanctuary);
+  assert.deepEqual(out.strip, [band]);
+});
+
+test('an image+text band whose picture was handed out is given the next unused one', () => {
+  // The home page, in miniature: the statement borrows the sanctuary, which is
+  // also the image+text band's own picture, so that band draws the congregation
+  // instead and the nave is shown once.
+  const tower = img('tower');
+  const sanctuary = img('sanctuary');
+  const children = img('children');
+  const congregation = img('congregation');
+  const out = assignSpareImages([
+    { _type: 'heroSection', frames: [tower, sanctuary, children, congregation] },
+    { _type: 'sundayTimesSection' },
+    { _type: 'imageTextSection', image: sanctuary },
+    { _type: 'linkCardsSection', heading: 'Statement' },
+  ]);
+  assert.equal(out.statement, sanctuary);
+  assert.equal(out.door, children);
+  assert.equal(out.replacements.get(2), congregation);
+  assert.deepEqual(out.strip, []);
+});
+
+test('the replacement is null when the pool has nothing left', () => {
+  const sanctuary = img('sanctuary');
+  const out = assignSpareImages([
+    { _type: 'imageTextSection', image: sanctuary },
+    { _type: 'linkCardsSection', heading: 'Statement' },
+  ]);
+  assert.equal(out.statement, sanctuary);
+  assert.equal(out.replacements.get(0), null);
+  assert.ok(out.replacements.has(0));
+});
+
+test('a replacement is never a second copy of a picture already handed out', () => {
+  // Two bands carrying the SAME photograph. Handing the second one back to the
+  // band that lent it would show the same picture twice, which is the defect
+  // this whole mechanism exists to remove.
+  const sanctuary = img('sanctuary');
+  const out = assignSpareImages([
+    { _type: 'imageTextSection', image: sanctuary },
+    { _type: 'heritageBandSection', image: sanctuary },
+    { _type: 'linkCardsSection', heading: 'Statement' },
+  ]);
+  assert.equal(out.statement, sanctuary);
+  assert.equal(out.replacements.get(0), null);
+  assert.deepEqual(out.strip, []);
+});
+
+test('a band that did not lend its picture keeps it', () => {
+  const a = img('a');
+  const b = img('b');
+  const out = assignSpareImages([
+    { _type: 'heroSection', frames: [img('tower'), a] },
+    { _type: 'imageTextSection', image: b },
+    { _type: 'linkCardsSection', heading: 'Statement' },
+  ]);
+  assert.equal(out.statement, a);
+  assert.equal(out.replacements.has(1), false);
+});
+
+test('the asset ref is what identifies a picture, not the object', () => {
+  // The projection builds a fresh object per block, so two references to the
+  // same asset are never the same object.
+  const one = { _type: 'image', asset: { _ref: 'image-nave-2000x1500-jpg' }, alt: 'a' };
+  const two = { _type: 'image', asset: { _ref: 'image-nave-2000x1500-jpg' }, alt: 'b' };
+  const spare = { _type: 'image', asset: { _ref: 'image-lawn-2000x1500-jpg' }, alt: 'c' };
+  const out = assignSpareImages([
+    { _type: 'heroSection', frames: [img('tower'), one, spare] },
+    { _type: 'imageTextSection', image: two },
+    { _type: 'linkCardsSection', heading: 'Statement' },
+  ]);
+  assert.equal(out.statement, one);
+  assert.equal(out.replacements.get(1), spare);
 });

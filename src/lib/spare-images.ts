@@ -16,6 +16,25 @@
 // distances on purpose: once large and cropped in the Sunday band's frame,
 // once at its own size where the editor put it.
 //
+// TWO RULES ADDED IN FIX ROUND 1 (2026-09-21), both from the built home page.
+//
+// THE HERO LENDS ITS SPARE FRAMES, AND NEVER ITS FIRST. A page whose pictures
+// live in the hero's cross-fade had almost nothing in the pool, while five
+// photographs sat in the hero doing one job between them. So every frame after
+// the first joins the pool, at the FRONT of it. The first frame never does: it
+// is the LCP image, and a second copy of it at another crop is a second decode
+// on the slowest paint of the page.
+//
+// A BLOCK THAT LENT ITS PICTURE DOES NOT ALSO DRAW IT. Home showed the nave
+// full-bleed in the statement band and again, at nearly the same crop, in the
+// image-and-text band two screens earlier: one photograph twice, which reads as
+// a mistake rather than as two distances. So an imageTextSection whose own
+// image was handed out is given a REPLACEMENT, the next unused picture in the
+// pool, or null when there is none, and the band then draws no figure at all.
+// The old "the building shows at two distances on purpose" only holds when the
+// two distances are genuinely different pictures, which this function cannot
+// judge, so it stops lending a band its own photograph back.
+//
 // Unit-tested in spare-images.test.ts.
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 // Relative, with the extension, because this module is unit-tested under
@@ -45,6 +64,13 @@ export interface SpareImages {
    */
   statementIndex: number | null;
   doorIndex: number | null;
+  /**
+   * Row index -> the picture an imageTextSection should draw INSTEAD of its
+   * own, because its own was handed to the statement or the door. `null` means
+   * "draw no figure": the pool had nothing left. A row that is not a key here
+   * keeps the image it carries, so a renderer asks `has(i)` before `get(i)`.
+   */
+  replacements: Map<number, SanityImageObject | null>;
 }
 
 /** An image counts only when it actually points at an asset. */
@@ -71,6 +97,16 @@ const isPortrait = (image: SanityImageObject): boolean => {
   return !!size && size.height > size.width;
 };
 
+/**
+ * The identity of a picture: its asset ref, or the `_id` the older projections
+ * carry. Two blocks pointing at one photograph are two different objects, so
+ * this is the only comparison that catches a duplicate.
+ */
+const assetKey = (image: SanityImageObject | null | undefined): string | null => {
+  const asset = image?.asset as { _ref?: string; _id?: string } | undefined;
+  return asset?._ref ?? asset?._id ?? null;
+};
+
 /** In the pool: points at an asset, and is not taller than it is wide. */
 const borrowable = (value: unknown): value is SanityImageObject =>
   hasAsset(value) && !isPortrait(value);
@@ -78,9 +114,9 @@ const borrowable = (value: unknown): value is SanityImageObject =>
 /**
  * Build the page's spare-image pool and hand it out.
  *
- * POOL, in array order: `imageTextSection.image`, each of
- * `gallerySection.images`, and `heritageBandSection.image`, minus any
- * portrait (see isPortrait below).
+ * POOL: every `heroSection` frame after the first, then, in array order,
+ * `imageTextSection.image`, each of `gallerySection.images`, and
+ * `heritageBandSection.image`, minus any portrait (see isPortrait above).
  *
  * CONSUMERS, in this order: the first `linkCardsSection` that has a non-empty
  * heading takes pool[0] as its statement backdrop, then the first
@@ -88,20 +124,43 @@ const borrowable = (value: unknown): value is SanityImageObject =>
  * left is the strip.
  */
 export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
-  const pool: SanityImageObject[] = [];
+  // The hero's spare frames go in first, wherever the hero sits in the array,
+  // because they are the pictures nothing else on the page is showing.
+  const heroExtras: SanityImageObject[] = [];
+  for (const row of rows) {
+    if (row._type !== 'heroSection') continue;
+    const frames = Array.isArray(row.frames)
+      ? row.frames
+      : Array.isArray(row.backgroundImages)
+        ? row.backgroundImages
+        : [];
+    // slice(1): the first frame is the LCP image and is never borrowed.
+    for (const image of frames.slice(1)) if (borrowable(image)) heroExtras.push(image);
+  }
+
+  const bandImages: SanityImageObject[] = [];
   let statementIndex: number | null = null;
   let doorIndex: number | null = null;
+  // Every image+text row and the picture it carries, so the duplicate pass
+  // below can hand one back a replacement keyed by its row index.
+  const imageTextRows: { index: number; image: SanityImageObject }[] = [];
 
   rows.forEach((row, index) => {
     switch (row._type) {
-      case 'imageTextSection':
+      case 'imageTextSection': {
+        if (borrowable(row.image)) {
+          bandImages.push(row.image);
+          imageTextRows.push({ index, image: row.image });
+        }
+        break;
+      }
       case 'heritageBandSection': {
-        if (borrowable(row.image)) pool.push(row.image);
+        if (borrowable(row.image)) bandImages.push(row.image);
         break;
       }
       case 'gallerySection': {
         const images = Array.isArray(row.images) ? row.images : [];
-        for (const image of images) if (borrowable(image)) pool.push(image);
+        for (const image of images) if (borrowable(image)) bandImages.push(image);
         break;
       }
       case 'linkCardsSection': {
@@ -120,6 +179,8 @@ export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
     }
   });
 
+  const pool: SanityImageObject[] = [...heroExtras, ...bandImages];
+
   // Hand out in consumer order, statement first, from the front of the pool.
   let next = 0;
   const take = (wanted: boolean): SanityImageObject | null =>
@@ -128,14 +189,47 @@ export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
   const statement = take(statementIndex !== null);
   const door = take(doorIndex !== null);
 
+  // Every picture now showing somewhere, by asset.
+  const onThePage = new Set<string>();
+  for (const image of [statement, door]) {
+    const key = assetKey(image);
+    if (key) onThePage.add(key);
+  }
+
+  // THE DUPLICATE PASS. A band whose own picture is now showing somewhere else
+  // takes the next unused one, skipping any entry that is ANOTHER copy of a
+  // picture already on the page: handing that back would show it twice, which
+  // is the whole defect this exists to remove.
+  const replacements = new Map<number, SanityImageObject | null>();
+  for (const row of imageTextRows) {
+    const key = assetKey(row.image);
+    if (!key || !onThePage.has(key)) continue;
+    let replacement: SanityImageObject | null = null;
+    while (next < pool.length) {
+      const candidate = pool[next++] as SanityImageObject;
+      const candidateKey = assetKey(candidate);
+      if (candidateKey && onThePage.has(candidateKey)) continue;
+      replacement = candidate;
+      if (candidateKey) onThePage.add(candidateKey);
+      break;
+    }
+    replacements.set(row.index, replacement);
+  }
+
   // A consumer that asked for a picture and found an empty pool keeps no
   // index: a renderer testing the index must never be told "this block has one"
   // when it has none.
   return {
     statement,
     door,
-    strip: pool.slice(next),
+    // What nobody claimed, minus any further copy of a picture already shown,
+    // for the same reason the duplicate pass skips them.
+    strip: pool.slice(next).filter((image) => {
+      const key = assetKey(image);
+      return !key || !onThePage.has(key);
+    }),
     statementIndex: statement ? statementIndex : null,
     doorIndex: door ? doorIndex : null,
+    replacements,
   };
 }

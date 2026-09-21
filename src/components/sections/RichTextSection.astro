@@ -97,7 +97,15 @@ const proseClass = [
     {
       heading ? (
         <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)]">
-          <div class="col-span-12 lg:col-span-4">
+          {/* The heading column STICKS on a desktop (fix round 1, 2026-09-21).
+              /beliefs has bands whose reading runs 1200px past the end of the
+              heading, and a heading that scrolls away leaves a tall empty
+              column that reads as a mistake. Riding down with the reader it
+              reads as a rubric instead, and it also answers "which band am I
+              in" on the longest page on the site. `self-start` is what lets it
+              stick at all: a grid item stretches to the row's height by
+              default, and a full-height box has nothing to stick within. */}
+          <div class="col-span-12 self-start lg:sticky lg:top-[calc(var(--header-offset)+1rem)] lg:col-span-4">
             <SectionHeading
               eyebrow={eyebrow}
               headline={heading}

@@ -32,10 +32,14 @@
 //    image's stored hotspot, because a hotspot an editor never moved still
 //    stores dead centre and would quietly undo the rule on every picture.
 //
-// 4. THE PICTURE IS ALSO THE PAGE'S SPARE. src/lib/spare-images.ts reads
-//    `imageTextSection.image` into the pool the statement band and the Sunday
-//    band borrow from. It stays here as well: the building shows at two
-//    distances on purpose.
+// 4. THE PICTURE IS ALSO THE PAGE'S SPARE, AND MAY NOT BE THIS ONE.
+//    src/lib/spare-images.ts reads `imageTextSection.image` into the pool the
+//    statement band and the Sunday band borrow from, and a band whose picture
+//    was borrowed is handed a different one by SectionRenderer so the page
+//    never shows one photograph twice. `image` can therefore be null even
+//    though the block carries one, and the band then renders as text alone:
+//    the heading column, the reading column, and no figure. That is a real
+//    layout, not a broken one, which is why there is no placeholder box.
 import { surfaceClass } from '@/lib/surfaces';
 import SanityImage from '@/components/SanityImage.astro';
 import PortableText from '@/components/PortableText';
