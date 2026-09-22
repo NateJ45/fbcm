@@ -244,6 +244,46 @@ test('FOOT: a short last paragraph after groups becomes a closing row', () => {
   assert.equal(out.pieces.at(-1)?.kind, 'foot');
 });
 
+test('pullFoot measures cleaned text: a stega-only span does not defeat the link-line check', () => {
+  const S = '​‌‍﻿​‌‍﻿';
+  const marked = (t: string) => ({
+    _type: 'span' as const,
+    _key: `s${n++}`,
+    text: t,
+    marks: ['link'],
+  });
+  const plain = (t: string) => ({ _type: 'span' as const, _key: `s${n++}`, text: t, marks: [] });
+  const linkLine = (withStegaSpan: boolean): PtBlock => ({
+    _type: 'block',
+    _key: `b${n++}`,
+    style: 'normal',
+    markDefs: [],
+    children: withStegaSpan ? [marked('fbcmuncie.org'), plain(S)] : [marked('fbcmuncie.org')],
+  });
+  const body = (withStegaSpan: boolean) => [p(words(20)), linkLine(withStegaSpan)];
+  const clean = classifyRichText(body(false), { hasHead: false });
+  const stega = classifyRichText(body(true), { hasHead: false });
+  assert.equal(clean.pieces.at(-1)?.kind, 'foot');
+  assert.equal(stega.pieces.at(-1)?.kind, 'foot');
+});
+
+test('narrow: true forces columns to one across', () => {
+  const body = [h3('A'), p(words(20)), h3('B'), p(words(20))];
+  const out = classifyRichText(body, { hasHead: true, narrow: true });
+  assert.equal(out.shape, 'columns');
+  const cols = out.pieces.find((x) => x.kind === 'columns');
+  assert.ok(cols && cols.kind === 'columns');
+  assert.equal(cols.across, 1);
+});
+
+test('a headingless single list with no paragraphs classifies without throwing', () => {
+  const out = classifyRichText([li('Exterior Building'), li('Fellowship Hall'), li('Kitchen')], {
+    hasHead: false,
+  });
+  assert.equal(out.shape, 'ledger');
+  assert.deepEqual(kinds(out.pieces), ['triad']);
+});
+
 test('isLedeParagraph: 8 to 40 words, ends a sentence, not the first of exactly two', () => {
   assert.equal(
     isLedeParagraph(p('At each entrance, all ages are invited to check-in with a greeter.'), 1, 2),

@@ -13,6 +13,7 @@ import {
   splitBlockText,
   type PtBlock,
 } from './span-split.ts';
+import { splitStega } from './preview-stega.ts';
 
 export type RichShape = 'row' | 'columns' | 'sections' | 'register' | 'ledger' | 'prose';
 export interface RichPara {
@@ -235,7 +236,8 @@ function pullFoot(segs: Seg[]): { segs: Seg[]; foot: PtBlock | null } {
   const afterGroup = segs.some((s) => s.kind === 'h3' || s.kind === 'h4');
   const children = last.b.children ?? [];
   const linkLine =
-    children.length > 0 && children.every((c) => (c.marks ?? []).length > 0 || !c.text.trim());
+    children.length > 0 &&
+    children.every((c) => (c.marks ?? []).length > 0 || !splitStega(c.text ?? '').cleaned.trim());
   return afterGroup || linkLine ? { segs: segs.slice(0, -1), foot: last.b } : { segs, foot: null };
 }
 
