@@ -23,16 +23,27 @@ Presbyterian and Peachtree Church) confirmed it: nobody does that. Two variant
 loops, each judged against a prototype approved as the visual spec, replaced it.
 
 `RichTextSection` now lays its body out from the body's own shape (the "Ledger"),
-classified in `src/lib/rich-shape.ts`: `row`, `columns`, `sections`, `register`,
-`ledger` or `prose`, decided from block styles, list items and a shared opening
-word across list items, never from a field. `ImageText` now places its photograph
-by the photograph's own shape, classified in `src/lib/photo-shape.ts`: `ground`
-(full-bleed, text set into a darkened edge), `window` (a lancet arch taken from the
-church's own window tracery, at most one per page), `frame` (an archival portrait),
-`plate` (an archival landscape), `legend` (a named group photo) or `row` (beside
-the text, the default). A page-level pass assigns shapes across all of a page's
-photo bands together, enforcing at most one window and at most two grounds per
-page, so an editor swapping one band's picture can change another band's shape.
+classified in `src/lib/rich-shape.ts`, first match wins: `row` (a band with a
+heading whose body has no h3, h4, list or quote, 3 or fewer paragraphs, 80 words
+or fewer),
+`columns` (2 or more h3 groups whose bodies are only paragraphs, 150 words or fewer
+per group), `sections` (any other body with an h3), `register` (8 or more
+paragraphs, at least 80% of them 35 words or fewer), `ledger` (lists of 3 or more
+items carrying at least 40% of the words) or `prose`. A body h2 counts as an h3, a
+blockquote is its own piece, a numbered list stays an ordered list, and a body with
+h4 but no h3 has its h4s promoted to h3 (final-review fixes, 2026-09-22). Nothing
+is decided from a field. `ImageText` now places its photograph by the photograph's
+own shape, classified in `src/lib/photo-shape.ts`, first match wins: `window` (the
+page's first portrait, aspect 0.85 or less, set in a lancet arch taken from the
+church's own window tracery), `frame` (any later portrait of aspect 0.85 or less), `legend` (aspect 1.8 or
+more with a "left to right" paragraph over 3 to 8 listed names), `plate` (aspect
+under 1.25 with a year from 1500 to 1949 in the alt or eyebrow), `ground` (aspect
+1.3 or more and 2000px wide or more, not the band straight after a photo hero, and
+a second one only 4 or more rows after the first on a page of 6 or more rows) or
+`row` (beside the text, the default). A page-level pass assigns shapes across all
+of a page's photo bands together, so there is at most one window and at most two
+grounds per page, and an editor swapping one band's picture can change another
+band's shape.
 One shared renderer, `RichBody.astro`, draws both, so a photo band's prose and a
 text band's prose read as one grammar. See `docs/agent/components.md`.
 
