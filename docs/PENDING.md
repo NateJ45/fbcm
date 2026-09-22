@@ -524,9 +524,9 @@ now ties the schema max and the slice with a drift test.
 ## RichText Ledger and photo shapes landed (2026-09-22)
 
 Branch `feat/richtext-ledger-photo-shapes`, ten tasks run as subagent-driven
-development, at HEAD `4be932e`, not yet merged (Nathan merges to `main`
-locally). Full account in `docs/agent/changelog.md`'s 2026-09-22 entry; this
-is what it closes and what it leaves open.
+development, merged to `main` 2026-09-22. Full account in
+`docs/agent/changelog.md`'s 2026-09-22 entry; this is what it closes and what
+it leaves open.
 
 **Closed, from the per-section critique of the art-direction pass:**
 
@@ -608,7 +608,7 @@ this branch):**
   the Wix capture missed and will upload the whole church photo library to
   Sanity with media tags. Placement of the new photographs into pages,
   including the wedding page's building shots Nathan asked to reuse, is
-  queued after this branch merges.
+  queued now that the Ledger branch has merged (2026-09-22).
 - **Children's photos: resolved, not open.** Nathan, 2026-09-22: every child
   photograph in use on the new site (the home hero, the ministries band, and
   any others the photo library adds) was already live and public on the
