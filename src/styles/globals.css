@@ -1260,6 +1260,21 @@
   width: 100%;
   height: auto;
 }
+/* A bled row's caption starts on the grid, not at the bled edge: the margin
+   is the negation of .bleed-left's pull (and of the phone's gutter pull for
+   both sides, below). */
+.ph-beside .bleed-left .ph-cap {
+  margin-left: max(
+    var(--spacing-gutter),
+    calc((100cqw - var(--container-content)) / 2 + var(--spacing-gutter))
+  );
+}
+@media (max-width: 900px) {
+  .ph-beside .bleed-left .ph-cap,
+  .ph-beside .bleed-right .ph-cap {
+    margin-left: var(--spacing-gutter);
+  }
+}
 /* PLATE */
 .ph-plate {
   background: var(--mat);
