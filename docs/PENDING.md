@@ -578,13 +578,21 @@ merged to `main` at `183a61f` and deployed. Full account of what changed is in
   prose that lived only in that ledger. Nothing to do about it now, but it's
   why this entry has to reconstruct the fix above from the CI log and the
   diff rather than pointing at a ledger entry.
-- **`scripts/lib/lib/render-og.mjs` still duplicates `scripts/lib/render-og.mjs`,
-  and the two differ.** The art-direction plan's own Task 13 cleanup item said
-  to delete the `lib/lib` directory only if the files inside are byte-identical
-  to their real counterparts; `diff` says they are not, so it was left in
-  place per that conditional instruction. Whoever touches OG image generation
-  next should work out which copy is live (check what actually imports from
-  `scripts/lib/lib/`) and delete the other.
+- ~~**`scripts/lib/lib/render-og.mjs` still duplicates `scripts/lib/render-og.mjs`,
+  and the two differ.**~~ Closed 2026-09-22 (`chore/cleanup`): the whole
+  `scripts/lib/lib/` directory is gone. Nothing imported from it (the only
+  import inside it was its own `sanity-lib.mjs` reaching its own
+  `loadEnv.mjs`); the live copy is `scripts/lib/render-og.mjs`, imported by
+  both `generate-og-*.mjs` scripts and rewritten by `apply-brand`. The
+  lib/lib copy differed only in its brand-inputs block, which still held the
+  starter's slate palette and Libre Baskerville, so it was a stale fork
+  leftover; the other four files were byte-identical duplicates. Proof:
+  `npm run og` wrote the same bytes before and after the delete (sha256
+  `cf0dd25d...`), and `npm run sync-check` went from 93 same / 0 drifted to
+  88 same / 0 drifted. (That `og` output differs from the committed
+  `public/og-default.png` because the generator falls back to the CSS font
+  stack, "No @fontsource display file found"; the committed PNG was left
+  as it is.)
 - **The `/styleguide` visual-regression baseline is stale** (light and dark
   both failed in the first post-merge CI run, `expect(page).toHaveScreenshot`).
   Expected: the art-direction pass changed the page's rendered output from top
