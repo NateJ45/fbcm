@@ -10,6 +10,22 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-22 — The Studio's Help guides, rewritten for the church secretary (PORTS.md card 41)._
+
+`src/sanity/guides/content.ts` was still the starter's design-studio template and had
+been unhooked from the desk on 2026-09-19. It is now ten guides in five categories
+(Start here; Sundays and notices; Blog, staff and ministries; Pictures; When something
+is wrong), each one a job the secretary will actually do, following the stonesteps-50k
+rewrite. They sit in the Help group under "How the website works" and "Your church at a
+glance". Every click path was checked against the schemas and then walked in the real
+Studio, which corrected several guesses (there is no Discard or Unpublish in these
+menus, the Media tool's tags sit on the right, and Presentation lists pages by their own
+titles). The walk also found things the Studio cannot do yet, most importantly that the
+service time was copied into about fifteen bands at seed time and that the `ministry`
+documents are read by no page; those are listed in `docs/PENDING.md`. A guide on how a
+band's picture decides its shape is drafted there and waits for
+feat/richtext-ledger-photo-shapes to merge.
+
 _2026-09-21 — The art-direction pass: a full identity and layout rebuild off the generic starter look._
 
 Nathan's read on the deployed plan-2 site was blunt: "very generic and plain... not

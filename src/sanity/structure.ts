@@ -4,11 +4,10 @@
 // "Start Here" groupings (inherited from the starter this was forked from)
 // are gone. Two things that lived in "Start Here" survive because they still
 // do real work for this editor: the "How the website works" guide and the
-// "Your church at a glance" notes, both folded into Help below. The generic
-// starter guide DATA in src/sanity/guides/content.ts ("THIS IS A TEMPLATE,
-// REWRITE IT PER PROJECT" at its own header) is no longer wired into the
-// desk; rewriting it for the church is separate work this task does not
-// cover, so it is left alone rather than half-adapted.
+// "Your church at a glance" notes, both folded into Help below. The guide
+// DATA in src/sanity/guides/content.ts was unhooked here on 2026-09-19 while
+// it was still the starter's generic template, then rewritten for the church
+// secretary and wired back into Help on 2026-09-22 (feat/editor-guide).
 //
 // Every document type is placed explicitly so nothing floats loose at the
 // desk root. The trailing default-list filter is a safety net for any future
@@ -49,6 +48,8 @@ import {
   UsersIcon,
 } from '@sanity/icons';
 import StudioGuide from './components/StudioGuide';
+import { makeGuideView } from './components/GuideView';
+import { guides, GUIDE_CATEGORIES } from './guides/content';
 import BusinessOverview from './components/BusinessOverview';
 import { STAFF_GROUPS } from '../lib/church-derive';
 import { site } from '../data/site';
@@ -292,6 +293,11 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
       S.divider(),
 
       // ── Help ─────────────────────────────────────────────────────────────
+      // The handbook (PORTS.md card 41), after the two panels that were already
+      // here. The guides are DATA in src/sanity/guides/content.ts, held in the
+      // repo so they cannot be deleted by accident; each category becomes a
+      // titled divider with its guides under it, in GUIDE_CATEGORIES order.
+      //
       // The two Start Here panels that still do real work for this church:
       // the how-to guide (studioGuide, rewritten in Task 10 for a church
       // secretary) and the church-at-a-glance notes (studioNotes). Brand kit
@@ -330,6 +336,25 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
                       S.view.form().title('Edit notes'),
                     ]),
                 ),
+              ...GUIDE_CATEGORIES.flatMap((category) => {
+                const mine = guides.filter((g) => g.category === category);
+                return mine.length === 0
+                  ? []
+                  : [
+                      S.divider().title(category),
+                      ...mine.map((g) =>
+                        S.listItem()
+                          .id(`guide-${g.slug}`)
+                          .title(g.title)
+                          .icon(() => g.icon)
+                          .child(
+                            S.component(makeGuideView(g.slug) as never)
+                              .id(`guide-view-${g.slug}`)
+                              .title(g.title),
+                          ),
+                      ),
+                    ];
+              }),
             ]),
         ),
 

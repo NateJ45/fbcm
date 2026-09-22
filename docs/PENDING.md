@@ -452,15 +452,12 @@ leaves open, with what closes each.
   `scripts/.parity` locally for this (that happens once, at the end of plan
   2c, per the task-6 brief). Refresh the CI baseline itself with `visual.yml`'s
   own `update` input the first time it runs against this change.
-- **`src/sanity/guides/content.ts` is still the starter's generic "Help & Guide"
-  template** ("THIS IS A TEMPLATE. REWRITE IT PER PROJECT" at its own header),
-  written for a design studio, not a church. Task 10 (2026-09-19) unhooked it
-  from the desk rather than half-rewrite it under a task scoped to
-  `structure.ts` and the `studioGuide` seed: the desk's Help group now holds
-  only "How the website works" (studioGuide) and "Your church at a glance"
-  (studioNotes), both rewritten for a church secretary. If this guide system is
-  wanted back, it needs its own pass over `content.ts`'s guide list, in the
-  church's own language, before it is wired back into `structure.ts`.
+- ~~**`src/sanity/guides/content.ts` is still the starter's generic "Help & Guide"
+  template**~~ Closed 2026-09-22 (feat/editor-guide): rewritten as ten guides
+  for the church secretary in five categories and wired back into the desk's
+  Help group under the two existing panels. Every click path was walked in the
+  real Studio. The walk turned up the items in "Editor guide: what the Studio
+  cannot do yet" below.
 - **Sign-in to the Studio at a local origin needs a one-time CORS grant.**
   Verifying Task 10's desk in a real browser (`npm run preview`, `/studio`)
   reached the Sanity "Connect this Studio to your project" screen every time,
@@ -470,6 +467,79 @@ leaves open, with what closes each.
   confirm). Registering `npx sanity cors add http://127.0.0.1:<port> --credentials`
   is the fix, same family as item 1a above; nobody has done it for this project
   yet.
+
+### Editor guide: what the Studio cannot do yet (found 2026-09-22)
+
+Found while writing and walking the Help guides (feat/editor-guide). Each one
+is described to the secretary honestly in the guides today; fixing it means
+changing the guide that mentions it in the same commit.
+
+- **The service time is copied into about fifteen bands.** The page seeds
+  (`scripts/pages/*.mjs`) read `siteSettings.serviceTime` and the street line
+  at SEED time and wrote them as typed text into hero facts (home, visit,
+  contact), sundayTimes columns (home, visit, contact), timeline markers
+  (visit, ministries), CTA subheads (beliefs, blog, give, history, ministries,
+  visit, wedding), a Give paragraph and the Home SEO title. Only the header,
+  footer and Hours band read Site settings live. A time change today means
+  hand-editing every copy; the `service-times` guide lists them. This is the
+  CLAUDE.md rule 15 shape: derive at build time instead.
+- **The `ministry` documents are not read by any page.** No query or component
+  renders them; `/ministries` is a `page` document built from sections. The
+  desk still shows a top-level "Ministries" list, so an editor's change there
+  goes nowhere. The `ministries` guide warns against it. Decide: connect them,
+  or take the list off the desk. (Ministries also has no coordinator field;
+  each band's closing contact lines were typed at seed time.)
+- **No deacons.** Nothing in the schema or data represents them. Ask the
+  church how they want them shown before adding a group option.
+- **A new post's Author defaults to "Your Name"** (`journalEntry.ts`,
+  `initialValue`, description "Defaults to the founder"): starter residue
+  (CLAUDE.md rule 11). It prints under the post title if left alone.
+- **"Publish automatically at" does nothing yet.** The field is on every
+  `page`, but `.github/workflows/publish-due.yml` still has its schedule
+  commented out. The `who-to-ask` guide tells the secretary to leave it empty.
+  Either switch the workflow on or hide the field.
+- **The workspace is still titled "My Studio"** (`sanity.config.ts`, `title`).
+  It shows in the Studio's top-left, every browser tab, and as the name of the
+  Studio's own photo source in every image field's menu ("Upload / My Studio /
+  Unsplash / Media"), which will puzzle an editor.
+- **The Presentation page list shows the Blog page as "Journal"** and pages by
+  their document titles ("Plan a visit", "What we believe", "Our history"),
+  which differ from the menu names. The guide explains it; renaming the
+  journalPage title to "Blog" would remove one of the explanations.
+- **Media library asset names are full local file paths**
+  (`C:\Users\natha\Documents\Claude\Proje...`), from the import scripts'
+  upload filenames. Cosmetic, but it is what the secretary reads when choosing
+  a photo. The photo-library work is the natural place to fix it.
+- **Staff photos and Ministry photos have no alt-text field.** StaffGrid
+  passes no alt, so the image renders `alt=""` beside the printed name, which
+  is acceptable; the guide says so.
+- **There is no Unpublish for staff members** (their document menu has only
+  Duplicate and Delete in this Sanity version), so "someone leaves" means
+  Delete. A "Show on the Staff page" switch would be kinder.
+- **`BusinessOverview.tsx` still headings its pane "Your business at a
+  glance"** while the desk calls it "Your church at a glance".
+- **GuideView's "Take me there" links produce `#//structure/...`** (double
+  slash, because `basePath` is `/` under hash routing). They work; cosmetic,
+  and GuideView is PORTABLE, so it belongs on PORTS.md card 41.
+- **Held guide: how a band's picture decides its shape.** Waits for
+  feat/richtext-ledger-photo-shapes to reach main. Draft, for `content.ts`
+  (category "Pictures"), to check against the merged code before adding:
+  > **How a picture decides the shape of its band.** You never choose a
+  > band's layout; the picture does. A tall portrait becomes a pointed-arch
+  > **window**, like a church window, but only the first tall portrait on a
+  > page gets one; any later tall portrait is hung as a **framed portrait**.
+  > A very wide picture whose text has a "left to right" line followed by a
+  > short list of names becomes a **legend**, the picture with the names laid
+  > out under it. A picture whose alt text or small line above the heading
+  > mentions a year before 1950 is treated as an old photograph and set as a
+  > **plate**. A large, wide landscape can become a full-width **backdrop**
+  > behind the band, at most twice on a page and never straight after an
+  > opening photo. Everything else sits beside its text. Because the page is
+  > worked out from the top down, changing one band's picture, or moving a
+  > band, can change the shape of another band further down: if a new tall
+  > portrait appears higher up, it takes the window and the old window becomes
+  > a framed portrait. Look at the whole page in Presentation before you
+  > publish.
 
 ### For ncs-astro-sanity-starter (the library of record), found on this fork
 
