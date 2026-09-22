@@ -454,3 +454,83 @@ test('wide absent (or false) leaves the existing outputs unchanged', () => {
     assert.deepEqual(classifyRichText(body, { hasHead, narrow: false }), base);
   }
 });
+
+// ---------- the rest of proseBody: h2, blockquote, numbered lists ----------
+// The Studio offers "Heading" (h2), "Quote" (blockquote) and "Numbered" lists
+// in every section body; each must come out as what the editor picked.
+const h2 = (text: string): PtBlock => ({ ...p(text), style: 'h2' });
+const bq = (text: string): PtBlock => ({ ...p(text), style: 'blockquote' });
+const num = (text: string, mark = ''): PtBlock => ({
+  ...p(text),
+  listItem: 'number' + mark,
+  level: 1,
+});
+const ZW = '\u200b\u200c\u200d\ufeff\u200b\u200c\u200d\ufeff';
+const allPieces = (ps: RichPiece[]): RichPiece[] =>
+  ps.flatMap((x) =>
+    x.kind === 'section'
+      ? [x, ...allPieces(x.pieces)]
+      : x.kind === 'columns'
+        ? [x, ...x.groups.flatMap((g) => allPieces(g.pieces))]
+        : x.kind === 'register'
+          ? [x, ...[...x.left, ...x.right].flatMap(allPieces)]
+          : [x],
+  );
+
+test('an h2 in the body is a section head (the band’s own heading is the h2)', () => {
+  const out = classifyRichText([h2('Our history'), p(words(30))], { hasHead: true });
+  assert.equal(out.shape, 'sections');
+  const sect = out.pieces.find((x) => x.kind === 'section');
+  assert.ok(sect && sect.kind === 'section');
+  assert.equal(txt(sect.head), 'Our history');
+});
+
+test('a blockquote is its own piece and is never word-counted into prose columns', () => {
+  const quote = bq(words(120, 'quoted'));
+  const out = classifyRichText([p(words(120)), quote, p(words(120))], { hasHead: false });
+  assert.deepEqual(kinds(out.pieces), ['run2', 'quote', 'run2']);
+  const q = out.pieces[1];
+  assert.ok(q.kind === 'quote');
+  assert.equal(q.block, quote);
+  for (const x of out.pieces)
+    if (x.kind === 'run2' || x.kind === 'run3' || x.kind === 'measure')
+      assert.ok(!x.paras.some((r) => r.block === quote));
+});
+
+test('a blockquote is never dropped by the ROW or REGISTER shapes', () => {
+  const row = classifyRichText([p('A short line.'), bq('Be still, and know.')], { hasHead: true });
+  assert.ok(allPieces(row.pieces).some((x) => x.kind === 'quote'));
+  const reg = classifyRichText(
+    [...Array.from({ length: 9 }, (_, i) => p(`Line ${i} is short.`)), bq('A creed line.')],
+    { hasHead: true },
+  );
+  assert.ok(allPieces(reg.pieces).some((x) => x.kind === 'quote'));
+});
+
+test('a numbered list stays ordered', () => {
+  const out = classifyRichText([p('Three steps:'), num('One'), num('Two'), num('Three')], {
+    hasHead: false,
+  });
+  const list = allPieces(out.pieces).find((x) => x.kind === 'plain');
+  assert.ok(list && list.kind === 'plain');
+  assert.equal(list.ordered, true);
+  assert.equal(list.items.length, 3);
+  // a bullet list is not
+  const bullets = classifyRichText(
+    [li('Alpha ' + words(11)), li('Beta ' + words(11)), li('Gamma ' + words(11))],
+    { hasHead: false },
+  );
+  const b = allPieces(bullets.pieces).find((x) => x.kind === 'plain');
+  assert.ok(b && b.kind === 'plain');
+  assert.ok(!b.ordered);
+});
+
+test('a stega-carrying listItem "number" is still ordered (listItem is not in NON_STEGA_FIELDS)', () => {
+  const out = classifyRichText(
+    [num('Alpha ' + words(11), ZW), num('Beta ' + words(11), ZW), num('Gamma ' + words(11), ZW)],
+    { hasHead: false },
+  );
+  const list = allPieces(out.pieces).find((x) => x.kind === 'plain');
+  assert.ok(list && list.kind === 'plain');
+  assert.equal(list.ordered, true);
+});

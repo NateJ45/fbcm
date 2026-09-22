@@ -948,6 +948,41 @@
 .rt-labelled .rt-ds p + p {
   margin-top: 0.5em;
 }
+/* A numbered list keeps its numbers. The rows are grids (no list marker), so
+   the number is a counter in its own first column. */
+.rt-ledger.is-ol {
+  counter-reset: rt-ol;
+}
+.rt-ledger.is-ol > .rt-row {
+  counter-increment: rt-ol;
+}
+.rt-ledger.is-ol > .rt-row::before {
+  content: counter(rt-ol, decimal) '.';
+  grid-column: 1;
+  margin-right: 0.5em;
+  color: var(--color-gold-ink);
+  font-size: var(--text-item);
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+.rt-ledger.is-ol .rt-it {
+  grid-column: 2 / 11;
+}
+/* A quote from the body ("Quote" in the Studio): its own piece, one measure,
+   on a gold rule. Block, not the subgrid .rt-sub gives it. */
+.rt-quote {
+  display: block;
+  grid-column: 1 / 8;
+  max-width: 62ch;
+  border-left: 1px solid var(--color-gold);
+  padding-left: 1em;
+  font-style: italic;
+  font-size: var(--text-item);
+  line-height: 1.45;
+}
+.rt-quote p + p {
+  margin-top: 0.75em;
+}
 .rt-said {
   grid-column: 1 / -1;
   list-style: none;

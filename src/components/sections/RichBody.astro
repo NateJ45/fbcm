@@ -29,6 +29,11 @@ const { pieces } = Astro.props as Props;
       <div class="rt-leadin">
         <PortableText value={toPt(x.block)} variant="bare" />
       </div>
+    ) : x.kind === 'quote' ? (
+      <blockquote class="rt-sub rt-quote rt-v">
+        {/* the element is here, so the block renders as its paragraph */}
+        <PortableText value={toPt({ ...x.block, style: 'normal' })} variant="bare" />
+      </blockquote>
     ) : x.kind === 'measure' || x.kind === 'run2' || x.kind === 'run3' ? (
       <div class={`rt-${x.kind} rt-v`}>
         {x.paras.map((q) =>
@@ -98,6 +103,16 @@ const { pieces } = Astro.props as Props;
           </li>
         ))}
       </ul>
+    ) : x.kind === 'plain' && x.ordered ? (
+      <ol class="rt-sub rt-ledger rt-v is-ol">
+        {x.items.map((it) => (
+          <li class="rt-row">
+            <span class="rt-it">
+              <PortableText value={toPt(it)} variant="bare" />
+            </span>
+          </li>
+        ))}
+      </ol>
     ) : x.kind === 'plain' ? (
       <ul class="rt-sub rt-ledger rt-v">
         {x.items.map((it) => (

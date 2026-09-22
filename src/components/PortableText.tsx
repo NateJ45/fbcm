@@ -206,11 +206,15 @@ export default function PortableText({ value, className, variant = 'prose' }: Pr
     // No wrapper element at all: the caller's own element is the container, so
     // a bare block can sit inside an <h3>, <li> or <span> without nesting a
     // <div> where HTML does not allow one. Headings and list items render only
-    // their spans; a normal paragraph is a bare <p>.
+    // their spans (the caller supplies the heading element); a normal paragraph
+    // is a bare <p> and a quote is a <blockquote>. Every style proseBody offers
+    // is mapped here, or it falls to the library's unstyled default.
     components.block = {
       normal: ({ children }) => <p>{children}</p>,
+      h2: ({ children }) => <>{children}</>,
       h3: ({ children }) => <>{children}</>,
       h4: ({ children }) => <>{children}</>,
+      blockquote: ({ children }) => <blockquote className="rt-quote">{children}</blockquote>,
     };
     components.list = {
       bullet: ({ children }) => <>{children}</>,

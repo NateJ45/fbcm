@@ -24,12 +24,13 @@ export type RichPiece =
   | { kind: 'lede'; block: PtBlock }
   | { kind: 'standfirst'; block: PtBlock }
   | { kind: 'leadin'; block: PtBlock }
+  | { kind: 'quote'; block: PtBlock }
   | { kind: 'measure' | 'run2' | 'run3'; paras: RichPara[] }
   | { kind: 'table'; rows: { name: string | null; tail: PtBlock }[] }
   | { kind: 'labelled'; rows: { label: PtBlock; body: PtBlock[] }[] }
   | { kind: 'said'; prefix: string; hang: boolean; items: PtBlock[] }
   | { kind: 'triad'; prefix: string; items: PtBlock[] }
-  | { kind: 'index' | 'plain'; items: PtBlock[] }
+  | { kind: 'index' | 'plain'; items: PtBlock[]; ordered?: boolean }
   | { kind: 'section'; head: PtBlock; pieces: RichPiece[] }
   | {
       kind: 'columns';
@@ -51,6 +52,7 @@ type Seg =
   | { kind: 'p'; b: PtBlock }
   | { kind: 'h3'; b: PtBlock }
   | { kind: 'h4'; b: PtBlock }
+  | { kind: 'quote'; b: PtBlock }
   | { kind: 'list'; items: PtBlock[] };
 interface Ctx {
   runIn: boolean;
@@ -66,6 +68,8 @@ const endsSentence = (b: PtBlock) => /[.!?:]["”’)]?$/.test(text(b));
 const endsColon = (b: PtBlock) => /:\s*["”’]?$/.test(text(b));
 const across = (n: number) => (n <= 4 ? n : n % 3 === 0 ? 3 : 4);
 
+// An h2 in the body is a section head like an h3: the band's own heading is
+// the page's h2, so a body "Heading" sits one level under it.
 function segments(body: PtBlock[]): Seg[] {
   const segs: Seg[] = [];
   for (const b of body) {
@@ -74,9 +78,13 @@ function segments(body: PtBlock[]): Seg[] {
       const last = segs.at(-1);
       if (last && last.kind === 'list') last.items.push(b);
       else segs.push({ kind: 'list', items: [b] });
-    } else if (b.style === 'h3') segs.push({ kind: 'h3', b });
+    } else if (b.style === 'h3' || b.style === 'h2') segs.push({ kind: 'h3', b });
     else if (b.style === 'h4') segs.push({ kind: 'h4', b });
-    else if (text(b)) segs.push({ kind: 'p', b });
+    else if (b.style === 'blockquote') {
+      // A quote is its own piece, never a paragraph: it is not word-counted
+      // into a prose run and never split across columns.
+      if (text(b)) segs.push({ kind: 'quote', b });
+    } else if (text(b)) segs.push({ kind: 'p', b });
   }
   return segs;
 }
@@ -103,7 +111,13 @@ export function isLedeParagraph(
   return w >= 8 && w <= 40 && endsSentence(b) && remaining > 0 && runLength !== 2;
 }
 
+// listItem is NOT in NON_STEGA_FIELDS (src/lib/cms-preview.ts), so in the
+// preview it can carry a stega run: compare the cleaned value, never the raw.
+const isNumbered = (b: PtBlock) => splitStega(b.listItem ?? '').cleaned === 'number';
+
 function listPiece(items: PtBlock[]): RichPiece {
+  // A numbered list keeps its numbers: its order is the content.
+  if (items.length && items.every(isNumbered)) return { kind: 'plain', items, ordered: true };
   const texts = items.map(text);
   const piped = items.filter((i) => text(i).includes(' | ')).length;
   const short = texts.every((t) => wordCount(t) <= 6);
@@ -230,6 +244,9 @@ function flow(
     } else if (s.kind === 'list') {
       out.push(listPiece(s.items));
       i++;
+    } else if (s.kind === 'quote') {
+      out.push({ kind: 'quote', block: s.b });
+      i++;
     } else if (s.kind === 'h4') {
       const opensSection = i === 0 && o.inSection;
       const groups: { head: PtBlock; body: Seg[] }[] = [];
@@ -292,6 +309,7 @@ export function classifyRichText(
   const H3 = segs.filter((s) => s.kind === 'h3').length;
   const H4 = segs.filter((s) => s.kind === 'h4').length;
   const lists = segs.filter((s): s is Extract<Seg, { kind: 'list' }> => s.kind === 'list');
+  const quotes = segs.filter((s) => s.kind === 'quote').length;
   const paras = segs.filter((s): s is Extract<Seg, { kind: 'p' }> => s.kind === 'p');
   const total = segs.reduce((n, s) => n + segWords(s), 0);
   const ctx: Ctx = {
@@ -301,7 +319,7 @@ export function classifyRichText(
   };
 
   let shape: RichShape;
-  if (opts.hasHead && !H3 && !H4 && !lists.length && paras.length <= 3 && total <= 80)
+  if (opts.hasHead && !H3 && !H4 && !lists.length && !quotes && paras.length <= 3 && total <= 80)
     shape = 'row';
   else if (
     H3 >= 2 &&
@@ -341,6 +359,7 @@ export function classifyRichText(
       else if (s.kind === 'p')
         cells.push([{ kind: 'measure', paras: [{ block: s.b, label: null }] }]);
       else if (s.kind === 'list') cells.push([listPiece(s.items)]);
+      else if (s.kind === 'quote') cells.push([{ kind: 'quote', block: s.b }]);
     }
     const rows = Math.ceil(cells.length / 2);
     return {
