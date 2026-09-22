@@ -254,17 +254,24 @@ summary still reads 30 with the same 14/14/2 split, nothing has moved and this e
 If the numbers differ, find out which root moved before editing anything, and re-read the
 `--force` warning above before touching a dependency.
 
-### 5. Eighteen eslint warnings, all unused bindings
+### 5. One eslint warning, in a PORTABLE file
 
-`npm run lint` is a CI step now (2026-09-06) and exits clean, but it still prints
-`@typescript-eslint/no-unused-vars` warnings: unused imports in `Footer.astro`,
-`BusinessOverview.tsx`, the journal index and a couple of others, plus one unused
-`SHOW_THRESHOLD` in `BaseLayout.astro`. Warnings do not fail the run. The count grew
-from seven to eighteen in the art-direction pass (2026-09-21): mostly retired icon
-imports in `richSections.ts` and a couple of now-unused locals left behind when
-sections were rewritten. Triage them in a slop sweep (card 16); each is either a dead
-import to delete or a binding that was meant to be used and is not, which is the more
-interesting kind.
+`npm run lint` is a CI step now (2026-09-06) and exits clean. Warnings do not fail
+the run. The count grew from seven to eighteen in the art-direction pass
+(2026-09-21) and came down from eighteen to **one** in the 2026-09-22 cleanup
+(`chore/cleanup`). All seventeen fixed were dead: retired icon imports, an unused
+`headingAccentField` import and a never-called `proseBody` helper in
+`richSections.ts`, `useEffect` in `BeforeAfterSlider.tsx`, the unread catch binding
+in `CopyEmailButton.tsx` (now `catch {}`), `SHOW_THRESHOLD` in `BaseLayout.astro`
+(the header's show/hide runs on a +/-4px scroll delta and `HIDE_AFTER`; the 80px
+constant has been unread since the fork), and unused locals in `capture-blog.mjs`,
+`capture-pages.mjs`, `generate-logo-variants.mjs` and `pages/ministries.mjs` (an
+unused `pick` helper). None was a binding that was meant to be used and is not.
+
+The one left is `statSync`, imported and never used at line 93 of
+`scripts/scaffold.mjs`. That file is PORTABLE (the starter owns it), so the fix belongs in
+`ncs-astro-sanity-starter` first and comes here through `npm run sync-check`, not
+as a local edit.
 
 ### 7. Two PORTABLE scripts are excluded from prettier
 

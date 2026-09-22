@@ -207,7 +207,6 @@ function collectImages(scope, region, out) {
 // ---------------------------------------------------------------------------
 
 const BLOCK_SELECTOR = 'p,h1,h2,h3,h4,h5,h6,li,blockquote,figcaption,dt,dd,td,th,pre';
-const BLOCK_TAGS = new Set(BLOCK_SELECTOR.split(',').map((s) => s.toUpperCase()));
 
 function extractBodyText(main) {
   const lines = [];

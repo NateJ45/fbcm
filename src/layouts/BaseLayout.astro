@@ -600,7 +600,6 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           window.addEventListener('keydown', markGesture, { passive: true });
           window.addEventListener('pointerdown', markGesture, { passive: true });
 
-          const SHOW_THRESHOLD = 80; // small jitter buffer
           const HIDE_AFTER = 120;    // don't hide until past hero band
 
           // ---- data-scrolled ---------------------------------------------
