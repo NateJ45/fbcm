@@ -1397,7 +1397,9 @@
   object-fit: cover;
   object-position: 50% 15%;
 }
-/* GROUND */
+/* GROUND. The literal #17151f (ink) and #f4efe6 (cream) below are a deliberate
+   dark pin, like .bg-accent-dark: the band is always a dark photograph under
+   cream text, whatever the reader's theme, so theme tokens would flip wrongly. */
 .ph-ground-fig {
   position: relative;
   width: 100cqw;
