@@ -148,7 +148,7 @@ function cropFor(photo: any): { style?: string; className: string } {
                   return (
                     <article
                       id={person.slug || undefined}
-                      class="scroll-mt-[var(--header-offset)] border-t border-hair pt-6"
+                      class="min-w-0 scroll-mt-[var(--header-offset)] border-t border-hair pt-6"
                     >
                       {person.photo?.asset ? (
                         <div class="aspect-[4/5] w-full overflow-hidden" data-reveal>
@@ -176,7 +176,7 @@ function cropFor(photo: any): { style?: string; className: string } {
                       {person.email && (
                         <a
                           href={`mailto:${person.email}`}
-                          class="mt-2 inline-block font-body text-sm break-words text-foreground underline decoration-gold underline-offset-4"
+                          class="mt-2 inline-block max-w-full font-body text-sm break-words text-foreground underline decoration-gold underline-offset-4"
                         >
                           {person.email}
                         </a>
