@@ -10,6 +10,52 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-21 — The art-direction pass: a full identity and layout rebuild off the generic starter look._
+
+Nathan's read on the deployed plan-2 site was blunt: "very generic and plain... not
+portfolio quality... I wouldn't hand it over to the client." Research against a
+rubric scored it 6/20 against the best church sites in the country (King's Chapel,
+Trinity Wall Street, Washington National Cathedral, St Bride's, St Paul's London),
+and a photo-inventory audit found 118 real archive photographs against 22 in use.
+The type system is Castoro Titling (capitals only, no weight axis), Castoro (roman
+and italic) and Sofia Sans Semi Condensed, chosen from a five-system specimen page
+after the first proposal (Fraunces / Newsreader / Archivo) was rejected as "typical
+ai chosen fonts". Thirteen tasks, run as subagent-driven development with a fresh
+implementer per task and a task-scoped review after each:
+
+Header, footer and mobile menu rebuilt in the Stone Steps chrome idiom (an
+overlay header that goes transparent over a full-bleed hero, a drop-from-top
+indigo menu with numbered rows and a window-texture background, a footer with a
+live-updating "this Sunday" line and numbered columns). The hero gained a
+cross-fading photo slideshow with a WCAG 2.2.2 pause control, a live dated Sunday
+line (`src/lib/live-sunday.ts`, server-static then client-upgraded), and
+display-scale titling type. Every page-builder section was redrawn into the same
+editorial grammar: ruled rows, asymmetric grids, hairlines instead of cards,
+oldstyle figures, sticky narrow columns. A new shared derived-data module,
+`src/lib/spare-images.ts`, computes a pool of "spare" photographs once per page
+(from image/gallery/heritage blocks and unused hero frames) so a statement band,
+a Sunday-times door photo and a heritage detail strip can each borrow a real
+photograph with no schema change and no image ever borrowed twice. The journal
+(blog index, post template, 404, privacy) moved into the same reading face. A
+motion pass added scroll reveals on photographs and numerals, one hover language,
+and two ambient loops, with `prefers-reduced-motion` honoured throughout.
+
+Zero Sanity schema changes. Every task passed its own spec-and-quality review,
+several with fix rounds; load-bearing cross-task defects (a missing dark-mode
+value for `--color-gold-ink` that failed 34 axe-dark checks site-wide, a hero
+frame borrowed for the Sunday-times door that silently duplicated a photograph
+elsewhere on the home page, a plan instruction to delete the hero's pause control
+that would have shipped a WCAG 2.2.2 violation) were caught and fixed before they
+could compound. Closing gates found one real regression the per-task reviews
+missed: `StaffGrid.astro`'s email links sat in a `grid-cols-2` card and overflowed
+their column by up to 12px at the 320px reflow gate, because `overflow-wrap:
+break-word` does not reduce a shrink-to-fit element's own intrinsic width (fixed
+with `max-w-full`; the general lesson is CLAUDE.md rule 18). Merged to `main` at
+`183a61f` and deployed. Three unused starter font packages and three dead starter
+components (`FeaturedWork.astro`, `FeaturedJournal.astro`, `ProjectCard.astro`)
+came out in the same closing pass. `playwright.config.ts` lost its `PORTABLE`
+marker here: it now carries FBCM-specific `testMatch` entries (PORTS.md card 35).
+
 _2026-09-06 — The starter catches up: Sanity phase 1, the family test standard, and two workflows harvested from the retiring church starter._
 
 The starter had become the odd one out. It is structurally the canonical source (57 files carry the `PORTABLE` marker, PORTS.md has 44 cards, every client repo's `scripts/sync-check.mjs` diffs against it), but its stack and its gates were older than the sites it governs.

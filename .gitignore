@@ -83,3 +83,8 @@ test-results/
 # which limits the damage but is not a reason to commit one.
 sanity-backup-*.tar.gz
 sanity-backup-*.tar.gz.enc
+
+# Superpowers skill scratch (brainstorm state, subagent-driven-development
+# ledgers under .superpowers/sdd/<plan>/). Local working state, never repo
+# source; each SDD run's ledger is deleted once its final review is clean.
+.superpowers/

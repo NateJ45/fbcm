@@ -3494,13 +3494,23 @@ CMS-driven pages flakes with content.
   its contrast.
 
 **What is canonical here and what is not.** Marked `PORTABLE` and byte-exact
-across the family: `playwright.config.ts`, `tests/helpers.ts`,
-`tests/smoke.spec.ts`, `tests/a11y.spec.ts`, `tests/a11y-dark.spec.ts`,
-`tests/reflow.spec.ts`. Every per-site list was pushed OUT of them into
-`tests/routes.ts`, which is the seam: the route list, the hidden-route list, and
-`FORM_ROUTES`. `smoke.spec.ts` reads the title from `src/data/site.ts` rather
-than a literal, so `npm run apply-brand` cannot leave it asserting the previous
-project's name.
+across the family: `tests/helpers.ts`, `tests/smoke.spec.ts`,
+`tests/a11y.spec.ts`, `tests/a11y-dark.spec.ts`, `tests/reflow.spec.ts`. Every
+per-site list was pushed OUT of them into `tests/routes.ts`, which is the seam:
+the route list, the hidden-route list, and `FORM_ROUTES`. `smoke.spec.ts` reads
+the title from `src/data/site.ts` rather than a literal, so
+`npm run apply-brand` cannot leave it asserting the previous project's name.
+
+**`playwright.config.ts` lost its `PORTABLE` marker here (2026-09-21, the
+art-direction pass, task 13 cleanup).** The art-direction pass added
+site-specific spec files (`tests/header.spec.ts`, `tests/menu.spec.ts`,
+`tests/motion.spec.ts`), and `playwright.config.ts`'s `testMatch` grew entries
+naming them, which the family's canonical copy has no reason to carry (a
+church's header/menu/motion specs are not shared shape). This repo's copy is
+now FBCM-specific config, not this file's library-of-record copy; the
+canonical copy stays wherever the sibling repos last agreed it, unchanged by
+this. Whoever next syncs the family should read this repo's `playwright.config.ts`
+as a divergent fork, not a source to pull from.
 
 Deliberately NOT marked, and the reason matters: `ci.yml` and `lighthouse.yml`
 carry a per-site `env:` block of PUBLIC_SANITY_\* identifiers, and

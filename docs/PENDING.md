@@ -254,14 +254,17 @@ summary still reads 30 with the same 14/14/2 split, nothing has moved and this e
 If the numbers differ, find out which root moved before editing anything, and re-read the
 `--force` warning above before touching a dependency.
 
-### 5. Seven eslint warnings, all unused bindings
+### 5. Eighteen eslint warnings, all unused bindings
 
-`npm run lint` is a CI step now (2026-09-06) and exits clean, but it still prints seven
+`npm run lint` is a CI step now (2026-09-06) and exits clean, but it still prints
 `@typescript-eslint/no-unused-vars` warnings: unused imports in `Footer.astro`,
 `BusinessOverview.tsx`, the journal index and a couple of others, plus one unused
-`SHOW_THRESHOLD` in `BaseLayout.astro`. Warnings do not fail the run. Triage them in a
-slop sweep (card 16); each is either a dead import to delete or a binding that was meant
-to be used and is not, which is the more interesting kind.
+`SHOW_THRESHOLD` in `BaseLayout.astro`. Warnings do not fail the run. The count grew
+from seven to eighteen in the art-direction pass (2026-09-21): mostly retired icon
+imports in `richSections.ts` and a couple of now-unused locals left behind when
+sections were rewritten. Triage them in a slop sweep (card 16); each is either a dead
+import to delete or a binding that was meant to be used and is not, which is the more
+interesting kind.
 
 ### 7. Two PORTABLE scripts are excluded from prettier
 
@@ -515,6 +518,81 @@ Also worth a note on card 8/`sanityFetch`: a GROQ parse error in one section's
 projection (`[0...limit]`, a field reference as a slice bound) failed the ENTIRE
 home page query and fell back to defaults on a green build. `DYNAMIC_LIST_MAX`
 now ties the schema max and the slice with a drift test.
+
+---
+
+## Art-direction pass landed (2026-09-21)
+
+Branch `feat/art-direction`, thirteen tasks run as subagent-driven development,
+merged to `main` at `183a61f` and deployed. Full account of what changed is in
+`docs/agent/changelog.md`'s 2026-09-21 entry; this is what it leaves open.
+
+- **A real reflow-gate regression was found and fixed AFTER the merge, not
+  before it.** The branch's own closing gates were never run (the session ran
+  out of budget mid-Task-13 and Nathan finished the merge himself); the first
+  post-merge CI run on `main` caught it: `StaffGrid.astro`'s email links sat
+  in a `grid-cols-2` card and overflowed their column by up to 12px at the
+  320px reflow gate on `/staff`, `/ministries` and `/who-we-are`. Root cause:
+  `overflow-wrap: break-word` (Tailwind's `break-words`) does not reduce a
+  shrink-to-fit `inline-block` element's own intrinsic width, so an email
+  address with no spaces to break on rendered at its full unbroken width
+  regardless of its grid track being correctly held to 128px. Fixed with
+  `max-w-full` alongside `break-words`; the general lesson is CLAUDE.md rule 18. Committed directly to `main` (no branch) since the bug shipped there;
+  `npm run test:unit` (588 tests) and the full `reflow.spec.ts` suite both
+  green after the fix except the item below.
+- **A separate, much smaller reflow-gate finding is still open, unresolved.**
+  `/visit` and `/ministries` both report `scrollWidth` 2px over `clientWidth`
+  at 320px, present before the StaffGrid fix too (as 1px on `/visit` in the
+  original CI failure) and unrelated to it. Walking every element's
+  `getBoundingClientRect()` at the frame the test samples finds nothing whose
+  right edge actually exceeds 320px; the header itself sits at exactly 320.
+  Ruled out: any single element overflowing, the now-fixed StaffGrid email
+  pattern (`/visit` doesn't render `StaffGrid` at all and shows the same 2px),
+  and the skip-link's off-screen positioning. Two rounds of a substantially
+  different investigation each came up empty (CLAUDE.md's two-strike rule), so
+  this stopped rather than guessing further. Whoever
+  picks this up next should look at whether it's a Chromium
+  scrollbar-accounting quirk (`100vw` in `.bleed-right`/`.bleed-left`'s calc()
+  vs `document.documentElement.clientWidth`) rather than a content bug — it is
+  2px, present at 320px only, and identical in magnitude on both routes,
+  which points at something structural rather than page content.
+- **The `.superpowers/sdd/2026-09-20-fbcm-art-direction/` ledger no longer
+  exists.** It was git-ignored scratch inside the `fbcm-art-direction`
+  worktree; the worktree was removed as part of this closing pass (clean per
+  `git status`, which doesn't surface ignored files) without checking for it
+  first. The actual work product, every commit and its message, is intact in
+  `git log`; what's lost is the per-task review notes and controller-ruling
+  prose that lived only in that ledger. Nothing to do about it now, but it's
+  why this entry has to reconstruct the fix above from the CI log and the
+  diff rather than pointing at a ledger entry.
+- **`scripts/lib/lib/render-og.mjs` still duplicates `scripts/lib/render-og.mjs`,
+  and the two differ.** The art-direction plan's own Task 13 cleanup item said
+  to delete the `lib/lib` directory only if the files inside are byte-identical
+  to their real counterparts; `diff` says they are not, so it was left in
+  place per that conditional instruction. Whoever touches OG image generation
+  next should work out which copy is live (check what actually imports from
+  `scripts/lib/lib/`) and delete the other.
+- **The `/styleguide` visual-regression baseline is stale** (light and dark
+  both failed in the first post-merge CI run, `expect(page).toHaveScreenshot`).
+  Expected: the art-direction pass changed the page's rendered output from top
+  to bottom. Refresh it with `visual.yml`'s own `update` input, the same
+  pattern used for plan 2c's Task 6 refresh above.
+- **A production Lighthouse re-measure is owed**, same as plan 2c left open:
+  the branch changed layout, fonts and motion on every page, and the last
+  recorded Lighthouse numbers predate all of it.
+- **Per-page rubric scoring against the design spec's own bar was deferred**
+  to conserve the session's budget (Task 13 was trimmed after two dispatched
+  subagents died on rate/spend limits mid-close-out). The spec is
+  `docs/superpowers/specs/2026-09-20-fbcm-art-direction-design.md`; nobody has
+  scored the shipped site against it page by page.
+- **Everything plan 2c already left open and Nathan hasn't closed still
+  stands**: the hero-photo delivery decision, `PUBLIC_CF_ANALYTICS_TOKEN` /
+  `PUBLIC_GA_ID` before the domain moves, Search Console for the new host, the
+  church's photo day (still four thumbnail-only staff portraits and no
+  `mapImage` on Contact), the church's nine-item confirm list in
+  `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`, and plan 3
+  (the cutover). See "Plan 2c landed" just below for the full list; none of it
+  changed in this pass.
 
 ---
 
