@@ -534,3 +534,47 @@ test('a stega-carrying listItem "number" is still ordered (listItem is not in NO
   assert.ok(list && list.kind === 'plain');
   assert.equal(list.ordered, true);
 });
+
+// ---------- "Small heading" (h4) with no h3 ----------
+// The band's own heading is the h2, so h4 columns straight under it would skip
+// a level. With no h3 in the body, h4 is promoted to h3 before shape selection.
+const levels = (ps: RichPiece[]) =>
+  allPieces(ps).flatMap((x) => (x.kind === 'columns' ? [x.level] : []));
+
+test('a band with h4 and no h3 promotes its h4 groups to h3 (no skipped level)', () => {
+  const out = classifyRichText(
+    [p(words(20)), h4('Breakfast'), p(words(20)), h4('Lunch'), p(words(20))],
+    { hasHead: true },
+  );
+  assert.ok(!levels(out.pieces).includes('h4'));
+  assert.equal(out.shape, 'columns');
+  assert.deepEqual(levels(out.pieces), ['h3']);
+});
+
+test('a band with h3 AND h4 (ministries, Adults) keeps its h4 columns', () => {
+  const body = [
+    p(words(36)),
+    h3('Sunday morning'),
+    p(words(20)),
+    li('Alpha ' + words(11)),
+    li('Beta ' + words(8)),
+    h3('Life Groups'),
+    p(words(30)),
+    h3('Fellowship and other events'),
+    h4('Fresh Brewed Life'),
+    p(words(15)),
+    h4('Church Friends Lunch'),
+    p(words(12)),
+    h4('Service Trips'),
+    p(words(10)),
+    p('Adult Coordinator'),
+  ];
+  const out = classifyRichText(body, { hasHead: true });
+  assert.equal(out.shape, 'sections');
+  // the closing contact line is the foot, as on the live page
+  assert.deepEqual(kinds(out.pieces), ['lede', 'section', 'section', 'section', 'foot']);
+  assert.deepEqual(levels(out.pieces), ['h4']);
+  const last = out.pieces[3];
+  assert.ok(last.kind === 'section');
+  assert.equal(txt(last.head), 'Fellowship and other events');
+});

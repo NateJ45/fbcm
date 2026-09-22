@@ -302,7 +302,13 @@ export function classifyRichText(
   body: PtBlock[] | null | undefined,
   opts: { hasHead: boolean; narrow?: boolean; wide?: boolean },
 ): RichLayout {
-  const segs = segments(Array.isArray(body) ? body : []);
+  const raw = segments(Array.isArray(body) ? body : []);
+  // A "Small heading" (h4) with no h3 above it would sit straight under the
+  // band's h2 and skip a level, so with no h3 in the body the h4s ARE the h3s.
+  // A body that has h3 (ministries, Adults) keeps its h4 as a level below.
+  const segs: Seg[] = raw.some((s) => s.kind === 'h3')
+    ? raw
+    : raw.map((s) => (s.kind === 'h4' ? { kind: 'h3', b: s.b } : s));
   const continuation = !opts.hasHead;
   if (!segs.length) return { shape: 'prose', continuation, pieces: [] };
 
