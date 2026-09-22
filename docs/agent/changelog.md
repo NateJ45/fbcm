@@ -66,7 +66,7 @@ files alone get a 147,456 B ceiling, kept under the embedded Studio's
 **One schema change, made deliberately mid-branch with Nathan's sign-off.**
 Opening the Studio's Text field on the Ministries Adults band, which the
 seeded content already carried as `h4`, crashed with "Could not find Sanity
-schema type for style: h4" the section body schemas had never declared it.
+schema type for style: h4". The section body schemas had never declared it.
 Added `h4` ("Small heading") to the `proseBody` style list in `sections.ts`
 and `richSections.ts`, the one place both files need it; typegen and a
 render-identity diff (`dist/client/ministries/index.html` byte-identical
