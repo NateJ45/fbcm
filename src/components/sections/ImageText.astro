@@ -73,7 +73,11 @@ const mat = surface === 'muted' ? 'var(--color-background)' : 'var(--color-muted
 const blocks: PtBlock[] = Array.isArray(body) ? body : [];
 const hasPicture = !!image?.asset;
 const shape: PhotoShape = hasPicture ? shapeProp : 'row';
+// The alt ATTRIBUTE and every test run on the cleaned string; the visible
+// caption prints the RAW alt, so in the preview its stega payload survives and
+// the caption stays click-to-edit (note 2).
 const alt = splitStega(image?.alt ?? '').cleaned;
+const caption: string = image?.alt ?? '';
 const dims = photoAspect(image);
 
 // The lede: one rule for the whole site (src/lib/rich-shape.ts isLedeParagraph).
@@ -140,7 +144,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
             {alt && (
               <p class="ph-gcap">
                 <span class="ph-tick" />
-                <span class="ph-cap mt-0">{alt}</span>
+                <span class="ph-cap mt-0">{caption}</span>
               </p>
             )}
             <div class="ph-gbody rt-g">
@@ -206,7 +210,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                 {alt && (
                   <figcaption class="ph-cap">
                     <span class="ph-tick" />
-                    {alt}
+                    {caption}
                   </figcaption>
                 )}
               </figure>
@@ -234,7 +238,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                       {alt && (
                         <figcaption class="ph-cap">
                           <span class="ph-tick" />
-                          {alt}
+                          {caption}
                         </figcaption>
                       )}
                     </figure>
@@ -253,7 +257,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                       {alt && (
                         <figcaption class="ph-cap">
                           <span class="ph-tick" />
-                          {alt}
+                          {caption}
                         </figcaption>
                       )}
                     </figure>
@@ -272,7 +276,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                       {alt && (
                         <figcaption class="ph-cap">
                           <span class="ph-tick" />
-                          {alt}
+                          {caption}
                         </figcaption>
                       )}
                     </figure>
@@ -291,7 +295,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                       {alt && (
                         <figcaption class="ph-cap">
                           <span class="ph-tick" />
-                          {alt}
+                          {caption}
                         </figcaption>
                       )}
                     </figure>
