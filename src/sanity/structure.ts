@@ -50,6 +50,7 @@ import {
 import StudioGuide from './components/StudioGuide';
 import { makeGuideView } from './components/GuideView';
 import { guides, GUIDE_CATEGORIES } from './guides/content';
+import { GUIDE_ICONS } from './guides/icons';
 import BusinessOverview from './components/BusinessOverview';
 import { STAFF_GROUPS } from '../lib/church-derive';
 import { site } from '../data/site';
@@ -346,7 +347,7 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
                         S.listItem()
                           .id(`guide-${g.slug}`)
                           .title(g.title)
-                          .icon(() => g.icon)
+                          .icon(GUIDE_ICONS[g.icon])
                           .child(
                             S.component(makeGuideView(g.slug) as never)
                               .id(`guide-view-${g.slug}`)

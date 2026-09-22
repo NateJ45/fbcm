@@ -10,6 +10,20 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-22 — The Studio made easier to read._
+
+Nathan found the Studio hard to read. The cause was measurable: every label, list row
+and form field was set in Castoro, the site's reading serif, at Sanity's small UI sizes,
+and the Help guides drew their prose in the theme's muted grey (6.73:1 in the dark
+scheme against about 14.6:1 for ordinary text). The interface stack is now the system
+sans (his choice), with Castoro Titling kept for pane headings; `brand.config.json`'s
+`studio.fonts.body` was changed with it so `apply-brand` writes the same line back. The
+guides' paragraphs and leads are no longer muted (14.59:1 dark, 14.61:1 light). The guide
+icons are `@sanity/icons` components chosen by name (`src/sanity/guides/icons.ts`)
+instead of emoji, which Windows drew small and unevenly. The workspace title "My Studio",
+which also named the Studio's own photo source in every image menu, is now "First
+Baptist Studio", and the church-at-a-glance pane no longer says "business".
+
 _2026-09-22 — The Studio's Help guides, rewritten for the church secretary (PORTS.md card 41)._
 
 `src/sanity/guides/content.ts` was still the starter's design-studio template and had

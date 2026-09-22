@@ -74,11 +74,32 @@ export const GUIDE_CATEGORIES = [
 ] as const;
 export type GuideCategory = (typeof GUIDE_CATEGORIES)[number];
 
+/**
+ * The icon each guide shows, by NAME. src/sanity/guides/icons.ts maps each name
+ * to an @sanity/icons component. Names rather than emoji since 2026-09-22:
+ * Windows draws emoji small and inconsistently, and the rest of the desk uses
+ * @sanity/icons, so the Help list now matches it. Kept as plain strings so
+ * this file stays data and the unit test can import it without React.
+ */
+export const GUIDE_ICON_NAMES = [
+  'bulb',
+  'page',
+  'clock',
+  'bell',
+  'edit',
+  'users',
+  'heart',
+  'image',
+  'arrow',
+  'help',
+] as const;
+export type GuideIconName = (typeof GUIDE_ICON_NAMES)[number];
+
 export interface Guide {
   slug: string;
   category: GuideCategory;
   title: string;
-  icon: string;
+  icon: GuideIconName;
   lead: string;
   diy: DiyLevel;
   body: GuideBlock[];
@@ -90,7 +111,7 @@ export const guides: Guide[] = [
     slug: 'start-here',
     category: 'Start here',
     title: 'Start here: how this all works',
-    icon: '👋',
+    icon: 'bulb',
     lead: 'Two minutes that make everything else make sense.',
     diy: 'self',
     body: [
@@ -153,7 +174,7 @@ export const guides: Guide[] = [
     slug: 'edit-a-page',
     category: 'Start here',
     title: 'Change a page: its words and its sections',
-    icon: '📄',
+    icon: 'page',
     lead: 'Every page is a stack of bands. You edit what is in each band, and the order they come in.',
     diy: 'self',
     body: [
@@ -215,7 +236,7 @@ export const guides: Guide[] = [
     slug: 'service-times',
     category: 'Sundays and notices',
     title: 'Change the service time or the Sunday details',
-    icon: '🕰️',
+    icon: 'clock',
     lead: 'One setting, and then the pages that repeat it.',
     diy: 'mixed',
     body: [
@@ -278,7 +299,7 @@ export const guides: Guide[] = [
     slug: 'announcement',
     category: 'Sundays and notices',
     title: 'Put a notice across the top of every page',
-    icon: '📣',
+    icon: 'bell',
     lead: 'For a closing, a change of plan, or news everyone should see.',
     diy: 'self',
     body: [
@@ -318,7 +339,7 @@ export const guides: Guide[] = [
     slug: 'blog-post',
     category: 'Blog, staff and ministries',
     title: 'Add a blog post or a sermon preview',
-    icon: '✍️',
+    icon: 'edit',
     lead: 'A new post appears on the Blog page, newest first, by itself.',
     diy: 'self',
     body: [
@@ -368,7 +389,7 @@ export const guides: Guide[] = [
     slug: 'staff',
     category: 'Blog, staff and ministries',
     title: 'Add, change or remove a staff member',
-    icon: '🧑‍🤝‍🧑',
+    icon: 'users',
     lead: 'The Staff page, and the "people to talk to" on the Ministries page, read from here.',
     diy: 'self',
     body: [
@@ -424,7 +445,7 @@ export const guides: Guide[] = [
     slug: 'ministries',
     category: 'Blog, staff and ministries',
     title: 'Update a ministry and who leads it',
-    icon: '🤝',
+    icon: 'heart',
     lead: 'The Ministries page is a page like any other. Edit it there.',
     diy: 'mixed',
     body: [
@@ -468,7 +489,7 @@ export const guides: Guide[] = [
     slug: 'photos',
     category: 'Pictures',
     title: 'Add or change a photo',
-    icon: '📷',
+    icon: 'image',
     lead: 'Where photos come from, and the one sentence each one needs.',
     diy: 'self',
     body: [
@@ -520,7 +541,7 @@ export const guides: Guide[] = [
     slug: 'old-web-addresses',
     category: 'When something is wrong',
     title: 'Old web addresses and links that moved',
-    icon: '↪️',
+    icon: 'arrow',
     lead: 'Anyone with an old link, a bookmark or a printed bulletin should still arrive.',
     diy: 'self',
     body: [
@@ -567,7 +588,7 @@ export const guides: Guide[] = [
     slug: 'who-to-ask',
     category: 'When something is wrong',
     title: 'Who to ask, and what to send',
-    icon: '🛟',
+    icon: 'help',
     lead:
       'If something looks wrong, stop and ask ' +
       SITE.contactName +

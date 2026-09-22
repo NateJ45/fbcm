@@ -498,10 +498,9 @@ changing the guide that mentions it in the same commit.
   `page`, but `.github/workflows/publish-due.yml` still has its schedule
   commented out. The `who-to-ask` guide tells the secretary to leave it empty.
   Either switch the workflow on or hide the field.
-- **The workspace is still titled "My Studio"** (`sanity.config.ts`, `title`).
-  It shows in the Studio's top-left, every browser tab, and as the name of the
-  Studio's own photo source in every image field's menu ("Upload / My Studio /
-  Unsplash / Media"), which will puzzle an editor.
+- ~~**The workspace is still titled "My Studio"**~~ Fixed 2026-09-22
+  (feat/studio-readability): now "First Baptist Studio", which is also what
+  every image menu calls the Studio's own photo source.
 - **The Presentation page list shows the Blog page as "Journal"** and pages by
   their document titles ("Plan a visit", "What we believe", "Our history"),
   which differ from the menu names. The guide explains it; renaming the
@@ -516,8 +515,8 @@ changing the guide that mentions it in the same commit.
 - **There is no Unpublish for staff members** (their document menu has only
   Duplicate and Delete in this Sanity version), so "someone leaves" means
   Delete. A "Show on the Staff page" switch would be kinder.
-- **`BusinessOverview.tsx` still headings its pane "Your business at a
-  glance"** while the desk calls it "Your church at a glance".
+- ~~**`BusinessOverview.tsx` still headings its pane "Your business at a
+  glance"**~~ Fixed 2026-09-22 (feat/studio-readability).
 - **GuideView's "Take me there" links produce `#//structure/...`** (double
   slash, because `basePath` is `/` under hash routing). They work; cosmetic,
   and GuideView is PORTABLE, so it belongs on PORTS.md card 41.

@@ -63,12 +63,18 @@ import { PAGE_BUILDER_TYPES } from './src/sanity/pageBuilderConfig';
 // time, and a post-hoc `theme.fonts.family` patch is ignored. Point these at
 // whatever `npm run apply-brand` writes into globals.css; the stacks below end
 // in system fallbacks so a fresh clone with no font files still reads well.
+//
+// FBCM, 2026-09-22: the body/label stack is the SYSTEM sans on purpose. The
+// site's reading serif (Castoro) set every label, list row and form field at
+// Sanity's small UI sizes and was hard to read; Nathan chose system sans for
+// the interface and kept Castoro Titling for pane headings only.
 // =============================================================================
 // These two lines are REWRITTEN by `npm run apply-brand` from
 // brand/brand.config.json (studio.fonts.display / studio.fonts.body). Keep them
 // as single-quoted one-line string literals or the rewrite will not match.
 const DISPLAY_STACK = '"Castoro Titling", Georgia, serif';
-const BODY_STACK = '"Castoro", Georgia, serif';
+const BODY_STACK =
+  'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 
 function withFamily(font: ThemeFont, family: string): ThemeFont {
   return { ...font, family };
@@ -96,7 +102,7 @@ const IS_DEV =
 export default defineConfig({
   name: 'my-studio',
   // Short title shown in the browser tab when editing. Update per project.
-  title: 'My Studio',
+  title: 'First Baptist Studio',
 
   projectId:
     envVal('SANITY_STUDIO_PROJECT_ID', 'PUBLIC_SANITY_PROJECT_ID') || 'placeholder-project-id',

@@ -3,6 +3,7 @@ import type { ComponentType } from 'react';
 import { useWorkspace } from 'sanity';
 import { useRouter } from 'sanity/router';
 import { guides, SITE, type DiyLevel, type GuideBlock, type PathLink } from '../guides/content';
+import { GUIDE_ICONS } from '../guides/icons';
 
 // =============================================================================
 // GuideView — read-only Help pane rendered inside the Studio structure
@@ -183,9 +184,12 @@ function BlockView({ block }: { block: GuideBlock }) {
           {block.text}
         </Heading>
       );
+    // Not `muted`: in the dark scheme muted text measured 6.7:1 against the
+    // pane, readable but visibly dim for the guides' main prose. Full-strength
+    // text is ~14:1. Muted is kept for the "See also" line only.
     case 'p':
       return (
-        <Text size={2} muted style={{ lineHeight: 1.6 }}>
+        <Text size={2} style={{ lineHeight: 1.6 }}>
           <RichText text={block.text} />
         </Text>
       );
@@ -303,11 +307,14 @@ export function makeGuideView(slug: string): ComponentType {
                 width: 40,
                 height: 40,
                 borderRadius: 12,
-                fontSize: 20,
+                fontSize: 25,
                 flexShrink: 0,
               }}
             >
-              {guide.icon}
+              {(() => {
+                const Icon = GUIDE_ICONS[guide.icon];
+                return <Icon />;
+              })()}
             </span>
             <Heading as="h1" size={4}>
               {guide.title}
@@ -315,7 +322,7 @@ export function makeGuideView(slug: string): ComponentType {
             <DiyBadge level={guide.diy} />
           </Flex>
           <Box marginTop={3}>
-            <Text size={2} muted style={{ lineHeight: 1.6 }}>
+            <Text size={2} style={{ lineHeight: 1.6 }}>
               {guide.lead}
             </Text>
           </Box>
