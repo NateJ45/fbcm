@@ -1027,6 +1027,8 @@
   line-height: 1.45;
 }
 .rt-triad > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding-right: 14px;
   margin-right: 14px;
   border-right: 1px solid var(--hair-strong);
