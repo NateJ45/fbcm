@@ -460,11 +460,16 @@ export function ledeEchoes(
 ): boolean {
   const ex = norm(cleaned(excerpt)).slice(0, 60).trim();
   if (!ex || !Array.isArray(body)) return false;
-  const first = body.find(
+  const texts = body.filter(
     (n) =>
       (isParagraph(n) || n._type === 'journalPoint' || n._type === 'journalQA') && textOf(n).trim(),
   );
-  return !!first && norm(textOf(first)).includes(ex);
+  const echoes = (n: BodyNode | undefined) => !!n && norm(textOf(n)).includes(ex);
+  // A sermon preview opens "This is a sermon preview for...", and its excerpt is
+  // usually the first paragraph AFTER that line (and after the reading, which is
+  // a journalLection and so never in `texts`). Look one paragraph past it.
+  const opener = texts[0] && /^this is a sermon preview/i.test(norm(textOf(texts[0])));
+  return echoes(texts[0]) || (!!opener && echoes(texts[1]));
 }
 
 /** The text of the first `n` text blocks, for readingOf / seriesOf. */

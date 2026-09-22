@@ -389,6 +389,29 @@ test('ledeEchoes looks at the first paragraph only, past headings and lists', ()
   assert.equal(ledeEchoes('An opening line.', body), true);
 });
 
+test('ledeEchoes looks past a sermon-preview opener and the reading', () => {
+  const body = [
+    p('This is a sermon preview for the second week of our Kingdom Family Values series.'),
+    { _type: 'journalLection', _key: 'lec', reference: 'Matthew 19:1-14', blocks: [] },
+    p('We often bring with us a lot of assumptions about marriage. The Pharisees did the same.'),
+  ];
+  assert.equal(
+    ledeEchoes(
+      'We often bring with us a lot of assumptions about marriage. The Pharisees did too.',
+      body,
+    ),
+    true,
+  );
+  // only the opener is skipped: a later echo still counts as a fresh standfirst
+  assert.equal(
+    ledeEchoes(
+      'This is a sermon preview for the second week of our Kingdom Family Values series.',
+      body,
+    ),
+    true,
+  );
+});
+
 test('openingText joins the first six text blocks; listenHref finds the channel link', () => {
   const first = link('livestream page', 'https://fbcmuncie.churchcenter.com/channels/12345');
   const body = [
