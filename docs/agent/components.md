@@ -143,7 +143,8 @@ truth are still the reference for what each branch should look like:
   - `legend`: aspect 1.8 or more, and the body has a paragraph containing
     "left to right" followed by 3 to 8 list items (the names), optionally a
     footnote starting with `*`. ImageText lifts the label, names and
-    footnote out of the body.
+    footnote out of the body; if that lookup finds nothing in what is left
+    after the lede, the band falls back to `row` (`resolveLegend`).
   - `plate`: aspect under 1.25, and the alt text or eyebrow names a year from
     1500 to 1949. Matted, never cropped.
   - `ground`: aspect 1.3 or more and the image 2000px wide or more, not the

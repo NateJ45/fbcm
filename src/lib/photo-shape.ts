@@ -55,6 +55,21 @@ export function findLegend(body: PtBlock[] | null | undefined) {
   return null;
 }
 
+/**
+ * The legend a band can actually draw. The page pass (assignPhotoShapes) runs
+ * findLegend on the WHOLE body; ImageText looks only at the body left after
+ * its lede, where the label may no longer be. A legend with nothing to lift
+ * falls back to a row, never to a legend band with no names.
+ */
+export function resolveLegend(
+  shape: PhotoShape,
+  rest: PtBlock[],
+): { shape: PhotoShape; legend: ReturnType<typeof findLegend> } {
+  if (shape !== 'legend') return { shape, legend: null };
+  const legend = findLegend(rest);
+  return legend ? { shape, legend } : { shape: 'row', legend: null };
+}
+
 export function assignPhotoShapes(
   rows: PhotoRow[],
   opts: { heroHasPhoto?: boolean } = {},

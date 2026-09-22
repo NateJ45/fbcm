@@ -39,7 +39,7 @@ import CtaLink from '@/components/CtaLink.astro';
 import RichBody from '@/components/sections/RichBody.astro';
 import Lancet from '@/components/sections/Lancet.astro';
 import { classifyRichText, isLedeParagraph } from '@/lib/rich-shape';
-import { photoAspect, findLegend, type PhotoShape } from '@/lib/photo-shape';
+import { photoAspect, resolveLegend, type PhotoShape } from '@/lib/photo-shape';
 import { toPt, type PtBlock } from '@/lib/span-split';
 import { splitStega } from '@/lib/preview-stega';
 
@@ -72,7 +72,7 @@ const band = surface === 'muted' ? 'var(--color-muted)' : 'var(--color-backgroun
 const mat = surface === 'muted' ? 'var(--color-background)' : 'var(--color-muted)';
 const blocks: PtBlock[] = Array.isArray(body) ? body : [];
 const hasPicture = !!image?.asset;
-const shape: PhotoShape = hasPicture ? shapeProp : 'row';
+const assigned: PhotoShape = hasPicture ? shapeProp : 'row';
 // The alt ATTRIBUTE and every test run on the cleaned string; the visible
 // caption prints the RAW alt, so in the preview its stega payload survives and
 // the caption stays click-to-edit (note 2).
@@ -86,8 +86,10 @@ const runLength = firstRun === -1 ? blocks.length : firstRun;
 const ledeBlock = isLedeParagraph(blocks[0], runLength, blocks.length - 1) ? blocks[0] : null;
 let rest = ledeBlock ? blocks.slice(1) : blocks;
 
-// The legend lifts its label, names and footnote out of the body.
-const legend = shape === 'legend' ? findLegend(rest) : null;
+// The legend lifts its label, names and footnote out of the body. The shape is
+// settled here, after the lede, so the whole template sees a legend that has
+// nothing left to lift as the row it falls back to (resolveLegend).
+const { shape, legend } = resolveLegend(assigned, rest);
 const legendLabel = legend ? rest[legend.labelIndex] : null;
 const legendNames = legend ? rest.slice(legend.listStart, legend.listEnd) : [];
 const legendFoot = legend && legend.footIndex !== null ? rest[legend.footIndex] : null;

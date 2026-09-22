@@ -4,6 +4,7 @@ import {
   photoAspect,
   isArchival,
   findLegend,
+  resolveLegend,
   assignPhotoShapes,
   type PhotoRow,
 } from './photo-shape.ts';
@@ -97,4 +98,25 @@ test('ground budget: a second ground only four rows later on a long page, never 
 
 test('a row with no picture gets no shape', () => {
   assert.equal(assignPhotoShapes([{ _type: 'imageTextSection', image: null }]).size, 0);
+});
+
+test('resolveLegend: a legend whose names are still in the rest keeps its legend', () => {
+  const rest = [p('Pictured left to right:'), li('A'), li('B'), li('C')];
+  const r = resolveLegend('legend', rest);
+  assert.equal(r.shape, 'legend');
+  assert.deepEqual(r.legend, { labelIndex: 0, listStart: 1, listEnd: 4, footIndex: null });
+});
+
+test('resolveLegend: a legend with nothing left to find falls back to row', () => {
+  // The page pass saw the whole body; ImageText looks only at what is left
+  // after the lede, so the label can be gone by then.
+  const r = resolveLegend('legend', [li('A'), li('B'), li('C')]);
+  assert.equal(r.shape, 'row');
+  assert.equal(r.legend, null);
+});
+
+test('resolveLegend: any other shape passes through without a lookup', () => {
+  const rest = [p('Pictured left to right:'), li('A'), li('B'), li('C')];
+  assert.deepEqual(resolveLegend('ground', rest), { shape: 'ground', legend: null });
+  assert.deepEqual(resolveLegend('row', rest), { shape: 'row', legend: null });
 });
