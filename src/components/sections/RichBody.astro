@@ -7,31 +7,27 @@
 // cleaned text by construction (src/lib/span-split.ts).
 import PortableText from '@/components/PortableText';
 import type { RichPiece } from '@/lib/rich-shape';
-import type { PtBlock } from '@/lib/span-split';
-import type { PortableTextBlock } from '@portabletext/types';
+import { toPt } from '@/lib/span-split';
 
 interface Props {
   pieces: RichPiece[];
 }
 const { pieces } = Astro.props as Props;
-// PtBlock is the classifier's loose read of a block (children optional);
-// the renderer wants the library type. Same object, narrower claim.
-const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
 ---
 
 {
   pieces.map((x) =>
     x.kind === 'lede' ? (
       <div class="rt-lede rt-v">
-        <PortableText value={one(x.block)} variant="bare" />
+        <PortableText value={toPt(x.block)} variant="bare" />
       </div>
     ) : x.kind === 'standfirst' ? (
       <div class="rt-standfirst">
-        <PortableText value={one(x.block)} variant="bare" />
+        <PortableText value={toPt(x.block)} variant="bare" />
       </div>
     ) : x.kind === 'leadin' ? (
       <div class="rt-leadin">
-        <PortableText value={one(x.block)} variant="bare" />
+        <PortableText value={toPt(x.block)} variant="bare" />
       </div>
     ) : x.kind === 'measure' || x.kind === 'run2' || x.kind === 'run3' ? (
       <div class={`rt-${x.kind} rt-v`}>
@@ -39,10 +35,10 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
           q.label ? (
             <div class="rt-runin">
               <span class="rt-rl font-ui text-ui">{q.label}</span>
-              <PortableText value={one(q.block)} variant="bare" />
+              <PortableText value={toPt(q.block)} variant="bare" />
             </div>
           ) : (
-            <PortableText value={one(q.block)} variant="bare" />
+            <PortableText value={toPt(q.block)} variant="bare" />
           ),
         )}
       </div>
@@ -52,7 +48,7 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
           <div class="rt-row">
             {r.name ? <p class="rt-nm">{r.name}</p> : null}
             <div class="rt-ds" style={r.name ? undefined : 'grid-column:1/12'}>
-              <PortableText value={one(r.tail)} variant="bare" />
+              <PortableText value={toPt(r.tail)} variant="bare" />
             </div>
           </div>
         ))}
@@ -65,7 +61,7 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
               <span>{x.prefix}</span>
             </span>
             <span class="rt-tx">
-              <PortableText value={one(it)} variant="bare" />
+              <PortableText value={toPt(it)} variant="bare" />
             </span>
           </li>
         ))}
@@ -75,7 +71,7 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
         {x.items.map((it) => (
           <span>
             {x.prefix && <span class="rt-pre">{x.prefix} </span>}
-            <PortableText value={one(it)} variant="bare" />
+            <PortableText value={toPt(it)} variant="bare" />
           </span>
         ))}
       </div>
@@ -83,7 +79,7 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
       <ul class="rt-index rt-v">
         {x.items.map((it) => (
           <li>
-            <PortableText value={one(it)} variant="bare" />
+            <PortableText value={toPt(it)} variant="bare" />
           </li>
         ))}
       </ul>
@@ -92,7 +88,7 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
         {x.items.map((it) => (
           <li class="rt-row">
             <span class="rt-it">
-              <PortableText value={one(it)} variant="bare" />
+              <PortableText value={toPt(it)} variant="bare" />
             </span>
           </li>
         ))}
@@ -101,7 +97,7 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
       <>
         <div class="rt-sect">
           <h3 class="rt-h3">
-            <PortableText value={one(x.head)} variant="bare" />
+            <PortableText value={toPt(x.head)} variant="bare" />
           </h3>
         </div>
         <Astro.self pieces={x.pieces} />
@@ -112,11 +108,11 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
           <div class:list={['rt-col', g.big && 'is-big']}>
             {x.level === 'h3' ? (
               <h3 class="rt-h3">
-                <PortableText value={one(g.head)} variant="bare" />
+                <PortableText value={toPt(g.head)} variant="bare" />
               </h3>
             ) : (
               <h4 class="rt-h4">
-                <PortableText value={one(g.head)} variant="bare" />
+                <PortableText value={toPt(g.head)} variant="bare" />
               </h4>
             )}
             <Astro.self pieces={g.pieces} />
@@ -138,7 +134,7 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
       </div>
     ) : x.kind === 'foot' ? (
       <div class="rt-foot">
-        <PortableText value={one(x.block)} variant="bare" />
+        <PortableText value={toPt(x.block)} variant="bare" />
       </div>
     ) : null,
   )

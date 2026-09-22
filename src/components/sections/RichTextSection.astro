@@ -24,8 +24,7 @@ import RichBody from '@/components/sections/RichBody.astro';
 import { surfaceClass } from '@/lib/surfaces';
 import { classifyRichText } from '@/lib/rich-shape';
 import PortableText from '@/components/PortableText';
-import type { PortableTextBlock } from '@portabletext/types';
-import type { PtBlock } from '@/lib/span-split';
+import { toPt } from '@/lib/span-split';
 
 interface Props {
   eyebrow?: string;
@@ -53,7 +52,6 @@ const bg = surfaceClass(surface);
 const hasHead = !!(heading || eyebrow);
 const layout = classifyRichText(body, { hasHead });
 const measure = layout.pieces[0];
-const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
 ---
 
 <section
@@ -82,7 +80,7 @@ const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
             </div>
             <div class:list={['rt-rt', layout.rowLong && 'is-long']}>
               {measure.paras.map((q) => (
-                <PortableText value={one(q.block)} variant="bare" />
+                <PortableText value={toPt(q.block)} variant="bare" />
               ))}
             </div>
           </div>

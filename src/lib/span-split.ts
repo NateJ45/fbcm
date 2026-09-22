@@ -13,6 +13,7 @@
 // A split whose point is not inside the FIRST span (a mark straddles it) is
 // refused, and the caller falls back to rendering the block whole.
 import { splitStega } from './preview-stega.ts';
+import type { PortableTextBlock } from '@portabletext/types';
 
 export interface PtSpan {
   _type: 'span';
@@ -29,6 +30,11 @@ export interface PtBlock {
   children?: PtSpan[];
   markDefs?: unknown[];
 }
+
+/** One block, typed for the PortableText renderer. PtBlock is the classifier's
+ *  loose read of a block (children optional); the renderer wants the library
+ *  type. Same object, narrower claim. */
+export const toPt = (b: PtBlock): PortableTextBlock[] => [b] as unknown as PortableTextBlock[];
 
 const clean = (s: string): string => splitStega(s ?? '').cleaned;
 
