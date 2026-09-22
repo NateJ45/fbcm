@@ -26,6 +26,7 @@ export type RichPiece =
   | { kind: 'leadin'; block: PtBlock }
   | { kind: 'measure' | 'run2' | 'run3'; paras: RichPara[] }
   | { kind: 'table'; rows: { name: string | null; tail: PtBlock }[] }
+  | { kind: 'labelled'; rows: { label: PtBlock; body: PtBlock[] }[] }
   | { kind: 'said'; prefix: string; hang: boolean; items: PtBlock[] }
   | { kind: 'triad'; prefix: string; items: PtBlock[] }
   | { kind: 'index' | 'plain'; items: PtBlock[] }
@@ -54,6 +55,7 @@ type Seg =
 interface Ctx {
   runIn: boolean;
   narrow: boolean;
+  wide: boolean;
 }
 
 const text = (b: PtBlock) => blockText(b).trim();
@@ -161,6 +163,42 @@ function proseRun(run: PtBlock[], ctx: Ctx): RichPiece[] {
   return sets.map((s) => ({ kind, paras: s }));
 }
 
+// WIDE (opt-in; ImageText passes it only for a photo GROUND). The prototype's
+// ground flow (photos/index.html, flow(body, { wide: true })) has two rules the
+// Ledger lacks. A LABEL is a paragraph of five words or fewer with no terminal
+// punctuation; followed by a paragraph that is not a label, it opens a
+// labelled row whose description is every paragraph up to the next label
+// ("Nursery Care (104)" beside its own text, never beside another room's). A
+// run of two or more paragraphs up to 180 words is a two-column set; anything
+// else is one measure. Cleaned text only (wordsOf, text).
+const isLabel = (b: PtBlock | undefined) =>
+  !!b && wordsOf(b) <= 5 && !/[.!?:,;]["”’]?$/.test(text(b));
+
+function wideRun(run: PtBlock[], ctx: Ctx): RichPiece[] {
+  const labelAt = (i: number) => isLabel(run[i]) && i + 1 < run.length && !isLabel(run[i + 1]);
+  const out: RichPiece[] = [];
+  let i = 0;
+  while (i < run.length) {
+    if (labelAt(i)) {
+      const rows: { label: PtBlock; body: PtBlock[] }[] = [];
+      while (i < run.length && labelAt(i)) {
+        const label = run[i++];
+        const body: PtBlock[] = [];
+        while (i < run.length && !labelAt(i)) body.push(run[i++]);
+        rows.push({ label, body });
+      }
+      out.push({ kind: 'labelled', rows });
+    } else {
+      const prose: PtBlock[] = [];
+      while (i < run.length && !labelAt(i)) prose.push(run[i++]);
+      const T = prose.reduce((n, b) => n + wordsOf(b), 0);
+      const paras = prose.map((b) => para(b, ctx));
+      out.push({ kind: prose.length >= 2 && T <= 180 ? 'run2' : 'measure', paras });
+    }
+  }
+  return out;
+}
+
 function flow(
   segs: Seg[],
   ctx: Ctx,
@@ -187,7 +225,7 @@ function flow(
       let leadin: PtBlock | null = null;
       const last = run.at(-1);
       if (last && nextIsList && endsColon(last) && wordsOf(last) <= 25) leadin = run.pop()!;
-      out.push(...proseRun(run, ctx));
+      out.push(...(ctx.wide && !ctx.narrow ? wideRun(run, ctx) : proseRun(run, ctx)));
       if (leadin) out.push({ kind: 'leadin', block: leadin });
     } else if (s.kind === 'list') {
       out.push(listPiece(s.items));
@@ -245,7 +283,7 @@ function pullFoot(segs: Seg[]): { segs: Seg[]; foot: PtBlock | null } {
 
 export function classifyRichText(
   body: PtBlock[] | null | undefined,
-  opts: { hasHead: boolean; narrow?: boolean },
+  opts: { hasHead: boolean; narrow?: boolean; wide?: boolean },
 ): RichLayout {
   const segs = segments(Array.isArray(body) ? body : []);
   const continuation = !opts.hasHead;
@@ -259,6 +297,7 @@ export function classifyRichText(
   const ctx: Ctx = {
     runIn: paras.filter((x) => runInSplit(x.b)).length >= 2,
     narrow: !!opts.narrow,
+    wide: !!opts.wide,
   };
 
   let shape: RichShape;
@@ -274,6 +313,7 @@ export function classifyRichText(
     shape = 'columns';
   else if (H3 >= 1 || H4 >= 2) shape = 'sections';
   else if (
+    !opts.wide &&
     paras.length >= 8 &&
     paras.filter((x) => wordsOf(x.b) <= 35).length / paras.length >= 0.8
   )

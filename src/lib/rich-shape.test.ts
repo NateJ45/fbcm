@@ -338,3 +338,119 @@ test('SECTIONS: a one-paragraph intro before the h3 groups is a lede (ministries
   // A headingless band never takes a lede, whatever follows.
   assert.notEqual(classifyRichText(body, { hasHead: false }).pieces[0].kind, 'lede');
 });
+
+// ---------- wide: the photo GROUND's body (opt-in, ImageText only) ----------
+// The prototype's ground flow (photos/index.html, flow(body, { wide: true })):
+// a short unpunctuated paragraph followed by a real one is a LABELLED row, and
+// a run of 2+ paragraphs up to 180 words is a two-column set.
+const visitChildren = () => [
+  p('Nursery Care (104)'),
+  p('For children ages 3 and younger, nursery care is available throughout the service.'),
+  p('Family Room (105)'),
+  p(
+    'For little ones and parents who need to step out during service, this room provides toys, a live stream, rocking chairs, nursing privacy, and a changing table for all who desire it.',
+  ),
+  p("Children's Church (B-03 & 102)"),
+  p("Students preschool - fifth grade will be dismissed to Children's Church during the service."),
+  p('There are two classes.'),
+  p("Preschool - 2nd grade: Kickstart Children's Church (102)"),
+  p("3rd - 5th grade: The Underground Children's Church (B-03)"),
+];
+const labelled = (ps: RichPiece[]) =>
+  ps.find((x): x is Extract<RichPiece, { kind: 'labelled' }> => x.kind === 'labelled');
+const txt = (b: PtBlock) => (b.children ?? []).map((c) => c.text).join('');
+
+test('wide: label/description pairs become labelled rows, each label beside its own text', () => {
+  const body = visitChildren();
+  const out = classifyRichText(body, { hasHead: false, wide: true });
+  assert.notEqual(out.shape, 'register');
+  assert.deepEqual(kinds(out.pieces), ['labelled']);
+  const rows = labelled(out.pieces)!.rows;
+  assert.deepEqual(
+    rows.map((r) => txt(r.label)),
+    ['Nursery Care (104)', 'Family Room (105)', "Children's Church (B-03 & 102)"],
+  );
+  // the label keeps its BLOCK (click-to-edit in the preview), not a string
+  assert.equal(rows[0].label, body[0]);
+  assert.deepEqual(
+    rows.map((r) => r.body.length),
+    [1, 1, 4],
+  );
+  assert.equal(rows[0].body[0], body[1]);
+});
+
+test('wide: a short paragraph WITH terminal punctuation is not a label', () => {
+  // control: the same paragraph without the punctuation IS a label
+  const ok = classifyRichText([p('Nursery care'), p(words(12)), p(words(12))], {
+    hasHead: false,
+    wide: true,
+  });
+  assert.equal(labelled(ok.pieces)?.rows.length, 1);
+  for (const end of ['.', ':', '!', '?', ',', ';']) {
+    const out = classifyRichText([p(`Nursery care${end}`), p(words(12)), p(words(12))], {
+      hasHead: false,
+      wide: true,
+    });
+    assert.equal(labelled(out.pieces), undefined, `label ending "${end}"`);
+  }
+});
+
+test('wide: a trailing label with no description is not a row', () => {
+  const out = classifyRichText([p(words(20)), p(words(20)), p('Contact the office')], {
+    hasHead: false,
+    wide: true,
+  });
+  assert.equal(labelled(out.pieces), undefined);
+  const out2 = classifyRichText([p('Family Room'), p(words(10)), p('Nursery Care')], {
+    hasHead: false,
+    wide: true,
+  });
+  const rows = labelled(out2.pieces)!.rows;
+  assert.deepEqual(
+    rows.map((r) => txt(r.label)),
+    ['Family Room'],
+  );
+});
+
+test('wide: 2+ paragraphs up to 180 words set as two columns; 181 words do not', () => {
+  const at = (a: number, b: number) =>
+    kinds(classifyRichText([p(words(a)), p(words(b))], { hasHead: false, wide: true }).pieces);
+  assert.deepEqual(at(90, 90), ['run2']);
+  assert.deepEqual(at(90, 91), ['measure']);
+  // one paragraph is never a set
+  assert.deepEqual(kinds(classifyRichText([p(words(40))], { hasHead: false, wide: true }).pieces), [
+    'measure',
+  ]);
+});
+
+test('wide absent (or false) leaves the existing outputs unchanged', () => {
+  const covenant = [
+    p(
+      'We, the members of this church, through the grace of God, humbly and solemnly undertake with His aid:',
+    ),
+    li('To attend the worship and services of this church regularly.'),
+    li('To contribute cheerfully and regularly to the financial support of the work.'),
+    li('To aid and assist prayerfully the minister.'),
+    p(words(10)),
+  ];
+  const lifeGroups = [
+    h3('Life Groups'),
+    li('Charis | For college students.'),
+    li('Snowbirds | Locations vary.'),
+    li('Loose item'),
+  ];
+  const register = visitChildren();
+  const cases: [PtBlock[], boolean, string, string[]][] = [
+    [covenant, true, 'ledger', ['lede', 'said', 'measure']],
+    [lifeGroups, true, 'sections', ['section']],
+    [register, false, 'register', ['register']],
+    [register, true, 'register', ['register']],
+  ];
+  for (const [body, hasHead, shape, ks] of cases) {
+    const base = classifyRichText(body, { hasHead });
+    assert.equal(base.shape, shape);
+    assert.deepEqual(kinds(base.pieces), ks);
+    assert.deepEqual(classifyRichText(body, { hasHead, wide: false }), base);
+    assert.deepEqual(classifyRichText(body, { hasHead, narrow: false }), base);
+  }
+});
