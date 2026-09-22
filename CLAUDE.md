@@ -1,22 +1,10 @@
 # First Baptist Church Muncie — CLAUDE.md
 
-**What this repo is.** The First Baptist Church Muncie website (309 East Adams Street, Muncie, IN 47305), forked from `ncs-astro-sanity-starter` on 2026-09-18 and replacing the church's Wix site. The binding spec is `docs/superpowers/specs/2026-09-18-fbcm-rebuild-design.md`: read it before making a judgement call about what the site should do. Plan 1 built the foundation and imported the content (142 posts at their original `/post/<slug>` URLs, 17 staff, 5 ministries, 49 retired-URL redirects, five of them added in task 16 from links found inside the restored post bodies). Plan 2 built the site on top of it: eleven pages are live and composed end to end from the page builder (`/`, `/visit`, `/who-we-are`, `/beliefs`, `/ministries`, `/staff`, `/history`, `/wedding`, `/give`, `/contact` and `/blog`), each one seeded by an idempotent module under `scripts/pages/` and run by `npm run seed-pages`. Contact is a `page` document now, not a bespoke route with a form: visitors use the church's own Church Center forms. The blog grew archive, category and tag routes alongside the post pages. Plan 2c is DONE (2026-09-20): the icon set is the church's own tower, `journalEntry.featured` is retired, the live preview is activated on production, anchors land below the sticky header and are asserted in Playwright, every redirect is verified against the deployed site by `npm run verify:redirects`, Lighthouse is measured and recorded for six pages in both form factors, and the parity baselines were recaptured on a settled tree. That last step also closed the loop it exposed: committed baselines are `.html`, Tailwind v4 scans every tracked file, so a capture used to feed the NEXT build's stylesheet. `src/styles/globals.css` now carries `@source not` for `scripts/.parity`, `docs/` and the root Markdown, and `npm run parity compare` is 162/162 PASS for the right reason, proven by two consecutive builds producing the same stylesheet byte count. The record is in `docs/PENDING.md`, known gap 2. **The art-direction pass landed 2026-09-21** (branch `feat/art-direction`, merged to `main` at `183a61f`): a full identity and layout rebuild off the generic starter look, built on Castoro Titling, Castoro and Sofia Sans Semi Condensed, with photography used as layout (a shared spare-image pool, `src/lib/spare-images.ts`), a rebuilt header/footer/mobile menu in the Stone Steps chrome idiom, and every page-builder section redrawn in an editorial grammar of hairlines and asymmetric grids. Zero Sanity schema changes. Deployed and live. **Plan 3 is the cutover**: moving `fbcmuncie.org` onto this site, planned in `docs/superpowers/notes/2026-09-20-cutover-plan.md`. The rest of this file is still the starter's own reference, rewritten in plan 2, and it remains accurate about the STACK: the conventions and landmines an agent needs on every task. Deep detail for specific areas (theme, components, SEO, performance, Sanity, deployment) lives under `docs/agent/` and is read on demand. The topic index at the bottom is the map.
+**What this repo is.** The First Baptist Church Muncie website (309 East Adams Street, Muncie, IN 47305), replacing the church's Wix site. Forked from `ncs-astro-sanity-starter` on 2026-09-18, so a lot of the machinery here is the starter's; this file describes FBCM as it is now. The binding spec is `docs/superpowers/specs/2026-09-18-fbcm-rebuild-design.md`, and the art-direction spec is `docs/superpowers/specs/2026-09-20-fbcm-art-direction-design.md`. Read the relevant one before making a judgement call about what the site should do.
 
-**Read `docs/PENDING.md` early in a session.** It is the live registry of open loops: queued work, known gaps, and waiting-on-a-human items. If you finish or discover one, update it in the same commit.
+**Where it stands.** Eleven pages, all composed from the page builder (`/`, `/visit`, `/who-we-are`, `/beliefs`, `/ministries`, `/staff`, `/history`, `/wedding`, `/give`, `/contact`, `/blog`), each seeded by a module under `scripts/pages/`. 142 imported posts at their original `/post/<slug>` URLs with restored bodies, 17 staff, 5 ministries, 49 retired-URL redirects. There is no form on the site: visitors use the church's Church Center forms. The art-direction pass (merged 2026-09-21 at `183a61f`) rebuilt the identity: Castoro Titling for display capitals, Castoro for reading, Sofia Sans Semi Condensed for furniture, photographs used as layout through a shared spare-image pool (`src/lib/spare-images.ts`), a Stone Steps-style header, footer and mobile menu, and every section redrawn in hairlines and asymmetric grids, with zero Sanity schema changes. It is deployed at https://fbcm-site.nathanjnixon86.workers.dev. **Next is plan 3, the cutover** of `fbcmuncie.org` (`docs/superpowers/notes/2026-09-20-cutover-plan.md`), which waits on Nathan's decisions listed in `docs/PENDING.md`.
 
-Companion tactical runbook: `OPERATIONS.md`. New-project setup entry point: `docs/bootstrap/NEW-PROJECT.md`, rewritten 2026-09-18 from the order the Stone Steps build actually followed; it is the start for any team adapting this starter for a new client, and `docs/bootstrap/setup-checklist.md` is its sign-off. Cross-repo shared-improvement registry: `PORTS.md` (see [Library of record](#library-of-record-portsmd-and-sync-check) below).
-
----
-
-## About this starter
-
-`ncs-astro-sanity-starter` is a production-ready Astro + Sanity + Cloudflare Workers site template forked from a finished client build. This is a **page-builder-first** starter: the home, about, services, and process pages all render via a shared `SectionRenderer` component fed by Sanity `pageBuilder` arrays, and any custom page created in the Studio gets a `/[slug]` route for free. The infrastructure -- build pipeline, CMS integration, deploy hooks, polish layer, section-visibility system, component library, Lighthouse 100/100/100/100 baseline -- is already standing. A new project pours in two things: its brand identity (run `npm run apply-brand` with `brand/brand.config.json`) and its content.
-
-This starter is not a minimal scaffold. It ships with real patterns and real gotchas documented from production. The point is to skip the month of discovering them.
-
-**It ships FULL and subtracts, and `npm run scaffold` is how.** Everything above is here because some project needed it, not because every project does. A race site needs no services grid; a school needs no testimonials; plenty of sites need no journal. So seven capabilities -- `about`, `faq`, `journal`, `philosophy`, `process`, `services`, `testimonials` -- are marked in the source at every place they register, and `npm run scaffold -- --remove <name> --write` takes one out of all of them at once: the schema, the routes, the components, the desk structure, the three copies of the preview path map, the doc-to-URL switch, the insert menu, the seed rows, the reserved slug and the test route list. Removing one by hand means finding it in about thirty files, of which a dozen are generic registries that must all agree, and a missed one is a runtime error in the Studio that passes the build. The list of what can go is `npm run scaffold` with no arguments, and npm needs its `--` separator in front of the script's own flags. The four kinds of marker are documented at the top of `scripts/scaffold.mjs`.
-
-_Provenance: forked from the Reid Design build._
+**Read `docs/PENDING.md` early in a session.** It is the live registry of open loops. If you finish or discover one, update it in the same commit. Change history is in `docs/agent/changelog.md`, and the tactical runbook is `OPERATIONS.md`.
 
 ---
 
@@ -26,7 +14,7 @@ Full stack notes and the `astro.config.mjs` landmines are in `docs/agent/stack-a
 
 - **Astro 7.x**, TypeScript strict, `output: 'static'` with a handful of SSR routes. Node 22.12+.
 - **Sanity v6** is the CMS. The Studio lives IN THIS PACKAGE (schemas in `src/sanity/schemaTypes/`, desk in `src/sanity/structure.ts`, config at the repo-root `sanity.config.ts`, CLI config in `sanity.cli.ts`) and is **embedded at `/studio`** via `@sanity/astro`, so it rebuilds with every deploy and can never drift stale. There is deliberately no `studioHost`/`deployment` in `sanity.cli.ts` so a stray `sanity deploy` cannot recreate a hosted copy. `npm run typegen` regenerates types from the schemas.
-- **Live draft preview at `/preview/**`** through Sanity's Presentation tool: click-to-edit, live refresh over SSE, and in-canvas section controls. See [Live draft preview](#live-draft-preview-preview) below.
+- **Live draft preview at `/preview/**`** through Sanity's Presentation tool: click-to-edit, live refresh over SSE, and in-canvas section controls. See the preview rules below and `docs/agent/preview.md`.
 - **Tailwind 4 via `@tailwindcss/vite`.** There is no `tailwind.config.mjs`. Brand tokens live in `@theme` blocks in `src/styles/globals.css`.
 - **React 19 islands** for interactivity; Astro components for everything static.
 - **Cloudflare Workers** for hosting, not Pages (Pages is in maintenance mode). Deploy with `npm run deploy`, which is `wrangler deploy -c dist/server/wrangler.json`. A bare `wrangler deploy` reads the root `wrangler.jsonc`, which knows nothing about the SSR entrypoint, and every sub-route 404s.
@@ -38,34 +26,16 @@ Full stack notes and the `astro.config.mjs` landmines are in `docs/agent/stack-a
 
 ---
 
-## Live draft preview (`/preview/**`)
+## Live draft preview (`/preview/**`): the rules that break it
 
-Added 2026-08-28 (PORTS.md cards 10, 11 and 17). Editors see their **unpublished drafts** rendered in the real design, live, inside the Studio: open the **Preview** tool at `/studio`, and the page list on the left drives an iframe of the site.
+Editors see unpublished drafts in the real design inside the Studio's Presentation tool. `/preview/**`, `/preview/live` and `/api/draft-mode/*` are the only SSR routes. **The full reference is `docs/agent/preview.md`. Read it before touching `src/lib/cms-preview.ts`, `src/lib/preview-*.ts`, `src/pages/preview/` or `src/components/preview/`.** These are the rules that bite without warning:
 
-- `/preview/**`, `/preview/live` and `/api/draft-mode/*` are the site's only **SSR** routes (`prerender = false`). Everything else stays statically built. They are `noindex` and never appear in the sitemap.
-- `src/lib/cms-preview.ts` is a SECOND Sanity client, separate from `src/lib/sanity.ts` (build-time): it reads the token from the **Worker runtime env** per request, uses `perspective: 'drafts'`, and turns on **stega** so click-to-edit works.
-- **Never compare a stega-encoded string in logic.** Stega hides about 1KB of invisible markers inside every string it touches, so `align === 'left'` is `false` on an encoded value and the component silently picks the wrong branch, in preview only. Every enum that drives rendering is excluded via `NON_STEGA_FIELDS` in `cms-preview.ts`. **Add any new logic-driving dropdown field to that list the day you add the field.**
-- **And never MEASURE one either: clean a display string before any `split`, `length`, `slice`, truncation or word count.** The companion to the rule above, and the harder one to spot, because the string still reads correctly. The payload is written in U+200B, U+200C, U+200D and **U+FEFF**, and U+FEFF matches `\s` in a JavaScript regex. So splitting a headline on whitespace to animate it word by word shatters the payload into dozens of fake words: on stonesteps-50k that turned a three-word wordmark into 157 "words" and grew the hero band from 1032px to 1879px, in the preview only, which is where nobody has a baseline to compare against. `splitStega()` in the PORTABLE `src/lib/preview-stega.ts` already returns the cleaned text; use it, and keep the payload for re-attachment if the string is written back.
-- `src/pages/preview/live.ts` is an **SSE proxy**: it holds ONE long-lived connection to Sanity's listen API server-side (the token never reaches the browser) and forwards a tiny "change" signal. `VisualEditingOverlay` soft-refetches the page and swaps `#main`. It is event-driven on purpose. **Never replace it with an interval poll** (that is what burned the WCP Sanity quota).
-- The preview cookie carries an **unforgeable fingerprint** of the server-side token (`src/lib/preview-auth.ts`), not the package's default `'true'`.
-- **The preview is fast on purpose, and five rules keep it that way** (PORTS.md cards 29-29d, ported 2026-08-28 with deployed measurements). Read those cards before touching the refresh loop.
-  - **Instant text.** Plain string fields are swapped into the live DOM the moment an edit reaches the frame, ~100-140ms after the keystroke, long before the server can re-render. `src/lib/preview-text-diff.ts` (string leaves only, never portable text, items matched by `_key`), `src/lib/preview-stega.ts` (decode the invisible payload so a field is matched to its node by IDENTITY, not by searching for words) and `src/lib/preview-text-nodes.ts` (write only where the node reads EXACTLY the old value, and re-attach the payload). A missed instant update is invisible; a wrong one is a lie about what the page says.
-  - **`useEditState(id, type, 'default')`, never `'low'`** in `src/sanity/components/LiveDraftBridge.tsx`. Measured on the deployed Studio: under `'low'` the local store coalesced isolated keystrokes into the autosave commit and one keystroke took 413ms and the next 1429ms. The 60ms trailing throttle, not the store's scheduler, is what keeps it cheap.
-  - **One refresh at a time, and never a stale one** (`src/lib/preview-refresh.ts`). Single-flight, stale-response discard, and a 1200ms floor between refresh STARTS. A `/preview` render is ~0.9s of Worker CPU; an 80ms debounce with no in-flight guard produced six concurrent renders and a Cloudflare `Error 1102`.
-  - **Morph `#main`, never `replaceWith` it** (`src/lib/preview-morph.ts`). The wholesale swap re-decoded 14 images and blocked the main thread for ~1000ms, twice per keystroke; the morph does it in 12ms and rebuilds 0 images. A bailed morph returns false and the caller RE-PARSES and falls back, so it can be slow but never half-applied.
-  - **Staleness counts every channel.** Every document instant text applies bumps the scheduler's sequence (`noteInstantChange`), because the SSE stream runs a second behind the local channel and a render that started before an edit would otherwise be accepted carrying half-typed words.
-- **Two preview rules that no test can enforce.** (1) `/preview/**` responses MUST send `Cache-Control: no-store`; without it browsers heuristically cache them and the Studio iframe serves the PREVIOUS deploy until the cache ages out. (2) The `/preview/live` listen MUST stay `visibility: 'query'`. `'transaction'` looks faster and is worse: it fires before the query index has caught up, so the refetch it triggers returns stale data and the morph writes old words over the new ones instant text already placed.
-- **Preview pages render the real Header and Footer** (2026-08-28, PORTS.md card 18), each wrapped in a `data-sanity` attribute pointed at `siteSettings`, so in Edit mode the chrome outlines as an editable surface and a click opens Site settings. The slim bar at the top says as much. This shell was chrome-less until the click interceptor existed, because back then a header link would have bounced the editor's iframe onto the live site; the interceptor closed that hole (edit-mode clicks select only, browse-mode clicks are remapped into `/preview/*` whenever the path is the root or a single segment outside `NEVER_REMAP`), which is what makes it safe to show the chrome and let the preview match production edge to edge.
-- **Two page shapes preview differently.** The four builder pages (home, about, services, process) and every custom `page` doc are their `pageBuilder` array end to end, so they preview in full fidelity through the same `SectionRenderer` the live page uses. The bespoke pages (faq, journal, privacy, 404) have code-drawn middles, so they preview as their **editable surface**: hero fields, any page sections, the closing CTA, with a note on the page saying so. Converting one of those to the builder upgrades its preview for free (PORTS.md card 12) and is a separate job.
-- **In-canvas section controls.** Every section rendered in the preview carries a `data-sanity` attribute built by `sectionEditAttr` in `src/lib/preview-edit-attr.ts`, so the overlay can outline a whole section and offer insert-before/after (through the grouped, searchable insert menu), duplicate, remove, and drag-to-reorder right on the page. Stega alone cannot do this: it marks TEXT, and a section band has no text of its own. Two rules. (1) The attribute is **preview-only**: `SectionRenderer` renders the wrapper only when the preview route passes `editDoc`, so every live render is byte-identical, and `npm run parity compare` is the gate. (2) The wrapper must be a **real block box**, never `display: contents`, because the overlay outlines the element's rect and a `contents` element has none.
-- **Floating in-canvas controls** (2026-08-28, PORTS.md card 28). On top of the section controls above, the preview hands `<VisualEditing>` a `components` resolver (`src/components/preview/overlay/index.ts`) that draws two of this repo's own controls over the element the editor CLICKED: a word picker that sets a section's `headingAccent` by clicking the word in the heading, and an "Edit here" card that edits the two document-level hero strings (a textarea) or a rich twin (a bold/italic contenteditable with an allow-list paste). Five things to know before touching it.
-  - **A custom component only mounts on a node the schema resolves to a FIELD.** A bare array-item path gets no resolver context at all, so nothing can hang off a section wrapper; anything section-wide needs a preview-only element carrying a `data-sanity` for a real field.
-  - **Gate on `focused`, never `activated`.** `activated` means "in the viewport", so an ungated control appears on every matching element at once. A card that OPENS must not stay gated on `focused` either: the host recomputes it on every `presentation/focus`, so the card would vanish mid-gesture. A card owns its open state and closes only on its close button, Escape, or an outside press, and it renders flush to its anchor so the pointer never crosses unowned pixels.
-  - **Writes go through `useDocuments`** (`src/components/preview/overlay/useDraftDocument.ts`), which patches over the comlink: always the draft, no token in the browser, covered by the Studio's undo. Never give the island a write client.
-  - **`src/lib/section-fields.ts` is a REGISTRY of what the schema has, and `section-fields.test.ts` is its drift gate.** Add or remove a `headingAccentField()` or a `richTwin()` and that test fails until the registry agrees. It also re-derives the heading FIELD NAME, because four of the five accent types call their big line `headline`, not `heading`.
-  - **There is no band or surface control here, on purpose.** See rule 9 below: blocks carry no colour field, so there is nothing for one to write to, and the drift gate now FAILS if anyone adds one. The sibling repos have that third control; this template deliberately does not.
-- **The path-to-type map lives in TWO places that must stay in sync:** `SINGLETON_PREVIEW_PATHS` in `src/sanity/resolve.ts` and `SINGLETON_BY_PATH` in `src/pages/preview/[...slug].astro`. It was three until 2026-09-20: `FIRST_SEGMENT_PREVIEWABLE` in `src/layouts/PreviewLayout.astro`'s click interceptor was unreachable behind that file's blanket single-segment clause and had gone stale (it still named `contact` after contact became a `page` document), so it was deleted. The interceptor now treats the root and any single segment outside `NEVER_REMAP` as previewable, which is true because `/preview/<slug>` resolves a singleton first and a custom `page` slug otherwise.
-- **Activating preview on a fork takes two things outside the code:** the `SANITY_TOKEN` runtime secret (`.dev.vars` locally, `npx wrangler secret put SANITY_TOKEN` in production), and the deployed origin on the project's CORS allow list (`npx sanity cors add <origin> --credentials`). Without the token everything **fails closed**, and the preview routes answer 503 with the two missing pieces named rather than a stack trace. The public site builds and serves normally either way. **Activated on production 2026-09-20: `SANITY_TOKEN` set on the Worker, deployed origin on the CORS list; anonymous requests render published content, drafts only behind the Studio cookie.** The one thing still unproven is a human signing in to the deployed Studio and opening the Preview tool, which is Nathan's (`docs/PENDING.md`).
+- **Never compare a stega-encoded string in logic, and never measure one.** Stega hides invisible markers in every string (including U+FEFF, which matches `\s`), so `align === 'left'` is false and a whitespace split shatters into dozens of fake words, in the preview only. Enums that drive rendering go in `NON_STEGA_FIELDS` in `cms-preview.ts` the day the field is added (rule 8b). Display strings go through `splitStega().cleaned` before any split, length, slice or count.
+- **`/preview/live` is an event-driven SSE proxy. Never replace it with an interval poll** (that burned the WCP Sanity quota), and keep its listen at `visibility: 'query'`.
+- **`/preview/**` must send `Cache-Control: no-store`**, or the Studio iframe serves the previous deploy.
+- **The section-edit wrapper is preview-only and must be a real block box**, never `display: contents`. Every live render stays byte-identical, and `npm run parity compare` is the gate.
+- **The path-to-type map lives in two places that must agree:** `SINGLETON_PREVIEW_PATHS` in `src/sanity/resolve.ts` and `SINGLETON_BY_PATH` in `src/pages/preview/[...slug].astro`.
+- The preview was activated on production on 2026-09-20 (`SANITY_TOKEN` on the Worker, origin on the CORS list). Without the token, every preview route fails closed with a 503.
 
 ---
 
@@ -100,6 +70,7 @@ Added 2026-08-28 (PORTS.md cards 10, 11 and 17). Editors see their **unpublished
 16. **Retiring data means a backup-then-delete script, run dry first, never a raw delete.** When the five unprovable 27K records came off the board, the working script wrote all five documents verbatim to a committed JSON file BEFORE deleting anything, guarded each delete on the exact conditions that justified it (a 27K entry dated before the 27K existed; an athlete only if nothing outside those records pointed at them), and carried a `--dry-run` that prints the whole plan and writes nothing. `scripts/retire-27k-records.mjs` in the Stone Steps repo is the shape to copy. `scripts/cutover.mjs` here is the same discipline applied to a live domain and goes one better: it is dry BY DEFAULT, and `--write` is the only thing that lets it act, which is the safer of the two defaults. A delete you cannot read the plan for before it runs, and cannot reverse after it runs, is not a migration. This one is judgement too, but it has a habit that makes it cheap: write the backup step first, and the dry run falls out of it.
 17. **One grammar per page.** Every heading and every object shares one left edge, text-and-picture bands share one split, and buttons come from one family. Stone Steps shipped with three heading systems running at once, a leftover button style from this starter, and three bands each drawing their own eyebrow on top of the shared one, because `SectionHeading` and the band components each carried a default that nothing had to opt into. The site read as unfinished for a reason no single section was responsible for, which is why this is worth stating as a rule: the defect is only visible when you scroll the whole page, and nobody reviews a whole page while writing one band. The lever here is `align` on `SectionHeading.astro`, which is per-call and defaults to `left`: pick the page's grammar once and do not vary it band by band. No test enforces it. `npm run parity compare` will tell you a render changed, not that a render is inconsistent.
 18. **`break-words` on a `display: inline-block` (or any shrink-to-fit) element does not, by itself, let it shrink below its own unbroken content width.** `overflow-wrap: break-word` only breaks a line once the box already has a constrained width; it is explicitly excluded from the box's own intrinsic/preferred-width calculation, so an `inline-block` with no `width`/`max-width` still sizes itself to fit the whole string (an email address has no spaces to break on) and overflows its grid or flex parent instead of wrapping inside it. This shipped in the art-direction pass: `StaffGrid.astro`'s email links sat in a `grid-cols-2` card at 320px, the grid track correctly held to 128px, and the `<a>` still rendered at 160px and pushed the page 12px past the viewport, invisible on a 1280px screen and only caught by the 320px reflow gate. The fix is always the same shape: pair `break-words` with `max-w-full` (or give the element `w-full`/`block` instead of `inline-block`), never `break-words` alone. Before trusting a narrow layout that wraps long unbroken strings (emails, URLs, tokens), check `getBoundingClientRect()` on the actual element at 320px, not just that the class is present.
+19. **`100vw` includes the scrollbar, and the test suite cannot see the difference.** On any desktop browser with a classic scrollbar, `100vw` is wider than the page by the scrollbar's width, so anything sized or positioned with it overshoots the visible edge and the whole page scrolls sideways. The art-direction pass shipped exactly this: the `.bleed-right` / `.bleed-left` photographs overflowed 11 of 13 routes by 7-8px at 1440px, and every reflow test passed, because Playwright launches Chromium with `--hide-scrollbars`, where `100vw` and the page width agree. Nathan found it by looking. The fix was `container-type: inline-size` on `#main` and `100cqw` in place of `100vw` (measured: this does not trap the `position: fixed` elements inside `main`). The gate now has a `chromium-scrollbars` project in `playwright.config.ts` that reruns `reflow.spec.ts` with real scrollbars. Never size a layout box in `vw` to reach the viewport edge; use `cqw` against `#main`, or a negative margin against the container.
 
 ---
 
@@ -118,14 +89,12 @@ Standalone scripts:
 - `npm run typegen` to regenerate Sanity TypeScript types after editing schemas (run this after any schema change before testing locally).
 - `npm run og` to re-run `scripts/generate-og-default.mjs` and regenerate `public/og-default.png` (after changing brand colors, tagline, or the wordmark in the script's inputs block).
 - `npm run apply-brand` to deterministically rewrite `globals.css` tokens, `src/data/site.ts`, Studio theme inputs, font imports, and the OG image based on `brand/brand.config.json`. Idempotent -- safe to re-run.
-- `npm run seed` runs `scripts/seed-core.mjs`. It creates or replaces the core singletons (`siteSettings`, `homePage`, `aboutPage`, `servicesPage`, `processPage`, `faqPage`, `journalPage`, `privacyPage`, `notFoundPage`, `studioGuide`, `studioNotes`) and the seed collection docs (services, processSteps, testimonials, philosophyPoints, journalCategories, journalEntries, faqItems). Requires `PUBLIC_SANITY_PROJECT_ID` and `SANITY_API_WRITE_TOKEN` in `.env`. Idempotent: uses `createOrReplace` with deterministic `_id` values so re-running is safe. Two things about its CONTENT, both load-bearing:
-  - **Every seeded string reads as a placeholder, and that is a rule** (PORTS.md card 44). It either says "replace this" in so many words or is structurally neutral ("Step two (replace me)", "How long it takes"). It used to be plausible copy for an interior-design studio, down to real prices and budget brackets, and a fork could ship somebody else's trade by not noticing: good copy for the wrong business looks exactly like copy, while an obvious placeholder cannot be shipped by accident. The privacy policy and the Studio help documents are the two deliberate exemptions.
-  - **Each section is scaffold-marked**, so `--remove faq` takes the FAQ page and its questions out of the seeder too. Markers never nest, so a section carries the ONE capability that owns the page it seeds; the note at the top of the file explains the one combination that leaves a stray block in the dataset and why that is the right boundary.
+- `npm run seed-pages` runs the idempotent page modules under `scripts/pages/`: dry by default, backup-first, and it is how the eleven pages were composed. `npm run seed` (`scripts/seed-core.mjs`) is the starter's singleton seeder and still seeds placeholder copy by design (PORTS.md card 44); do not run it against this dataset expecting church content.
 - `npm run scaffold` runs `scripts/scaffold.mjs`, the capability remover. Its own flags need npm's `--` separator in front of them: `npm run scaffold` (or `-- --list`) prints what can go; `-- --remove <name>` prints the plan; `-- --remove <name> --write` applies it. It is DRY BY DEFAULT and never touches the Sanity dataset. Run `npm run typegen && npm run build && npm run test:unit` after a removal, which is what it prints. See rule 14 and the marker documentation at the top of the script.
 - `npm run audit:studio` runs `scripts/audit-studio.mjs`, a read-only audit of the seven Studio faults that a build, a type check and a test all pass: a field that is hidden AND required (permanently invalid document, error naming a field nowhere on screen), a preview title taken from a number (crashes the whole array field), a stored key the schema does not declare (puts the "Remove field" button in front of an editor, CLAUDE.md rule 1), a page slug on the reserved-route list, a collection whose "Used on" entry disagrees with the pages that render it, a required field blank in the live data, and money typed into prose beside a structured price field. Checks 1 and 2 read only the schema and run on a fresh clone; the rest need a configured project. Exits non-zero on a finding. PORTABLE, ported from the Stone Steps build.
 - `npm run test:unit` to run the 588 unit tests (node --test) across 36 `*.test.ts` files in `src/lib/`. (`npm test` is the Playwright suite now, per the family test standard.) Three of them are GATES rather than ordinary suites, and they are the ones to read before changing what they watch: `theme-tokens` (contrast over the `@theme` palette), `layout-variants` (re-derives each grid's base columns from the `.astro` source), and `section-fields` (parses the block schemas and fails when a section gains or loses a `headingAccent` or a rich twin without the in-canvas registry agreeing -- and when a block grows a colour field, per rule 9). The rest cover the pure logic: `sectionCadence`, `sectionVisibility`, `reservedSlugs`, `slugify`, `heading-accent` (the one accent splitter, for both the script and the colour accent), `inline-rich-write`, `sanity-path`, `surfaces`, `redirects`, `page-checks`, `undoRedo`, `utils`, `convert-body` (the Wix-HTML-to-Portable-Text converter, including the dash normaliser rule 2 depends on), the seven `preview-*` modules, and, added in the art-direction pass, `spare-images` (the shared spare-image pool), `hero-frames`, `live-sunday` / `live-sunday-inline` (the drift gate between the server string and the client upgrade script), and `cta-href` (the one place a `ctaBlock` resolves to an href).
 - `npm run parity list | capture | compare [page]` runs `scripts/page-parity.mjs`, the rendered-HTML parity harness. It never builds: build first, then capture or compare. Routes are auto-discovered from the build output and baselines live in `scripts/.parity/` (committed, 162 pages, generated blog archive pages excluded). Use it on any change that is meant to be render-neutral. See PORTS.md card 3. **`npm run parity:capture` / `npm run parity:compare`** bake in `--exclude "blog/page/**,blog/tag/**,blog/category/**/page/**"`, the exclusion this repo's baseline set was recaptured with on 2026-09-20 (plan 2c task 7): pagination, tag and per-category-page archive routes are hundreds of near-identical copies of the same template, so excluding them keeps a real diff from hiding in the noise while the first page of each template still covers it. `npm run parity compare` is 162/162 PASS, and it stays that way across a rebuild. **The one thing to know before you touch this harness is the loop that used to break it:** `scripts/.parity/*.html` is COMMITTED, Tailwind v4 scans every tracked file for classes, and task 7 moved the stylesheet inline, so a capture fed the next build's stylesheet and every page then reported a diff. `src/styles/globals.css` cuts it with `@source not` for `scripts/.parity`, `docs/` and the root Markdown (prose that names a utility class used to keep that class alive too). So a recapture now reaches a fixpoint: capture, rebuild, compare, and the stylesheet's byte count is identical on both sides. **Prove that pair of numbers rather than trusting one green run** -- green for the wrong reason is still red, and `docs/PENDING.md` known gap 2 names the two classes that proved it.
-- `npm run sync-check [site-repo]` diffs another repo's PORTABLE-marked canonical files against this starter's copies. See the [Library of record](#library-of-record-portsmd-and-sync-check) section.
+- `npm run sync-check` diffs this repo's PORTABLE-marked files against the starter's copies. See "PORTABLE files and the starter" below.
 - `npm run free-dist` kills a stale `wrangler dev` / `astro preview` still holding a handle on `dist/` (the cryptic `EPERM ... dist\client` on the next build). Windows only; no-ops elsewhere. Not wired as a `prebuild` hook here, so run it by hand when a build fails that way.
 - `npm run check` is the fast gate: `astro check && npm run lint`. `npm run check:full` is `typegen`, build (which includes the embedded Studio) and the unit tests. Together with `npm run format:check`, `npm run check:links` and `npm test` (Playwright), that is exactly what CI runs on every push and PR, in two parallel jobs; `lighthouse.yml` runs `npx lhci autorun` separately. The family test standard is PORTS.md card 35. Run `npm run parity compare` alongside on any change meant to be render-neutral; parity is deliberately a local gate (see the note in `.github/workflows/ci.yml`).
 - `npm test` runs the Playwright suites (smoke, axe light, axe dark plus the focus-indicator check, reflow) on chromium and a WebKit iPhone profile, against a fresh production build served statically. `npm run test:ui` opens the Playwright UI. `PLAYWRIGHT_PORT` moves the server off 4321 if something else is holding it.
@@ -140,12 +109,10 @@ Standalone scripts:
 ## Code conventions
 
 - TypeScript strict mode. No `any`.
-- Comment generously, especially in components that a future maintainer might edit by hand.
-- At the top of each component file, add a header comment marking it `// Safe to edit by hand` or `// Foundation, edit with care`.
-- Astro components for static content. React islands only where interactivity is required (lightbox, mobile nav, form handler, before/after slider, accordions).
-- Prefer Astro's built-in `<Image />` and `<Picture />` components over plain `<img>` tags for any locally-bundled assets. For Sanity-hosted images, use the project's `<SanityImage />` wrapper (see image handling section).
-- Tailwind utility classes inline. Pull into `@apply` only when a pattern repeats four or more times.
-- Use `clsx` or `class-variance-authority` for conditional classes once components get state-dependent styling.
+- Each component file starts with a header comment marking it `// Safe to edit by hand` or `// Foundation, edit with care`. Which files are which, and why, is in `docs/agent/file-map.md`. In short: tokens, copy, `src/data/*` and assets are safe to edit. `globals.css` beyond the tokens, the schemas, the Studio config, the preview stack, `SectionRenderer.astro`, `BaseLayout.astro`, `src/lib/sanity.ts` and `queries.ts` are foundation and need a planned change.
+- Astro components for static content; React islands only where interactivity is required. Use `<SanityImage />` for Sanity images and Astro `<Image />` / `<Picture />` for local ones.
+- Tailwind utilities inline; `@apply` only for a pattern repeated four or more times.
+- Ask before installing a dependency (rule 8 is why).
 
 ---
 
@@ -188,183 +155,26 @@ Additional routes come from opt-in modules staged under `modules/` (OFF by defau
 
 ---
 
-## Safe to edit by hand
+## Verifying UI changes
 
-These are the files where a project maintainer can make changes without risk of breaking the underlying architecture:
-
-- Text content inside `src/pages/*.astro` (everything outside the frontmatter and Sanity-fetched content)
-- `src/data/site.ts` -- static identity constants (site name, domain, brand color mirrors for scripts, asset paths). Replace all placeholder values before launch. (Written automatically by `npm run apply-brand`; also safe to edit by hand.)
-- **The brand config (preferred reskin path):**
-  - `brand/brand.config.json` -- single source of truth for identity, palette, fonts, and logo paths. Edit this, then run `npm run apply-brand` and it cascades to globals.css, site.ts, the Studio theme, and the OG image.
-  - For a full rebrand orchestration (font install, brand apply, contrast check, copy retone) use the `/reskin` skill at `.claude/skills/reskin/SKILL.md`.
-- The design seam -- files that define the visual identity of the project (also written by `apply-brand`; safe to edit directly if you know what you're changing):
-  - `src/styles/globals.css` `@theme` block: palette tokens (`--color-primary`, `--color-ink`, `--color-paper`, etc.), the `--tint-rgb` token (controls polish-layer tint color across card-lift, surface-warm, and branded overlays), and font-family tokens
-  - Font imports at the top of `src/styles/globals.css` (swap `@fontsource/libre-baskerville` and `@fontsource-variable/inter` for a project's chosen fonts; update `--font-display` and `--font-body` tokens accordingly)
-  - `public/favicon.svg`, `public/og-default.png` (regenerate OG via `npm run og` after changing brand inputs in `scripts/generate-og-default.mjs`)
-  - **The icon set is the tower from the church's wordmark**, drawn on a `#292854` rounded plate (the taupe tower face vanishes on a bright tab strip with no ground behind it, and `scripts/generate-favicons.mjs` composites no background of its own when it rasterizes `apple-touch-icon.png`). `public/favicon.svg` is the one source; `npm run favicon` regenerates every other size from it. **Never put a `--` inside a comment in that SVG**: it ends the comment early and the image renders blank on a build that passes every gate (vault gotcha `double-hyphen-in-svg-comment-blanks-the-image`).
-  - Logo files in `src/assets/` (imported by `Header.astro` / `Footer.astro` via `getImage()`)
-- `src/data/defaultSections.ts` -- code-defined default section arrays for the section-driven core pages. These are the fallback content shown when no Sanity project is connected. Safe to edit as long as each object matches its schema type.
-- Images in `src/assets/` (logo variants, OG image)
-- Copy strings and `href` values in static page components
-- Tailwind utility classes on existing components when content needs different visual weight
-- Brand colors, tagline, and wordmark inputs in `scripts/generate-og-default.mjs` (re-run `npm run og` after editing)
-- `docs/brand/voice.md` -- per-project voice and copy guidelines (fill in per project; the `/reskin` skill rewrites this during a full rebrand)
-
-**Enabling the script accent (opt-in):** The calligraphic script accent is OFF by default. No script font loads unless you opt in. To enable it for a project: (1) add a `@fontsource` import for your chosen calligraphic face (e.g. `@fontsource/great-vibes/400.css`), and (2) update `--font-script` in the `@theme` block to name that face first. Components using the `font-script` utility class will then render the calligraphic accent.
-
-## Foundation, edit with care (route through a planned session)
-
-- `src/styles/globals.css` -- the full file beyond the design seam tokens: shadcn `:root` / `.dark` overrides, **polish-layer utilities** (`.card-lift`, `.press-tactile`, `.nav-underline`, `.site-header`, `.reading-progress`, `.surface-warm`, `[data-reveal]`), base resets, paper-grain `body::before`, print stylesheet
-- `src/sanity/schemaTypes/*.ts` -- Sanity schemas. Changing fields can break existing content. See gotcha #1 above. Key schemas: `sections.ts` (11 general block types + `SECTION_TYPES` + `SECTION_INSERT_MENU`/`sectionArrayOptions` + `additionalSectionsField`), `richSections.ts` (11 rich section types + per-page curated lists), `businessInfo.ts` (service areas, travel, availability, geo, `businessModel`, `additionalLocations` -- split from siteSettings; merged back by `getSiteSettings()`), `siteSettings.ts` (`businessType`, `socialLinks` array), `faqCategory.ts`, `faqItem.ts` (`categoryRef` field), `page.ts` (custom page document type).
-- `sanity.config.ts` and `sanity.cli.ts` (repo root), `src/sanity/structure.ts`, `src/sanity/resolve.ts`, `src/sanity/urls.ts`, `src/sanity/components/` -- the Studio's workspace config, desk structure, Presentation location map, URL helpers and custom panes.
-- The preview stack: `src/lib/cms-preview.ts`, `src/lib/preview-auth.ts`, `src/lib/preview-edit-attr.ts`, the seven `src/lib/preview-{stega,text-diff,text-nodes,live-draft,refresh,morph,navigation}.ts` (PORTABLE - the starter is the library of record for those, so edit them here and let `sync-check` propagate), `src/layouts/PreviewLayout.astro`, `src/components/preview/`, `src/sanity/components/LiveDraftBridge.tsx`, `src/pages/preview/`, `src/pages/api/draft-mode/`. Read the [Live draft preview](#live-draft-preview-preview) section before touching any of them.
-- `src/lib/sanity.ts` -- Sanity client, `sanityFetch` wrapper, `urlFor`, `parseSanityAssetDimensions`. The `isSanityUnconfigured` guard and graceful-fallback behavior are load-bearing for fresh-clone builds.
-- `src/lib/queries.ts`, `src/lib/sanity.types.ts` -- GROQ queries and generated types. Includes `sectionsProjection()`, `getPage`, `getAllPageSlugs`, `getNavPages`.
-- `src/lib/sectionCadence.ts` -- logic that maps section index to surface variant (the alternating-bg cadence). `SectionRenderer` calls this; blocks have no color field. Unit-tested in `src/lib/sectionCadence.test.ts`.
-- `src/lib/reservedSlugs.ts` -- the list of slugs the custom `[slug].astro` route must not serve (because they are handled by dedicated pages). Consumed inside `getStaticPaths` in `[slug].astro`. Unit-tested in `src/lib/reservedSlugs.test.ts`.
-- `src/components/SectionRenderer.astro` -- the page-builder runtime. Maps each block `_type` to its component and applies the surface cadence from `sectionCadence.ts`. Changing the type-to-component map here affects all section-driven pages.
-- `src/lib/heading-accent.ts` -- shared helper `splitHeadingAccent(heading, accent)` used by `Hero.astro`, `SectionHeading.astro`, and `FinalCta.astro`. ONE splitter serves both accent devices: the script accent and the colour accent differ only in the class on the wrapping span. The script accent's own weaker copy, `src/lib/scriptAccent.ts`, was retired on 2026-09-18 (PORTS.md card 53). Matching is case-insensitive, first occurrence only, and stega-safe.
-- `src/lib/sectionVisibility.ts` -- `getSectionVisibility(raw)` converts the raw `siteSettings.sectionVisibility` Sanity object into a flat boolean map. Rule: `value !== false` (unset/null/true = visible; only explicit false = hidden). Every toggleable page imports this. See [Section visibility](docs/agent/page-architecture.md#section-visibility).
-- `src/layouts/BaseLayout.astro` -- anti-FOUC theme bootstrap, skip link, header/main/footer wiring, View Transitions ClientRouter, Lenis init, **scroll-reveal observer**, **sticky-header scroll listener**, OG meta, JSON-LD, title-suffix-doubling guard. It renders `<Analytics />` but configures nothing: see below.
-- `src/components/Analytics.astro` plus `src/components/analytics/{GoogleAnalytics,CloudflareBeacon}.astro` -- all three PORTABLE. `Analytics.astro` owns the environment variables and the conditions, the other two own the tags. Both are silent no-ops when their variable is unset, so a fresh clone needs neither. **The gating lives in the marked file rather than in `BaseLayout.astro` on purpose**, because the layout is per-repo and conditions placed there drift invisibly. GA4 loads its library after the load event and builds the script element at runtime; both departures from Google's snippet are load-bearing and PORTS.md card 54 says what each one cost. **If this site replaces an existing one, set `PUBLIC_GA_ID` before the domain moves:** a rebuild does not inherit the old site's tag, and the loss is invisible for weeks.
-- `src/components/ui/` shadcn primitives -- **note: `accordion.tsx` is customized** (removed `h-(--radix-accordion-content-height)` lock + dropped `text-sm font-medium` from trigger). If you reinstall via `npx shadcn add` it will revert; reapply the changes.
-- React islands: `MobileNav.tsx`, `ThemeToggle.tsx`, `BackToTop.tsx`, `BeforeAfterSlider.tsx`, `FaqAccordion.tsx`, `StickyCTAChip.tsx`, `CopyEmailButton.tsx`, `PortableText.tsx`, `JournalPortableText.tsx`, `StatsCounter.tsx`, `NewsletterSignup.tsx`
-- Astro wrappers: `SanityImage.astro`, `StructuredData.astro` (if present), `SectionHeading.astro`, `SectionDivider.astro`, `ServiceAreaCue.astro`, `ReadingProgress.astro`, `ProcessStepIllustration.astro`, `Hero.astro`, `HeroBackground.astro`, `FinalCta.astro`, `CtaLink.astro`, `StatsRow.astro`, `PressStrip.astro`; section components in `src/components/sections/`. `FeaturedWork.astro`, `FeaturedJournal.astro` and `ProjectCard.astro` were deleted in the art-direction pass (2026-09-21): starter residue, unreferenced by any page.
-- `scripts/apply-brand.mjs` -- the brand reskin script. Reads `brand/brand.config.json` and rewrites globals.css, site.ts, Studio config, and regenerates the OG image. Idempotent.
-- `scripts/generate-og-default.mjs`, `scripts/generate-og-pages.mjs`, `scripts/generate-llms-full.mjs`, `scripts/generate-logo-variants.mjs`, `scripts/optimize-logo-files.mjs`, `scripts/import-content.mjs` -- reusable generator and import scripts
-- `scripts/with-workerd.mjs`, `scripts/free-dist.mjs`, `scripts/page-parity.mjs`, `scripts/sync-check.mjs`, `scripts/lib/sanity-lib.mjs`, `src/lib/contrast.ts` -- **canonical copies owned by this repo on behalf of the whole site family.** Each carries a `PORTABLE:` first-line marker. Editing one changes the family's copy, so make general changes only and note them on the matching PORTS.md card. Site-specific behavior does not belong in a marked file.
-- The in-canvas control layer is canonical too (PORTS.md cards 28, 28a, 28b): `src/lib/sanity-path.ts`, `src/lib/inline-rich.ts`, `src/lib/inline-rich-write.ts`, `src/lib/heading-accent.ts` (+ their `.test.ts`) and `src/components/preview/overlay/{usePopover,useDraftDocument,styles}.ts`. **Three seams keep them shareable, and every one of them is a per-repo file, never a branch inside a marked one:** `readSectionPath(path, arrayFields)` takes the page-builder array names (the list lives in `src/lib/section-fields.ts`), `overlay/tool-theme.ts` holds the six palette values `styles.ts` draws with, and `RichWriteOptions.multiline` says whether a repo's twin keeps its line breaks. Reid-design-site and mas-monograms carry four of these files, so a change to any of them puts five repos into drift -- reach for a seam before an edit.
-- `astro.config.mjs`, `wrangler.jsonc`, `package.json`, `tsconfig.json`, `components.json`
-- `public/_headers` (security response headers shipped with the deploy)
-- `src/pages/robots.txt.ts` (generated endpoint; reads the production URL from `src/data/site.ts` and emits allow-all + correct sitemap reference at build time -- do not create a static `public/robots.txt`)
-- `public/llms.txt` (AI/LLM crawler index -- update if major pages change)
-
-**Modules:** files under `modules/` each contain a page, islands, schema additions, and a co-located query file (`modules/<name>/src/lib/<name>Queries.ts`). Enabling a module is copy-a-folder: copy the module folder into `src/` and `src/sanity/schemaTypes/`, register the schema in `src/sanity/schemaTypes/index.ts`, and toggle it on in `siteSettings.sectionVisibility`. The co-located query file means no hand-pasting into core `queries.ts`. Per-module guides are in `docs/modules/`. Do not edit module internals without reading its doc first. Two modules are staged (`events`, `resources`); the other eleven are in `archive/modules/` and `archive/README.md` covers restoring one.
-
-**`archive/`:** retired work, kept but not maintained. Nothing wires it, `tsconfig.json`, `.prettierignore` and `eslint.config.js` all skip it explicitly, and `npm run scaffold` does not walk it. A file in there cannot break a build and also cannot be trusted to still work.
-
-If a change requires editing the foundation set, do it in a planned session, write the change deliberately, and update this doc when the architecture shifts.
+Every UI change is seen rendered before it is reported done: **light and dark, ~375px and ~1280px, hover and keyboard focus, and the sections on either side of the change.** `scripts/shoot-pages.mjs` walks each page before capturing, so scroll reveals fire and lazy images load (on Git Bash, prefix `MSYS_NO_PATHCONV=1` for a bare `/` route). The gates prove correctness, not appearance, and two overflow bugs passed every gate (rules 18 and 19). **Look at the page in a real browser, with a real scrollbar, at a wide desktop width as well as on a phone.** For a Studio change, open `/studio` in a browser with the console open; a 200 is not verification.
 
 ---
 
-## Visual verification workflow
+## Writing copy and prose
 
-Every UI change is verified visually before being reported done. The build that ships first-time-right is the one where the person who wrote the code saw it rendering correctly in every state that matters. This is a rule, not a habit.
-
-### What to verify
-
-For any change touching components, layouts, styles, or copy that affects layout:
-
-1. **Both themes.** Light AND dark. Toggle in the running site via the header `ThemeToggle`, or use Chrome DevTools' "Emulate CSS prefers-color-scheme" while testing system mode. Light is primary, but dark must read as the brand, not as broken.
-2. **Both viewports.** Mobile (~375px wide) and desktop (~1280px wide). Most visitors arrive on mobile. Never ship desktop-only.
-3. **Interactive states.** Hover, focus (keyboard Tab), active. Test with mouse AND keyboard.
-4. **Adjacent regressions.** Look at the sections immediately before and after the change. Cascading styles wreck neighbors more often than expected.
-
-### How to verify
-
-Use the Playwright MCP for screenshot-and-compare loops:
-
-1. `npm run dev` (or hit the deployed URL for deployed changes)
-2. Open the page via Playwright MCP at both viewports
-3. Take screenshots, light and dark
-4. Compare against the intent (spec, mockup, or prior screenshot)
-5. If something's off, fix and re-screenshot. Don't ship a change you haven't seen rendered.
-
-For accessibility-affecting changes, run Lighthouse on the changed page before opening a PR. Targets: 100/100/100/100 desktop. Defend them — when a score drops, find out why before merging.
-
-For Sanity Studio testing (schema or structure changes), run `npm run dev` and open `/studio` in a real browser with the console open. The Studio is the editor's UI; broken Studio = broken editor workflow, and a schema error passes the build and only surfaces at browser runtime.
-
-### When NOT to skip this
-
-Even "tiny" changes — a color tweak, a spacing nudge, a copy edit — go through the same loop. The smallest changes are where regressions hide because no one looks at them.
+- **No em-dashes in public-facing site copy** (rule 2). Internal docs, comments and commit messages are exempt.
+- The church's own words are edited for the web, not rewritten. New sentences are written only where none exist, and each one is listed for the church's approval in `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`.
+- No AI-tell vocabulary (delve, navigate as a verb, leverage, robust, seamless, meticulous, tapestry, realm, landscape, testament to, ever-evolving, crucial, pivotal) and no AI-tell patterns ("It's not just X, it's Y", "Not only... but also", "It's important to note", "When it comes to"). Say it plainly, be specific, and stop when you are done.
 
 ---
 
-## Working with Claude
+## PORTABLE files and the starter
 
-- Use Claude Code from the desktop app, not the terminal. Show diffs clearly so they read well in that UI.
-- Prefer Plan Mode for any multi-file change, especially when touching Sanity schemas (schema changes propagate to live content).
-- Pause for confirmation before installing new dependencies.
-- When proposing design changes, describe the visual outcome in plain language, not just the code.
-- For browser-based verification, prefer the Playwright MCP. See the [Visual verification workflow](#visual-verification-workflow) section above for what to verify and when.
-- For Sanity Studio testing, run `npm run dev` and open `/studio` in a real browser. A 200 response is not verification; read the console.
-- Don't report a UI change as done without screenshots in both themes and both viewports.
+This repo is a **consumer** of the site family's shared code, not its library of record. The library of record is `ncs-astro-sanity-starter` (the sibling folder), and `PORTS.md` is the registry: an applied-to matrix and one dated card per shared improvement. 89 files here carry a first-line `PORTABLE: canonical copy` marker, which means the starter owns them. `npm run sync-check` diffs them against the starter's copies.
 
----
-
-## Communication style
-
-These apply to everything written: code comments, PR descriptions, commit messages, and copy on the site itself.
-
-- Warm, conversational tone. Not stiff or corporate.
-- Step-by-step structure for any process or how-to.
-- No em-dashes in public-facing site copy. Use commas, periods, colons, or restructure the sentence. This rule is scoped to site copy only: code comments, commit messages, plans, specs, and internal docs may use em-dashes.
-- No AI-tell phrases: delve, navigate (as a verb), leverage, robust, seamless, meticulous, tapestry, realm, landscape, testament to, ever-evolving, crucial, pivotal.
-- No AI-tell sentence patterns: "It's not just X, it's Y," "Not only... but also," "It's important to note that," "When it comes to," "In the realm of," "That said" or "With that being said" as transitions.
-- Don't open replies with filler like "Certainly!", "Absolutely!", "Great question!", or "I'd be happy to help."
-- Don't close replies with "I hope this helps!" or "Let me know if you have any questions." End on the actual content.
-- Avoid three-item lists where the third item is filler. Two items is fine if two is the truth.
-- Use bold for genuine emphasis or list labels only, never random nouns mid-sentence.
-- Default to prose, not headers and bullets, unless content is genuinely a list or step-by-step.
-- Comment code generously so future maintainers can follow without reverse-engineering.
-
-### Site copy voice (for copy that appears on the live site)
-
-Good site copy for a service business follows five patterns. Full rationale and examples should go in a project-specific voice doc.
-
-1. **Say it plainly. Especially about money.** Don't apologize, don't pad, don't soften prices with hedging language.
-2. **Sound like a smart friend, not a brochure.** No "transformative experiences" or "elevated living."
-3. **Show the thinking, not the credentials.** Specific reasoning beats generic claims of expertise.
-4. **Stop talking when you're done.** End the paragraph. Don't tack on a closing line that restates the point.
-5. **Be specific.** Concrete details beat generic descriptors.
-
-Banned vocabulary: "transformative," "curated experience," "investment in your space," "elevated living," "tailored solutions."
-
----
-
-## Library of record: PORTS.md and sync-check
-
-Added 2026-08-27. This repo is not only a starting point for new projects, it is the
-**library of record** for improvements shared across the site family (wcp, presacademy,
-reid-design-site, mas-monograms, 2ndpreschicago, nixoncreativestudio). When a fix stops
-being about one client and becomes a technique, its canonical copy lives here.
-`ncs-church-starter` was a seventh member until it was archived on 2026-09-06; PORTS.md
-still carries its column and its historical cards, but nothing syncs to it any more.
-
-- **`PORTS.md`** (repo root) is the registry: a short intro, an applied-to matrix (one row
-  per shared improvement, one column per repo), then one dated **port card** per
-  improvement covering what it is, the bug that produced it, where the canonical copy
-  lives, and what has to be adapted per site. Read it before porting anything between
-  repos, and before assuming a technique is new.
-- **Docs-in-sync clause:** an improvement that generalizes gets a card **in the same
-  commit that generalizes it**. Same for the matrix when a repo's status changes. A card
-  written a week later is written from memory, and the reason a technique exists is the
-  part that decays fastest.
-- **Canonical files carry a first-line marker** reading `PORTABLE: canonical copy`
-  followed by "ncs-astro-sanity-starter is the library of record for this file", in that
-  file's comment syntax. 94 files carry it as of 2026-09-18. The originals were
-  `scripts/with-workerd.mjs`, `scripts/free-dist.mjs`, `scripts/page-parity.mjs`,
-  `scripts/sync-check.mjs`, `scripts/lib/sanity-lib.mjs` and `src/lib/contrast.ts`; the
-  in-canvas control layer and the family test standard added the rest. Run
-  `npm run sync-check` with no argument for the current list. Marking a file is a
-  judgement: `ci.yml`, `lighthouse.yml`, `lighthouserc.json`, `.prettierignore` and
-  `tests/routes.ts` are deliberately NOT marked because each carries something that is
-  legitimately per-site, and a byte-exact check that can never pass teaches everyone to
-  ignore the tool (PORTS.md card 35).
-- **`npm run sync-check [site-repo]`** walks a repo, finds the marked files, and diffs
-  each against this starter's copy of the same path: `SAME` / `DRIFT` /
-  `MISSING-IN-STARTER`, exit 1 on drift. Line endings are normalized; everything else is
-  byte-exact. Point it at the starter with `NCS_STARTER_DIR`, or let it find a sibling
-  `ncs-astro-sanity-starter`. It is dependency-free so it runs in any repo in the family.
-  Run with no argument from here for a self-check (everything must be `SAME`).
-- **If you change a marked file, you are changing the family's copy.** Either the change
-  is general (make it here, note it on the card, and the next sync session pushes it out)
-  or it is site-specific (then it does not belong in a marked file at all).
-
-Related tooling installed alongside: `npm run parity` (the rendered-HTML parity harness,
-baselines committed in `scripts/.parity/`), `npm run free-dist` (Windows dist-lock
-rescue), and the stale-types guard in `.github/workflows/ci.yml`. Cards 1 through 15 in
-PORTS.md explain each.
+- Do not make a site-specific change in a marked file. If the change is general, make it, note it on the matching `PORTS.md` card for the next sync session, and say so in the commit. If it is site-specific, it belongs somewhere else, or the marker comes off deliberately with a note on the card (that is what happened to `playwright.config.ts`, card 35).
+- Findings on this fork that belong upstream are collected in `docs/upstream/2026-09-20-starter-findings.md` and in the "For ncs-astro-sanity-starter" list in `docs/PENDING.md`.
 
 ---
 
@@ -379,6 +189,8 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 | Area                                                                                                     | Doc                                                                  |
 | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | **Open loops registry (read early each session)**                                                        | `docs/PENDING.md`                                                    |
+| Live draft preview, full reference                                                                       | `docs/agent/preview.md`                                              |
+| What is safe to edit vs foundation, file by file                                                         | `docs/agent/file-map.md`                                             |
 | Stack detail + astro.config landmines                                                                    | `docs/agent/stack-and-config.md`                                     |
 | Page + section architecture, nav, visibility toggles                                                     | `docs/agent/page-architecture.md`                                    |
 | Brand colors + theme system (light/dark discipline)                                                      | `docs/agent/theme-and-color.md`                                      |
@@ -401,9 +213,3 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 | New-project setup runbook + pre-launch checklist                                                         | `docs/bootstrap/NEW-PROJECT.md`, `docs/bootstrap/setup-checklist.md` |
 | Per-module enable guides (`events`, `resources`)                                                         | `docs/modules/<module-name>.md`                                      |
 | The eleven archived modules: what they are and how to bring one back                                     | `archive/README.md`                                                  |
-
----
-
-_Structure: this file is the always-loaded constitution. Deep reference lives under `docs/agent/` (see the topic index above). Change history is in `docs/agent/changelog.md`._
-
-See `OPERATIONS.md` for the tactical playbook (deploy, patch content, run audits, common gotchas).
