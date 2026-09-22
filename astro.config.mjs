@@ -82,11 +82,6 @@ const cmsRedirects = buildRedirectMap(
   await cmsQuery('*[_type == "redirect" && defined(from) && defined(to)]{from,to,permanent}', []),
 );
 
-// Pages the editor keeps out of search. "Keep this page out of Google"
-// (page.hideFromSearch) has to do two things: put a robots tag on the page
-// (src/pages/[slug].astro does that) and drop the page from the sitemap, which
-// is built here. Archived pages are listed too, belt and braces - they are never
-// built, so no URL of theirs can reach the sitemap anyway.
 // Non-font asset inline ceiling (128 KiB), unchanged since 2026-09-20: margin
 // between the then-measured site sheet (124,750 B, since grown, see below)
 // and the Studio's lib.<hash>.css (165,056 B).
@@ -95,9 +90,14 @@ const SITE_ASSET_INLINE_LIMIT = 131072;
 // photo-shape CSS: the site sheet measured 133,535 B that day, which is over
 // SITE_ASSET_INLINE_LIMIT but comfortably under this with margin on both
 // sides of it and the Studio's still-unchanged 165,056 B sheet. See the long
-// comment on `build.inlineStylesheets` above and on `assetsInlineLimit` below.
+// comments on `build.inlineStylesheets` and on `assetsInlineLimit` below.
 const CSS_INLINE_LIMIT = 147456;
 
+// Pages the editor keeps out of search. "Keep this page out of Google"
+// (page.hideFromSearch) has to do two things: put a robots tag on the page
+// (src/pages/[slug].astro does that) and drop the page from the sitemap, which
+// is built here. Archived pages are listed too, belt and braces - they are never
+// built, so no URL of theirs can reach the sitemap anyway.
 const hiddenPagePaths = new Set(
   (
     await cmsQuery(
