@@ -945,6 +945,9 @@
   grid-column: 6 / 12;
   max-width: 62ch;
 }
+.rt-labelled .rt-ds p + p {
+  margin-top: 0.5em;
+}
 .rt-said {
   grid-column: 1 / -1;
   list-style: none;

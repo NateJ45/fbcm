@@ -93,7 +93,9 @@ if (legend) {
 }
 
 const beside = shape === 'row' || shape === 'window' || shape === 'frame' || shape === 'plate';
-const layout = classifyRichText(rest, { hasHead: false, narrow: beside });
+// A ground's body sits at full width under the photo: the prototype's wide flow
+// (labelled rows, a two-column set up to 180 words). Opt-in, ground only.
+const layout = classifyRichText(rest, { hasHead: false, narrow: beside, wide: shape === 'ground' });
 const side = imageSide; // the schema default is 'left', which is where the window wants to be
 // ROW width follows the picture (P1's mapping): portrait 4, square 5, landscape 6, wide 7.
 const rowWidth = !dims ? 6 : dims.a < 0.9 ? 4 : dims.a <= 1.15 ? 5 : dims.a < 1.6 ? 6 : 7;
@@ -158,9 +160,9 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
           class:list={[
             'rt-g',
             beside && hasPicture && 'ph-beside',
-            `is-${shape}`,
-            side === 'left' && 'is-left',
-            shape === 'row' && `w${rowWidth}`,
+            hasPicture && `is-${shape}`,
+            hasPicture && side === 'left' && 'is-left',
+            hasPicture && shape === 'row' && `w${rowWidth}`,
           ]}
         >
           <header class="rt-head">

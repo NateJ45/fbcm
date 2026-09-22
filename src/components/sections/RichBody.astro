@@ -53,6 +53,21 @@ const { pieces } = Astro.props as Props;
           </div>
         ))}
       </div>
+    ) : x.kind === 'labelled' ? (
+      <div class="rt-sub rt-ledger rt-labelled rt-v">
+        {x.rows.map((r) => (
+          <div class="rt-row">
+            <div class="rt-nm">
+              <PortableText value={toPt(r.label)} variant="bare" />
+            </div>
+            <div class="rt-ds">
+              {r.body.map((b) => (
+                <PortableText value={toPt(b)} variant="bare" />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     ) : x.kind === 'said' ? (
       <ul class:list={['rt-said rt-v', x.hang && 'is-hang']}>
         {x.items.map((it) => (
