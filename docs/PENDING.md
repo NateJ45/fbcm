@@ -540,22 +540,27 @@ merged to `main` at `183a61f` and deployed. Full account of what changed is in
   `max-w-full` alongside `break-words`; the general lesson is CLAUDE.md rule 18. Committed directly to `main` (no branch) since the bug shipped there;
   `npm run test:unit` (588 tests) and the full `reflow.spec.ts` suite both
   green after the fix except the item below.
-- **A separate, much smaller reflow-gate finding is still open, unresolved.**
-  `/visit` and `/ministries` both report `scrollWidth` 2px over `clientWidth`
-  at 320px, present before the StaffGrid fix too (as 1px on `/visit` in the
-  original CI failure) and unrelated to it. Walking every element's
-  `getBoundingClientRect()` at the frame the test samples finds nothing whose
-  right edge actually exceeds 320px; the header itself sits at exactly 320.
-  Ruled out: any single element overflowing, the now-fixed StaffGrid email
-  pattern (`/visit` doesn't render `StaffGrid` at all and shows the same 2px),
-  and the skip-link's off-screen positioning. Two rounds of a substantially
-  different investigation each came up empty (CLAUDE.md's two-strike rule), so
-  this stopped rather than guessing further. Whoever
-  picks this up next should look at whether it's a Chromium
-  scrollbar-accounting quirk (`100vw` in `.bleed-right`/`.bleed-left`'s calc()
-  vs `document.documentElement.clientWidth`) rather than a content bug — it is
-  2px, present at 320px only, and identical in magnitude on both routes,
-  which points at something structural rather than page content.
+- **A second, much smaller reflow-gate finding, also fixed.** `/visit`,
+  `/ministries` and (on CI's Linux font rendering only) `/who-we-are` reported
+  `scrollWidth` 1-2px over `clientWidth` at 320px, unrelated to the StaffGrid
+  bug above (present before that fix too, and `/visit` doesn't render
+  `StaffGrid` at all). Walking every element's `getBoundingClientRect()` found
+  nothing whose right edge actually exceeded 320px, which ruled out ordinary
+  content overflow; bisecting the DOM by hiding each of `/visit`'s top-level
+  sections in turn isolated it to `FaqBand.astro`'s open first `<details>`
+  item specifically (the "Questions" band every interior page shares), and
+  removing that one section alone dropped `scrollWidth` back to exactly 320.
+  The exact internal mechanism was not fully pinned down (neither the rotating
+  "+" icon's transform nor any single descendant's paint rect explains a 2px
+  document-level overflow with no element visibly over the edge), which
+  smells like a Chromium `<details>`/`<summary>` layout quirk rather than a
+  CSS mistake in this codebase. Fixed defensively at the located source
+  regardless: `min-w-0 overflow-x-clip` on the answer column
+  (`FaqBand.astro`), which is correct on its own terms (that div is a
+  `grid-cols-12` item and had neither). Verified: `reflow.spec.ts` is
+  68/68 (four widths across every route it covers), parity recaptured and
+  re-proven at a fixpoint after the change, full unit suite (588) and full
+  Playwright suite (171) green.
 - **The `.superpowers/sdd/2026-09-20-fbcm-art-direction/` ledger no longer
   exists.** It was git-ignored scratch inside the `fbcm-art-direction`
   worktree; the worktree was removed as part of this closing pass (clean per
