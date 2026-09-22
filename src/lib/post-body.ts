@@ -51,6 +51,7 @@ export interface PTBlock {
   level?: number;
   children?: Array<PTSpan | { _type: string; [key: string]: unknown }>;
   markDefs?: PTMarkDef[];
+  [key: string]: unknown;
 }
 
 /** Any member of the body array: a text block or a custom object. */
@@ -100,7 +101,7 @@ function isBlock(node: unknown): node is PTBlock {
   return !!node && (node as BodyNode)._type === 'block';
 }
 
-function spansOf(node: { children?: unknown }): PTSpan[] {
+function spansOf(node: { [key: string]: unknown }): PTSpan[] {
   const kids = Array.isArray(node.children) ? node.children : [];
   return kids.filter((c): c is PTSpan => !!c && (c as PTSpan)._type === 'span');
 }
@@ -154,7 +155,7 @@ function spanIsDeadLink(block: PTBlock, span: PTSpan): boolean {
 }
 
 /** Every span that carries words is bold. */
-function whollyStrong(node: { children?: unknown }): boolean {
+function whollyStrong(node: { [key: string]: unknown }): boolean {
   const spans = spansOf(node).filter((s) => cleaned(s.text).trim());
   return spans.length > 0 && spans.every((s) => (s.marks ?? []).includes('strong'));
 }
