@@ -2,23 +2,37 @@
 // Page-builder block: a text section (optional heading + rich body).
 // Surface (background / muted) is assigned by SectionRenderer so the page
 // cadence stays correct no matter the order. Safe to edit by hand.
+//
+// History, short form. Plan 2b (ruling P19, 2026-09-19) stopped this band
+// swapping its CONTAINER to a narrow width, because that pulled the heading to
+// a second left edge (CLAUDE.md rule 17); the measure became the body's rule,
+// not the band's. The art-direction pass (2026-09-21) then set the heading in a
+// sticky column beside the prose. Long bodies left that column empty for
+// screens at a time, and every body, whatever its shape, read as one column of
+// paragraphs.
+//
+// THE LEDGER (2026-09-22, replacing the heading-left/prose-right split of the
+// art-direction pass). The heading sits ABOVE the body at the page's one left
+// edge, and the body is laid out from its own shape by src/lib/rich-shape.ts:
+// h3 groups become ruled columns, lists become ruled rows (a list whose items
+// share their opening words is set as a said text), many short statements
+// become a two-column register, long prose goes into balanced columns. The
+// approved prototype is docs/superpowers/prototypes/2026-09-22-richtext-and-photos/richtext/.
+// `width` and `align` stay in the schema for old documents and have no effect.
 import SectionHeading from '@/components/SectionHeading.astro';
-import PortableText from '@/components/PortableText';
+import RichBody from '@/components/sections/RichBody.astro';
 import { surfaceClass } from '@/lib/surfaces';
-import { PROSE_MEASURE } from '@/lib/prose';
+import { classifyRichText } from '@/lib/rich-shape';
+import PortableText from '@/components/PortableText';
+import type { PortableTextBlock } from '@portabletext/types';
+import type { PtBlock } from '@/lib/span-split';
 
 interface Props {
   eyebrow?: string;
   heading?: string;
   scriptAccent?: string;
-  /** One word of the heading in the brand accent colour. See SectionHeading. */
   headingAccent?: string;
   body?: any;
-  /**
-   * Kept for compatibility with documents that already carry it, and with the
-   * schema field editors still see. It has NO visual effect: see the ruling
-   * P19 note below. 'narrow' is an alias of 'normal'.
-   */
   width?: 'normal' | 'narrow';
   align?: 'left' | 'center';
   surface?: 'background' | 'muted';
@@ -31,97 +45,63 @@ const {
   scriptAccent,
   headingAccent,
   body,
-  align = 'left',
   surface = 'background',
   headingId,
 } = Astro.props as Props;
 
-// Surface classes come from src/lib/surfaces.ts, where the contrast gate
-// measures this pair. Same strings as the ternary that was here (2026-08-28).
 const bg = surfaceClass(surface);
-
-// MEASURE IS THE BODY'S RULE, NOT THE BAND'S (plan 2b ruling P19, 2026-09-19).
-//
-// This band used to swap the whole CONTAINER to `max-w-prose` when `width` was
-// 'narrow', which pulled the eyebrow, the heading and the text inward to a
-// second left edge while every other band on the page started at the gutter.
-// One page, two left edges: exactly what CLAUDE.md rule 17 is about. The other
-// setting, 'normal', had the opposite fault: the body ran the full content
-// width, about 108 characters a line, which is past the point where a reader
-// loses the start of the next line.
-//
-// So the container is ALWAYS the page's `max-w-content px-gutter`, and the body
-// carries its own measure.
-//
-// The NUMBER is measured, not assumed. CSS `ch` is the advance width of the
-// digit zero, and this body face sets a zero far wider than its average
-// letter: at 1280 a `max-w-[68ch]` body came out 772px and fitted 88 to 93
-// real characters a line, which is barely narrower than the full content
-// width it was meant to fix. 52ch is 590px here and measures 65 to 69
-// characters on the Beliefs bands, which is the target. Re-measure in the
-// browser if the body font ever changes; do not convert this by arithmetic.
-//
-// The `width` field stays in the schema and on existing documents; 'narrow' is
-// now an alias with no visual difference.
-//
-// The measure itself moved to src/lib/prose.ts on 2026-09-20 so /privacy, which
-// is a bespoke route rather than a builder page, can read the same one string
-// instead of carrying a second copy of it.
-//
-// THE HEADING SITS BESIDE THE PROSE, NOT ABOVE IT (art-direction pass, task 8).
-//
-// A band that has a heading is a twelve-column grid: the heading in the first
-// four columns, the reading starting at column six. The measure below is what
-// makes that work, because a 62ch column inside six of twelve columns is the
-// same line length it was at full width. A band with NO heading keeps the
-// single column it always had, so the prose still starts at the page's own
-// left edge rather than indenting itself to where a missing heading would be.
-//
-// The old `mt-l` that separated the heading from the prose went with it: in the
-// two-column form there is nothing above the prose to separate it from, and on
-// a phone the body column carries its own `mt-9`.
-const alignClass = align === 'center' ? 'text-center' : '';
-const proseClass = [
-  PROSE_MEASURE,
-  alignClass,
-  // Centred prose has to be centred as a BOX as well as as text, or the 68ch
-  // measure would sit against the left edge with its lines centred inside it.
-  align === 'center' ? 'mx-auto' : '',
-]
-  .filter(Boolean)
-  .join(' ');
+const hasHead = !!(heading || eyebrow);
+const layout = classifyRichText(body, { hasHead });
+const measure = layout.pieces[0];
+const one = (b: PtBlock) => [b] as unknown as PortableTextBlock[];
 ---
 
-<section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-gutter py-section-lg">
+<section
+  class={bg}
+  aria-labelledby={heading ? headingId : undefined}
+  data-rich-shape={layout.shape}
+>
+  <div
+    class:list={[
+      'mx-auto max-w-content px-gutter',
+      layout.continuation || layout.shape === 'row' ? 'py-section-md' : 'py-section-lg',
+    ]}
+  >
     {
-      heading ? (
-        <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)]">
-          {/* The heading column STICKS on a desktop (fix round 1, 2026-09-21).
-              /beliefs has bands whose reading runs 1200px past the end of the
-              heading, and a heading that scrolls away leaves a tall empty
-              column that reads as a mistake. Riding down with the reader it
-              reads as a rubric instead, and it also answers "which band am I
-              in" on the longest page on the site. `self-start` is what lets it
-              stick at all: a grid item stretches to the row's height by
-              default, and a full-height box has nothing to stick within. */}
-          <div class="col-span-12 self-start lg:sticky lg:top-[calc(var(--header-offset)+1rem)] lg:col-span-4">
-            <SectionHeading
-              eyebrow={eyebrow}
-              headline={heading}
-              headingId={headingId}
-              align={align}
-              scriptAccent={scriptAccent}
-              headingAccent={headingAccent}
-              class={align === 'center' ? 'mx-auto' : ''}
-            />
-          </div>
-          <div class="col-span-12 mt-9 lg:col-span-6 lg:col-start-6 lg:mt-0">
-            {body && <PortableText value={body} className={proseClass} />}
+      layout.shape === 'row' && measure?.kind === 'measure' ? (
+        <div class="rt-g">
+          <div class="rt-rowline">
+            <div class="rt-rh">
+              <SectionHeading
+                eyebrow={eyebrow}
+                headline={heading}
+                headingId={headingId}
+                scriptAccent={scriptAccent}
+                headingAccent={headingAccent}
+              />
+            </div>
+            <div class:list={['rt-rt', layout.rowLong && 'is-long']}>
+              {measure.paras.map((q) => (
+                <PortableText value={one(q.block)} variant="bare" />
+              ))}
+            </div>
           </div>
         </div>
       ) : (
-        body && <PortableText value={body} className={proseClass} />
+        <div class="rt-g">
+          {hasHead && (
+            <div class="rt-head">
+              <SectionHeading
+                eyebrow={eyebrow}
+                headline={heading}
+                headingId={headingId}
+                scriptAccent={scriptAccent}
+                headingAccent={headingAccent}
+              />
+            </div>
+          )}
+          <RichBody pieces={layout.pieces} />
+        </div>
       )
     }
   </div>
