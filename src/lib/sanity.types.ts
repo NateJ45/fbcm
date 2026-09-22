@@ -910,7 +910,7 @@ export type ImageTextSection = {
       _type: 'span';
       _key: string;
     }>;
-    style?: 'normal' | 'h2' | 'h3' | 'blockquote';
+    style?: 'normal' | 'h2' | 'h3' | 'h4' | 'blockquote';
     listItem?: 'bullet' | 'number';
     markDefs?: Array<{
       href?: string;
@@ -938,7 +938,7 @@ export type RichTextSection = {
       _type: 'span';
       _key: string;
     }>;
-    style?: 'normal' | 'h2' | 'h3' | 'blockquote';
+    style?: 'normal' | 'h2' | 'h3' | 'h4' | 'blockquote';
     listItem?: 'bullet' | 'number';
     markDefs?: Array<{
       href?: string;
