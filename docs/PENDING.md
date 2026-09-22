@@ -568,11 +568,14 @@ this branch):**
 
 **Other open items from this branch:**
 
+- **For Nathan, in the Studio: fix the `/history` "Saunders to the
+  co-pastors" photo's alt text.** It says "the congregation in the 1990s",
+  but the picture is a head-and-shoulders portrait of George Saunders, and
+  since this pass the alt prints as the visible caption, so the wrong
+  description now sits in plain view under his portrait. A content edit, no
+  code. (Also in the vault as a `#nathan` item.)
 - **Content, found while placing photographs (for the photo pass, not this
   branch):**
-  - `/history`'s "Saunders to the co-pastors" frame's alt text says "the
-    congregation in the 1990s", but the picture is a head-and-shoulders
-    portrait of George Saunders.
   - The "Postwar to Mattox" ground is a phone photograph of a framed print;
     the frame's dark edges show at both sides of the full-bleed band.
   - `/contact`'s window sits on the left because the seeded data says
@@ -593,16 +596,35 @@ this branch):**
   `splitBlockText` assumes a single trailing stega run, with no guard for one
   sitting mid-span; `sharedPrefix` joins cleaned words with single spaces
   while `splitBlockText` indexes the raw span, so a double or leading space
-  in a shared prefix would mis-split; the bare PortableText variant used
-  inside the Ledger does not override `blockquote`/`h2`, so either would fall
-  back to prose styling if a band ever used one; a band with h4 headings and
-  no h3 would emit h4 columns under an h2, unreachable by any live band
-  today; the Task 6 ground-budget edge cases (no dedicated test for "never
-  two consecutive grounds", and a hero not first in `rows`) are untested;
-  `wideRun` treats two consecutive label-shaped paragraphs as a labelled row
-  rather than a description, faithful to the prototype but untested; the
-  ground band's literal colours `#f4efe6` and `#17151f` carry no comment or
-  token, unlike `.bg-accent-dark`'s documented pin.
+  in a shared prefix would mis-split; of the Task 6 ground-budget edge cases,
+  "never two consecutive grounds" IS tested (`photo-shape.test.ts`, "ground
+  budget: a second ground only four rows later..."), and what stays untested
+  is the page-length floor (a 5-row page, where a second ground 4 rows later
+  must still be refused) and a hero that is not first in `rows`; `wideRun`
+  treats two consecutive label-shaped paragraphs as a labelled row rather
+  than a description, faithful to the prototype but untested.
+- **Resolved in the final whole-branch review (2026-09-22):** Heading (h2),
+  Quote (blockquote) and Numbered lists, all offered by `proseBody`, used to
+  fall to unstyled defaults or lose their order in the Ledger; they now
+  render as a section head, a `quote` piece on a gold rule, and an ordered
+  list. A body with h4 and no h3 now promotes its h4s to h3, so it no longer
+  skips a level under the band's h2. A `legend` band whose names are gone
+  after the lede now falls back to `row`. The ground band's literal colours
+  now carry a comment naming them a deliberate dark pin.
+- **`richTextSection`'s `align` field is now inert.** The Ledger ignores it
+  (the heading always sits at the page's one left edge, CLAUDE.md rule 17),
+  and `RichTextSection.astro` says so in a comment, but the Studio still
+  offers it with no hint. Saying so in the field's schema `description` is a
+  schema change and needs Nathan's OK; hiding or removing the field needs
+  the same, plus the rule 1 "Remove field" care.
+- **The ground's text could clip a long lede at 320px.** `.ph-ground-fig` has
+  a fixed `clamp()` height and `.ph-ground-text` is absolutely positioned at
+  its foot, so text taller than the band is cut off by `overflow: hidden`.
+  The longest live ground text is 21 words and fits. Fix later with a
+  `min-height` in place of the height and the text in normal flow.
+- **Captions (optional, predates this pass).** The ground's caption is a
+  `<p>`, not a `<figcaption>`, and every photo shape repeats the alt text as
+  its visible caption, so a screen reader hears the description twice.
 - **Photo library, a separate branch.** `feat/photo-library` (worktree
   `../fbcm-photos`, cut from `main` at `e6d1e90`) is gap-filling photographs
   the Wix capture missed and will upload the whole church photo library to
