@@ -10,12 +10,11 @@
 // a pager on a six-post list is furniture.
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Archive from '@/components/blog/Archive.astro';
-import FinalCta from '@/components/FinalCta.astro';
-import { getAllJournalEntries, getJournalPage, getSiteSettings } from '@/lib/queries';
+import { getAllJournalEntries, getSiteSettings } from '@/lib/queries';
 import { getSectionVisibility } from '@/lib/sectionVisibility';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
-import { tagIndex } from '@/lib/blog-derive';
+import { tagIndex, type RegisterEntry } from '@/lib/blog-derive';
 import { slugify } from '@/lib/slugify';
 
 export async function getStaticPaths() {
@@ -26,17 +25,22 @@ export async function getStaticPaths() {
   if (!getSectionVisibility(settings?.sectionVisibility).journal) return [];
 
   // The whole group travels as a prop: the route would otherwise re-derive the
-  // same 217-way grouping once per page.
-  return tagIndex((entries ?? []) as any[], slugify).map((group) => ({
+  // same 217-way grouping once per page. The whole archive travels too, by
+  // reference, for the filter row's counts.
+  const all = (entries ?? []) as RegisterEntry[];
+  return tagIndex(all, slugify).map((group) => ({
     params: { tag: group.slug },
-    props: { label: group.label, entries: group.entries },
+    props: { label: group.label, entries: group.entries, all },
   }));
 }
 
 const { tag } = Astro.params;
-const { label, entries } = Astro.props as { label: string; entries: any[] };
+const { label, entries, all } = Astro.props as {
+  label: string;
+  entries: RegisterEntry[];
+  all: RegisterEntry[];
+};
 const siteSettings = await getSiteSettings().catch(() => null);
-const journalPage = await getJournalPage().catch(() => null);
 
 const count = entries.length;
 const title = `${label} | Blog | ${site.name}`;
@@ -56,15 +60,11 @@ const schemas = [
     eyebrow="Tagged"
     heading={label}
     intro={`${count} ${count === 1 ? 'post' : 'posts'}, newest first.`}
-    entries={entries}
+    list={entries}
+    allEntries={all}
     page={1}
-    pages={1}
+    paged={false}
     basePath={`/blog/tag/${tag}`}
-  />
-  <FinalCta
-    headline={journalPage?.finalCtaHeadline}
-    subhead={journalPage?.finalCtaSubhead}
-    cta={journalPage?.finalCta}
-    backgroundImage={journalPage?.finalCtaBackgroundImage}
+    exclude={label}
   />
 </BaseLayout>

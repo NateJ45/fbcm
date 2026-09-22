@@ -9,17 +9,11 @@
 // the querystring hand-off script on /blog.
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Archive from '@/components/blog/Archive.astro';
-import FinalCta from '@/components/FinalCta.astro';
-import {
-  getAllJournalEntries,
-  getAllJournalCategories,
-  getJournalPage,
-  getSiteSettings,
-} from '@/lib/queries';
+import { getAllJournalEntries, getAllJournalCategories, getSiteSettings } from '@/lib/queries';
 import { getSectionVisibility } from '@/lib/sectionVisibility';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
-import { paginate, PER_PAGE, clean } from '@/lib/blog-derive';
+import { paginate, PER_PAGE, clean, type RegisterEntry } from '@/lib/blog-derive';
 
 export async function getStaticPaths() {
   const [categories, settings] = await Promise.all([
@@ -34,17 +28,17 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const [entries, categories, journalPage, siteSettings] = await Promise.all([
+const [entries, categories, siteSettings] = await Promise.all([
   getAllJournalEntries().catch(() => []),
   getAllJournalCategories().catch(() => []),
-  getJournalPage().catch(() => null),
   getSiteSettings().catch(() => null),
 ]);
 
 const category = ((categories ?? []) as any[]).find((c) => c?.slug?.current === slug);
 if (!category) return Astro.redirect('/blog');
 
-const inCategory = ((entries ?? []) as any[]).filter((e) =>
+const all = (entries ?? []) as RegisterEntry[];
+const inCategory = all.filter((e) =>
   (e.categories ?? []).some((c: any) => clean(c?.slug?.current) === slug),
 );
 const slice = paginate(inCategory, PER_PAGE, 1);
@@ -69,18 +63,12 @@ const schemas = [
     eyebrow="Category"
     heading={label}
     intro={clean(category.description) || undefined}
-    entries={slice.items}
+    list={inCategory}
+    allEntries={all}
     page={slice.page}
-    pages={slice.pages}
     basePath={`/blog/category/${slug}`}
-    categories={(categories ?? []) as any}
     activeSlug={String(slug)}
+    exclude={String(slug)}
     emptyMessage="No posts in this category yet."
-  />
-  <FinalCta
-    headline={journalPage?.finalCtaHeadline}
-    subhead={journalPage?.finalCtaSubhead}
-    cta={journalPage?.finalCta}
-    backgroundImage={journalPage?.finalCtaBackgroundImage}
   />
 </BaseLayout>

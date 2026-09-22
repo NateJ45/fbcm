@@ -1,0 +1,232 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// The register (journal pass, 2026-09-22, variant "I1 Register"). A page of
+// posts set as ruled rows, grouped by the year they were published in Muncie:
+//
+//   year (old-style, cols 1-2) | date | title + excerpt | meta | 4:3 plate
+//
+// The meta is derived (registerMeta in blog-derive.ts): a sermon preview says
+// which Sunday and which reading, anything else its category. The covers are
+// shrunk to recognition plates on purpose: 123 of 141 are sermon slides with
+// their own lettering, and a grid of them is a collage of other people's type.
+//
+// Phone (< 1024px): one column, the meta line above the title, the plate at the
+// right (96px, 84px under 640px).
+import SanityImage from '@/components/SanityImage.astro';
+import { groupByYear, registerMeta, type RegisterEntry } from '@/lib/blog-derive';
+
+interface Props {
+  entries: RegisterEntry[];
+  emptyMessage?: string;
+}
+const { entries, emptyMessage = 'Nothing here yet.' } = Astro.props as Props;
+const groups = groupByYear(entries ?? []);
+---
+
+{
+  entries.length === 0 ? (
+    <p class="max-w-[62ch] text-body text-muted-foreground">{emptyMessage}</p>
+  ) : (
+    <div class="reg">
+      {groups.map((g) => (
+        <div class="yr">
+          {g.year !== null && <h3 class="yr-h oldstyle">{g.year}</h3>}
+          <div class="rows">
+            {g.items.map((entry) => {
+              const m = registerMeta(entry);
+              const href = entry.slug?.current ? `/post/${entry.slug.current}` : '#';
+              return (
+                <a class="row group" href={href}>
+                  <span class="d oldstyle">{m.iso && <time datetime={m.iso}>{m.day}</time>}</span>
+                  <span class="t">
+                    <span class="mm oldstyle">
+                      {m.key && <span class="k">{m.key}</span>}
+                      {m.preview
+                        ? m.value && ` · ${m.value}`
+                        : m.day && (m.key ? ` · ${m.day}` : m.day)}
+                    </span>
+                    <b>{entry.title}</b>
+                    {entry.excerpt && <span class="ex">{entry.excerpt}</span>}
+                  </span>
+                  <span class="m oldstyle">
+                    {m.key && <span class="k">{m.key}</span>}
+                    {m.value}
+                  </span>
+                  <span class="p zoom-img" aria-hidden="true">
+                    {(entry.coverImage as any)?.asset ? (
+                      <SanityImage
+                        source={entry.coverImage as any}
+                        width={400}
+                        height={300}
+                        alt=""
+                        sizes="(min-width: 1024px) 14vw, 96px"
+                      />
+                    ) : (
+                      <span class="ph" />
+                    )}
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .reg {
+    border-bottom: 1px solid var(--hair);
+  }
+  .yr {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+    border-top: 1px solid var(--hair-strong);
+    padding-top: 22px;
+    margin-top: 30px;
+  }
+  .yr:first-child {
+    margin-top: 0;
+  }
+  .yr-h {
+    grid-column: 1 / 3;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-h2);
+    line-height: 1;
+    color: var(--foreground);
+  }
+  .rows {
+    grid-column: 3 / 13;
+    min-width: 0;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+    padding: 18px 0 20px;
+    border-top: 1px solid var(--hair);
+    text-decoration: none;
+    align-items: start;
+    color: var(--foreground);
+  }
+  .row:first-child {
+    border-top: 0;
+    padding-top: 4px;
+  }
+  .d {
+    grid-column: 1 / 2;
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+    padding-top: 6px;
+    white-space: nowrap;
+  }
+  .t {
+    grid-column: 2 / 7;
+    min-width: 0;
+  }
+  .t b {
+    display: block;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 1.05rem + 0.6vw, 1.625rem);
+    line-height: 1.18;
+    overflow-wrap: break-word;
+    transition: color 0.2s;
+  }
+  .t .ex {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted-foreground);
+    font-size: 0.9875rem;
+    line-height: 1.5;
+    max-width: 58ch;
+    overflow-wrap: break-word;
+  }
+  .mm {
+    display: none;
+  }
+  .m {
+    grid-column: 7 / 9;
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    letter-spacing: 0.03em;
+    line-height: 1.45;
+    color: var(--muted-foreground);
+    padding-top: 5px;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  .k {
+    color: var(--color-gold-ink);
+  }
+  .m .k {
+    display: block;
+    font-size: var(--text-ui);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+  .p {
+    grid-column: 9 / 11;
+    margin-top: 6px;
+    overflow: hidden;
+    display: block;
+  }
+  .p :global(img),
+  .p .ph {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .p .ph {
+    background: var(--muted);
+  }
+  .row:hover .t b,
+  .row:focus-visible .t b {
+    color: var(--color-gold-ink);
+  }
+
+  @media (max-width: 1023px) {
+    .yr {
+      display: block;
+    }
+    .yr-h {
+      margin-bottom: 8px;
+      font-size: var(--text-h3);
+    }
+    .row {
+      grid-template-columns: minmax(0, 1fr) 96px;
+      column-gap: 16px;
+    }
+    .d,
+    .m {
+      display: none;
+    }
+    .t {
+      grid-column: 1;
+    }
+    .p {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .mm {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: 0.8125rem;
+      letter-spacing: 0.04em;
+      color: var(--muted-foreground);
+      margin: 0 0 6px;
+    }
+  }
+  @media (max-width: 640px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr) 84px;
+    }
+  }
+</style>
