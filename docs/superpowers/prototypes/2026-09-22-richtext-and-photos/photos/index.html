@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ground and Window</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=Sofia+Sans+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f4efe6; --soft: #ebe4d8; --ink: #17151f; --muted: #514c58;
+  --gold-ink: #805709; --gold: #d59b29; --indigo: #292854; --brown: #39251e;
+  --hair: rgba(23,21,31,.16); --hair-strong: rgba(23,21,31,.34);
+  --glass: #17151f;           /* the ground's gradient colour */
+  --on-ground: #f4efe6;       /* text on a photograph, both themes */
+  --max: 1400px; --gutter: clamp(20px, 5vw, 72px); --gap: clamp(16px, 2.5vw, 40px);
+  --h2: clamp(2rem, 1.2rem + 2.6vw, 3.25rem);
+  --h3: clamp(1.375rem, 1rem + 1vw, 1.75rem);
+  --lede: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  --item: clamp(1.125rem, 1rem + .4vw, 1.375rem);
+  --body: 1.0625rem; --ui: .8125rem;
+  --section-lg: clamp(4rem, 8vw, 7rem); --section-md: clamp(3rem, 6vw, 5rem);
+  --tick: 28px;               /* the family mark: a 28px gold rule */
+  --moulding: 9px;            /* gold line set this far off a hung picture */
+  --bar: 46px;
+  --f-read: "Castoro", Georgia, serif;
+  --f-ui: "Sofia Sans Semi Condensed", "Arial Narrow", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14121b; --soft: #1c1926; --ink: #f1ece3; --muted: #c2bcc9;
+    --gold-ink: #d59b29; --hair: rgba(241,236,227,.16); --hair-strong: rgba(241,236,227,.34);
+    --glass: #0b0a10; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14121b; --soft: #1c1926; --ink: #f1ece3; --muted: #c2bcc9;
+  --gold-ink: #d59b29; --hair: rgba(241,236,227,.16); --hair-strong: rgba(241,236,227,.34);
+  --glass: #0b0a10; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--f-read);
+  font-size: var(--body); line-height: 1.7; padding-top: var(--bar); }
+p, h2, h3, h4, ul, ol, figure { margin: 0; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration-color: var(--gold); text-underline-offset: .18em; }
+.ui { font-family: var(--f-ui); font-size: var(--ui); letter-spacing: .14em; text-transform: uppercase; font-weight: 500; line-height: 1.4; }
+
+/* ---------- prototype chrome (not part of the design) ---------- */
+.bar { position: fixed; inset: 0 0 auto 0; height: var(--bar); z-index: 50; display: flex; align-items: center; gap: 14px;
+  padding: 0 14px; background: var(--paper); border-bottom: 1px solid var(--hair-strong); font-family: var(--f-ui); font-size: 12.5px; }
+.bar b { font-weight: 600; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+.bar .thesis { color: var(--muted); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar nav { display: flex; gap: 2px; }
+.bar nav a, .bar button { font: inherit; color: var(--ink); background: none; border: 1px solid var(--hair-strong); padding: 3px 9px; cursor: pointer; text-decoration: none; line-height: 1.4; }
+.bar nav a[aria-current] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+@media (max-width: 700px) { .bar .thesis { display: none; } .bar { gap: 8px; } .bar b { flex: 1; } }
+.spec { font-family: var(--f-ui); font-size: 11.5px; letter-spacing: .06em; color: var(--muted); background: var(--paper);
+  padding: 8px var(--gutter); border-top: 1px dashed var(--hair-strong); border-bottom: 1px dashed var(--hair-strong);
+  scroll-margin-top: var(--bar); }
+.spec span { opacity: .8; }
+dialog { max-width: min(900px, 100vw - 24px); max-height: calc(100vh - 60px); padding: 28px clamp(18px, 3vw, 36px); border: 1px solid var(--hair-strong);
+  background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.55; }
+dialog::backdrop { background: rgba(10,10,15,.45); }
+dialog h2 { font-size: 1.75rem; line-height: 1.1; margin-bottom: .6em; font-weight: 400; }
+dialog h3 { font-family: var(--f-ui); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-ink); margin: 1.6em 0 .5em; font-weight: 600; }
+dialog pre { font-size: 12.5px; line-height: 1.5; overflow-x: auto; border-top: 1px solid var(--hair-strong); border-bottom: 1px solid var(--hair); padding: 10px 0; }
+dialog table { border-collapse: collapse; width: 100%; font-size: 14px; }
+dialog td, dialog th { text-align: left; vertical-align: top; border-top: 1px solid var(--hair); padding: 6px 10px 6px 0; }
+dialog ul { padding-left: 1.2em; } dialog li { margin: .3em 0; }
+dialog p + p { margin-top: .6em; }
+dialog .close { position: sticky; top: 0; float: right; font-family: var(--f-ui); background: var(--paper); border: 1px solid var(--hair-strong); padding: 3px 10px; cursor: pointer; color: var(--ink); }
+
+/* ================= the design ================= */
+main { container-type: inline-size; }
+.band { background: var(--paper); --band: var(--paper); --mat: var(--soft); }
+.band.soft { background: var(--soft); --band: var(--soft); --mat: var(--paper); }
+.wrap { max-width: var(--max); margin: 0 auto; padding: var(--section-lg) var(--gutter); }
+.g { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+
+/* Ledger head (adopted): above the body, one left edge */
+.head { grid-column: 1 / -1; margin-bottom: clamp(36px, 4.5vw, 64px); }
+.eyebrow { color: var(--gold-ink); margin-bottom: 20px; }
+h2.h { font-size: var(--h2); line-height: 1.05; font-weight: 400; max-width: 22ch; }
+.lede { font-style: italic; font-size: var(--lede); line-height: 1.35; max-width: 34em; margin-bottom: clamp(28px, 3.5vw, 48px); }
+h3.h3 { font-size: var(--h3); line-height: 1.15; font-weight: 400; }
+
+/* reading flows (Ledger's pieces, the ones these bodies use) */
+.measure p + p, .measure p + .rows, .measure .rows + p { margin-top: 1em; }
+.measure { max-width: 62ch; }
+.set { columns: 2; column-gap: var(--gap); column-rule: 1px solid var(--hair); }
+.set p { break-inside: avoid; } .set p + p { margin-top: .85em; }
+.rows { border-bottom: 1px solid var(--hair); list-style: none; padding: 0; }
+.rows > li { border-top: 1px solid var(--hair); padding: 10px 0 11px; font-size: var(--item); line-height: 1.45; }
+.rows > li:first-child { border-top-color: var(--hair-strong); }
+.sect { border-top: 1px solid var(--hair-strong); padding-top: 16px; margin: clamp(24px, 3vw, 36px) 0 14px; }
+.labelled { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); border-bottom: 1px solid var(--hair); }
+.labelled .lrow { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; border-top: 1px solid var(--hair); padding: 14px 0 16px; align-items: baseline; }
+.labelled .lrow:first-child { border-top-color: var(--hair-strong); }
+.labelled .nm { grid-column: 1 / 5; font-size: var(--item); line-height: 1.3; }
+.labelled .ds { grid-column: 6 / 12; max-width: 62ch; }
+.labelled .ds p + p { margin-top: .5em; }
+
+/* ---------- THE FAMILY ---------- */
+/* 1. the tick: every caption, and the eyebrow on a ground, hangs from one 28px gold rule */
+.tick { display: block; width: var(--tick); height: 1px; background: var(--gold); }
+figcaption.cap { margin-top: 14px; font-style: italic; font-size: .9375rem; line-height: 1.45; color: var(--muted); max-width: 40ch; }
+figcaption.cap .tick { margin-bottom: 9px; }
+/* 2. the moulding: pictures of people and of the past are HUNG; one gold line set off them */
+.hung { position: relative; }
+.hung::after { content: ""; position: absolute; inset: calc(-1 * var(--moulding)); border: 1px solid var(--gold); pointer-events: none; }
+/* 3. edges: square corners everywhere; only the one window is shaped */
+
+/* ---------- BESIDE (row, plate, window, frame): text and picture share a row ---------- */
+.beside .side-text { grid-column: 1 / 7; grid-row: 2; }
+.beside .side-fig  { grid-column: 8 / 13; grid-row: 2; align-self: start; }
+.beside.fig-left .side-fig  { grid-column: 1 / 6; grid-row: 2; }
+.beside.fig-left .side-text { grid-column: 6 / 12; grid-row: 2; }
+/* a view (ROW) rides along with a long text so it stays BESIDE it */
+.beside.is-row .side-fig { position: sticky; top: calc(var(--bar) + 32px); }
+.row-img { width: 100%; height: auto; }
+
+/* PLATE: an archival scan matted on the other surface, a gold line round the print, never bled */
+.plate { background: var(--mat); padding: clamp(20px, 2.6vw, 40px) clamp(20px, 2.6vw, 40px) clamp(18px, 2vw, 28px); }
+.plate .print { position: relative; }
+.plate .print::after { content: ""; position: absolute; inset: -6px; border: 1px solid var(--gold); pointer-events: none; }
+.plate img { width: 100%; height: auto; }
+.plate figcaption.cap { margin-top: 22px; }
+.plate-wrap { max-width: 500px; }
+.beside.fig-left .plate-wrap { max-width: 480px; }
+
+/* WINDOW: the lancet. Width 1 : height 2.1. Arch head = two arcs of radius 1.5 x span
+   (a lancet; equilateral would be 1.0, HP Pres's is rounder), so the point rises 1.118 x span
+   above the springing line. The photo starts 16% of the way down and fades up into the band's own
+   surface (--band, set on .band / .band.soft and re-resolved per theme), so the point reads as open. */
+.window-wrap { width: min(100%, 340px); }
+.window { position: relative; width: 100%; }
+.fig-right .window-wrap { margin-left: auto; }
+.window .pane { position: relative; aspect-ratio: 1 / 2.1; clip-path: url(#lancet); background: var(--band); }
+.window .pane img { position: absolute; left: 0; right: 0; bottom: 0; top: 16%; width: 100%; height: 84%;
+  object-fit: cover; object-position: 50% 0%;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%); mask-image: linear-gradient(to bottom, transparent 0, #000 7%); }
+.window .moulding { position: absolute; inset: calc(-1 * var(--moulding)); width: calc(100% + 2 * var(--moulding)); height: calc(100% - 0px + 2 * var(--moulding)); overflow: visible; pointer-events: none; }
+.window .moulding path { fill: none; stroke: var(--gold); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.window-wrap figcaption.cap { margin-top: calc(14px + var(--moulding)); }
+.beside.window-band .side-fig { grid-column: 1 / 5; }
+.beside.window-band .side-text { grid-column: 6 / 12; }
+.beside.window-band.fig-right .side-fig { grid-column: 9 / 13; grid-row: 2; }
+.beside.window-band.fig-right .side-text { grid-column: 1 / 8; grid-row: 2; }
+
+/* FRAME: a second portrait on a page. Native shape, never landscape, hung like the plate. */
+.frame img { width: 100%; height: auto; max-height: 560px; object-fit: cover; object-position: 50% 15%; }
+
+/* ---------- GROUND: the photograph is the band ---------- */
+.ground { background: var(--band); }
+.ground-fig { position: relative; width: 100cqw; height: clamp(520px, 52cqw, 780px); overflow: hidden; background: #17151f; }
+.ground-fig > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+/* the home hero's recipe, verbatim: one bottom gradient, one left gradient, same ink */
+.ground-fig .ov { position: absolute; inset: 0; background:
+    linear-gradient(to top, rgb(23 21 31 / 94%) 0%, rgb(23 21 31 / 62%) 34%, rgb(23 21 31 / 12%) 62%, rgb(23 21 31 / 0%) 80%),
+    linear-gradient(to right, rgb(23 21 31 / 55%) 0%, rgb(23 21 31 / 0%) 55%); }
+.ground-text { position: absolute; inset: auto 0 0 0; }
+.ground-text .in { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter) clamp(36px, 5vw, 64px); color: var(--on-ground); }
+.ground-text .tick { margin-bottom: 16px; }
+.ground-text .eyebrow { color: #e7b85a; }
+.ground-text .h { max-width: 16ch; }
+.ground-text .lede { margin: 18px 0 0; max-width: 30em; color: rgb(244 239 230 / 92%); }
+.ground .wrap { padding-top: clamp(20px, 2.4vw, 28px); }
+.ground .gcap { grid-column: 1 / -1; margin: 0 0 clamp(48px, 6vw, 80px); display: flex; gap: 14px; align-items: baseline; }
+.ground .gcap .tick { flex: none; transform: translateY(-4px); }
+.ground .gbody { grid-column: 1 / 11; }
+
+/* ---------- LEGEND: a wide group photo, the names under the people ---------- */
+.legend-fig { grid-column: 1 / -1; }
+.legend-fig img { width: 100%; height: auto; }
+.legend-fig .lg-label { color: var(--gold-ink); margin: 18px 0 0; }
+.names { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); column-gap: var(--gap); list-style: none; padding: 0; margin: 12px 0 0; }
+.names li { padding-top: 12px; font-size: var(--item); line-height: 1.3; position: relative; text-align: center; }
+.names li::before { content: ""; position: absolute; top: 0; left: calc(50% - var(--tick) / 2); width: var(--tick); height: 1px; background: var(--gold); }
+.legend-fig .foot { margin-top: 12px; color: var(--muted); font-size: .9375rem; }
+.legend-fig figcaption.cap { margin-top: 26px; }
+.legend-rest { grid-column: 1 / 11; margin-top: clamp(40px, 5vw, 72px); }
+
+/* continuation (adopted from Ledger) */
+.cont-label { grid-column: 1 / 5; align-self: start; position: sticky; top: calc(var(--bar) + 20px); border-top: 1px solid var(--hair-strong); padding-top: 12px; }
+.cont-label .ui { color: var(--gold-ink); }
+.cont-label .was { display: block; font-style: italic; color: var(--muted); line-height: 1.35; margin-top: 6px; max-width: 24ch; }
+.cont-text { grid-column: 6 / 12; max-width: 62ch; font-size: 1.125rem; line-height: 1.72; }
+.cont-text p + p { margin-top: 1em; }
+
+/* ---------- tablet and phone ---------- */
+@media (max-width: 1023px) {
+  .g > *, .beside .side-fig, .beside .side-text, .beside.fig-left .side-fig, .beside.fig-left .side-text,
+  .beside.window-band .side-fig, .beside.window-band .side-text,
+  .beside.window-band.fig-right .side-fig, .beside.window-band.fig-right .side-text { grid-column: 1 / -1 !important; grid-row: auto !important; }
+  .fig-right .window-wrap { margin-left: 0; }
+  .beside .side-fig { margin-bottom: 40px; position: static !important; }
+  .beside .lede-slot { order: -1; }
+  .set { columns: 1; }
+  .labelled, .labelled .lrow { display: block; }
+  .labelled .nm { margin-bottom: 4px; }
+  .cont-label { position: static; margin-bottom: 24px; }
+  .window-wrap { width: min(66%, 250px); margin: var(--moulding); }
+  .plate-wrap { max-width: none; }
+  .ground-fig { height: clamp(480px, 128cqw, 640px); }
+  .names { column-gap: 10px; }
+  .names li { font-size: .9375rem; }
+}
+@media (max-width: 520px) {
+  .names { grid-template-columns: 1fr; }
+  .names li { display: grid; grid-template-columns: 2.2em 1fr; padding: 8px 0; border-top: 1px solid var(--hair); text-align: left; }
+  .names li::before { display: none; }
+  .names li .pos { font-family: var(--f-ui); font-size: var(--ui); letter-spacing: .1em; color: var(--gold-ink); }
+}
+@media (min-width: 521px) { .names li .pos { display: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- The lancet in objectBoundingBox units, box fixed at 1 : 2.1 by CSS.
+       Springing line at 1.118 / 2.1 = 0.5324. Arc radius 1.5 spans, scaled into the box: rx 1.5, ry 1.5/2.1 = 0.7143. -->
+  <clipPath id="lancet" clipPathUnits="objectBoundingBox">
+    <path d="M0,1 L0,0.5324 A1.5,0.7143 0 0 1 0.5,0 A1.5,0.7143 0 0 1 1,0.5324 L1,1 Z"/>
+  </clipPath>
+</svg>
+<div class="bar" role="banner">
+  <b>P3 &middot; Ground and window</b>
+  <span class="thesis">The photo shapes the band: a view becomes the ground, a face gets the building's lancet, a scan is hung as a plate.</span>
+  <nav aria-label="Variants"><a href="../p1/index.html" data-v="p1">P1</a><a href="../p2/index.html" data-v="p2">P2</a><a href="../p3/index.html" data-v="p3" aria-current="page">P3</a></nav>
+  <button type="button" id="theme">Dark</button>
+  <button type="button" id="rulesBtn">Rules</button>
+</div>
+<main id="main"></main>
+
+<dialog id="rules" aria-labelledby="rulesTitle">
+  <button class="close" type="button" onclick="this.closest('dialog').close()">Close</button>
+  <h2 id="rulesTitle">Ground and window: the rules</h2>
+  <p><b>Thesis.</b> The picture decides the band. A photograph of the place, wide and sharp enough, stops being a rectangle in a column and becomes the band's GROUND, with the heading set into its darkened edge (the home hero's recipe). A photograph of a person is shown through the building's own window: the 1929 tower's pointed lancet, head and shoulders, whole. A scan from the archive is hung as a museum PLATE. Everything else sits BESIDE its text at the text's height. Nothing sits in a column below its words.</p>
+  <p><b>Reference moves.</b> HP Pres's arch mask (but our arch is the lancet, radius 1.5 spans, where theirs is round-shouldered); Washington National Cathedral showing its building at three distances, which here maps to the three treatments: the ground is the building seen whole, the window is a person seen through it, the plate is the building as it was.</p>
+
+  <h3>Classifier (build time; inputs: asset WxH from the ref, alt, eyebrow, cleaned body, page position)</h3>
+<pre>
+a       = W / H                                   // from image-&lt;id&gt;-&lt;W&gt;x&lt;H&gt;-jpg
+old     = /\b(1[5-8]\d\d|19[0-4]\d)\b/ in splitStega(alt).cleaned or eyebrow   // a year before 1950
+legend  = a &gt;= 1.8 &amp;&amp; body has a para matching /left to right/i
+          immediately followed by a list of 3..8 items
+
+if a &lt;= 0.85                       -&gt; portraitsSeenOnPage++ == 0 ? WINDOW : FRAME
+elif legend                        -&gt; LEGEND
+elif a &lt; 1.25 &amp;&amp; old               -&gt; PLATE
+elif a &gt;= 1.3 &amp;&amp; W &gt;= 2000 &amp;&amp; groundOK(position) -&gt; GROUND
+else                               -&gt; ROW
+
+groundOK(i) = groundsOnPage == 0
+           || (groundsOnPage == 1 &amp;&amp; i - lastGround &gt;= 4 &amp;&amp; bandsOnPage &gt;= 6)
+           // at most two per page, the first eligible wins, the second only far away
+           // and never on consecutive bands; never the page's first band after a photo hero
+
+LEDE (every branch) = first block is a normal paragraph
+           &amp;&amp; 8 &lt;= words(cleaned) &lt;= 40          // the length guard: a 70-word paragraph stays body
+           &amp;&amp; ends in . ! ? : (optionally a closing quote)   // "Nursery Care (104)" is a label, not a lede
+           &amp;&amp; something is left in the body after it
+BODY flow   = Ledger's: label paras (&lt;= 5 words, no end punctuation) + following paras -&gt; LABELLED rows;
+              lists -&gt; ruled rows; h3 -&gt; sub-head rule; 2+ paras &lt;= 180 words at full width -&gt; SET (2 cols);
+              beside a picture -&gt; one MEASURE column (a two-column set in six columns is too narrow)
+side        = imageSide (left | right); the WINDOW defaults to left so the text keeps column 6,
+              the column a headingless continuation band picks up
+</pre>
+
+  <h3>Which test band hits which branch</h3>
+  <table>
+    <tr><th>landscape-short</th><td>a 1.83, 2400 wide, first on /home: <b>GROUND</b>. Lede "At each entrance..." (12 words) on the photo; three short paragraphs below as a two-column SET.</td></tr>
+    <tr><th>landscape-long</th><td>a 1.76 but only 1600 wide: <b>ROW</b> (a 1600px source bled across a 1440 screen at 2x is soft). First paragraph is 44 words: the guard refuses the lede, so it reads as body. The photo is sticky beside the 170 words.</td></tr>
+    <tr><th>landscape-children</th><td>a 1.50, 2400 wide, first on /visit: <b>GROUND</b> (the tower against the sky: the textbook ground). First paragraph "Nursery Care (104)" has no sentence end: no lede. The body becomes LABELLED rows: room name left, what happens there on column 6.</td></tr>
+    <tr><th>group-wide</th><td>a 2.00 and "left to right in photo" + 5 names: <b>LEGEND</b>. The photo spans the container (not bled: people at the edges would be cut by a bleed crop); the five names sit centred in five equal columns, which puts each name under its person here (people at about 9, 30, 53, 73 and 90% across; column centres at 10, 30, 50, 70, 90), each on a gold tick. Phone: a numbered list.</td></tr>
+    <tr><th>archival-square</th><td>a 1.01, alt "built in 1890": <b>PLATE</b>, matted on the other surface, gold line round the print, caption as the label. Lede 20 words.</td></tr>
+    <tr><th>portrait-archival</th><td>a 0.80: first portrait on /history, <b>WINDOW</b>, left, so the text and the continuation after it share column 6. The Fighting Parson is shown in the lancet of the building he built.</td></tr>
+    <tr><th>portrait-person</th><td>a 0.67: first portrait on /contact, <b>WINDOW</b> (right side, per imageSide). The contact page's only arch.</td></tr>
+  </table>
+
+  <h3>What renders per branch, and why</h3>
+  <ul>
+    <li><b>GROUND:</b> the photo is 100cqw wide (the container-query width of <code>#main</code>, never 100vw), 52cqw tall (520 to 780px), cover at 50% 25% (higher than the site's 40% head-room rule, because the bottom third is under the gradient and the words anyway, so the crop spends its loss there). The hero's two gradients, same stops, same ink. Tick, eyebrow, h2 and lede sit bottom-left at the container's left edge, so the heading keeps the page's one left edge. Caption (alt) is the first thing on paper, then the rest of the body in Ledger's flow. Why: a wide view has room in its sky or floor for words; putting the words there is the only way a landscape stops being "a huge rectangle".</li>
+    <li><b>WINDOW:</b> the head above as usual, then the lancet (4 columns, max 340px wide, 1 : 2.1) beside the lede and body. The photo starts 16% of the way down the window and fades over its top 7% into the band's own surface colour (the <code>--band</code> custom property, inherited from the band, so paper or soft in either theme with no build-time colour), leaving the point of the arch open under the gold moulding, so the point of the arch never cuts a crown: the crown sits where the arch has already widened to over half the span, the face where it is over 80%. A gold moulding line follows the arch 9px outside it. Why: portraits were the worst images on the site because a landscape frame takes the head; the lancet is taller than any portrait, so it can only ever lose the sides.</li>
+    <li><b>FRAME</b> (second portrait on the same page): the same beside-row, the picture at its native portrait shape (max 560px tall), square-topped, with the same gold moulding. Never a second arch: two arches on a page is the HP Pres identity, not a moment.</li>
+    <li><b>PLATE:</b> the scan at its native shape inside a mat of the OTHER surface (soft on a paper band, paper on a soft band), a gold line 6px off the print, the caption inside the mat as the museum label. Never bled, never cropped: an archival print's edge is part of the document.</li>
+    <li><b>LEGEND:</b> described above. The list paragraph and the footnote stay where the editor wrote them, under the photo; the rest of the body follows as a SET.</li>
+    <li><b>ROW:</b> the fallback. Body in columns 1 to 6, the photo in 8 to 12 at its native shape (no forced 16:9), tops aligned with the lede, sticky while the text runs longer than it. No moulding: a view of the place is not hung, it is looked at.</li>
+  </ul>
+
+  <h3>The family resemblance (rule 17), held in all six branches</h3>
+  <ul>
+    <li><b>The tick.</b> One 28px gold rule. Every caption hangs from it; on a ground it sits above the eyebrow; in the legend each name hangs from one. It is the only ornament the photo system adds.</li>
+    <li><b>The caption.</b> Always the alt text, italic Castoro 15px, muted, directly under the picture's bottom-left corner. Never over the photo (except nothing: the ground's caption is on paper under it).</li>
+    <li><b>The gold line.</b> Pictures of people and of the past are hung: one 1px gold line set off them (window, frame, plate). Pictures of the place are not: the ground is the wall itself, the row is a view.</li>
+    <li><b>The edges.</b> Headings always at column 1, above. Pictures sit on column 1, 6, 8 or the viewport edge. Square corners everywhere; the one lancet per page is the only shape.</li>
+  </ul>
+
+  <h3>Seven photo bands in a row (History's seven eras)</h3>
+  <p>History is mostly scans and portraits, so a typical run reads: PLATE right, WINDOW left (the first pastor with a portrait), PLATE left, FRAME right (the next portrait), PLATE right, GROUND (the 1929 building, if a sharp wide photo of it exists), ROW or PLATE. What keeps it from monotony: (1) imageSide alternates, and the classifier never overrides it except for the window; (2) the three shapes of object (mat, arch, frame) differ in silhouette even on the same side; (3) the one ground, if any, lands in the middle, because the first ground-eligible band wins and eras 1 to 3 are scans. Honest limit: if all seven are scans it is seven plates alternating sides, which is a museum wall; calm, but a wall.</p>
+
+  <h3>Porting cost</h3>
+  <ul>
+    <li><b>New pure module</b> <code>src/lib/photo-shape.ts</code> (about 120 lines): aspect from the asset ref, the year test, the legend test, the lede guard, and a page-level pass that assigns WINDOW/FRAME and the ground budget. <code>photo-shape.test.ts</code> covering the seven bands and the budget cases.</li>
+    <li><b>SectionRenderer.astro</b> (foundation): must run the page-level pass once (ground budget, first portrait) and hand each ImageText its <code>shape</code>. About 15 lines. It already walks the sections for the spare-image pool, so the pass rides that loop.</li>
+    <li><b>ImageText.astro</b> rewritten as five small branches (about 260 lines) plus <code>Lancet.astro</code> (the clipPath, the moulding SVG) and about 120 lines of CSS in globals.css. <code>spare-images.ts</code> untouched, but a borrowed spare changes the picture and so may change the branch: the classifier must run on the picture actually rendered.</li>
+    <li><b>Preview risk:</b> alt and eyebrow go through <code>splitStega().cleaned</code> before the year test; word counts likewise. The legend test reads list items and a paragraph's text: cleaned only. The ground's text on a photo is still click-to-edit (plain elements). Moderate risk: the page-level pass means editing one band's image in the preview can flip ANOTHER band's branch (a new portrait earlier on the page takes the arch). That is correct but surprising; say so in the Studio help text.</li>
+    <li><b>Parity:</b> every ImageText render changes; recapture after review. Rule 19: the ground uses 100cqw, the reflow gate with real scrollbars covers it.</li>
+  </ul>
+
+  <h3>Honest weaknesses</h3>
+  <ul>
+    <li><b>"Clear subject" is not derivable.</b> The ground test is aspect and resolution only. The home interior photo passes and works; a 2400px photo of a crowded fellowship hall would also pass and put a heading over faces. Mitigation: the text sits bottom-left under a 94% gradient, which darkens that corner whatever is there. A real fix needs a field, which the brief forbids.</li>
+    <li><b>Portrait framing assumes a head near the top.</b> True of every headshot and studio portrait on the site; a full-length portrait with a tiny head would show the head small in the arch, not cropped. The window never crops the top, only the sides.</li>
+    <li><b>The year test is crude.</b> "Pastor since 1921" on a modern photo of a plaque would read as archival if square. Cost of a false positive: a matted modern photo, which still looks fine.</li>
+    <li><b>The legend assumes people evenly spread.</b> Five equal columns under five people is close here; with a clumped group the names drift from their faces. It is still in reading order, which is what "left to right" promises.</li>
+    <li><b>The window is a strong move.</b> If the church dislikes it, it is the one piece that fails loudly. It is also the piece that gets the reaction.</li>
+  </ul>
+</dialog>
+
+<script>
+const CONTENT = [{"page":"home","id":"home-2-band","eyebrow":"Your first Sunday","heading":"What a first Sunday is like","alt":"The congregation standing to sing on a Sunday morning","w":2400,"h":1309,"words":74,"body":"<p>Your first Sunday</p>\n<p>At each entrance, all ages are invited to check-in with a greeter.</p>\n<p>The Greeters can direct you where you need to go, and answer questions you may have.</p>\n<p>Children will receive a name tag for nursery or children's church.</p>\n<p>For children ages 3 and younger, nursery care is available throughout the service.</p>","key":"landscape-short","local":"img/landscape-short.jpg"},{"page":"ministries","id":"worship","eyebrow":"Worship arts","heading":"Praise team, instruments and handbells","alt":"The handbell choir rehearsing","w":1600,"h":908,"words":170,"body":"<p>Worship arts</p>\n<p>The Worship Ministry at FBCM understands that Christian worship is a lifestyle centered around responding to the revealed God of the Bible. Worship is also a series of interconnected actions like prayer, fellowship, giving full attention to the Bible, singing, and observing communion.</p>\n<p>When we gather, worship leaders help us by:</p>\n<ul><li>Greeting people as they enter</li><li>Singing and playing a variety of instruments</li><li>Supporting through technical arts (sound, slides, livestream, etc.)</li><li>Leading in prayer &amp; scripture reading</li><li>Serving communion</li></ul>\n<p>Our Praise Team consists of longtime church members, college interns, and newer friends who sing, and play a variety of instruments. Instruments played in worship range from the ukulele to the organ!</p>\n<p>A unique aspect of our church is our hand bell choir, always looking for new members. We believe that music is an important part of our spiritual life and look forward to making beautiful music with you.</p>\n<p>Cynthia Smith, Worship Arts Director, <a href=\"mailto:cynthia@fbcmuncie.org\">cynthia@fbcmuncie.org</a></p>\n<p>Molly Flodder, Worship Coordinator, <a href=\"mailto:worship@fbcmuncie.org\">worship@fbcmuncie.org</a></p>","key":"landscape-long","local":"img/landscape-long.jpg"},{"page":"visit","id":"page-3-band","eyebrow":"Children","heading":"Where the children go","alt":"The limestone bell tower of First Baptist Church against a blue sky","w":2400,"h":1596,"words":111,"body":"<p>Children</p>\n<p>Nursery Care (104)</p>\n<p>For children ages 3 and younger, nursery care is available throughout the service.</p>\n<p>Family Room (105)</p>\n<p>For little ones and parents who need to step out during service, this room provides toys, a live stream, rocking chairs, nursing privacy, and a changing table for all who desire it.</p>\n<p>Children's Church (B-03 &amp; 102)</p>\n<p>Students preschool - fifth grade will be dismissed to Children's Church during the service.</p>\n<p>There are two classes.</p>\n<p>Preschool - 2nd grade: Kickstart Children's Church (102)</p>\n<p>3rd - 5th grade: The Underground Children's Church (B-03)</p>","key":"landscape-children","local":"img/landscape-children.jpg"},{"page":"staff","id":"page-7-band","eyebrow":"Deacons","heading":"Our deacons","alt":"The 2026 deacons of First Baptist Church Muncie","w":1600,"h":800,"words":121,"body":"<p>Deacons</p>\n<p>Current Deacons (left to right in photo):</p>\n<ul><li>Gayle Songer</li><li>Richard \"Dick\" Flaherty</li><li>James \"Jim\" Butler*</li><li>Aaron Smith</li><li>Janis Wright</li></ul>\n<p>*Deacon chair: <a href=\"mailto:deaconchair@fbcmuncie.org\">deaconchair@fbcmuncie.org</a></p>\n<p>Each active member or attendee is assigned a Deacon whom they can go to with questions, to get connected, or for pastoral care needs.</p>\n<p>In the New Testament, deacons were chosen for acts of mercy and service in the church (1 Timothy 3:8-9; Romans 16:1-2).</p>\n<p>Following that example, Deacons assist at the Lord’s table and in baptism, in orienting and caring for members, and oversee the benevolence fund. A deacon serves a three-year term before rotating off for at least one year before they can be nominated again.</p>","key":"group-wide","local":"img/group-wide.jpg"},{"page":"history","id":"era-3","eyebrow":"1887 to 1917","heading":"The gas boom to the debt paid","alt":"The second church building, built in 1890","w":1638,"h":1622,"words":136,"body":"<p>1887 to 1917</p>\n<p>The Gas Boom of the 1880s and 90s brought many new residents to the country and large increases in church membership.</p>\n<p>The arrival of Loren Clevenger as pastor in 1887 coincided with the beginning of a gas boom in Muncie and Delaware County that brought thousands of new residents to the area. This rise in population and prosperity did wonders for the Muncie churches, including First Baptist. In the three years from 1887 to 1890, membership at First Baptist rose from 67 to 141. The old church simply could not hold that many people, and so the congregation eventually moved into a new building on July 20, 1890. Phenomenal growth followed, with the membership soaring to 500 in 1900.</p>","key":"archival-square","local":"img/archival-square.jpg"},{"page":"history","id":"building","eyebrow":"1921 to 1929","heading":"The Fighting Parson and the building","alt":"Pastor William Graham Everson, the Fighting Parson, 1921","w":1140,"h":1425,"words":136,"body":"<p>1921 to 1929</p>\n<p>The preaching and personality of pastor William Graham Everson brought hundreds of new members to First Baptist and eventually caused the congregation to agree that a newer and larger church building was needed.</p>\n<p>Fraser’s contributions paved the way for the next pastor, a man with a grandiose vision, to challenge the church to even greater accomplishments. William Graham Everson stepped into the pulpit as pastor for the first time in March, 1921. An enlisted soldier during the Spanish-American War, he had risen to the rank of lieutenant colonel during World War I and had commanded troops in Italy and Austria. Since he was already an ordained minister when he accomplished these military feats, he was nicknamed “The Fighting Parson.”</p>","key":"portrait-archival","local":"img/portrait-archival.jpg"},{"page":"contact","id":"page-3-band","eyebrow":"Meet with a pastor","heading":"Tuesdays with Kendall or Jonathan","alt":"Kendall Ellis, Co-Pastor","w":2806,"h":4209,"words":91,"body":"<p>Meet with a pastor</p>\n<p>The pastoral staff are in and out of the office throughout the week with various appointments, visitations, study, and meetings.</p>\n<p>The Co-Pastors have set aside Tuesdays as office hours for those seeking meetings at the church. You can schedule a time in their office hours below.</p>\n<p>Tuesday Office Hours | 9:00 a.m. - 12:00 p.m. and 1:00 p.m - 5:00 p.m.</p>\n<p><a href=\"https://calendar.app.google/yfMeekvgCxY7x2mU6\" target=\"_blank\" rel=\"noopener noreferrer\">Schedule with Jonathan Balmer</a> · <a href=\"https://calendar.app.google/oAVyoHDFut24sJtTA\" target=\"_blank\" rel=\"noopener noreferrer\">Schedule with Kendall Ellis</a></p>\n<h3 id=\"for-business-billing-or-related-needs\">For Business, Billing, or Related Needs</h3>\n<p>(765) 284-7749</p>\n<p><a href=\"mailto:office@fbcmuncie.org\">office@fbcmuncie.org</a></p>","key":"portrait-person","local":"img/portrait-person.jpg"}];
+const CONT = {"key":"history-cont","page":"history","id":"page-9-band","eyebrow":"","heading":"","imgs":[],"body":"<p>In Muncie, his boundless energy, untiring zeal, and powerful sermons soon attracted large crowds to the church. The church sanctuary could hold between 450 and 500 people. By the fall of 1921 it was no longer large enough to accommodate the worshipers. An overflow area was opened. Yet sometimes people had to stand, and on some occasions, people were turned away.</p>\n<p>This was particularly true of Sunday evening services. Some of the other Muncie churches did not have Sunday evening services, so many of those members came to hear “The Fighting Parson.” Hundreds were baptized during his ministry; once he baptized twenty-five in one service. A man of action more than a man of theory, Everson was an excellent leader, and nowhere was that leadership more evident and more tested than in the church’s decision to construct a new building.</p>\n<p>Visualizing a beautiful new church is one thing; convincing the members that the time was at hand for constructing such a building was quite another matter; and raising the funds for such an undertaking was a staggering task. Yet, had Everson not pushed for the construction when he did, the building would not have been erected for many years to come. Certainly it would not have been constructed during the Depression, and with the United States entering World War II in 1941, it is quite possible the task would have been postponed at least until after 1945.</p>\n<p>After numerous delays and much indecision, a site was purchased and construction of the new building in downtown Muncie began. Everson was active in promoting numerous fund-raising programs, and finally on May 12, 1929, 1200 people marched from the old church to the new one on the corner of Jefferson and Adams streets. The new church cost $338,000. The congregation had raised enough funds that the mortgage on the new building was only $166,000. That was a large sum, larger than the members had hoped for; but given the church’s financial giving the past few years, the sum seemed very manageable.</p>\n"};
+const SIDE = { 'landscape-long': 'right', 'archival-square': 'right', 'portrait-archival': 'left', 'portrait-person': 'right' };
+
+/* ---------- body parsing (the port works on Portable Text blocks; this reads the cleaned HTML) ---------- */
+function toBlocks(html) {
+  const d = document.createElement('div'); d.innerHTML = html; const out = [];
+  for (const el of d.children) {
+    if (el.tagName === 'P') out.push({ k: 'p', html: el.innerHTML, text: el.textContent.trim() });
+    else if (el.tagName === 'UL' || el.tagName === 'OL') out.push({ k: 'list', items: [...el.children].map(li => ({ html: li.innerHTML, text: li.textContent.trim() })) });
+    else if (/^H[34]$/.test(el.tagName)) out.push({ k: 'h3', html: el.innerHTML, text: el.textContent.trim() });
+  }
+  return out;
+}
+const words = t => (t.trim().match(/\S+/g) || []).length;
+const isLabel = b => b && b.k === 'p' && words(b.text) <= 5 && !/[.!?:,;]["”’]?$/.test(b.text);
+const labelStart = (bl, i) => isLabel(bl[i]) && bl[i + 1] && bl[i + 1].k === 'p' && !isLabel(bl[i + 1]);
+const isLede = (b, rest) => b && b.k === 'p' && words(b.text) >= 8 && words(b.text) <= 40 && /[.!?:]["”’]?$/.test(b.text) && rest.length > 0;
+
+/* ---------- the classifier ---------- */
+function classify(band, page) {
+  const a = band.w / band.h;
+  const old = /\b(1[5-8]\d\d|19[0-4]\d)\b/.test(band.alt + ' ' + band.eyebrow);
+  const blocks = band.blocks;
+  const li = blocks.findIndex((b, i) => b.k === 'p' && /left to right/i.test(b.text) && blocks[i + 1] && blocks[i + 1].k === 'list' && blocks[i + 1].items.length >= 3 && blocks[i + 1].items.length <= 8);
+  if (a <= 0.85) return page.portraits++ === 0 ? 'window' : 'frame';
+  if (a >= 1.8 && li >= 0) return 'legend';
+  if (a < 1.25 && old) return 'plate';
+  if (a >= 1.3 && band.w >= 2000 && (page.grounds === 0)) { page.grounds++; return 'ground'; }
+  return 'row';
+}
+
+/* ---------- flows ---------- */
+function flow(blocks, { wide }) {
+  let html = '', i = 0;
+  while (i < blocks.length) {
+    const b = blocks[i];
+    if (labelStart(blocks, i)) {
+      let rows = '';
+      while (i < blocks.length && labelStart(blocks, i)) {
+        const nm = blocks[i]; i++; const ds = [];
+        while (i < blocks.length && blocks[i].k === 'p' && !labelStart(blocks, i)) { ds.push(blocks[i]); i++; }
+        rows += `<div class="lrow"><div class="nm">${nm.html}</div><div class="ds">${ds.map(d => `<p>${d.html}</p>`).join('')}</div></div>`;
+      }
+      html += `<div class="labelled">${rows}</div>`;
+    } else if (b.k === 'p') {
+      const run = [b]; i++; while (i < blocks.length && blocks[i].k === 'p' && !labelStart(blocks, i)) { run.push(blocks[i]); i++; }
+      const w = run.reduce((n, r) => n + words(r.text), 0);
+      html += (wide && run.length >= 2 && w <= 180) ? `<div class="set">${run.map(r => `<p>${r.html}</p>`).join('')}</div>`
+                                                    : `<div class="measure">${run.map(r => `<p>${r.html}</p>`).join('')}</div>`;
+    } else if (b.k === 'list') {
+      html += `<ul class="rows" style="margin-top:1em">${b.items.map(x => `<li>${x.html}</li>`).join('')}</ul>`; i++;
+    } else if (b.k === 'h3') { html += `<div class="sect"><h3 class="h3">${b.html}</h3></div>`; i++; }
+    else i++;
+  }
+  return html;
+}
+const cap = alt => `<figcaption class="cap"><span class="tick"></span>${alt}</figcaption>`;
+const head = band => `<header class="head">${band.eyebrow ? `<p class="eyebrow ui">${band.eyebrow}</p>` : ''}<h2 class="h" id="h-${band.key}">${band.heading}</h2></header>`;
+const img = (band, extra = '') => `<img src="${band.local}" alt="${band.alt}" width="${band.w}" height="${band.h}" ${extra}>`;
+
+function splitLede(blocks) {
+  const [first, ...rest] = blocks;
+  return isLede(first, rest) ? { lede: first, body: rest } : { lede: null, body: blocks };
+}
+
+function renderBand(band, shape) {
+  const { lede, body } = splitLede(band.blocks);
+  const ledeHTML = lede ? `<p class="lede">${lede.html}</p>` : '';
+  if (shape === 'ground') {
+    return `<div class="ground-fig">${img(band, 'loading="eager"')}<div class="ov"></div>
+      <div class="ground-text"><div class="in">${band.eyebrow ? `<span class="tick"></span><p class="eyebrow ui">${band.eyebrow}</p>` : ''}<h2 class="h" id="h-${band.key}">${band.heading}</h2>${lede ? `<p class="lede">${lede.html}</p>` : ''}</div></div></div>
+      <div class="wrap"><div class="g"><p class="gcap cap"><span class="tick"></span><span style="font-style:italic;color:var(--muted);font-size:.9375rem">${band.alt}</span></p>
+      <div class="gbody">${flow(body, { wide: true })}</div></div></div>`;
+  }
+  if (shape === 'legend') {
+    const bl = band.blocks; const li = bl.findIndex((b, i) => b.k === 'p' && /left to right/i.test(b.text) && bl[i + 1] && bl[i + 1].k === 'list');
+    const label = bl[li], list = bl[li + 1];
+    const after = bl.slice(li + 2); let foot = null;
+    if (after[0] && after[0].k === 'p' && /^\*/.test(after[0].text)) foot = after.shift();
+    const rest = [...bl.slice(0, li), ...after];
+    return `<div class="wrap"><div class="g">${head(band)}
+      <figure class="legend-fig">${img(band)}
+        <p class="lg-label ui">${label.html}</p>
+        <ol class="names" style="--n:${list.items.length}">${list.items.map((x, k) => `<li><span class="pos">${k + 1}</span><span>${x.html}</span></li>`).join('')}</ol>
+        ${foot ? `<p class="foot">${foot.html}</p>` : ''}
+        ${cap(band.alt)}
+      </figure>
+      <div class="legend-rest">${flow(rest, { wide: true })}</div></div></div>`;
+  }
+  const side = SIDE[band.key] || 'right';
+  let fig = '';
+  if (shape === 'row') fig = `<figure>${img(band, 'class="row-img"')}${cap(band.alt)}</figure>`;
+  if (shape === 'plate') fig = `<div class="plate-wrap"><figure class="plate"><div class="print">${img(band)}</div>${cap(band.alt)}</figure></div>`;
+  if (shape === 'frame') fig = `<figure class="frame"><div class="hung">${img(band)}</div>${cap(band.alt)}</figure>`;
+  if (shape === 'window') fig = `<figure class="window-wrap"><div class="window"><div class="pane">${img(band)}</div>
+      <svg class="moulding" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"><path d="M0,1 L0,0.5324 A1.5,0.7143 0 0 1 0.5,0 A1.5,0.7143 0 0 1 1,0.5324 L1,1 Z"/></svg></div>${cap(band.alt)}</figure>`;
+  const cls = `beside is-${shape}${shape === "window" ? " window-band" : ""} fig-${side}`;
+  return `<div class="wrap"><div class="g ${cls}">${head(band)}
+    <div class="side-fig">${fig}</div>
+    <div class="side-text">${ledeHTML}${flow(body, { wide: false })}</div></div></div>`;
+}
+
+/* ---------- build the page ---------- */
+const main = document.getElementById('main');
+const pages = {};
+const LABEL = { 'landscape-short': 'landscape 2400x1309 (1.83)', 'landscape-long': 'landscape 1600x908 (1.76)', 'landscape-children': 'landscape 2400x1596 (1.50)',
+  'group-wide': 'group 1600x800 (2.00)', 'archival-square': 'engraving scan 1638x1622 (1.01)', 'portrait-archival': 'portrait 1140x1425 (0.80)', 'portrait-person': 'portrait 2806x4209 (0.67)' };
+let k = 0, prev = null;
+CONTENT.forEach(band => {
+  band.blocks = toBlocks(band.body);
+  // extraction artifact: the live build's eyebrow <p> was scraped into the body; the CMS body does not carry it
+  if (band.blocks[0] && band.blocks[0].text === band.eyebrow) band.blocks.shift();
+  const page = pages[band.page] ||= { portraits: 0, grounds: 0 };
+  const shape = classify(band, page);
+  const spec = document.createElement('div');
+  spec.className = 'spec'; spec.id = band.key;
+  spec.innerHTML = `specimen &middot; <b>${band.key}</b> <span>&middot; ${LABEL[band.key]} &middot; /${band.page} &middot; branch: ${shape.toUpperCase()}${SIDE[band.key] && shape !== 'ground' ? ' &middot; imageSide ' + SIDE[band.key] : ''}</span>`;
+  const sec = document.createElement('section');
+  sec.className = 'band' + (k % 2 ? ' soft' : '') + (shape === 'ground' ? ' ground' : '');
+  sec.dataset.key = band.key; sec.dataset.shape = shape;
+  sec.setAttribute('aria-labelledby', 'h-' + band.key);
+  sec.innerHTML = renderBand(band, shape);
+  main.append(spec, sec); k++; prev = band;
+
+  if (band.key === 'portrait-archival') {
+    const s2 = document.createElement('div'); s2.className = 'spec'; s2.id = 'history-cont';
+    s2.innerHTML = `specimen &middot; <b>history-cont</b> <span>&middot; headingless rich text after the window band &middot; /history &middot; Ledger CONTINUATION</span>`;
+    const c = document.createElement('section'); c.className = 'band' + (k % 2 ? ' soft' : ''); c.dataset.key = 'history-cont';
+    c.innerHTML = `<div class="wrap"><div class="g"><aside class="cont-label" aria-label="Continues the previous section"><span class="ui">Continued</span><span class="ui" style="display:block;color:var(--muted);margin-top:6px">${band.eyebrow}</span><span class="was">${band.heading}</span></aside>
+      <div class="cont-text">${toBlocks(CONT.body).map(b => `<p>${b.html}</p>`).join('')}</div></div></div>`;
+    main.append(s2, c); k++;
+  }
+});
+
+/* keep your place across variants */
+const links = [...document.querySelectorAll('.bar nav a')];
+const setHash = key => links.forEach(a => a.href = `../${a.dataset.v}/index.html#${key}`);
+const io = new IntersectionObserver(es => {
+  const vis = es.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+  if (vis.length) setHash(vis[0].target.dataset.key);
+}, { rootMargin: '-45% 0px -50% 0px' });
+document.querySelectorAll('section.band').forEach(s => io.observe(s));
+if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) requestAnimationFrame(() => t.scrollIntoView()); }
+
+/* theme */
+const root = document.documentElement, tb = document.getElementById('theme');
+const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+const syncBtn = () => tb.textContent = isDark() ? 'Light' : 'Dark';
+tb.onclick = () => { root.dataset.theme = isDark() ? 'light' : 'dark'; syncBtn(); };
+syncBtn();
+document.getElementById('rulesBtn').onclick = () => document.getElementById('rules').showModal();
+</script>
+</body>
+</html>

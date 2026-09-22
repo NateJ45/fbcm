@@ -1,0 +1,93 @@
+[
+ {
+  "page": "home",
+  "id": "home-2-band",
+  "eyebrow": "Your first Sunday",
+  "heading": "What a first Sunday is like",
+  "alt": "The congregation standing to sing on a Sunday morning",
+  "w": 2400,
+  "h": 1309,
+  "words": 74,
+  "body": "<p>Your first Sunday</p>\n<p>At each entrance, all ages are invited to check-in with a greeter.</p>\n<p>The Greeters can direct you where you need to go, and answer questions you may have.</p>\n<p>Children will receive a name tag for nursery or children's church.</p>\n<p>For children ages 3 and younger, nursery care is available throughout the service.</p>",
+  "key": "landscape-short",
+  "local": "img/landscape-short.jpg"
+ },
+ {
+  "page": "ministries",
+  "id": "worship",
+  "eyebrow": "Worship arts",
+  "heading": "Praise team, instruments and handbells",
+  "alt": "The handbell choir rehearsing",
+  "w": 1600,
+  "h": 908,
+  "words": 170,
+  "body": "<p>Worship arts</p>\n<p>The Worship Ministry at FBCM understands that Christian worship is a lifestyle centered around responding to the revealed God of the Bible. Worship is also a series of interconnected actions like prayer, fellowship, giving full attention to the Bible, singing, and observing communion.</p>\n<p>When we gather, worship leaders help us by:</p>\n<ul><li>Greeting people as they enter</li><li>Singing and playing a variety of instruments</li><li>Supporting through technical arts (sound, slides, livestream, etc.)</li><li>Leading in prayer &amp; scripture reading</li><li>Serving communion</li></ul>\n<p>Our Praise Team consists of longtime church members, college interns, and newer friends who sing, and play a variety of instruments. Instruments played in worship range from the ukulele to the organ!</p>\n<p>A unique aspect of our church is our hand bell choir, always looking for new members. We believe that music is an important part of our spiritual life and look forward to making beautiful music with you.</p>\n<p>Cynthia Smith, Worship Arts Director, <a href=\"mailto:cynthia@fbcmuncie.org\">cynthia@fbcmuncie.org</a></p>\n<p>Molly Flodder, Worship Coordinator, <a href=\"mailto:worship@fbcmuncie.org\">worship@fbcmuncie.org</a></p>",
+  "key": "landscape-long",
+  "local": "img/landscape-long.jpg"
+ },
+ {
+  "page": "visit",
+  "id": "page-3-band",
+  "eyebrow": "Children",
+  "heading": "Where the children go",
+  "alt": "The limestone bell tower of First Baptist Church against a blue sky",
+  "w": 2400,
+  "h": 1596,
+  "words": 111,
+  "body": "<p>Children</p>\n<p>Nursery Care (104)</p>\n<p>For children ages 3 and younger, nursery care is available throughout the service.</p>\n<p>Family Room (105)</p>\n<p>For little ones and parents who need to step out during service, this room provides toys, a live stream, rocking chairs, nursing privacy, and a changing table for all who desire it.</p>\n<p>Children's Church (B-03 &amp; 102)</p>\n<p>Students preschool - fifth grade will be dismissed to Children's Church during the service.</p>\n<p>There are two classes.</p>\n<p>Preschool - 2nd grade: Kickstart Children's Church (102)</p>\n<p>3rd - 5th grade: The Underground Children's Church (B-03)</p>",
+  "key": "landscape-children",
+  "local": "img/landscape-children.jpg"
+ },
+ {
+  "page": "staff",
+  "id": "page-7-band",
+  "eyebrow": "Deacons",
+  "heading": "Our deacons",
+  "alt": "The 2026 deacons of First Baptist Church Muncie",
+  "w": 1600,
+  "h": 800,
+  "words": 121,
+  "body": "<p>Deacons</p>\n<p>Current Deacons (left to right in photo):</p>\n<ul><li>Gayle Songer</li><li>Richard \"Dick\" Flaherty</li><li>James \"Jim\" Butler*</li><li>Aaron Smith</li><li>Janis Wright</li></ul>\n<p>*Deacon chair: <a href=\"mailto:deaconchair@fbcmuncie.org\">deaconchair@fbcmuncie.org</a></p>\n<p>Each active member or attendee is assigned a Deacon whom they can go to with questions, to get connected, or for pastoral care needs.</p>\n<p>In the New Testament, deacons were chosen for acts of mercy and service in the church (1 Timothy 3:8-9; Romans 16:1-2).</p>\n<p>Following that example, Deacons assist at the Lord’s table and in baptism, in orienting and caring for members, and oversee the benevolence fund. A deacon serves a three-year term before rotating off for at least one year before they can be nominated again.</p>",
+  "key": "group-wide",
+  "local": "img/group-wide.jpg"
+ },
+ {
+  "page": "history",
+  "id": "era-3",
+  "eyebrow": "1887 to 1917",
+  "heading": "The gas boom to the debt paid",
+  "alt": "The second church building, built in 1890",
+  "w": 1638,
+  "h": 1622,
+  "words": 136,
+  "body": "<p>1887 to 1917</p>\n<p>The Gas Boom of the 1880s and 90s brought many new residents to the country and large increases in church membership.</p>\n<p>The arrival of Loren Clevenger as pastor in 1887 coincided with the beginning of a gas boom in Muncie and Delaware County that brought thousands of new residents to the area. This rise in population and prosperity did wonders for the Muncie churches, including First Baptist. In the three years from 1887 to 1890, membership at First Baptist rose from 67 to 141. The old church simply could not hold that many people, and so the congregation eventually moved into a new building on July 20, 1890. Phenomenal growth followed, with the membership soaring to 500 in 1900.</p>",
+  "key": "archival-square",
+  "local": "img/archival-square.jpg"
+ },
+ {
+  "page": "history",
+  "id": "building",
+  "eyebrow": "1921 to 1929",
+  "heading": "The Fighting Parson and the building",
+  "alt": "Pastor William Graham Everson, the Fighting Parson, 1921",
+  "w": 1140,
+  "h": 1425,
+  "words": 136,
+  "body": "<p>1921 to 1929</p>\n<p>The preaching and personality of pastor William Graham Everson brought hundreds of new members to First Baptist and eventually caused the congregation to agree that a newer and larger church building was needed.</p>\n<p>Fraser’s contributions paved the way for the next pastor, a man with a grandiose vision, to challenge the church to even greater accomplishments. William Graham Everson stepped into the pulpit as pastor for the first time in March, 1921. An enlisted soldier during the Spanish-American War, he had risen to the rank of lieutenant colonel during World War I and had commanded troops in Italy and Austria. Since he was already an ordained minister when he accomplished these military feats, he was nicknamed “The Fighting Parson.”</p>",
+  "key": "portrait-archival",
+  "local": "img/portrait-archival.jpg"
+ },
+ {
+  "page": "contact",
+  "id": "page-3-band",
+  "eyebrow": "Meet with a pastor",
+  "heading": "Tuesdays with Kendall or Jonathan",
+  "alt": "Kendall Ellis, Co-Pastor",
+  "w": 2806,
+  "h": 4209,
+  "words": 91,
+  "body": "<p>Meet with a pastor</p>\n<p>The pastoral staff are in and out of the office throughout the week with various appointments, visitations, study, and meetings.</p>\n<p>The Co-Pastors have set aside Tuesdays as office hours for those seeking meetings at the church. You can schedule a time in their office hours below.</p>\n<p>Tuesday Office Hours | 9:00 a.m. - 12:00 p.m. and 1:00 p.m - 5:00 p.m.</p>\n<p><a href=\"https://calendar.app.google/yfMeekvgCxY7x2mU6\" target=\"_blank\" rel=\"noopener noreferrer\">Schedule with Jonathan Balmer</a> · <a href=\"https://calendar.app.google/oAVyoHDFut24sJtTA\" target=\"_blank\" rel=\"noopener noreferrer\">Schedule with Kendall Ellis</a></p>\n<h3 id=\"for-business-billing-or-related-needs\">For Business, Billing, or Related Needs</h3>\n<p>(765) 284-7749</p>\n<p><a href=\"mailto:office@fbcmuncie.org\">office@fbcmuncie.org</a></p>",
+  "key": "portrait-person",
+  "local": "img/portrait-person.jpg"
+ }
+]

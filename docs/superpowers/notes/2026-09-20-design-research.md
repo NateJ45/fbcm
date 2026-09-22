@@ -171,3 +171,74 @@ What changes, in order of leverage:
 
 The current site stays live and unchanged throughout; the domain cutover (plan 3) waits until
 this pass is done and Nathan is willing to hand it over.
+
+## 7. Addendum, 2026-09-22: the critique, two site audits, and the rules they produced
+
+Three inputs after the art-direction pass shipped: a per-section critique of the deployed site
+(published as an Artifact, "FBCM Design Critique"; 92 section screenshots at 1440 with real
+scrollbars, 12 phone pages), an audit of Two Ten Creatives' "10 of the best church websites of
+2026" list, and an audit of Highland Park Presbyterian (hppres.org) and Peachtree Church
+(peachtreechurch.com). Evidence was read from screenshots of each homepage and visit page at
+1440 and 390.
+
+### The critique in one paragraph
+
+The vocabulary from section 5 landed; the composition did not. About 45 of 92 bands are the same
+shape: heading in columns 1 to 4, prose in columns 6 to 11, and, when there is a photograph, a
+16:9 frame BELOW the text in the opposite column bleeding off the edge. Eight of twelve pages
+open on the same 50/50 split hero, eleven end on two indigo bands saying the same sentence, and
+the titling capitals appear three or four times per page at near-equal size, so nothing is the
+page's moment. The ranked fix list is in the Artifact.
+
+### Rule: a photograph belongs to its text, not to a column below it
+
+Nathan, 2026-09-22, on the ImageText band (the Fighting Parson): "the whole huge rectangle in a
+different column just looks bad and I don't see other websites doing it." He is right, and none
+of the 13 sites audited does it. What they do instead, in order of how often:
+
+1. **Beside, at the text's height.** The photo sits in the same row as the heading and prose,
+   tops aligned, sized to the text block rather than to the viewport (Austin Stone's visit page,
+   Motivation, Brooklake, Peachtree's plan-your-visit, HP Pres throughout).
+2. **The photo IS the band.** Full-bleed ground with the text set into a darkened edge. Used for
+   one or two moments per page, never for every image.
+3. **Shaped.** HP Pres masks photos to a pointed church-window arch, which ties the picture to
+   the building and, for a portrait, shows the whole head and shoulders where a 16:9 crop takes
+   the top of the head. For FBCM: take the arch's proportions from our own window tracery, and
+   use it on at most one image per page, or it becomes a gimmick and becomes HP Pres's identity
+   rather than ours.
+
+Portrait-shaped originals (the asset ref carries the dimensions, `image-...-WxH-jpg`) must never
+be forced into a landscape frame; that one rule accounts for the four worst images on the site.
+
+### What to take from the audited sites
+
+- **HP Pres:** the arch mask (above); service times on a strip that overlaps the hero's bottom
+  edge, which breaks the clean-rectangle band once, on purpose, and removes the home page's
+  duplicated facts; a footer that ends on three large ruled links (Sundays, Find Your Place,
+  Sermons and Stories) instead of a second poster; visit-page headings phrased as the visitor's
+  own questions ("Where do I park?", "What about my kids?"), which is a copy change for the
+  approval note.
+- **Bay Hope, River Valley:** a weekly "This Sunday" line naming this week's sermon, derived from
+  the newest sermon-preview post and hidden when that post is older than about ten days.
+- **Motivation:** the footer ending on a large wordmark; FAQ within the first two screens of the
+  visit page.
+- **General:** a sermon library by series, derived from the existing categories and tags, is the
+  most repeated feature across the list. Scope it separately; it is a feature, not a style.
+
+### What not to take
+
+Autoplay video heroes, stage-lit concert photography, carousels and rotating banners, scrolling
+text marquees, spinning or notification-styled buttons (Motivation, Church of the City), 14-link
+menus (Vous), rounded cards everywhere, and the Proxima Nova / Inter / Montserrat sans family. The
+Two Ten list judges sites by how well they hold attention; that is the megachurch register in
+section 4 and it stays ruled out. Peachtree is a competent Lora + Montserrat theme with nothing
+FBCM should borrow. The Meeting House could not be audited: its TLS chain is broken
+(`ERR_CERT_AUTHORITY_INVALID`), which any visitor would also see.
+
+### Decisions taken 2026-09-22
+
+- **RichTextSection:** variant A ("Ledger": heading above, h3 groups as columns, lists as ruled
+  rows, all derived from the Portable Text shape) is the base, with B's liturgical setting for
+  lists whose items share an opening word (the covenant, "To" hung in the margin) and C's
+  multi-column setting for long headingless continuation prose.
+- **Photographs:** a variant loop on image placement comes next, under the rule above.

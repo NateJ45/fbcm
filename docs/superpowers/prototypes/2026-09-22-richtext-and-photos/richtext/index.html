@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ledger, round 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=Sofia+Sans+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f4efe6; --soft: #ebe4d8; --ink: #17151f; --muted: #514c58;
+  --gold-ink: #805709; --gold: #d59b29;
+  --hair: rgba(23,21,31,.16); --hair-strong: rgba(23,21,31,.34);
+  --max: 1400px; --gutter: clamp(20px, 5vw, 72px); --gap: clamp(16px, 2.5vw, 40px);
+  --h2: clamp(2rem, 1.2rem + 2.6vw, 3.25rem);
+  --h3: clamp(1.375rem, 1rem + 1vw, 1.75rem);
+  --lede: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  /* ADDED SIZE 1: the ledger item (list rows, register, said text, table names, row text). */
+  --item: clamp(1.125rem, 1rem + .4vw, 1.375rem);
+  /* ADDED SIZE 2: dense prose, only in three-column runs. */
+  --dense: 1rem;
+  --body: 1.0625rem; --ui: .8125rem;
+  --section-lg: clamp(4rem, 8vw, 7rem); --section-md: clamp(3rem, 6vw, 5rem);
+  --bar: 46px;
+  --f-read: "Castoro", Georgia, serif;
+  --f-ui: "Sofia Sans Semi Condensed", "Arial Narrow", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14121b; --soft: #1c1926; --ink: #f1ece3; --muted: #c2bcc9;
+    --gold-ink: #d59b29; --hair: rgba(241,236,227,.16); --hair-strong: rgba(241,236,227,.34);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14121b; --soft: #1c1926; --ink: #f1ece3; --muted: #c2bcc9;
+  --gold-ink: #d59b29; --hair: rgba(241,236,227,.16); --hair-strong: rgba(241,236,227,.34);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--f-read);
+  font-size: var(--body); line-height: 1.7; padding-top: var(--bar); }
+p, h2, h3, h4, ul, ol, figure { margin: 0; }
+a { color: inherit; text-decoration-color: var(--gold); text-underline-offset: .18em; }
+.ui { font-family: var(--f-ui); font-size: var(--ui); letter-spacing: .14em; text-transform: uppercase; font-weight: 500; line-height: 1.4; }
+
+/* ---------- prototype chrome (not part of the design) ---------- */
+.bar { position: fixed; inset: 0 0 auto 0; height: var(--bar); z-index: 50; display: flex; align-items: center; gap: 14px;
+  padding: 0 14px; background: var(--paper); border-bottom: 1px solid var(--hair-strong); font-family: var(--f-ui); font-size: 12.5px; }
+.bar b { font-weight: 600; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+.bar .thesis { color: var(--muted); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar nav { display: flex; gap: 2px; }
+.bar nav a, .bar button { font: inherit; color: var(--ink); background: none; border: 1px solid var(--hair-strong); padding: 3px 9px; cursor: pointer; text-decoration: none; line-height: 1.4; }
+.bar nav a[aria-current] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+@media (max-width: 760px) { .bar .thesis { display: none; } .bar { gap: 6px; padding: 0 8px; } .bar b { flex: 1; } .bar nav a, .bar button { padding: 3px 6px; } }
+.pagediv { background: var(--ink); color: var(--paper); font-family: var(--f-ui); padding: 18px var(--gutter); scroll-margin-top: var(--bar);
+  display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: baseline; }
+.pagediv b { font-size: 20px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+.pagediv span { font-size: 12.5px; letter-spacing: .06em; opacity: .75; }
+.spec { font-family: var(--f-ui); font-size: 11.5px; letter-spacing: .05em; color: var(--muted); background: var(--paper);
+  padding: 7px var(--gutter); border-top: 1px dashed var(--hair-strong); border-bottom: 1px dashed var(--hair-strong);
+  scroll-margin-top: var(--bar); }
+.spec b { color: var(--ink); font-weight: 600; }
+.spec .br { color: var(--gold-ink); font-weight: 600; letter-spacing: .1em; }
+dialog { max-width: min(900px, 100vw - 24px); max-height: calc(100vh - 60px); padding: 28px clamp(18px, 3vw, 36px); border: 1px solid var(--hair-strong);
+  background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.55; }
+dialog::backdrop { background: rgba(10,10,15,.45); }
+dialog h2 { font-size: 1.75rem; line-height: 1.1; margin-bottom: .6em; font-weight: 400; }
+dialog h3 { font-family: var(--f-ui); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-ink); margin: 1.6em 0 .5em; font-weight: 600; }
+dialog pre { font-size: 12.5px; line-height: 1.5; overflow-x: auto; border-top: 1px solid var(--hair-strong); border-bottom: 1px solid var(--hair); padding: 10px 0; white-space: pre; }
+dialog table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+dialog td, dialog th { text-align: left; vertical-align: top; border-top: 1px solid var(--hair); padding: 5px 10px 5px 0; }
+dialog th { font-family: var(--f-ui); font-weight: 600; font-size: 12px; letter-spacing: .06em; }
+dialog ul, dialog ol { padding-left: 1.3em; } dialog li { margin: .3em 0; }
+dialog code { font-size: 13px; }
+dialog .close { position: sticky; top: 0; float: right; font-family: var(--f-ui); background: var(--paper); border: 1px solid var(--hair-strong); padding: 3px 10px; cursor: pointer; color: var(--ink); }
+
+/* ---------- the design ---------- */
+main { container-type: inline-size; }
+.band { background: var(--paper); }
+.band.soft { background: var(--soft); }
+.wrap { max-width: var(--max); margin: 0 auto; padding: var(--section-lg) var(--gutter); }
+.band.cont .wrap { padding-top: var(--section-md); }
+.band.rowband .wrap { padding-top: var(--section-md); padding-bottom: var(--section-md); }
+.g { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+.sub { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
+.g > :last-child { margin-bottom: 0 !important; }
+.vspace { margin-bottom: clamp(32px, 4vw, 52px); }
+
+/* band head: above the body, at the one left edge */
+.head { grid-column: 1 / -1; margin-bottom: clamp(36px, 4.5vw, 64px); }
+.eyebrow { color: var(--gold-ink); margin-bottom: 20px; }
+h2.h { font-size: var(--h2); line-height: 1.05; font-weight: 400; max-width: 22ch; }
+.lede { grid-column: 1 / 9; font-style: italic; font-size: var(--lede); line-height: 1.35; max-width: 38em; }
+.leadin { grid-column: 1 / 9; font-style: italic; font-size: var(--item); line-height: 1.45; max-width: 40em; margin-bottom: 14px; }
+h3.h3 { font-size: var(--h3); line-height: 1.15; font-weight: 400; }
+h4.h4 { font-size: var(--item); line-height: 1.25; font-weight: 400; }
+
+/* prose runs: measure, or balanced columns (2 on the halves, 3 across the band) */
+.measure { grid-column: 1 / 8; max-width: 62ch; }
+.measure p + p { margin-top: 1em; }
+.run2 { grid-column: 1 / 11; columns: 2; column-gap: var(--gap); column-rule: 1px solid var(--hair); }
+.run3 { grid-column: 1 / -1; columns: 3; column-gap: var(--gap); column-rule: 1px solid var(--hair); font-size: var(--dense); line-height: 1.62; hyphens: auto; -webkit-hyphens: auto; }
+.run2 p, .run3 p { break-inside: auto; orphans: 3; widows: 3; }
+.run2 p + p, .run3 p + p { margin-top: .8em; }
+.run3 + .run3 { border-top: 1px solid var(--hair); padding-top: clamp(24px, 3vw, 36px); }
+
+/* h3 groups as columns under hairlines */
+.cols { row-gap: clamp(32px, 4vw, 48px); }
+.col { border-top: 1px solid var(--hair-strong); padding-top: 18px; }
+.cols.flush .col { border-top: 0; padding-top: 0; }
+.col .h3, .col .h4 { margin-bottom: 10px; }
+.col p + p { margin-top: .75em; }
+.cols.n2 .col:nth-child(2n+1) { grid-column: 1 / 6; } .cols.n2 .col:nth-child(2n) { grid-column: 6 / 12; }
+.cols.n3 .col { grid-column: span 4; }
+.cols.n4 .col { grid-column: span 3; }
+.cols.n2 .h3 { font-size: var(--lede); line-height: 1.1; }
+.cols .col.big p { font-size: var(--item); line-height: 1.5; }
+.runin { border-top: 1px solid var(--hair); padding-top: 12px; margin-top: 14px !important; }
+.runin .rl { display: block; color: var(--gold-ink); margin-bottom: 4px; }
+
+/* ledger rows */
+.ledger { list-style: none; padding: 0; border-bottom: 1px solid var(--hair); }
+.ledger > .row { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; border-top: 1px solid var(--hair); padding: 14px 0 15px; align-items: baseline; }
+.ledger > .row:first-child { border-top-color: var(--hair-strong); }
+.ledger .it { font-size: var(--item); line-height: 1.45; }
+.ledger.plain .it { grid-column: 1 / 10; }
+.ledger.table .nm { grid-column: 1 / 5; font-size: var(--item); line-height: 1.3; }
+.ledger.table .ds { grid-column: 6 / 12; max-width: 62ch; }
+
+/* said: a list whose items share their first 1 to 3 words (from B). Italic, item size,
+   the shared words hung in gold-ink in their own narrow track, no numbers. */
+.said { grid-column: 1 / -1; list-style: none; padding: 0; display: grid; grid-template-columns: max-content minmax(0, 42em) 1fr;
+  column-gap: .5em; border-bottom: 1px solid var(--hair); }
+.said > li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; border-top: 1px solid var(--hair); padding: 13px 0 14px; align-items: baseline; }
+.said > li:first-child { border-top-color: var(--hair-strong); }
+.said .pre { grid-column: 1; text-align: right; color: var(--gold-ink); font-style: italic; font-size: var(--item); line-height: 1.45; }
+.said .tx { grid-column: 2; font-style: italic; font-size: var(--item); line-height: 1.45; }
+
+/* short items: inline triad (<= 4) or a ruled index in columns (>= 5) */
+.triad { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 0; font-style: italic; font-size: var(--item); line-height: 1.45; }
+.triad span { padding-right: 14px; margin-right: 14px; border-right: 1px solid var(--hair-strong); }
+.triad span:last-child { border-right: 0; }
+.triad .pre { color: var(--gold-ink); padding: 0; margin: 0; border: 0; }
+.index { grid-column: 1 / -1; list-style: none; padding: 0; columns: 3; column-gap: var(--gap); border-top: 1px solid var(--hair-strong); }
+.index li { break-inside: avoid; border-bottom: 1px solid var(--hair); padding: 10px 0 11px; font-size: var(--item); line-height: 1.35; }
+
+/* register: many one-sentence statements, two ruled columns, read down then across */
+.register .cell { border-top: 1px solid var(--hair); padding: 13px 0 15px; font-size: var(--item); line-height: 1.45; }
+.register .cell.first { border-top-color: var(--hair-strong); }
+.register .cell.L { grid-column: 1 / 6; } .register .cell.R { grid-column: 6 / 12; }
+.register .triad { margin-top: 8px; font-size: inherit; }
+
+/* sections: h3 is a full-width sub-head row */
+.sect { grid-column: 1 / -1; border-top: 1px solid var(--hair-strong); padding-top: 18px; margin-bottom: clamp(20px, 2.5vw, 30px); }
+.foot { grid-column: 1 / -1; border-top: 1px solid var(--hair-strong); padding-top: 14px; color: var(--muted); }
+.foot p { max-width: 62ch; }
+
+/* single ruled row */
+.rowline { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; border-top: 1px solid var(--hair-strong); border-bottom: 1px solid var(--hair); padding: 22px 0 26px; align-items: start; }
+.rowline .rh { grid-column: 1 / 6; }
+.rowline .rh .eyebrow { margin-bottom: 12px; }
+.rowline .rt { grid-column: 6 / 12; font-size: var(--item); line-height: 1.45; }
+.rowline .rt.long { font-size: var(--body); line-height: 1.7; }
+.rowline .rt p + p { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--hair); }
+.standfirst { grid-column: 1 / 8; font-style: italic; font-size: var(--item); line-height: 1.45; max-width: 36em; margin-bottom: 18px; }
+.col .standfirst { margin-bottom: 0; }
+@media (min-width: 1024px) {
+  .said.hang { grid-template-columns: 0 minmax(0, 42em) 1fr; column-gap: 0; }
+  .said.hang > li { align-items: start; }
+  .said.hang .pre { position: relative; align-self: start; }
+  .said.hang .pre > span { top: 0; }
+  .said.hang .pre > span { position: absolute; right: 0; margin-right: .4em; white-space: nowrap; }
+}
+
+/* ---------- 2x2 before the four columns get narrow ---------- */
+@media (max-width: 1199px) {
+  .cols.n4 .col { grid-column: span 6; }
+  .run3 { columns: 2; }
+}
+/* ---------- tablet and phone ---------- */
+@media (max-width: 1023px) {
+  .g > *, .sub > *, .ledger > .row > *, .register .cell { grid-column: 1 / -1 !important; }
+  .sub, .ledger > .row, .rowline { display: block; }
+  .sub.cols { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+  .cols .col, .cols.n2 .col, .cols.n3 .col, .cols.n4 .col { grid-column: span 6 !important; }
+  .run2 { grid-column: 1 / -1; }
+  .lede, .leadin { max-width: none; }
+  .ledger.table .nm { margin-bottom: 4px; }
+  .register { display: block; }
+  .register .cell.R.first { border-top-color: var(--hair); }
+  .rowline .rh { margin-bottom: 14px; }
+  .index { columns: 2; }
+}
+@media (max-width: 699px) {
+  .cols .col, .cols.n2 .col, .cols.n3 .col, .cols.n4 .col { grid-column: 1 / -1 !important; }
+  .run2, .run3 { columns: 1; column-rule: 0; font-size: var(--body); line-height: 1.7; }
+  .said { column-gap: .4em; }
+}
+@media (max-width: 520px) { .index { columns: 1; } }
+.index li { overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<div class="bar" role="banner">
+  <b>A2 &middot; Ledger</b>
+  <span class="thesis">Round 2: every rich-text band on the site. Head above; the body's own structure laid across twelve columns as ruled rows and columns.</span>
+  <nav aria-label="Variants"><a href="../a2/index.html" data-v="a2" aria-current="page">A2</a><a href="../a/index.html" data-v="a">A</a><a href="../b/index.html" data-v="b">B</a><a href="../c/index.html" data-v="c">C</a></nav>
+  <button type="button" id="theme">Dark</button>
+  <button type="button" id="rulesBtn">Rules</button>
+</div>
+<main id="main"></main>
+
+<dialog id="rules" aria-labelledby="rulesTitle">
+  <button class="close" type="button" onclick="this.closest('dialog').close()">Close</button>
+  <h2 id="rulesTitle">Ledger, round 2: the rules</h2>
+  <p><b>Thesis.</b> A rich-text band is a ledger. The eyebrow and h2 sit above the body at the one left edge, and the body's own structure (h3 groups, lists, statements, name and description pairs, long prose) is laid across all twelve columns as ruled rows and ruled columns. Paper and ink, hairlines only, no boxes, no fills. Reference: Trinity Church Wall Street (research note section 3, item 2). Borrowed this round: the said-list setting from B, and balanced prose columns for long continuation prose from C.</p>
+
+  <h3>Final classifier</h3>
+<pre>
+// Input: the band's Portable Text blocks + whether it has a heading/eyebrow.
+// text(b)  = splitStega(spansText(b)).cleaned      // never measure a stega string
+// words(s) = text.trim().split(/\s+/).length
+// segs     = consecutive listItem blocks grouped into one list; h3, h4, normal kept
+
+shape(band):
+  hasHead = heading || eyebrow
+  if hasHead && H3 == 0 && H4 == 0 && lists == 0
+            && paras <= 3 && total <= 80                    -> ROW
+  if H3 >= 2 && every h3 group is paragraphs only
+            && every group <= 150 words                     -> COLUMNS(n = H3)
+  if H3 >= 1 || H4 >= 2                                     -> SECTIONS
+  if paras >= 8 && share(paras <= 35 words) >= 0.8          -> REGISTER
+  if some list has >= 3 items && listWords/total >= 0.4     -> LEDGER
+  else                                                      -> PROSE
+  !hasHead  -> the same shape, drawn as a CONTINUATION: no head, no lede,
+               top padding at section-md                    (ROW cannot occur)
+
+ROW:        head cols 1-5, text cols 6-11, top-aligned; each paragraph is a ruled sub-row
+COLUMNS(n): across = n <= 4 ? n : (n % 3 == 0 ? 3 : 4)   // 4 across for four
+            2x2 below 1200px, 1 across below 700px
+            a group of <= 40 words sets its text at the item size
+
+flow(segs)   // the one renderer every branch uses for its runs
+  PARAGRAPH RUN (consecutive normal blocks), T = its words:
+    LEDE      headed band, first run, first para <= 40 words
+              and (run == 1 || run >= 3 || it ends with ":")
+    STANDFIRST band-level, all or none: every h3 group that opens with 2+ paragraphs
+              opens with one of <= 30 words -> those first paragraphs italic, item size
+    LEAD-IN   last para of a run ends with ":", <= 25 words, a list follows
+                                                                -> italic, item size
+    MEASURE   T <= 60, or one paragraph of <= 110 words        -> cols 1-7, 62ch
+    RUN2      otherwise, ceil(T / 150) <= 2                     -> 2 columns, cols 1-10, 17px
+    RUN3      ceil(T / 150) >= 3                                -> 3 columns, full width, 16px
+              split into sets of about 600 words, a hairline between sets
+  LIST L (item text cleaned):
+    TABLE     >= half the items contain " | "          -> name cols 1-4 | text cols 6-11
+    SAID      no " | ", shared first 1 to 3 words across every item,
+              shorter than the shortest item, and (items >= 3 || prefix >= 2 words)
+                all items <= 6 words -> inline TRIAD with the prefix in gold-ink
+                else                 -> SAID rows: italic, item size, prefix in gold-ink;
+                                        prefix <= 6 chars is HUNG into the gutter at >= 1024px
+                                        (text keeps the band's left edge), else its own track
+    TRIAD     every item <= 6 words, <= 4 items         -> one line, hairline separators
+    INDEX     every item <= 6 words, >= 5 items         -> ruled rows in 3 columns
+    PLAIN     otherwise                                 -> ruled rows, item size
+  H4 RUN     2+ h4 groups -> COLUMNS (3 across max); FLUSH (no column rules)
+             when it opens its h3 section, because the section rule is already there
+  RUN-IN     paragraph /^(Label) [-–] (text)$/ where Label is 1-4 words, <= 28 chars,
+             no ".", every word capitalised (of/and/the/to/in/for allowed), AND at least
+             two paragraphs in the same band match      -> label in the UI face, sub-row
+  FOOT       last block is a para <= 15 words and either follows an h3/h4 group
+             or is a link line                          -> closing ruled row, muted
+</pre>
+
+  <h3>Every band, and the branch it hits</h3>
+  <div id="bandTable"></div>
+
+  <h3>Per branch: what renders, and why</h3>
+  <ul>
+    <li><b>Every headed band:</b> eyebrow and h2 above, at the one left edge; the body gets all twelve columns. Two internal edges repeat: col 1 and col 6 (the column ImageText already starts its prose on), so halves, table text and row text line up down a page.</li>
+    <li><b>COLUMNS:</b> each h3 group is a column under a strong hairline. Four across only from 1200px; below that, 2x2.</li>
+    <li><b>SAID</b> (from B, replacing round 1's numbered covenant): a list whose items all open with the same words is a text said aloud. The shared words sit in their own narrow gold-ink track so the verbs align; the rest is italic at the item size; hairlines stay because this is still the ledger. No numbers: the church never numbered it. Hits the covenant ("To"), the confession list ("That"), and the "God is" triad in the creed.</li>
+    <li><b>REGISTER (kept from A):</b> the creed stays a two-column ruled register, read down then across. B's single-column said setting was considered; the register is denser and the client preferred A. The embedded "God is" list takes the SAID idea in its triad form, prefix in gold-ink.</li>
+    <li><b>RUN2 / RUN3</b> (from C): long prose goes into balanced columns instead of one long column. This is what stops History running down one column for thousands of pixels. RUN3 uses the dense 16px size; phones get one 17px column.</li>
+    <li><b>CONTINUATION:</b> round 1's "Continued" margin label is gone. A headingless band is simply the same system with no head, starting at the left edge, on a tighter top padding. History's six continuations now read as column sets and sections, not a strip on the right.</li>
+    <li><b>INDEX</b> (new this round): Contact's ten one-line items as ruled rows in three columns, not a ten-row ledger.</li>
+    <li><b>STANDFIRST</b> (new this round): History's h3 sections open with a one-sentence summary before the story. It is a band-level, all-or-none test (every h3 group opening with two or more paragraphs must open with one of 30 words or fewer), so a band never mixes italic and roman openings; Four commitments fails it on The Way (37 words) and stays roman throughout.</li>
+    <li><b>ROW:</b> short headed bands (Give, the CCT intro, Affiliation) on one ruled line at desktop, top-aligned, each paragraph its own ruled sub-row (Give's three ways read as three rows); above 60 words the text drops to body size.</li>
+  </ul>
+
+  <h3>New strings</h3>
+  <p>None. Round 1's "Continued" is gone. The page dividers and specimen labels are prototype chrome, not design.</p>
+  <h3>Sizes added</h3>
+  <p>Two, the allowed maximum: <code>--item: clamp(1.125rem, 1rem + .4vw, 1.375rem)</code> for list rows, register statements, said text, table names and row text; <code>--dense: 1rem</code> for three-column prose only. The two-group h3 now reuses the lede token instead of a clamp of its own.</p>
+  <h3>Cadence</h3>
+  <p>No exception. Surfaces here are the ones the live pages assign today. Still true: a continuation would read better on its predecessor's surface; that would be a cadence exception and is not taken.</p>
+
+  <h3>Port plan</h3>
+  <ol>
+    <li><b>New <code>src/lib/rich-shape.ts</code></b> (pure, about 220 lines). Exports:
+<pre>export type Shape = 'row' | 'columns' | 'sections' | 'register' | 'ledger' | 'prose';
+export interface Piece { kind: 'lede' | 'leadin' | 'measure' | 'run2' | 'run3' | 'table' | 'said'
+  | 'triad' | 'index' | 'plain' | 'h3' | 'h4cols' | 'foot'; blocks: PortableTextBlock[];
+  prefix?: string; runIn?: boolean; flush?: boolean }
+export function classifyRichText(body: PortableTextBlock[], opts: { hasHead: boolean }):
+  { shape: Shape; continuation: boolean; across?: number;
+    intro: Piece[]; groups: { head?: PortableTextBlock; pieces: Piece[] }[]; foot?: Piece }
+export function sharedPrefix(items: string[]): string        // cleaned text in, words out
+export function splitAtPrefix(span: string, prefix: string): [string, string]   // stega-safe
+export function splitPiped(span: string): [string, string] | null              // stega-safe
+export function runInLabel(span: string): [string, string] | null              // stega-safe</pre>
+    Every measure uses <code>splitStega(text).cleaned</code>.</li>
+    <li><b>New <code>src/lib/rich-shape.test.ts</code></b>, node --test, one case per band in the table above (bodies saved as fixtures from this extraction, 29 of them), plus: one h3; a two-item list with a shared "The" (must be PLAIN, not SAID); a 900-word headingless essay (RUN3, two sets); a headed 900-word essay (LEDE + RUN3); seven h3 groups (4 across); a paragraph "Next week - we meet" alone in its band (must NOT be a run-in); a stega-encoded covenant (same shape as clean, prefix split keeps the payload on the body half); an empty body (renders nothing).</li>
+    <li><b><code>RichTextSection.astro</code></b> rewritten (about 250 lines): call <code>classifyRichText</code>, render one branch per shape. Each piece renders its blocks through the existing <code>PortableText</code> component block by block with small serializers (said, table, run-in), so click-to-edit keeps working per paragraph and per list item. The <code>lg:sticky</code> heading column goes. Accepts a new optional prop <code>continuation?: boolean</code> only as an override for tests; the default derives from missing heading and eyebrow.</li>
+    <li><b><code>SectionRenderer.astro</code></b>: no change is required (round 1 needed the previous band's heading; round 2 does not). The headingless band still gets the next surface in the cadence.</li>
+    <li><b>CSS</b>: the <code>--item</code> and <code>--dense</code> tokens in <code>globals.css @theme</code>, and about 60 lines of component CSS (subgrid rows, run2/run3 columns, said track). No schema change, no new field, nothing in <code>NON_STEGA_FIELDS</code>.</li>
+    <li><b>Stega handling for splitting.</b> Three branches split one span's text: SAID (at the prefix), TABLE (at " | "), RUN-IN (at " - "). Rule for all three: find the split point on <code>splitStega(s).cleaned</code>; stega appends its payload at the END of the string, so indices into the cleaned prefix are valid in the raw string; render the first half from <code>cleaned.slice(0, i)</code> and the second half as <code>cleaned.slice(j) + encoded</code>, so the payload stays on the second half and that half is still click-to-edit. Only split when the delimiter lies in the block's FIRST span; if it does not (a mark straddles it), fall back to PLAIN / ordinary paragraph. Word counts and every regex run on cleaned text only.</li>
+    <li><b>Gates:</b> <code>npm run test:unit</code>, <code>npm run check</code>, build, then <code>npm run parity capture</code> (every rich-text band changes, nothing else may), Playwright reflow at 320 including the <code>chromium-scrollbars</code> project, and a preview check in the Studio's Presentation tool on /beliefs (said list + register) and /ministries (table) with click-to-edit on both halves of a split item.</li>
+  </ol>
+
+  <h3>Honest weaknesses</h3>
+  <ul>
+    <li>/ministries "Sunday, room by room" and "Adults" are the densest bands on the site: sub-heads, rows, tables and columns in one band. Orderly, but a lot of hairline.</li>
+    <li>RUN2 applied to the pastors' letter (who-we-are, staff) sets a letter as two newspaper columns. It reads, but a letter is the one kind of prose that might deserve a single measure; there is no signal in the body that says "letter".</li>
+    <li>RUN3 at 16px is denser than the rest of the site's reading; it is only used above 300 words and only at desktop.</li>
+    <li>The SAID test cannot tell a spoken text from a list that merely repeats a word ("The Nursery / The Kids Center"). Requiring three items or a two-word prefix makes it rare, not impossible.</li>
+    <li>/beliefs is register, sections, prose, said, columns, prose back to back: the rules dominate that page.</li>
+  </ul>
+</dialog>
+
+<script>
+const BANDS = [{"page":"who-we-are","surface":"soft","eyebrow":"Our watchword","heading":"Praise and proclaim","body":"<p>This statement is our congregational “watchword.” A watchword is a short reminder and a promise from scripture about who God is and who he has called his people to be.</p><p>When the people of God were in exile, the Prophet Isaiah spoke. He delivered a message from God about what it would be like \"In that day\" when they returned. The people would return, praising and proclaiming the name of the Lord, and making him known to all nations.</p><p>At First Baptist Church Muncie, we believe the day of the Lord's favor has come in Jesus. The short of it is: that Jesus really does change everything.</p><p>And our goal for this season is to praise and proclaim his name.</p><p>This watchword, “Praise &amp; Proclaim” reminds us of the importance of each:</p><h3>Praise</h3><p>That our Purpose is worship, lifting up name of God: Father, Son, &amp; Holy Spirit.</p><h3>Proclaim</h3><p>That our Joy is to share the Good News of Jesus, with our neighbors &amp; the world.</p>","prevType":{"heading":"","eyebrow":"","cls":""}},{"page":"who-we-are","surface":"paper","eyebrow":"Our goals","heading":"Four commitments","body":"<h3>Worship</h3><p>FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.</p><p>Following God's Word - Our times of worship are rooted in scripture and prayer-filled so that our body can collectively hear from God, discern the next right step, and follow the Holy Spirit.</p><h3>The Way</h3><p>FBCM proclaims God's faithfulness with people who are curious about faith, as well as new believers. We offer a growth track, a step by step path into the life of this church, to help us all “come and see” who Jesus is and grow spiritually (John 1:39-41).</p><p>Caring Mentorship – Each regular attendee is connected with a deacon, a church member chosen to care for others, who offers prayer and support.</p><h3>Witness</h3><p>To make known what God has done, FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.</p><p>Local Partnership – We believe God has placed us in downtown Muncie for a reason. We work with local groups to bring light and hope to our community.</p><h3>Work</h3><p>FBCM exalts God by following Jesus’ example of serving others, rather than seeking to be served ourselves (Mark 10:45).</p><p>Serve – We actively and practically help and work alongside our neighbors.</p><p>Support – We give sacrificially to help those in need through regular offerings and donations.</p><p>Share – We care for church members who are sick, home bound, or struggling, making sure they remain part of our life together.</p>","prevType":{"heading":"Praise and proclaim","eyebrow":"Our watchword","cls":""}},{"page":"who-we-are","surface":"paper","eyebrow":"A note from our pastors","heading":"From Kendall and Jonathan","body":"<p>If you’re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you’re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we’d love for you to join us for worship too!</p><p>We’re all about the church. This church is made up of people who are all imperfect, all of us with our own struggles, all of us failing, falling into our old selfish ways, and getting up again only by God’s grace. And those same people are also filled by God’s own Spirit, have a sincere desire to be “good news” people, and to serve one another as we grow in our love of Christ together.</p><p>Finally, we would love for you to join us this Sunday, or anytime we’re gathered to encounter the same Christ who was, and is, and will come again – as we meet him in worship, the word, and the Lord’s table. “Come and see!”</p><p><a href=\"/staff\">Read the full letter on the Staff page</a></p>","prevType":{"heading":"Our pastors and worship arts director","eyebrow":"Our leadership","cls":""}},{"page":"who-we-are","surface":"soft","eyebrow":"Our pledge","heading":"What we promise","body":"<p>We pledge ourselves to be the family of God for you in this place:</p><ul><li>Bearing your burdens, as you bear ours. (Galatians 6:2)</li><li>Encouraging you in the faith, as we are encouraged by you. (1 Thess. 5:11)</li><li>Delighting in the Lord’s ways (Ps. 86:11-13; Ps. 37:3-6)</li><li>Offering our lives as a living sacrifice: Holy &amp; Pleasing to God. (Romans 12:1)</li></ul><p>When a member joins, we say this pledge together as a church.</p>","prevType":{"heading":"From Kendall and Jonathan","eyebrow":"A note from our pastors","cls":""}},{"page":"beliefs","surface":"soft","eyebrow":"Our basic beliefs","heading":"What we hold","body":"<p>There is One Triune God revealed to us as Father, Son, &amp; Holy Spirit.</p><ul><li>God is Love.</li><li>God is Spirit.</li><li>God is Holy.</li></ul><p>God created heaven and earth, all things visible and invisible.</p><p>The world God created is good.</p><p>Humanity was created in God’s image. We rebelled and turned from God – insisting on our own way.</p><p>This is called sin, and it corrupts all of creation.</p><p>Jesus came as the Holy One of Israel and the incarnation of God: he is fully human and fully God.</p><p>He was born of the Virgin Mary.</p><p>Jesus lived a perfect life in complete love and obedience to the Father, walking in the power of the Holy Spirit.</p><p>In him, the Kingdom of God has come.</p><p>In his suffering death on the cross, and in his rising again on the third day, according to the Scriptures, Jesus completed our salvation and the redemption of the world.</p><p>Jesus ascended to the right hand of the Father, and will return again on the last day to judge the living and the dead and make all that is wrong right.</p><p>The Holy Spirit inspired the Bible, sanctifies believers, and calls and equips the church, the people of God, to spread the Good News of Jesus Christ and to make disciples of all nations.</p><p>Christian life begins with conversion to Christ, empowered by the prior work of the Holy Spirit to regenerate (give us a new birth). Faith in Christ is how we are justified and forgiven.</p><p>There are two sacraments, or ordinances, which the Lord commanded the church to practice until he returns: Baptism and the Lord’s Supper (communion).</p>","prevType":{"heading":"","eyebrow":"","cls":""}},{"page":"beliefs","surface":"paper","eyebrow":"Being Baptist","heading":"Four things Baptists hold to","body":"<h3>Lordship of Christ and freedom to serve</h3><p>Baptists believe that Christ is head of his church. Each church is “autonomous,” but that shouldn’t mean we think “we’re the ones in charge.” It is Christ who is “in charge.” That’s what it means to say “Jesus is Lord.” And, as members of the body of Christ, each church member is empowered by the Spirit to discern His will in interpreting the Scriptures together.</p><p>Churches are each autonomous, directly under the Lordship of Christ, and we willingly and joyfully partner in ministry with other Christians and churches on mission. We each bring our unique Spirit-given gifts. We each benefit from one another.</p><p>Baptists, from the beginning, have also championed freedom for all people to worship according to conscience. That is, to worship, or not to worship, without being forced to do so or not to do so.</p><p>Even in times and places where those labeled heretics were punished by law, Baptists said right belief (while important) can’t be forced by the punishment of the state. Baptists are certain that service to God is crucial, but it must be service freely given. Thomas Helwys (1576-1616), one of the first Baptists, was even put in Newgate prison in London for this belief!</p><h3>Covenant Community</h3><p>The church is a covenant community. A covenant is a promise. The Lord has saved us, shown us great mercy and love, and made us a new people. The church is the body of believers united to one another to live as followers of Christ in that newness of life. We gather to Worship him through hearing and proclaiming the word and celebrating the Lord’s Supper and Baptism as Jesus commanded. In living in Jesus’ new life, we learn to love and trust God and live well with one another, with mutual accountability and encouragement.</p><p>We each have responsibilities to minister to one another.</p><h3>Church of Believers</h3><p>In different times and places, a common misunderstanding was that being Christian is something like being a citizen of a country, something you are because of where you are born, regardless of your beliefs or faith. Against this view, Baptists have consistently emphasized the importance of a church of “regenerate believers.” That is, being a Christian isn’t about what place you’re from, or what family you're born into. Being a Christian is about trusting Jesus as Lord and following him.</p><p>The church is made up of believers who have decided to follow Jesus and become part of the covenant community in baptism, united to freely serve, under the Lordship of Christ.</p><p>Our own practice of baptism is in accordance with what we believe the New Testament teaches. We baptize upon confession of faith in Jesus. We proclaim that decision to follow Jesus, and recognize God’s work of salvation, through Baptism in the name of the one true God: Father, Son, and Holy Spirit.</p><p>Although Muncie First Baptist Church only baptizes believers by immersion, the church accepts any member who was baptized in the name of the Father, Son, &amp; Holy Spirit, and trusts in Christ as Lord and Savior.</p><p>We recognize there are many genuine Christians and faithful churches who do not practice confession and then baptism, in that order. FBCM does not require professing Christians, who were Baptized as infants in the name of the Father, Son, and Holy Spirit, to be (re-)baptized to become members.</p>","prevType":{"heading":"What we hold","eyebrow":"Our basic beliefs","cls":""}},{"page":"beliefs","surface":"soft","eyebrow":"Historic confessions","heading":"What we have signed our names to","body":"<p>Holy Scripture is our source for faith and practice. We recognize there will be diversity in views and interpretation among believers.</p><p>As a guide to Christian teaching and to simply describe common beliefs in our community, FBCM adopted a historic confession as a congregation. As our by-laws &amp; constitution say: “Recognizing and honoring the differences that exist among believers, this Church generally ascribes to the New Hampshire Confession of Faith 1833.”</p><p>When seeking to form a missionary society which we partner with to this day, a Baptist pastor and scholar named J. Newton Brown helped create a confession of belief with other believers. It came to be known as the New Hampshire Baptist Confession of Faith of 1833 (NHCF 1833), and has served as a framework for many later Baptist Confessions– especially here in the United States.</p><p>The General Board of the American Baptists Churches - USA released an identity statement in 2005. While not binding on congregations or individuals, this statement represents an expression of the faith of American Baptists in the 21st century.</p><p>God has given this particular community of believers called Baptists a distinctive history and experience. As we share in common with Christians everywhere, so Baptists everywhere celebrate a common heritage.</p><p>With Baptist brothers and sisters around the world, we believe:</p><ul><li>That the Bible is the final authority and trustworthy for faith and practice. It is to be interpreted responsibly under the guidance of God’s Holy Spirit within the community of faith;</li><li>That the Church is a gathered fellowship of regenerated believers, a sign of the coming universal reign of God;</li><li>That the freedom to respond to the Lordship of Christ in all circumstances is fundamental to the Christian gospel and to human dignity; and</li><li>That witness to Christ is the ongoing task of every Christian and of every church.</li></ul>","prevType":{"heading":"","eyebrow":"","cls":""}},{"page":"beliefs","surface":"soft","eyebrow":"Our church covenant","heading":"The covenant we keep","body":"<p>We, the members of this church, through the grace of God, humbly and solemnly undertake with His aid:</p><ul><li>To attend the worship and services of this church regularly, using them for the edification of our souls.</li><li>To contribute cheerfully and regularly to the financial support of the work of this church and its various beneficences.</li><li>To aid and assist prayerfully, loyally, and willingly, the minister and those who work with him [or her] in the witness of this church.</li><li>To maintain, in all our relations with our fellow members, an attitude of spiritual integrity, sympathy, and love.</li><li>To cooperate with interest and earnestness in the redemptive, missionary, and social tasks of the Kingdom of God.</li><li>To cultivate by prayer and meditation a life of devotion and consecration to God and to our Savior, Jesus Christ.</li><li>To aspire, in our private lives, to character and conduct that shall be approved by God and our consciences.</li><li>To order the life in our homes so that they may be truly Christian and dwelling places of God.</li><li>To bear ourselves in our social and business interrelationships in accordance with the principles of Jesus Christ.</li></ul><p>We enter this covenant inspired by devoted love to Him who gave Himself for our salvation. We seek that communion of our spirits with His, so graciously bestowed on us. We desire to serve Him and those who are in the work of His hand. We pray for Divine guidance and help in this our earnest endeavor.</p><p>We further engage that when we remove from this place, we will, as soon as possible, unite with some other Church where we can carry out the spirit of this Covenant and the principles of God’s word.</p>","prevType":{"heading":"Three documents","eyebrow":"Read the documents","cls":""}},{"page":"beliefs","surface":"paper","eyebrow":"Membership","heading":"Full and associate members","body":"<h3>Full member</h3><p>To join Muncie First Baptist Church people normally present themselves for membership by coming forward at the end of a worship service when the pastor invites people to join the church.</p><p>Any person who professes faith in Jesus Christ as Lord and Savior may be admitted for membership by making your profession of faith in Jesus Christ public and following that with baptism, by transferring your membership from another church or by stating that you are a Christian and have been a member of a church, but for some reason transfer of a letter from that church is unlikely.</p><p>If you were baptized as an infant, our membership form may ask if you have taken any form of confirmation class.</p><h3>Associate member</h3><p>Any believer who is temporarily living in the Muncie community may unite with Muncie First Baptist Church during their stay in Muncie and retain membership in their home church.</p><p>Traditionally, college students have joined as associate members.</p><p>An Associate Member has no vote on church matters and may not hold elected positions, but may attend church meetings, may assume some positions of leadership, and is invited to participate in all church activities. Such membership terminates upon completion of their temporary stay.</p><p>For more information see <a href=\"#documents\">our Constitution and Bylaws</a>.</p>","prevType":{"heading":"The covenant we keep","eyebrow":"Our church covenant","cls":""}},{"page":"beliefs","surface":"soft","eyebrow":"Affiliation","heading":"American Baptist Churches USA","body":"<p>We are affiliated with the <a href=\"https://www.abc-usa.org/\">American Baptist Churches - USA</a> and the <a href=\"https://abc-indiana.org/\">American Baptist Churches of Indiana and Kentucky</a>.</p><p>American Baptists are a Christ-centered, biblically grounded, ethnically diverse people called to radical personal discipleship in Christ Jesus.</p><p>American Baptists' commitment to Jesus propels us to nurture authentic relationships with one another; build healthy churches; transform our communities, our nations, and our world; engage every member in hands-on ministry; and speak the prophetic word in love.</p>","prevType":{"heading":"Full and associate members","eyebrow":"Membership","cls":""}},{"page":"ministries","surface":"paper","eyebrow":"","heading":"Sunday, room by room","body":"<h3>Sunday school</h3><p>“Sunday School” refers to a time of small group Bible study during the hour before our regular worship service. While adults are in their traditional Sunday School classes the following is available:</p><ul><li>Nursery (Rm. 104) is available for infants through 3 years old.</li><li>Children Pre-K through 5th grade are invited to gather in the Kids Center (Rm. B01) to learn about Christian spiritual habits through creative exercises in art, music, reading.</li></ul><p>During this time, we emphasize one of four different spiritual habits: spending time with others, using your gifts, spending time with God, and witnessing to our faith.</p><p>FBCM’s children’s ministry volunteers teach these spiritual habits through a variety of worship arts experiences, such as hand bells, choir, and theater.</p><p>Parents can pick-up their children from the Nursery and Worship Arts Sunday School at 10:15 AM to enjoy breakfast at “Donut Hour” as a family in the Fellowship Hall.</p><h3>Worship and children’s church</h3><p>When it’s time for the worship service to begin at 10:45 AM, younger kids may be returned to the Nursery (Rm. 104) while older children Pre-K through 5th grade will join their families in the sanctuary for the first part of worship (~15 minutes) before being dismissed to Children’s Church.</p><p>FBC Muncie provides childcare throughout all of worship for infants through 3 year olds in the Nursery (Rm. 104).</p><p>Families who prefer to keep their young children close during worship are also welcome to use the Family Room (Rm. 105) to nurse, calm crying kids, or take a break while watching the service on a TV.</p><p>Because FBC Muncie believes that Children’s Ministry should be part of the life of the entire congregation, we welcome preschool through 5th grade children to participate in the first part of Sunday worship with the adults.</p><p>During this time, children will be invited to join their families and the congregation in:</p><ul><li>singing, clapping, and dancing to praise songs</li><li>reading and listening to holy Scripture</li><li>praying</li><li>participating in occasional “Children’s Time,” activities and lessons at the front of the sanctuary.</li></ul><p>When the first part of worship is over, a member of the FBC Muncie Leadership Team will invite all the children to line up and follow our Children’s Ministry volunteers to Children’s Church. You are also welcome to walk with your child to Children’s Church if that makes you or your child feel more comfortable. Currently, FBCM provides two Children’s Church classes:</p><ul><li>Kickstart (Rm. 102) for Preschool through 2nd graders.</li><li>The Underground (Rm. B01) for 3rd through 5th graders.</li></ul><p>During this second half of worship, adults will have the opportunity to hear the sermon and participate in the rest of worship.</p><p>Meanwhile, during Children’s Church, your kids will be engaging with the Bible story through short stories, crafts, games, and other age-appropriate group activities.</p><p>When worship is over, parents will take their security tag to pick-up their children from their various classrooms. If you are unsure where a classroom is located, you can stop by the Welcome Center and someone there will be able to guide you.</p><h3>Through the year</h3><p>Several children’s events are planned throughout the year. Some are just for fun while others are ways for the children to serve in the church or community. Events are age appropriate and fun for the whole family!</p><p>Examples of special events you can expect from our Children’s Ministry include:</p><ul><li>Vacation Bible School (VBS)</li><li>Parent's Night Out</li><li>Family Service opportunities</li><li>Trunk or Treat</li><li>Operation Christmas Child</li></ul>","prevType":{"heading":"Nursery through fifth grade","eyebrow":"Children","cls":"with-figure"}},{"page":"ministries","surface":"paper","eyebrow":"Adults","heading":"Sunday classes, Life Groups and more","body":"<p>From College and Career to Retirees, FBCM's Adult Ministry aims to engage adults of all ages in intentional discipleship so we may follow Jesus and become more like him - full of grace and truth.</p><h3>Sunday morning</h3><p>Every Sunday morning, there are classes for Adults (in addition for classes for teenagers, children, and nursery) at 9:30 a.m.</p><ul><li>Friendship Class taught by Pastor Jonathan. This class alternates between theological topics and biblical studies on the Christian life. This class meets in B-05.</li><li>Intergenerational Bible Study class taught by Jim Butler. The class meets in B-04.</li></ul><h3>Life Groups</h3><p>We also have various Life groups that meet in set seasons. In between the seasons, we have times of “All Church Discipleship” where all adults gather for Bible study or a teaching series.</p><p>We have several life groups which meet at various days &amp; times for discipleship, Bible study, and encouragement.</p><ul><li>Charis Student Ministry | For college students and those in early career. Led by Daniel Harris, the director of Charis student ministries. This group explores how faith intersects with everyday moments in life. For meeting times and details, contact daniel@charismuncie.org.</li><li>Faithful Fellowship | This life group meets every season on the first and third Sundays at the church. This group enjoys snacks together while exploring theology as it relates to the mission of the church. This group typically meets on Sunday evenings.</li><li>Jane Patton Life Group | This life group, convened by Jane Patton, meets at her home. The life group meets at 4 p.m. twice a month on Sundays during the fall and spring seasons.</li><li>Snowbirds Life Group | Locations vary for this life group which meets during the summer and fall life groups seasons. The snowbirds group engages in Bible study and snacks are provided. It meets mid-week (typically Thursdays) in room B-05.</li><li>Julie Davis Life Group | This life group, taught by Julie Davis, meets at the home of Brian and Deena Green. It involves extended Bible Study, a meal, and even some take-home work. The life group meets twice a month during the fall and spring seasons, starting at 5:30 p.m.</li></ul><h3>Fellowship and other events</h3><h4>Women's Ministry - \"Fresh Brewed Life\"</h4><p>Meeting throughout the year, these events include breakfast and hospitality for women of all ages. Come to share life together!</p><h4>Church Friends Lunch</h4><p>These post-worship luncheons are opportunities for fun, food, and fellowship multiple times a year. These usually take place at the church fellowship hall.</p><h4>Service Trips</h4><p>All church trips for service and worship allow us to serve together as a church family. Whether assisting communities in medium-to-long-term disaster relief or helping partner organizations with projects they need help with, these are great opportunities to draw close to communities in need, one another, and God.</p><p>Cheryl Flaherty, Adult Coordinator, <a href=\"mailto:adult@fbcmuncie.org\">adult@fbcmuncie.org</a></p>","prevType":{"heading":"Grades 6 to 12","eyebrow":"Youth","cls":"with-figure"}},{"page":"ministries","surface":"soft","eyebrow":"Outreach","heading":"Joining Christ where he is already at work","body":"<p>FBCM desires to join Christ where he is already at work in our world, in Muncie and across the globe. We do so personally, by sharing the mercy and love that God has shown us with others. We also do this with community partners, stewarding our resources to support them in their work.</p><h3>Ways You Can Connect With FBCM to serve our community</h3><ul><li>Volunteering with our partner organizations or at community events.</li><li>Special offerings and projects for disaster relief, mission work, and other needs.</li><li>Sewing Group (Rm 203) - A multi-aged, monthly group which sews pillowcases for those in need.</li><li>Use our building for something great! FBCM offers our facilities to host outside events and organizations. Our website has links to our building use policy <a href=\"/wedding#building-use\">here</a>.</li></ul><p>Dana Davis, Outreach Coordinator, <a href=\"mailto:outreach@fbcmuncie.org\">outreach@fbcmuncie.org</a></p>","prevType":{"heading":"Sunday classes, Life Groups and more","eyebrow":"Adults","cls":""}},{"page":"ministries","surface":"soft","eyebrow":"","heading":"","body":"<h3>Stay updated</h3><p>There are many ways to get the latest information about what is happening in Adult ministry or any of our ministries.</p><ul><li><a href=\"https://fbcmuncie.churchcenter.com/pages/fbcs-wednesday-weekly\">Wednesday Weekly</a></li><li><a href=\"/blog#publications\">The Visitor Quarterly</a></li><li><a href=\"https://fbcmuncie.churchcenter.com/\">Our Church App.</a></li></ul>","prevType":{"heading":"The people to talk to","eyebrow":"Get involved","cls":""}},{"page":"staff","surface":"soft","eyebrow":"Pastors and staff","heading":"How we are led","body":"<p>We believe that Christ is the head of the church – our Great Shepherd. Pastors serve as “under-shepherds,” under Christ (1 Peter 5:1-4). Pastors are men and women called by God and the congregation to serve Christ’s church in a variety of ministry areas: from preaching, teaching, visiting the sick, providing spiritual counsel, among many other roles. The pastors serve as a resource for the fulfillment of the Church’s God-given purpose.</p><p>We have two Co-Pastors, a married couple, who serve as our Senior Pastors. There is a long history of married couples working together in ministry. In Scripture, married couples hosted churches in their house, taught together, and supported the work of the church as a ministry team (for example, Priscilla and Aquila – see Acts 18:26; 1 Corinthians 16:19; Romans 16:3).</p><p>In addition to our Co-Pastors, we also have a Worship Director, who coordinates and supports our worship leaders, planning alongside the Pastors and other ministers in the church, and inviting us into times of intentional worship.</p>","prevType":{"heading":"","eyebrow":"","cls":""}},{"page":"staff","surface":"soft","eyebrow":"A note from our pastors","heading":"From Kendall and Jonathan","body":"<p>If you’re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you’re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we’d love for you to join us for worship too!</p><p>After all, Jesus did not say to his first followers: “Figure it all out, and then get back to me.” He said to them, “Come and see” (John 1:39).</p><p>Even so, we know people curious about a church wonder what a particular church, including its pastors, “are all about.”</p><p>We love the Good News – the Gospel – that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He Ascended to heaven, and he will come again in glory to make all that is wrong right. That’s life-changing, and truly good, news. It’s news good enough to set all of us free.</p><p>We’re all about the church. This church is made up of people who are all imperfect, all of us with our own struggles, all of us failing, falling into our old selfish ways, and getting up again only by God’s grace. And those same people are also filled by God’s own Spirit, have a sincere desire to be “good news” people, and to serve one another as we grow in our love of Christ together.</p><p>We’re honored to serve as Co-Pastors here. And it’s not only because First Baptist decided to do something a little unusual in calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community.</p><p>We love to serve here because we love being part of this Spirit-led people gathered to join Christ's presence in our community.</p><p>Finally, we would love for you to join us this Sunday, or anytime we’re gathered to encounter the same Christ who was, and is, and will come again – as we meet him in worship, the word, and the Lord’s table. “Come and see!”</p>","prevType":{"heading":"Our pastors and worship arts director","eyebrow":"Pastors","cls":""}},{"page":"staff","surface":"paper","eyebrow":"","heading":"What the Church Coordination Team is","body":"<p>Members of the Church Coordination Team (CCT) are church members selected as representatives by the whole church body for the purpose of coordinating the ministry of the church. They are tasked with coordinating the work of a particular area of church ministry. CCT members generally serve up to three years before rotating off for at least one year before they may be nominated again.</p>","prevType":{"heading":"From Kendall and Jonathan","eyebrow":"A note from our pastors","cls":""}},{"page":"history","surface":"soft","eyebrow":"","heading":"","body":"<h3>Slow Growth</h3><p>Financial pledges were honored or ignored depending on the member’s opinion of the pastor.</p><p>Growth was slow and somewhat painful during the first two decades. The largest expense for the church was the salary of the minister. Whenever a new pastor was asked to come, members pledged to pay a certain sum of money over a specific period of time, usually twelve months. Pledges were not always paid, however. Economic hardships sometimes caused members to fall behind. Then too, if individuals became dissatisfied with the pastor they sometimes intentionally neglected to contribute their agreed-on sum. If enough persons did this, the pastor would of economic necessity be forced to resign.</p><h3>Bickering</h3><p>Bickering among members nearly caused the church to disband in the 1870s.</p><p>Bickering among members was not uncommon. (After all, this is a Baptist Church.) The name-calling and animosity led to the resignation of one pastor in the late 1870s. Eventually the situation became so bad that in 1880 there was a motion in a business meeting to disband the church. Fortunately, the motion did not pass.</p><h3>N.B. Rairden - 1881</h3><p>Harmony came to the congregation during the pastorate of N. B. Rairden and his wife leading to the church officially being named The First Baptist Church of Muncie, Indiana.</p><p>The coming of pastor N.B. Rairden in 1881 marked a turning point for the fledgling congregation. He and his wife were both young and energetic, and they stayed at the church for nearly four years. No pastor prior to Rairden had stayed as long as two and a half years. Their contribution was primarily that of uniting and harmonizing a church with a history of disharmony. Never again would the members discuss disbanding. It was also during the Rairden pastorate that the church officially adopted the name First Baptist Church of Muncie, Indiana. Previously the church was referred to as the Regular Baptist Church or simply as the Muncie Baptist Church.</p>","prevType":{"heading":"Struggle and Rairden","eyebrow":"1862 to 1881","cls":"with-figure"}},{"page":"history","surface":"paper","eyebrow":"","heading":"","body":"<h3>Second Building - 1890</h3><p>Overcrowded conditions led the congregation to move into a new and much larger church in 1890.</p><h3>State Convention</h3><p>No longer a small and insignificant congregation, Muncie First Baptist hosted the annual meeting of the Indiana Baptist Convention in 1890.</p><p>The congregation was so pleased with the new structure that the Indiana Baptist Convention was invited to hold its annual meeting at Muncie First Baptist Church later in 1890. That was the first time the convention had ever been held in Muncie. Since then the convention has been at Muncie First Baptist five additional times: 1902, 1931, 1948, 1954, and 1967.</p><h3>Cassius M. Carter</h3><p>The prominence of Pastor Cassius M. Carter brought recognition to the Muncie Church never previously enjoyed.</p><p>Much of the progress the church experienced during the first three decades of the twentieth century can be closely associated with the men who were pastors at the time. Cassius M. Carter became pastor in 1898 and remained pastor for twelve and a half years, the longest pastorate in the history of First Baptist until Dan Mattox seven decades later. Three-time president of the Indiana Baptist Convention, Dr. Carter was asked to preach, lecture, and conduct revivals across this country and Europe. His prominence brought to the Muncie church a recognition not enjoyed previously.</p><h3>Institutional Church</h3><p>First Baptist became an “Institutional Church” offering athletic programs, reading and social rooms, and a gym for young men and women.</p><p>During the early part of the century there was a trend in America to adapt downtown churches into what became known as “institutional churches.” They supplemented the ordinary methods of spreading the gospel such as preaching, prayer meetings, Sunday School, and pastoral visitation with what one historian called “organized kindness.” These churches became hives of activity with athletic programs, gymnasiums, reading rooms, day nurseries, medical clinics, sewing classes, lecture series, choral societies, and drama clubs. During Carter’s pastorate, Muncie First Baptist never became a full-blown institutional church, but it did begin to offer some of the programs associated with such churches. In 1900 the church added an $18,000 institutional annex to the main building. That addition housed a gymnasium, reading room, study, social room, club room for young men, and club room for young women. The annex was kept open for long hours during the day but not twenty-four hours a day.</p><h3>Debt is Paid - 1913</h3><p>After years of indebtedness, a highly successful financial campaign allowed the church to liquidate the entire debt, highlighted by a note-burning ceremony on December 24, 1917.</p><p>In October, 1913, John Falconer Fraser became pastor. According to the church records, Fraser baptized more than 400 persons during this seven-and-a-half-year ministry. Baptists in the state recognized his leadership abilities and three times elected him president of the Indiana Baptist Convention (1917, 1918, 1919). But his crowning achievement at Muncie First Baptist was liquidating the church debt. When Fraser arrived, the church still owed money on the 1887 church building and the annex that was added in 1900. During 1914, the church spent more than it took in and so went further into debt.</p><p>A fund-raising canvass in 1915 failed to reverse the trend. The church was having so much difficulty paying its bills that Fraser authorized the church secretary to withhold the pastor’s salary for a few weeks in order to fund these expenditures. Once again the church had to borrow money in 1915 and found itself further in debt ($8410 by the end of 1915). Another financial campaign in 1916 led to more than 500 people signing pledge cards. Getting members to sign a pledge was one thing; getting them to pay the pledge proved more difficult. Only 150 people paid their entire pledge, while 50 individuals paid nothing at all. Expenditures were cut, yet the church was unable to pay the pastor nor the custodian all that was owed them at the end of the year.</p><p>In 1917, the financial picture brightened. More people paid their pledges, and several individuals gave regularly who had not pledged at all. The economy was improving and incomes were rising. The church announced at the end of the fiscal year in 1917 that church income had risen more than 50 percent over the previous year.</p><p>Fraser believed the time was right for paying off the church debt. One by one he called church members into his study and talked to them about their donations. Sunday School classes were urged to contribute, and even prominent citizens of Muncie who did not attend First Baptist were invited to help. The whole effort was an overwhelming success. On December 24, 1917, the total church indebtedness of $8413.80 was paid in full. To celebrate this momentous occasion, the church had a special note-burning ceremony on December 30.</p>","prevType":{"heading":"The gas boom to the debt paid","eyebrow":"1887 to 1917","cls":"with-figure"}},{"page":"history","surface":"paper","eyebrow":"","heading":"","body":"<p>In Muncie, his boundless energy, untiring zeal, and powerful sermons soon attracted large crowds to the church. The church sanctuary could hold between 450 and 500 people. By the fall of 1921 it was no longer large enough to accommodate the worshipers. An overflow area was opened. Yet sometimes people had to stand, and on some occasions, people were turned away.</p><p>This was particularly true of Sunday evening services. Some of the other Muncie churches did not have Sunday evening services, so many of those members came to hear “The Fighting Parson.” Hundreds were baptized during his ministry; once he baptized twenty-five in one service. A man of action more than a man of theory, Everson was an excellent leader, and nowhere was that leadership more evident and more tested than in the church’s decision to construct a new building.</p><p>Visualizing a beautiful new church is one thing; convincing the members that the time was at hand for constructing such a building was quite another matter; and raising the funds for such an undertaking was a staggering task. Yet, had Everson not pushed for the construction when he did, the building would not have been erected for many years to come. Certainly it would not have been constructed during the Depression, and with the United States entering World War II in 1941, it is quite possible the task would have been postponed at least until after 1945.</p><p>After numerous delays and much indecision, a site was purchased and construction of the new building in downtown Muncie began. Everson was active in promoting numerous fund-raising programs, and finally on May 12, 1929, 1200 people marched from the old church to the new one on the corner of Jefferson and Adams streets. The new church cost $338,000. The congregation had raised enough funds that the mortgage on the new building was only $166,000. That was a large sum, larger than the members had hoped for; but given the church’s financial giving the past few years, the sum seemed very manageable.</p>","prevType":{"heading":"The Fighting Parson and the building","eyebrow":"1921 to 1929","cls":"with-figure"}},{"page":"history","surface":"paper","eyebrow":"","heading":"","body":"<p>Eventually Mercantile Trust Company of St. Louis filed suit to foreclose the mortgage. Mercantile Trust claimed the church still owed $144,000 in principal and interest, but since the church could not pay this amount or make satisfactory arrangements with the bondholder, the church was put up for sale at auction in Indianapolis on July 21, 1938. Only one bid was entered and that was by Mercantile Trust. The trust company bid $55,250, and thus bought the church for less than half the principal bonded indebtedness. By terms of the sale, Mercantile Trust now owned the church building, but the congregation was given the right to occupy the building for one year (until July 21, 1939).</p><p>The bondholders, of course, did not want the building. They wanted to sell it to the church or to someone else to recoup some of their losses on the loan. Mercantile Trust offered to settle with the church in full for $88,400. Muncie First Baptist officials worked with the trust company for an entire year trying to negotiate the sale of the building. And eventually, one year and one week after the sale of the building, Muncie First Baptist bought it back for $70,000. Because of this experience, people who joined the church later noticed a strong resistance by older members of the congregation to permit the church to borrow money ever again. During World War II, the members of First Baptist demonstrated that they were not pacifists.</p><p>During the Civil War a large number of the church family had joined the war effort, a number that was 30 percent higher than the county in general. Even the pastor resigned during the Civil War in order to fight for the Union cause. During World War I, pastor John Fraser had volunteered his services to help the men in uniform. After the war, the church called “The Fighting Parson” as their pastor. He preached that any man who says that Christianity stands for pacifism is a liar. Then in World War II, pastor J. Marion Smith preached patriotism. The church opened its doors to the servicemen and servicewomen in the city, and 140 members joined the armed forces.</p>","prevType":{"heading":"Sold and bought back","eyebrow":"1938 to 1939","cls":"with-figure"}},{"page":"history","surface":"soft","eyebrow":"","heading":"","body":"<h3>1960s</h3><p>The 1960s was a decade in which Muncie First Baptist demonstrated more than its usual concern for others in the community. First, the church helped establish Riverside Baptist Church (pictured, right) with financial support and by encouraging several of its families who lived on the west side to join this new Baptist church. First Baptist was also instrumental in the founding of the Gateway Christian Center in the heart of a nearly all-black area of Muncie. It was hoped that such a center would help lessen racial tensions in the city. The center offered Bible study classes, a Vacation Bible School, grooming, crafts, and recreation. A branch of the Muncie public library was established in the center, as was a medical clinic, staffed freely by area physicians and nurses. First Baptist contributed $1000 per year, plus many members of the church contributed financially on their own and served on various committees at the center.</p><h3>Dan Mattox</h3><p>The much-loved Dan Mattox was pastor for fifteen years, the longest tenure in the history of First Baptist.</p><p>The fifteen-year pastorate of Dan Mattox (1974–1989) brought stability to First Baptist Church and perhaps a sense of complacency. Extremely well-loved by the congregation, Mattox proved to be an excellent pastor. He claimed he had only one sermon; he just dressed it up in different ways. That sermon was that we all “are the servants of God, and we have the work of the ministry to do.” Sunday School attendance and church worship attendance both remained consistent. Full-time staff members in Christian Education and music provided excellent leadership as well. Although challenged to be ministers of the gospel, the congregation may have experienced a sense of complacency as things seemed to be going quite well.</p>","prevType":{"heading":"Postwar to Mattox","eyebrow":"1950 to 1989","cls":"with-figure"}},{"page":"history","surface":"soft","eyebrow":"","heading":"","body":"<p>Nevertheless, the church engaged in very active programming. Seminars and programs to help members be better shepherds and relate better to others were held. Care groups were started. Marriage enrichment retreats were held. The musical Liberty was performed to the delight of the whole community several different years. Pastor Saunders was always interested in good relations with other churches, and with the help and leadership of several First Baptist men, a unity service was held in April, 1998, with Union Baptist Church, a mostly Black church. That went so well that another unity service was planned for August. This time many churches joined the effort, with the result that an estimated 5000 people attended the service held in Worthen Arena at Ball State University. It was an enormous interracial success, and a third service was held the next April. Again some 5000 attended, and in recognition of George Saunders’s contribution to the movement, he was asked to be the speaker.</p><h3>2000s</h3><p>“Worship Wars” led to serious problems for several years but eventually gave way to more harmonious support.</p><p>Although the controversy over what kind of worship service to have began while Saunders was pastor, it was not until the pastorate of Woody Noblitt that the “worship wars” really broke out at First Baptist Church. Should First Baptist have a traditional and a contemporary worship service, or should the church have one blended service? Solomon, in all his wisdom, would have had difficulty navigating these turbulent waters. When Noblitt first arrived, the church had one blended worship service. Then the church voted to have two services: a blended/traditional service first and a contemporary service later.</p><p>After two years, the church decided to return to one blended service; but that seemed to please almost no one, and two months later the church agreed to return to two services. Starting times for the two services also were changed several times before settling on 9:15 for the traditional/blended service and 11:15 for the contemporary service. During all this, many members left First Baptist, some because they were unhappy with the services being offered and some simply because they were tired of all the changes and controversy. Accompanying this controversy was a significant drop in attendance both in Sunday School and in the morning worship services.</p><p>Despite this decline, those who remained showed signs of renewal. The church had a successful “Forty Days of Purpose” program in 2004, with the goal of unifying the church’s purposes and bringing on spiritual renewal. The outreach ministry sponsored fall carnivals in the parking lot for neighboring children with as many as 150 attending. A shelter was constructed in the parking lot for the church and anyone in the area to use.</p><p>Members opened their pockets to purchase a projection system for the sanctuary, a new organ (at a cost of nearly $130,000), an improvement in the sanctuary sound system, and construction of a permanent extension to the pulpit area. And the very successful Christmas musical, A Time for Christmas, was presented in 2003 and 2004. With a cast of 120 (almost all members of FBC), the musical was performed three nights in 2003 and four nights in 2004 to a full house each night. One estimate was that 1300 people saw the musical in 2004.</p><p>During this time, the worship-style controversy virtually ended, and a spirit of harmony and support is much more apparent.</p><h3>2010s</h3><p>Pastor Allen and the church celebrated a monumental sabbatical after which the members loosened their purse strings and raised over $300,000 for church renewal and renovation.</p><p>In January of 2010 Fred Schulz retired as church organist after thirty-eight years of service to First Baptist. No other staff member had served the church that long. Fred Retired and in 2014 Clif Davis came on staff to serve as interim part-time Director of Church Worship. Today, Clif is still part-time but with some different responsibilities and a different title: Worship Arts Pastor. Both Wade and Clif earned doctoral degrees in their fields of study during this time period.</p><p>First Baptist and Wade were awarded a Eli Lily Clergy Renewal Grant for the Summer of 2017. The grant of nearly $41,000 allowed Wade to be away from First Baptist for fifteen weeks. He was to use the time primarily to rest and relax, and also to do research on a topic of his choice. The time was designed to be a time of reflection and rebirth for the local church in the pastor’s absence. First Baptist filled the pulpit with some eight different speakers and focused on the theme of “Joining God in the Neighborhood.”</p><p>Later that same year the church launched what was called The Legacy Capital Campaign. The campaign focused on renovating, restoring, and remodeling the church’s nearly ninety-year-old building. The campaign was to raise $300,000, a goal that eventually was surpassed. The finds were used primarily to tuck point, clean, and seal the stone exterior; to carpet and vinyl plank the sanctuary; and to improve the signage both inside and outside the building.</p><p>The last major project of Wade’s ministry was called the Story Project. It was a years-long endeavor to collect and organize in book form the writings of dozens of members and attendees that related God has been in work in their lives. The finished book, entitled “We are the Clay” consists of thirty-five articles and was edited by Julie Davis.</p><p>The membership was shocked when Wade announced in December, 2020, that he was leaving our church to become a pastor of a church in the finger-lake region of New York. When he Preached his last sermon in February 2021, Wade’s pastorate totaled 12 ½ years, the second longest tenure in the long history of First Baptist Muncie.</p><h3>2020s</h3><p>The 2020 pandemic presented challenges for First Baptist and every church, not only in the nation, but the world. When the church began resuming services in-person, in addition to the ongoing live stream offerings, the interim pastor, Dr. David Hinson, encouraged the church to expand its giving with the Vision 2022 campaign. Its goals included making the internship program part of the normal church budget, and to raise money in hopes of funding a part-time youth minister.</p><p>The Pastoral search team’s efforts to find a pastor resulted in the church calling not just one pastor, but two: Jonathan Balmer and Kendall Ellis (a married couple) were called by the congregation in May of 2022 to serve as Co-Pastors – a first for the congregation.</p><p>Jonathan and Kendall each preach, alternating responsibilities between pulpit and youth ministries – in addition to being involved with other areas of ministry alongside the Church Coordination Team.</p><p>Kendall, having received a Masters of Social Work in addition to a Master of Divinity from Baylor University, is keenly interested in community ministry. Jonathan has a strong interest in discipleship and theology for the sake of the church. Their gifts, they and the congregation hope, will complement one another as First Baptist Muncie continues to discern God’s will to serve in a new-era in the life of Muncie and this community of believers in Christ Jesus.</p>","prevType":{"heading":"Saunders to the co-pastors","eyebrow":"1990 to 2022","cls":"with-figure"}},{"page":"wedding","surface":"soft","eyebrow":"Why here","heading":"A wedding at First Baptist","body":"<p>First Baptist Church is a fitting wedding location and the facilities can be reserved for Christian weddings.</p><p>Building rentals for this purpose is something we do to share our building with sisters and brothers in Christ in the area so they might celebrate at a reasonable cost. Any associated fees are used exclusively for the cost of utilities, maintaining our building, and accounting for the time of our wedding coordinator, and others, who help make wedding ceremonies possible.</p><p>If you are interested, please read the following information and requirements for using our building and decide if our church may be right for your wedding ceremony.</p><p><a href=\"mailto:wedding@fbcmuncie.org\">Ella Mae Lemen, Wedding Coordinator</a></p><p>Ella Mae is a long-time member of First Baptist Church who also serves as our Wedding Coordinator. She is the appropriate person to contact if you are interested in celebrating a Christian wedding ceremony at First Baptist.</p>","prevType":{"heading":"","eyebrow":"","cls":""}},{"page":"wedding","surface":"paper","eyebrow":"Reserving your wedding","heading":"How to reserve the church","body":"<ul><li>Mail the signed contract, the information sheet and a deposit to First Baptist Church, 309 East Adams Street.</li><li>Fill out the wedding information form online.</li><li>Talk with Ella Mae Lemen, the wedding coordinator, about your date and the building.</li></ul><p>The documents below carry the fees.</p>","prevType":{"heading":"","eyebrow":"","cls":""}},{"page":"wedding","surface":"paper","eyebrow":"Building use","heading":"Using the building for other events","body":"<p>Throughout our history and into the present, First Baptist has opened up its facilities for use by friends and community organizations.</p><p>If you would like to use our building on a short term basis in some other way, you will need to complete a building usage form. Please fill out an online Building Use Request Form. If the online building request form is filled out, only the signed Property Use Agreement (Release and Indemnity Agreement / Acceptance of Responsibility) must be signed and turned into the office, and you will not be required to fill out all the information about your event by hand. Those who do not fill out the online form will need to fill out the entire building use form by hand and turn it into the Church Office, before the building use request can be considered.</p><ul><li>Exterior Building</li><li>Fellowship Hall</li><li>Kitchen</li><li>Youth Center</li></ul><p>The documents below carry the fees.</p>","prevType":{"heading":"Three documents","eyebrow":"Wedding documents","cls":""}},{"page":"give","surface":"paper","eyebrow":"Ways to give","heading":"Three ways to give","body":"<p>You can give online through Church Center any time. <a href=\"https://fbcmuncie.churchcenter.com/giving\">Give through Church Center</a></p><p>You can also give in person during Sunday worship, when the offering is taken. Sundays at 10:45 am.</p><p>Or mail a check to the church office: First Baptist Church, 309 East Adams Street, Muncie, IN 47305.</p>","prevType":{"heading":"","eyebrow":"","cls":""}},{"page":"give","surface":"soft","eyebrow":"Where it goes","heading":"What your gift supports","body":"<p>We give sacrificially to help those in need through regular offerings and donations.</p><p>Special offerings and projects for disaster relief, mission work, and other needs.</p>","prevType":{"heading":"Three ways to give","eyebrow":"Ways to give","cls":""}},{"page":"contact","surface":"paper","eyebrow":"Share a life update","heading":"Tell the church","body":"<p>Do you need to share something with the church such as:</p><ul><li>Birth Announcement</li><li>Notification of Death</li><li>Special Birthday</li><li>Special Anniversary</li><li>Engagement/Marriage Announcement</li><li>Retirement</li><li>Non-Emergency Hospital Admission / Surgical Procedure</li><li>Graduation</li><li>Decision of Faith</li><li>Phone Number / Address Change?</li></ul><p>Tell us and a member of the pastoral team will follow up. <a href=\"https://fbcmuncie.churchcenter.com/people/forms/159897\">Share a life update</a></p>","prevType":{"heading":"Office and pastors' hours","eyebrow":"Hours","cls":""}}];
+
+function toBlocks(html) {
+  const doc = new DOMParser().parseFromString('<div>' + html + '</div>', 'text/html');
+  const out = [];
+  for (const el of doc.body.firstChild.children) {
+    const tag = el.tagName.toLowerCase();
+    if (tag === 'ul' || tag === 'ol') {
+      for (const li of el.children) out.push({ style: 'normal', listItem: 'bullet', html: li.innerHTML, text: li.textContent });
+    } else out.push({ style: tag === 'p' ? 'normal' : tag, html: el.innerHTML, text: el.textContent });
+  }
+  return out;
+}
+const words = (t) => t.trim().split(/\s+/).filter(Boolean).length;
+function segments(blocks) {
+  const segs = [];
+  for (const b of blocks) {
+    if (b.listItem) { const l = segs[segs.length - 1]; if (l && l.kind === 'list') l.items.push(b); else segs.push({ kind: 'list', items: [b] }); }
+    else segs.push({ kind: b.style === 'normal' ? 'p' : b.style, b });
+  }
+  return segs;
+}
+const segWords = (s) => s.kind === 'list' ? s.items.reduce((n, i) => n + words(i.text), 0) : words(s.b.text);
+function splitGroups(segs, level) {
+  const intro = [], groups = [];
+  for (const s of segs) {
+    if (s.kind === level) groups.push({ head: s.b, body: [] });
+    else if (groups.length) groups[groups.length - 1].body.push(s);
+    else intro.push(s);
+  }
+  return { intro, groups };
+}
+const across = (n) => n <= 4 ? n : (n % 3 === 0 ? 3 : 4);
+
+function classify(band) {
+  const segs = segments(toBlocks(band.body));
+  const hasHead = !!(band.heading || band.eyebrow);
+  const H3 = segs.filter(s => s.kind === 'h3').length, H4 = segs.filter(s => s.kind === 'h4').length;
+  const lists = segs.filter(s => s.kind === 'list'), paras = segs.filter(s => s.kind === 'p');
+  const total = segs.reduce((n, s) => n + segWords(s), 0);
+  const stats = { total, H3, H4, lists: lists.length, paras: paras.length };
+  let shape;
+  if (hasHead && !H3 && !H4 && !lists.length && paras.length <= 3 && total <= 80) shape = 'row';
+  else if (H3 >= 2 && splitGroups(segs, 'h3').groups.every(g => g.body.every(s => s.kind === 'p') && g.body.reduce((n, s) => n + segWords(s), 0) <= 150)) shape = 'columns';
+  else if (H3 >= 1 || H4 >= 2) shape = 'sections';
+  else if (paras.length >= 8 && paras.filter(p => words(p.b.text) <= 35).length / paras.length >= 0.8) shape = 'register';
+  else if (lists.some(l => l.items.length >= 3) && lists.reduce((n, l) => n + segWords(l), 0) / total >= 0.4) shape = 'ledger';
+  else shape = 'prose';
+  // run-in is a band-level pattern: needs two matching paragraphs
+  const runinCount = paras.filter(p => runInSplit(p.b)).length;
+  return { shape, segs, hasHead, stats, runin: runinCount >= 2, runinCount };
+}
+
+/* ---------- piece rules ---------- */
+const SMALL = new Set(['of', 'and', 'the', 'to', 'in', 'for', 'a']);
+function runInSplit(b) {
+  if (/[<>]/.test(b.html)) return null;
+  const m = b.html.match(/^([^.\-–]{2,28}?) [-–] (.+)$/s);
+  if (!m) return null;
+  const w = m[1].trim().split(/\s+/);
+  if (w.length > 4) return null;
+  if (!w.every((x, i) => /^[A-Z]/.test(x) || (i > 0 && SMALL.has(x)))) return null;
+  return m;
+}
+function sharedPrefix(items) {
+  const ws = items.map(i => i.text.trim().split(/\s+/));
+  const min = Math.min(...ws.map(w => w.length));
+  let k = 0;
+  while (k < 3 && k < min - 1 && ws.every(w => w[k].toLowerCase() === ws[0][k].toLowerCase())) k++;
+  return k;
+}
+function stripPrefix(html, k) {
+  // prototype: the prefix words are plain text at the start of the item
+  const re = new RegExp('^\\s*((?:\\S+\\s+){' + k + '})');
+  const m = html.match(re);
+  return m ? [m[1].trim(), html.slice(m[0].length)] : ['', html];
+}
+function para(b, runin) {
+  if (runin) { const m = runInSplit(b); if (m) return `<p class="runin"><span class="rl ui">${m[1]}</span>${m[2]}</p>`; }
+  return `<p>${b.html}</p>`;
+}
+function listHTML(list) {
+  const items = list.items;
+  const piped = items.filter(i => i.text.includes(' | ')).length;
+  const short = items.every(i => words(i.text) <= 6);
+  if (piped && piped >= items.length / 2) {
+    return { kind: 'table', html: `<div class="sub ledger table vspace">${items.map(i => {
+      const k = i.html.indexOf(' | ');
+      return k < 0 ? `<div class="row"><p class="ds" style="grid-column:1/12">${i.html}</p></div>`
+        : `<div class="row"><p class="nm">${i.html.slice(0, k)}</p><p class="ds">${i.html.slice(k + 3)}</p></div>`;
+    }).join('')}</div>` };
+  }
+  const k = piped ? 0 : sharedPrefix(items);
+  if (k && (items.length >= 3 || k >= 2)) {
+    if (short) return { kind: 'said triad', html: `<p class="triad vspace">${items.map(i => { const [p, r] = stripPrefix(i.html, k); return `<span><span class="pre">${p}</span> ${r}</span>`; }).join('')}</p>` };
+    const hang = stripPrefix(items[0].html, k)[0].length <= 6;
+    return { kind: 'said' + (hang ? ' (hung)' : ''), html: `<ul class="said${hang ? ' hang' : ''} vspace">${items.map(i => { const [p, r] = stripPrefix(i.html, k); return `<li><span class="pre"><span>${p}</span></span><span class="tx">${r}</span></li>`; }).join('')}</ul>` };
+  }
+  if (short && items.length <= 4) return { kind: 'triad', html: `<p class="triad vspace">${items.map(i => `<span>${i.html}</span>`).join('')}</p>` };
+  if (short) return { kind: 'index', html: `<ul class="index vspace">${items.map(i => `<li>${i.html}</li>`).join('')}</ul>` };
+  return { kind: 'plain', html: `<ul class="sub ledger plain vspace">${items.map(i => `<li class="row"><span class="it">${i.html}</span></li>`).join('')}</ul>` };
+}
+function proseRun(run, runin, used) {
+  if (!run.length) return '';
+  const T = run.reduce((n, r) => n + segWords(r), 0);
+  if (T <= 60 || (run.length === 1 && T <= 110)) { used.add('measure'); return `<div class="measure vspace">${run.map(r => para(r.b, runin)).join('')}</div>`; }
+  const n = Math.min(3, Math.max(2, Math.ceil(T / 150)));
+  used.add('run' + n);
+  const sets = []; let cur = [], cw = 0;
+  for (const r of run) { const w = segWords(r); if (cw + w > 600 && cur.length) { sets.push(cur); cur = []; cw = 0; } cur.push(r); cw += w; }
+  if (cur.length) sets.push(cur);
+  return sets.map(s => `<div class="run${n} vspace">${s.map(r => para(r.b, runin)).join('')}</div>`).join('');
+}
+function flow(segs, opts, used) {
+  let html = '', i = 0, allowLede = opts.allowLede;
+  while (i < segs.length) {
+    const s = segs[i];
+    if (s.kind === 'p') {
+      const run = [];
+      while (i < segs.length && segs[i].kind === 'p') run.push(segs[i++]);
+      const nextIsList = segs[i] && segs[i].kind === 'list';
+      if (allowLede && words(run[0].b.text) <= 40 && (run.length === 1 || run.length >= 3 || /:\s*$/.test(run[0].b.text))) {
+        html += `<p class="lede vspace">${run.shift().b.html}</p>`; used.add('lede');
+      }
+      if (opts.standfirst && run.length >= 2 && words(run[0].b.text) <= 30) { html += `<p class="standfirst">${run.shift().b.html}</p>`; used.add('standfirst'); }
+      opts = { ...opts, standfirst: false };
+      let leadin = '';
+      if (run.length && nextIsList && /:\s*$/.test(run[run.length - 1].b.text) && words(run[run.length - 1].b.text) <= 25) { leadin = `<p class="leadin">${run.pop().b.html}</p>`; used.add('leadin'); }
+      html += proseRun(run, opts.runin, used) + leadin;
+    } else if (s.kind === 'list') {
+      const r = listHTML(s); used.add(r.kind); html += r.html; i++;
+    } else if (s.kind === 'h4') {
+      const groups = [], opensSection = i === 0 && opts.inSection;
+      while (i < segs.length && (segs[i].kind === 'h4' || (groups.length && segs[i].kind !== 'h3'))) {
+        if (segs[i].kind === 'h4') groups.push({ head: segs[i].b, body: [] }); else groups[groups.length - 1].body.push(segs[i]);
+        i++;
+      }
+      used.add('h4 columns' + (opensSection ? ' (flush)' : ''));
+      html += columnsHTML(groups, 'h4', opts.runin, opensSection);
+    } else i++;
+    allowLede = false;
+  }
+  return html;
+}
+function columnsHTML(groups, level, runin, flush, sf = false) {
+  const n = Math.min(across(groups.length), level === 'h4' ? 3 : 4);
+  return `<div class="sub cols n${n}${flush ? ' flush' : ''} vspace">${groups.map(g => {
+    const w = g.body.reduce((a, s) => a + segWords(s), 0);
+    return `<div class="col${level === 'h3' && w <= 40 ? ' big' : ''}"><${level} class="${level}">${g.head.html}</${level}>${
+      g.body.map((s, k) => sf && s.kind === 'p' && k === 0 && g.body.length >= 2 && g.body[1].kind === 'p' && words(s.b.text) <= 30 ? `<p class="standfirst">${s.b.html}</p>` : s.kind === 'p' ? para(s.b, runin) : s.kind === 'list' ? listHTML(s).html : '').join('')}</div>`; }).join('')}</div>`;
+}
+function pullFoot(segs) {
+  const last = segs[segs.length - 1];
+  if (!last || last.kind !== 'p' || words(last.b.text) > 15) return { segs, foot: null };
+  const afterGroup = segs.some(s => s.kind === 'h3' || s.kind === 'h4');
+  const linkLine = /^\s*<a [^>]*>[^<]*<\/a>\s*\.?\s*$/.test(last.b.html);
+  if (afterGroup || linkLine) return { segs: segs.slice(0, -1), foot: last.b };
+  return { segs, foot: null };
+}
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+function head(band) {
+  return `<header class="head">${band.eyebrow ? `<p class="eyebrow ui">${esc(band.eyebrow)}</p>` : ''}${band.heading ? `<h2 class="h" id="h-${band.key}">${esc(band.heading)}</h2>` : ''}</header>`;
+}
+
+function render(band) {
+  const c = classify(band); const used = new Set();
+  const H = c.hasHead ? head(band) : '';
+  const opts = { allowLede: c.hasHead, runin: c.runin };
+  if (c.runin) used.add('run-in x' + c.runinCount);
+  let inner = '';
+  if (c.shape === 'row') {
+    const long = c.stats.total > 60;
+    inner = `<div class="rowline"><div class="rh">${band.eyebrow ? `<p class="eyebrow ui">${esc(band.eyebrow)}</p>` : ''}<h2 class="h" id="h-${band.key}">${esc(band.heading)}</h2></div><div class="rt${long ? ' long' : ''}">${c.segs.map(s => `<p>${s.b.html}</p>`).join('')}</div></div>`;
+  } else if (c.shape === 'columns' || c.shape === 'sections') {
+    const { segs, foot } = pullFoot(c.segs);
+    const { intro, groups } = splitGroups(segs, 'h3');
+    const eligible = groups.filter(g => g.body[0] && g.body[0].kind === 'p' && g.body[1] && g.body[1].kind === 'p');
+    const sf = eligible.length > 0 && eligible.every(g => words(g.body[0].b.text) <= 30);
+    if (sf) used.add('standfirst');
+    inner = H + flow(intro, opts, used);
+    if (c.shape === 'columns') { inner += columnsHTML(groups, 'h3', c.runin, false, sf); used.add(`${across(groups.length)} across`); }
+    else inner += groups.map(g => `<div class="sect"><h3 class="h3">${g.head.html}</h3></div>${flow(g.body, { allowLede: false, runin: c.runin, inSection: true, standfirst: sf }, used)}`).join('');
+    if (foot) { inner += `<div class="foot"><p>${foot.html}</p></div>`; used.add('foot'); }
+  } else if (c.shape === 'register') {
+    const cells = [];
+    for (const s of c.segs) {
+      if (s.kind === 'list' && cells.length) { const r = listHTML(s); used.add(r.kind); cells[cells.length - 1] += r.html.replace(' vspace', ''); }
+      else if (s.kind === 'p') cells.push(`<p>${s.b.html}</p>`);
+      else if (s.kind === 'list') cells.push(listHTML(s).html);
+    }
+    const rows = Math.ceil(cells.length / 2);
+    inner = H + `<div class="sub register">${cells.map((h, k) => {
+      const L = k < rows, r = (L ? k : k - rows) + 1;
+      return `<div class="cell ${L ? 'L' : 'R'}${r === 1 ? ' first' : ''}" style="grid-row:${r}">${h}</div>`;
+    }).join('')}</div>`;
+  } else {
+    const { segs, foot } = pullFoot(c.segs);
+    inner = H + flow(segs, opts, used);
+    if (foot) { inner += `<div class="foot"><p>${foot.html}</p></div>`; used.add('foot'); }
+  }
+  return { html: `<div class="g">${inner}</div>`, c, used: [...used] };
+}
+
+/* ---------- page assembly ---------- */
+const PAGE_ORDER = ['who-we-are', 'beliefs', 'ministries', 'staff', 'history', 'wedding', 'give', 'contact'];
+const main = document.getElementById('main');
+const table = [];
+const counts = {};
+BANDS.forEach(b => { counts[b.page] = (counts[b.page] || 0) + 1; });
+let curPage = null, n = 0;
+BANDS.forEach((band) => {
+  if (band.page !== curPage) {
+    curPage = band.page; n = 0;
+    const d = document.createElement('div'); d.className = 'pagediv'; d.id = 'page-' + band.page;
+    d.innerHTML = `<b>/${band.page}</b><span>${counts[band.page]} rich-text band${counts[band.page] > 1 ? 's' : ''}, in page order, on the surface the live page gives each</span>`;
+    main.append(d);
+  }
+  n++;
+  band.key = `${band.page}-${n}`;
+  const r = render(band);
+  const name = band.heading || (band.prevType && band.prevType.heading ? `(continues "${band.prevType.heading}")` : '(headingless)');
+  const branch = (r.c.hasHead ? '' : 'CONTINUATION / ') + r.c.shape.toUpperCase();
+  table.push({ key: band.key, name, branch, pieces: r.used.join(', '), stats: r.c.stats });
+  const spec = document.createElement('div');
+  spec.className = 'spec'; spec.id = band.key;
+  spec.innerHTML = `<b>${band.key}</b> &middot; ${esc(name)} &middot; <span class="br">${branch}</span> &middot; ${r.c.stats.total} words, ${r.c.stats.paras} p, ${r.c.stats.H3} h3, ${r.c.stats.H4} h4, ${r.c.stats.lists} list${!r.c.hasHead && band.prevType ? ' &middot; follows: ' + esc([band.prevType.eyebrow, band.prevType.heading].filter(Boolean).join(', ')) : ''}`;
+  const sec = document.createElement('section');
+  sec.className = 'band' + (band.surface === 'soft' ? ' soft' : '') + (r.c.shape === 'row' ? ' rowband' : '') + (r.c.hasHead ? '' : ' cont');
+  sec.dataset.key = band.key; sec.dataset.branch = branch;
+  if (band.heading) sec.setAttribute('aria-labelledby', 'h-' + band.key); else sec.setAttribute('aria-label', 'Continued');
+  sec.innerHTML = `<div class="wrap">${r.html}</div>`;
+  main.append(spec, sec);
+});
+document.getElementById('bandTable').innerHTML = `<table><tr><th>band</th><th>name</th><th>branch</th><th>pieces</th><th>words</th></tr>${
+  table.map(t => `<tr><td>${t.key}</td><td>${esc(t.name)}</td><td>${t.branch}</td><td>${t.pieces}</td><td>${t.stats.total}</td></tr>`).join('')}</table>`;
+window.__TABLE = table;
+
+/* keep your place */
+const links = [...document.querySelectorAll('.bar nav a')];
+const setHash = (key) => links.forEach(a => a.href = `../${a.dataset.v}/index.html#${key}`);
+const io = new IntersectionObserver((es) => {
+  const vis = es.filter(e => e.isIntersecting);
+  if (vis.length) setHash(vis[0].target.dataset.key);
+}, { rootMargin: '-45% 0px -50% 0px' });
+document.querySelectorAll('section.band').forEach(s => io.observe(s));
+if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) requestAnimationFrame(() => t.scrollIntoView()); }
+
+const root = document.documentElement, tb = document.getElementById('theme');
+const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+const syncBtn = () => tb.textContent = isDark() ? 'Light' : 'Dark';
+tb.onclick = () => { root.dataset.theme = isDark() ? 'light' : 'dark'; syncBtn(); };
+syncBtn();
+document.getElementById('rulesBtn').onclick = () => document.getElementById('rules').showModal();
+</script>
+</body>
+</html>
