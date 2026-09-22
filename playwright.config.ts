@@ -48,6 +48,21 @@ export default defineConfig({
   // viewport widths, which fights device emulation, so it is chromium-only.
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    // Reflow again, with REAL scrollbars (added 2026-09-22). Playwright launches
+    // Chromium with --hide-scrollbars, where 100vw equals the page width, so a
+    // layout sized in 100vw that overshoots by the scrollbar's width passes the
+    // gate above and scrolls sideways in every real desktop browser. That
+    // shipped: the .bleed-* pictures overflowed 11 of 13 routes at 1440px and no
+    // test saw it. This project restores the scrollbar and reruns reflow only,
+    // so the other suites' measurements stay exactly as they were.
+    {
+      name: 'chromium-scrollbars',
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: { ignoreDefaultArgs: ['--hide-scrollbars'] },
+      },
+      testMatch: /reflow\.spec\.ts$/,
+    },
     {
       name: 'webkit-iphone',
       use: { ...devices['iPhone 14'] },

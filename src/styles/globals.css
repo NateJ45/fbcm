@@ -142,7 +142,10 @@
   --text-h4: clamp(1.25rem, 2vw, 1.5rem);
   --text-h3: clamp(1.375rem, 1rem + 1vw, 1.75rem);
   --text-h2: clamp(2rem, 1.2rem + 2.6vw, 3.25rem);
-  --text-h1: clamp(2.6rem, 1rem + 5.4vw, 6rem);
+  /* Floor lowered from 2.6rem (2026-09-22): at 2.6rem the word "COMMUNITY."
+     in Castoro Titling capitals measured 299px against a 280px column on a
+     320px phone. */
+  --text-h1: clamp(2.35rem, 1rem + 5.4vw, 6rem);
   /* Bigger than h1: the one poster-scale line a page is allowed. */
   --text-display: clamp(2.9rem, 1rem + 8.4vw, 8rem);
   /* The standfirst under a hero heading. */
@@ -619,6 +622,11 @@
     /* Headings are short; let the browser even out the rag rather than
        leaving one orphaned word on the last line. */
     text-wrap: balance;
+    /* Last resort only: a single word wider than the column (Castoro Titling
+       capitals are wide) breaks rather than pushing the page sideways. On a
+       block-level heading this works; see CLAUDE.md rule 18 for why it does
+       not on an inline-block. */
+    overflow-wrap: break-word;
   }
   h1 {
     font-family: var(--font-display);
@@ -728,17 +736,29 @@
    the gutter plus the leftover half-margin either side of a centred container
    (when it is wider). `min()` picks the more negative of the two.
    Under 900px there is no leftover margin and a one-sided bleed reads as a
-   mistake, so both collapse to a plain symmetrical gutter pull. */
+   mistake, so both collapse to a plain symmetrical gutter pull.
+
+   100cqw, NEVER 100vw (fixed 2026-09-22). `100vw` includes the vertical
+   scrollbar, so on any desktop browser with a classic scrollbar every bleeding
+   picture ran half a scrollbar (7-8px) past the visible edge and the whole page
+   scrolled sideways, on 11 of 13 routes at 1440px. The reflow gate never saw
+   it: Playwright launches Chromium with --hide-scrollbars, where 100vw and the
+   page width agree. `#main` is an inline-size container (below), so 100cqw is
+   the page's own width, scrollbar excluded. Measured: container-type does not
+   trap the position:fixed reading bar or sticky chip that live inside main. */
+#main {
+  container-type: inline-size;
+}
 .bleed-right {
   margin-right: min(
     calc(-1 * var(--spacing-gutter)),
-    calc((100vw - var(--container-content)) / -2 - var(--spacing-gutter))
+    calc((100cqw - var(--container-content)) / -2 - var(--spacing-gutter))
   );
 }
 .bleed-left {
   margin-left: min(
     calc(-1 * var(--spacing-gutter)),
-    calc((100vw - var(--container-content)) / -2 - var(--spacing-gutter))
+    calc((100cqw - var(--container-content)) / -2 - var(--spacing-gutter))
   );
 }
 @media (max-width: 900px) {

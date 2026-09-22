@@ -561,6 +561,14 @@ merged to `main` at `183a61f` and deployed. Full account of what changed is in
   68/68 (four widths across every route it covers), parity recaptured and
   re-proven at a fixpoint after the change, full unit suite (588) and full
   Playwright suite (171) green.
+- **Desktop horizontal overflow on 11 of 13 routes, found by Nathan by eye,
+  fixed 2026-09-22.** The `.bleed-*` photographs used `100vw`, which includes
+  the scrollbar, so on any desktop browser they overshot the edge by 7-8px at
+  1440px. Every gate passed because Playwright hides scrollbars. Fixed with
+  `container-type: inline-size` on `#main` and `100cqw`; the reflow suite now
+  also runs in a `chromium-scrollbars` project. The hero h1's size floor came
+  down to 2.35rem in the same change (Castoro Titling capitals ran past the
+  column on a 320px phone). CLAUDE.md rule 19.
 - **The `.superpowers/sdd/2026-09-20-fbcm-art-direction/` ledger no longer
   exists.** It was git-ignored scratch inside the `fbcm-art-direction`
   worktree; the worktree was removed as part of this closing pass (clean per
