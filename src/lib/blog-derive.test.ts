@@ -18,8 +18,18 @@ import {
   seriesByTag,
   weekOfEyebrow,
   tagIndex,
+  categoryLabel,
+  categorySingular,
+  categoryFilters,
+  freshPreview,
+  worthComingBackFor,
+  pageYearSpans,
+  thinStateTags,
+  groupByYear,
+  registerMeta,
   type BlogEntry,
 } from './blog-derive.ts';
+import { localDay } from './sermon-derive.ts';
 import { slugify } from './slugify.ts';
 
 // ── Fixtures ────────────────────────────────────────────────────────────────
@@ -235,4 +245,135 @@ test('two spellings of one tag are one page, not two routes with one path', () =
   assert.equal(index[0].slug, 'holidays');
   assert.equal(index[0].label, 'Holidays');
   assert.equal(index[0].entries.length, 2);
+});
+
+// ── The register (I1 Register, 2026-09-22) ──────────────────────────────────
+
+test('categoryLabel shortens and plurals the category for the filter row', () => {
+  assert.equal(categoryLabel('Sermon Preview'), 'Sermon previews');
+  assert.equal(categoryLabel('FBCM Events'), 'Events');
+  assert.equal(categoryLabel('Church Resources'), 'Church resources');
+  assert.equal(categoryLabel('Ruminations'), 'Ruminations');
+  assert.equal(categoryLabel(''), '');
+  assert.equal(categoryLabel('Sermon Preview​‌‍﻿'), 'Sermon previews');
+});
+
+test('categorySingular is the one-post form', () => {
+  assert.equal(categorySingular('Sermon Preview'), 'Sermon preview');
+  assert.equal(categorySingular('FBCM Events'), 'Event');
+  assert.equal(categorySingular('Series Resources'), 'Series resource');
+  assert.equal(categorySingular('Ruminations'), 'Rumination');
+});
+
+test('categoryFilters counts from the posts, most posts first', () => {
+  assert.deepEqual(
+    categoryFilters(entries).map((f) => [f.slug, f.label, f.count]),
+    [
+      ['ruminations', 'Ruminations', 3],
+      ['sermon-preview', 'Sermon previews', 3],
+    ],
+  );
+  assert.deepEqual(categoryFilters([{ title: 'no category' }]), []);
+});
+
+test('freshPreview: the newest preview while its Sunday has not passed', () => {
+  // preview-3 is 2024-01-17T00:00Z, which is Tuesday January 16 in Muncie, so
+  // its Sunday is January 21.
+  const day = (iso: string) => localDay(`${iso}T17:00:00.000Z`)!;
+  assert.equal(freshPreview(entries, day('2024-01-18'))?.title, 'Preview for the third Sunday');
+  assert.equal(freshPreview(entries, day('2024-01-21'))?.title, 'Preview for the third Sunday');
+  assert.equal(freshPreview(entries, day('2024-01-22')), null);
+  const { durable } = splitDurable(entries);
+  assert.equal(freshPreview(durable, day('2024-01-18')), null);
+});
+
+test('worthComingBackFor never repeats a post that is already on page 1', () => {
+  const page1 = entries.slice(0, 2); // preview-3, winter
+  assert.deepEqual(titles(worthComingBackFor(entries, page1)), [
+    'A note about the organ',
+    'What we read in Advent',
+  ]);
+  assert.deepEqual(titles(worthComingBackFor(entries, [], 1)), ['Ruminations on a long winter']);
+});
+
+test('pageYearSpans says which years each page holds, with exact days in the title', () => {
+  const list: BlogEntry[] = [
+    { publishedAt: '2025-02-10T15:00:00.000Z' },
+    { publishedAt: '2025-01-05T15:00:00.000Z' },
+    { publishedAt: '2024-12-29T15:00:00.000Z' },
+    { publishedAt: '2024-11-03T15:00:00.000Z' },
+    { publishedAt: '2024-10-01T15:00:00.000Z' },
+  ];
+  assert.deepEqual(pageYearSpans(list, 2), [
+    { page: 1, span: '2025', title: 'February 10, 2025 to January 5, 2025' },
+    { page: 2, span: '2024', title: 'December 29, 2024 to November 3, 2024' },
+    { page: 3, span: '2024', title: 'October 1, 2024 to October 1, 2024' },
+  ]);
+  // A page that crosses a year: the newer year in full, the older one short,
+  // joined by an en dash (U+2013), never an em dash.
+  assert.equal(pageYearSpans(list, 3)[0].span, '2025–24');
+  assert.deepEqual(pageYearSpans([], 12), []);
+});
+
+test('pageYearSpans reads the day in Muncie, not in UTC', () => {
+  // 02:00 UTC on New Year's Day is still December 31 in Indiana.
+  const list: BlogEntry[] = [{ publishedAt: '2025-01-01T02:00:00.000Z' }];
+  assert.equal(pageYearSpans(list, 12)[0].span, '2024');
+});
+
+test('thinStateTags: other tags and categories, most frequent first, own label excluded', () => {
+  const advent = entries.filter((e) => (e.tags ?? []).includes('Advent'));
+  const out = thinStateTags(advent, 'Advent', slugify);
+  assert.deepEqual(
+    out.map((f) => [f.kind, f.label, f.count, f.href]),
+    [
+      ['tag', 'Christmas', 3, '/blog/tag/christmas/'],
+      ['category', 'Sermon Preview', 2, '/blog/category/sermon-preview/'],
+      ['category', 'Ruminations', 2, '/blog/category/ruminations/'],
+      ['tag', 'Holidays', 1, '/blog/tag/holidays/'],
+    ],
+  );
+  assert.equal(thinStateTags(advent, 'advent', slugify, 2).length, 2);
+});
+
+test('thinStateTags excludes a category page by its slug too', () => {
+  const out = thinStateTags(entries.slice(0, 2), 'sermon-preview', slugify);
+  assert.ok(!out.some((f) => f.label === 'Sermon Preview'));
+  assert.ok(out.some((f) => f.label === 'Ruminations'));
+});
+
+test('groupByYear groups consecutive posts by their Muncie year', () => {
+  const list: BlogEntry[] = [
+    { title: 'a', publishedAt: '2025-01-02T15:00:00.000Z' },
+    { title: 'b', publishedAt: '2025-01-01T02:00:00.000Z' }, // Dec 31, 2024 locally
+    { title: 'c', publishedAt: '2024-06-01T15:00:00.000Z' },
+  ];
+  assert.deepEqual(
+    groupByYear(list).map((g) => [g.year, titles(g.items)]),
+    [
+      [2025, ['a']],
+      [2024, ['b', 'c']],
+    ],
+  );
+});
+
+test('registerMeta: a preview names its Sunday and reading, anything else its category', () => {
+  const preview = registerMeta({
+    ...entries[0],
+    opening: 'This is a sermon preview. Our reading is Romans 8:1-11 this week.',
+  });
+  assert.deepEqual(preview, {
+    preview: true,
+    key: 'Sunday Jan 21',
+    value: 'Romans 8:1-11',
+    day: 'Jan 16',
+    iso: '2024-01-16',
+  });
+  const other = registerMeta(entries[1]);
+  assert.equal(other.preview, false);
+  assert.equal(other.key, 'Rumination');
+  assert.equal(other.value, '');
+  assert.equal(registerMeta({ publishedAt: '2024-01-01T15:00:00.000Z' }).key, '');
+  // No reference in the opening: no reading, never a guess.
+  assert.equal(registerMeta({ ...entries[0], opening: 'No verse here.' }).value, '');
 });

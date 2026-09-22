@@ -1,0 +1,144 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// "Worth coming back for" on /blog page 1 (journal pass, 2026-09-22, "I1
+// Register"): four durable posts that are NOT already in the register below
+// (worthComingBackFor in blog-derive.ts), two columns, plate beside title.
+// The old Featured grid repeated five of its six cards eight inches lower.
+import SanityImage from '@/components/SanityImage.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { formatDay, isoDay, localDay } from '@/lib/sermon-derive';
+import { clean, type RegisterEntry } from '@/lib/blog-derive';
+
+interface Props {
+  entries: RegisterEntry[];
+}
+const { entries } = Astro.props as Props;
+---
+
+{
+  entries.length > 0 && (
+    <section class="bg-background" aria-labelledby="blog-worth-heading">
+      <div class="mx-auto max-w-content px-gutter pt-section-lg">
+        <SectionHeading
+          headline="Worth coming back for"
+          headingId="blog-worth-heading"
+          level="h2"
+          align="left"
+          tone="church"
+        />
+        <div class="worth">
+          {entries.map((entry) => {
+            const d = localDay(entry.publishedAt);
+            const category = (entry.categories ?? [])
+              .map((c) => clean(c?.title).trim())
+              .find(Boolean);
+            return (
+              <a href={entry.slug?.current ? `/post/${entry.slug.current}` : '#'}>
+                <span class="pl zoom-img" aria-hidden="true">
+                  {(entry.coverImage as any)?.asset ? (
+                    <SanityImage
+                      source={entry.coverImage as any}
+                      width={600}
+                      height={450}
+                      alt=""
+                      sizes="(min-width: 1024px) 18vw, (min-width: 641px) 40vw, 120px"
+                    />
+                  ) : (
+                    <span class="ph" />
+                  )}
+                </span>
+                <span class="tx">
+                  {category && <span class="c font-ui">{category}</span>}
+                  <b>{entry.title}</b>
+                  {d && (
+                    <small class="oldstyle">
+                      <time datetime={isoDay(d)}>{formatDay(d)}</time>
+                    </small>
+                  )}
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .worth {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(16px, 2.5vw, 40px);
+    margin-top: 28px;
+    border-bottom: 1px solid var(--hair);
+  }
+  a {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 22px;
+    padding: 22px 0 24px;
+    border-top: 1px solid var(--hair);
+    text-decoration: none;
+    align-items: start;
+    color: var(--foreground);
+  }
+  .pl {
+    display: block;
+    overflow: hidden;
+  }
+  .pl :global(img),
+  .pl .ph {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .ph {
+    background: var(--muted);
+  }
+  .tx {
+    min-width: 0;
+  }
+  .c {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-gold-ink);
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  b {
+    display: block;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 1.05rem + 0.6vw, 1.5rem);
+    line-height: 1.18;
+    overflow-wrap: break-word;
+    transition: color 0.2s;
+  }
+  a:hover b,
+  a:focus-visible b {
+    color: var(--color-gold-ink);
+  }
+  small {
+    display: block;
+    margin-top: 8px;
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+  }
+  @media (max-width: 1023px) {
+    .worth {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    a {
+      grid-template-columns: 120px minmax(0, 1fr);
+    }
+  }
+</style>

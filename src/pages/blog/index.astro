@@ -1,57 +1,58 @@
 ---
 // scaffold-file: journal
 // Safe to edit by hand for copy + structure changes.
-// The blog index. Spec 5.10: the archive foregrounds the 36 durable posts
-// without hiding the 106 weekly sermon previews.
+// The blog index, as a register (journal pass, 2026-09-22, variant "I1
+// Register", docs/superpowers/plans/2026-09-22-fbcm-journal-polish.md, track
+// B). It scans by date and title, the way the church's own Visitor archive and
+// the home page's blog band already do. In this order:
 //
-// Five bands, in this order:
-//   1. Hero, from the journalPage singleton (seeded by scripts/pages/blog.mjs).
-//   2. Featured: the newest six DURABLE posts. Which six is derived from the
-//      category every build (splitDurable), never from journalEntry.featured,
-//      which is a stored boolean nothing here reads (CLAUDE.md rule 15).
-//   3. This week: the newest sermon preview, one wide card, under an eyebrow
-//      that names the week it was written for.
-//   4. All posts: page 1 of 12, with the category chips and the pager.
-//   5. The singleton's additionalSections (this is where the #publications
-//      document list lives), then the closing CTA.
+//   1. Opener: eyebrow, h1 and lede from the journalPage singleton (fields
+//      unchanged), with the DOOR beside it: this Sunday's preview while its
+//      Sunday has not passed, else the latest post (Door.astro says how the
+//      visitor's clock gets the last word on a static page).
+//   2. Filters: the categories as text links with derived counts.
+//   3. Worth coming back for: four durable posts NOT on page 1 below.
+//   4. All posts: page 1 of the register, grouped by year, and the pager.
+//   5. The singleton's additionalSections (the #publications list).
+//
+// Which posts are durable is derived from the category every build
+// (splitDurable), never from a stored flag (CLAUDE.md rule 15). No closing CTA:
+// the footer follows the publications list.
 //
 // The whole archive is static. There is no SSR outside /preview, so the
 // category filter is a ROUTE (/blog/category/<slug>/), not a querystring, and
 // the inline script at the top of <main> is what carries plan 1's six
 // /blog?category=... redirect targets onto it.
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import {
-  getJournalPage,
-  getAllJournalEntries,
-  getAllJournalCategories,
-  getSiteSettings,
-} from '@/lib/queries';
+import { getJournalPage, getAllJournalEntries, getSiteSettings } from '@/lib/queries';
 import { getSectionVisibility } from '@/lib/sectionVisibility';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
 import {
-  splitDurable,
   paginate,
-  weekOfEyebrow,
   clean,
   tagIndex,
+  categoryFilters,
+  freshPreview,
+  worthComingBackFor,
   PER_PAGE,
+  type RegisterEntry,
 } from '@/lib/blog-derive';
+import { localDay } from '@/lib/sermon-derive';
 import { slugify } from '@/lib/slugify';
 
-import Hero from '@/components/Hero.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import SectionRenderer from '@/components/SectionRenderer.astro';
-import JournalCard from '@/components/JournalCard.astro';
-import PostGrid from '@/components/blog/PostGrid.astro';
+import Opener from '@/components/blog/Opener.astro';
+import Door from '@/components/blog/Door.astro';
+import Filters from '@/components/blog/Filters.astro';
+import Worth from '@/components/blog/Worth.astro';
+import Register from '@/components/blog/Register.astro';
 import Pager from '@/components/blog/Pager.astro';
-import CategoryChips from '@/components/blog/CategoryChips.astro';
-import FinalCta from '@/components/FinalCta.astro';
 
-const [page, entries, categories, siteSettings] = await Promise.all([
+const [page, entries, siteSettings] = await Promise.all([
   getJournalPage().catch(() => null),
   getAllJournalEntries().catch(() => []),
-  getAllJournalCategories().catch(() => []),
   getSiteSettings().catch(() => null),
 ]);
 
@@ -68,22 +69,23 @@ const heroEyebrow = page?.heroEyebrow ?? 'Blog';
 const heroHeadline = page?.heroHeadline ?? 'Writing from First Baptist.';
 const heroSubhead = page?.heroSubhead ?? undefined;
 
-const all = (entries ?? []) as any[];
-const { durable, previews } = splitDurable(all);
-const featured = durable.slice(0, 6);
-const thisWeek = previews[0] ?? null;
+const all = (entries ?? []) as RegisterEntry[];
 const firstPage = paginate(all, PER_PAGE, 1);
+// "Today" is the build's day in Muncie. The door's inline script re-checks it
+// against the visitor's clock, because this page outlives the build.
+const today = localDay(new Date().toISOString()) ?? new Date();
+const fresh = freshPreview(all, today);
+const latest = all[0] ?? null;
+const worth = worthComingBackFor(all, firstPage.items, 4);
 
 // The routes the redirect script below is allowed to send a visitor to. Both
 // lists are derived from the SAME data the two routes build from, so the script
 // can never point at a page this build did not produce:
-//   - category: the filter in src/pages/blog/category/[slug].astro's
-//     getStaticPaths (a slug, and at least one post),
+//   - category: a category with a slug and at least one post, which is the
+//     filter in src/pages/blog/category/[slug].astro's getStaticPaths,
 //   - tag: the grouping in src/pages/blog/tag/[tag].astro's getStaticPaths.
-const builtCategorySlugs = ((categories ?? []) as any[])
-  .filter((c) => c?.slug?.current && (c.postCount ?? 0) > 0)
-  .map((c) => clean(c.slug.current));
-const builtTagSlugs = tagIndex(all as any[], slugify).map((g) => g.slug);
+const builtCategorySlugs = categoryFilters(all).map((f) => clean(f.slug));
+const builtTagSlugs = tagIndex(all, slugify).map((g) => g.slug);
 
 const schemas = [
   breadcrumbSchema([
@@ -125,85 +127,34 @@ const schemas = [
     })();
   </script>
 
-  {/* ------- 1. Hero --------------------------------------------------------- */}
-  <Hero
+  {/* ------- 1 + 2. Opener, door and filters --------------------------------- */}
+  <Opener
     eyebrow={heroEyebrow}
-    headline={heroHeadline}
-    subhead={heroSubhead}
-    backgroundImage={page?.heroImage}
+    heading={heroHeadline}
+    lede={heroSubhead}
     headingId="blog-hero-heading"
-    size="short"
-    layout="split"
-  />
+  >
+    {(fresh || latest) && <Door {fresh} {latest} />}
+    <Filters slot="filters" entries={all} allCurrent />
+  </Opener>
 
-  {/* ------- 2. Featured: the newest six durable posts ---------------------- */}
-  {
-    featured.length > 0 && (
-      <section class="bg-background" aria-labelledby="blog-featured-heading">
-        <div class="mx-auto max-w-content px-gutter py-section-lg">
-          <SectionHeading
-            eyebrow="Featured"
-            headline="Worth coming back for"
-            headingId="blog-featured-heading"
-            level="h2"
-            align="left"
-            tone="church"
-          />
-          <div class="mt-section-md">
-            <PostGrid entries={featured} />
-          </div>
-        </div>
-      </section>
-    )
-  }
+  {/* ------- 3. Worth coming back for ---------------------------------------- */}
+  <Worth entries={worth} />
 
-  {
-    /* ------- 3. This week: the newest sermon preview, one wide card --------
-     The eyebrow names the week from the post's own publish date. It is the
-     band's eyebrow rather than the card's because there is exactly one card
-     here and the date IS the heading of this band. */
-  }
-  {
-    thisWeek && (
-      <section class="bg-muted" aria-labelledby="blog-this-week-heading">
-        <div class="mx-auto max-w-content px-gutter py-section-lg">
-          <SectionHeading
-            eyebrow={weekOfEyebrow(thisWeek.publishedAt)}
-            headline="This week"
-            headingId="blog-this-week-heading"
-            level="h2"
-            align="left"
-            tone="church"
-          />
-          <div class="mt-section-md grid grid-cols-1 lg:grid-cols-2">
-            <JournalCard entry={thisWeek} featured />
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  {/* ------- 4. All posts: page 1 of the archive ---------------------------- */}
+  {/* ------- 4. All posts: page 1 of the register --------------------------- */}
   <section class="bg-background" aria-labelledby="blog-all-heading">
     <div class="mx-auto max-w-content px-gutter py-section-lg">
       <SectionHeading
-        eyebrow="The archive"
         headline="All posts"
         headingId="blog-all-heading"
         level="h2"
         align="left"
         tone="church"
       />
-
-      <div class="mt-l">
-        <CategoryChips categories={(categories ?? []) as any} />
+      <div class="mt-7">
+        <Register entries={firstPage.items} emptyMessage="The first posts are on their way." />
       </div>
-
-      <div class="mt-section-md">
-        <PostGrid entries={firstPage.items} emptyMessage="The first posts are on their way." />
-      </div>
-
-      <Pager page={firstPage.page} pages={firstPage.pages} basePath="/blog" />
+      <Pager list={all} page={1} basePath="/blog" />
     </div>
   </section>
 
@@ -217,13 +168,5 @@ const schemas = [
     sections={(page as any)?.additionalSections}
     idPrefix="blog"
     settings={siteSettings}
-  />
-
-  {/* ------- 6. Final CTA ---------------------------------------------------- */}
-  <FinalCta
-    headline={page?.finalCtaHeadline}
-    subhead={page?.finalCtaSubhead}
-    cta={page?.finalCta}
-    backgroundImage={page?.finalCtaBackgroundImage}
   />
 </BaseLayout>

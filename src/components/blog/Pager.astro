@@ -1,53 +1,154 @@
 ---
 // scaffold-file: journal
 // Safe to edit by hand
-// The archive pager: "Newer / Page 3 of 12 / Older", one shape for all four
-// list routes (/blog, /blog/page/N, a category, a category page). Page 1 is
-// always the bare base path, never `/page/1/`, so /blog and /blog/page/1 are
-// not two URLs for one list.
+// The archive pager, one shape for every list route (/blog, /blog/page/N, a
+// category, a category's page N). Journal pass, 2026-09-22 ("I1 Register"):
+// "Page 1 of 12" said nothing about which page holds 2024, so every number now
+// carries the year or years its page covers ("2025–24"), with the exact first
+// and last days in its title. The spans come from pageYearSpans, which slices
+// with the same paginate() the routes build from, so the two cannot disagree.
 //
-// Renders nothing at all when there is only one page. A pager on a one-page
-// archive is furniture that says "there is more" when there is not.
+// Phone (< 640px): Newer, "Page n of N", Older.
+//
+// Page 1 is always the bare base path, never `/page/1/`, so /blog and
+// /blog/page/1 are not two URLs for one list. Renders nothing on a one-page list.
+import { pageYearSpans, PER_PAGE, type BlogEntry } from '@/lib/blog-derive';
+
 interface Props {
+  /** The WHOLE list being paged, not just this page: the spans need every page. */
+  list: BlogEntry[];
   page: number;
-  pages: number;
   /** '/blog' or '/blog/category/sermon-preview'. No trailing slash. */
   basePath: string;
 }
-const { page, pages, basePath } = Astro.props as Props;
+const { list, page, basePath } = Astro.props as Props;
 
+const spans = pageYearSpans(list ?? [], PER_PAGE);
+const pages = spans.length;
 const hrefFor = (n: number) => (n <= 1 ? `${basePath}/` : `${basePath}/page/${n}/`);
-// The whole pager is the UI face at label size now, and the gold is the
-// nav-underline that wipes in under a link rather than a 2px bar across the
-// top of the band. Same device the header nav and the `link` CTA use, so the
-// archive's two controls come from one family (CLAUDE.md rule 17).
-const link = 'nav-underline font-ui text-ui text-foreground transition-colors hover:text-gold-ink';
 ---
 
 {
   pages > 1 && (
-    <nav class="mt-section-md border-t border-hair-strong pt-6" aria-label="Archive pages">
-      <div class="flex flex-wrap items-baseline justify-between gap-s">
-        {page > 1 ? (
-          <a href={hrefFor(page - 1)} class={link} rel="prev">
-            &larr; Newer posts
-          </a>
-        ) : (
-          <span aria-hidden="true" />
-        )}
-
-        <p class="font-ui text-ui text-muted-foreground">
-          Page {page} of {pages}
-        </p>
-
-        {page < pages ? (
-          <a href={hrefFor(page + 1)} class={link} rel="next">
-            Older posts &rarr;
-          </a>
-        ) : (
-          <span aria-hidden="true" />
-        )}
-      </div>
+    <nav class="pager" aria-label="Archive pages">
+      {page > 1 ? (
+        <a class="end" href={hrefFor(page - 1)} rel="prev">
+          &larr; Newer
+        </a>
+      ) : (
+        <span class="end" aria-hidden="true" />
+      )}
+      <ol>
+        {spans.map((s) => (
+          <li>
+            <a
+              href={hrefFor(s.page)}
+              title={s.title || undefined}
+              aria-current={s.page === page ? 'page' : undefined}
+            >
+              <span class="pn oldstyle">{s.page}</span>
+              {s.span && <span class="sp oldstyle">{s.span}</span>}
+            </a>
+          </li>
+        ))}
+      </ol>
+      <span class="mob">
+        Page {page} of {pages}
+      </span>
+      {page < pages ? (
+        <a class="end" href={hrefFor(page + 1)} rel="next">
+          Older &rarr;
+        </a>
+      ) : (
+        <span class="end" aria-hidden="true" />
+      )}
     </nav>
   )
 }
+
+<style>
+  .pager {
+    margin-top: clamp(40px, 5vw, 64px);
+    border-top: 1px solid var(--hair-strong);
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    font-family: var(--font-ui);
+  }
+  .end {
+    font-size: var(--text-ui);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    padding-top: 2px;
+    color: var(--foreground);
+    min-width: 5.5em;
+  }
+  .end:last-child {
+    text-align: right;
+  }
+  a.end:hover {
+    color: var(--color-gold-ink);
+  }
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 10px;
+    min-width: 0;
+  }
+  li a {
+    display: block;
+    text-align: center;
+    padding: 0 10px;
+    text-decoration: none;
+    color: var(--foreground);
+  }
+  .pn {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    line-height: 1.4;
+  }
+  .sp {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+  li a:hover .pn {
+    color: var(--color-gold-ink);
+  }
+  li a[aria-current='page'] .pn {
+    color: var(--color-gold-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-underline-offset: 0.25em;
+  }
+  .mob {
+    display: none;
+    font-size: var(--text-ui);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    padding-top: 2px;
+  }
+  @media (max-width: 640px) {
+    ol {
+      display: none;
+    }
+    .mob {
+      display: block;
+    }
+    .end {
+      min-width: 0;
+    }
+  }
+</style>

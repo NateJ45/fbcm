@@ -1,0 +1,163 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// The door beside the index's opener (journal pass, 2026-09-22, "I1 Register").
+// The old "This week" band still called a January preview "this week" in
+// September. The door says only what the dates can prove:
+//
+//   fresh   the newest sermon preview, while its Sunday has not passed:
+//           "This Sunday, <Month D>" + title + reading + author + excerpt
+//   latest  otherwise the newest post of any kind:
+//           "Latest · <Month D>" + a hung 4:3 plate + title + excerpt
+//
+// "Fresh" is decided at BUILD time (freshPreview in blog-derive.ts), and a
+// static page can outlive its Sunday. So both doors are rendered, the latest
+// one `hidden`, and the inline script below re-checks against the visitor's
+// clock, in the church's time zone, and swaps them once the Sunday has gone.
+// Without JavaScript the build's answer stands.
+import SanityImage from '@/components/SanityImage.astro';
+import { localDay, sundayOf, formatDay, isoDay, readingOf, CHURCH_TZ } from '@/lib/sermon-derive';
+import type { RegisterEntry } from '@/lib/blog-derive';
+
+interface Props {
+  fresh: RegisterEntry | null;
+  latest: RegisterEntry | null;
+}
+const { fresh, latest } = Astro.props as Props;
+
+const hrefOf = (e: RegisterEntry) => (e.slug?.current ? `/post/${e.slug.current}` : '#');
+const monthDay = (d: Date | null) => (d ? formatDay(d, { month: 'long', day: 'numeric' }) : '');
+
+const freshSunday = fresh ? sundayOf(fresh.publishedAt) : null;
+const freshMeta = fresh
+  ? [readingOf(fresh.opening), (fresh.author ?? '').trim()].filter(Boolean).join(' · ')
+  : '';
+const latestDay = latest ? localDay(latest.publishedAt) : null;
+---
+
+{
+  fresh && freshSunday && (
+    <div class="door" data-door-fresh={isoDay(freshSunday)}>
+      <p class="lbl font-ui text-ui font-medium">This Sunday, {monthDay(freshSunday)}</p>
+      <a class="dt" href={hrefOf(fresh)}>
+        <b>{fresh.title}</b>
+      </a>
+      {freshMeta && <p class="meta oldstyle">{freshMeta}</p>}
+      {fresh.excerpt && <p class="ex">{fresh.excerpt}</p>}
+    </div>
+  )
+}
+{
+  latest && (
+    <div class="door" data-door-latest hidden={fresh && freshSunday ? true : undefined}>
+      <p class="lbl font-ui text-ui font-medium">
+        Latest{latestDay && <> &middot; {monthDay(latestDay)}</>}
+      </p>
+      {(latest.coverImage as any)?.asset && (
+        <div class="thumbw">
+          <SanityImage
+            source={latest.coverImage as any}
+            width={640}
+            height={480}
+            alt=""
+            sizes="(min-width: 400px) 320px, 100vw"
+            loading={fresh ? 'lazy' : 'eager'}
+          />
+        </div>
+      )}
+      <a class="dt" href={hrefOf(latest)}>
+        <b>{latest.title}</b>
+      </a>
+      {latest.excerpt && <p class="ex">{latest.excerpt}</p>}
+    </div>
+  )
+}
+{/* Does nothing unless the fresh door was rendered. */}
+<script is:inline define:vars={{ tz: CHURCH_TZ }}>
+  (function () {
+    try {
+      var fresh = document.querySelector('[data-door-fresh]');
+      var latest = document.querySelector('[data-door-latest]');
+      if (!fresh || !latest) return;
+      // en-CA formats as YYYY-MM-DD, so the two days compare as strings.
+      var today = new Intl.DateTimeFormat('en-CA', {
+        timeZone: tz,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(new Date());
+      if (today > fresh.getAttribute('data-door-fresh')) {
+        fresh.hidden = true;
+        latest.hidden = false;
+      }
+    } catch (_e) {
+      /* Leave the build's answer in place. */
+    }
+  })();
+</script>
+
+<style>
+  .door {
+    border-top: 1px solid var(--hair-strong);
+    padding-top: 14px;
+  }
+  .door[hidden] {
+    display: none;
+  }
+  .lbl {
+    color: var(--color-gold-ink);
+    margin-bottom: 12px;
+  }
+  .dt {
+    display: block;
+    text-decoration: none;
+    color: var(--foreground);
+  }
+  .dt b {
+    display: block;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.125rem);
+    line-height: 1.12;
+    overflow-wrap: break-word;
+    transition: color 0.2s;
+  }
+  .dt:hover b,
+  .dt:focus-visible b {
+    color: var(--color-gold-ink);
+  }
+  .meta {
+    margin-top: 10px;
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+    color: var(--muted-foreground);
+  }
+  .ex {
+    margin-top: 10px;
+    color: var(--muted-foreground);
+    font-size: 1rem;
+    line-height: 1.55;
+    overflow-wrap: break-word;
+  }
+  /* The plate, hung in a 1px gold moulding 9px outside the print. */
+  .thumbw {
+    position: relative;
+    display: block;
+    margin: 13px 9px 26px;
+    max-width: 320px;
+  }
+  .thumbw::after {
+    content: '';
+    position: absolute;
+    inset: -9px;
+    border: 1px solid var(--color-gold);
+    pointer-events: none;
+  }
+  .thumbw :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+</style>

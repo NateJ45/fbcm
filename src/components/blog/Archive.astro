@@ -2,76 +2,73 @@
 // scaffold-file: journal
 // Safe to edit by hand
 // The body of every blog list that is not the index: /blog/page/N, a category,
-// a category's page N, and a tag. One heading, one chip row, one grid, one
-// pager, in that order, so the four routes are one page with four titles.
+// a category's page N, and a tag (journal pass, 2026-09-22, "I1 Register").
+// Opener (no door), filters, register, pager, then the thin state when the
+// list holds fewer than four posts. No closing CTA: the footer follows.
 //
-// The index has more on it (featured, this week, the publications list), so it
-// draws its own body and shares these same partials rather than this shell.
-import SectionHeading from '@/components/SectionHeading.astro';
-import PostGrid from '@/components/blog/PostGrid.astro';
+// The index has more on it (the door, "Worth coming back for", the
+// publications list), so it composes the same partials itself rather than
+// using this shell.
+import Opener from '@/components/blog/Opener.astro';
+import Filters from '@/components/blog/Filters.astro';
+import Register from '@/components/blog/Register.astro';
 import Pager from '@/components/blog/Pager.astro';
-import CategoryChips from '@/components/blog/CategoryChips.astro';
-import type { BlogEntry } from '@/lib/blog-derive';
+import ThinState from '@/components/blog/ThinState.astro';
+import { paginate, PER_PAGE, type RegisterEntry } from '@/lib/blog-derive';
 
 interface Props {
   eyebrow: string;
   heading: string;
   /** One plain sentence under the heading. Optional. */
   intro?: string;
-  entries: BlogEntry[];
+  /** The WHOLE list (the pager's year spans and the thin state need all of it). */
+  list: RegisterEntry[];
+  /** Every post on the site, for the filter counts. */
+  allEntries: RegisterEntry[];
   page: number;
-  pages: number;
+  /** false on a tag page: the whole list is one page, however long. */
+  paged?: boolean;
   basePath: string;
-  categories?: unknown[];
+  /** The category being shown. */
   activeSlug?: string;
+  /** "All posts" is the list being shown (/blog/page/N). */
+  allCurrent?: boolean;
+  /** This page's own tag or category, left out of the thin state's line. */
+  exclude?: string;
   emptyMessage?: string;
 }
 const {
   eyebrow,
   heading,
   intro,
-  entries,
+  list,
+  allEntries,
   page,
-  pages,
+  paged = true,
   basePath,
-  categories = [],
   activeSlug,
+  allCurrent = false,
+  exclude,
   emptyMessage,
 } = Astro.props as Props;
+
+const items = paged ? paginate(list, PER_PAGE, page).items : list;
 ---
 
-<section class="bg-background" aria-labelledby="blog-archive-heading">
-  <div class="mx-auto max-w-content px-gutter py-section-lg">
-    <SectionHeading
-      eyebrow={eyebrow}
-      headline={heading}
-      subhead={intro}
-      headingId="blog-archive-heading"
-      level="h1"
-      align="left"
-      tone="church"
-    />
+<Opener {eyebrow} heading={heading} lede={intro} headingId="blog-archive-heading">
+  <Filters slot="filters" entries={allEntries} {activeSlug} {allCurrent} />
+</Opener>
 
+<section class="bg-background" aria-labelledby="blog-archive-posts">
+  <div class="mx-auto max-w-content px-gutter pt-section-md pb-section-lg">
     {
-      categories.length > 0 && (
-        <div class="mt-l">
-          <CategoryChips categories={categories as any} activeSlug={activeSlug} />
-        </div>
-      )
+      /* The page heading above is the h1 and every year in the register is an
+        h3, so without this the heading order jumps h1 -> h3 and axe fails the
+        route. */
     }
-
-    {
-      /* The page heading above is the h1 and every card title is an h3, so
-        without this the heading order jumps h1 -> h3 and axe fails the route.
-        It is the same visually-hidden rung the post grid on /blog gets from
-        that page's own "All posts" h2. */
-    }
-    <h2 class="sr-only">Posts</h2>
-
-    <div class="mt-section-md">
-      <PostGrid entries={entries} emptyMessage={emptyMessage} />
-    </div>
-
-    <Pager page={page} pages={pages} basePath={basePath} />
+    <h2 id="blog-archive-posts" class="sr-only">Posts</h2>
+    <Register entries={items} {emptyMessage} />
+    {paged && <Pager list={list} page={page} basePath={basePath} />}
+    <ThinState list={list} exclude={exclude} />
   </div>
 </section>
