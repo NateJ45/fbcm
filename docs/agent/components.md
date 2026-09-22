@@ -87,6 +87,55 @@ The Portable Text renderer (`JournalPortableText.tsx`) detects image orientation
 
 **Module-specific detail layouts** (portfolio/case study, before/after, shop, etc.) live under `modules/` and are documented in `docs/modules/`. The long-read grid pattern above is shared between the journal and any module that adds a long-form detail page.
 
+**Rich text and photo layout (the Ledger and photo shapes):**
+
+`RichTextSection.astro` and `ImageText.astro` (added 2026-09-22, the RichText
+Ledger and photo-shapes branch) never take a layout field. Each classifies its
+own content at build time and hands the result to one shared renderer,
+`RichBody.astro`, so a photo band's prose and a text band's prose read as the
+same grammar. The two prototypes that were approved as the visual source of
+truth are still the reference for what each branch should look like:
+`docs/superpowers/prototypes/2026-09-22-richtext-and-photos/richtext/index.html`
+(the Ledger, all 29 rich-text bands on the site) and
+`docs/superpowers/prototypes/2026-09-22-richtext-and-photos/photos/index.html`
+("Ground and window").
+
+- **`RichTextSection`** passes its body through `classifyRichText()` in
+  `src/lib/rich-shape.ts`, which returns one of six shapes: `row` (a single
+  ruled line), `columns` (h3/h4 groups set side by side), `sections` (h3/h4
+  groups stacked), `register` (a two-column split for a said/triad list),
+  `ledger` (lede, said or run pieces read top to bottom), `prose` (plain
+  running text). The classifier reads only what is already in the Portable
+  Text body: block styles, list items, a shared opening word across list
+  items (the covenant's hung "To"), paragraph and list length. No schema
+  field drives the choice.
+- **`ImageText`** passes its picture through `assignPhotoShapes()` in
+  `src/lib/photo-shape.ts`, called ONCE per page from `SectionRenderer.astro`
+  before any band renders. It returns one of six shapes: `ground`
+  (full-bleed, text set into a darkened edge, used for at most two per page),
+  `window` (the lancet arch, at most one per page), `frame` (an archival
+  portrait, dated before 1950), `plate` (an archival landscape), `legend`
+  (a group photo with named figures underneath), `row` (photo beside text at
+  the text's own height, the default). The shapes are read from the image's
+  own aspect ratio, its alt text and eyebrow, and its position among the
+  page's other photo bands, never from a field.
+- **The page pass is a budget, not a per-band choice, and that is the
+  editor's surprise to know about.** Because `assignPhotoShapes` looks at
+  every ImageText band on the page together, swapping ONE band's picture in
+  the Studio can change ANOTHER band's shape. A new portrait added earlier on
+  the page can take the one lancet window a later band was using, which then
+  falls back to a frame or a row. There is never more than one window and
+  never more than two grounds per page, and a ground never sits directly
+  after a photo hero. If a page's photo layout looks different after an
+  unrelated image edit, this budget is why. Grounds also take an opt-in
+  "wide" flow inside `rich-shape.ts` (labelled rows whose label keeps its own
+  editable block, or two columns for a short run of paragraphs): only
+  ImageText passes that option, so `RichTextSection`'s 29 bands cannot be
+  affected by it.
+- Both classifiers run on `splitStega(...).cleaned` text, never on the raw
+  stega-encoded string, so the preview takes the same branch as the live
+  site. See "Live draft preview" in `docs/agent/preview.md`.
+
 **Contact page pieces:**
 
 - `CopyEmailButton.tsx` -- mailto link + clipboard fallback.
