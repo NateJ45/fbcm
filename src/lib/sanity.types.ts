@@ -150,6 +150,7 @@ export type StaffMember = {
   email?: string;
   phone?: string;
   group?: 'pastors' | 'coordination' | 'support';
+  showOnSite?: boolean;
   bio?: Array<{
     children?: Array<{
       marks?: Array<string>;

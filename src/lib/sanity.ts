@@ -34,6 +34,13 @@ import { createImageUrlBuilder } from '@sanity/image-url';
 // `./package.json`, so the deep import resolves at runtime through bundler
 // leniency while `astro check` reports it as a missing module.
 import type { SanityImageSource } from '@sanity/image-url';
+import {
+  PLACEHOLDER_SETTINGS_QUERY,
+  fillPlaceholders,
+  hasPlaceholder,
+  placeholderValues,
+  type PlaceholderSettings,
+} from './settings-placeholders.ts';
 
 const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
 const dataset = import.meta.env.PUBLIC_SANITY_DATASET ?? 'production';
@@ -141,11 +148,34 @@ export async function sanityFetch<T>(
     return fallback;
   }
   try {
-    return await client.fetch<T>(query, params);
+    const result = await client.fetch<T>(query, params);
+    // Site settings placeholders ({time}, {address}...), filled here so every
+    // page, band and SEO field gets them without any component knowing. See
+    // src/lib/settings-placeholders.ts. Most results carry none, and pay only
+    // the cheap scan.
+    return hasPlaceholder(result) ? fillPlaceholders(result, await settingsValues()) : result;
   } catch (err) {
     console.warn('[sanity] fetch error (returning empty fallback):', err);
     return fallback;
   }
+}
+
+// The placeholder values, fetched once per build rather than once per query. A
+// one-minute lifetime keeps a long-running dev server from serving yesterday's
+// service time; a static build finishes well inside it. A failed fetch leaves
+// the placeholders visible ({time}) rather than blank, which is the failure an
+// editor can see and report.
+let settingsCache: { at: number; values: ReturnType<typeof placeholderValues> } | null = null;
+async function settingsValues(): Promise<ReturnType<typeof placeholderValues>> {
+  if (settingsCache && Date.now() - settingsCache.at < 60_000) return settingsCache.values;
+  let settings: PlaceholderSettings | null = null;
+  try {
+    settings = await client.fetch<PlaceholderSettings | null>(PLACEHOLDER_SETTINGS_QUERY);
+  } catch (err) {
+    console.warn('[sanity] could not read Site settings for placeholders:', err);
+  }
+  settingsCache = { at: Date.now(), values: placeholderValues(settings) };
+  return settingsCache.values;
 }
 
 const builder = createImageUrlBuilder({

@@ -10,6 +10,23 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-22 — The service time, address, phone and email live in one place._
+
+The page seeds had typed Site settings values into 46 places across 14 documents, so a
+new service time meant a hunt. Site settings placeholders (`{time}`, `{address}` and six
+more, `src/lib/settings-placeholders.ts`) are now filled at the two fetch chokepoints,
+`sanityFetch` for the build and `previewFetch` for Presentation, so no component needed to
+change and the editor sees the real value in the preview. `seed-pages` converts typed
+copies before writing, and `scripts/settings-placeholders.mjs` is both the one-time,
+backup-first migration and the standing audit (`--check`). The converter is narrow on
+purpose: "(Mark 10:45)" and the "10:15-10:45 a.m." fellowship hour look like the service
+time and are left alone, and the script refuses to write if any change fails to fill back
+to the church's text. Parity was 162/162 with no placeholders in the data, and a local
+build that simulated the migration changed only "10:45 AM" to "10:45 am". Same branch:
+blog posts no longer default their Author to "Your Name", staff members get a "Show on
+the Staff page" switch, Presentation labels the Blog page "Blog", guide links lost a double
+slash, and scheduled publishing is switched on pending one repo secret.
+
 _2026-09-22 — The Studio made easier to read._
 
 Nathan found the Studio hard to read. The cause was measurable: every label, list row

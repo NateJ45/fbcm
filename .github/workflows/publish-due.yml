@@ -36,9 +36,17 @@ name: Publish scheduled drafts
 # */30 means "within about half an hour of the time the editor picked", and the
 # field description in the Studio says exactly that. GitHub's scheduler is also
 # best-effort and can be delayed under load, so treat this as a soft promise.
+#
+# ── FBCM: SWITCHED ON 2026-09-22 ─────────────────────────────────────────────
+# Nathan chose to switch it on. The project id falls back to the existing
+# PUBLIC_SANITY_PROJECT_ID repo variable, so the ONLY thing left is the
+# SANITY_AUTH_TOKEN secret (an Editor token). Until it exists every run skips
+# with the warning below, which is harmless. Each publish fires the Sanity
+# webhook, which rebuilds the site, so a scheduled page is live a few minutes
+# after the half-hour run that publishes it.
 on:
-  # schedule:
-  #   - cron: '*/30 * * * *' # every half hour
+  schedule:
+    - cron: '*/30 * * * *' # every half hour
   workflow_dispatch:
 
 jobs:
@@ -50,7 +58,7 @@ jobs:
       - id: check
         env:
           TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
-          PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+          PROJECT_ID: ${{ vars.SANITY_PROJECT_ID || vars.PUBLIC_SANITY_PROJECT_ID }}
         run: |
           if [ -n "$TOKEN" ] && [ -n "$PROJECT_ID" ]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
@@ -74,7 +82,7 @@ jobs:
       - name: Publish anything whose time has come
         env:
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
-          SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+          SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID || vars.PUBLIC_SANITY_PROJECT_ID }}
           SANITY_DATASET: production
         # --apply is what turns the script from a dry run into a publish. The
         # script defaults to dry-run precisely so that a human running it by

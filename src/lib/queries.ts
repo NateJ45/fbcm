@@ -134,7 +134,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     // they vanish from the site entirely while still existing in the dataset.
     _type == "staffGridSection" => {
       ...,
-      "members": *[_type == "staffMember" && (coalesce(^.group, "all") == "all" || group == coalesce(^.group, "all") || (coalesce(^.group, "all") == "support" && !defined(group)))] | order(order asc, name asc) {
+      "members": *[_type == "staffMember" && showOnSite != false && (coalesce(^.group, "all") == "all" || group == coalesce(^.group, "all") || (coalesce(^.group, "all") == "support" && !defined(group)))] | order(order asc, name asc) {
         _id, name, "slug": slug.current, role, email, phone, group, order, bio,
         photo{ ..., asset->, "alt": coalesce(alt, asset->altText, name) }
       }

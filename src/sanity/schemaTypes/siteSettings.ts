@@ -58,7 +58,8 @@ export const siteSettings = defineType({
       title: 'Service time',
       type: 'string',
       group: 'church',
-      description: 'As it should read on the page, like "Sundays at 10:45 am".',
+      description:
+        'As it should read on the page, like "Sundays at 10:45 am". Every page that says {service time} or {time} fills it in from here.',
       initialValue: 'Sundays at 10:45 am',
     }),
     defineField({

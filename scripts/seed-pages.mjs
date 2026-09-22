@@ -68,6 +68,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createClient } from '@sanity/client';
 import { loadEnv } from './lib/loadEnv.mjs';
 import * as copy from './lib/page-copy.mjs';
+import { placeholdersForTypedCopies } from '../src/lib/settings-placeholders.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
@@ -477,7 +478,12 @@ async function main() {
   for (const mod of wanted) {
     copy.resetCtaKeys();
     const built = await mod.build(ctx);
-    const doc = { _id: mod.id, _type: mod.type, ...built };
+    // The modules read Site settings to write the service time, the address,
+    // the phone and the email into their bands. Those become placeholders here
+    // ({time}, {address}...), so the value lives once, in Site settings, and a
+    // re-seed can never type the copies back in (src/lib/settings-placeholders.ts).
+    const raw = { _id: mod.id, _type: mod.type, ...built };
+    const doc = ctx.settings ? placeholdersForTypedCopies(raw, ctx.settings) : raw;
 
     console.log(`${mod.id}  (${mod.type})  /${mod.slug}`);
 

@@ -110,9 +110,9 @@ export const journalEntry = defineType({
       name: 'author',
       title: 'Author',
       type: 'string',
-      description: 'Byline. Defaults to the founder. Change if a guest writes a post.',
+      description:
+        'Who wrote it, as it should appear under the title, like "Kendall Ellis". Leave blank for no byline.',
       group: 'meta',
-      initialValue: 'Your Name',
     }),
     defineField({
       name: 'publishedAt',

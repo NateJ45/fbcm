@@ -237,10 +237,9 @@ export const guides: Guide[] = [
     category: 'Sundays and notices',
     title: 'Change the service time or the Sunday details',
     icon: 'clock',
-    lead: 'One setting, and then the pages that repeat it.',
-    diy: 'mixed',
+    lead: 'Change it once, in Site settings, and every page follows.',
+    diy: 'self',
     body: [
-      { kind: 'h', text: 'First, Site settings' },
       {
         kind: 'path',
         items: ['Site settings', 'Site settings', 'Church details'],
@@ -256,34 +255,36 @@ export const guides: Guide[] = [
         ],
       },
       {
-        kind: 'p',
-        text: 'That updates the line at the top of every page and the footer at the bottom of every page, including the "Today" and "This Sunday" line that changes with the day of the week. The office hours band on the Contact page also reads from here, so it follows by itself.',
-      },
-      { kind: 'h', text: 'Then, the pages that say it again' },
-      {
         kind: 'callout',
-        tone: 'caution',
-        title: 'The time is also written into bands on other pages.',
-        text: 'When the pages were built, the service time and the street address were typed into several bands as well. Those do not follow Site settings. If the time changes, they need changing by hand, or the site will say two different times.',
+        tone: 'positive',
+        title: 'That is the whole job.',
+        text: 'The time, the address, the phone number and the email are kept in one place, Site settings. Every page that mentions them fills them in from there when the site rebuilds: the top and bottom of every page, the Sunday columns, the timelines, the closing bands, even the lines Google shows. Change it once and the whole site agrees.',
+      },
+      { kind: 'h', text: 'Words the site fills in for you' },
+      {
+        kind: 'p',
+        text: 'Open a band that mentions the time and you will see something like `{time}` where the time goes. That is a **placeholder**: the site swaps it for the real value from Site settings. In `Presentation` you see the real value; in the box you see the placeholder. You can type these into any text box yourself:',
       },
       {
         kind: 'bullets',
         items: [
-          '**Home**: the three short facts in the opening band ("Sundays"), and the first column of the Sunday times band.',
-          '**Visit** (called "Plan a visit" in the page list): the opening band facts, the timeline, and the first column of "Doors, parking and access", including its sentence "Worship is at 10:45 AM each Sunday."',
-          '**Contact**: the first column of the Sunday times band.',
-          '**Ministries**: the Sunday row of the timeline.',
-          '**Give**: the paragraph about giving in person during worship.',
-          'The closing band at the foot of Plan a visit, What we believe, Ministries, Our history, Weddings and building use, Give, and Journal (the Blog page), which reads like "Sundays at 10:45 am. 309 East Adams Street."',
+          '`{service time}` becomes the whole line, like "Sundays at 10:45 am".',
+          '`{time}` becomes just the time, like "10:45 am".',
+          '`{service length}` becomes "About an hour".',
+          '`{address}` becomes "309 East Adams Street", and `{short address}` becomes "309 East Adams".',
+          '`{city}` becomes "Muncie, IN 47305".',
+          '`{phone}` and `{email}` become the church’s public phone number and email.',
         ],
       },
       {
-        kind: 'p',
-        text: '_If the street address ever changes, the same bands carry it too, as do the opening band of Contact and the closing band of Staff._',
+        kind: 'callout',
+        tone: 'caution',
+        title: 'Type them exactly, curly brackets and all.',
+        text: 'If you see a placeholder like {time} on the live website, either it has a typing mistake or that box in Site settings is empty. Fill in Site settings and publish, and it comes right.',
       },
       {
         kind: 'p',
-        text: 'The quickest way through the list is `Presentation`: open each page, find the time, click it and retype it. Publish each page when it is right. _In that page list, pages go by their own titles, so Visit is "Plan a visit", Beliefs is "What we believe", History is "Our history" and the Blog page is "Journal"._',
+        text: '_Two times are not settings and are still typed where they appear: Sunday school at 9:30 am, and the fellowship hour (10:15 to 10:45) in the Youth band on the Ministries page. If either changes, change it there._',
       },
       {
         kind: 'callout',
@@ -356,7 +357,7 @@ export const guides: Guide[] = [
           'Write a short `Excerpt`: one or two sentences that appear on the Blog page under the title.',
           'Add a `Cover image` and fill in its `Alt text` (a sentence describing the picture).',
           'Under `Categories`, click `Add item` and choose one, like "Sermon Preview".',
-          'Change `Author` to the name of whoever wrote it.',
+          'Type the name of whoever wrote it in `Author`.',
           'Write the post in `Body`, below the other boxes.',
           'Publish.',
         ],
@@ -364,8 +365,8 @@ export const guides: Guide[] = [
       {
         kind: 'callout',
         tone: 'caution',
-        title: 'Always check the Author box.',
-        text: 'A new post starts with "Your Name" in `Author`, and that is what the post will say under its title if it is left alone.',
+        title: 'The Author box is the byline.',
+        text: 'Whatever is in `Author` prints under the post’s title. Leave it blank and the post has no byline.',
       },
       {
         kind: 'bullets',
@@ -405,7 +406,7 @@ export const guides: Guide[] = [
           'Fill in `Name`, then click `Generate` beside `Web address`.',
           'Type their `Role` the way it should read, like "Pastor" or "Church Clerk".',
           'Add their `Email address` and `Phone number` if they want them shown.',
-          'Choose their `Group`: `Pastors`, `Church Coordination Team`, or `Support and volunteer roles`.',
+          'Choose their `Group`: `Pastors`, `Church Coordination Team`, or `Support and volunteer roles`. Leave `Show on the Staff page` on.',
           'Add a `Photo` and a few lines in `About them` if you have them.',
           'Publish.',
         ],
@@ -420,10 +421,10 @@ export const guides: Guide[] = [
         title: 'Coordinators update the Ministries page too.',
         text: 'The "The people to talk to" band on the Ministries page lists everyone in the `Church Coordination Team` group. Change a coordinator here and that band follows by itself.',
       },
-      { kind: 'h', text: 'When someone leaves' },
+      { kind: 'h', text: 'When someone leaves, or is away for a while' },
       {
         kind: 'p',
-        text: 'Open them, click the `...` button beside `Publish`, and choose `Delete`. That takes them off the Staff page at the next rebuild. A deleted person cannot easily be brought back, so if they might return, copy their `About them` words somewhere safe first.',
+        text: 'Open them and switch off `Show on the Staff page`, then publish. They come off the website at the next rebuild but stay in the Studio, marked "(hidden)" in the list, so switching it back on is all it takes if they return. Only `Delete` someone (in the `...` menu beside `Publish`) if you are sure they are not coming back.',
       },
       {
         kind: 'callout',
@@ -633,11 +634,11 @@ export const guides: Guide[] = [
       {
         kind: 'callout',
         tone: 'caution',
-        title: 'Leave "Publish automatically at" empty.',
+        title: 'Leave "Publish automatically at" empty for now.',
         text:
-          'Pages have a `Publish automatically at` box under the `Publishing` tab. It is not switched on for this site yet, so a page set to publish itself will stay a draft. Publish by hand, or ask ' +
+          'Pages have a `Publish automatically at` box under the `Publishing` tab, for publishing a page at a set time. It is being switched on, and until ' +
           SITE.contactName +
-          '.',
+          ' tells you it works, a page set to publish itself may stay a draft. Publish by hand until then.',
       },
       { kind: 'seealso', items: ['Start here: how this all works'] },
     ],

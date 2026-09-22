@@ -474,37 +474,48 @@ Found while writing and walking the Help guides (feat/editor-guide). Each one
 is described to the secretary honestly in the guides today; fixing it means
 changing the guide that mentions it in the same commit.
 
-- **The service time is copied into about fifteen bands.** The page seeds
-  (`scripts/pages/*.mjs`) read `siteSettings.serviceTime` and the street line
-  at SEED time and wrote them as typed text into hero facts (home, visit,
-  contact), sundayTimes columns (home, visit, contact), timeline markers
-  (visit, ministries), CTA subheads (beliefs, blog, give, history, ministries,
-  visit, wedding), a Give paragraph and the Home SEO title. Only the header,
-  footer and Hours band read Site settings live. A time change today means
-  hand-editing every copy; the `service-times` guide lists them. This is the
-  CLAUDE.md rule 15 shape: derive at build time instead.
-- **The `ministry` documents are not read by any page.** No query or component
-  renders them; `/ministries` is a `page` document built from sections. The
-  desk still shows a top-level "Ministries" list, so an editor's change there
-  goes nowhere. The `ministries` guide warns against it. Decide: connect them,
-  or take the list off the desk. (Ministries also has no coordinator field;
-  each band's closing contact lines were typed at seed time.)
+- **The service time is copied into about fifteen bands.** CODE DONE
+  2026-09-22 (feat/settings-placeholders); ONE DATA STEP LEFT. Site settings
+  placeholders (`{service time}`, `{time}`, `{service length}`, `{address}`,
+  `{short address}`, `{city}`, `{phone}`, `{email}`) are filled at the two
+  fetch chokepoints (`sanityFetch`, `previewFetch`) from
+  `src/lib/settings-placeholders.ts`, and `seed-pages` converts typed copies
+  before it writes, so a re-seed cannot bring them back. Proven render-neutral
+  with no placeholders in the data (parity 162/162), and proven end to end by
+  a local build that simulated the migrated data (the only rendered change is
+  "10:45 AM"/"10:45 a.m." printing as "10:45 am"; the fellowship-hour range
+  and "Mark 10:45" untouched). **Remaining, in this order:** merge and deploy
+  the branch, THEN from the main checkout run
+  `node scripts/settings-placeholders.mjs` (dry; expect 46 changes in 14
+  documents plus 17 staff members), then `--write` (backup-first, one
+  transaction, revision-guarded). Writing before the deploy would show a
+  literal `{time}` on the live site. Afterwards `--check` is the audit (exit 1
+  if a typed copy is back). Left typed on purpose: the two `mailto:` link
+  targets (the URL field rejects braces; the visible text becomes `{email}`),
+  Sunday school at 9:30 am and the 10:15-10:45 fellowship hour (not settings),
+  and every blog post (dated writing).
+- **The `ministry` documents are not read by any page.** Nathan chose
+  (2026-09-22) to CONNECT them to the site rather than hide the list. Design
+  to be agreed before building; see the proposal in that session. Until then
+  the `ministries` guide keeps telling the secretary to edit the page.
 - **No deacons.** Nothing in the schema or data represents them. Ask the
   church how they want them shown before adding a group option.
-- **A new post's Author defaults to "Your Name"** (`journalEntry.ts`,
-  `initialValue`, description "Defaults to the founder"): starter residue
-  (CLAUDE.md rule 11). It prints under the post title if left alone.
-- **"Publish automatically at" does nothing yet.** The field is on every
-  `page`, but `.github/workflows/publish-due.yml` still has its schedule
-  commented out. The `who-to-ask` guide tells the secretary to leave it empty.
-  Either switch the workflow on or hide the field.
+- ~~**A new post's Author defaults to "Your Name"**~~ Fixed 2026-09-22
+  (feat/settings-placeholders): no initial value; blank means no byline. All
+  142 existing posts already carry a real author.
+- **"Publish automatically at" is switched on, waiting on one secret.**
+  2026-09-22 (feat/settings-placeholders): `publish-due.yml` runs every half
+  hour and falls back to the existing `PUBLIC_SANITY_PROJECT_ID` variable. It
+  skips with a warning until the `SANITY_AUTH_TOKEN` repo secret (an Editor
+  token) exists. When it does, replace the `who-to-ask` guide's "leave it
+  empty for now" callout with a short how-to.
 - ~~**The workspace is still titled "My Studio"**~~ Fixed 2026-09-22
   (feat/studio-readability): now "First Baptist Studio", which is also what
   every image menu calls the Studio's own photo source.
-- **The Presentation page list shows the Blog page as "Journal"** and pages by
-  their document titles ("Plan a visit", "What we believe", "Our history"),
-  which differ from the menu names. The guide explains it; renaming the
-  journalPage title to "Blog" would remove one of the explanations.
+- ~~**The Presentation page list shows the Blog page as "Journal"**~~ Fixed
+  2026-09-22: the label is "Blog" (a fixed label in `PreviewNavigator.tsx`).
+  Custom pages still list by their own titles ("Plan a visit"), which is
+  right; the guides say so where it matters.
 - **Media library asset names are full local file paths**
   (`C:\Users\natha\Documents\Claude\Proje...`), from the import scripts'
   upload filenames. Cosmetic, but it is what the secretary reads when choosing
@@ -512,14 +523,15 @@ changing the guide that mentions it in the same commit.
 - **Staff photos and Ministry photos have no alt-text field.** StaffGrid
   passes no alt, so the image renders `alt=""` beside the printed name, which
   is acceptable; the guide says so.
-- **There is no Unpublish for staff members** (their document menu has only
-  Duplicate and Delete in this Sanity version), so "someone leaves" means
-  Delete. A "Show on the Staff page" switch would be kinder.
-- ~~**`BusinessOverview.tsx` still headings its pane "Your business at a
-  glance"**~~ Fixed 2026-09-22 (feat/studio-readability).
-- **GuideView's "Take me there" links produce `#//structure/...`** (double
-  slash, because `basePath` is `/` under hash routing). They work; cosmetic,
-  and GuideView is PORTABLE, so it belongs on PORTS.md card 41.
+- ~~**There is no Unpublish for staff members**~~ Fixed 2026-09-22: a "Show on
+  the Staff page" switch (`showOnSite`, unset means shown) filters the one
+  staff query (`queries.ts` staffGridSection), which the preview shares; the
+  Studio list tags hidden people "(hidden)". The migration above stores `true`
+  on the 17 existing people so the switch does not draw as grey "not set".
+- ~~**GuideView's "Take me there" links produce `#//structure/...`**~~ Fixed
+  2026-09-22 (trailing slash stripped from basePath before joining). GuideView
+  carries no PORTABLE marker, but the same line is in the starter's copy: note
+  it on PORTS.md card 41 at the next sync.
 - **Held guide: how a band's picture decides its shape.** Waits for
   feat/richtext-ledger-photo-shapes to reach main. Draft, for `content.ts`
   (category "Pictures"), to check against the merged code before adding:

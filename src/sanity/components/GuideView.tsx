@@ -146,7 +146,9 @@ function PathCard({ items, link }: { items: string[]; link?: PathLink }) {
   }
   // One workspace here, so the base path is simply the Studio's own. (WCP has
   // two and swaps the last segment; there is nothing to swap to on this site.)
-  const base = basePath;
+  // basePath is '/' at the root, '/studio' when mounted under a path, so strip
+  // any trailing slash before joining to keep exactly one slash either way.
+  const base = basePath.replace(/\/$/, '');
   const path =
     'doc' in link
       ? `${base}/intent/edit/id=${link.doc};type=${link.type ?? link.doc}`

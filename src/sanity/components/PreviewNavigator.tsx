@@ -72,7 +72,7 @@ const APIV = '2026-05-01';
 // equals the type (the desk structure's singleton convention).
 const MAIN_PAGES: { type: string; label: string }[] = [
   { type: 'homePage', label: 'Home' },
-  { type: 'journalPage', label: 'Journal' }, // scaffold: journal
+  { type: 'journalPage', label: 'Blog' }, // scaffold: journal
   { type: 'privacyPage', label: 'Privacy' },
   { type: 'notFoundPage', label: '404 page' },
 ];
