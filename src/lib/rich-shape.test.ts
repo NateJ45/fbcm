@@ -316,3 +316,25 @@ test('a stega-encoded covenant classifies exactly like a clean one', () => {
   assert.ok(said && said.kind === 'said');
   assert.ok(said.items[0].children![0].text.endsWith(S), 'the payload stays on the tail');
 });
+
+test('SECTIONS: a one-paragraph intro before the h3 groups is a lede (ministries, Adults band)', () => {
+  // The live Adults band on /ministries opens with one 36-word sentence and
+  // then its h3 sections. The prototype sets that sentence as a lede; the h3
+  // groups that follow count as "something after it".
+  const body = [
+    p(
+      "From College and Career to Retirees, FBCM's Adult Ministry aims to engage adults of all ages in intentional discipleship so we may follow Jesus and become more like him - full of grace and truth.",
+    ),
+    h3('Sunday morning'),
+    p(words(20)),
+    li(words(12)),
+    li(words(9)),
+    h3('Life Groups'),
+    p(words(30)),
+  ];
+  const out = classifyRichText(body, { hasHead: true });
+  assert.equal(out.shape, 'sections');
+  assert.equal(out.pieces[0].kind, 'lede');
+  // A headingless band never takes a lede, whatever follows.
+  assert.notEqual(classifyRichText(body, { hasHead: false }).pieces[0].kind, 'lede');
+});

@@ -164,7 +164,7 @@ function proseRun(run: PtBlock[], ctx: Ctx): RichPiece[] {
 function flow(
   segs: Seg[],
   ctx: Ctx,
-  o: { allowLede: boolean; standfirst: boolean; inSection: boolean },
+  o: { allowLede: boolean; standfirst: boolean; inSection: boolean; after?: number },
 ): RichPiece[] {
   const out: RichPiece[] = [];
   let i = 0;
@@ -176,7 +176,9 @@ function flow(
       const run: PtBlock[] = [];
       while (i < segs.length && segs[i].kind === 'p') run.push((segs[i++] as { b: PtBlock }).b);
       const nextIsList = segs[i]?.kind === 'list';
-      const remaining = segs.length - i + run.length - 1;
+      // `after` counts what follows these segments in the band (the h3 groups
+      // after an intro), so an intro paragraph with sections below it can lede.
+      const remaining = segs.length - i + run.length - 1 + (o.after ?? 0);
       if (allowLede && isLedeParagraph(run[0], run.length, remaining))
         out.push({ kind: 'lede', block: run.shift()! });
       if (standfirst && run.length >= 2 && wordsOf(run[0]) <= 30)
@@ -316,7 +318,12 @@ export function classifyRichText(
     const sf =
       eligible.length > 0 && eligible.every((g) => wordsOf((g.body[0] as { b: PtBlock }).b) <= 30);
     pieces.push(
-      ...flow(intro, ctx, { allowLede: opts.hasHead, standfirst: false, inSection: false }),
+      ...flow(intro, ctx, {
+        allowLede: opts.hasHead,
+        standfirst: false,
+        inSection: false,
+        after: groups.length,
+      }),
     );
     if (shape === 'columns') pieces.push(columnsPiece(groups, 'h3', ctx, false, sf));
     else
