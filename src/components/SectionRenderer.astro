@@ -38,6 +38,7 @@ import LinkCards from '@/components/sections/LinkCards.astro';
 import { classifySections } from '@/lib/sectionCadence';
 import { splitStega } from '@/lib/preview-stega';
 import { assignSpareImages } from '@/lib/spare-images';
+import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
 import type { PageBuilderBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
@@ -105,6 +106,29 @@ const rows = classifySections<PageBuilderBlock>(sections as PageBuilderBlock[], 
 // that row should draw INSTEAD of its own (or null for no figure at all), and
 // the ImageText call below asks it before reading the block's own image.
 const spares = assignSpareImages(rows.map(({ block }) => block as unknown as { _type: string }));
+
+// PHOTO SHAPES (2026-09-22). The picture decides the band: see
+// src/lib/photo-shape.ts. The pass runs on the picture each ImageText row will
+// ACTUALLY render (after the spare-image swap above), because a borrowed
+// picture changes the shape. It is page-level so there is at most one lancet
+// window and at most two grounds per page.
+const heroHasPhoto = rows.some(({ block }) => {
+  const b = block as { _type?: string; frames?: unknown[]; backgroundImage?: unknown };
+  return (
+    b._type === 'heroSection' &&
+    ((Array.isArray(b.frames) && b.frames.length > 0) || !!b.backgroundImage)
+  );
+});
+const renderedImage = (block: unknown, index: number) =>
+  spares.replacements.has(index)
+    ? spares.replacements.get(index)
+    : (block as { image?: unknown }).image;
+const photoShapes = assignPhotoShapes(
+  rows.map(
+    ({ block }, i) => ({ ...(block as object), image: renderedImage(block, i) }) as PhotoRow,
+  ),
+  { heroHasPhoto },
+);
 
 // The section wrapper. It is a real block-level element on EVERY render now,
 // live and preview alike, because it carries the anchor id (2026-09-19, plan 2b
@@ -326,14 +350,13 @@ const wrapAttrs = (key: string | undefined) =>
           />
         ) : s._type === 'imageTextSection' ? (
           <ImageText
-            image={
-              spares.replacements.has(blockIndex) ? spares.replacements.get(blockIndex) : s.image
-            }
+            image={renderedImage(s, blockIndex)}
             imageSide={s.imageSide}
             eyebrow={s.eyebrow}
             heading={s.heading}
             body={s.body}
             cta={s.cta}
+            shape={photoShapes.get(blockIndex) ?? 'row'}
             surface={surface ?? 'background'}
             headingId={headingId}
           />

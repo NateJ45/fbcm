@@ -1,49 +1,47 @@
 ---
 // Safe to edit by hand
-// Page-builder block: one picture and a piece of text, drawn ASYMMETRICALLY
-// (art-direction pass, 2026-09-20, spec section 5; the prototype's `.first`
-// band). It was a 50/50 split with the image vertically centred beside the
-// words, which is the layout every template ships and the reason the band read
-// as a brochure.
+// Page-builder block: one picture and its text. The PICTURE decides the band
+// (2026-09-22; src/lib/photo-shape.ts, prototype in
+// docs/superpowers/prototypes/2026-09-22-richtext-and-photos/photos/):
+//   ground  a wide sharp view of the place; the band's ground, heading set in
+//   window  the page's first portrait, through the tower's lancet (Lancet.astro)
+//   frame   any later portrait, native shape, hung on a gold line
+//   plate   an archival scan, matted on the other surface, never cropped
+//   legend  a wide group photo whose body names the people left to right
+//   row     everything else, beside its text at its native shape
+// No picture ever sits in a column below its words, and no picture is forced
+// into a landscape crop (that is how portraits lost their heads).
 //
-// The shape now is the prototype's: a short heading block in the first four of
-// twelve columns, the body starting at column six so the two have a real gap
-// rather than a gutter, and the photograph BELOW both, wider than either, bled
-// off the edge of the page. `imageSide` still decides which edge it runs off.
+// Three things are worth knowing before editing it.
 //
-// Four things are worth knowing before editing it.
+// 1. THE LEDE IS BORROWED FROM THE BODY by the one rule the whole site uses,
+//    isLedeParagraph in src/lib/rich-shape.ts. It is then removed from the
+//    body render so the page never says it twice. The Ledger classifier is
+//    called with hasHead: false so it never takes a second one.
 //
-// 1. THE LEDE IS BORROWED FROM THE BODY, and only when there is enough body to
-//    spare. The prototype's heading block carries a short line under the h2,
-//    and this block has no field for one: the pass changed no schema. So the
-//    FIRST paragraph of the body is promoted into that slot, and it is then
-//    removed from the body render so the page never says it twice. A body of
-//    one or two paragraphs is left alone: taking half of a two-paragraph band
-//    into the heading column empties the column that is supposed to hold the
-//    reading.
+// 2. THE CAPTION IS THE ALT TEXT. A figure with no caption looks unfinished,
+//    and the alt is the one description the editor has already written. It is
+//    not a second field to keep in step.
 //
-// 2. THE CAPTION IS THE ALT TEXT. A figure with no caption under a bled
-//    photograph looks unfinished, and the alt is the one description the
-//    editor has already written. It is not a second field to keep in step.
-//
-// 3. THE CROP IS THE SITE'S HEAD-ROOM RULE, `object-[50%_40%]`, the same one
-//    the hero and the Sunday band's frame use: a 16:9 window on a photograph
-//    of people cuts foreheads off when it is centred. It is NOT read from the
-//    image's stored hotspot, because a hotspot an editor never moved still
-//    stores dead centre and would quietly undo the rule on every picture.
-//
-// 4. THE PICTURE IS ALSO THE PAGE'S SPARE, AND MAY NOT BE THIS ONE.
+// 3. THE PICTURE IS ALSO THE PAGE'S SPARE, AND MAY NOT BE THIS ONE.
 //    src/lib/spare-images.ts reads `imageTextSection.image` into the pool the
 //    statement band and the Sunday band borrow from, and a band whose picture
 //    was borrowed is handed a different one by SectionRenderer so the page
 //    never shows one photograph twice. `image` can therefore be null even
-//    though the block carries one, and the band then renders as text alone:
-//    the heading column, the reading column, and no figure. That is a real
-//    layout, not a broken one, which is why there is no placeholder box.
+//    though the block carries one, and the band then renders as text alone
+//    (`data-photo-shape="none"`): the heading, then the body across the full
+//    grid, and no figure. That is a real layout, not a broken one, which is
+//    why there is no placeholder box.
 import { surfaceClass } from '@/lib/surfaces';
 import SanityImage from '@/components/SanityImage.astro';
 import PortableText from '@/components/PortableText';
 import CtaLink from '@/components/CtaLink.astro';
+import RichBody from '@/components/sections/RichBody.astro';
+import Lancet from '@/components/sections/Lancet.astro';
+import { classifyRichText, isLedeParagraph } from '@/lib/rich-shape';
+import { photoAspect, findLegend, type PhotoShape } from '@/lib/photo-shape';
+import { toPt, type PtBlock } from '@/lib/span-split';
+import { splitStega } from '@/lib/preview-stega';
 
 interface Props {
   image?: any;
@@ -52,6 +50,7 @@ interface Props {
   heading?: string;
   body?: any;
   cta?: any;
+  shape?: PhotoShape;
   surface?: 'background' | 'muted';
   headingId: string;
 }
@@ -63,93 +62,273 @@ const {
   heading,
   body,
   cta,
+  shape: shapeProp = 'row',
   surface = 'background',
   headingId,
 } = Astro.props as Props;
 
 const bg = surfaceClass(surface);
+const band = surface === 'muted' ? 'var(--color-muted)' : 'var(--color-background)';
+const mat = surface === 'muted' ? 'var(--color-background)' : 'var(--color-muted)';
+const blocks: PtBlock[] = Array.isArray(body) ? body : [];
+const hasPicture = !!image?.asset;
+const shape: PhotoShape = hasPicture ? shapeProp : 'row';
+const alt = splitStega(image?.alt ?? '').cleaned;
+const dims = photoAspect(image);
 
-// See note 1. Portable Text arrives as an array of blocks; only a plain
-// paragraph (`style: 'normal'`) is promotable, because a heading or a list item
-// read as a lede is a different kind of sentence. Three paragraphs is the
-// floor: below it the body would lose too much of itself.
-const blocks: any[] = Array.isArray(body) ? body : [];
-const paragraphs = blocks.filter((b) => b?._type === 'block' && (b.style ?? 'normal') === 'normal');
-const promoteLede = paragraphs.length >= 3 && (blocks[0]?.style ?? 'normal') === 'normal';
-const ledeBlock = promoteLede ? blocks[0] : null;
-const bodyBlocks = promoteLede ? blocks.slice(1) : blocks;
+// The lede: one rule for the whole site (src/lib/rich-shape.ts isLedeParagraph).
+const firstRun = blocks.findIndex((b) => b?.listItem || (b?.style ?? 'normal') !== 'normal');
+const runLength = firstRun === -1 ? blocks.length : firstRun;
+const ledeBlock = isLedeParagraph(blocks[0], runLength, blocks.length - 1) ? blocks[0] : null;
+let rest = ledeBlock ? blocks.slice(1) : blocks;
 
-// The lede is rendered as plain text rather than through PortableText, because
-// it is one paragraph in a display slot, not a piece of prose. `.children` is
-// the span array every normal block carries.
-const ledeText: string = ledeBlock
-  ? (ledeBlock.children ?? []).map((c: any) => c?.text ?? '').join('')
-  : '';
+// The legend lifts its label, names and footnote out of the body.
+const legend = shape === 'legend' ? findLegend(rest) : null;
+const legendLabel = legend ? rest[legend.labelIndex] : null;
+const legendNames = legend ? rest.slice(legend.listStart, legend.listEnd) : [];
+const legendFoot = legend && legend.footIndex !== null ? rest[legend.footIndex] : null;
+if (legend) {
+  const end = legend.footIndex !== null ? legend.footIndex + 1 : legend.listEnd;
+  rest = rest.filter((_, i) => i < legend.labelIndex || i >= end);
+}
 
-// The photograph runs off the edge the editor chose. `bleed-right` and
-// `bleed-left` are the shared utilities from globals.css; both collapse to a
-// plain gutter pull on a phone, where the grid is one column anyway.
-const figureClass =
-  imageSide === 'left'
-    ? 'col-span-12 lg:col-span-8 bleed-left'
-    : 'col-span-12 lg:col-start-5 lg:col-span-8 bleed-right';
+const beside = shape === 'row' || shape === 'window' || shape === 'frame' || shape === 'plate';
+const layout = classifyRichText(rest, { hasHead: false, narrow: beside });
+const side = imageSide; // the schema default is 'left', which is where the window wants to be
+// ROW width follows the picture (P1's mapping): portrait 4, square 5, landscape 6, wide 7.
+const rowWidth = !dims ? 6 : dims.a < 0.9 ? 4 : dims.a <= 1.15 ? 5 : dims.a < 1.6 ? 6 : 7;
+const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
 ---
 
-<section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div
-    class="mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] px-gutter py-section-lg"
-  >
-    <div class="col-span-12 lg:col-span-4">
-      {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
-      {
-        heading && (
-          <h2 id={headingId} class="max-w-[11ch] font-body text-h2 font-normal text-foreground">
-            {heading}
-          </h2>
-        )
-      }
-      {
-        ledeText && (
-          <p class="mt-5 max-w-[22ch] text-lede font-normal text-muted-foreground">{ledeText}</p>
-        )
-      }
-    </div>
-
-    <div class="col-span-12 mt-9 lg:col-span-6 lg:col-start-6 lg:mt-0">
-      {
-        bodyBlocks.length > 0 && (
-          <PortableText
-            value={bodyBlocks}
-            className="font-body text-[1.125rem] leading-[1.72] text-foreground/90"
-          />
-        )
-      }
-      {
-        cta?.label && (
-          <div class="mt-8">
-            <CtaLink cta={cta} variant="link" />
+<section
+  class={bg}
+  style={`--band:${band};--mat:${mat}`}
+  aria-labelledby={heading ? headingId : undefined}
+  data-photo-shape={hasPicture ? shape : 'none'}
+>
+  {
+    shape === 'ground' ? (
+      <>
+        <div class="ph-ground-fig">
+          <SanityImage source={image} width={2400} sizes="100vw" quality={75} alt={alt} />
+          <div class="hero-overlay" aria-hidden="true" />
+          <div class="ph-ground-text">
+            <div class="ph-in">
+              {eyebrow && (
+                <>
+                  <span class="ph-tick" />
+                  <p class="mb-5 font-ui text-ui text-gold">{eyebrow}</p>
+                </>
+              )}
+              {heading && (
+                <h2 id={headingId} class="font-body text-h2 font-normal">
+                  {heading}
+                </h2>
+              )}
+              {ledeBlock && (
+                <div class="ph-lede">
+                  <PortableText value={toPt(ledeBlock)} variant="bare" />
+                </div>
+              )}
+            </div>
           </div>
-        )
-      }
-    </div>
+        </div>
+        <div class="mx-auto max-w-content px-gutter pt-[clamp(20px,2.4vw,28px)] pb-section-lg">
+          <div class="rt-g">
+            {alt && (
+              <p class="ph-gcap">
+                <span class="ph-tick" />
+                <span class="ph-cap mt-0">{alt}</span>
+              </p>
+            )}
+            <div class="ph-gbody rt-g">
+              <RichBody pieces={layout.pieces} />
+            </div>
+            {cta?.label && (
+              <div class="col-span-12 mt-8">
+                <CtaLink cta={cta} variant="link" />
+              </div>
+            )}
+          </div>
+        </div>
+      </>
+    ) : (
+      <div class="mx-auto max-w-content px-gutter py-section-lg">
+        <div
+          class:list={[
+            'rt-g',
+            beside && hasPicture && 'ph-beside',
+            `is-${shape}`,
+            side === 'left' && 'is-left',
+            shape === 'row' && `w${rowWidth}`,
+          ]}
+        >
+          <header class="rt-head">
+            {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
+            {heading && (
+              <h2 id={headingId} class="max-w-[22ch] font-body text-h2 font-normal text-foreground">
+                {heading}
+              </h2>
+            )}
+          </header>
 
-    {
-      image?.asset && (
-        <figure class:list={[figureClass, 'mt-[clamp(56px,7vw,96px)]']} data-reveal>
-          <SanityImage
-            source={image}
-            width={1800}
-            sizes="(min-width: 1024px) 70vw, 100vw"
-            quality={75}
-            class="aspect-video w-full object-cover object-[50%_40%]"
-          />
-          {image?.alt && (
-            <figcaption class="mt-3 font-ui text-[0.75rem] tracking-[.06em] text-muted-foreground">
-              {image.alt}
-            </figcaption>
+          {shape === 'legend' && hasPicture ? (
+            <>
+              <figure class="ph-legend">
+                <SanityImage
+                  source={image}
+                  width={2000}
+                  sizes="(min-width: 1400px) 1400px, 100vw"
+                  quality={78}
+                  alt={alt}
+                  class="ph-img"
+                />
+                {legendLabel && (
+                  <div class="ph-label font-ui text-ui">
+                    <PortableText value={toPt(legendLabel)} variant="bare" />
+                  </div>
+                )}
+                <ol class="ph-names" style={`--n:${legendNames.length}`}>
+                  {legendNames.map((nm, k) => (
+                    <li>
+                      <span class="ph-pos">{k + 1}</span>
+                      <PortableText value={toPt(nm)} variant="bare" />
+                    </li>
+                  ))}
+                </ol>
+                {legendFoot && (
+                  <div class="ph-foot">
+                    <PortableText value={toPt(legendFoot)} variant="bare" />
+                  </div>
+                )}
+                {alt && (
+                  <figcaption class="ph-cap">
+                    <span class="ph-tick" />
+                    {alt}
+                  </figcaption>
+                )}
+              </figure>
+              <div class="ph-legend-rest rt-g">
+                {ledeBlock && (
+                  <div class="rt-lede rt-v">
+                    <PortableText value={toPt(ledeBlock)} variant="bare" />
+                  </div>
+                )}
+                <RichBody pieces={layout.pieces} />
+                {cta?.label && (
+                  <div class="col-span-12 mt-8">
+                    <CtaLink cta={cta} variant="link" />
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              {hasPicture && (
+                <div class="ph-fig" data-reveal>
+                  {shape === 'window' ? (
+                    <figure class="ph-window-wrap">
+                      <Lancet image={image} alt={alt} uid={headingId} />
+                      {alt && (
+                        <figcaption class="ph-cap">
+                          <span class="ph-tick" />
+                          {alt}
+                        </figcaption>
+                      )}
+                    </figure>
+                  ) : shape === 'plate' ? (
+                    <figure class="ph-plate">
+                      <div class="ph-print">
+                        <SanityImage
+                          source={image}
+                          width={1000}
+                          sizes="500px"
+                          quality={80}
+                          alt={alt}
+                          class="ph-img"
+                        />
+                      </div>
+                      {alt && (
+                        <figcaption class="ph-cap">
+                          <span class="ph-tick" />
+                          {alt}
+                        </figcaption>
+                      )}
+                    </figure>
+                  ) : shape === 'frame' ? (
+                    <figure class="ph-frame">
+                      <div class="ph-hung">
+                        <SanityImage
+                          source={image}
+                          width={900}
+                          sizes="(min-width: 1024px) 420px, 100vw"
+                          quality={78}
+                          alt={alt}
+                          class="ph-img"
+                        />
+                      </div>
+                      {alt && (
+                        <figcaption class="ph-cap">
+                          <span class="ph-tick" />
+                          {alt}
+                        </figcaption>
+                      )}
+                    </figure>
+                  ) : (
+                    <figure
+                      class:list={[rowBleed && (side === 'left' ? 'bleed-left' : 'bleed-right')]}
+                    >
+                      <SanityImage
+                        source={image}
+                        width={1600}
+                        sizes="(min-width: 1024px) 60vw, 100vw"
+                        quality={75}
+                        alt={alt}
+                        class="ph-img"
+                      />
+                      {alt && (
+                        <figcaption class="ph-cap">
+                          <span class="ph-tick" />
+                          {alt}
+                        </figcaption>
+                      )}
+                    </figure>
+                  )}
+                </div>
+              )}
+              {hasPicture ? (
+                <div class="ph-text">
+                  {ledeBlock && (
+                    <div class="rt-lede rt-v">
+                      <PortableText value={toPt(ledeBlock)} variant="bare" />
+                    </div>
+                  )}
+                  <RichBody pieces={layout.pieces} />
+                  {cta?.label && (
+                    <div class="mt-8">
+                      <CtaLink cta={cta} variant="link" />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div class="rt-sub">
+                  {ledeBlock && (
+                    <div class="rt-lede rt-v">
+                      <PortableText value={toPt(ledeBlock)} variant="bare" />
+                    </div>
+                  )}
+                  <RichBody pieces={layout.pieces} />
+                  {cta?.label && (
+                    <div class="col-span-12 mt-8">
+                      <CtaLink cta={cta} variant="link" />
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           )}
-        </figure>
-      )
-    }
-  </div>
+        </div>
+      </div>
+    )
+  }
 </section>
