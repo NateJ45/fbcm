@@ -452,7 +452,9 @@ leaves open, with what closes each.
 - CLAUDE.md and README.md: only the opening paragraph says what this repo is; the
   body still documents the starter. Rewrite for this site.
 - Dead `Service` interface and `serviceListSchema()` in `src/lib/schemas.ts`.
-- **The `/styleguide` visual baseline needs a refresh on CI once Task 6 lands.**
+- ~~**The `/styleguide` visual baseline needs a refresh on CI once Task 6 lands.**~~
+  Closed: refreshed on CI by `39ffca0` (2026-09-20) and again, after the
+  art-direction pass, by `bda0dcb` (2026-09-22).
   Task 6 (2026-09-19) added the eight church-block fixtures to the page, which
   changes its rendered output; `visual.yml`'s stored baseline for that route is
   now stale and will report a diff on the next run. Do NOT regenerate
@@ -600,11 +602,14 @@ merged to `main` at `183a61f` and deployed. Full account of what changed is in
   `public/og-default.png` because the generator falls back to the CSS font
   stack, "No @fontsource display file found"; the committed PNG was left
   as it is.)
-- **The `/styleguide` visual-regression baseline is stale** (light and dark
-  both failed in the first post-merge CI run, `expect(page).toHaveScreenshot`).
-  Expected: the art-direction pass changed the page's rendered output from top
-  to bottom. Refresh it with `visual.yml`'s own `update` input, the same
-  pattern used for plan 2c's Task 6 refresh above.
+- ~~**The `/styleguide` visual-regression baseline is stale** (light and dark
+  both failed in the first post-merge CI run, `expect(page).toHaveScreenshot`).~~
+  Closed 2026-09-22 by `bda0dcb` "test: regenerate visual baselines", the
+  `visual.yml` update run (github-actions, 18:00 UTC), which rewrote both
+  `styleguide-light.png` and `styleguide-dark.png`. The next push-triggered
+  Visual regression run, on `6f01bfa` at 18:22 UTC, passed, and that push
+  also carried `5066b5d` (the bleed and `--text-h1` fix), so the baseline
+  holds after it.
 - **A production Lighthouse re-measure is owed**, same as plan 2c left open:
   the branch changed layout, fonts and motion on every page, and the last
   recorded Lighthouse numbers predate all of it.
@@ -736,9 +741,9 @@ still open, all closing in plan 2b/2c:
 - `npm run parity compare` is intentionally all-red: the header and footer
   changed on every page, so every baseline in `scripts/.parity/` differs. Do
   not recapture now; plan 2c recaptures once, after the eleven pages land.
-- `visual.yml`'s CI-stored `/styleguide` baseline is stale after Task 6's eight
-  block fixtures; refresh it on CI with the workflow's own `update` input the
-  next time it runs, not by regenerating `scripts/.parity` locally.
+- ~~`visual.yml`'s CI-stored `/styleguide` baseline is stale after Task 6's eight
+  block fixtures.~~ Closed: refreshed on CI by `39ffca0` (2026-09-20), and
+  again by `bda0dcb` (2026-09-22) after the art-direction pass.
 - ~~`public/favicon.svg` is still the starter's roundel, not the church's mark.~~
   Closed 2026-09-20 (plan 2c task 1): the icon set is the tower from the
   church's own wordmark, on a navy plate, and `npm run favicon` regenerates
