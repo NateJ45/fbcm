@@ -10,6 +10,31 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-23 — Dead CSS trimmed from the inline stylesheet (about 34 KB per page)._
+
+The inline site sheet was close to its 147,456 B ceiling (CLAUDE.md rule 20):
+the post-page sheet was 143,982 B. Most of the waste was Tailwind generating
+utilities from files that never render, because v4 scans every tracked file.
+`globals.css` now carries `@source not` for archive/, modules/, scripts/,
+tests/, prototypes/, the Playwright configs, src/sanity/, public/, brand/,
+the root config files, `src/**/*.test.ts`, and the starter's unimported
+component-library files (eleven shadcn / Magic UI primitives, Starwind,
+PrimeReact, the orphaned CopyEmailButton). New `src/lib/css-sources.test.ts`
+fails if anything in src/ imports a file excluded that way, so reaching for
+one of those components later is a loud failure instead of a silently
+unstyled one. Also removed: `starwind.css`'s import (Tailwind never compiled
+it, so its `@theme` blocks shipped verbatim and did nothing), the unused
+chart, sidebar and Starwind colour tokens (also out of
+`brand/brand.config.json`), `@import 'shadcn/tailwind.css'` in favour of its
+data-state variants vendored verbatim (the import emitted scroll-fade and
+shimmer `@property` rules unconditionally), and globals.css rules for the
+archived portfolio module and two long-gone post-body hooks. Every removed
+class was checked against all built output. Sheets: home and pages 133,453 B
+to 99,471 B; post pages 143,982 B to 110,148 B. Left in place, with reasons,
+in the branch report: utilities generated only by explanatory comments
+(`ring`, `text-cream` and about ten more, roughly 770 B) and Sofia's Greek and
+Cyrillic `@font-face` subsets (about 860 B).
+
 _2026-09-23 — No more visible captions printing the photograph's alt text._
 
 The owner: "we don't need the photos on the website to have captions like
