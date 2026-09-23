@@ -41,17 +41,10 @@
 // Write gold/outline in new code. The aliases are for callers that have not
 // been visited yet, not a second family wearing the first one's clothes.
 //
-//   - "rule" — the church identity button (2026-09-23, the Who We Are
-//     "alive" pass). SQUARE, a solid fill, and a 3px gold rule drawn 3px
-//     beneath it, with three small rays at the right edge that spread on
-//     hover and focus (the watchword's megaphone). Ported from the
-//     prototype's `.btn`, WITHOUT its arched top: Nathan rejected the curved
-//     head, so the plate stays square (plan spec change 1). Brand indigo
-//     with a white label on paper (hover indigo-dark); under onDark, brand
-//     gold with the indigo-dark ink and a paper rule (hover a lighter gold). Both label pairs are measured in both themes in
-//     theme-tokens.test.ts (IDENTITY_PAIRS). Its sizing (`.btn-rule` in
-//     globals.css) is unlayered CSS, so utility classes passed in `class`
-//     cannot override its padding, height or type size.
+//   rule      -> gold
+//     "rule" was the square church-identity button with a bar beneath and
+//     rays (2026-09-23, Who We Are). Nathan preferred the header's GIVE plate,
+//     so the same day it became an alias for gold: one button family.
 //
 // All variants are set in the UI face at the shared label size, and the two
 // button variants share the inset double rule, em-based padding and a 44x44
@@ -122,18 +115,15 @@ const baseClasses = onDark
 // whole point of keeping them, and it is why `onDark` keeps working through an
 // alias. A `secondary` caller on a dark band now gets outline's OWN onDark
 // classes, not a bronze button sitting on indigo.
-const resolved = variant === 'primary' ? 'gold' : variant === 'secondary' ? 'outline' : variant;
-
-// The rule button shares nothing with the plate below: no inset double rule,
-// no rounded corner, its own padding, and a pseudo-element rule beneath. Its
-// geometry, the rule, the focus ring and the ray spread are `.btn-rule` in the
-// "Church identity" block of globals.css; only the colours are utilities.
-const ruleClasses = [
-  'btn-rule inline-flex items-center gap-3 font-ui font-bold no-underline transition-colors',
-  onDark
-    ? 'btn-rule-dark bg-band-gold text-band-ink hover:bg-gold-hover'
-    : 'bg-band-indigo text-white-pure hover:bg-band-deep',
-];
+// `rule` is an alias for `gold` since 2026-09-23: Nathan preferred the header's
+// GIVE plate (the inset double rule) over the square button with a bar and rays,
+// so the site has one button family again (CLAUDE.md rule 17).
+const resolved =
+  variant === 'primary' || variant === 'rule'
+    ? 'gold'
+    : variant === 'secondary'
+      ? 'outline'
+      : variant;
 
 // THE PLATE SIGNATURE (2026-09-20, plan 3 task 2). Every button carries an
 // inset double rule: a 3px band of its own fill, then a 1px line of its label
@@ -164,9 +154,7 @@ const variantClasses = (() => {
   href={href}
   class:list={resolved === 'link'
     ? [linkClasses, extraClass]
-    : resolved === 'rule'
-      ? [ruleClasses, extraClass]
-      : [baseClasses, variantClasses, extraClass]}
+    : [baseClasses, variantClasses, extraClass]}
   target={newTab ? '_blank' : undefined}
   rel={newTab ? 'noopener noreferrer' : undefined}
 >
@@ -179,15 +167,6 @@ const variantClasses = (() => {
       >
         &#8594;
       </span>
-    )
-  }
-  {
-    resolved === 'rule' && (
-      <svg aria-hidden="true" viewBox="0 0 13 22">
-        <path d="M2 5L10 1" />
-        <path d="M3 11H12" />
-        <path d="M2 17L10 21" />
-      </svg>
     )
   }
 </a>
