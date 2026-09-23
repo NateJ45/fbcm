@@ -2,13 +2,13 @@
   "generatedAt": "2026-09-18T18:28:23.388Z",
   "source": "https://www.fbcmuncie.org/ (Wix), captured before the Astro/Sanity rebuild",
   "totals": {
-    "files": 424,
-    "bytes": 1622399508
+    "files": 501,
+    "bytes": 1792155548
   },
   "byDirectory": {
     "images": {
-      "files": 376,
-      "bytes": 879432999
+      "files": 453,
+      "bytes": 1049189039
     },
     "files": {
       "files": 47,
@@ -3507,6 +3507,820 @@
       "sourceUrl": "https://video.wixstatic.com/video/81f7ac_59e19330783a4981a8a70296dd41afe3/1080p/mp4/file.mp4",
       "label": "In-post video, 1080p",
       "foundOn": "https://www.fbcmuncie.org/post/kingdom-family-vacation-anti-family-values-jesus-resources"
+    },
+    {
+      "path": "images/08181c_8ea435a2042a4e2380ae153fb5c68b19_tilde_mv2.jpg",
+      "bytes": 12967750,
+      "sha256": "f0d7c9d5f0143dfa05f2c3fa921097d81f61fd492cf53ceca1c99242d46920a9",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_8ea435a2042a4e2380ae153fb5c68b19~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/baptists",
+        "https://www.fbcmuncie.org/beliefs",
+        "https://www.fbcmuncie.org/history",
+        "https://www.fbcmuncie.org/membership",
+        "https://www.fbcmuncie.org/ministers",
+        "https://www.fbcmuncie.org/team",
+        "https://www.fbcmuncie.org/what-to-expect",
+        "https://www.fbcmuncie.org/team/cynthia-smith",
+        "https://www.fbcmuncie.org/team/kendall-ellis",
+        "https://www.fbcmuncie.org/team/jonathan-balmer",
+        "https://www.fbcmuncie.org/team/loraine-garrett",
+        "https://www.fbcmuncie.org/team/molly-flodder",
+        "https://www.fbcmuncie.org/team/caroline-koby",
+        "https://www.fbcmuncie.org/team/ella-mae-lemen",
+        "https://www.fbcmuncie.org/team/ed-brzak",
+        "https://www.fbcmuncie.org/team/joe-songer",
+        "https://www.fbcmuncie.org/team/dana-davis",
+        "https://www.fbcmuncie.org/team/cheryl-flaherty",
+        "https://www.fbcmuncie.org/team/sandi-brzak",
+        "https://www.fbcmuncie.org/team/sally-butler",
+        "https://www.fbcmuncie.org/team/jaden-johnson",
+        "https://www.fbcmuncie.org/team/andy-heimlich",
+        "https://www.fbcmuncie.org/team/nina-oisten"
+      ]
+    },
+    {
+      "path": "images/nsplsh_6b427962484a3343455749_tilde_mv2.jpg",
+      "bytes": 604000,
+      "sha256": "dabb48139c401433d8e8de7cfd8124f3f2256a705fe31b33d4d7ca455c33d908",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_6b427962484a3343455749~mv2_d_4048_3036_s_4_2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs"
+      ]
+    },
+    {
+      "path": "images/nsplsh_706561546e695a73555173_tilde_mv2.jpg",
+      "bytes": 6484066,
+      "sha256": "1c4628c2cd575f514fe827982276d37141102f8238107366e783cf8970b2a336",
+      "sourceUrl": "https://static.wixstatic.com/media/nsplsh_706561546e695a73555173~mv2_d_3384_5076_s_4_2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/beliefs"
+      ]
+    },
+    {
+      "path": "images/81f7ac_732cf054670f466d89de846a11d28b00_tilde_mv2.png",
+      "bytes": 762528,
+      "sha256": "a131d0cf04702d40cd39158685335b183faaf11dda89a6332469236d512cc57a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_732cf054670f466d89de846a11d28b00~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog"
+      ]
+    },
+    {
+      "path": "images/81f7ac_9bbbef7c9ed7458c87448a97e5eb7afd_tilde_mv2.png",
+      "bytes": 62952,
+      "sha256": "955472fca09dc931f19ba6850ea8c3894e6c23912f3ca3e9c4c7ab26a4d2dd29",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_9bbbef7c9ed7458c87448a97e5eb7afd~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog"
+      ]
+    },
+    {
+      "path": "images/81f7ac_b3930c58f4a544da87572ac85d617729_tilde_mv2.png",
+      "bytes": 105300,
+      "sha256": "78a0065fc5fef437bda5a399480cc5f4a3719e68db89b0e9c068c5b3a4c89f03",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_b3930c58f4a544da87572ac85d617729~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog"
+      ]
+    },
+    {
+      "path": "images/81f7ac_5497f6eff6284e5098ff0991e6508472_tilde_mv2.png",
+      "bytes": 776542,
+      "sha256": "e7484608b05b0504e73c62ac9aabeadda0f4dbfbd17f056dc03b491af288203a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_5497f6eff6284e5098ff0991e6508472~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_0f57a015a2b74932847d812faf260833_tilde_mv2.png",
+      "bytes": 773037,
+      "sha256": "b450e02e2217f21480231d35f5bc88eabb42ea1a40d5f1ade7ada65d9e90f324",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0f57a015a2b74932847d812faf260833~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_7671b48645e84fa7863a2afebd572fda_tilde_mv2.png",
+      "bytes": 773147,
+      "sha256": "71466530b110ba318beaeaa19166220514ebbc2cf1ce2438a9824d936adc6859",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_7671b48645e84fa7863a2afebd572fda~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_c3923d6d1cb04622a6eb42c34dd7c060_tilde_mv2.png",
+      "bytes": 762652,
+      "sha256": "585de1dc01eca51e2d4eb97459b227d5f2429efaf164765e98b03681f1cbe5dd",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_c3923d6d1cb04622a6eb42c34dd7c060~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_29bcbe73beb54b62baa8239e98f902a5_tilde_mv2.png",
+      "bytes": 2350536,
+      "sha256": "2b35fa3f9ea78383a96d7a3f5659562025e2fe9d2d1f809e15cba48b64f3ff28",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_29bcbe73beb54b62baa8239e98f902a5~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_f7361be561724c8c93d82157cc97b8a1_tilde_mv2.png",
+      "bytes": 715954,
+      "sha256": "281a5495d256adc15397f4a54c8f030aa4c9cca89e5efbae7ceea832afde48d0",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_f7361be561724c8c93d82157cc97b8a1~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_ea52ef4eb7ea4e289efde3bb0aa5adaa_tilde_mv2.png",
+      "bytes": 336815,
+      "sha256": "dfc7f9808d642e9ff89d3bde9bb1e693d5eeddee5d8407e264295ee341f33d1c",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ea52ef4eb7ea4e289efde3bb0aa5adaa~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1"
+      ]
+    },
+    {
+      "path": "images/81f7ac_2c69c065726c493081194ac02be18514_tilde_mv2.png",
+      "bytes": 716496,
+      "sha256": "7676b81e5aef340b81fc2c791c935c8c1ddb890999515b3cd4b15822e8c6449e",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2c69c065726c493081194ac02be18514~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_79c624f83ad94f08a85f81060f630e3c_tilde_mv2.png",
+      "bytes": 547907,
+      "sha256": "dd7fad394fd6c0826721ad4baea198bd4b5901ffd7af79aef70b3e41c9ff22bd",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_79c624f83ad94f08a85f81060f630e3c~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_62705d65f714416ca5703f4cd3cd7bd4_tilde_mv2.png",
+      "bytes": 565485,
+      "sha256": "22c9940ae6bcb4ab6c43effe0a2720723b4d68724feb80f6f2e18e85a36d33a0",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_62705d65f714416ca5703f4cd3cd7bd4~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_07435efc381e4428ad6d2d0a664aca6a_tilde_mv2.png",
+      "bytes": 1197203,
+      "sha256": "fefccef6428a4f0401790d423494f460d2240d5301a684052c51a86cd4a84e3c",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_07435efc381e4428ad6d2d0a664aca6a~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_2146c425e0e04141b8286c64d61e872b_tilde_mv2.png",
+      "bytes": 1198664,
+      "sha256": "592b99d5952930da77dd6949b4f301fe1c9c792172234d688d48a8ee837e80c4",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2146c425e0e04141b8286c64d61e872b~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog"
+      ]
+    },
+    {
+      "path": "images/81f7ac_621da95ba1e643138e0248316642fa31_tilde_mv2.png",
+      "bytes": 1199904,
+      "sha256": "461ebe39efa37e7fcf56b02a9c17d3ee93dd65645af85baa95694b492dff0214",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_621da95ba1e643138e0248316642fa31~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_a58a708d7bea4d9f84d8a7e73a59e637_tilde_mv2.png",
+      "bytes": 1198987,
+      "sha256": "153511562763aa55342068a7b93d9256698be8d56a81d898bd980d7f00312d5a",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_a58a708d7bea4d9f84d8a7e73a59e637~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_c01b9721054143cc92200bc471b3030b_tilde_mv2.png",
+      "bytes": 1233650,
+      "sha256": "c68009f6191801618ca06f5983fc387c5bc9ef6523de706fc5ceda50471c1451",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_c01b9721054143cc92200bc471b3030b~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog"
+      ]
+    },
+    {
+      "path": "images/b444c3_762f53ccda0e4eee8cc51147ab1aff2b_tilde_mv2.png",
+      "bytes": 1472393,
+      "sha256": "d80be4dee97e0afc6dbacef79a36ef5f80545d6a26077ad08cf373b4b6ddc643",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_762f53ccda0e4eee8cc51147ab1aff2b~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_7ce4ea18c433464fb79a0cbda339d516_tilde_mv2.png",
+      "bytes": 933205,
+      "sha256": "0958e1070c3137667079a661441782d6986d10067a5cc639fec30889c6eb141d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_7ce4ea18c433464fb79a0cbda339d516~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_08258592955c4388a664e4c2b7686a20_tilde_mv2.png",
+      "bytes": 904602,
+      "sha256": "f31ded4ca6e94958d4712aec8efb7e5309f0081cd9efda8f0c4c0bd94b7f1478",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_08258592955c4388a664e4c2b7686a20~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_0f15095668b14141a21bf739df36af94_tilde_mv2.png",
+      "bytes": 946313,
+      "sha256": "73db189b328fbb5f73439b3e3a3354f6062718f77881ee049d84c08c53d585c7",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0f15095668b14141a21bf739df36af94~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_ceea4e6c4ddd4cab9b02747aae88203b_tilde_mv2.png",
+      "bytes": 914219,
+      "sha256": "0359719699f5ca3730fb34be586a84c830e0819dfe5f6566af6caa51474066e1",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ceea4e6c4ddd4cab9b02747aae88203b~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1"
+      ]
+    },
+    {
+      "path": "images/81f7ac_2ead68b2ead04ecabaaf013c1fac1fcf_tilde_mv2.png",
+      "bytes": 934649,
+      "sha256": "8ef22a31a5563af58aab7a659672144ea48369d15fa97e505052fc94c6509385",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_2ead68b2ead04ecabaaf013c1fac1fcf~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_62430ba549674b9c93deb467a62a8077_tilde_mv2.png",
+      "bytes": 1322061,
+      "sha256": "2509a214cb67dadd58d0f7adbd2b1b4e07c60f10c676f7f554ddcb5282809994",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_62430ba549674b9c93deb467a62a8077~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_9e6830e0c0fc4703b7a8c25fb5490f41_tilde_mv2.png",
+      "bytes": 1316840,
+      "sha256": "22705c441af1d0a81875c73dbf26ff651b1489b5088661091a519b3ca229339f",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_9e6830e0c0fc4703b7a8c25fb5490f41~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog"
+      ]
+    },
+    {
+      "path": "images/81f7ac_58c73836559d48398df0fe92f4004b4d_tilde_mv2.png",
+      "bytes": 1329948,
+      "sha256": "572e2eb9e3c326424cb02f0273e2a89642a64e8f961f781c8a35ffbea7e9e35d",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_58c73836559d48398df0fe92f4004b4d~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog"
+      ]
+    },
+    {
+      "path": "images/b444c3_5b960db89abd49fb8014e8c61cbbaa88_tilde_mv2.png",
+      "bytes": 1335854,
+      "sha256": "3f011c5ba05f0118a12f2f610f7d6cad783dd822fbfd90eb9f24759aecdba868",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_5b960db89abd49fb8014e8c61cbbaa88~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog",
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/08181c_ca2a2650d5b54e349593ab188f4b6057_tilde_mv2.jpg",
+      "bytes": 7564236,
+      "sha256": "630c9dc05c8a34179ad8c6f2e4bee6957a94d10b1942729e0c2581fbe70e3192",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_ca2a2650d5b54e349593ab188f4b6057~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/children"
+      ]
+    },
+    {
+      "path": "images/08181c_27f69f090dd1483c98c6cd1023d636b4_tilde_mv2.jpg",
+      "bytes": 8907745,
+      "sha256": "616c98ad020ced81fd86f2a589debc8406bafbf4e20dbc6619da79177038ae24",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_27f69f090dd1483c98c6cd1023d636b4~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/contact"
+      ]
+    },
+    {
+      "path": "images/08181c_83b49b5728464621b766a37d2e52d803_tilde_mv2.jpg",
+      "bytes": 21530490,
+      "sha256": "00dd1e10aa7660e5e2eaa0b976db793b04b7bf68e2962201aa00bb73eea17ba6",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_83b49b5728464621b766a37d2e52d803~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/wedding"
+      ]
+    },
+    {
+      "path": "images/08181c_4126db7ca52e4c1293daadf58963a865_tilde_mv2.jpg",
+      "bytes": 75171,
+      "sha256": "82b6088ebf070910417b77ddb3fd279b87094934452fb7b032297647dc4b7c51",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_4126db7ca52e4c1293daadf58963a865~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/wedding"
+      ]
+    },
+    {
+      "path": "images/08181c_02c12560c3394778bbbb460cc77f2f25_tilde_mv2.jpg",
+      "bytes": 172601,
+      "sha256": "233df2537a0a03a5efb41146ce495552aaa96019e4e933b7d6027fa51e007510",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_02c12560c3394778bbbb460cc77f2f25~mv2.jpeg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/wedding"
+      ]
+    },
+    {
+      "path": "images/08181c_15cc943f3d0943f38417e6f525b25940_tilde_mv2.jpg",
+      "bytes": 89608,
+      "sha256": "dc40e0fced419d16879c8027a124f0d09f76f89f40f324ed2475a73ad98f4ed1",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_15cc943f3d0943f38417e6f525b25940~mv2.jpeg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/wedding"
+      ]
+    },
+    {
+      "path": "images/08181c_4ff63c03faa14372b7c85442ef1582a2_tilde_mv2.jpg",
+      "bytes": 75171,
+      "sha256": "82b6088ebf070910417b77ddb3fd279b87094934452fb7b032297647dc4b7c51",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_4ff63c03faa14372b7c85442ef1582a2~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/wedding"
+      ]
+    },
+    {
+      "path": "images/08181c_ab32276699d74838af78236d2a7d559c_tilde_mv2.jpg",
+      "bytes": 7174014,
+      "sha256": "cfd25123ea3750cd7a16a298bc921517cb4b89e7f8e1e42f82c05d218e9c9fea",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_ab32276699d74838af78236d2a7d559c~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/08181c_3760e4a041f04c98ae8dda0b793fbc4a_tilde_mv2.jpg",
+      "bytes": 6424171,
+      "sha256": "83ea601792eb6822926ac68207fa1399575d8fa628621a0d74a5e7a0eb83bf06",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_3760e4a041f04c98ae8dda0b793fbc4a~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/daa8147c90904123b99659c0169c0d91.jpg",
+      "bytes": 3782542,
+      "sha256": "acf424a42e69fa0b4960d51dfcc4ad46edada1745f1f62426500fc0fb806bd5a",
+      "sourceUrl": "https://static.wixstatic.com/media/daa8147c90904123b99659c0169c0d91.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/youth"
+      ]
+    },
+    {
+      "path": "images/08181c_9c1ca24c26a14c48935869caa808331e_tilde_mv2.jpg",
+      "bytes": 175294,
+      "sha256": "050f942db90be09b53c85799484e663080f88c1264e37ddcb2a1f4455acbb996",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_9c1ca24c26a14c48935869caa808331e~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/youth"
+      ]
+    },
+    {
+      "path": "images/08181c_2ec5508a231d47b4a1de6588298338bc_tilde_mv2.jpg",
+      "bytes": 4116432,
+      "sha256": "7f9e277042e26c58452a6bd5cfb6505c302caa02bc454fac3df9a1acf42ed16d",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_2ec5508a231d47b4a1de6588298338bc~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/youth"
+      ]
+    },
+    {
+      "path": "images/b98776_0b38a83a7a844934914a7630735a2915_tilde_mv2.jpg",
+      "bytes": 257674,
+      "sha256": "ffb85e4458ded266adce96a6b1aee0c41ead661d59f57705c82a5dbfddc5b07d",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_0b38a83a7a844934914a7630735a2915~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/youth"
+      ]
+    },
+    {
+      "path": "images/08181c_42c2e16bcb3147238759e922c478a5ed_tilde_mv2.jpg",
+      "bytes": 190676,
+      "sha256": "f96909da14845cff5200a7e68b073939ad99e0c7268a0d774070ec57c19a087b",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_42c2e16bcb3147238759e922c478a5ed~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/youth"
+      ]
+    },
+    {
+      "path": "images/b98776_87d4938abcfa42b88aca4915afcc545d_tilde_mv2.jpg",
+      "bytes": 686268,
+      "sha256": "783affeb162e6e127e550044c8f3d40b5e61a6f20e94b3c4610f113398a2efed",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_87d4938abcfa42b88aca4915afcc545d~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/youth"
+      ]
+    },
+    {
+      "path": "images/08181c_1760306b3d9843a4a2eeb2c1e3f508ba_tilde_mv2.jpg",
+      "bytes": 10715114,
+      "sha256": "3e9a26a1fd04f7171723b27999c577799894e0469d17f563183ec9bf37e91723",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_1760306b3d9843a4a2eeb2c1e3f508ba~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/youth"
+      ]
+    },
+    {
+      "path": "images/81f7ac_4db7aee0a0d242e5beaaafbb5ce31949_tilde_mv2.png",
+      "bytes": 1126234,
+      "sha256": "363bdd217e412c1b522ab3553c1929a4b1911de4cdda14740b7f2b4e0374fd9b",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_4db7aee0a0d242e5beaaafbb5ce31949~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1"
+      ]
+    },
+    {
+      "path": "images/b444c3_0ff1a4d1653a4be389c252346ed4f531_tilde_mv2.png",
+      "bytes": 504341,
+      "sha256": "650ba3e123d1d37f31d3e2f9f6d094d85e7fee74567bdfad8b86e53b2c0fa83a",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_0ff1a4d1653a4be389c252346ed4f531~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1"
+      ]
+    },
+    {
+      "path": "images/81f7ac_690d6332a3e64eaa83fde3783a7bd36f_tilde_mv2.png",
+      "bytes": 516719,
+      "sha256": "92b4387597df17073b5bc0d3becf57d95aafc79b3685c28c1147668d851a3992",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_690d6332a3e64eaa83fde3783a7bd36f~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1"
+      ]
+    },
+    {
+      "path": "images/b444c3_e833e0cf135d4acca13b39cfadb451b6_tilde_mv2.png",
+      "bytes": 232041,
+      "sha256": "05bf4a25ea3c5a0b610558fbfc71de3a7946ea50ccb41a3e90f97f08774f1950",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_e833e0cf135d4acca13b39cfadb451b6~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1"
+      ]
+    },
+    {
+      "path": "images/b98776_49095460f7734da6bdced3a87ca1e695_tilde_mv2.png",
+      "bytes": 5755636,
+      "sha256": "afe81e55c4b0a790a0d57d3c29cd60f8b954d2fed27403da9b362128016c1793",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_49095460f7734da6bdced3a87ca1e695~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1"
+      ]
+    },
+    {
+      "path": "images/51b820_5aa2572137084e6eab3173a186a1412d_tilde_mv2.png",
+      "bytes": 3110698,
+      "sha256": "7b93b439fea47653c7521f115659d96c9a74f8d80b3440ad1c881c643aff7978",
+      "sourceUrl": "https://static.wixstatic.com/media/51b820_5aa2572137084e6eab3173a186a1412d~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/fbcm-events-1"
+      ]
+    },
+    {
+      "path": "images/81f7ac_98f7de259e854d09a5b675ef7db8862d_tilde_mv2.png",
+      "bytes": 1123170,
+      "sha256": "4302b14eceb37c908c6efb3e5d7c289bccbc0b9ffa6abc21fbba52bb872400a1",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_98f7de259e854d09a5b675ef7db8862d~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/series-resources"
+      ]
+    },
+    {
+      "path": "images/b444c3_63afd8e6e0f04470b50ee18b42c5ac7d_tilde_mv2.png",
+      "bytes": 266063,
+      "sha256": "6381e9695d88e35ee26bd862a3d02f41654783144e9d41e3ff1b0e598f3cb1a7",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_63afd8e6e0f04470b50ee18b42c5ac7d~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/series-resources"
+      ]
+    },
+    {
+      "path": "images/b444c3_ea7d5cd52641408baec136906faff4e5_tilde_mv2.png",
+      "bytes": 1322721,
+      "sha256": "20cf31084465e4ec198d61261cd17974e0f567a3faf15142201d1415d8fd4db6",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_ea7d5cd52641408baec136906faff4e5~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_8c2b6b5f35644e8b80b43707d493ec5f_tilde_mv2.png",
+      "bytes": 1327443,
+      "sha256": "0b292797e5240e22d714ec4ef052061d8e9f1b9abbdddcd4fcf1051afcf53729",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_8c2b6b5f35644e8b80b43707d493ec5f~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_8ef2d262aa174349b9b5c3d343c6ed44_tilde_mv2.png",
+      "bytes": 726211,
+      "sha256": "d80f94b93752b6742afa7c5aef6d04f86f552c0bd98303074a9f25a463e51012",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_8ef2d262aa174349b9b5c3d343c6ed44~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_1a01612c3d0e49c2b28ef0665922f854_tilde_mv2.png",
+      "bytes": 680791,
+      "sha256": "b55db7532f210f45b0f7697ac16819ec0e393dd5b65d2e43cefd6a8b1ad1c2f7",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_1a01612c3d0e49c2b28ef0665922f854~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_93db4f5dc61d44a0a8117b3584c55387_tilde_mv2.png",
+      "bytes": 728860,
+      "sha256": "86f5fe95a6c9875ca12e4b1d8d102e5beb05f7cd3ce8540e35b1a2c2604f0387",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_93db4f5dc61d44a0a8117b3584c55387~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_5f9bf266d6f2413da0b642d7121c30d5_tilde_mv2.png",
+      "bytes": 79028,
+      "sha256": "843afda7c6be60274ac0c19d6c99bb401b5332e6a22881414e2bf6061dc70a1d",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_5f9bf266d6f2413da0b642d7121c30d5~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_bfd7b960fa914536a332ac9911f20ce4_tilde_mv2.png",
+      "bytes": 78005,
+      "sha256": "6a0f0750fbce69cb3b1c2aba1eff1f078e829a7e7eb8a8d8840e5b4ac7bc476d",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_bfd7b960fa914536a332ac9911f20ce4~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_8f198facd3a4492ca43cd80d4aba1125_tilde_mv2.png",
+      "bytes": 75443,
+      "sha256": "e9b6c6d85d6dc981b54d0d73631a3009f50468725d22c40b7a78f7ea42d4ba07",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_8f198facd3a4492ca43cd80d4aba1125~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_27d869aa23844066b9f173ace4685490_tilde_mv2.png",
+      "bytes": 81038,
+      "sha256": "ecc460fc3fdf5e3d1feef5372a21fb433c852e7fc88701b2a5ee443959583b04",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_27d869aa23844066b9f173ace4685490~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_bbd9752818b04924a81164d1810233dd_tilde_mv2.png",
+      "bytes": 75962,
+      "sha256": "390f0c643553c303d3967a563eebba24aed54a62c573a4675756d779e4250d42",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_bbd9752818b04924a81164d1810233dd~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_1b7a505fa8334e49b5cd4db99a7b13a2_tilde_mv2.png",
+      "bytes": 77511,
+      "sha256": "aa0adc901102eb23bece23aea228f325fdc80a8723d5fa63eff3aeac77913346",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_1b7a505fa8334e49b5cd4db99a7b13a2~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_389df1476f6f432fae9fab1750c08c99_tilde_mv2.png",
+      "bytes": 85703,
+      "sha256": "e262851dea9a0ee4f83d0552a044e1b29e980fa5bfe771e2836060449b9463c1",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_389df1476f6f432fae9fab1750c08c99~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_980b1f8242b146f3b077489cad405233_tilde_mv2.png",
+      "bytes": 72054,
+      "sha256": "74d4314b536ee062939e0001de31c23f80b0c6db84bb38320981a4c6f3d5001a",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_980b1f8242b146f3b077489cad405233~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_830bc38ec50d41a2af923dd485a22647_tilde_mv2.png",
+      "bytes": 65188,
+      "sha256": "3a34be1a45f31b47ac120bcc64232235c921937778c798f971997a3ef3c5716f",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_830bc38ec50d41a2af923dd485a22647~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/b444c3_164051fba7aa41609387d5ddc51decbc_tilde_mv2.png",
+      "bytes": 63259,
+      "sha256": "5c725856c36c56b690b4fc41ad9ad7f4ec9bd25ed46095bcaa5a68ec0563b6ab",
+      "sourceUrl": "https://static.wixstatic.com/media/b444c3_164051fba7aa41609387d5ddc51decbc~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/81f7ac_ddcdce5957294a24b427be5f8736f0ef_tilde_mv2.png",
+      "bytes": 94048,
+      "sha256": "917cbb70273c82578c6b178c2af372884e858c0941e7734d9018ed14f35e9142",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_ddcdce5957294a24b427be5f8736f0ef~mv2.png",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/08181c_6d94b4099ee94e3e8cab4b6c7883eab2_tilde_mv2.jpg",
+      "bytes": 12924301,
+      "sha256": "ee0bfc64f134a99e8273a2b341b30c8e8ee4c8cdf7c50ad3653301eae4b21153",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_6d94b4099ee94e3e8cab4b6c7883eab2~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/81f7ac_0d4e67a450a54ca5b89c2564e4f0461d_tilde_mv2.jpg",
+      "bytes": 2409136,
+      "sha256": "64dfb6358b58ba9e25a678c55ff2b5b2ed06481a02764a455e27e3fab92d2639",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0d4e67a450a54ca5b89c2564e4f0461d~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/81f7ac_4eae792ee0d34050a9e6f431e80bbfca_tilde_mv2.jpg",
+      "bytes": 439302,
+      "sha256": "1a783b568428af4ff97062ad1e51866f2cc52a7d131eed15bc7aaacb4e886a2b",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_4eae792ee0d34050a9e6f431e80bbfca~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/b98776_0cfbc148ba1e46bd81ae9003172231e7_tilde_mv2.jpg",
+      "bytes": 6932654,
+      "sha256": "7f27b8369a8020075edd083dad51669fa3ceaf6c4765074612a04163f60fc2cf",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_0cfbc148ba1e46bd81ae9003172231e7~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/b98776_7e3f96b5e0d042418c4d56bc0b914eea_tilde_mv2.jpg",
+      "bytes": 5092125,
+      "sha256": "d1e5d4c9765d97bb456ab38908051f4b0e859c79864ae4a1b07c97eec9b26eaf",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_7e3f96b5e0d042418c4d56bc0b914eea~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/b98776_0f921d0be3034bd680c45eb9eb1b8809_tilde_mv2.jpg",
+      "bytes": 5009489,
+      "sha256": "d192ba60e17f7e2f0290ffc149417dee94d97e98810d966d4ecacbf4612eff75",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_0f921d0be3034bd680c45eb9eb1b8809~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
     }
   ]
 }
