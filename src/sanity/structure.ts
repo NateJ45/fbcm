@@ -52,7 +52,7 @@ import { makeGuideView } from './components/GuideView';
 import { guides, GUIDE_CATEGORIES } from './guides/content';
 import { GUIDE_ICONS } from './guides/icons';
 import BusinessOverview from './components/BusinessOverview';
-import { STAFF_GROUPS } from '../lib/church-derive';
+import { STAFF_GROUPS } from '../lib/church-derive'; // scaffold: church
 import { site } from '../data/site';
 
 const SINGLETON_TYPES = [
@@ -144,6 +144,7 @@ function navOrderedPagesList(S: StructureBuilder) {
 
 // ── People: staff sorted the way the Staff page itself groups them ──────────
 //
+// scaffold: church
 // src/lib/church-derive.ts's groupStaff() puts pastors first, then the
 // coordination team, then support and volunteer roles, and STAFF_GROUPS is
 // the one place that order is written down. Importing it here (rather than
@@ -152,6 +153,7 @@ function navOrderedPagesList(S: StructureBuilder) {
 const STAFF_GROUP_RANK = `select(${STAFF_GROUPS.map(
   (group, i) => `group == "${group}" => ${i}`,
 ).join(', ')}, ${STAFF_GROUPS.length})`;
+// scaffold:end
 
 export const deskStructure = (S: StructureBuilder, _context: StructureResolverContext) =>
   S.list()
@@ -235,7 +237,7 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
                     .title('Staff members')
                     .filter('_type == "staffMember"')
                     .defaultOrdering([
-                      { field: STAFF_GROUP_RANK, direction: 'asc' },
+                      { field: STAFF_GROUP_RANK, direction: 'asc' }, // scaffold: church
                       { field: 'order', direction: 'asc' },
                       { field: 'name', direction: 'asc' },
                     ]),
