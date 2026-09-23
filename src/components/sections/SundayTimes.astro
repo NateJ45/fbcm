@@ -1,63 +1,80 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: Sunday times, drawn as TWO DOORS (art-direction pass,
-// 2026-09-20, spec section 5).
+// Page-builder block: Sunday times, drawn as THE HYMN BOARD (2026-09-23, the
+// Home identity pass; the prototype's `section.expect`,
+// docs/superpowers/prototypes/2026-09-23-home/home.html).
 //
-// The left door is the service time at poster scale. It is the one place on
-// the site where `text-display` is used outside a hero, and the numeral is
-// Castoro ROMAN, not the display face: `font-display` is Castoro Titling,
-// which is capitals only and has no figures worth reading. So the big line is
-// `font-body oldstyle`, which is the same family at its text weight with
-// old-style figures. Under it the first item's text is the lede, and every
-// remaining item, plus every door, is one row of a ruled schedule.
+// The whole band is brand brown (--color-band-brown), dark BY TYPE, so it is on
+// no cadence and carries no colour field (CLAUDE.md rule 9). The owner's
+// override #5 (plan 2026-09-23-fbcm-home-identity.md): no boxed card floating
+// on the cream page. The prototype's framed brown board on cream became the
+// band itself, and the times are set STRAIGHT ONTO IT, the way the board by
+// the pulpit carries its numbers: gold numerals, the title beside each, a
+// small line under it, and a gold hairline between the rows.
 //
-// The right door is a photograph when the page can spare one, and the map and
-// address when it cannot. The photograph is BORROWED: this block has no image
-// field and no schema change was made for one, so SectionRenderer hands it
-// `frame` from the page's shared spare-image pool (src/lib/spare-images.ts).
-// The picture is not taken away from the block that owns it; the building
-// shows at two distances on purpose.
+// The rows come from boardRows() (src/lib/hymn-board.ts, unit-tested): every
+// item, then every door. A clock time is a gold numeral with its am/pm set
+// small and lower case; any other big line ("309 East Adams", "Online") is set
+// in the same gold, smaller, and wraps inside its cell; a door has the door
+// glyph where the time would be. The row whose time is the service time in
+// Site settings is drawn largest, derived rather than chosen (rule 15). The
+// first column is a subgrid track sized to its widest cell (capped at 40% of
+// the board), so the titles share one left edge down the whole board.
 //
-// SELF_CONTAINED: it paints its own paper surface, because the church blocks
-// are light or dark BY TYPE (see SELF_CONTAINED_TYPES in src/lib/sectionCadence.ts).
+// THE PICTURES. The band's own `photos` come first: the first in a wide door
+// arch, the second in a small lancet overlapping its lower right corner, cut
+// out of the photo behind it by a brown halo. With no photos of its own the
+// band takes a spare photograph from the page's pool (src/lib/spare-images.ts,
+// which skips a band that has its own), drawn in the same door arch. With no
+// picture at all, the map from Site settings stands in the picture's place
+// when `showMap` is on and a map has been uploaded; with none of those the
+// board sits alone, centred.
 //
-// The map, the address and the directions link all come from Site settings, so
-// the church types them once. When there is no photograph to borrow and the
-// editor has turned the map off, or no map picture has been uploaded yet, the
-// right door becomes a cream address card rather than an empty box: the
-// address is the one thing this band must never fail to show.
+// The `notes` go under the pictures (under the board when there are none),
+// each with a small building glyph: a door, the basin, a window, by position.
+//
+// On a long board (Visit's three doors) the picture holds its place at the
+// top of the viewport while the board scrolls past it, so the left half is
+// not a picture and then a long empty field. Only when there are no notes:
+// the notes sit under the picture, and a sticky column taller than a short
+// laptop screen would hold them out of sight until the band ended.
+//
+// The address and the directions link come from Site settings, so the church
+// types them once. The address is printed under the board. The band's `rule`
+// button is its own `cta` when an editor set one, with the directions as a
+// text link beside the address; with no `cta` the directions link is the
+// rule button. The address is the one thing this band must never fail to
+// show when it has no picture: `showMap` off only hides it (and the
+// directions with it) when there is a picture beside the board.
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { getSiteSettings } from '@/lib/queries';
-import type { SectionSiteSettings, SanityImageObject } from '@/lib/pageBuilder.types';
-import { site } from '@/data/site';
+import type {
+  ProjectedCtaBlock,
+  ProjectedImage,
+  SectionSiteSettings,
+  SanityImageObject,
+} from '@/lib/pageBuilder.types';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
-import { photoAspect } from '@/lib/photo-shape';
-
-interface TimeItem {
-  _key?: string;
-  label?: string;
-  big?: string;
-  body?: string;
-}
-
-interface Door {
-  _key?: string;
-  name?: string;
-  body?: string;
-}
+import { boardRows, noteGlyph, type BoardItem, type BoardDoor } from '@/lib/hymn-board';
 
 interface Props {
-  eyebrow?: string;
-  heading?: string;
-  items?: TimeItem[];
-  doors?: Door[];
-  showMap?: boolean;
+  eyebrow?: string | null;
+  heading?: string | null;
+  intro?: string | null;
+  items?: BoardItem[] | null;
+  notes?: (string | null)[] | null;
+  photos?: (ProjectedImage | SanityImageObject | null)[] | null;
+  cta?: ProjectedCtaBlock | null;
+  doors?: BoardDoor[] | null;
+  showMap?: boolean | null;
   headingId: string;
   /**
-   * A photograph borrowed from elsewhere on the page for the right door. Null
-   * (the default) falls back to the map and address card. SectionRenderer
+   * A photograph borrowed from elsewhere on the page, used only when the band
+   * has no photos of its own. Null (the default) means none. SectionRenderer
    * computes it once per page with assignSpareImages(), so two bands on the
    * same page can never be handed the same picture.
    */
@@ -65,11 +82,11 @@ interface Props {
   /**
    * Site settings, handed down by SectionRenderer from the route that already
    * fetched them. In /preview/** that is the DRAFT client, so an editor
-   * changing the map, the address or the directions link sees it; calling
-   * getSiteSettings() here would read the published document and then serve a
-   * memoised copy of it for the isolate's whole life. The fetch below is only
-   * the fallback for callers that pass nothing (the styleguide, and the
-   * code-defined default sections).
+   * changing the map, the address, the directions link or the service time
+   * sees it; calling getSiteSettings() here would read the published document
+   * and then serve a memoised copy of it for the isolate's whole life. The
+   * fetch below is only the fallback for callers that pass nothing (the
+   * styleguide, and the code-defined default sections).
    */
   settings?: SectionSiteSettings | null;
 }
@@ -77,73 +94,46 @@ interface Props {
 const {
   eyebrow,
   heading,
-  items = [],
-  doors = [],
+  intro,
+  items,
+  notes,
+  photos,
+  cta,
+  doors,
   showMap,
   headingId,
   frame = null,
   settings: settingsProp,
 } = Astro.props as Props;
 
-// The fallback path still goes through getSiteSettings(), whose promise is
-// memoised (src/lib/queries.ts), so a page carrying this block and the give band
-// makes at most one request for the settings either way.
 const settings: SectionSiteSettings | null =
   settingsProp !== undefined ? settingsProp : await getSiteSettings();
 const mapImage = settings?.mapImage;
 const directionsUrl: string | undefined = settings?.directionsUrl ?? undefined;
-const hasFrame = !!frame?.asset;
 
-// THE BORROWED PHOTOGRAPH IS PLACED BY ITS OWN SHAPE (2026-09-23). It used to
-// be a 4:3 `bleed-right` crop across half the page whatever the picture was,
-// and on the home page it read as a stock photograph towering over the 10:45
-// block. It now hangs INSIDE the grid as a framed picture (the gold hairline
-// of ImageText's `frame` shape, `.ph-hung`), sized from the asset's own
-// dimensions (photoAspect, the same reader photo-shape.ts uses; it cleans
-// stega from the ref first), so its height stays under the left door's:
-//   landscape (w/h >= 1.25): the full right column, cropped to 3:2 (held
-//     to 36rem while the doors stack below lg, so a tablet does not get a
-//     full-width poster of it)
-//   squarish (0.85 < w/h < 1.25): at most 26rem wide, 4:5 crop
-//   portrait (w/h <= 0.85): at most 20rem wide, 4:5 crop
-// An unreadable ref is treated as landscape, the commonest shape in the pool.
-// An editor's hotspot sets the crop point; without one the crop keeps the top
-// of the picture, where the faces are (the same default as the split hero).
-//
-// NO VISIBLE CAPTION (2026-09-23, the owner: "the pictures speak for
-// themselves"). The frame used to print the borrowed photo's alt text under
-// it as a figcaption. The alt text still lives on the <img> via SanityImage's
-// default (it reads source.alt when no explicit alt prop is passed), for
-// screen readers, but nothing prints it as reading copy any more.
-const frameAspect = hasFrame ? photoAspect(frame) : null;
-const frameShape: 'landscape' | 'square' | 'portrait' = !frameAspect
-  ? 'landscape'
-  : frameAspect.a <= 0.85
-    ? 'portrait'
-    : frameAspect.a < 1.25
-      ? 'square'
-      : 'landscape';
-const frameWidth =
-  frameShape === 'landscape'
-    ? 'w-full max-w-[36rem] lg:max-w-none'
-    : frameShape === 'square'
-      ? 'max-w-[26rem]'
-      : 'max-w-[20rem]';
-const frameCrop = frameShape === 'landscape' ? 'aspect-[3/2]' : 'aspect-[4/5]';
-const frameHotspot = frame?.hotspot;
-const frameObjectPosition =
-  typeof frameHotspot?.x === 'number' && typeof frameHotspot?.y === 'number'
-    ? `${(frameHotspot.x * 100).toFixed(2)}% ${(frameHotspot.y * 100).toFixed(2)}%`
-    : '50% 25%';
-const showTheMap = showMap !== false && !!mapImage?.asset;
+// ── The pictures ───────────────────────────────────────────────────────────
+const ownPhotos = (photos ?? []).filter((p): p is SanityImageObject => !!p?.asset).slice(0, 2);
+const mainPhoto: SanityImageObject | null = ownPhotos[0] ?? (frame?.asset ? frame : null);
+const smallPhoto: SanityImageObject | null = ownPhotos[1] ?? null;
+const showTheMap = !mainPhoto && showMap !== false && !!mapImage?.asset;
+const hasPicture = !!mainPhoto || showTheMap;
+const altOf = (image: SanityImageObject | null): string => {
+  const alt = (image as { alt?: unknown } | null)?.alt;
+  return typeof alt === 'string' ? alt : '';
+};
 
-// The address card's lines. `address` is a plain string in Site settings and may
-// hold more than one line; the city/state pair comes from Business info through the
-// same flattened settings object. Both are optional, so the card falls back to the
-// church's own name and never renders empty.
-// splitStega first: the payload is written in U+200B/C/D and U+FEFF, and
-// trim() eats U+FEFF, so splitting the raw string shatters it and click-to-edit
-// stops resolving on the address. The payload is put back on the first line.
+// ── The board ──────────────────────────────────────────────────────────────
+const rows = boardRows(items ?? [], doors ?? [], settings?.serviceTime);
+const validNotes = (notes ?? []).filter(
+  (n): n is string => typeof n === 'string' && splitStega(n).cleaned.trim() !== '',
+);
+
+// The address lines. `address` is a plain string in Site settings and may hold
+// more than one line; the city/state pair comes from Business info through the
+// same flattened settings object. splitStega first: the payload is written in
+// U+200B/C/D and U+FEFF, and trim() eats U+FEFF, so splitting the raw string
+// shatters it and click-to-edit stops resolving on the address. The payload
+// is put back on the first line.
 const addressSplit = splitStega(typeof settings?.address === 'string' ? settings.address : '');
 const addressLines: string[] = [
   ...addressSplit.cleaned.split('\n'),
@@ -152,117 +142,198 @@ const addressLines: string[] = [
   .map((line) => line.trim())
   .filter(Boolean)
   .map((line, i) => (i === 0 ? reattachStega(line, addressSplit.encoded) : line));
+const showAddress = addressLines.length > 0 && (showMap !== false || !hasPicture);
 
-// With a frame in the right door the map PICTURE stays out (one photograph per
-// door), but the address and the directions link come back as a ruled row
-// under the heading, because on a page with a spare image that row is the only
-// place the address appears. `showMap` still governs it: an editor who turned
-// the map off gets no row either.
-const showAddressRow = hasFrame && showMap !== false && addressLines.length > 0;
-
-const validItems = items.filter((i) => i?.label || i?.big || i?.body);
-const validDoors = doors.filter((d) => d?.name || d?.body);
-
-// ── The left door ──────────────────────────────────────────────────────────
-// The first item is the service time: its big line becomes the numeral and its
-// text becomes the lede. Everything after it drops into the schedule.
-const lead = validItems[0];
-
-// Split a trailing "am" / "pm" off the numeral so it can be set small and
-// italic against the figures, the way a clock face carries it.
-//
-// splitStega FIRST, and put the payload back on the part that keeps the
-// meaning. A stega payload is written in U+200B/C/D and U+FEFF, and U+FEFF
-// matches `\s` in a JavaScript regex, so running this match over the raw string
-// would tear the payload in half and click-to-edit would stop resolving on the
-// service time, in the preview only (CLAUDE.md, the preview rules).
-const bigSplit = splitStega(lead?.big ?? '');
-const meridiem = bigSplit.cleaned.match(/^(.*?)\s*(am|pm)\s*$/i);
-const numeral = reattachStega(meridiem ? meridiem[1] : bigSplit.cleaned, bigSplit.encoded);
-const numeralSuffix = meridiem ? meridiem[2] : '';
-
-// The schedule: every item after the first, then every door. A door has no
-// time of its own, so its first cell is empty and its name carries the row.
-const scheduleRows: { key: string; big?: string; label?: string; body?: string }[] = [
-  ...validItems.slice(1).map((item, i) => ({
-    key: item._key ?? `item-${i}`,
-    big: item.big,
-    label: item.label,
-    body: item.body,
-  })),
-  ...validDoors.map((door, i) => ({
-    key: door._key ?? `door-${i}`,
-    big: undefined,
-    label: door.name,
-    body: door.body,
-  })),
-];
-
-const directionsCta = directionsUrl
-  ? {
-      label: 'Open in Google Maps',
-      linkType: 'external' as const,
-      externalUrl: directionsUrl,
-      openInNewTab: true,
-    }
-  : null;
+const directionsCta =
+  directionsUrl && showAddress
+    ? {
+        label: 'Open in Google Maps',
+        linkType: 'external' as const,
+        externalUrl: directionsUrl,
+        openInNewTab: true,
+      }
+    : null;
+const hasCta = !!cta?.label;
+const stickyPicture = hasPicture && validNotes.length === 0;
 ---
 
-<section class="bg-background" aria-labelledby={heading ? headingId : undefined}>
+<section class="bg-band-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
   <div
-    class="mx-auto grid max-w-content grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] gap-y-14 px-gutter py-section-lg"
+    class:list={[
+      'mx-auto max-w-content px-gutter py-section-lg',
+      hasPicture &&
+        'grid grid-cols-1 gap-y-[clamp(40px,5vw,64px)] lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-[clamp(32px,4vw,64px)]',
+    ]}
   >
-    {/* ── Left door: the time, the lede, the schedule ─────────────────── */}
-    <div class="col-span-12 lg:col-span-5">
-      <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow || 'Sunday morning'}</p>
+    {
+      /* ── The pictures (or the map) ─────────────────────────────────────── */
+      hasPicture && (
+        <div
+          class:list={[
+            'relative w-full max-w-[40rem] lg:col-span-6 lg:max-w-none',
+            stickyPicture &&
+              'lg:sticky lg:top-[clamp(104px,12vh,136px)] lg:row-span-2 lg:self-start',
+          ]}
+        >
+          {mainPhoto ? (
+            <div class:list={['relative', smallPhoto && 'pb-[clamp(40px,5vw,80px)]']}>
+              <ArchFrame
+                image={mainPhoto}
+                shape="door"
+                width={1400}
+                sizes="(min-width:1024px) 45vw, 100vw"
+                alt={altOf(mainPhoto)}
+                grade="warm"
+                style="--arch-ratio: 160 / 112;"
+              />
+              {smallPhoto && (
+                <div class="absolute right-[-2%] bottom-0 w-[36%]">
+                  <span class="hb-halo arch-lancet" aria-hidden="true" />
+                  <ArchFrame
+                    image={smallPhoto}
+                    shape="lancet"
+                    width={600}
+                    sizes="(min-width:1024px) 16vw, 36vw"
+                    alt={altOf(smallPhoto)}
+                    grade="warm"
+                    class="relative"
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <figure class="m-0 border border-gold/40" data-reveal>
+              <SanityImage
+                source={mapImage}
+                width={1400}
+                sizes="(min-width:1024px) 45vw, 100vw"
+                quality={75}
+                alt="Map of the streets around the church"
+                class="block w-full"
+              />
+            </figure>
+          )}
+        </div>
+      )
+    }
+
+    {/* ── The words and the board ─────────────────────────────────────── */}
+    <div
+      class:list={[
+        hasPicture
+          ? 'lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1 xl:col-span-5 xl:col-start-8'
+          : 'mx-auto max-w-[40rem]',
+      ]}
+    >
+      {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
+      {
+        heading && (
+          <h2 id={headingId} class="font-display text-h2 leading-[1.02] font-normal text-gold">
+            {heading}
+          </h2>
+        )
+      }
+      {
+        intro && (
+          <p class="mt-[clamp(18px,2vw,28px)] max-w-[30em] font-body text-lede leading-normal whitespace-pre-line">
+            {intro}
+          </p>
+        )
+      }
 
       {
-        numeral && (
-          <div
-            class="-ml-[.04em] font-body text-display leading-none font-normal oldstyle"
+        rows.length > 0 && (
+          <ol
+            class="mt-[clamp(28px,3.5vw,48px)] grid grid-cols-[fit-content(40%)_minmax(0,1fr)] gap-x-[clamp(14px,2vw,24px)] border-t border-gold/35"
             data-reveal
           >
-            {numeral}
-            {numeralSuffix && (
-              <span class="ml-[.15em] align-[.1em] text-[.28em] font-normal italic">
-                {numeralSuffix}
-              </span>
-            )}
+            {rows.map((row) => (
+              <li
+                class:list={[
+                  'col-span-full grid items-baseline border-b border-gold/35 py-[clamp(12px,1.4vw,16px)]',
+                  // A door row on a phone keeps its glyph in a narrow track of
+                  // its own, so the door's long directions get the width the
+                  // time column would otherwise hold empty beside them.
+                  row.kind === 'door'
+                    ? 'grid-cols-[28px_minmax(0,1fr)] gap-x-3.5 sm:grid-cols-subgrid sm:gap-x-[clamp(14px,2vw,24px)]'
+                    : 'grid-cols-subgrid',
+                ]}
+              >
+                {row.kind === 'time' ? (
+                  <span
+                    class:list={[
+                      'min-w-[3.2ch] font-display leading-none whitespace-nowrap text-gold lining-nums',
+                      row.main ? 'text-[clamp(36px,3.8vw,54px)]' : 'text-[clamp(28px,2.8vw,40px)]',
+                    ]}
+                  >
+                    {row.big}
+                    {row.meridiem && (
+                      <span class="ml-[.14em] font-body text-[.42em] italic">{row.meridiem}</span>
+                    )}
+                  </span>
+                ) : row.kind === 'word' ? (
+                  <span class="max-w-full min-w-0 font-display text-[clamp(19px,1.7vw,24px)] leading-[1.1] break-words text-gold">
+                    {row.big}
+                  </span>
+                ) : row.kind === 'door' ? (
+                  <span class="self-start pt-1 text-gold">
+                    <BuildingGlyph name="door" class="w-6" />
+                  </span>
+                ) : (
+                  <span />
+                )}
+                <span class="min-w-0">
+                  {row.label && (
+                    <span
+                      class:list={[
+                        'block font-body leading-tight',
+                        row.main
+                          ? 'text-[clamp(1.375rem,1.1rem+.8vw,1.75rem)] text-white-pure italic'
+                          : 'text-[clamp(1.2rem,1.05rem+.4vw,1.375rem)]',
+                      ]}
+                    >
+                      {row.label}
+                    </span>
+                  )}
+                  {row.body && (
+                    <span class="mt-1 block font-ui text-[1rem] leading-snug text-band-taupe">
+                      {row.body}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ol>
+        )
+      }
+
+      {
+        showAddress && (
+          <div class="mt-7 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
+            <address class="font-body text-body leading-snug not-italic oldstyle">
+              {addressLines.map((line) => (
+                <span class="block">{line}</span>
+              ))}
+            </address>
+            {hasCta && directionsCta && <CtaLink cta={directionsCta} variant="link" onDark />}
+          </div>
+        )
+      }
+      {
+        (hasCta || directionsCta) && (
+          <div class:list={[showAddress ? 'mt-7' : 'mt-9', 'pb-1.5']}>
+            <CtaLink cta={hasCta ? cta : directionsCta} variant="rule" onDark />
           </div>
         )
       }
 
       {
-        lead?.body && (
-          <p class="mt-2.5 max-w-[26ch] text-lede font-normal text-muted-foreground">{lead.body}</p>
-        )
-      }
-
-      {
-        scheduleRows.length > 0 && (
-          <ul class="mt-9 border-t border-hair">
-            {/* The first cell is a FIXED track, because a per-row `auto` track
-                would give the second column a ragged left edge down the list.
-                The spec drew it at 7ch, the width of a time, and every big line
-                in the prototype was one. The real content is not: /visit says
-                "Available" and / says "309 East Adams". A grid item wider than
-                a fixed track does not push the next column along, it draws ON
-                TOP of it, and measured in the built page "Available" is 98px
-                against a 7ch track of 67px, so it overlapped the sentence
-                beside it by more than the 20px gap. 11ch is 105px, which holds
-                the longest single word the three pages carry, and the
-                break-word below is the safety net for anything longer: it never
-                fires on a word that fits. */}
-            {scheduleRows.map((row) => (
-              <li class="grid grid-cols-[11ch_1fr] items-baseline gap-5 border-b border-hair py-4">
-                <span class="min-w-0 font-body text-2xl font-normal [overflow-wrap:break-word] oldstyle">
-                  {row.big}
-                </span>
-                <span class="font-body text-body">
-                  {row.label}
-                  {row.label && row.body ? ' ' : ''}
-                  {row.body && <em class="text-muted-foreground">{row.body}</em>}
-                </span>
+        !hasPicture && validNotes.length > 0 && (
+          <ul class="mt-10 grid max-w-[32em] gap-3.5">
+            {validNotes.map((note, i) => (
+              <li class="grid grid-cols-[26px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
+                <BuildingGlyph name={noteGlyph(i)} class="-mt-0.5 w-[26px] text-gold" />
+                <span>{note}</span>
               </li>
             ))}
           </ul>
@@ -270,89 +341,18 @@ const directionsCta = directionsUrl
       }
     </div>
 
-    {/* ── Right door: the photograph, or the map and address ──────────── */}
-    <div class="col-span-12 lg:col-span-6 lg:col-start-7">
-      {
-        hasFrame ? (
-          <figure class={frameWidth} data-reveal>
-            <div class="ph-hung">
-              <SanityImage
-                source={frame}
-                width={1200}
-                sizes={
-                  frameShape === 'landscape'
-                    ? '(min-width:1024px) 45vw, 100vw'
-                    : '(min-width:1024px) 26rem, 100vw'
-                }
-                quality={78}
-                class={`block w-full object-cover ${frameCrop}`}
-                style={`object-position: ${frameObjectPosition};`}
-              />
-            </div>
-          </figure>
-        ) : showTheMap ? (
-          <figure class="bleed-right" data-reveal>
-            <SanityImage
-              source={mapImage}
-              width={1800}
-              sizes="(min-width:1024px) 55vw, 100vw"
-              quality={75}
-              alt="Map of the streets around the church"
-              class="w-full"
-            />
-          </figure>
-        ) : (
-          <div class="border-t border-hair bg-surface-soft p-l">
-            <p class="font-body text-h3 text-foreground">{settings?.title ?? site.name}</p>
-            {addressLines.map((line) => (
-              <p class="mt-1 font-body text-body text-muted-foreground oldstyle">{line}</p>
-            ))}
-          </div>
-        )
-      }
-
-      {
-        /* The band's heading sits on the right door, under the picture. It is
-          an <h2> ELEMENT at the h3 SIZE: the page's hero already carries the
-          h1, and dropping a real <h3> in here would skip a level and fail
-          axe's heading-order rule. The size is the one the spec asks for. */
-      }
-      {
-        heading && (
-          <h2 id={headingId} class="mt-8 max-w-[24ch] font-body text-h3">
-            {heading}
-          </h2>
-        )
-      }
-
-      {
-        /* THE ADDRESS SURVIVES A BORROWED FRAME (fix round 1, 2026-09-21).
-          One photograph per door, so the map PICTURE stays out when a frame is
-          present, but the address itself must not leave with it: on /visit and
-          /contact the map card was the only place on the page that said where
-          the church is. So a frame brings a compact ruled row instead, the
-          address on the left and the directions link on the right. Without a
-          frame nothing changes: the map or the address card renders as before,
-          with the link under it. */
-      }
-      {
-        showAddressRow ? (
-          <div class="mt-6 grid grid-cols-[1fr_auto] items-baseline gap-6 border-t border-hair pt-4">
-            <div>
-              {addressLines.map((line) => (
-                <p class="font-body text-body text-muted-foreground oldstyle">{line}</p>
-              ))}
-            </div>
-            {directionsCta && <CtaLink cta={directionsCta} variant="link" />}
-          </div>
-        ) : (
-          directionsCta && (
-            <div class="mt-5">
-              <CtaLink cta={directionsCta} variant="link" />
-            </div>
-          )
-        )
-      }
-    </div>
+    {
+      /* ── The notes, under the pictures ─────────────────────────────────── */
+      hasPicture && validNotes.length > 0 && (
+        <ul class="grid max-w-[32em] content-start gap-3.5 self-start lg:col-span-6 lg:row-start-2">
+          {validNotes.map((note, i) => (
+            <li class="grid grid-cols-[26px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
+              <BuildingGlyph name={noteGlyph(i)} class="-mt-0.5 w-[26px] text-gold" />
+              <span>{note}</span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
   </div>
 </section>

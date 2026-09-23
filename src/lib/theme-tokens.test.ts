@@ -326,6 +326,11 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
   // Witness: white, and gold for every accent including the 15px ring scope.
   ['color-white-pure', 'color-band-brown', 'white on the Witness band', 'body'],
   ['color-gold', 'color-band-brown', 'gold accent on the Witness band', 'body'],
+  // The hymn board (SundayTimes, 2026-09-23, the Home pass): the intro, the
+  // row titles, the notes and the address in paper; each row's small line in
+  // taupe; the heading, the numerals and the glyphs in gold (the pair above).
+  ['color-bg', 'color-band-brown', 'reading text on the hymn-board band', 'body'],
+  ['color-band-taupe', 'color-band-brown', "each hymn-board row's small line", 'body'],
   // Work.
   ['color-band-ink', 'color-band-taupe', 'ink on the Work band', 'body'],
 ];

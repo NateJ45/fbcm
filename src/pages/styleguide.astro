@@ -212,49 +212,6 @@ function paragraph(key: string, text: string) {
   ];
 }
 
-const SUNDAY_TIMES_FIXTURE = {
-  eyebrow: 'This Sunday',
-  heading: 'When we gather',
-  items: [
-    {
-      _key: 'st-1',
-      label: 'Sunday school',
-      big: '9:30 am',
-      body: 'Classes for all ages meet before worship.',
-    },
-    {
-      _key: 'st-2',
-      label: 'Donut hour',
-      big: '10:15 am',
-      body: 'Coffee and donuts in the fellowship hall, a relaxed way to meet people before the service.',
-    },
-    {
-      _key: 'st-3',
-      label: 'Worship',
-      big: '10:45 am',
-      body: 'The main service, in the sanctuary.',
-    },
-  ],
-  doors: [
-    {
-      _key: 'door-1',
-      name: 'Adams Street circular drive',
-      body: 'The accessible entrance. An automatic door opener sits beside the mailbox.',
-    },
-    {
-      _key: 'door-2',
-      name: 'Front doors',
-      body: 'The large wooden doors open straight into the sanctuary.',
-    },
-    {
-      _key: 'door-3',
-      name: 'Jefferson Street side doors',
-      body: 'Near the church offices, on the Jefferson Street side of the building.',
-    },
-  ],
-  showMap: true,
-};
-
 const TIMELINE_FIXTURE = {
   eyebrow: 'A Sunday morning',
   heading: 'How the morning runs',
@@ -798,6 +755,109 @@ const P = {
     0.38,
     0.55,
   ),
+};
+
+// =============================================================================
+// The hymn board (Home identity Task 1, 2026-09-23)
+// =============================================================================
+// Four states of sundayTimesSection: the home band (three times, two photos,
+// two notes), Visit's current content (a word and a door list, with a spare
+// frame as SectionRenderer would hand it), Contact's current content (no
+// photo, so the map from Site settings stands in), and no picture at all (the
+// board alone, centred). The words are the church's, from scripts/pages/.
+const SUNDAY_HOME_FIXTURE = {
+  eyebrow: 'Sundays',
+  heading: 'What to Expect',
+  intro:
+    'At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have.',
+  items: [
+    {
+      _key: 'h1',
+      label: 'Sunday School',
+      big: '9:30 am',
+      body: 'Classes for adults, youth and children',
+    },
+    { _key: 'h2', label: 'Donut [Semi-] Hour', big: '10:15 am', body: 'Fellowship Hall' },
+    { _key: 'h3', label: 'Worship', big: '10:45 am', body: 'Sanctuary' },
+  ],
+  notes: [
+    'For children ages 3 and younger, nursery care is available throughout the service.',
+    'The first Sunday of each month is communion Sunday.',
+  ],
+  photos: [P.door, P.children],
+  cta: {
+    _type: 'ctaBlock' as const,
+    label: 'What to expect',
+    linkType: 'external' as const,
+    externalUrl: '/visit',
+    openInNewTab: false,
+  },
+  showMap: false,
+};
+const SUNDAY_VISIT_FIXTURE = {
+  eyebrow: 'Getting in',
+  heading: 'Doors, parking and access',
+  items: [
+    { _key: 'v1', label: 'Worship', big: '10:45 am', body: 'Worship is at 10:45 AM each Sunday.' },
+    {
+      _key: 'v2',
+      label: 'Find us',
+      big: '309 East Adams',
+      body: 'Our parking lot is located on the Adams Street side.',
+    },
+    {
+      _key: 'v3',
+      label: 'Assisted listening',
+      big: 'Available',
+      body: 'On Sundays, if you would like an assisted listening device, please ask one of our greeters or the Welcome Center and they will be happy to give you one.',
+    },
+  ],
+  doors: [
+    {
+      _key: 'd1',
+      name: 'Adams Street circular drive',
+      body: 'Our wheelchair accessible entrance is off our circular drive, on the Adams street side of the building. Those wishing to use our automatic door should use the circular drive entrance. The door opener is on the side of our mailbox, close to the door on its right. Once inside, there is an elevator which will go to any floor: our lower level (B) which houses our fellowship hall, the first floor (where the sanctuary and offices are) or the second floor (which hosts classrooms and our youth center).',
+    },
+    {
+      _key: 'd2',
+      name: 'The wooden front doors',
+      body: 'The large wooden front doors which go into the sanctuary.',
+    },
+    {
+      _key: 'd3',
+      name: 'Jefferson Street side doors',
+      body: 'The Jefferson Street side doors which enter our main hallway near the church offices.',
+    },
+  ],
+  showMap: true,
+  frame: P.nave,
+};
+const SUNDAY_CONTACT_FIXTURE = {
+  eyebrow: 'Sunday',
+  heading: 'Find us on Sunday',
+  items: [
+    { _key: 'c1', label: 'Worship', big: '10:45 am', body: 'Worship is at 10:45 AM each Sunday.' },
+    {
+      _key: 'c2',
+      label: 'Find us',
+      big: '309 East Adams',
+      body: 'Our wheelchair accessible entrance is off our circular drive, on the Adams street side of the building.',
+    },
+    {
+      _key: 'c3',
+      label: 'Online',
+      big: 'Live',
+      body: 'For live streams, please visit our YouTube channel.',
+    },
+  ],
+  showMap: true,
+};
+const SUNDAY_BARE_FIXTURE = {
+  eyebrow: 'Sundays',
+  heading: 'When we gather',
+  items: SUNDAY_HOME_FIXTURE.items,
+  notes: SUNDAY_HOME_FIXTURE.notes,
+  showMap: false,
 };
 
 const GOALS_FIXTURE: ProjectedGoalsSection = {
@@ -1427,14 +1487,18 @@ const DOOR_CARDS_FIXTURE = {
     headingId="styleguide-hero-split"
   />
 
-  <SundayTimes
-    eyebrow={SUNDAY_TIMES_FIXTURE.eyebrow}
-    heading={SUNDAY_TIMES_FIXTURE.heading}
-    items={SUNDAY_TIMES_FIXTURE.items}
-    doors={SUNDAY_TIMES_FIXTURE.doors}
-    showMap={SUNDAY_TIMES_FIXTURE.showMap}
-    headingId="styleguide-sundaytimes"
-  />
+  <div id="sg-sunday-home">
+    <SundayTimes {...SUNDAY_HOME_FIXTURE} headingId="styleguide-sundaytimes" />
+  </div>
+  <div id="sg-sunday-visit">
+    <SundayTimes {...SUNDAY_VISIT_FIXTURE} headingId="styleguide-sundaytimes-visit" />
+  </div>
+  <div id="sg-sunday-contact">
+    <SundayTimes {...SUNDAY_CONTACT_FIXTURE} headingId="styleguide-sundaytimes-contact" />
+  </div>
+  <div id="sg-sunday-bare">
+    <SundayTimes {...SUNDAY_BARE_FIXTURE} headingId="styleguide-sundaytimes-bare" />
+  </div>
 
   <Timeline
     eyebrow={TIMELINE_FIXTURE.eyebrow}

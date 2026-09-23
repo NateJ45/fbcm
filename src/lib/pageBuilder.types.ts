@@ -318,8 +318,18 @@ export interface ProjectedDynamicListSection extends AnchoredSection {
 // are the generated type plus a _key.
 // ---------------------------------------------------------------------------
 
-/** sundayTimesSection — three columns, doors, and the map from siteSettings. */
-export type ProjectedSundayTimesSection = { _key: string } & _SundayTimesSection;
+/**
+ * sundayTimesSection — the hymn board: the times, the notes, its own photos
+ * (resolved through IMAGE_PROJECTION), its button (CTA_PROJECTION), the doors,
+ * and the map from siteSettings.
+ */
+export type ProjectedSundayTimesSection = { _key: string } & Omit<
+  _SundayTimesSection,
+  'photos' | 'cta'
+> & {
+    photos?: ProjectedImage[] | null;
+    cta?: ProjectedCtaBlock | null;
+  };
 
 /** One timeline row after `"anchor": anchor.current` flattens the slug. */
 export type ProjectedTimelineRow = Omit<NonNullable<_TimelineSection['rows']>[number], 'anchor'> & {

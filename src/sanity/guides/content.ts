@@ -286,6 +286,20 @@ export const guides: Guide[] = [
         kind: 'p',
         text: '_Two times are not settings and are still typed where they appear: Sunday school at 9:30 am, and the fellowship hour (10:15 to 10:45) in the Youth band on the Ministries page. If either changes, change it there._',
       },
+      { kind: 'h', text: 'The brown band with the Sunday times' },
+      {
+        kind: 'p',
+        text: 'The brown band that lists the Sunday times ("Doors, parking and access" on the Visit page, "Find us on Sunday" on the Contact page) is changed on its page in `Presentation`. Each row on it has a `Small label`, a `Big line` and a line of `Text`. The row whose time matches the `Service time` in Site settings is drawn largest, so it moves by itself when the time changes.',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          '`Introduction` is a sentence or two above the times.',
+          '`Notes` are up to three short lines under the photo, like the nursery or communion.',
+          '`Photos` takes one or two photos. The first is the larger. Leave it empty and the band borrows a photo from elsewhere on the same page.',
+          '`Button (optional)` puts one button under the times. Leave it empty and the band shows the Google Maps directions button instead.',
+        ],
+      },
       {
         kind: 'callout',
         tone: 'default',

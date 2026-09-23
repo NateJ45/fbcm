@@ -1,7 +1,7 @@
 // scaffold: church
 // The church blocks: what a church page needs and a service business does not. Every
 // description says what to TYPE. No block carries a colour field: the dark bands
-// (sundayTimes is cream, faq/scripture/give are indigo, heritage is brown) are dark
+// (sundayTimes and heritage are brown, faq/scripture/give are indigo) are dark
 // by TYPE, which is what keeps SectionRenderer's cadence the only source of surface.
 //
 // scriptureBandSection.accentWord is a plain string, not a headingAccentField().
@@ -36,12 +36,22 @@ export const sundayTimesSection = defineType({
   fields: [
     eyebrow,
     heading,
+    // The three hymn-board additions (2026-09-23, the Home identity pass). All
+    // optional, so the Visit and Contact bands written before them stay valid.
+    defineField({
+      name: 'intro',
+      title: 'Introduction',
+      type: 'text',
+      rows: 3,
+      description: 'A sentence or two above the times.',
+    }),
     defineField({
       name: 'items',
-      title: 'Three columns',
+      title: 'The times',
       type: 'array',
       validation: (r) => r.min(1).max(3),
-      description: 'Up to three. The first usually carries the service time.',
+      description:
+        'Up to three rows on the board. The big line is set in gold, and the row whose time matches the service time in Site settings is drawn largest.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -70,6 +80,43 @@ export const sundayTimesSection = defineType({
           preview: { select: { title: 'label', subtitle: 'big' } },
         }),
       ],
+    }),
+    defineField({
+      name: 'notes',
+      title: 'Notes',
+      type: 'array',
+      validation: (r) => r.max(3),
+      description: 'Short lines under the photo, like the nursery or communion.',
+      of: [defineArrayMember({ type: 'string' })],
+    }),
+    defineField({
+      name: 'photos',
+      title: 'Photos',
+      type: 'array',
+      validation: (r) => r.max(2),
+      description:
+        "One or two photos. The first is the larger. Leave empty to use a photo from the page's spare pool.",
+      of: [
+        defineArrayMember({
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Describe the photo',
+              type: 'string',
+              validation: (r) => r.required(),
+            }),
+          ],
+        }),
+      ],
+    }),
+    defineField({
+      name: 'cta',
+      title: 'Button (optional)',
+      type: 'ctaBlock',
+      description:
+        'Like "What to expect", pointing at the Visit page. Leave empty and the band shows the directions button instead.',
     }),
     defineField({
       name: 'doors',
@@ -104,10 +151,11 @@ export const sundayTimesSection = defineType({
     anchorField(),
   ],
   preview: {
-    select: { title: 'heading' },
-    prepare: ({ title }) => ({
+    select: { title: 'heading', media: 'photos.0' },
+    prepare: ({ title, media }) => ({
       title: title || 'Sunday times',
       subtitle: 'Sunday times and location',
+      media,
     }),
   },
 });

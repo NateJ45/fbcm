@@ -444,7 +444,11 @@ const wrapAttrs = (key: string | undefined) =>
           <SundayTimes
             eyebrow={s.eyebrow}
             heading={s.heading}
+            intro={s.intro}
             items={s.items ?? []}
+            notes={s.notes ?? []}
+            photos={s.photos ?? []}
+            cta={s.cta}
             doors={s.doors ?? []}
             showMap={s.showMap}
             frame={blockIndex === spares.doorIndex ? spares.door : null}

@@ -956,6 +956,7 @@ export type SundayTimesSection = {
   _type: 'sundayTimesSection';
   eyebrow?: string;
   heading?: string;
+  intro?: string;
   items?: Array<{
     label?: string;
     big?: string;
@@ -963,6 +964,17 @@ export type SundayTimesSection = {
     _type: 'timeItem';
     _key: string;
   }>;
+  notes?: Array<string>;
+  photos?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+    _key: string;
+  }>;
+  cta?: CtaBlock;
   doors?: Array<{
     name?: string;
     body?: string;

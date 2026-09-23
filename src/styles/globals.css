@@ -2404,6 +2404,16 @@ body::before {
     height: calc(100% + 6px);
   }
 }
+/* The hymn board's small lancet (SundayTimes.astro) is cut out of the door
+   photo behind it by a halo of the band's own brown, 10px proud of the arch
+   (the lancet mask comes from .arch-lancet on the same element). */
+.hb-halo {
+  position: absolute;
+  inset: -10px;
+  background: var(--color-band-brown);
+  mask-image: var(--arch-mask);
+  mask-size: 100% 100%;
+}
 /* One grade for every amateur photograph: a touch warmer, a touch firmer. */
 .graded {
   filter: saturate(0.9) contrast(1.05) sepia(0.07) brightness(1.02);

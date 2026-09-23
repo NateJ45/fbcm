@@ -361,3 +361,29 @@ test('a link-card band with a photo on every card is not the statement consumer'
   assert.equal(out.statementIndex, null);
   assert.deepEqual(out.strip, [photo]);
 });
+
+test('a Sunday band with its own photos borrows nothing, and a later one without can', () => {
+  const a = img('sanctuary');
+  const own = img('greeter');
+  const alone = assignSpareImages([
+    { _type: 'sundayTimesSection', photos: [own] },
+    { _type: 'imageTextSection', image: a },
+  ]);
+  assert.equal(alone.door, null);
+  assert.equal(alone.doorIndex, null);
+
+  const second = assignSpareImages([
+    { _type: 'sundayTimesSection', photos: [own] },
+    { _type: 'imageTextSection', image: a },
+    { _type: 'sundayTimesSection' },
+  ]);
+  assert.equal(second.doorIndex, 2);
+  assert.equal(second.door, a);
+
+  // An empty photos list (or photos with no asset) is no photos at all.
+  const empty = assignSpareImages([
+    { _type: 'sundayTimesSection', photos: [{ _type: 'image' }] },
+    { _type: 'imageTextSection', image: a },
+  ]);
+  assert.equal(empty.doorIndex, 0);
+});

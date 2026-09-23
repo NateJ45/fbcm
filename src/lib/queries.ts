@@ -110,7 +110,9 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     _type == "sundayTimesSection" => {
       ...,
       items[],
-      doors[]
+      doors[],
+      photos[]${IMAGE_PROJECTION},
+      cta${CTA_PROJECTION}
     },
     _type == "timelineSection" => {
       ...,
