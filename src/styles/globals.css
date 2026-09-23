@@ -60,6 +60,11 @@
 @source not '../components/starwind';
 @source not '../components/primereact';
 
+/* Unit tests never render, but they name classes and tokens in fixtures and
+   assertions (theme-tokens.test.ts names every palette token, which kept
+   theme variables such as --color-taupe emitted with nothing reading them). */
+@source not '../**/*.test.ts';
+
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource/castoro-titling';
@@ -245,19 +250,6 @@
 @theme inline {
   --font-heading: var(--font-display);
   --font-sans: var(--font-body);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -446,41 +438,9 @@
   --ring: #292854;
   --link: #17151f; /* 15.76:1 on #f4efe6 — passes AA */
 
-  /* Charts (kept neutral, not used at launch) */
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-
   --radius: 0.125rem;
 
-  /* Sidebar (reserved for Studio-style admin contexts, not used on site) */
-  --sidebar: #f4efe6;
-  --sidebar-foreground: #17151f;
-  --sidebar-primary: #292854;
-  --sidebar-primary-foreground: #f4efe6;
-  --sidebar-accent: #ebe4d8;
-  --sidebar-accent-foreground: #17151f;
-  --sidebar-border: #dcd5c9;
-  --sidebar-ring: #292854;
-
   --tint-rgb: 41, 40, 84;
-
-  /* Starwind UI extra semantic tokens — not in shadcn's default set.
-       Values are harmonized to the existing neutral palette so the starter
-       renders sensibly out of the box. apply-brand rewrites these. */
-  --primary-accent: #1c1b3a; /* darker shade of --primary for hover states */
-  --secondary-accent: #17151f; /* dark ink — active/pressed secondary */
-  --info: #93c5fd; /* soft blue, harmonized with slate primary */
-  --info-foreground: #1e3a5f; /* deep blue for text on info surfaces */
-  --success: #86efac; /* soft green */
-  --success-foreground: #14532d; /* deep green for text on success surfaces */
-  --warning: #fde68a; /* soft amber */
-  --warning-foreground: #713f12; /* deep amber for text on warning surfaces */
-  --error: oklch(0.577 0.245 27.325); /* matches --destructive */
-  --error-foreground: #ffffff;
-  --outline: #292854; /* matches --ring */
 
   /* The alternating "muted" section surface's soft band, semantically indirect
      for the same reason --color-accent points at var(--accent): the palette
@@ -524,35 +484,7 @@
   --ring: #d59b29;
   --link: #f1ece3;
 
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-
-  --sidebar: #1c1926;
-  --sidebar-foreground: #f1ece3;
-  --sidebar-primary: #f1ece3;
-  --sidebar-primary-foreground: #14121b;
-  --sidebar-accent: #26222f;
-  --sidebar-accent-foreground: #f1ece3;
-  --sidebar-border: oklch(1 0 0 / 14%);
-  --sidebar-ring: #d59b29;
-
   --tint-rgb: 213, 155, 41;
-
-  /* Starwind UI extra semantic tokens — dark mode variants. */
-  --primary-accent: #f1ece3; /* lifted primary for dark hover states */
-  --secondary-accent: #f1ece3; /* near-white for dark active secondary */
-  --info: #93c5fd; /* same soft blue works on dark surfaces */
-  --info-foreground: #1e3a5f;
-  --success: #86efac;
-  --success-foreground: #14532d;
-  --warning: #fde68a;
-  --warning-foreground: #713f12;
-  --error: oklch(0.704 0.191 22.216); /* matches dark --destructive */
-  --error-foreground: #ffffff;
-  --outline: #d59b29; /* matches dark --ring */
 
   /* Dark mode: indigo becomes paper, cream becomes ink. Gold and the browns do not move.
      --color-bg-soft is deliberately NOT redeclared here even though the task brief that
