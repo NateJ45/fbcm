@@ -812,7 +812,14 @@ export const pledgeSection = defineType({
       title: 'Photo',
       type: 'image',
       options: { hotspot: true },
-      fields: [defineField({ name: 'alt', title: 'Describe the photo', type: 'string' })],
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Describe the photo',
+          type: 'string',
+          validation: (r) => r.required(),
+        }),
+      ],
     }),
     anchorField(),
   ],
@@ -849,7 +856,14 @@ export const letterSection = defineType({
       title: 'Portrait',
       type: 'image',
       options: { hotspot: true },
-      fields: [defineField({ name: 'alt', title: 'Describe the photo', type: 'string' })],
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Describe the photo',
+          type: 'string',
+          validation: (r) => r.required(),
+        }),
+      ],
     }),
     anchorField(),
   ],
