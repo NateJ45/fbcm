@@ -155,20 +155,6 @@
               "marks": []
             }
           ]
-        },
-        {
-          "_type": "block",
-          "_key": "ww-d-1",
-          "style": "normal",
-          "markDefs": [],
-          "children": [
-            {
-              "_type": "span",
-              "_key": "ww-d-1s1",
-              "text": "This watchword, “Praise & Proclaim” reminds us of the importance of each:",
-              "marks": []
-            }
-          ]
         }
       ],
       "verse": "Give praise to the Lord, proclaim his name; make known among the nations what he has done, and proclaim that his name is exalted.",
@@ -1111,7 +1097,7 @@
             "_key": "cta-4",
             "label": "Download",
             "linkType": "external",
-            "externalUrl": "https://www.fbcmuncie.org/_files/ugd/08181c_75a0565927c14a929d1ebee1565e638c.pdf",
+            "externalUrl": "https://cdn.sanity.io/files/7jw947g5/production/3a0aedfcc69aaee01054ce3ec21fc2ac048292ec.pdf",
             "openInNewTab": true
           },
           "image": {

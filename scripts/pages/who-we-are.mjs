@@ -16,7 +16,7 @@
 //   letterSection         A Note From Our Pastors, the whole letter
 //   linkCardsSection      Where To Go Next, four cards as arched doors
 //
-// Six things about this file are deliberate.
+// Seven things about this file are deliberate.
 //
 // 1. WHAT CAME OFF, AND WHY. The previous composition (plan 2b) set this page
 //    as a scripture band, three text blocks, a staff grid, link cards and a
@@ -61,10 +61,58 @@
 //    crop each frame needs is set here, from the prototype's object-position.
 //    No photo on this page has a caption (Nathan's ruling, 2026-09-23).
 //
-// 6. ONE LINK STILL POINTS AT WIX. The Welcome Booklet is a PDF on the Wix
-//    file host (the capture's own button). It is not in Sanity yet, and a
-//    dry run must not upload it, so the card links the Wix copy until it is
-//    uploaded; docs/PENDING.md carries that before cutover.
+// 6. THE WELCOME BOOKLET IS UPLOADED ON --apply, NEVER LINKED TO WIX. The
+//    capture's button points at the PDF on the Wix file host, which dies at
+//    cutover. The module reads the same file from ../fbcm-archive/files/ and
+//    links the Sanity file asset it becomes. A Sanity asset id is the SHA-1 of
+//    the file's bytes (file-<sha1>-pdf, served at
+//    cdn.sanity.io/files/<project>/<dataset>/<sha1>.pdf), so the URL is known
+//    BEFORE the upload: a dry run prints the upload as a planned step and
+//    writes nothing, and --apply uploads through makeUploader().uploadFile()
+//    (as beliefs.mjs and wedding.mjs do) and throws if Sanity hands back any
+//    other id. A final guard throws if any fbcmuncie.org/_files link reaches
+//    the page.
+//
+// 7. CUTS, EACH A WHOLE SENTENCE. (a) The Worship goal's closing sentence is
+//    the hero headline (note 2). (b) "This watchword, “Praise & Proclaim”
+//    reminds us of the importance of each:" is cut from the watchword: it
+//    introduced the two meanings, and the band sets those beside the mark
+//    under their own "Praise" and "Proclaim", so kept it would end the
+//    Read-more text on a colon pointing at nothing.
+
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { loadEnv } from '../lib/loadEnv.mjs';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
+
+/**
+ * The Sanity file asset an archive PDF becomes, worked out from its bytes, and
+ * the upload itself on --apply only (note 6). Returns the asset's CDN URL.
+ */
+async function archivePdf(file) {
+  const rel = `../fbcm-archive/files/${file}`;
+  const sha1 = createHash('sha1')
+    .update(readFileSync(resolve(ROOT, rel)))
+    .digest('hex');
+  const assetId = `file-${sha1}-pdf`;
+  const env = loadEnv(ROOT);
+  const projectId = env.PUBLIC_SANITY_PROJECT_ID;
+  const dataset = env.PUBLIC_SANITY_DATASET || 'production';
+  if (!projectId) throw new Error('who-we-are.mjs: PUBLIC_SANITY_PROJECT_ID is not set.');
+  if (process.argv.includes('--apply')) {
+    const { client, makeUploader } = await import('../lib/sanity-lib.mjs');
+    const uploaded = await makeUploader(client).uploadFile(rel);
+    if (uploaded !== assetId) {
+      throw new Error(`who-we-are.mjs: uploaded ${rel} as ${uploaded}, expected ${assetId}.`);
+    }
+  } else {
+    console.log(`  planned on --apply: upload ${rel} as ${assetId}`);
+  }
+  return `https://cdn.sanity.io/files/${projectId}/${dataset}/${sha1}.pdf`;
+}
 
 /** A hotspot centred on (x, y), kept inside the frame so the Studio accepts it. */
 function hotspot(x, y) {
@@ -99,6 +147,9 @@ export default {
     'Em-dash to comma (CLAUDE.md rule 2): "...calling a married couple to be Co-Pastors, both of us preaching the word..." (A note from our pastors.)',
     'Lifted, not written: "“Come and see.”" is set large as the pull quote of The Way. It is the pastors’ letter’s own quotation of John 1:39, which The Way’s opening sentence also quotes.',
     'Not repeated: the Worship goal’s closing sentence, "We are a Spirit-led people gathered to join Christ’s presence in our community.", is the headline at the top of the page, so the Worship goal stops before it.',
+    "The headline at the top of the page is the Site settings tagline, 'We're a Spirit-led people gathered to join Christ's presence in our community.', a contraction of the church’s own 'We are a Spirit-led people...' (the closing line of the Worship goal).",
+    'Cut, a whole sentence: "This watchword, “Praise & Proclaim” reminds us of the importance of each:" (Our watchword). The two meanings it introduced are printed beside the mark under their own headings, "Praise" and "Proclaim".',
+    'Re-cased: the hero button "A note from our pastors" is the church’s heading "A Note From Our Pastors" set as a sentence.',
     'Re-cased from the Wix card style (every word capitalised) to sentences: "Find out what you can expect this Sunday.", "Get in touch with us with our virtual contact card.", "Read our staff bios and meet the people of FBCM.", "Download our Welcome Booklet." and the button "Read more". (Where to go next.)',
   ],
 
@@ -226,8 +277,9 @@ export default {
       ...paragraphs(pick(ww, 'When the people of God were in exile'), 'ww-a'),
       ...paragraphs(pick(ww, 'At First Baptist Church Muncie, we believe'), 'ww-b'),
       ...paragraphs(pick(ww, 'And our goal for this season'), 'ww-c'),
-      ...paragraphs(pick(ww, 'reminds us of the importance of each'), 'ww-d'),
     ];
+    // Cut (note 7b), but checked: if the sentence leaves the capture, re-read it.
+    pick(ww, 'reminds us of the importance of each');
     const praise = gloss(pick(ww, 'That our Purpose'), 'lifting up name', 'lifting up the name');
     const proclaim = pick(ww, 'That our Joy');
 
@@ -463,8 +515,8 @@ export default {
           pick(cardLines, 'Download Our Welcome Booklet'),
           'Download our Welcome Booklet.',
         ),
-        // See note 6 at the top of this file: still the Wix copy of the PDF.
-        cta: ctaExternal('Download', button(3)),
+        // Note 6: the capture's PDF, uploaded to Sanity on --apply.
+        cta: ctaExternal('Download', await archivePdf(button(3).split('/').pop())),
         image: await photo('wwa-next-doors', 0.5, 0.78),
       },
     ];
@@ -554,6 +606,10 @@ export default {
 
     // No em-dash reaches the page (CLAUDE.md rule 2), whatever the capture
     // carries: the two the church wrote are turned into commas above.
+    // And no link to the Wix file host, which dies at cutover (note 6).
+    if (JSON.stringify(page).includes('fbcmuncie.org/_files')) {
+      throw new Error('who-we-are.mjs: a fbcmuncie.org/_files link reached the page.');
+    }
     const dash = JSON.stringify(page).indexOf('—');
     if (dash !== -1) {
       throw new Error(

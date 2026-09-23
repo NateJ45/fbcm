@@ -58,6 +58,9 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Em-dash to comma (CLAUDE.md rule 2): "...calling a married couple to be Co-Pastors, both of us preaching the word..." (A note from our pastors.)
 - Lifted, not written: "“Come and see.”" is set large as the pull quote of The Way. It is the pastors’ letter’s own quotation of John 1:39, which The Way’s opening sentence also quotes.
 - Not repeated: the Worship goal’s closing sentence, "We are a Spirit-led people gathered to join Christ’s presence in our community.", is the headline at the top of the page, so the Worship goal stops before it.
+- The headline at the top of the page is the Site settings tagline, 'We're a Spirit-led people gathered to join Christ's presence in our community.', a contraction of the church’s own 'We are a Spirit-led people...' (the closing line of the Worship goal).
+- Cut, a whole sentence: "This watchword, “Praise & Proclaim” reminds us of the importance of each:" (Our watchword). The two meanings it introduced are printed beside the mark under their own headings, "Praise" and "Proclaim".
+- Re-cased: the hero button "A note from our pastors" is the church’s heading "A Note From Our Pastors" set as a sentence.
 - Re-cased from the Wix card style (every word capitalised) to sentences: "Find out what you can expect this Sunday.", "Get in touch with us with our virtual contact card.", "Read our staff bios and meet the people of FBCM.", "Download our Welcome Booklet." and the button "Read more". (Where to go next.)
 
 ### Photos of children

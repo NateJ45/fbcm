@@ -682,20 +682,25 @@ now ties the schema max and the slice with a drift test.
 
 ### Who We Are "alive": before the page is applied (2026-09-23)
 
-- **The Welcome Booklet still points at Wix.** The "Find Out More" card on the
-  composed Who We Are page (`scripts/pages/who-we-are.mjs`) links
-  `https://www.fbcmuncie.org/_files/ugd/08181c_75a0565927c14a929d1ebee1565e638c.pdf`,
-  the capture's own button, because the PDF is not in Sanity and a dry run must not
-  upload it. That URL dies at cutover. Upload
-  `../fbcm-archive/files/08181c_75a0565927c14a929d1ebee1565e638c.pdf` (the shared
-  uploader, as `wedding.mjs` does its PDFs) and point the card at the asset before or
-  with the `--apply` of this page.
+- **The Welcome Booklet is uploaded on `--apply`, not before.** The "Find Out More"
+  card on the composed Who We Are page (`scripts/pages/who-we-are.mjs`) links the
+  Sanity file asset that `../fbcm-archive/files/08181c_75a0565927c14a929d1ebee1565e638c.pdf`
+  becomes, `file-3a0aedfcc69aaee01054ce3ec21fc2ac048292ec-pdf`. A Sanity asset id is
+  the SHA-1 of the file's bytes, so the CDN URL is known before the upload. The dry
+  run prints the upload as a planned step; `--apply` performs it through
+  `makeUploader().uploadFile()` (as `beliefs.mjs` and `wedding.mjs` do) and throws if
+  Sanity returns any other id. Until the apply, that CDN URL answers 404, including on
+  `/styleguide/who-we-are`. The module throws if any `fbcmuncie.org/_files` link
+  reaches the page, so the Wix copy (which dies at cutover) can never be seeded.
 - **The page is composed but not applied.** Deploy the branch (the schema carries the
-  new church sections), then `npm run seed-pages -- --only who-we-are --apply`. Until
-  then `/styleguide/who-we-are` shows the composition from
-  `scripts/data/fixtures/who-we-are.json` (rebuild it with
-  `node scripts/page-fixture.mjs who-we-are`), and can be deleted once the live page
-  shows it.
+  new church sections), then `npm run seed-pages -- --only who-we-are --apply`.
+- **Clean-up once `/who-we-are` itself shows the composition.** Delete
+  `src/pages/styleguide/who-we-are.astro`, the `'/styleguide/who-we-are'` line and its
+  comment in `tests/routes.ts`, and `scripts/data/fixtures/who-we-are.json`. KEEP
+  `scripts/page-fixture.mjs` and the `scripts/data/fixtures/` folder: the script is
+  page-agnostic (`node scripts/page-fixture.mjs <slug>` builds any page module
+  read-only into `scripts/data/fixtures/<slug>.json`) and is how the next page composed
+  ahead of its schema deploy gets looked at.
 
 ---
 

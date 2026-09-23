@@ -12,7 +12,9 @@
 //
 // READ-ONLY BY CONSTRUCTION. The client carries the READ token, never the
 // write token, so a photo that is not already in the media library fails to
-// upload rather than uploading. Only `library` manifest entries resolve.
+// upload rather than uploading, and any manifest key that is not a `library`
+// entry is refused before it is resolved. A module's own --apply-only steps
+// (who-we-are.mjs uploads its booklet PDF) never run: there is no --apply here.
 //
 // What it writes is the module's own output, as `seed-pages` builds it, then
 // projected the way src/lib/queries.ts projects a page for SectionRenderer:
@@ -51,11 +53,28 @@ const client = createClient({
 
 const mod = (await import(pathToFileURL(resolve(root, 'scripts', 'pages', `${slug}.mjs`)).href))
   .default;
-const { makePageImages } = await import('./lib/page-images.mjs');
+const { makePageImages, resolveEntry } = await import('./lib/page-images.mjs');
+
+// Only media-library photos. Any other manifest entry would resize and UPLOAD
+// (page-images.mjs), so this refuses before the module can ask for one.
+const pageImages = makePageImages(client);
+const images = {
+  ...pageImages,
+  async image(key) {
+    const { entry } = resolveEntry(pageImages.manifest, key);
+    if (!entry.library) {
+      throw new Error(
+        `page-fixture: "${key}" is not a library entry in scripts/data/page-images.json; ` +
+          'a fixture only resolves photos already in the media library, and uploads nothing.',
+      );
+    }
+    return pageImages.image(key);
+  },
+};
 
 copy.resetCtaKeys();
 const built = await mod.build({
-  images: makePageImages(client),
+  images,
   copy,
   settings: await client.fetch('*[_type == "siteSettings"][0]'),
   staff: await client.fetch('*[_type == "staffMember"]|order(order asc, name asc)'),
