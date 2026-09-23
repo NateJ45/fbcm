@@ -10,6 +10,23 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-22 — Five branches integrated to `main` (`integrate/2026-09-23`)._
+
+The RichText Ledger and photo shapes, `chore/cleanup`, the Studio pass
+(`feat/ministry-bands` with `feat/editor-guide`, `feat/studio-readability` and
+`feat/settings-placeholders` beneath it), the journal polish (with
+`feat/journal-index`) and the photo library's two data files were merged in that
+order on one integration branch. The code conflicts were small: `SectionRenderer`
+now resolves Ministry bands first and then runs the Ledger's photo-shape pass over
+the resolved rows, so a Ministry band with a photograph gets a photo shape like any
+other ImageText band; the dead `proseBody` copy in `richSections.ts` stays deleted
+(the live one in `sections.ts` carries both `h4` and the mailto/tel link fix); and
+`scripts/pages/ministries.mjs` loses both of its now-unused helpers. Site settings
+placeholders are filled at the fetch chokepoints, before the Ledger or the photo
+classifier measures any text, so the order needed no change. Parity was recaptured
+once on the integrated tree and proved as a fixpoint. Full conflict log and gate
+output are in the integration report.
+
 _2026-09-22 — The RichText Ledger and photo shapes: a photograph belongs to its text, not to a column below it._
 
 A per-section critique of the deployed art-direction site (92 section screenshots at
@@ -136,8 +153,8 @@ menus, the Media tool's tags sit on the right, and Presentation lists pages by t
 titles). The walk also found things the Studio cannot do yet, most importantly that the
 service time was copied into about fifteen bands at seed time and that the `ministry`
 documents are read by no page; those are listed in `docs/PENDING.md`. A guide on how a
-band's picture decides its shape is drafted there and waits for
-feat/richtext-ledger-photo-shapes to merge.
+band's picture decides its shape is drafted there; it waited for
+feat/richtext-ledger-photo-shapes, which merged to `main` with this work on 2026-09-22.
 
 _2026-09-22 — The journal polish: the post page as a bulletin, the archive as a register._
 

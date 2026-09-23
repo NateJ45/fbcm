@@ -564,8 +564,8 @@ changing the guide that mentions it in the same commit.
   2026-09-22 (trailing slash stripped from basePath before joining). GuideView
   carries no PORTABLE marker, but the same line is in the starter's copy: note
   it on PORTS.md card 41 at the next sync.
-- **Held guide: how a band's picture decides its shape.** Waits for
-  feat/richtext-ledger-photo-shapes to reach main. Draft, for `content.ts`
+- **Held guide: how a band's picture decides its shape.** The Ledger reached
+  `main` on 2026-09-22 (via `integrate/2026-09-23`), so this is unblocked. Draft, for `content.ts`
   (category "Pictures"), to check against the merged code before adding:
   > **How a picture decides the shape of its band.** You never choose a
   > band's layout; the picture does. A tall portrait becomes a pointed-arch
@@ -690,7 +690,7 @@ it leaves open.
   the h3 groups that follow it.
 
 **Open, found while landing the above (not fixed, no further work planned
-this branch):**
+on the Ledger branch):**
 
 - **The pastors' letter reads as newspaper columns.** Its body has no signal
   in the Portable Text that marks it as a letter (no distinct style, no
@@ -703,7 +703,7 @@ this branch):**
   the left half of the page**, rather than using the width available to
   them. The classifier's column rules are tuned for longer running text.
 - **`/beliefs` and `/ministries` carry heavy hairline density.** Both pages
-  stack several ruled/columned bands in a row; nothing in this branch reduced
+  stack several ruled/columned bands in a row; nothing in the Ledger branch reduced
   the rule count, only reshaped what sits inside each rule.
 - **The ground test cannot detect a crowded photo.** `assignPhotoShapes`
   budgets grounds by count and spacing, not by how busy the photograph itself
@@ -711,7 +711,7 @@ this branch):**
   was not taken (rule 15: anything computable stays computed, and crowding
   is not computable from the data on hand).
 
-**Other open items from this branch:**
+**Other open items from the Ledger branch:**
 
 - **For Nathan, in the Studio: fix the `/history` "Saunders to the
   co-pastors" photo's alt text.** It says "the congregation in the 1990s",
@@ -719,8 +719,8 @@ this branch):**
   since this pass the alt prints as the visible caption, so the wrong
   description now sits in plain view under his portrait. A content edit, no
   code. (Also in the vault as a `#nathan` item.)
-- **Content, found while placing photographs (for the photo pass, not this
-  branch):**
+- **Content, found while placing photographs (for the photo pass, not the
+  Ledger branch):**
   - The "Postwar to Mattox" ground is a phone photograph of a framed print;
     the frame's dark edges show at both sides of the full-bleed band.
   - `/contact`'s window sits on the left because the seeded data says
@@ -770,12 +770,13 @@ this branch):**
 - **Captions (optional, predates this pass).** The ground's caption is a
   `<p>`, not a `<figcaption>`, and every photo shape repeats the alt text as
   its visible caption, so a screen reader hears the description twice.
-- **Photo library, a separate branch.** `feat/photo-library` (worktree
-  `../fbcm-photos`, cut from `main` at `e6d1e90`) is gap-filling photographs
-  the Wix capture missed and will upload the whole church photo library to
-  Sanity with media tags. Placement of the new photographs into pages,
-  including the wedding page's building shots Nathan asked to reuse, is
-  queued now that the Ledger branch has merged (2026-09-22).
+- **Photo library.** `feat/photo-library` gap-filled the photographs the Wix
+  capture missed (77 new originals, listed in
+  `scripts/data/gapfill-2026-09-22.json`, with `scripts/data/binary-manifest.json`
+  updated); those two data files merged to `main` on 2026-09-22 (via
+  `integrate/2026-09-23`). Still open: uploading the whole church photo
+  library to Sanity with media tags, and placing the new photographs into
+  pages, including the wedding page's building shots Nathan asked to reuse.
 - **Children's photos: resolved, not open.** Nathan, 2026-09-22: every child
   photograph in use on the new site (the home hero, the ministries band, and
   any others the photo library adds) was already live and public on the
