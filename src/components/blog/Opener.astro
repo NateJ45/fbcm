@@ -5,6 +5,8 @@
 // Register"): eyebrow, h1 and lede in cols 1 to 7, and whatever the page puts
 // in the default slot (the index's door) in cols 9 to 12. The filter row goes
 // in the `filters` slot, under both, on the same left edge (CLAUDE.md rule 17).
+import { headlineScale, headlineClass } from '@/lib/headline-scale';
+
 interface Props {
   eyebrow?: string;
   heading: string;
@@ -13,6 +15,10 @@ interface Props {
 }
 const { eyebrow, heading, lede, headingId = 'blog-heading' } = Astro.props as Props;
 const hasAside = Astro.slots.has('default');
+// The heading is sized by its own length, like every hero headline
+// (src/lib/headline-scale.ts). A category or tag name is usually a poster;
+// a long one steps down rather than breaking a word.
+const scale = headlineScale(heading, { tall: false });
 ---
 
 <div class="bg-background">
@@ -22,7 +28,7 @@ const hasAside = Astro.slots.has('default');
         {eyebrow && <p class="font-ui text-ui font-medium text-gold-ink">{eyebrow}</p>}
         <h1
           id={headingId}
-          class="mt-5 max-w-[18ch] font-display text-h1 leading-none font-normal tracking-[0.01em] break-words text-foreground uppercase"
+          class:list={['mt-5 text-foreground', headlineClass(scale, { tall: false })]}
         >
           {heading}
         </h1>

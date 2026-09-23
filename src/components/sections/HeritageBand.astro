@@ -38,6 +38,7 @@
 //    paper-white in both themes, rather than text-cream, which flips to ink
 //    under .dark.
 import SectionHeading from '@/components/SectionHeading.astro';
+import { headlineScale } from '@/lib/headline-scale';
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
@@ -189,6 +190,7 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
         headline={heading}
         headingId={headingId}
         level={level}
+        scale={level === 'h1' ? headlineScale(heading, { tall: false }) : undefined}
         align="left"
         tone="band"
       />

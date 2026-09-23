@@ -70,6 +70,7 @@
 import { splitHeadingAccent } from '@/lib/heading-accent';
 import { hasInlineRich } from '@/lib/inline-rich';
 import InlineRich from '@/components/InlineRich.astro';
+import { headlineClass, type HeadlineScale } from '@/lib/headline-scale';
 
 interface Props {
   eyebrow?: string;
@@ -94,6 +95,13 @@ interface Props {
    * already in play: one accent per heading.
    */
   headingAccent?: string;
+  /**
+   * h1 only: the hero headline scale from src/lib/headline-scale.ts. Hero's
+   * text-only branch and the band-opening GiveBand / HeritageBand pass it.
+   * Unset or 'poster', the h1 keeps the classes it always had (and the 404
+   * and privacy pages never pass it).
+   */
+  scale?: HeadlineScale;
   /** Accepted and ignored since 2026-09-20. See the note in the header. */
   rule?: boolean;
   class?: string;
@@ -111,6 +119,7 @@ const {
   scriptAccent,
   headingAccent,
   rule = false,
+  scale,
   class: extraClass = '',
 } = Astro.props as Props;
 
@@ -140,12 +149,18 @@ const richSubhead = hasInlineRich(subheadRich);
 // Castoro roman at the same single weight, which is why every level is
 // font-normal: there is no weight axis to reach for, and `font-light` would
 // silently fall back to the 400 face while telling a maintainer otherwise.
+// A `scale` (hero headlines, src/lib/headline-scale.ts) only changes the h1
+// when it steps DOWN from poster: a poster keeps this component's own h1
+// classes, so a short band-opening headline ("Since 1859.") renders exactly
+// as it did before the scale existed.
 const headingClass =
-  level === 'h1'
-    ? 'font-display uppercase text-h1 leading-none tracking-[0.01em] font-normal'
-    : level === 'h2'
-      ? 'font-body text-h2 leading-[1.05] font-normal max-w-[22ch]'
-      : 'font-body text-h3 leading-[1.15] font-normal';
+  level === 'h1' && scale && scale !== 'poster'
+    ? headlineClass(scale, { tall: false })
+    : level === 'h1'
+      ? 'font-display uppercase text-h1 leading-none tracking-[0.01em] font-normal'
+      : level === 'h2'
+        ? 'font-body text-h2 leading-[1.05] font-normal max-w-[22ch]'
+        : 'font-body text-h3 leading-[1.15] font-normal';
 
 const wrapperAlign = align === 'center' ? 'text-center mx-auto' : 'text-left';
 // text-bg, never text-cream, on anything that sits on a FIXED dark band:
