@@ -20,9 +20,10 @@ wherever the two disagree.
 7. **No captions on photos.** Alt text stays for screen readers.
 8. **Square gold-ruled buttons** (`CtaLink variant="rule"`), never pills.
 9. **Headlines sized by length**; nothing breaks mid-word.
-10. **Out:** tracked-caps eyebrows that only decorate, 01/02/03 numbering on anything that
+10. **No boxed cards floating on cream** (Nathan, 2026-09-23). Boards, drawings and lists sit on a full-width band or directly on the page, never in a framed, shadowed box.
+11. **Out:** tracked-caps eyebrows that only decorate, 01/02/03 numbering on anything that
     is not a sequence, decorative hairlines, two-column small prose.
-11. **Cover-the-logo test** on every page: at least three only-here elements and at least
+12. **Cover-the-logo test** on every page: at least three only-here elements and at least
     one real face (Give and Contact excepted).
 
 ## How each page is done

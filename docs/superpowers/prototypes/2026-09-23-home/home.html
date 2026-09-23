@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FBCM Home Prototype</title>
+<meta name="description" content="Prototype of the First Baptist Church Muncie home page in the settled identity: brand colours, arch frames, building glyphs, square gold-ruled buttons.">
+<!--
+  Home page prototype, 2026-09-23. Design exploration only, not production code.
+  Speaks the Who We Are language (identity rollout plan, step 1) in the brand palette only:
+  indigo, indigo-dark, gold, brown, brown-mid, taupe, cream. No season line anywhere.
+  Motion: IntersectionObserver reveals, run once, skipped under prefers-reduced-motion and without JS.
+-->
+<style>
+@font-face{font-family:"Castoro Titling";src:url("../../../../node_modules/@fontsource/castoro-titling/files/castoro-titling-latin-400-normal.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Castoro";src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-normal.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Castoro";font-style:italic;src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-italic.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Sofia Sans SC";font-weight:100 900;src:url("../../../../node_modules/@fontsource-variable/sofia-sans-semi-condensed/files/sofia-sans-semi-condensed-latin-wght-normal.woff2") format("woff2");font-display:swap}
+
+:root{
+  /* the brand, and nothing else */
+  --indigo:#292854; --indigo-dark:#1C1B3A; --gold:#D59B29; --brown:#39251E; --brown-mid:#724F43; --taupe:#B5ABA3; --cream:#F4EFE6;
+  --display:"Castoro Titling",Georgia,serif;
+  --read:"Castoro",Georgia,serif;
+  --ui:"Sofia Sans SC","Arial Narrow",system-ui,sans-serif;
+  --gut:clamp(16px,4vw,64px);
+  --max:1320px;
+  --ease:cubic-bezier(.2,.7,.1,1);
+  --lancet:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150' preserveAspectRatio='none'%3E%3Cpath d='M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z'/%3E%3C/svg%3E");
+  --door:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 130' preserveAspectRatio='none'%3E%3Cpath d='M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130Z'/%3E%3C/svg%3E");
+  --door-wide:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V34C0 12 44 6 80 0C116 6 160 12 160 34V100Z'/%3E%3C/svg%3E");
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--cream);color:var(--brown);font-family:var(--read);font-size:19px;line-height:1.6;overflow-x:hidden;
+  font-feature-settings:"kern","liga","onum";-webkit-font-smoothing:antialiased}
+main{overflow-x:clip}
+img{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0 0 1em;text-wrap:pretty}
+h1,h2,h3,h4{margin:0;font-weight:400;text-wrap:balance;overflow-wrap:normal;word-break:normal;hyphens:manual}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.glyph{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.glyph *{vector-effect:non-scaling-stroke}
+.h2{font-family:var(--display);font-size:clamp(34px,4.4vw,64px);line-height:1.02;letter-spacing:.02em}
+
+/* ---------- the rule button: square, solid, a 3px rule 3px beneath, the watchword's three rays ---------- */
+.btn{--bg:var(--indigo);--fg:var(--cream);--rule:var(--gold);--bg-h:var(--indigo-dark);
+  position:relative;display:inline-flex;align-items:center;gap:12px;min-height:48px;padding:.55em 1.2em .45em 1.3em;
+  font-family:var(--ui);font-weight:700;font-size:17px;line-height:1.1;text-decoration:none;color:var(--fg);background:var(--bg);transition:background .2s}
+.btn::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:3px;background:var(--rule);pointer-events:none}
+.btn:hover{background:var(--bg-h)}
+.btn:focus-visible{outline-offset:8px}
+.btn svg{width:13px;height:22px;flex:none;overflow:visible;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.btn path{transition:translate .3s}
+.btn:is(:hover,:focus-visible) path:nth-child(1){translate:2px -2px}
+.btn:is(:hover,:focus-visible) path:nth-child(2){translate:3px 0}
+.btn:is(:hover,:focus-visible) path:nth-child(3){translate:2px 2px}
+.btn.on-dark{--bg:var(--gold);--fg:var(--indigo-dark);--rule:var(--cream);--bg-h:#e3ad44}
+.btn.on-gold{--bg:var(--brown);--fg:var(--cream);--rule:var(--cream);--bg-h:#1f140f}
+.textlink{font-family:var(--ui);font-weight:700;font-size:17px;text-decoration:none;border-bottom:2px solid currentColor;padding:12px 0 2px;display:inline-block}
+.textlink:hover{border-bottom-color:var(--gold)}
+
+/* ---------- header ---------- */
+.site-head{background:var(--cream);position:relative;z-index:5}
+.site-head .wrap{display:flex;align-items:center;gap:24px;min-height:84px}
+.brand{display:flex;flex-direction:column;text-decoration:none;line-height:1}
+.brand b{font-family:var(--display);font-weight:400;font-size:25px;letter-spacing:.02em;color:var(--indigo)}
+.brand span{font-family:var(--ui);font-size:14px;color:var(--brown-mid);margin-top:6px}
+.nav{margin-left:auto;display:flex;gap:26px;font-family:var(--ui);font-size:17px;font-weight:500;color:var(--brown)}
+.nav a{text-decoration:none;padding:12px 0 8px;border-bottom:2px solid transparent}
+.nav a:hover{border-color:var(--gold)}
+.menu-btn{display:none;margin-left:auto;font-family:var(--ui);font-weight:700;font-size:17px;background:none;border:0;border-bottom:2px solid var(--indigo);color:var(--indigo);min-height:44px;padding:8px 2px 4px;cursor:pointer}
+
+/* ---------- arch frames ---------- */
+.fr{position:relative;margin:0}
+.arch{position:relative;overflow:hidden;background:rgba(28,27,58,.2);
+  -webkit-mask:var(--m,var(--lancet)) center/100% 100% no-repeat;mask:var(--m,var(--lancet)) center/100% 100% no-repeat}
+.arch.l{--m:var(--lancet)} .arch.d{--m:var(--door)} .arch.dw{--m:var(--door-wide)}
+.arch img{width:100%;height:100%;object-fit:cover;filter:saturate(.9) contrast(1.05) sepia(.07) brightness(1.02)}
+.arch::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(255,236,190,.12),rgba(0,0,0,0) 40%,rgba(0,0,0,.1))}
+.mould{position:absolute;inset:-9px -9px 0 -9px;width:calc(100% + 18px);height:calc(100% + 9px);pointer-events:none;overflow:visible}
+.mould path{fill:none;stroke:var(--mould,var(--gold));stroke-width:1.4;vector-effect:non-scaling-stroke}
+
+@media (prefers-reduced-motion:no-preference){
+  .js .arch[data-rv]{transition:clip-path 1.25s var(--ease)}
+  .js .arch[data-rv] img{transition:transform 1.6s var(--ease)}
+  .js .arch.l[data-rv]:not(.in){clip-path:inset(100% 0 0 0)}
+  .js .arch.d[data-rv]:not(.in),.js .arch.dw[data-rv]:not(.in){clip-path:inset(0 50% 0 50%)}
+  .js .arch[data-rv]:not(.in) img{transform:scale(1.08)}
+  .js .arch[data-rv].in{clip-path:inset(0)}
+  .js .mould{transition:opacity 1s .5s}
+  .js .fr:has(.arch[data-rv]:not(.in)) .mould{opacity:0}
+  .js [data-up]{transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--i,0) * 110ms)}
+  .js [data-up]:not(.in){opacity:0;transform:translateY(22px)}
+  .rays path{stroke-dasharray:80;stroke-dashoffset:0;transition:stroke-dashoffset .9s var(--ease)}
+  .js .rays:not(.in) path{stroke-dashoffset:80}
+}
+.rays path{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round}
+
+/* ---------- 1. opener: the welcome, the time, the door, three generations in a window ---------- */
+.opener{background:var(--indigo);color:var(--cream);position:relative;z-index:2}
+.opener .wrap{display:grid;grid-template-columns:minmax(0,5.2fr) minmax(0,6.8fr);gap:clamp(28px,4vw,72px);align-items:end;padding-top:clamp(36px,5vw,80px)}
+.op-text{padding-bottom:clamp(56px,7vw,112px)}
+.opener h1{font-family:var(--display);font-size:clamp(21px,2vw,29px);line-height:1.2;letter-spacing:.05em;color:var(--gold);margin:0 0 clamp(18px,2.4vw,30px);max-width:17em}
+.when{font-style:italic;font-size:clamp(44px,5vw,78px);line-height:1.02;letter-spacing:-.015em;margin:0 0 clamp(22px,2.6vw,36px);text-wrap:balance}
+.when b{font-weight:400;font-style:normal;font-family:var(--display);letter-spacing:.01em;color:var(--gold);white-space:nowrap}
+.where{display:flex;align-items:center;gap:14px;font-family:var(--ui);font-size:19px;font-weight:600;line-height:1.3;margin:0 0 clamp(26px,3vw,40px);color:var(--cream);text-decoration:none}
+.where svg{width:30px;height:40px;flex:none;color:var(--gold)}
+.where span{border-bottom:1px solid rgba(213,155,41,.6)}
+.where small{display:block;font-weight:400;font-size:16px;color:var(--taupe);border:0}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:18px 30px}
+.window{position:relative;display:grid;grid-template-columns:1fr 1.75fr 1fr;gap:clamp(8px,1.4vw,20px);align-items:end;margin-bottom:calc(-1 * clamp(64px,7.5vw,110px))}
+.window .fr:nth-child(2) .arch,.window .fr:nth-child(4) .arch{aspect-ratio:100/228}
+.window .fr:nth-child(3) .arch{aspect-ratio:100/180}
+.window .glow{position:absolute;left:50%;bottom:100%;width:46%;transform:translate(-50%,6%);overflow:visible;color:var(--gold);pointer-events:none}
+
+/* ---------- 2. what to expect: a door, a hymn board ---------- */
+.expect{background:var(--cream);color:var(--brown);--mould:var(--brown-mid)}
+.expect .wrap{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);grid-template-areas:"pics text" "notes text";grid-template-rows:auto 1fr;column-gap:clamp(40px,6vw,104px);row-gap:clamp(36px,4vw,56px);align-items:start;padding-top:calc(clamp(64px,7.5vw,110px) + clamp(56px,6vw,96px));padding-bottom:clamp(80px,9vw,140px)}
+.expect .h2{color:var(--indigo)}
+.ex-pics{grid-area:pics;position:relative;padding-bottom:clamp(40px,5vw,80px)}
+.ex-text{grid-area:text}
+.expect .notes{grid-area:notes;margin:0;max-width:26em}
+.ex-pics .main .arch{aspect-ratio:160/112}
+.ex-pics .main img{object-position:42% 45%}
+.ex-pics .kid{position:absolute;right:-2%;bottom:0;width:36%}
+.ex-pics .kid .arch{aspect-ratio:100/150}
+.ex-pics .kid .arch{outline:0}
+.ex-pics .kid::before{content:"";position:absolute;inset:-10px -10px -10px -10px;background:var(--cream);
+  -webkit-mask:var(--lancet) center/100% 100% no-repeat;mask:var(--lancet) center/100% 100% no-repeat}
+.ex-lead{font-size:clamp(21px,1.7vw,24px);line-height:1.5;margin:clamp(18px,2vw,28px) 0 0;max-width:30em}
+.ex-lead+.ex-lead{margin-top:.6em}
+/* the hymn board: the brown-and-gold board every old sanctuary hangs by the pulpit */
+.board{margin:clamp(34px,4vw,52px) 0 clamp(28px,3vw,40px);background:var(--brown);color:var(--cream);padding:22px clamp(18px,2.4vw,32px) 12px;position:relative;max-width:520px;
+  box-shadow:inset 0 0 0 1px rgba(213,155,41,.55),inset 0 0 0 6px var(--brown),inset 0 0 0 7px rgba(213,155,41,.35)}
+.board h3{font-family:var(--display);font-size:18px;letter-spacing:.14em;color:var(--gold);text-align:center;margin:0 0 10px}
+.board ol{list-style:none;margin:0;padding:0}
+.board li{display:grid;grid-template-columns:clamp(100px,10vw,146px) minmax(0,1fr);gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid rgba(213,155,41,.35)}
+.board time{font-family:var(--display);font-size:clamp(30px,2.8vw,40px);line-height:1;color:var(--gold);font-feature-settings:"lnum"}
+.board b{font-weight:400;font-size:22px;line-height:1.2;display:block}
+.board small{display:block;font-family:var(--ui);font-size:16px;color:var(--taupe);line-height:1.35;margin-top:3px}
+.board li.main time{font-size:clamp(40px,3.8vw,54px)}
+.board li.main b{font-style:italic;font-size:28px;color:#fff}
+.notes{display:grid;gap:14px;margin:0 0 clamp(30px,3vw,40px);padding:0;list-style:none;max-width:32em}
+.notes li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:14px;align-items:start;font-size:18.5px;line-height:1.5}
+.notes svg{width:26px;height:34px;color:var(--brown-mid);margin-top:-2px}
+
+/* ---------- 3. the four goals, as four doors in ---------- */
+.goals{background:var(--indigo-dark);color:var(--cream);padding:clamp(80px,9vw,140px) 0}
+.goals-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:clamp(24px,5vw,80px);align-items:end;margin-bottom:clamp(44px,5vw,80px)}
+.goals .h2{color:var(--gold);font-size:clamp(46px,6vw,92px)}
+.goals-top p{font-size:clamp(20px,1.6vw,23px);color:var(--taupe);margin:0;max-width:30em}
+.doors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2.4vw,36px);list-style:none;margin:0;padding:0;align-items:start}
+.doors li:nth-child(2){margin-top:clamp(28px,4vw,64px)}
+.doors li:nth-child(4){margin-top:clamp(28px,4vw,64px)}
+.doors .arch{aspect-ratio:100/124}
+.doors .name{display:flex;align-items:flex-end;gap:12px;margin:26px 0 4px}
+.doors .name svg{width:36px;height:48px;flex:none;color:var(--gold)}
+.doors h3{font-family:var(--display);font-size:clamp(32px,2.9vw,44px);line-height:.9;color:var(--cream);white-space:nowrap}
+.doors .also{font-family:var(--ui);font-weight:600;font-size:16px;color:var(--gold);margin:0 0 12px}
+.doors p.say{font-size:18px;line-height:1.5;color:#e9e2d6;margin:0 0 14px}
+.doors .textlink{color:var(--cream)}
+.doors a.card{text-decoration:none;display:block}
+
+/* ---------- 4. the building ---------- */
+.heritage{background:var(--cream);color:var(--brown);padding:clamp(80px,9vw,140px) 0;--mould:var(--brown-mid)}
+.her-top{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(36px,5vw,88px);align-items:start}
+.heritage .h2{color:var(--indigo)}
+.years{font-family:var(--display);line-height:.86;color:var(--indigo);display:flex;align-items:baseline;gap:.18em;font-size:clamp(52px,5.4vw,80px);margin:0 0 clamp(20px,2.4vw,32px);letter-spacing:.01em;font-feature-settings:"lnum"}
+.years i{font-family:var(--read);font-size:.42em;color:var(--brown-mid);letter-spacing:0}
+.her-text p:not(.years){font-size:clamp(19px,1.5vw,21px);line-height:1.6;max-width:30em}
+.her-text .lead{font-size:clamp(22px,1.9vw,27px);line-height:1.4;color:var(--indigo);font-style:italic}
+.plate{margin:0;background:#fbf8f2;padding:clamp(12px,1.6vw,22px);box-shadow:0 0 0 1px rgba(114,79,67,.3),0 30px 60px -30px rgba(57,37,30,.45);position:relative}
+.plate img{width:100%;height:auto;filter:sepia(.25) contrast(1.08);mix-blend-mode:multiply}
+.plate .signed{position:absolute;right:clamp(16px,2vw,28px);bottom:-18px;background:var(--indigo);color:var(--cream);font-family:var(--ui);font-weight:700;font-size:15px;padding:7px 14px 6px;letter-spacing:.02em}
+.ledger{list-style:none;margin:clamp(56px,6vw,96px) 0 0;padding:0;display:grid;grid-template-columns:minmax(0,1.1fr) repeat(4,minmax(0,1fr));gap:clamp(18px,2.4vw,40px);align-items:start}
+.ledger li{border-top:3px solid var(--indigo);padding-top:16px}
+.ledger li.hist{border:0;padding:0}
+.ledger li.hist .arch{aspect-ratio:160/118}
+.ledger li.hist img{filter:grayscale(1) sepia(.35) contrast(1.05);object-position:50% 40%}
+.ledger time{display:block;font-family:var(--display);font-size:clamp(30px,2.6vw,40px);line-height:1;color:var(--indigo);font-feature-settings:"lnum";margin-bottom:10px}
+.ledger p{font-size:17.5px;line-height:1.45;margin:0;color:var(--brown)}
+.ledger li:nth-child(5){border-top-color:var(--gold)}
+.her-acts{margin-top:clamp(40px,4vw,64px)}
+
+/* ---------- 5. recent writing ---------- */
+.journal{background:var(--brown);color:var(--cream);padding:clamp(80px,9vw,140px) 0;--mould:var(--gold)}
+.jr-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px 40px;margin-bottom:clamp(36px,4vw,60px)}
+.journal .h2{color:var(--gold)}
+.jr-top p{font-size:21px;color:var(--taupe);margin:10px 0 0}
+.posts{list-style:none;margin:0;padding:0;border-top:1px solid rgba(213,155,41,.45)}
+.post{display:grid;grid-template-columns:9em 88px minmax(0,1fr) 12em;gap:clamp(18px,2.6vw,40px);align-items:center;padding:clamp(22px,2.4vw,32px) 0;border-bottom:1px solid rgba(213,155,41,.45);position:relative}
+.post time{font-family:var(--ui);font-weight:600;font-size:17px;color:var(--taupe);font-feature-settings:"lnum"}
+.post .fr .arch{aspect-ratio:100/140}
+.post h3{font-size:clamp(24px,2.3vw,34px);line-height:1.15;margin:0 0 6px}
+.post h3 a{text-decoration:none;background:linear-gradient(var(--gold),var(--gold)) 0 100%/0 2px no-repeat;transition:background-size .35s var(--ease)}
+.post h3 a::after{content:"";position:absolute;inset:0}
+.post:hover h3 a,.post h3 a:focus-visible{background-size:100% 2px}
+.post p{font-size:18px;line-height:1.5;margin:0;color:#e3dbd2;max-width:36em}
+.post .by{font-family:var(--ui);font-size:16px;line-height:1.35;color:var(--taupe);text-align:right}
+.post .by b{display:block;color:var(--cream);font-weight:600;font-size:17px}
+
+/* ---------- 6. give ---------- */
+.give{background:var(--gold);color:var(--brown);padding:clamp(64px,7vw,110px) 0}
+.give .wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(24px,4vw,64px);align-items:center}
+.give svg.big{width:clamp(64px,7vw,104px);height:auto;aspect-ratio:48/64;color:var(--brown)}
+.give .h2{color:var(--brown);font-size:clamp(40px,5vw,72px)}
+.give p{font-size:clamp(20px,1.7vw,24px);line-height:1.45;margin:10px 0 0;max-width:30em}
+
+/* ---------- footer ---------- */
+.foot{background:var(--indigo-dark);color:#e6e0d6;padding:clamp(56px,6vw,88px) 0 40px;font-family:var(--ui);font-size:17px}
+.foot .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+.foot .mark{font-family:var(--read);font-style:italic;font-size:48px;line-height:.9;color:var(--cream)}
+.foot .mark i{color:var(--gold)}
+.foot .mark span{display:block;font-style:normal;font-family:var(--display);font-size:33px;color:var(--gold);margin-top:6px;letter-spacing:.02em}
+.foot .mark small{font-family:var(--ui);font-style:normal;font-size:15px;color:var(--taupe);display:block;margin-top:10px}
+.foot h4{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:20px;color:var(--gold);margin-bottom:12px}
+.foot h4 svg{width:20px;height:27px}
+.foot ul{list-style:none;margin:0;padding:0;line-height:1.9}
+.foot a{text-decoration:none;display:inline-block;padding:2px 0}
+.foot a:hover{text-decoration:underline}
+.foot .base{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.14);padding-top:22px;margin-top:10px;color:var(--taupe);font-size:15px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1120px){
+  .nav{gap:18px;font-size:16px}
+  .site-head .btn{display:none}
+  .doors{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .doors li:nth-child(2){margin-top:clamp(28px,4vw,64px)}
+  .doors li:nth-child(3){margin-top:0}
+  .post{grid-template-columns:8em 76px minmax(0,1fr)}
+  .post .by{grid-column:3;text-align:left;margin-top:-12px}
+  .ledger{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .ledger li.hist{grid-column:1/-1;max-width:520px}
+}
+@media (max-width:900px){
+  .nav{display:none}
+  .menu-btn{display:inline-block}
+  .opener .wrap{grid-template-columns:minmax(0,1fr)}
+  .op-text{padding-bottom:10px}
+  .expect .wrap,.her-top,.goals-top{grid-template-columns:minmax(0,1fr)}
+  .expect .wrap{grid-template-areas:"pics" "text" "notes";grid-template-rows:auto}
+  .ex-pics{max-width:640px}
+  .foot .wrap{grid-template-columns:1fr 1fr}
+  .foot .brandcol{grid-column:1/-1}
+  .give .wrap{grid-template-columns:auto minmax(0,1fr)}
+  .give .act{grid-column:1/-1}
+}
+@media (max-width:620px){
+  body{font-size:18px}
+  .brand b{font-size:20px}
+  .brand span{font-size:13px}
+  .site-head .wrap{min-height:66px}
+  .opener .wrap{padding-top:26px;gap:18px}
+  .opener h1{font-size:18px;margin-bottom:12px}
+  .when{font-size:40px;margin-bottom:18px}
+  .where{font-size:17.5px;margin-bottom:22px;gap:12px}
+  .where svg{width:24px;height:32px}
+  .where small{font-size:15px}
+  .acts{gap:14px 22px}
+  .window{margin-left:calc(-1 * var(--gut) + 8px);margin-right:calc(-1 * var(--gut) + 8px);grid-template-columns:.8fr 1.7fr .8fr;gap:8px;margin-top:34px}
+  .window .fr:nth-child(3) .arch{aspect-ratio:100/128}
+  .window .fr:nth-child(2) .arch,.window .fr:nth-child(4) .arch{aspect-ratio:100/220}
+  .window .glow{width:40%}
+  .mould{inset:-6px -6px 0 -6px;width:calc(100% + 12px);height:calc(100% + 6px)}
+  .ex-pics .kid{width:38%;right:0}
+  .board li{grid-template-columns:92px minmax(0,1fr);gap:12px}
+  .board time{font-size:30px}
+  .board li.main time{font-size:36px}
+  .board b{font-size:20px}
+  .board li.main b{font-size:24px}
+  .doors{grid-template-columns:minmax(0,1fr);gap:48px}
+  .doors li{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:0 18px;align-items:end;margin-top:0!important}
+  .doors li .fr{grid-row:1/5}
+  .doors .name{margin-top:0}
+  .doors h3{font-size:clamp(24px,8vw,30px);white-space:normal}
+  .doors .name svg{width:28px;height:38px}
+  .doors p.say{font-size:17px}
+  .doors li:nth-child(even){grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)}
+  .doors li:nth-child(even) .fr{grid-column:2;grid-row:1/5}
+  .doors li:nth-child(even)>*:not(.fr){grid-column:1}
+  .ledger{grid-template-columns:minmax(0,1fr) minmax(0,1fr);row-gap:30px;align-items:start}
+  .years{font-size:14.5vw}
+  .post{grid-template-columns:64px minmax(0,1fr);gap:6px 18px;align-items:start}
+  .post .fr{grid-row:1/4}
+  .post time{grid-column:2;font-size:15.5px}
+  .post h3{font-size:23px}
+  .post div p{display:none}
+  .post .by{grid-column:2;margin-top:0;font-size:15px}
+  .post .by b{display:inline;font-size:15.5px}
+  .give .wrap{grid-template-columns:minmax(0,1fr)}
+  .give svg.big{width:56px}
+  .foot .wrap{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="qf" d="M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z"/>
+    <symbol id="i-window" viewBox="0 0 48 64"><path d="M5 62V30C5 16 14 7 24 3C34 7 43 16 43 30V62"/><path d="M10 62V36A12 12 0 0 1 16 25A12 12 0 0 1 22 36V62"/><path d="M26 62V36A12 12 0 0 1 32 25A12 12 0 0 1 38 36V62"/><use href="#qf" transform="translate(24 16) scale(.36)"/><path d="M2 62H46"/></symbol>
+    <symbol id="i-door" viewBox="0 0 48 64"><path d="M7 58V28C7 18 16 13 24 9C32 13 41 18 41 28V58"/><path d="M12 58V30C12 23 18 19 24 16C30 19 36 23 36 30V58"/><path d="M24 16V58"/><circle cx="20.5" cy="40" r="1"/><circle cx="27.5" cy="40" r="1"/><path d="M3 58H45M1 62H47"/></symbol>
+    <symbol id="i-rose" viewBox="0 0 48 64"><circle cx="24" cy="34" r="15"/><use href="#qf" transform="translate(24 34) scale(.9)"/><path d="M24 13V9M24 55V59M3 34H7M41 34H45M9.2 19.2L12 22M38.8 19.2L36 22M9.2 48.8L12 46M38.8 48.8L36 46"/></symbol>
+    <symbol id="i-basin" viewBox="0 0 48 64"><path d="M9 60V28A15 15 0 0 1 24 12A15 15 0 0 1 39 28V60"/><path d="M16 26A5 5 0 0 1 24 20A5 5 0 0 1 32 26"/><path d="M6 42H42"/><path d="M12 42C14 51 34 51 36 42"/><path d="M24 49V56"/><path d="M4 60H44"/></symbol>
+    <symbol id="ray3" viewBox="0 0 13 22"><path d="M2 5L10 1"/><path d="M3 11H12"/><path d="M2 17L10 21"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#"><b>First Baptist Muncie</b><span>309 East Adams Street, since 1859</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#">Visit</a><a href="#">Who We Are</a><a href="#">Ministries</a><a href="#">Staff</a><a href="#">History</a><a href="#">Blog</a><a href="#">Give</a>
+    </nav>
+    <a class="btn" href="#">Plan a visit<svg aria-hidden="true"><use href="#ray3"/></svg></a>
+    <button class="menu-btn" type="button">Menu</button>
+  </div>
+</header>
+
+<main>
+
+<!-- 1. OPENER -->
+<section class="opener" aria-labelledby="t-welcome">
+  <div class="wrap">
+    <div class="op-text">
+      <h1 id="t-welcome">Welcome to First Baptist Church Muncie</h1>
+      <p class="when">Sundays at <b>10:45&nbsp;am</b>, or view online anytime.</p>
+      <a class="where" href="https://maps.google.com/?q=309+East+Adams+Street,+Muncie,+IN+47305">
+        <svg class="glyph" aria-hidden="true"><use href="#i-door"/></svg>
+        <span>309 East Adams Street<small>Muncie, Indiana 47305</small></span>
+      </a>
+      <div class="acts">
+        <a class="btn on-dark" href="#">Plan a visit<svg aria-hidden="true"><use href="#ray3"/></svg></a>
+        <a class="textlink" href="https://www.youtube.com/@FbcmuncieOrg/streams">Services &amp; Sermons on YouTube</a>
+      </div>
+    </div>
+    <div class="window">
+      <svg class="glow rays" viewBox="0 0 200 90" aria-hidden="true">
+        <path d="M100 80V14"/><path d="M84 80L56 26"/><path d="M116 80L144 26"/><path d="M70 84L20 50"/><path d="M130 84L180 50"/>
+      </svg>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_ea565de6ebd54eb492cc0160af1b3853_tilde_mv2.jpg" alt="An older woman in a pink sweater smiling at a fellowship breakfast table." style="object-position:9% 50%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </figure>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_ff83101f12a94fe48c8618e84825faaa_tilde_mv2.jpg" alt="Pastors Kendall and Jonathan smiling together in the sanctuary balcony." style="object-position:53% 70%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </figure>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_60b24878ae9740c8b37634e80b3c70ef~mv2.jpg" alt="A smiling teenage girl with an open Bible on her lap." style="object-position:53% 40%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 2. WHAT TO EXPECT -->
+<section class="expect" aria-labelledby="t-expect">
+  <div class="wrap">
+    <div class="ex-pics">
+      <figure class="fr main">
+        <div class="arch dw" data-rv><img src="../../../../../fbcm-archive/images/08181c_5d24ca0140994eb3957782aec035415f_tilde_mv2.jpg" alt="At the sanctuary door, a greeter hands a woman a set of assisted-listening headphones."></div>
+        <svg class="mould" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100V34C0 12 44 6 80 0C116 6 160 12 160 34V100"/></svg>
+      </figure>
+      <figure class="fr kid">
+        <div class="arch l" data-rv style="position:relative;z-index:1"><img src="../../../../../fbcm-archive/images/b98776_e6612e5af7804e77ad336a6b384782ea_tilde_mv2.png" alt="Two little girls smiling, cheek to cheek." style="object-position:44% 50%"></div>
+      </figure>
+    </div>
+    <div class="ex-text">
+      <h2 class="h2" id="t-expect">What to Expect</h2>
+      <p class="ex-lead">At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have.</p>
+      <div class="board" data-up>
+        <h3>Sunday</h3>
+        <ol>
+          <li><time datetime="09:30">9:30</time><div><b>Sunday School</b><small>Classes for adults, youth and children</small></div></li>
+          <li><time datetime="10:15">10:15</time><div><b>Donut [Semi-] Hour</b><small>Fellowship Hall</small></div></li>
+          <li class="main"><time datetime="10:45">10:45</time><div><b>Worship</b><small>Sanctuary</small></div></li>
+        </ol>
+      </div>
+      <a class="btn" href="#">What to expect<svg aria-hidden="true"><use href="#ray3"/></svg></a>
+    </div>
+    <ul class="notes">
+        <li><svg class="glyph" aria-hidden="true"><use href="#i-door"/></svg><span>For children ages 3 and younger, nursery care is available throughout the service.</span></li>
+        <li><svg class="glyph" aria-hidden="true"><use href="#i-basin"/></svg><span>The first Sunday of each month is communion Sunday, a service with the whole church family.</span></li>
+      </ul>
+  </div>
+</section>
+
+<!-- 3. THE FOUR GOALS AS THE WAYS IN -->
+<section class="goals" aria-labelledby="t-goals">
+  <div class="wrap">
+    <div class="goals-top">
+      <h2 class="h2" id="t-goals">Our Goals</h2>
+      <p>We&rsquo;re a Spirit-led people gathered to join Christ&rsquo;s presence in our community.</p>
+    </div>
+    <ul class="doors">
+      <li data-up>
+        <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/81f7ac_ee96a9da57554d48b92008a87a38e1e3_tilde_mv2.jpg" alt="Two young women smiling together in the baptismal pool, one of them just baptized." style="object-position:50% 30%"></div>
+          <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+        <div class="name"><svg class="glyph" aria-hidden="true"><use href="#i-window"/></svg><h3>Worship</h3></div>
+        <p class="also">Gathering as one body</p>
+        <p class="say">FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.</p>
+        <a class="textlink" href="#">Plan a visit</a>
+      </li>
+      <li data-up style="--i:1">
+        <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/08181c_59662d549c1740c09d1e0ab31e2183f5_tilde_mv2.jpg" alt="Four teenagers reading open Bibles together around a table." style="object-position:58% 50%"></div>
+          <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+        <div class="name"><svg class="glyph" aria-hidden="true"><use href="#i-door"/></svg><h3>The Way</h3></div>
+        <p class="also">Discipleship</p>
+        <p class="say">We offer a growth track to help us all &ldquo;come and see&rdquo; who Jesus is and grow spiritually.</p>
+        <a class="textlink" href="#">Who we are</a>
+      </li>
+      <li data-up style="--i:2">
+        <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/08181c_b178e014f570469ba249e1dd6f8c4122_tilde_mv2.jpg" alt="Four young children holding hands outside the church's arched entrance." style="object-position:55% 50%"></div>
+          <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+        <div class="name"><svg class="glyph" aria-hidden="true"><use href="#i-rose"/></svg><h3>Witness</h3></div>
+        <p class="also">Evangelism</p>
+        <p class="say">FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.</p>
+        <a class="textlink" href="#">Our ministries</a>
+      </li>
+      <li data-up style="--i:3">
+        <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/b98776_46a45e062a994a32bb3a6fd407690ba9_tilde_mv2.jpg" alt="Church members laying out food together in the church kitchen." style="object-position:42% 40%"></div>
+          <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+        <div class="name"><svg class="glyph" aria-hidden="true"><use href="#i-basin"/></svg><h3>Work</h3></div>
+        <p class="also">Acts of mercy</p>
+        <p class="say">We actively and practically help and work alongside our neighbors.</p>
+        <a class="textlink" href="#">How we serve</a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- 4. THE BUILDING -->
+<section class="heritage" aria-labelledby="t-building">
+  <div class="wrap">
+    <div class="her-top">
+      <div class="her-text">
+        <p class="years" aria-hidden="true">1859<i>&amp;</i>1929</p>
+        <h2 class="h2" id="t-building">Our Building</h2>
+        <p class="lead" style="margin-top:.8em">Founded in 1859, First Baptist Church of Muncie has a long history of serving God and our neighbor in the Muncie community.</p>
+        <p>First Baptist&rsquo;s third, and most recent, building was completed in 1929. The Late Gothic Revival building was designed by Samuel Hannaford and Sons. It is constructed of Indiana limestone and has a cruciform plan.</p>
+      </div>
+      <figure class="plate" data-up>
+        <img src="../../../../../fbcm-archive/images/08181c_9a2e10a5752e4aea861c7b31482850a2_tilde_mv2.jpg" alt="Samuel Hannaford and Sons' pencil rendering of the church, drawn in 1927: the tower on the corner and the long limestone wings, a period car parked out front.">
+        <span class="signed" aria-hidden="true">1927</span>
+      </figure>
+    </div>
+    <ol class="ledger">
+      <li class="hist">
+        <figure class="fr"><div class="arch dw" data-rv><img src="../../../../../fbcm-archive/images/08181c_4765aa0a82724570ad7e94e194f992c2_tilde_mv2.jpg" alt="An old black and white photograph of the congregation, adults and children, gathered outside the church entrance."></div>
+          <svg class="mould" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100V34C0 12 44 6 80 0C116 6 160 12 160 34V100"/></svg></figure>
+      </li>
+      <li data-up><time>1859</time><p>Twelve Indiana residents, meeting at the county courthouse, founded the first Baptist Church in Muncie.</p></li>
+      <li data-up style="--i:1"><time>1862</time><p>The tiny congregation moved into their new church building.</p></li>
+      <li data-up style="--i:2"><time>1890</time><p>The congregation moved into a new building on July 20, 1890.</p></li>
+      <li data-up style="--i:3"><time>1929</time><p>This building completed. On the National Register of Historic Places since 1988.</p></li>
+    </ol>
+    <div class="her-acts"><a class="btn" href="#">Our history<svg aria-hidden="true"><use href="#ray3"/></svg></a></div>
+  </div>
+</section>
+
+<!-- 5. RECENT WRITING -->
+<section class="journal" aria-labelledby="t-blog">
+  <div class="wrap">
+    <div class="jr-top">
+      <div><h2 class="h2" id="t-blog">Church Blog</h2><p>Read the latest from FBCM</p></div>
+      <a class="btn on-dark" href="#">All posts<svg aria-hidden="true"><use href="#ray3"/></svg></a>
+    </div>
+    <ol class="posts">
+      <li class="post">
+        <time datetime="2026-09-17">September 17, 2026</time>
+        <figure class="fr"><div class="arch l"><img src="../../../../../fbcm-archive/images/81f7ac_11ac2a76a5ad4ffbaaa4670c60d07fd9_tilde_mv2.jpg" alt="" style="object-position:50% 25%"></div></figure>
+        <div><h3><a href="#">H&auml;ndel&rsquo;s Messiah Sing&#8209;In &amp; Carols Muncie</a></h3><p>Some Christmas events invite you to sit back and listen, but Messiah Sing-In &amp; Carols is a time to join in and be a participant in the music!</p></div>
+        <p class="by"><b>Cynthia Smith</b>FBCM Events</p>
+      </li>
+      <li class="post">
+        <time datetime="2025-12-08">December 8, 2025</time>
+        <figure class="fr"><div class="arch l"><img src="../../../../../fbcm-archive/images/08181c_496101713a394635b5bb1c3f0cd91db4_tilde_mv2.jpg" alt="" style="object-position:50% 25%"></div></figure>
+        <div><h3><a href="#">Blue Christmas? Hope &amp; Mental Health for the Holidays</a></h3><p>If Christmas feels heavy this year, you are not alone.</p></div>
+        <p class="by"><b>Kendall Ellis</b>Ruminations</p>
+      </li>
+      <li class="post">
+        <time datetime="2025-11-25">November 25, 2025</time>
+        <figure class="fr"><div class="arch l"><img src="../../../../../fbcm-archive/images/08181c_85e57ed38e8542679c46cebf54d15e36_tilde_mv2.jpg" alt="" style="object-position:50% 25%"></div></figure>
+        <div><h3><a href="#">A Light Wardrobe</a></h3><p>Advent is upon us: the great time of anticipation and preparation. Get ready!</p></div>
+        <p class="by"><b>Jonathan Balmer</b>Co-Pastor</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- 6. GIVE -->
+<section class="give" aria-labelledby="t-give">
+  <div class="wrap">
+    <svg class="glyph big" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-basin"/></svg>
+    <div>
+      <h2 class="h2" id="t-give">Give</h2>
+      <p>We give sacrificially to help those in need through regular offerings and donations.</p>
+    </div>
+    <div class="act"><a class="btn on-gold" href="#">Give online<svg aria-hidden="true"><use href="#ray3"/></svg></a></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="brandcol">
+      <p class="mark" aria-label="Praise and Proclaim">Praise <i>&amp;</i><span>Proclaim</span><small>Isaiah 12:4</small></p>
+      <p style="margin-top:22px;max-width:22em">First Baptist Church Muncie<br>309 East Adams Street, Muncie, Indiana 47305<br>(765) 284-7749</p>
+    </div>
+    <div><h4><svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-window"/></svg>Worship</h4><ul><li><a href="#">Sundays at 10:45 am</a></li><li><a href="#">What to expect</a></li><li><a href="#">Watch on YouTube</a></li></ul></div>
+    <div><h4><svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-door"/></svg>The Way</h4><ul><li><a href="#">Who We Are</a></li><li><a href="#">Beliefs</a></li><li><a href="#">History</a></li></ul></div>
+    <div><h4><svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-rose"/></svg>Witness &amp; Work</h4><ul><li><a href="#">Ministries</a></li><li><a href="#">Staff</a></li><li><a href="#">Give</a></li></ul></div>
+    <p class="base">An American Baptist congregation in downtown Muncie since 1859.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var d=document.documentElement;
+  if(!('IntersectionObserver' in window)) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  d.classList.add('js');
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{rootMargin:'0px 0px -10% 0px',threshold:0.12});
+  document.querySelectorAll('[data-rv]').forEach(function(el){ el.parentElement.setAttribute('data-rvp',''); });
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.querySelectorAll(':scope > [data-rv]').forEach(function(a){a.classList.add('in');}); io2.unobserve(e.target); } });
+  },{rootMargin:'0px 0px -8% 0px',threshold:0.1});
+  document.querySelectorAll('[data-rvp]').forEach(function(el){ io2.observe(el); });
+  document.querySelectorAll('[data-up],.rays').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
