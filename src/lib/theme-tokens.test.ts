@@ -295,60 +295,39 @@ test('the taupe tint surface keeps indigo ink readable', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Church identity (2026-09-23, the Who We Are "alive" pass). The season bands,
-// the four goal bands, and the two accent inks that sit on them. Every pair is
-// measured TWICE, once in the light palette and once as the dark theme
-// resolves it, because every one of these tokens is redeclared under .dark
-// (rich but not glaring). Floor is AA body text unless the pair is only ever
-// set at 24px and up, where WCAG's large-text 3:1 applies.
+// Church identity (2026-09-23, the Who We Are pass; brand palette only since
+// the owner's review the same day). The band grounds and the inks set on them.
+// Every pair is measured TWICE, once in the light palette and once as the dark
+// theme resolves it, because every one of these tokens is redeclared under
+// .dark. Floor is AA body text unless the pair is only ever set at 24px and
+// up, where WCAG's large-text 3:1 applies.
 //
-// The six season tokens are band FILLS keyed by src/lib/church-year.ts. Four
-// are dark grounds (green, violet, purple, red) and carry white with a mint or
-// gold-light accent; two are light grounds (gold, white) and carry the dark
-// --color-goal-ink-on-gold instead. A band that reads the season must flip its
-// ink for those two, and these pairs are the contract it flips between.
+// Three dark grounds (indigo, deep, brown) carry white with a brand gold
+// accent; two light grounds (gold, taupe) carry --color-band-ink.
 // ---------------------------------------------------------------------------
 
 type Floor = 'body' | 'large';
 const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
-  // Season bands: the dark four.
-  ['color-white-pure', 'color-season-green', 'white on the green season band', 'body'],
-  ['color-mint', 'color-season-green', 'mint accent on the green season band', 'body'],
-  ['color-white-pure', 'color-season-violet', 'white on the Advent band', 'body'],
-  ['color-gold-light', 'color-season-violet', 'gold-light accent on the Advent band', 'body'],
-  ['color-white-pure', 'color-season-purple', 'white on the Lent band', 'body'],
-  ['color-gold-light', 'color-season-purple', 'gold-light accent on the Lent band', 'body'],
-  ['color-white-pure', 'color-season-red', 'white on the Pentecost band', 'body'],
-  ['color-gold-light', 'color-season-red', 'gold-light accent on the Pentecost band', 'body'],
-  // Season bands: the light two.
-  ['color-goal-ink-on-gold', 'color-season-gold', 'ink on the Easter band', 'body'],
-  ['color-goal-ink-on-gold', 'color-season-white', 'ink on the Christmas band', 'body'],
-  // The four goal bands.
-  ['color-white-pure', 'color-goal-green', 'white on the Worship band', 'body'],
-  ['color-mint', 'color-goal-green', 'mint accent on the Worship band', 'body'],
+  // The window hero, the Worship goal and the link-card doors.
+  ['color-white-pure', 'color-band-indigo', 'white on the indigo band', 'body'],
   [
-    'color-goal-ink-on-gold',
-    'color-goal-gold',
-    'ink on The Way band, and the rule button on a dark band',
+    'color-gold',
+    'color-band-indigo',
+    'gold accent, hero label and link-card eyebrow on the indigo band',
     'body',
   ],
-  ['color-white-pure', 'color-goal-purple', 'white on the Witness band', 'body'],
-  ['color-gold-light', 'color-goal-purple', 'gold-light accent on the Witness band', 'body'],
-  ['color-white-pure', 'color-goal-brown', 'white on the Work band', 'body'],
-  ['color-gold-light', 'color-goal-brown', 'gold-light accent on the Work band', 'body'],
-  // The rule button's hover fills (CtaLink variant="rule").
-  ['color-white-pure', 'color-season-deep', 'the rule button label, hovered', 'body'],
-  ['color-goal-ink-on-gold', 'color-gold-hover', 'the onDark rule button label, hovered', 'body'],
-  // The watchword mark's ampersand and rays: brand gold, only ever 24px+.
-  ['color-gold', 'color-season-green', 'the mark ampersand on a green band', 'large'],
-  // The window hero (Task 4): the small "Who We Are" label on the green band.
-  ['color-gold-light', 'color-season-green', 'the window hero label on the green band', 'body'],
-  // The Watchword band's night ground (Task 4): every ink set on it.
-  ['color-white-pure', 'color-night', 'the mark "Praise" on the night band', 'body'],
-  ['color-bg', 'color-night', 'body text on the night band', 'body'],
-  ['color-mint', 'color-night', 'the highlighted verse words and PROCLAIM', 'body'],
-  ['color-gold-light', 'color-night', 'the "Read more" link on the night band', 'body'],
-  ['color-gold', 'color-night', 'the heading, the reference and the ampersand', 'body'],
+  // The Watchword band, and the rule button's hover fill.
+  ['color-white-pure', 'color-band-deep', 'the mark "Praise"; the rule button, hovered', 'body'],
+  ['color-bg', 'color-band-deep', 'body text on the Watchword band', 'body'],
+  ['color-gold', 'color-band-deep', 'heading, highlighted words, PROCLAIM, the link', 'body'],
+  // The Way, and the onDark rule button at rest and hovered.
+  ['color-band-ink', 'color-band-gold', 'ink on The Way band; the onDark rule button', 'body'],
+  ['color-band-ink', 'color-gold-hover', 'the onDark rule button label, hovered', 'body'],
+  // Witness: white, and gold for every accent including the 15px ring scope.
+  ['color-white-pure', 'color-band-brown', 'white on the Witness band', 'body'],
+  ['color-gold', 'color-band-brown', 'gold accent on the Witness band', 'body'],
+  // Work.
+  ['color-band-ink', 'color-band-taupe', 'ink on the Work band', 'body'],
 ];
 
 // Inks that FLIP with the theme, measured on the ground each theme actually
@@ -357,41 +336,58 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
 // dark scope), because --color-bg and --color-bg-soft deliberately never flip.
 // [ink, light ground, dark ground, why]
 const THEMED_IDENTITY_PAIRS: Array<[string, string, string, string]> = [
-  ['color-purple-ink', 'color-bg-soft', 'muted', 'the pledge heading, rubric and turns'],
+  ['color-indigo', 'color-bg-soft', 'muted', 'the pledge heading, rubric and turns'],
   ['color-gold-ink', 'color-bg-soft', 'muted', 'the pledge references'],
   [
-    'color-green-ink',
+    'color-brown-ink',
     'color-bg',
     'background',
     'the letter heading, first paragraph and signature',
   ],
   ['color-gold-ink', 'color-bg', 'background', "the letter's drop cap"],
-  // The goals index (Task 5): each goal's name in its own ink on the page.
-  ['color-purple-ink', 'color-bg', 'background', 'Witness in the goals index'],
-  ['color-brown-ink', 'color-bg', 'background', 'Work in the goals index'],
+  // The goals heading and index (Task 5): each goal's name in its own ink.
+  ['color-indigo', 'color-bg', 'background', 'the goals heading, Worship in the index'],
+  ['color-brown-ink', 'color-bg', 'background', 'Witness and Work in the goals index'],
 ];
 
 const IDENTITY_TOKENS = [
-  'color-season-green',
-  'color-season-violet',
-  'color-season-purple',
-  'color-season-red',
-  'color-season-gold',
-  'color-season-white',
-  'color-goal-green',
-  'color-goal-gold',
-  'color-goal-purple',
-  'color-goal-brown',
-  'color-goal-ink-on-gold',
-  'color-mint',
-  'color-gold-light',
-  'color-season-deep',
+  'color-band-indigo',
+  'color-band-deep',
+  'color-band-gold',
+  'color-band-brown',
+  'color-band-taupe',
+  'color-band-ink',
   'color-gold-hover',
-  'color-night',
-  'color-purple-ink',
-  'color-green-ink',
   'color-brown-ink',
 ];
+
+// The nave caption (GoalsBand, .gn-cap) sets the Worship name and subtitle on
+// an 80% indigo-dark scrim over a photograph an editor picks. The worst case
+// is a PURE WHITE photograph, so the scrim is composited over #fff and the two
+// inks measured on the result: white as body text, brand gold as large text
+// (the gold lines are 28px and up). The percentage is the one in globals.css.
+const NAVE_SCRIM_ALPHA = 0.8;
+
+test('the nave scrim reads over a pure white photograph (both themes)', (t) => {
+  const pct = css.match(/--gn-scrim: color-mix\(in srgb, var\(--color-band-deep\) (\d+)%/);
+  assert.ok(pct, 'globals.css .gn-cap no longer mixes --color-band-deep into --gn-scrim');
+  assert.equal(Number(pct[1]) / 100, NAVE_SCRIM_ALPHA, 'the scrim percentage moved; re-measure');
+  for (const [scope, read] of [
+    ['light', token],
+    ['dark', darkToken],
+  ] as const) {
+    const ground = rgbToHex(
+      flatten(hexToRgb(read('color-band-deep')), NAVE_SCRIM_ALPHA, hexToRgb('#ffffff')),
+    );
+    const white = contrastRatio('#ffffff', ground);
+    const gold = contrastRatio(read('color-gold'), ground);
+    t.diagnostic(
+      `${scope}: scrim ${ground}, white ${white.toFixed(2)}:1, gold ${gold.toFixed(2)}:1`,
+    );
+    assert.ok(white >= AA_BODY_TEXT, `${scope}: white on the nave scrim is ${white.toFixed(2)}:1`);
+    assert.ok(gold >= AA_LARGE_TEXT, `${scope}: gold on the nave scrim is ${gold.toFixed(2)}:1`);
+  }
+});
 
 test('every church identity token is declared in @theme AND redeclared in .dark', () => {
   const dark = tokensIn(css, DARK_SCOPE);

@@ -238,36 +238,27 @@
      taupe 7.42:1. Both asserted in theme-tokens.test.ts. */
   --color-indigo-deep: #1b1a3a;
 
-  /* Church identity (2026-09-23, the Who We Are "alive" pass). Band FILLS and
-     the two accent inks that sit on them, from the approved prototype
-     (docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html). Every
-     text pair on these grounds is measured in BOTH themes in
+  /* Church identity (2026-09-23, the Who We Are pass; brand-only since the
+     owner's review the same day). Band FILLS and the inks set on them, every
+     one a value from the church's own palette (brand/brand.config.json):
+     indigo, indigo-dark, gold, brown, taupe. The band tokens are separate
+     names from --color-indigo / --color-brown because those FLIP under .dark
+     (they are the page's ink and heritage surface), while a band is a fixed
+     ground. Every text pair on these grounds is measured in BOTH themes in
      theme-tokens.test.ts (IDENTITY_PAIRS), and every token is redeclared
-     under .dark. The season six are keyed by src/lib/church-year.ts: green,
-     violet, purple and red carry white with a mint / gold-light accent; gold
-     and white are light grounds and carry --color-goal-ink-on-gold. */
-  --color-season-green: #1d5a3a; /* Ordinary Time and Epiphany */
-  --color-season-violet: #3b2a6b; /* Advent */
-  --color-season-purple: #46275e; /* Lent and Holy Week */
-  --color-season-red: #8e1f24; /* Pentecost */
-  --color-season-gold: #c9972c; /* Easter */
-  --color-season-white: #ede4cf; /* Christmas */
-  --color-goal-green: #1d5a3a; /* Worship */
-  --color-goal-gold: #c9972c; /* The Way */
-  --color-goal-purple: #46275e; /* Witness */
-  --color-goal-brown: #6a3d20; /* Work */
-  --color-goal-ink-on-gold: #2c1a0f; /* ink on the gold and white grounds */
-  --color-mint: #a9dcbf; /* accent text on green, never on paper */
-  --color-gold-light: #f0c86a; /* accent text on violet, purple, red, brown */
-  --color-season-deep: #113a26; /* the rule button's hover fill, under white */
+     under .dark. Dark grounds (indigo, deep, brown) carry white with a brand
+     gold accent; light grounds (gold, taupe) carry --color-band-ink. */
+  --color-band-indigo: #292854; /* the window hero, Worship, link cards, the rule button */
+  --color-band-deep: #1c1b3a; /* the Watchword band, the rule button's hover */
+  --color-band-gold: #d59b29; /* The Way, the onDark rule button */
+  --color-band-brown: #39251e; /* Witness */
+  --color-band-taupe: #b5aba3; /* Work */
+  --color-band-ink: #1c1b3a; /* ink on the gold and taupe grounds */
   --color-gold-hover: #dcae4a; /* the onDark rule button's hover fill, under ink */
-  /* Task 4 (2026-09-23): the Watchword band's night ground, and the two inks
-     the pledge and the letter set on paper. Both inks flip to a light value
-     under .dark; every pair is measured in theme-tokens.test.ts. */
-  --color-night: #0c241a; /* the Watchword band */
-  --color-purple-ink: #46275e; /* the pledge on soft paper */
-  --color-green-ink: #113a26; /* the letter on paper */
-  --color-brown-ink: #6a3d20; /* Work in the goals index, on paper */
+  /* Inks the pledge, the letter and the goals index set on paper. Both flip
+     to a light brand value under .dark; every pair is measured in
+     theme-tokens.test.ts. */
+  --color-brown-ink: #724f43; /* brown-mid: the letter, Witness and Work in the index */
 
   /* Fonts. Three faces, and the family names are exactly what the installed
      @fontsource packages declare. No " Variable" suffix on either Castoro:
@@ -638,28 +629,18 @@
      thing that would drift. */
   --color-gold-ink: #d59b29;
 
-  /* Church identity, dark: every band drops in luminance so it stays rich
-     against the #14121b page without glaring; the gold ground keeps its dark
-     ink (still AA, measured in theme-tokens.test.ts) rather than flipping. */
-  --color-season-green: #174a30;
-  --color-season-violet: #30245a;
-  --color-season-purple: #3b2150;
-  --color-season-red: #74191e;
-  --color-season-gold: #ad8127;
-  --color-season-white: #cfc5ae;
-  --color-goal-green: #174a30;
-  --color-goal-gold: #ad8127;
-  --color-goal-purple: #3b2150;
-  --color-goal-brown: #56321b;
-  --color-goal-ink-on-gold: #1f1208;
-  --color-mint: #9fd3b5;
-  --color-gold-light: #e8c068;
-  --color-season-deep: #0f3522;
+  /* Church identity, dark: the brand's own dark values (the indigo field
+     and brown this block already uses), so the indigo and brown bands stay
+     rich against the #14121b page without glaring; gold and taupe keep their
+     value and their dark ink (still AA, measured in theme-tokens.test.ts). */
+  --color-band-indigo: #22214a;
+  --color-band-deep: #1b1a3a;
+  --color-band-gold: #d59b29;
+  --color-band-brown: #2b1b16;
+  --color-band-taupe: #b5aba3;
+  --color-band-ink: #1c1b3a;
   --color-gold-hover: #c4973a;
-  --color-night: #0a1e15;
-  --color-purple-ink: #d9c8ea;
-  --color-green-ink: #a9dcbf;
-  --color-brown-ink: #e3c1a0;
+  --color-brown-ink: #b5aba3;
 
   /* The alternating "muted" surface's real dark value. Unlike --color-bg-soft
      (which this gate forbids .dark from touching), --surface-soft is a plain
@@ -2428,15 +2409,6 @@ body::before {
   filter: saturate(0.9) contrast(1.05) sepia(0.07) brightness(1.02);
 }
 
-/* The season line's rule. */
-.season-line::before {
-  content: '';
-  flex: none;
-  width: 34px;
-  height: 2px;
-  background: currentColor;
-}
-
 /* The building glyphs: line art at a constant 2px whatever the size. */
 .building-glyph {
   fill: none;
@@ -2661,9 +2633,6 @@ body::before {
   position: relative;
   z-index: 2;
   padding-bottom: 40px;
-}
-.hw-text .season-line {
-  margin-bottom: clamp(22px, 3vw, 40px);
 }
 .hw-label {
   margin: 0 0 0.5em;
@@ -2951,7 +2920,7 @@ body::before {
 .lt-body > p:first-child {
   font-size: 24px;
   line-height: 1.52;
-  color: var(--color-green-ink);
+  color: var(--color-brown-ink);
 }
 .lt-body > p:first-child::first-letter {
   float: left;
@@ -2966,7 +2935,7 @@ body::before {
   font-size: clamp(28px, 2.6vw, 36px);
   font-style: italic;
   line-height: 1.25;
-  color: var(--color-green-ink);
+  color: var(--color-brown-ink);
 }
 .lt-sign {
   display: inline-block;
@@ -3013,34 +2982,37 @@ body::before {
 /* The goals (Task 5): GoalsBand.astro. Each goal band sets its ground, ink,
    accent (--gl-hi), secondary text (--gl-soft), hairline and arch outline by
    the colour class of its position; the index on the page ground reads
-   --gl-mark, an ink that flips with the theme. Every pair is measured in
-   theme-tokens.test.ts. */
-.gl-green {
-  --gl-bg: var(--color-goal-green);
-  --gl-mark: var(--color-green-ink);
-  --gl-hi: var(--color-mint);
-}
-.gl-gold {
-  --gl-bg: var(--color-goal-gold);
-  --gl-mark: var(--color-gold-ink);
-  --gl-ink: var(--color-goal-ink-on-gold);
-  --gl-hi: var(--gl-ink);
-  --gl-soft: var(--gl-ink);
-  --gl-rule: rgb(44 26 15 / 0.4);
-  --arch-mould: var(--gl-ink);
-}
-.gl-purple {
-  --gl-bg: var(--color-goal-purple);
-  --gl-mark: var(--color-purple-ink);
+   --gl-mark, an ink that flips with the theme. The rhythm is dark, light,
+   dark, light (indigo, gold, brown, taupe), all brand grounds. Every pair is
+   measured in theme-tokens.test.ts. */
+.gl-indigo {
+  --gl-bg: var(--color-band-indigo);
+  --gl-mark: var(--color-indigo);
 }
 .gl-brown {
-  --gl-bg: var(--color-goal-brown);
+  --gl-bg: var(--color-band-brown);
   --gl-mark: var(--color-brown-ink);
 }
-.gl-purple,
+.gl-indigo,
 .gl-brown {
-  --gl-hi: var(--color-gold-light);
+  --gl-hi: var(--color-gold);
   --arch-mould: var(--gl-hi);
+}
+.gl-gold {
+  --gl-bg: var(--color-band-gold);
+  --gl-mark: var(--color-gold-ink);
+}
+.gl-taupe {
+  --gl-bg: var(--color-band-taupe);
+  --gl-mark: var(--color-brown-ink);
+}
+.gl-gold,
+.gl-taupe {
+  --gl-ink: var(--color-band-ink);
+  --gl-hi: var(--gl-ink);
+  --gl-soft: var(--gl-ink);
+  --gl-rule: rgb(28 27 58 / 0.4);
+  --arch-mould: var(--gl-ink);
 }
 .gl {
   background: var(--gl-bg);
@@ -3150,9 +3122,10 @@ body::before {
 }
 
 /* NAVE. The caption carries its own scrim: it fades in above the words,
-   holds at 66% night behind every line (white 5.4:1, mint and gold-light
-   3.4:1 or better even over a pure white photo; both lines are large text),
-   and only below the words turns into the band colour. */
+   holds at 80% indigo-dark behind every line (white 8.7:1 and brand gold
+   3.5:1 even over a pure white photo; the gold lines are large text, and
+   both pairs are measured in theme-tokens.test.ts), and only below the words
+   turns into the band colour. */
 .gn-bleed {
   position: relative;
   display: flex;
@@ -3168,9 +3141,9 @@ body::before {
   object-fit: cover;
 }
 .gn-cap {
-  --gl-hi: var(--color-gold-light);
+  --gl-hi: var(--color-gold);
   --gl-soft: #fff;
-  --gn-scrim: color-mix(in srgb, var(--color-night) 66%, transparent);
+  --gn-scrim: color-mix(in srgb, var(--color-band-deep) 80%, transparent);
   --gn-tail: clamp(28px, 3vw, 48px);
   position: relative;
   width: 100%;
@@ -3182,9 +3155,6 @@ body::before {
     var(--gn-scrim) calc(100% - var(--gn-tail)),
     var(--gl-bg)
   );
-}
-.gl-green .gn-cap {
-  --gl-hi: var(--color-mint);
 }
 .gn-cap {
   /* The room the name has beside its glyph. */
@@ -3303,7 +3273,7 @@ body::before {
   align-items: end;
   margin-top: clamp(56px, 6vw, 96px);
   padding-bottom: 18px;
-  border-bottom: 1px solid rgb(240 200 106 / 0.55);
+  border-bottom: 1px solid rgb(213 155 41 / 0.55);
 }
 .gr-crowd .arch-mould {
   display: none;
@@ -3373,10 +3343,10 @@ body::before {
   --arch-ratio: 100 / 92;
 }
 .lc-door .arch {
-  background: var(--color-season-deep);
+  background: var(--color-band-deep);
 }
 .lc-door:focus-visible {
-  outline: 3px solid var(--color-gold-light);
+  outline: 3px solid var(--color-gold);
   outline-offset: 6px;
 }
 .lc-door .arch-mould {

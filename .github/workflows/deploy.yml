@@ -13,7 +13,7 @@ name: Deploy
 # only if somebody remembered, and a Sanity publish was live only if somebody
 # remembered twice.
 #
-# ── THE FOUR WAYS IT FIRES ──────────────────────────────────────────────────
+# ── THE THREE WAYS IT FIRES ──────────────────────────────────────────────────
 # push to main          a code change. Docs-only paths are ignored, see below.
 # repository_dispatch   an editor published in the Studio. A Sanity webhook
 #   (sanity-publish)    POSTs to GitHub's dispatches endpoint. This is the piece
@@ -23,20 +23,6 @@ name: Deploy
 #                       webhook is a per-project setup step; see
 #                       docs/agent/deployment.md.
 # workflow_dispatch     a human, for when something needs pushing out now.
-# schedule              a daily rebuild at 05:15 UTC (after midnight in
-#   (cron)               Muncie), added 2026-09-23 for the Who We Are identity
-#                       pass. src/lib/church-year.ts derives the liturgical
-#                       season (and the goals/watchword band colour it drives)
-#                       from the date at build time, per CLAUDE.md rule 15: it
-#                       is computed, never typed. A statically built site only
-#                       recomputes it when something rebuilds the site, so
-#                       without a scheduled deploy the season would sit stuck
-#                       on whatever it was at the last code push or Studio
-#                       publish, sometimes for weeks. This trigger targets
-#                       main and is gated the same as every other run (the
-#                       `gate` job below), so a fork with no Cloudflare
-#                       credentials configured gets a harmless daily no-op
-#                       rather than a red scheduled run.
 #
 # ── WHAT IT WILL NOT DO ─────────────────────────────────────────────────────
 # It will not deploy a build whose unit tests fail. They run in well under a
@@ -64,8 +50,6 @@ on:
   repository_dispatch:
     types: [sanity-publish]
   workflow_dispatch:
-  schedule:
-    - cron: '15 5 * * *'
 
 # Deploys queue rather than cancelling each other. cancel-in-progress would
 # abort a run mid `wrangler deploy`, and three spare minutes is a much better

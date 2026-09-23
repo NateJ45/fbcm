@@ -44,7 +44,6 @@ import { surfaceClass } from '@/lib/surfaces';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import WatchwordMark from '@/components/church/WatchwordMark.astro';
-import SeasonLine from '@/components/church/SeasonLine.astro';
 // scaffold: church
 // The church blocks (Task 6, plus link cards from task 5b), fixtured with real
 // church content so a pixel diff here means the design moved, not the content.
@@ -126,36 +125,17 @@ const SECONDARY_CTA = { label: 'Watch a service', linkType: 'external' as const,
 // =============================================================================
 // Church identity fixtures (2026-09-23)
 // =============================================================================
-/** The identity palette, swatched in both themes (every one flips in .dark). */
+/** The identity palette, swatched in both themes (every one is redeclared in
+    .dark). Brand values only: indigo, indigo-dark, gold, brown, taupe. */
 const IDENTITY_TOKENS = [
-  '--color-season-green',
-  '--color-season-violet',
-  '--color-season-purple',
-  '--color-season-red',
-  '--color-season-gold',
-  '--color-season-white',
-  '--color-goal-green',
-  '--color-goal-gold',
-  '--color-goal-purple',
-  '--color-goal-brown',
-  '--color-goal-ink-on-gold',
-  '--color-mint',
-  '--color-gold-light',
-  '--color-season-deep',
+  '--color-band-indigo',
+  '--color-band-deep',
+  '--color-band-gold',
+  '--color-band-brown',
+  '--color-band-taupe',
+  '--color-band-ink',
   '--color-gold-hover',
-];
-
-// One FIXED date per season, so the season line is part of the baseline and
-// never moves with the build date. Each sits on its own band colour, written
-// out as a literal class (Tailwind reads source text).
-const SEASON_FIXTURES = [
-  { date: new Date('2026-12-06T12:00:00Z'), band: 'bg-season-violet' },
-  { date: new Date('2026-12-28T12:00:00Z'), band: 'bg-season-white' },
-  { date: new Date('2027-01-20T12:00:00Z'), band: 'bg-season-green' },
-  { date: new Date('2027-03-01T12:00:00Z'), band: 'bg-season-purple' },
-  { date: new Date('2027-04-10T12:00:00Z'), band: 'bg-season-gold' },
-  { date: new Date('2027-05-16T12:00:00Z'), band: 'bg-season-red' },
-  { date: new Date('2026-09-23T12:00:00Z'), band: 'bg-season-green' },
+  '--color-brown-ink',
 ];
 
 // Real photographs from this project's own library (the church's own blog),
@@ -573,9 +553,7 @@ const LINK_CARDS_FIXTURE = {
 // =============================================================================
 // The church's own words from the approved prototype (and the live Wix page
 // before it), and photographs from this project's own library with the
-// library's alt text. The window hero's season is pinned to a fixed date so
-// the band colour is part of the baseline and never moves with the build.
-const WINDOW_DATE = new Date('2026-09-23T12:00:00Z');
+// library's alt text.
 const WINDOW_FRAMES: SanityImageObject[] = [
   {
     asset: { _ref: 'image-bad93d7a2b560248a8b1b249154c4bbc1ed83af5-1600x1064-jpg' },
@@ -1223,8 +1201,8 @@ const DOOR_CARDS_FIXTURE = {
     <div class="mx-auto w-full max-w-content px-6">
       <h2 id="styleguide-identity" class="font-display text-h3">Church identity</h2>
       <p class="mt-2 max-w-[60ch] text-sm text-muted-foreground">
-        The season and goal bands, the two arches drawn from the building, the four building glyphs,
-        the watchword mark and the rule button. Every text pair here is measured in both themes in
+        The brand bands, the two arches drawn from the building, the four building glyphs, the
+        watchword mark and the rule button. Every text pair here is measured in both themes in
         theme-tokens.test.ts.
       </p>
 
@@ -1238,17 +1216,6 @@ const DOOR_CARDS_FIXTURE = {
                 style={`background: var(${t})`}
               />
               <code class="mt-2 block font-mono text-[0.6875rem] break-all">{t}</code>
-            </li>
-          ))
-        }
-      </ul>
-
-      <h3 class="mt-10 font-display text-h5">The season line, one fixed date per season</h3>
-      <ul class="mt-5 grid gap-2">
-        {
-          SEASON_FIXTURES.map(({ date, band }) => (
-            <li class={`${band} px-6 py-4`}>
-              <SeasonLine date={date} />
             </li>
           ))
         }
@@ -1298,22 +1265,16 @@ const DOOR_CARDS_FIXTURE = {
            bytes to every page's inlined sheet (CLAUDE.md rule 20). */
       }
       <ul class="mt-5 flex flex-wrap items-end gap-6">
-        <li class="p-3" style="background: var(--color-goal-green); color: var(--color-mint)">
+        <li class="p-3" style="background: var(--color-band-indigo); color: var(--color-gold)">
           <BuildingGlyph name="window" class="w-12" />
         </li>
-        <li
-          class="p-3"
-          style="background: var(--color-goal-gold); color: var(--color-goal-ink-on-gold)"
-        >
+        <li class="p-3" style="background: var(--color-band-gold); color: var(--color-band-ink)">
           <BuildingGlyph name="door" class="w-12" />
         </li>
-        <li
-          class="p-3"
-          style="background: var(--color-goal-purple); color: var(--color-gold-light)"
-        >
+        <li class="p-3" style="background: var(--color-band-brown); color: var(--color-gold)">
           <BuildingGlyph name="rose" class="w-12" />
         </li>
-        <li class="p-3" style="background: var(--color-goal-brown); color: var(--color-gold-light)">
+        <li class="p-3" style="background: var(--color-band-taupe); color: var(--color-band-ink)">
           <BuildingGlyph name="basin" class="w-12" />
         </li>
         <li class="text-foreground"><BuildingGlyph name="window" class="w-16" /></li>
@@ -1330,10 +1291,9 @@ const DOOR_CARDS_FIXTURE = {
     </div>
   </section>
 
-  <section class="overflow-x-clip bg-season-green py-section-lg" aria-label="The watchword mark">
+  <section class="overflow-x-clip bg-band-deep py-section-lg" aria-label="The watchword mark">
     <div class="mx-auto w-full max-w-content px-6">
-      <SeasonLine date={new Date('2026-09-23T12:00:00Z')} />
-      <div class="mt-10">
+      <div>
         <WatchwordMark size="band" />
       </div>
       <div class="mt-14">
@@ -1341,7 +1301,7 @@ const DOOR_CARDS_FIXTURE = {
       </div>
       <div class="mt-12 flex flex-wrap items-center gap-6">
         <CtaLink cta={RULE_CTA_DARK} variant="rule" onDark />
-        <div class="flex items-end gap-6 text-mint">
+        <div class="flex items-end gap-6 text-gold">
           <BuildingGlyph name="window" class="w-10" />
           <BuildingGlyph name="door" class="w-10" />
           <BuildingGlyph name="rose" class="w-10" />
@@ -1377,7 +1337,6 @@ const DOOR_CARDS_FIXTURE = {
     primaryCta={WINDOW_HERO.primaryCta}
     secondaryCta={WINDOW_HERO.secondaryCta}
     layout="window"
-    date={WINDOW_DATE}
     dropInto
     headingId="styleguide-hero-window"
   />
@@ -1392,7 +1351,6 @@ const DOOR_CARDS_FIXTURE = {
       scriptAccent={WINDOW_HERO.scriptAccent}
       backgroundImages={WINDOW_FRAMES}
       layout="window"
-      date={WINDOW_DATE}
       headingId="styleguide-hero-window-2"
     />
   </div>
@@ -1405,7 +1363,6 @@ const DOOR_CARDS_FIXTURE = {
       scriptAccent={WINDOW_HERO.scriptAccent}
       primaryCta={WINDOW_HERO.primaryCta}
       layout="window"
-      date={WINDOW_DATE}
       dropInto
       headingId="styleguide-hero-window-3"
     />

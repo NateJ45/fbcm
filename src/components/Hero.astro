@@ -12,11 +12,10 @@
 //   3) "text" hero (interior pages with no photograph) — clean editorial
 //      heading on paper with eyebrow + headline + subhead.
 //   4) "window" hero (layout="window", 2026-09-23, the Who We Are "alive"
-//      pass; the prototype's `.opener`) — a band in the colour of the church
-//      season (churchSeason(), the same date SeasonLine reads), the season
-//      line, the eyebrow as a small gold label, the headline as a sentence in
-//      Castoro italic with the script-accent word in mint, and the first
-//      three frames as a triple lancet (middle largest, rays above it). With
+//      pass; the prototype's `.opener`) — a brand indigo band, the eyebrow as
+//      a small gold label, the headline as a sentence in Castoro italic with
+//      the script-accent word in brand gold, and the first three frames as a
+//      triple lancet (middle largest, rays above it). With
 //      `dropInto` (set by SectionRenderer only when the next block is the
 //      Watchword band) the window drops over the band's bottom edge into that
 //      band; otherwise it stays inside its own band. Two frames draw
@@ -46,8 +45,6 @@ import { splitStega } from '@/lib/preview-stega';
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
 import { staticSunday, timeOnly } from '@/lib/live-sunday';
 import ArchFrame from '@/components/church/ArchFrame.astro';
-import SeasonLine from '@/components/church/SeasonLine.astro';
-import { churchSeason, type SeasonToken } from '@/lib/church-year';
 
 interface CtaBlock {
   label?: string;
@@ -80,7 +77,7 @@ interface Props {
   /**
    * "full" (default when unset) = photo behind the words, full-bleed, as the
    * hero always rendered. "split" = cream two-column band, words left, first
-   * photo right. "window" = the season band with up to three arched
+   * photo right. "window" = the indigo band with up to three arched
    * photos, the middle one largest (2026-09-23). "window" draws with or
    * without photos; "full"/"split" only differ when an image is present.
    */
@@ -113,9 +110,6 @@ interface Props {
    * their own scriptAccent value through to this component.
    */
   scriptAccent?: string;
-  /** The window layout's season date. Defaults to now (the build date); the
-      styleguide pins it so its baseline never moves with the calendar. */
-  date?: Date;
   /** The window layout only: let the lancets hang over the band's bottom
       edge into the next block. SectionRenderer sets it only when that block
       is the Watchword band, the one band that pads its top to clear them; on
@@ -137,7 +131,6 @@ const {
   size = 'short',
   serviceTime,
   scriptAccent,
-  date,
   dropInto = false,
 } = Astro.props as Props;
 
@@ -235,34 +228,12 @@ const headlineOpts = { tall: size === 'tall' };
 const scale = headlineScale(headline, headlineOpts);
 const displayHeadlineClass = headlineClass(scale, headlineOpts);
 
-// THE WINDOW LAYOUT. The band takes the colour of the church season from the
-// same pure function SeasonLine reads (CLAUDE.md rule 15: derived from the
-// date, never a field), so the line and the band always agree. Classes are
-// written out in full because Tailwind reads source text. Gold (Easter) and
-// white (Christmas) are light grounds: the ink turns dark, the accent word is
-// told apart by its roman face alone, and both buttons become the season-green
-// rule button, whose white label is measured on its own fill.
+// THE WINDOW LAYOUT. A fixed brand indigo band (the owner's ruling,
+// 2026-09-23: the church's own colours, no liturgical season), white words
+// with the accent word, the label and the rays in brand gold. Both pairs are
+// measured in theme-tokens.test.ts (IDENTITY_PAIRS). The primary button is the
+// gold onDark rule button; the secondary is the paper text link.
 const isWindow = layout === 'window';
-const seasonDate = date ?? new Date();
-const seasonToken: SeasonToken = churchSeason(seasonDate).token;
-interface WindowTone {
-  band: string;
-  ink: string;
-  accent: string;
-  label: string;
-  light: boolean;
-}
-const DARK_INK = { ink: 'text-white-pure', label: 'text-gold-light', light: false };
-const LIGHT_INK = { ink: 'text-goal-ink-on-gold', label: 'text-goal-ink-on-gold', light: true };
-const WINDOW_TONE: Record<SeasonToken, WindowTone> = {
-  green: { band: 'bg-season-green', accent: 'text-mint', ...DARK_INK },
-  violet: { band: 'bg-season-violet', accent: 'text-gold-light', ...DARK_INK },
-  purple: { band: 'bg-season-purple', accent: 'text-gold-light', ...DARK_INK },
-  red: { band: 'bg-season-red', accent: 'text-gold-light', ...DARK_INK },
-  gold: { band: 'bg-season-gold', accent: '', ...LIGHT_INK },
-  white: { band: 'bg-season-white', accent: '', ...LIGHT_INK },
-};
-const tone = WINDOW_TONE[seasonToken];
 // Up to three frames. With three, the middle (largest) light is frames[0],
 // the one the editor put first ("put the best one first"), flanked by the
 // second and third. Two or one sit centred.
@@ -279,15 +250,13 @@ const windowDrops = dropInto && windowOrder.length > 0;
     class:list={[
       'hero-window relative z-[2] overflow-x-clip',
       windowDrops && 'hw-drop',
-      tone.band,
-      tone.ink,
+      'bg-band-indigo text-white-pure',
     ]}
     aria-labelledby={headingId}
   >
     <div class="hw-grid mx-auto max-w-content px-gutter">
       <div class="hw-text">
-        <SeasonLine date={seasonDate} />
-        {eyebrow && <p class:list={['hw-label font-display uppercase', tone.label]}>{eyebrow}</p>}
+        {eyebrow && <p class="hw-label font-display text-gold uppercase">{eyebrow}</p>}
         {/* The sentence treatment from headline-scale (reading face, sentence
             case), in italic at the prototype's size; the accent word is the
             one existing script-accent split, set roman in the accent ink
@@ -298,7 +267,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
         >
           {scriptFound ? (
             <>
-              {scriptBefore}<em class:list={['not-italic', tone.accent]}>{scriptWord}</em>{scriptAfter}
+              {scriptBefore}<em class="text-gold not-italic">{scriptWord}</em>{scriptAfter}
             </>
           ) : (
             headline
@@ -311,13 +280,8 @@ const windowDrops = dropInto && windowOrder.length > 0;
         )}
         {(primaryCta || secondaryCta) && (
           <div class="flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
-            {primaryCta && <CtaLink cta={primaryCta} variant="rule" onDark={!tone.light} />}
-            {secondaryCta &&
-              (tone.light ? (
-                <CtaLink cta={secondaryCta} variant="rule" />
-              ) : (
-                <CtaLink cta={secondaryCta} variant="link" onDark />
-              ))}
+            {primaryCta && <CtaLink cta={primaryCta} variant="rule" onDark />}
+            {secondaryCta && <CtaLink cta={secondaryCta} variant="link" onDark />}
           </div>
         )}
       </div>
@@ -327,7 +291,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
               The outer box positions them; the inner one rides the reveal
               observer, whose reduced-motion reset would cancel a transform. */}
           {middleIndex >= 0 && (
-            <div class:list={['hw-rays', tone.accent]} aria-hidden="true">
+            <div class="hw-rays text-gold" aria-hidden="true">
               <div data-reveal="mark">
                 <svg class="mark-rays" viewBox="0 0 200 90">
                   <path d="M100 80V14" />
