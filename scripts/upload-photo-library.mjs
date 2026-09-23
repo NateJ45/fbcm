@@ -202,6 +202,7 @@ async function main() {
   for (const item of plan) {
     const { p } = item;
     let id = item.assetId;
+    let uploadedDoc = null;
     if (!id) {
       const { data } = await resizeToBuffer(item.src);
       const asset = await client.assets.upload('image', data, {
@@ -211,16 +212,18 @@ async function main() {
         source: { name: SOURCE, id: p.file, url: p.sourceUrl ?? undefined },
       });
       id = asset._id;
+      uploadedDoc = asset;
       uploaded++;
     }
     assetMap[cacheKey(p.file)] = id;
     writeFileSync(ASSET_MAP_PATH, JSON.stringify(assetMap, null, 2));
 
-    const current = await client.fetch(
-      `*[_id == $id][0]{title, altText, description, originalFilename, source,
-        "tagIds": opt.media.tags[]._ref}`,
-      { id },
-    );
+    // Read by id, not by query: a GROQ query can lag a fresh upload by a moment and
+    // return null (the first --apply died on exactly that). The document endpoint
+    // is read-after-write consistent; the upload response is the fallback.
+    const doc = (await client.getDocument(id)) ?? uploadedDoc;
+    if (!doc) throw new Error(`asset ${id} not found for ${p.file}`);
+    const current = { ...doc, tagIds: (doc.opt?.media?.tags ?? []).map((t) => t._ref) };
     const set = metaSet(current, p);
     const have = new Set(current.tagIds ?? []);
     const refs = p.tags
