@@ -1,4 +1,13 @@
 /* Starwind UI — supplementary CSS. Foundation, edit with care.
+   NOT IMPORTED on this site (2026-09-23): no Starwind component is used, and
+   as written this file is not a Tailwind entry point (no `@import 'tailwindcss'`
+   or `@reference`), so importing it ships these `@theme` blocks to the browser
+   verbatim, where they do nothing. To use a Starwind component: move the two
+   @theme blocks below into globals.css, restore the Starwind semantic tokens
+   (--info, --success, --warning, --error, --primary-accent, --secondary-accent,
+   --outline) to its :root / .dark blocks and to brand/brand.config.json, and
+   delete the component's `@source not` line in globals.css.
+   The original note follows.
    This file is imported AFTER globals.css in BaseLayout.astro.
    globals.css owns :root / .dark semantic tokens and the @custom-variant dark rule.
    This file adds ONLY:
