@@ -12,18 +12,37 @@
 //   - videoEmbed   (YouTube/Vimeo URL → responsive iframe)
 //
 // Headings get a stable id (derived from the heading text via slugify) so
-// the auto-generated TOC and deep-link anchors work. Default block styles
+// the "In this post" list and deep-link anchors work. Default block styles
 // mirror the existing PortableText component, with one extra: "lead" style
 // for the large intro paragraph.
+//
+// THE READING PASS (journal polish, 2026-09-22, "P2 Bulletin"). The post page
+// hands this component the body AFTER src/lib/post-body.ts has run over it, so
+// four more types arrive that are never stored in Sanity: journalTable,
+// journalPoint, journalQA and journalLection. Their look, and the restyled
+// headings, quotes, lists, bold and captions, is CSS in the `.post-prose`
+// block of src/pages/post/[slug].astro rather than Tailwind utilities here: a
+// utility added or dropped in this file changes the one global stylesheet
+// every page inlines, and the journal pass must leave every other page's
+// bytes alone (the parity gate).
 
 import { PortableText as PT, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
+import type { ReactNode } from 'react';
 import { urlFor, parseSanityAssetDimensions } from '@/lib/sanity';
 import { slugify } from '@/lib/slugify';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
+import type {
+  BodyNode,
+  JournalTable,
+  JournalPoint,
+  JournalQA,
+  JournalLection,
+} from '@/lib/post-body';
 
 interface Props {
-  value: PortableTextBlock[] | undefined | null;
+  /** The body, raw or after prepareBody() (src/lib/post-body.ts). */
+  value: PortableTextBlock[] | BodyNode[] | undefined | null;
   className?: string;
 }
 
@@ -68,90 +87,70 @@ function videoEmbedSrc(url: string): string | null {
   return null;
 }
 
+const pad2 = (n: string) => (n.length === 1 ? `0${n}` : n);
+
 function makeComponents(): PortableTextComponents {
   const seen = new Map<string, number>();
 
-  return {
+  // One section-head style for h2, h3 and h4 (191 of the 227 body headings are
+  // Wix h4s, which is an accident of the import, not a level of the argument).
+  // Castoro roman at --text-h3 with a hairline above; the one titling line on
+  // a post is its <h1>. The ids are unchanged, so the contents list and old
+  // deep links still land.
+  const heading =
+    (Tag: 'h2' | 'h3' | 'h4') =>
+    ({ children }: { children?: ReactNode }) => (
+      <Tag id={makeHeadingId(seen, children)} className="pp-sh">
+        {children}
+      </Tag>
+    );
+
+  const components: PortableTextComponents = {
     block: {
-      // THE POST BODY (art-direction pass, 2026-09-20, task 11).
-      // Every heading in here is Castoro ROMAN (font-body), never the titling
-      // face: Castoro Titling is capitals-only, so `font-display` on a body
-      // heading would shout a sentence-case sub-head in full caps. The one
-      // titling line on a post is its <h1>, in the page header.
-      //
-      // The drop cap that used to ride on the first paragraph is gone. It had
-      // never actually rendered: the class was interpolated with no separating
-      // space (`text-lg${isFirst ? 'prose-drop-cap' : ''}`), so the first
-      // paragraph of all 142 posts carried one dead class named
-      // `text-lgprose-drop-cap` and lost its size into the bargain. A device
-      // nobody has ever seen on this site is not a device worth restoring.
-      normal: ({ children }) => (
-        <p className="my-5 font-body text-body leading-[1.72] text-foreground/90">{children}</p>
-      ),
-      // Lead paragraph — the standfirst size, italic, same as a lede anywhere
-      // else on the site. Never font-light: Castoro has one weight.
-      lead: ({ children }) => (
-        <p className="my-6 font-body text-lede font-normal text-foreground italic first:mt-0">
-          {children}
-        </p>
-      ),
-      h2: ({ children }) => (
-        <h2
-          id={makeHeadingId(seen, children)}
-          className="mt-14 mb-5 scroll-mt-24 font-body text-h2 font-normal text-foreground"
-        >
-          {children}
-        </h2>
-      ),
-      h3: ({ children }) => (
-        <h3
-          id={makeHeadingId(seen, children)}
-          className="mt-10 mb-3 scroll-mt-24 font-body text-h3 font-normal text-foreground"
-        >
-          {children}
-        </h3>
-      ),
-      h4: ({ children }) => (
-        <h4
-          id={makeHeadingId(seen, children)}
-          className="mt-8 mb-2 scroll-mt-24 font-body text-h4 font-normal text-foreground"
-        >
-          {children}
-        </h4>
-      ),
-      // A quotation inside the body: the gold rule down its left edge is the
-      // same hairline-and-accent device the bands use, so the quote belongs to
-      // the page rather than arriving from the starter's prose stylesheet.
-      blockquote: ({ children }) => (
-        <blockquote className="my-10 border-l border-gold pl-6 font-body text-h3 font-normal text-foreground italic">
-          {children}
-        </blockquote>
-      ),
+      normal: ({ children }) => <p>{children}</p>,
+      // Lead paragraph: the standfirst size, italic, as a lede anywhere else.
+      lead: ({ children }) => <p className="pp-lead">{children}</p>,
+      h2: heading('h2'),
+      h3: heading('h3'),
+      h4: heading('h4'),
+      // A quotation: Castoro italic at 1.125rem (it was 28px, louder than the
+      // sermon it quotes), with the gold rule hung in the gutter so the text
+      // keeps the page's left edge.
+      blockquote: ({ children }) => <blockquote>{children}</blockquote>,
+      // The two synthetic styles below are how a point and a question reach
+      // the span renderers (links, em) without a second copy of them.
+      __point: ({ children, value }) => {
+        const num = String((value as { num?: string })?.num ?? '');
+        return (
+          <p className="pp-point">
+            {num && <span className="pp-pn">{pad2(num)}</span>}
+            {children}
+          </p>
+        );
+      },
+      __question: ({ children }) => <p className="pp-q">{children}</p>,
     },
 
     list: {
-      bullet: ({ children }) => (
-        <ul className="my-5 list-disc space-y-2 pl-6 font-body text-body leading-[1.72] text-foreground/90 marker:text-gold">
-          {children}
-        </ul>
-      ),
-      number: ({ children }) => (
-        <ol className="my-5 list-decimal space-y-2 pl-6 font-body text-body leading-[1.72] text-foreground/90 marker:text-gold">
-          {children}
-        </ol>
-      ),
+      // A 12px gold rule for a bullet, an old-style gold numeral for a number:
+      // both drawn in CSS so the marker shares the reading face.
+      bullet: ({ children }) => <ul>{children}</ul>,
+      number: ({ children }) => <ol>{children}</ol>,
     },
     listItem: {
-      bullet: ({ children }) => <li className="pl-s">{children}</li>,
-      number: ({ children }) => <li className="pl-s">{children}</li>,
+      bullet: ({ children }) => <li>{children}</li>,
+      number: ({ children }) => <li>{children}</li>,
     },
 
     marks: {
-      strong: ({ children }) => (
-        <strong className="font-semibold text-foreground">{children}</strong>
-      ),
-      em: ({ children }) => <em className="italic">{children}</em>,
-      underline: ({ children }) => <span className="underline underline-offset-4">{children}</span>,
+      // Castoro has one weight, so bold was always a faux bold. It is a gold
+      // highlighter band instead (post-body.ts has already taken it off any
+      // run longer than twelve words).
+      strong: ({ children }) => <strong>{children}</strong>,
+      em: ({ children }) => <em>{children}</em>,
+      // post-body.ts drops every underline before render; this stays so a
+      // body that skipped the pass still renders, but it draws nothing.
+      underline: ({ children }) => <>{children}</>,
       // Highlight uses bg-accent (theme-aware) for a subtle warm callout effect.
       highlight: ({ children }) => (
         <span className="rounded-sm bg-accent/60 px-1 text-foreground">{children}</span>
@@ -163,7 +162,6 @@ function makeComponents(): PortableTextComponents {
         return (
           <a
             href={href}
-            className="text-link underline decoration-primary/40 underline-offset-4 transition-colors hover:decoration-primary"
             target={newTab ? '_blank' : undefined}
             rel={newTab ? 'noopener noreferrer' : undefined}
           >
@@ -229,11 +227,13 @@ function makeComponents(): PortableTextComponents {
         // measure as the words around it, which is the page's one grammar
         // (CLAUDE.md rule 17); a portrait shot still caps so it cannot run
         // taller than the viewport.
+        //
+        // P2 Bulletin (2026-09-22): a portrait now caps at 360px, and the
+        // caption hangs from the 28px gold tick every caption on the site uses.
         const dims = parseSanityAssetDimensions(value);
         const isPortrait = dims ? dims.height > dims.width : false;
-        const wrapperClass = isPortrait ? 'my-10 max-w-[420px]' : 'my-10';
         return (
-          <figure className={wrapperClass}>
+          <figure className={isPortrait ? 'pp-fig pp-portrait' : 'pp-fig'}>
             <img
               src={url}
               srcSet={`${url} 1x, ${url2x} 2x`}
@@ -245,11 +245,106 @@ function makeComponents(): PortableTextComponents {
               className="h-auto w-full"
             />
             {value.caption && (
-              <figcaption className="mt-3 font-body text-sm text-muted-foreground italic">
+              <figcaption className="pp-cap">
+                <span className="pp-tick" aria-hidden="true"></span>
                 {value.caption}
               </figcaption>
             )}
           </figure>
+        );
+      },
+
+      // -- the reading pass's four types (src/lib/post-body.ts) ------------
+      // A list whose items were table rows joined by middots. The header row
+      // is real <th scope="col">; a number column is old-style gold numerals;
+      // the last column of a three-column table is the quiet one (who sings).
+      journalTable: ({ value }) => {
+        const t = value as JournalTable;
+        if (!Array.isArray(t?.rows) || t.rows.length === 0) return null;
+        return (
+          <div className="pp-table">
+            <table>
+              {t.head && (
+                <thead>
+                  <tr>
+                    {t.head.map((c, i) => (
+                      <th key={i} scope="col">
+                        {/* The Messiah programme's number column has no
+                            heading of its own; a screen reader still gets one. */}
+                        {c ||
+                          (i === 0 && t.numCol ? <span className="sr-only">Number</span> : null)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+              )}
+              <tbody>
+                {t.rows.map((row, r) => (
+                  <tr key={r}>
+                    {row.map((c, i) => {
+                      const cls = [
+                        i === 0 && t.numCol ? 'pp-num' : '',
+                        i === row.length - 1 && row.length > 2 ? 'pp-last' : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ');
+                      return (
+                        <td key={i} className={cls || undefined}>
+                          {c}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      },
+
+      // A short bold paragraph doing a heading's job: roman at the item size,
+      // its "2." (if any) a gold numeral line above.
+      journalPoint: ({ value }) => (
+        <PT
+          value={
+            [
+              { ...(value as JournalPoint), _type: 'block', style: '__point' },
+            ] as unknown as PortableTextBlock[]
+          }
+          components={components}
+        />
+      ),
+
+      // The Messiah FAQ: a question and the paragraphs that answer it, ruled.
+      journalQA: ({ value }) => {
+        const qa = value as JournalQA;
+        return (
+          <div className="pp-qa">
+            <PT
+              value={
+                [
+                  { ...qa.question, _type: 'block', style: '__question' },
+                ] as unknown as PortableTextBlock[]
+              }
+              components={components}
+            />
+            <PT value={qa.answer as unknown as PortableTextBlock[]} components={components} />
+          </div>
+        );
+      },
+
+      // A sermon preview's opening scripture, set between two rules with the
+      // reference above it. The blocks are the post's own, unmoved.
+      journalLection: ({ value }) => {
+        const lec = value as JournalLection;
+        return (
+          <div className="pp-lection">
+            <p className="pp-lection-h">
+              <span>The reading</span>
+              <span>{lec.reference}</span>
+            </p>
+            <PT value={lec.blocks as unknown as PortableTextBlock[]} components={components} />
+          </div>
         );
       },
 
@@ -462,13 +557,14 @@ function makeComponents(): PortableTextComponents {
       },
     },
   };
+  return components;
 }
 
 export default function JournalPortableText({ value, className }: Props) {
   if (!value || value.length === 0) return null;
   return (
     <div className={className}>
-      <PT value={value} components={makeComponents()} />
+      <PT value={value as PortableTextBlock[]} components={makeComponents()} />
     </div>
   );
 }

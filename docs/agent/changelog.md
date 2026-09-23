@@ -139,6 +139,24 @@ documents are read by no page; those are listed in `docs/PENDING.md`. A guide on
 band's picture decides its shape is drafted there and waits for
 feat/richtext-ledger-photo-shapes to merge.
 
+_2026-09-22 — The journal polish: the post page as a bulletin, the archive as a register._
+
+The journal (142 posts, /blog and its archives) was the one part of the site the
+art-direction pass had not redrawn. An audit (`docs/superpowers/prototypes/2026-09-22-journal/audit.md`)
+found the index showing the same posts twice, a "This week" band eight months stale,
+a grid made of sermon slides, blockquotes louder than the sermon, Wix underlines on
+130 posts, two event tables stored as bullet lists and dead `#viewer-` anchors. Nathan
+chose P2 Bulletin and I1 Register from five prototypes. The post page now leads with
+the Sunday's order derived from the post itself (`sermon-derive.ts`: Sunday, reading,
+series; `post-body.ts`: tables, points, Q and A, the reading), hangs the series slide as
+a plate or bleeds a real photograph, and ends without the closing CTA band. The index
+and archives are a register grouped by year, with text filters, a de-duplicated "Worth
+coming back for", a door that says "This Sunday" only when true, year spans on the pager
+and a thin state for small archives. Built by two parallel Opus agents (post page;
+index) from the shared derivation module, integrated and gated in the main session;
+parity recaptured at 162/162 as a fixpoint (non-journal pages changed only by the
+shared stylesheet's checksum, proved page by page).
+
 _2026-09-21 — The art-direction pass: a full identity and layout rebuild off the generic starter look._
 
 Nathan's read on the deployed plan-2 site was blunt: "very generic and plain... not

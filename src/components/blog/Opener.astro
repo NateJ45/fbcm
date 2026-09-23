@@ -1,0 +1,71 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// The opener every journal list starts with (journal pass, 2026-09-22, "I1
+// Register"): eyebrow, h1 and lede in cols 1 to 7, and whatever the page puts
+// in the default slot (the index's door) in cols 9 to 12. The filter row goes
+// in the `filters` slot, under both, on the same left edge (CLAUDE.md rule 17).
+interface Props {
+  eyebrow?: string;
+  heading: string;
+  lede?: string;
+  headingId?: string;
+}
+const { eyebrow, heading, lede, headingId = 'blog-heading' } = Astro.props as Props;
+const hasAside = Astro.slots.has('default');
+---
+
+<div class="bg-background">
+  <div class="mx-auto max-w-content px-gutter">
+    <div class="ix-open">
+      <div class="l">
+        {eyebrow && <p class="font-ui text-ui font-medium text-gold-ink">{eyebrow}</p>}
+        <h1
+          id={headingId}
+          class="mt-5 max-w-[18ch] font-display text-h1 leading-none font-normal tracking-[0.01em] break-words text-foreground uppercase"
+        >
+          {heading}
+        </h1>
+        {
+          lede && (
+            <p class="mt-6 max-w-[34em] font-body text-lede text-foreground/90 italic">{lede}</p>
+          )
+        }
+      </div>
+      {
+        hasAside && (
+          <div class="r">
+            <slot />
+          </div>
+        )
+      }
+    </div>
+    <slot name="filters" />
+  </div>
+</div>
+
+<style>
+  .ix-open {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+    row-gap: 44px;
+    align-items: end;
+    padding-top: var(--spacing-section-lg);
+    padding-bottom: clamp(40px, 5vw, 64px);
+  }
+  .l {
+    grid-column: 1 / 8;
+    min-width: 0;
+  }
+  .r {
+    grid-column: 9 / 13;
+    min-width: 0;
+  }
+  @media (max-width: 1023px) {
+    .l,
+    .r {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

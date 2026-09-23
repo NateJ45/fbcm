@@ -423,8 +423,12 @@ const JOURNAL_CARD_PROJECTION = `{
   excerpt,
   publishedAt,
   tags,
+  author,
   coverImage${IMAGE_PROJECTION},
-  "categories": categories[]->{ _id, title, slug, description }
+  "categories": categories[]->{ _id, title, slug, description },
+  // The first six body blocks as plain text: where a sermon preview names its
+  // reading (readingOf in sermon-derive.ts). Text only, never the whole body.
+  "opening": pt::text(body[0...6])
 }`;
 // scaffold:end
 

@@ -20,6 +20,7 @@
 import { isSermonPreview } from './import-post.ts';
 import { weekOfLabel } from './church-derive.ts';
 import { splitStega } from './preview-stega.ts';
+import { localDay, sundayOf, formatDay, isoDay, readingOf } from './sermon-derive.ts';
 
 // The one implementation, re-exported rather than copied: the import script and
 // the archive have to agree about what a sermon preview is, forever.
@@ -213,4 +214,257 @@ export function tagIndex<T extends BlogEntry>(
  */
 export function weekOfEyebrow(publishedAt: string | null | undefined): string {
   return weekOfLabel(clean(publishedAt));
+}
+
+// ── The register (I1 Register, the journal pass, 2026-09-22) ────────────────
+// Everything the index and the archives say about a post beyond its title is
+// derived below from the post's own date, category, tags and opening text.
+// None of it is a field (CLAUDE.md rule 15), so none of it can drift.
+
+/** A card entry plus the two fields the register reads (queries.ts). */
+export interface RegisterEntry extends BlogEntry {
+  author?: string | null;
+  /** The first few body blocks, flattened: where a preview names its reading. */
+  opening?: string | null;
+}
+
+/** "Sermon Preview" -> "Sermon previews", "FBCM Events" -> "Events". */
+export function categoryLabel(title: string | null | undefined): string {
+  const words = clean(title)
+    .trim()
+    .replace(/^FBCM\s+/i, '')
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length === 0) return '';
+  const out = words
+    .map((w, i) => (i === 0 || (w.length > 1 && w === w.toUpperCase()) ? w : w.toLowerCase()))
+    .join(' ');
+  return /s$/i.test(out) ? out : `${out}s`;
+}
+
+/** The one-post form of categoryLabel: "Event", "Sermon preview". */
+export function categorySingular(title: string | null | undefined): string {
+  const plural = categoryLabel(title);
+  return /[^s]s$/i.test(plural) ? plural.slice(0, -1) : plural;
+}
+
+/** One category filter: a built route, and how many posts it holds. */
+export interface CategoryFilter {
+  slug: string;
+  title: string;
+  label: string;
+  count: number;
+}
+
+/**
+ * The filter row, counted from the posts themselves rather than read off a
+ * stored number, most posts first. Only a category with a slug and at least one
+ * post is here, which is exactly the set /blog/category/[slug] builds.
+ */
+export function categoryFilters(entries: readonly BlogEntry[]): CategoryFilter[] {
+  const bySlug = new Map<string, CategoryFilter>();
+  for (const e of entries ?? []) {
+    const seen = new Set<string>();
+    for (const c of e.categories ?? []) {
+      const slug = clean(c?.slug?.current).trim();
+      if (!slug || seen.has(slug)) continue;
+      seen.add(slug);
+      const found = bySlug.get(slug);
+      if (found) {
+        found.count += 1;
+      } else {
+        const title = clean(c?.title).trim() || slug;
+        bySlug.set(slug, { slug, title, label: categoryLabel(title), count: 1 });
+      }
+    }
+  }
+  return [...bySlug.values()].sort(
+    (a, b) => b.count - a.count || a.label.localeCompare(b.label, 'en'),
+  );
+}
+
+/**
+ * The newest sermon preview, when its Sunday is today or later; else null.
+ * `today` is a day from localDay() (00:00 UTC on the church's calendar day).
+ */
+export function freshPreview<T extends BlogEntry>(entries: readonly T[], today: Date): T | null {
+  let newest: T | null = null;
+  for (const e of entries ?? []) {
+    if (!entryIsSermonPreview(e)) continue;
+    if (!newest || publishedTime(e) > publishedTime(newest)) newest = e;
+  }
+  if (!newest) return null;
+  const sunday = sundayOf(newest.publishedAt);
+  return sunday && sunday.getTime() >= today.getTime() ? newest : null;
+}
+
+const entryKey = (e: BlogEntry) => e._id ?? `slug:${clean(e.slug?.current)}`;
+
+/**
+ * "Worth coming back for": the newest `n` durable posts that are NOT already on
+ * page 1 of the register, so the index never shows one post twice.
+ */
+export function worthComingBackFor<T extends BlogEntry>(
+  entries: readonly T[],
+  page1: readonly BlogEntry[],
+  n = 4,
+): T[] {
+  const onPage1 = new Set((page1 ?? []).map(entryKey));
+  return splitDurable(entries)
+    .durable.filter((e) => !onPage1.has(entryKey(e)))
+    .slice(0, Math.max(0, n));
+}
+
+/** What one numbered page of a list covers. */
+export interface PageSpan {
+  page: number;
+  /** "2025", or "2025–24" (an en dash) when the page crosses a year. */
+  span: string;
+  /** "September 17, 2026 to January 6, 2026", for the pager's title attribute. */
+  title: string;
+}
+
+/**
+ * Each page's years, from the same paginate() the routes use, so the pager can
+ * say which page holds 2024.
+ */
+export function pageYearSpans(entries: readonly BlogEntry[], perPage: number): PageSpan[] {
+  if (!entries?.length) return [];
+  const { pages } = paginate(entries, perPage, 1);
+  const out: PageSpan[] = [];
+  for (let n = 1; n <= pages; n += 1) {
+    const days = paginate(entries, perPage, n)
+      .items.map((e) => localDay(e.publishedAt))
+      .filter((d): d is Date => d !== null);
+    if (days.length === 0) {
+      out.push({ page: n, span: '', title: '' });
+      continue;
+    }
+    const first = days[0];
+    const last = days[days.length - 1];
+    const ya = first.getUTCFullYear();
+    const yb = last.getUTCFullYear();
+    out.push({
+      page: n,
+      span: ya === yb ? String(ya) : `${ya}–${String(yb).slice(-2)}`,
+      title: `${formatDay(first)} to ${formatDay(last)}`,
+    });
+  }
+  return out;
+}
+
+/** One link in the thin state's "Also filed under" line. */
+export interface FiledUnder {
+  kind: 'tag' | 'category';
+  label: string;
+  href: string;
+  count: number;
+}
+
+/**
+ * The other tags and categories on a short list's posts, most frequent first
+ * (first seen wins a tie), at most `max`. `exclude` is the page's own tag or
+ * category, by label or slug. Every href is a route the build makes: a tag
+ * goes through the same slugify the tag route's tagIndex uses, and a category
+ * that is on a post has at least one post, which is the category route's rule.
+ */
+export function thinStateTags(
+  entries: readonly BlogEntry[],
+  exclude: string | null | undefined,
+  slugify: (value: string) => string,
+  max = 8,
+): FiledUnder[] {
+  const ex = clean(exclude).trim().toLowerCase();
+  const exSlug = ex ? slugify(ex) : '';
+  const isExcluded = (label: string, slug: string) =>
+    !!ex && (label.toLowerCase() === ex || slug === ex || slug === exSlug);
+
+  const found = new Map<string, { item: FiledUnder; order: number }>();
+  const add = (key: string, make: () => FiledUnder) => {
+    const f = found.get(key);
+    if (f) f.item.count += 1;
+    else found.set(key, { item: make(), order: found.size });
+  };
+
+  for (const e of entries ?? []) {
+    const seen = new Set<string>();
+    for (const c of e.categories ?? []) {
+      const slug = clean(c?.slug?.current).trim();
+      const title = clean(c?.title).trim();
+      if (!slug || !title || isExcluded(title, slug)) continue;
+      const key = title.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      add(key, () => ({
+        kind: 'category',
+        label: title,
+        href: `/blog/category/${slug}/`,
+        count: 1,
+      }));
+    }
+    for (const raw of e.tags ?? []) {
+      const label = clean(raw).trim();
+      const slug = label ? slugify(label) : '';
+      if (!slug || isExcluded(label, slug)) continue;
+      const key = label.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      add(key, () => ({ kind: 'tag', label, href: `/blog/tag/${slug}/`, count: 1 }));
+    }
+  }
+  return [...found.values()]
+    .sort((a, b) => b.item.count - a.item.count || a.order - b.order)
+    .slice(0, Math.max(0, max))
+    .map((f) => f.item);
+}
+
+/** A page's posts grouped by the church-local year they were published in. */
+export function groupByYear<T extends BlogEntry>(
+  entries: readonly T[],
+): Array<{ year: number | null; items: T[] }> {
+  const groups: Array<{ year: number | null; items: T[] }> = [];
+  for (const e of entries ?? []) {
+    const y = localDay(e.publishedAt)?.getUTCFullYear() ?? null;
+    const last = groups[groups.length - 1];
+    if (last && last.year === y) last.items.push(e);
+    else groups.push({ year: y, items: [e] });
+  }
+  return groups;
+}
+
+/** A register row's date and meta column. */
+export interface RegisterMeta {
+  preview: boolean;
+  /** "Sunday Sep 21" on a preview, the category's singular label otherwise, or ''. */
+  key: string;
+  /** The reading on a preview ("Romans 8:1-11"), or ''. */
+  value: string;
+  /** "Sep 17": the post's own day. */
+  day: string;
+  /** YYYY-MM-DD of the post's own day, for <time datetime>. */
+  iso: string;
+}
+
+export function registerMeta(entry: RegisterEntry): RegisterMeta {
+  const d = localDay(entry.publishedAt);
+  const day = d ? formatDay(d, { month: 'short', day: 'numeric' }) : '';
+  const iso = d ? isoDay(d) : '';
+  if (entryIsSermonPreview(entry)) {
+    const sunday = sundayOf(entry.publishedAt);
+    return {
+      preview: true,
+      key: sunday ? `Sunday ${formatDay(sunday, { month: 'short', day: 'numeric' })}` : '',
+      value: readingOf(entry.opening),
+      day,
+      iso,
+    };
+  }
+  const first = (entry.categories ?? []).find((c) => clean(c?.title).trim());
+  return {
+    preview: false,
+    key: first ? categorySingular(first.title) : '',
+    value: '',
+    day,
+    iso,
+  };
 }

@@ -1,0 +1,4380 @@
+[
+  {
+    "_createdAt": "2026-09-18T23:17:54Z",
+    "_id": "post-a-light-wardrobe",
+    "_rev": "QjI0kncFolotw4PTBkXaYj",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:16:56Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "87c8b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87c8b0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a sermon preview for a sermon in the \"Arise! Your Light Has Come\" Advent 2025 series. "
+          },
+          {
+            "_key": "87c8b0s1",
+            "_type": "span",
+            "marks": [
+              "87c8b0m0",
+              "em",
+              "underline"
+            ],
+            "text": "The live stream recordings"
+          },
+          {
+            "_key": "87c8b0s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": " can be viewed online."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "87c8b0m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "87c8b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87c8b1s0",
+            "_type": "span",
+            "marks": [
+              "strong",
+              "em"
+            ],
+            "text": "“The night is nearly over; the day is almost here. So let us put aside the deeds of darkness and put on the armor of light.” - from Romans 13:11-14 (NIV)"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "87c8b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87c8b2s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "The following is excerpted from the Pastors' Column in the upcoming The Visitor newsletter. You can find current and previous issues of our church newsletter at "
+          },
+          {
+            "_key": "87c8b2s1",
+            "_type": "span",
+            "marks": [
+              "87c8b2m0",
+              "em",
+              "underline"
+            ],
+            "text": "fbcmuncie.org/publications"
+          },
+          {
+            "_key": "87c8b2s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "87c8b2m0",
+            "_type": "link",
+            "href": "http://fbcmuncie.org/publications"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "87c8b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87c8b3s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "A Light Wardrobe"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "87c8b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87c8b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Advent is upon us: the great time of anticipation and preparation. Get ready! No, not in the sense of hurry: the frantic pace of the adverts and the expectations placed upon us by the digital, algorithmically-powered 21st-century equivalent of the Madison Avenue advertisers and influencers pushing us to buy, spend, and consume. Rather we prepare ourselves for the light: for Christ is the light of the world."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "87c8b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87c8b5s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Theologically, "
+          },
+          {
+            "_key": "87c8b5s1",
+            "_type": "span",
+            "marks": [],
+            "text": "this means we take full inventory of the darkness, within and without. We recognize the fallenness in the world and ourselves for what it is. But this leads us not to despair or to cynicism. Because we do not end there. We put on the armor of light, trusting: “The light shines in the darkness, and the darkness has not overcome it.” That means that we live as Christ lived, and not according to the ways of sin and the world which seem, often, so powerful."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "87c8b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87c8b6s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Personally"
+          },
+          {
+            "_key": "87c8b6s1",
+            "_type": "span",
+            "marks": [],
+            "text": ", it is the prayer of your Pastors that the light and warmth of awaiting Christ be palpably present to each of you this Season. While we might rightly take inventory of the darkness during Advent, and while it is wise to guard against the compulsion to turn the season into one which is only about new gadgets and fancy gifts, none of this should suggest dreariness."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "87c8b7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87c8b7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "There is great joy to be found in the waiting, the preparation, and the promise of the once and future coming of Jesus Christ. As Christmas arrives, take joy, eat, gather with family and loved ones new and old, sing songs and laugh deeply. And do not let the darkness of the world rob you of joy."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "87c8b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87c8b8s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "\"Arise, shine, for your light has come, and the glory of the LORD rises upon you.\" "
+          },
+          {
+            "_key": "87c8b8s1",
+            "_type": "span",
+            "marks": [],
+            "text": "- Isaiah 60:1 (NLT)"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "A Light Wardrobe",
+      "asset": {
+        "_ref": "image-a0dbaaa674380d86d42c3f00b2cc41b31563ce7a-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "Advent is upon us: the great time of anticipation and preparation. Get ready!",
+    "publishedAt": "2025-11-25T20:46:35.525Z",
+    "slug": "a-light-wardrobe",
+    "tags": [
+      "Advent",
+      "Arise Your Light Has Come"
+    ],
+    "title": "A Light Wardrobe"
+  },
+  {
+    "_createdAt": "2026-09-18T23:18:04Z",
+    "_id": "post-bearing-good-news",
+    "_rev": "F5Duw02wR0YDcoTNScBq4W",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:54:14Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "ae1fb0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb0s0",
+            "_type": "span",
+            "marks": [],
+            "text": "This sermon preview is part of "
+          },
+          {
+            "_key": "ae1fb0s1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "\"Pardon the Interruption: An Advent Series.\""
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb1s0",
+            "_type": "span",
+            "marks": [],
+            "text": "To view past live streams, "
+          },
+          {
+            "_key": "ae1fb1s1",
+            "_type": "span",
+            "marks": [
+              "ae1fb1m0",
+              "underline"
+            ],
+            "text": "please view our live stream archive"
+          },
+          {
+            "_key": "ae1fb1s2",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "ae1fb1m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb2s0",
+            "_type": "span",
+            "marks": [],
+            "text": "For information and a schedule of our Christmas and New Year’s Service, "
+          },
+          {
+            "_key": "ae1fb2s1",
+            "_type": "span",
+            "marks": [
+              "ae1fb2m0",
+              "underline"
+            ],
+            "text": "see this post"
+          },
+          {
+            "_key": "ae1fb2s2",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "ae1fb2m0",
+            "_type": "link",
+            "href": "https://www.fbcmuncie.org/post/christmas-new-years-2023"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "***"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb4s0",
+            "_type": "span",
+            "marks": [
+              "strong",
+              "em"
+            ],
+            "text": "“I am the Lord’s servant,” Mary answered. “May your word to me be fulfilled.” Then the angel left her."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "-From Luke 1:28–38"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb6s0",
+            "_type": "span",
+            "marks": [
+              "strong",
+              "em"
+            ],
+            "text": "“But Mary treasured up all these things and pondered them in her heart. The shepherds returned, glorifying and praising God for all the things they had heard and seen, which were just as they had been told”"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "-From Luke 2:1-20"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb8s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Sometime Monday evening, Kendall and I realized how much we had to do before Christmas. We loaded our one-month-old daughter into the car, braved the cold, and hit three stores in as many hours. Our little one took her dinner in a Target fitting room. A normal routine was interrupted by hurry."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb9s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Has Christmas snuck up on you this year? Good! Christmas should come in a burst. God’s timing is not our timing. But it is in “the fullness of time” (Galatians 4:4) that Jesus came."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb10",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb10s0",
+            "_type": "span",
+            "marks": [],
+            "text": "This year, the last Sunday of Advent and Christmas Eve fall on the same day."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb11",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb11s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Sunday morning, we’ll see how Mary is the first faithful disciple: hearing the word of God and responding to it. It’s hard to imagine a life more interrupted, plans more upended, than Mary’s plans. And yet her response is, “May your word to me be fulfilled.”"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb12",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb12s0",
+            "_type": "span",
+            "marks": [],
+            "text": "In the evening, we’ll travel with Shepherds whose normal day shifts were interrupted by a chorus of an angel army proclaiming the good news of great joy and peace to those on whom God’s favor rests. When Mary hears of this astounding tale (after childbirth!) she “treasured up all these things and pondered them in her heart.”"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb13",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb13s0",
+            "_type": "span",
+            "marks": [],
+            "text": "God doesn’t come in our time. Christmas comes in a burst. It interrupts. It upends. It upsets. But because it does so, we can be confident that Christmas peace doesn’t come into our world once it is tidy and neat. It comes to people tending smelly livestock. It comes to the poor and at-risk. The news, tidings of great joy, the blessing of peace on earth: words worth treasuring and pondering."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ae1fb14",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae1fb14s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Christmas can still interrupt our lives. But the true meaning of Christmas won’t generate more hurry, like my last-minute shopping. Instead, Christmas interruptions generate wonder and awe at the God coming to be Immanuel, God with us, in the right time, the fullness of time, God’s time."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "Bearing Good News",
+      "asset": {
+        "_ref": "image-c771424259fc634f65d027aa9b78e6a05d7eb6ba-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "This sermon preview is part of \"Pardon the Interruption: An Advent Series.\"To view past live streams, please view our live stream archive.For information and a schedule of our Christmas and New Year’s Service, see this…",
+    "publishedAt": "2023-12-19T22:16:15.044Z",
+    "slug": "bearing-good-news",
+    "tags": [
+      "Advent",
+      "Christmas",
+      "Pardon The Interruption"
+    ],
+    "title": "Bearing Good News"
+  },
+  {
+    "_createdAt": "2026-09-18T23:18:22Z",
+    "_id": "post-elect-gentleness",
+    "_rev": "QjI0kncFolotw4PTBkXaYj",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:16:56Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "27f5b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is the sermon preview of sermon five of nine in the preaching series Elect Spiritual Fruit. To watch a recording of this message, visit FBCM’s "
+          },
+          {
+            "_key": "27f5b0s1",
+            "_type": "span",
+            "marks": [
+              "em",
+              "underline"
+            ],
+            "text": "services and sermons"
+          },
+          {
+            "_key": "27f5b0s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": " page."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b1s0",
+            "_type": "span",
+            "marks": [],
+            "text": "\"The angel of the Lord came back a second time and touched him and said, “Get up and eat, for the journey is too much for you.” "
+          },
+          {
+            "_key": "27f5b1s1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "- 1 Kings 19:7"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b2s0",
+            "_type": "span",
+            "marks": [],
+            "text": "“Looking inside ourselves, we can anticipate only harshness from heaven. Looking out to Christ, we can anticipate only gentleness.”"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "― Dane C. Ortlund, "
+          },
+          {
+            "_key": "27f5b3s1",
+            "_type": "span",
+            "marks": [
+              "strong",
+              "em"
+            ],
+            "text": "Gentle and Lowly: The Heart of Christ for Sinners and Sufferers"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "You believe in God, well and good. But even the demons believe and shudder (to paraphrase James 2:19). Many of us believe in God. In fact, most in our country believe in God, according to surveys. And I do not mention this to cast doubt on anyone's sincerity."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "But it makes a difference what God we believe in. Is the God you believe in the true God? Is he gentle? Is his burden easy and light like the God revealed to us in Jesus? Or his this God merely an incessant voice of accusation."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "While on vacation, I attended my friend Sara Jane's church in suburban Cincinnati. She is a Presbyterian. One of the gifts of good Presbyterian preaching is its strict attention to holy scriptures. She cautioned us not to assume that the voice in our head was not necessarily of God. \"If you are being told never to rest, never to give up, that might be the voice of your old boss posing at Jesus, but that is not the real Jesus. Jesus told his disciples then to rest. He tells us who are his disciples now to rest.\""
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "A needed message, and one consistent and resonate with one of the most powerful messages I have ever heard. Beth Moore preached at my seminary's Preaching conference in 2019. Her message was entitled \"Knowing This From That\" and examined Acts 1:-11 and the rest of Acts. \"This same Jesus,\" the two men dressed in white informed the Apostles, \"who has been taken from you into heaven, will come back in the same way you have seen him go into heaven.” (Acts 19:11)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b8s0",
+            "_type": "span",
+            "marks": [],
+            "text": "The message asked us to consider who *this* Jesus was, compared to the many forms of Jesus promoted in various corners of society. The late Evangelist Billy Graham's famous sermon \"Who is Jesus?\" where he also explored the unavoidable question also asked us to dispense with any false versions of Christ, as he thundered to a stadium of thousands."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b9s0",
+            "_type": "span",
+            "marks": [],
+            "text": "As Dane Ortlund notes, if we listen to a Christ of our own making we will find only a distorted Christ: distorted in its judgment and yet often endlessly exercising judgment. But if we look to Christ, as he is revealed to us in Scripture, we will find inexhaustible gentleness."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b10",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b10s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Elijah has been fleeing the prophets of false Gods. The Queen Jezebel and King Ahab have been promoting the false prophets of Baal. The prophets of the true Lord and God have been persecuted, and Elijah is exhausted. He prays to die (19:4). He has seen the harshness of the world and the situation is hopeless. So hopeless, in fact, it seems better not to be on earth at all. He has looked within him and found nothing left to give. He has looked without him, and seen dangers. What he has not seen is a reason for hope."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b11",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b11s0",
+            "_type": "span",
+            "marks": [],
+            "text": "How does the Lord respond? Does he chastise Elijah? Does he hand down judgment on him from on high?"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b12",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b12s0",
+            "_type": "span",
+            "marks": [],
+            "text": "No."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b13",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b13s0",
+            "_type": "span",
+            "marks": [],
+            "text": "The Lord, through an angel, gives Elijah food, and rest."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b14",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b14s0",
+            "_type": "span",
+            "marks": [],
+            "text": "The journey, he knows, is too much for him. The Lord's gentle and generous provision sustains him. And it is after this ordeal, when Elijah is at the end of his hope, that Elijah experiences the glory of God pass him by in what the NIV translates as a \"gentle whisper.\""
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b15",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b15s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Before we can ever know how to be gentle and our lives (and we should seek gentleness, rather than condemnation, to characterize our relationships with those near to us, and even those hostile to us), we must know the gentle nature of God, the true nature of God. The God whose burden is easy, and light (Matthew 11:18-30)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b16",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b16s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Reflection"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b17",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b17s0",
+            "_type": "span",
+            "marks": [],
+            "text": "1. Have you ever realized that the Jesus \"in your head\" is different from Jesus as revealed in Scripture? What changed when you realized who you thought Jesus was different from who he really is?"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b18",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b18s0",
+            "_type": "span",
+            "marks": [],
+            "text": "2. Is it difficult for you to accept gentleness or accept it? Why might that be?"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27f5b19",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "27f5b19s0",
+            "_type": "span",
+            "marks": [],
+            "text": "3. Sometimes gentleness is seen as weakness. In what ways might be a great spiritual strength?"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "Elect Gentleness",
+      "asset": {
+        "_ref": "image-a256cfca39402d27bbdf16128b06a0986bc29173-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "ou believe in God, well and good. But even the demons believe and shudder (to paraphrase James 2:19). Many of us believe in God. In fact,",
+    "publishedAt": "2024-10-16T00:17:02.541Z",
+    "slug": "elect-gentleness",
+    "tags": [],
+    "title": "Elect Gentleness"
+  },
+  {
+    "_createdAt": "2026-09-18T23:18:50Z",
+    "_id": "post-fbcm-sermon-podcast-now-available",
+    "_rev": "QjI0kncFolotw4PTBkXaYj",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:16:56Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "8640b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b0s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Our sermon podcast has returned!"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b1",
+        "_type": "inlineImage",
+        "alt": "FBCM Sermon Podcast Now Available",
+        "asset": {
+          "_ref": "image-0da21ab88186e001e4730ef99d2fd2e32a5954d3-940x726-png",
+          "_type": "reference"
+        },
+        "size": "wide"
+      },
+      {
+        "_key": "8640b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b2s0",
+            "_type": "span",
+            "marks": [],
+            "text": "We'll continue to live stream on "
+          },
+          {
+            "_key": "8640b2s1",
+            "_type": "span",
+            "marks": [
+              "8640b2m0",
+              "underline"
+            ],
+            "text": "our YouTube channel"
+          },
+          {
+            "_key": "8640b2s2",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "8640b2m0",
+            "_type": "link",
+            "href": "https://www.youtube.com/c/FbcmuncieOrg"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "And you'll continue to be able to find previous videos on "
+          },
+          {
+            "_key": "8640b3s1",
+            "_type": "span",
+            "marks": [
+              "8640b3m0",
+              "underline"
+            ],
+            "text": "our church center channel⁠"
+          },
+          {
+            "_key": "8640b3s2",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "8640b3m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "But in addition, sometime the week after they're preached live, we'll be putting our sermons online in audio-only podcast."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "We hope this will be a convenient library for any interested in the messages preached during our worship service."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "\"Let the message about Christ, in all its richness, fill your lives. Teach and counsel each other with all the wisdom he gives.\" - Colossians 3:16a (NLT)"
+          }
+        ],
+        "markDefs": [],
+        "style": "blockquote"
+      },
+      {
+        "_key": "8640b7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b7s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Here are some features of the podcast:"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b8s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Download and listen more easily on your commute, or when you're wanting to listen or catch-up on sermons without watching a whole live-stream / video."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b9s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Each episode has a short intro and outro, an arrangement of \"Be Thou My Vision,\" by FBCM's Worship Minister Dr. Clifton Davis."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b10",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b10s0",
+            "_type": "span",
+            "marks": [],
+            "text": "And each episode will end with one of several brief testimonies with brief instructions on how to find out more about our church. Our first one is from one of our elementary students, Landon! Listen to the end of the episode. He did a good job in his podcast debut!"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b11",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b11s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Available on all major podcast platforms."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b12",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b12s0",
+            "_type": "span",
+            "marks": [
+              "8640b12m0",
+              "underline"
+            ],
+            "text": "Apple Podcasts"
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "8640b12m0",
+            "_type": "link",
+            "href": "https://itunes.apple.com/podcasts/show/first-baptist-church-muncie-indiana-sermons/4ebebe00-f384-453b-8443-358f055b31df"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b13",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b13s0",
+            "_type": "span",
+            "marks": [
+              "8640b13m0",
+              "underline"
+            ],
+            "text": "Amazon Music"
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "8640b13m0",
+            "_type": "link",
+            "href": "https://music.amazon.com/podcasts/bf8194a2-658f-48da-b690-e72b79c87690/first-baptist-church-muncie-indiana---sermons"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b14",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b14s0",
+            "_type": "span",
+            "marks": [
+              "8640b14m0",
+              "underline"
+            ],
+            "text": "YouTube Music"
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "8640b14m0",
+            "_type": "link",
+            "href": "https://music.youtube.com/playlist?list=PLhBlTVSSFAoJvk2yxIXZyJDOZAowEmIxa&si=bU27b-BntRMBAv3n"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b15",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b15s0",
+            "_type": "span",
+            "marks": [
+              "8640b15m0",
+              "underline"
+            ],
+            "text": "Spotify"
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "8640b15m0",
+            "_type": "link",
+            "href": "https://open.spotify.com/show/1ZU36uuAsu4GEPA35jOT2q"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b16",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b16s0",
+            "_type": "span",
+            "marks": [],
+            "text": "And many more. You can find many of them linked on our "
+          },
+          {
+            "_key": "8640b16s1",
+            "_type": "span",
+            "marks": [
+              "8640b16m0",
+              "underline"
+            ],
+            "text": "Spotify for Podcasters page."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "8640b16m0",
+            "_type": "link",
+            "href": "https://podcasters.spotify.com/pod/show/first-baptist-church-munc"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b17",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b17s0",
+            "_type": "span",
+            "marks": [],
+            "text": "You can also ask your smart speaker to play \"First Baptist Church Muncie Indiana Podcast\" and it should play the latest episode."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8640b18",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8640b18s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Share this resource with friends. We hope it will be a convenient way to discover or revisit the sermons, and may prove edifying for your faith in Jesus."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "FBCM Sermon Podcast Now Available",
+      "asset": {
+        "_ref": "image-0da21ab88186e001e4730ef99d2fd2e32a5954d3-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "Our sermon podcast has returned!We'll continue to live stream on our YouTube channel.And you'll continue to be able to find previous videos on our church center channel⁠.But in addition, sometime the week after they're…",
+    "publishedAt": "2024-02-12T23:13:22.388Z",
+    "slug": "fbcm-sermon-podcast-now-available",
+    "tags": [],
+    "title": "FBCM Sermon Podcast Now Available"
+  },
+  {
+    "_createdAt": "2026-09-18T23:22:27Z",
+    "_id": "post-imitators",
+    "_rev": "QjI0kncFolotw4PTBkXaYj",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:16:56Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "1120b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a sermon preview for the fourth week of our “Walking in Wisdom: A Lenten Study of Proverbs” series."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1120b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b1s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "Visit FBCM’s "
+          },
+          {
+            "_key": "1120b1s1",
+            "_type": "span",
+            "marks": [
+              "1120b1m0",
+              "em",
+              "underline"
+            ],
+            "text": "Church Center Channel "
+          },
+          {
+            "_key": "1120b1s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "to view video live stream or audio version of sermon (published week after)."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "1120b1m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "1120b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b2s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "\"You know how we lived among you for your sake. You became imitators of us and of the Lord, for you welcomed the message in the midst of severe suffering with the joy given by the Holy Spirit.\""
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1120b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b3s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "-From 1 Thessalonians 1"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1120b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "My daughter is one and a half years old. It's hard to believe. So much, she learns from imitation. Her new favorite phrase is \"Oooooh Noooo!\" Often when she says something, Kendall and I think: \"Where did she learn that!\" Often (and sometimes to our horror) the answer is simple: us! Of course, we are reasonably, and I hope not vainly, proud when she tries and tries and imitates something we have been trying to teach her successfully."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1120b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Imitation is a way of learning. And it shows up prominently in Paul's first letter to the Thessalonians (perhaps his first letter, if some scholars are accurate)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1120b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Paul is eager to write this encouraging letter to the church in Thessalonica. Among Paul's letters, this one reads the most positively. A picture of the church actually doing something right - hurrah!"
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "1120b7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Paul (and Silvanus and Timothy) begin their greetings with gratitude for how the Thessalonian church has the Holy Spirit actively living in them and allows them to be imitators of God."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1120b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b8s0",
+            "_type": "span",
+            "marks": [],
+            "text": "This has allowed their faith to become well-known. Likewise, FBCM (and all Christians) are called to be imitators of God so that we might be witnesses to Muncie."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1120b9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1120b9s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Join us as we beigin our series through 1 Thessalonians."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "Imitators",
+      "asset": {
+        "_ref": "image-779312a01438bf3e52a2af8d22bb1822c6291be4-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "My daughter is one and a half years old. It's hard to believe. So much, she learns from imitation. Her new favorite phrase is \"Oooooh Noooo!\"",
+    "publishedAt": "2025-04-22T20:43:11.449Z",
+    "slug": "imitators",
+    "tags": [],
+    "title": "Imitators"
+  },
+  {
+    "_createdAt": "2026-09-18T23:22:58Z",
+    "_id": "post-justified-by-faith-empowered-by-the-spirit",
+    "_rev": "F5Duw02wR0YDcoTNScBq4W",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:54:14Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "4913b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b0s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "\" ...[H]ope does not put us to shame, because God’s love has been poured out into our hearts through the Holy Spirit, who has been given to us.\""
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4913b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b1s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "“For while we were still weak, at the right time Christ died for the ungodly.”"
+          },
+          {
+            "_key": "4913b1s1",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "4913b1s2",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "“God shows His love for us that while we were still sinners, Christ died for us.”"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4913b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b2s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "“For if while we were enemies we were reconciled to God by the death of His Son, much more, now that we are reconciled, shall we be saved by his life.” - All from Romans 5:1-10"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4913b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b3s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a sermon preview for the first week of our series on the Holy Spirit as Our Advocate, preached on and After Pentecost 2025."
+          },
+          {
+            "_key": "4913b3s1",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4913b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b4s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "Visit FBCM’s "
+          },
+          {
+            "_key": "4913b4s1",
+            "_type": "span",
+            "marks": [
+              "4913b4m0",
+              "em",
+              "underline"
+            ],
+            "text": "Church Center Channel "
+          },
+          {
+            "_key": "4913b4s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "to view video live stream (live) or audio version of sermon (published week after)."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "4913b4m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "4913b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "There are times when my own words are not good enough, and it is wiser to simply cede the metaphorical online microphone to someone who draws us into the happy mystery of the Gospel with a fitting word."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4913b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "This week, we learn about the Holy Spirit's role in giving us up, Hope which does not put us to shame. Hope which looks like Christ dying for the ungodly. Come on Sunday to see what the Spirit might say to us through this message. Come to the church blog to see a fitting quotation from Lutheran Pastor Sarah Hinlicky Wilson about the implications of this very good Gospel:"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4913b7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Christ came not for the good. Not even for the ones who wanted to be good or tried to be good. Not for his well-meaning allies, not for the ones who remembered to say thanks. He came for the unrighteous, the sinners, the ungrateful, the evil, the lost, the condemned, the ungodly. In short: his enemies. The ones who don’t want to be saved at all, whether because they don’t think they need it or because they frankly prefer their sins to God’s company. Christ wanted so much to rescue and redeem his enemies that he became sin for their sake, a curse for their sake, and then simply offered his redemption as a gift, knowing full well that some wouldn’t want the full pardon and the steadfast love and the everlasting life, if it meant conceding their enemy status. Two thousand years later we are still stunned by the news and still haven’t figured out how to be a church that corresponds to its message. Because what could such a church be? Only a perpetual embarrassment. People selected chiefly on account of their disqualification to accomplish great things. A fellowship of such sinners that backbiting and betrayal are an inevitability. Ambassadors who constantly consider defecting to the other side. How can God expect to win more to His church with that kind of public relations campaign? Unless, of course, that is exactly the point."
+          }
+        ],
+        "markDefs": [],
+        "style": "blockquote"
+      },
+      {
+        "_key": "4913b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b8s0",
+            "_type": "span",
+            "marks": [],
+            "text": "A church that is comprised of sinners and enemies cannot be other than a church comprised of sinners and enemies!"
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "4913b9",
+        "_type": "inlineImage",
+        "alt": "Justified by Faith, Empowered by the Spirit",
+        "asset": {
+          "_ref": "image-b10f1df20c13c774789e1a2825fa600080e2f587-2048x1365-jpg",
+          "_type": "reference"
+        },
+        "size": "wide"
+      },
+      {
+        "_key": "4913b10",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b10s0",
+            "_type": "span",
+            "marks": [],
+            "text": "In recovery, we hope; at war with the sin within, we hope; struck down daily and raised up again to new life daily, we hope. But a church that is really Christ’s church for Christ’s sinners and enemies is going to have to take that risk and suffer, as Christ did, the ungrateful and the evil and the ungodly. Certainly, if we are not continually naming, confessing, and confronting the sin, the wonder of God’s vast and shocking love will be lost. But it has to be love for a “true and not a fictitious” sinner. Nothing will ever convince us more thoroughly that salvation is God’s doing and not our own.¹"
+          }
+        ],
+        "markDefs": [],
+        "style": "blockquote"
+      },
+      {
+        "_key": "4913b11",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b11s0",
+            "_type": "span",
+            "marks": [],
+            "text": "There is much more to say."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4913b12",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b12s0",
+            "_type": "span",
+            "marks": [],
+            "text": "But for now, let \"Amen\" suffice."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4913b13",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4913b13s0",
+            "_type": "span",
+            "marks": [],
+            "text": "¹ From "
+          },
+          {
+            "_key": "4913b13s1",
+            "_type": "span",
+            "marks": [
+              "4913b13m0",
+              "strong",
+              "em",
+              "underline"
+            ],
+            "text": "Lutheran Forum, "
+          },
+          {
+            "_key": "4913b13s2",
+            "_type": "span",
+            "marks": [
+              "4913b13m1",
+              "strong",
+              "underline"
+            ],
+            "text": "Winter 2018, \"The Church and Happiness\" by Sarah Hinlickly Wilson:"
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "4913b13m0",
+            "_type": "link",
+            "href": "https://www.lutheranforum.com/blog/the-church-and-happiness-1"
+          },
+          {
+            "_key": "4913b13m1",
+            "_type": "link",
+            "href": "https://www.lutheranforum.com/blog/the-church-and-happiness-1"
+          }
+        ],
+        "style": "normal"
+      }
+    ],
+    "categories": [
+      {
+        "_key": "cat0",
+        "_ref": "category-sermon-preview",
+        "_type": "reference"
+      }
+    ],
+    "coverImage": {
+      "_type": "image",
+      "alt": "Justified by Faith, Empowered by the Spirit",
+      "asset": {
+        "_ref": "image-d13d2acce0100183891142eee86863ccaa397d2b-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "This week, we learn about the Holy Spirit's role in giving us up— Hope which does not put us to shame. Hope which looks like Christ dying for the ungodly.",
+    "publishedAt": "2025-06-11T13:42:33.108Z",
+    "slug": "justified-by-faith-empowered-by-the-spirit",
+    "tags": [
+      "Our Advocate"
+    ],
+    "title": "Justified by Faith, Empowered by the Spirit"
+  },
+  {
+    "_createdAt": "2026-09-18T23:23:29Z",
+    "_id": "post-mountaintop-forgiveness",
+    "_rev": "76n5oA2VRzKOmE8UARiwG0",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:17:01Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "f020b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a sermon preview for the fourth week of our “Mountaintop Manifesto” series."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b1s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "Visit FBCM’s "
+          },
+          {
+            "_key": "f020b1s1",
+            "_type": "span",
+            "marks": [
+              "f020b1m0",
+              "em",
+              "underline"
+            ],
+            "text": "Church Center Channel "
+          },
+          {
+            "_key": "f020b1s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "to view video live stream (live) or audio version of sermon (published later)."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "f020b1m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b2s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "\"Be careful not to practice your righteousness in front of others to be seen by them. If you do, you will have no reward from your Father in heaven.\""
+          },
+          {
+            "_key": "f020b2s1",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "f020b2s2",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "- From Matthew 6:1-8; 14-18"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "\"Don't think the church is full of hypocrites. There's always room for at least one more.\" I shared this once from the pulpit. It is what I thought was a well worn-out preacher joke. A person who heard me say it found it a bold statement: one he'd rarely heard a preacher share. Can you say that about \"good church people\"?"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Hypocrisy involves many things. We usually take it to mean to preach one thing and do another. The original word has the connotation of putting on a mask, or putting on a big showy display. When I said the church always has room for more hypocrites, that is not to say anything "
+          },
+          {
+            "_key": "f020b4s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "positive "
+          },
+          {
+            "_key": "f020b4s2",
+            "_type": "span",
+            "marks": [],
+            "text": "about hypocrisy. It is to say it is a universal human temptation and the hospital for sinners which is the church is exactly where such people need to be: not because God loves hypocrisy but because he wants religious hypocrites to become genuinely spiritual."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Jesus, in fact, is against hypocrisy, but he is not surprised to see it."
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "f020b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Such hypocrisy happens in every age. Clarence Jordan once wrote a paraphrase of the Gospels called \"The Cotton Patch Gospel\" where he imagined the Gospels taking place in the 20th century American South."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Here's how he put some of Jesus's words in Matthew 6:"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b8s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "Now, when you go to church, don’t be like the religious phonies who put on a solemn face to impress men with their piety. Rather, when you go to church, act perfectly normal so as not to give the impression you’re going there to be seen, but to worship God. And your Father, who sees the inner life, will respond to you."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b9s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Are we here to be seen, or to worship God? Of course, worshiping together is vital. The church is a community, not a show of private individuals. Going to church is not like going to a movie theater. But, we can find concern about God and godly things curiously absent from our religion if we're not careful. If at worship we're not gathered for God, it'd be better if we were not gathered at all."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b10",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b10s0",
+            "_type": "span",
+            "marks": [],
+            "text": "As we continue hearing from Jesus' Sermon on the Mount, Jesus reminds us that God is not impressed by outward displays alone, but looks at our hearts. The questions for us pile up when we hear such news. We begin to ask questions like:"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b11",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b11s0",
+            "_type": "span",
+            "marks": [],
+            "text": "What is the shape of my heart?"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b12",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b12s0",
+            "_type": "span",
+            "marks": [],
+            "text": "What do I desire? And does it look like Jesus?"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b13",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b13s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Is my heart set on the Kingdom of God?"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b14",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b14s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Am I extending the same forgiveness to others, that I would hope to receive myself?"
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f020b15",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f020b15s0",
+            "_type": "span",
+            "marks": [],
+            "text": "It's easy to become a hypocrite. It's hard to have a sincere heart, devoted to God. Some might even say it's impossible. But with God, all things are possible: even for us hypocrites and sinners gathered at church."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "Mountaintop Forgiveness",
+      "asset": {
+        "_ref": "image-292501f61a59db22aad873b45dae17e46941eb67-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "This is a sermon preview for the fourth week of our “Mountaintop Manifesto” series.",
+    "publishedAt": "2025-02-05T02:11:37.263Z",
+    "slug": "mountaintop-forgiveness",
+    "tags": [],
+    "title": "Mountaintop Forgiveness"
+  },
+  {
+    "_createdAt": "2026-09-18T23:23:35Z",
+    "_id": "post-mountaintop-love",
+    "_rev": "F5Duw02wR0YDcoTNScBq4W",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:54:14Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "be18b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a sermon preview for the fourth week of our “Mountaintop Manifesto” series."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b1s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "Visit FBCM’s "
+          },
+          {
+            "_key": "be18b1s1",
+            "_type": "span",
+            "marks": [
+              "be18b1m0",
+              "em",
+              "underline"
+            ],
+            "text": "Church Center Channel "
+          },
+          {
+            "_key": "be18b1s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "to view video live stream (live) or audio version of sermon (published later)."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "be18b1m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b2s0",
+            "_type": "span",
+            "marks": [
+              "strong",
+              "em"
+            ],
+            "text": "“"
+          },
+          {
+            "_key": "be18b2s1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Be perfect, therefore, as your heavenly Father is perfect."
+          },
+          {
+            "_key": "be18b2s2",
+            "_type": "span",
+            "marks": [
+              "strong",
+              "em"
+            ],
+            "text": "” - from "
+          },
+          {
+            "_key": "be18b2s3",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Matthew 5:33-48"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Let your yes be yes, and your no, no."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Turn the other cheek. Go the extra mile."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Love your enemies."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "It rains on the righteous and the unrighteous."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Be ye perfect, as your Heavenly Father is perfect (as the King James would have it, on the last one)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b8s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Here are some of Jesus's most famous teachings. But they are not the easiest. Anything that has \"Be ye perfect\" at the end of it, isn't going to be the simplest instruction. Even if we understand that \"perfect\" means \"whole,\" that hardly erases the difficulty. We're fractured and torn people, within ourselves and outside ourselves. Being whole doesn't come naturally to us. But Jesus isn't showing us what comes naturally. He is showing us the super-natural way of the Kingdom of God."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b9s0",
+            "_type": "span",
+            "marks": [],
+            "text": "These last three case studies in the Law continue from where Jesus left us last week. If last week concerned how we treat others, this week concerns how we pursue the peace of God. One point that can often be missed as that Jesus is not advocating accepting the evil in the world as the way things have to be."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b10",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b10s0",
+            "_type": "span",
+            "marks": [],
+            "text": "At the exact same time Jesus rejects violence, he is everywhere creatively showing the way of the Gospel's peace."
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "be18b11",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b11s0",
+            "_type": "span",
+            "marks": [],
+            "text": "It can be hard for us to imagine. So I will use an example of how resolute and wild a non-violent response can be (whether or not one finds it justified in this particular instance). I will point to the self-described \"bootleg Baptist\" Will Campbell (1924 - 2013)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b12",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b12s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Will Campbell was the only white minister asked by Martin Luther King Jr. to attend the creation of the "
+          },
+          {
+            "_key": "be18b12s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "Southern Christian Leadership Conference"
+          },
+          {
+            "_key": "be18b12s2",
+            "_type": "span",
+            "marks": [],
+            "text": ". He could be inspiring, cantankerous, and perplexing all at once."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b13",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b13s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Campbell, well before the increased security after the 9/11/2001 terror aattacks, once had difficulty getting through airport security. He carried a cane. A friend had repurposed the planks of an old barn and crafted them into a beautiful new cane for him. Campbell saw it as a picture of the “Gospel, taking something rotten and making something beautiful of it.”"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b14",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b14s0",
+            "_type": "span",
+            "marks": [],
+            "text": "One day he was going through airport security with his cane and was told that he needed to go back and put the cane on the roller. He put it on the roller and then asked for the cane back so he could walk again through security. The security guard told him to come through to get the cane himself, refusing to hand it back to him."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b15",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b15s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Then, Will Campbell says, the following transpired:"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b16",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b16s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "I said, “No, no. If you don’t mind bring it back to me. Now I have done what you asked me to do so will you do what I’m asking you to do?” He said, “Mister, can you walk without that cane?” By then people were backed up behind me clearing their throats, ’bout to miss their airplane don’cha know."
+          },
+          {
+            "_key": "be18b16s1",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "be18b16s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "I said, “We don’t pay you to ask medical questions. That’s a different specialty. They’re called physicians. Just bring the cane back.”"
+          },
+          {
+            "_key": "be18b16s3",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "be18b16s4",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "He was getting mad and I was somewhat out of sorts myself. When I got home and told my wife about it she accused me of being mildly in the grape but I wasn’t. Just vexed."
+          },
+          {
+            "_key": "be18b16s5",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "be18b16s6",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "Finally he said, “Mister, if you want your cane you’re going to have to come down here and get it.”"
+          },
+          {
+            "_key": "be18b16s7",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "be18b16s8",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "I said, “All right. Whatever you say.” Then I got down on my belly and crawled the length of the roller. With that people were hissing and booing him."
+          },
+          {
+            "_key": "be18b16s9",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "be18b16s10",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "“… Making that poor old man crawl to get his walking cane.” "
+          },
+          {
+            "_key": "be18b16s11",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "markDefs": [],
+        "style": "blockquote"
+      },
+      {
+        "_key": "be18b17",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b17s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Will Campbell obeys, but the way he obeys puts on display the nature of the request. He is being denied a simple dignity of being given back his cane. So he retrieves his cane, as requested, but he does so crawling. The crowd, as a result, is alarmed and upset with the security guard."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b18",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b18s0",
+            "_type": "span",
+            "marks": [],
+            "text": "I bring up this story because it seems like an unusually bold attempt to apply what we see in this passage of the Sermon on the "
+          },
+          {
+            "_key": "be18b18s1",
+            "_type": "span",
+            "marks": [
+              "underline"
+            ],
+            "text": "Mount"
+          },
+          {
+            "_key": "be18b18s2",
+            "_type": "span",
+            "marks": [],
+            "text": " (whether you think it was a good application or not may vary, Will Campbell's wife herself was not pleased with him in this instance, but it is a clear attempt to apply such teachings of Jesus!)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b19",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b19s0",
+            "_type": "span",
+            "marks": [
+              "be18b19m0",
+              "underline"
+            ],
+            "text": "In"
+          },
+          {
+            "_key": "be18b19s1",
+            "_type": "span",
+            "marks": [],
+            "text": " this week's section on the sermon of the mount, we see non-resistance take on various forms. Jesus tells the crowd to give not only your shirt, but your coat to one who wants to collect your shirt as payment. He asks them to turn your left cheek to someone who insults you with a backhanded slap to the face. He teaches them to go an extra mile, when a Roman soldier compels you to go one mile."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "be18b19m0",
+            "_type": "link",
+            "href": "http://Mount.In"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b20",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b20s0",
+            "_type": "span",
+            "marks": [],
+            "text": "This Sunday we will see that each case represents a creative and non-violent way to resist an evil status quo and to cling to the same truth we learned last week: each person is precious and made in the image of God."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b21",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b21s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Jesus is not asking us to be \"doormats\" who accept evil as a fact of life. He is inviting us into the bold new way of God's Kingdom: where we refuse to perpetuate the cycle of violence, in which enemies (inasmuch as it depends on us) are eliminated "
+          },
+          {
+            "_key": "be18b21s1",
+            "_type": "span",
+            "marks": [
+              "strong",
+              "underline"
+            ],
+            "text": "not"
+          },
+          {
+            "_key": "be18b21s2",
+            "_type": "span",
+            "marks": [],
+            "text": " by killing them, but by love which turns them into friends, and where simple trust in God replaces schemes which try to use religious things to gain advantage over others."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be18b22",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be18b22s0",
+            "_type": "span",
+            "marks": [],
+            "text": "How can this be? We invite you to watch this video to begin to reflect, and to join us this Sunday for worship to find out more."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "Mountaintop Love",
+      "asset": {
+        "_ref": "image-16d60ddfa6a848f33cf419ec9668e801af574d34-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "This is a sermon preview for the fourth week of our “Mountaintop Manifesto” series.",
+    "publishedAt": "2025-01-28T21:37:42.019Z",
+    "slug": "mountaintop-love",
+    "tags": [],
+    "title": "Mountaintop Love"
+  },
+  {
+    "_createdAt": "2026-09-18T23:23:42Z",
+    "_id": "post-multiplied",
+    "_rev": "76n5oA2VRzKOmE8UARiwG0",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:17:01Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "0706b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0706b0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a sermon preview for November 16, 2025, the third of four sermons in FBCM's \"Multiplied\" sermon series. "
+          },
+          {
+            "_key": "0706b0s1",
+            "_type": "span",
+            "marks": [
+              "0706b0m0",
+              "em",
+              "underline"
+            ],
+            "text": "Live streams and previous recordings of our services can be viewed here"
+          },
+          {
+            "_key": "0706b0s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "0706b0m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "0706b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0706b1s0",
+            "_type": "span",
+            "marks": [],
+            "text": "\"... he directed the people to sit down on the grass. Taking the five loaves and the two fish and looking up to heaven, he gave thanks and broke the loaves. Then he gave them to the disciples, and the disciples gave them to the people. They all ate and were satisfied, and the disciples picked up twelve basketfuls of broken pieces that were left over.\" - "
+          },
+          {
+            "_key": "0706b1s1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "from Matthew 14:13-21"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0706b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0706b2s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "This will be a special \"Stewardship Sunday.\" A time of offering will be part of our worship: monetary donations for our church, and non-perishable food for the hungry in our community."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0706b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0706b3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "While the disciples wanted to send the crowd away for a \"fend for yourself\" dinner, a young boy shared all that he had. And, with God at work, that was all which was actually needed."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0706b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0706b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "While this story of the fishes and loaves is perhaps the most iconic, Jesus had multiple other other feeding miracles throughout the gospels as well."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0706b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0706b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "What makes these miracles incredible is not just that there's extra resources. It's the realization that God has provided all that is needed."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0706b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0706b6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "What will be multiplied if, instead of seeing what we are provided as only what we have won from meager scarcity, we instead started realizing what we have is given out of God's great abundance?"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "Multiply Resources",
+      "asset": {
+        "_ref": "image-91c4b447a12f3343990bf62990aaa76908f8cbdf-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "While the disciples wanted to send the crowd away for a \"fend for yourself\" dinner, a young boy shared all that he had. And, with God at work, that was all which was actually needed.",
+    "publishedAt": "2025-11-11T21:10:37.826Z",
+    "slug": "multiplied",
+    "tags": [],
+    "title": "Multiply Resources"
+  },
+  {
+    "_createdAt": "2026-09-18T23:23:47Z",
+    "_id": "post-no-rest-for-the-wicked",
+    "_rev": "76n5oA2VRzKOmE8UARiwG0",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:17:01Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "1f33b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b0s0",
+            "_type": "span",
+            "marks": [],
+            "text": "\"I will save the lame and gather the outcast, and I will change their shame into praise and renown in all the earth.\" the prophet proclaims (Zephaniah 3:19) - "
+          },
+          {
+            "_key": "1f33b0s1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "From Zephaniah 3:14-20 (Old Testament, Candle Lighting Reading)"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b1s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Meanwhile, John the Baptist, proclaims \"You brood of vipers! Who warned you to flee from the wrath to come?\" (3:17) - "
+          },
+          {
+            "_key": "1f33b1s1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "From Luke 3:7-18 (New Testament Reading)"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b2s0",
+            "_type": "span",
+            "marks": [],
+            "text": "This is the third week of our Advent 2024 series, \""
+          },
+          {
+            "_key": "1f33b2s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "The Weary World Rejoices.\""
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Find our livestream and archive of previous sermons "
+          },
+          {
+            "_key": "1f33b3s1",
+            "_type": "span",
+            "marks": [
+              "1f33b3m0",
+              "underline"
+            ],
+            "text": "on our church center channel"
+          },
+          {
+            "_key": "1f33b3s2",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "1f33b3m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "\"It's Friday, but Sunday's Coming!\" S. M. Lockridge was a famous preacher who popularized that phase."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "We might also say, \"It's Advent, but Christmas is coming.\""
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "One of the most simple and captivating images which help us understand a key Advent theme: that the world we live in awaiting the invasion of God's grace while existing \"in territory held largely by the devil\" (Flannery O'Connor) comes from a children's novel."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "C.S. Lewis's "
+          },
+          {
+            "_key": "1f33b7s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "The Chronicles of Narnia"
+          },
+          {
+            "_key": "1f33b7s2",
+            "_type": "span",
+            "marks": [],
+            "text": ". The White Witch is in control of Narnia, in the first book "
+          },
+          {
+            "_key": "1f33b7s3",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "The Lion, The Witch & The Wardrobe"
+          },
+          {
+            "_key": "1f33b7s4",
+            "_type": "span",
+            "marks": [],
+            "text": ". And while she reigns it is, \"Always Winter, and Never Christmas.\" A terrible state, for sure."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b8s0",
+            "_type": "span",
+            "marks": [],
+            "text": "When we read the prophets, as we often do around Advent, it can be tempting to read the promises and to not allow ourselves to marvel at the situation in which the prophets spoke. We do this, especially because, we do not read the whole prophetic letters. We read portions that fit on an image we could share to social media, or put on a Christmas card. But what is striking is that these prophetic promises come to people who do not know \"Sunday is coming,\" or that Christmas will arrive, or that anything, ever, could look better."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b9s0",
+            "_type": "span",
+            "marks": [],
+            "text": "But imagine how these words of the prophets would sound if you did not stand on the side of history in which we now stand. What if you did not know Christmas was on the other side of these Advent words of judgment? What if you did not know resurrection Sunday was coming after the crucifixion of Good Friday?"
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "1f33b10",
+        "_type": "inlineImage",
+        "alt": "Light is never obvious to those living in darkness.",
+        "asset": {
+          "_ref": "image-9152fcf186ce9f4a7f5d0df8b31f22556c91a0b8-3648x5472-jpg",
+          "_type": "reference"
+        },
+        "caption": "Light is never obvious to those living in darkness.",
+        "size": "wide"
+      },
+      {
+        "_key": "1f33b11",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b11s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Historically, prophets like Zephaniah wrote in a time in history when everything seems lost. Israel is facing the invasion of Babylon, in our text today. These grand promises of God's people fearing disaster no more (3:15), come immediately after the much more immediately believable statements of woe and oracles of the Lord's Judgment and Jerusalem's destruction."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b12",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b12s0",
+            "_type": "span",
+            "marks": [],
+            "text": "In the midst of that political tumult, death, exile, we read: \"I will save the lame and gather the outcast, and I will change their shame into praise and renown in all the earth\" (Zephaniah 3:19). What reason is there to believe this? What evidence could the prophet point to given his situation? What cause could there be for his command to \"Rejoice and exult with all your heart\" (3:14) Look around you, Zephaniah! \"Read the room!\" Is this what \"Joy to the World?\" sounds like?"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b13",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b13s0",
+            "_type": "span",
+            "marks": [],
+            "text": "And what's more, Christians believe the messenger shouting the promises, the greatest and last of the prophets, and the herald of the coming Kingdom found in Jesus is John the Baptist. The same one who called the surrounding crowds a \"brood of vipers\" trying to avoid the wrath to come."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b14",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b14s0",
+            "_type": "span",
+            "marks": [],
+            "text": "If you're confused by this all, good! It's not immediately obvious to us how such statements of woe can co-exist with these promises. But the amazing truth is the judgment of God is better than his absence. God's presence, even if it comes like a refiner's fire, is so much better than there being no God at all. The hope we have is not merely that a baby messiah arrived, but that he is coming again."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b15",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b15s0",
+            "_type": "span",
+            "marks": [],
+            "text": "\"The Judge is standing at the door!\" says James, the brother of Jesus, in his letter. And in a world of darkness, that judgment just might break in, that it might meet us where we are in the darkness and hopelessness of life, and that his mercy might prevail - however hard to believe as it may seem - is good news."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b16",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b16s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Jesus is introduced by John the Baptist, the last prophet. The forerunner. Jesus is introduced by one who is unafraid to speak of the wickedness of humanity in its restless world. John baptizes with water, for repentance of sins. Jesus comes and, \""
+          },
+          {
+            "_key": "1f33b16s1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "He will baptize you with the Holy Spirit and fire.\" (Luke 3:17). "
+          },
+          {
+            "_key": "1f33b16s2",
+            "_type": "span",
+            "marks": [],
+            "text": "He comes with fire, but it is the refining fire of the Holy Spirit. He comes as Judge, but he is the Judge who is judged in our place."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b17",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b17s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "It's the third week of Advent, but Jesus is coming."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b18",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b18s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Let every heart prepare him room."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f33b19",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f33b19s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "Join us for worship, this Sunday at 10:45 a.m. at 309 East Adams Street in Downtown Muncie."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "No Rest For The Wicked",
+      "asset": {
+        "_ref": "image-6c46a5792737f8b73af4206f8ad7f10a5e243262-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "\"I will save the lame and gather the outcast, and I will change their shame into praise and renown in all the earth.\" the prophet proclaims",
+    "publishedAt": "2024-12-10T22:19:09.557Z",
+    "slug": "no-rest-for-the-wicked",
+    "tags": [],
+    "title": "No Rest For The Wicked"
+  },
+  {
+    "_createdAt": "2026-09-18T23:25:33Z",
+    "_id": "post-the-hopeful",
+    "_rev": "F5Duw02wR0YDcoTNSc7JER",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:17:04Z",
+    "author": "Kendall Ellis",
+    "body": [
+      {
+        "_key": "1e47b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a sermon preview for the fifth week of our 1 Thessalonians series."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1e47b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b1s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "Visit FBCM’s "
+          },
+          {
+            "_key": "1e47b1s1",
+            "_type": "span",
+            "marks": [
+              "1e47b1m0",
+              "em",
+              "underline"
+            ],
+            "text": "Church Center Channel "
+          },
+          {
+            "_key": "1e47b1s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "to view video live stream (live) or audio version of sermon (published week after)."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "1e47b1m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "1e47b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b2s0",
+            "_type": "span",
+            "marks": [
+              "strong",
+              "em"
+            ],
+            "text": "“For God did not appoint us to suffer wrath but to receive salvation through our Lord Jesus Christ. He died for us so that, whether we are awake or asleep, we may live together with him. Therefore encourage one another and build each other up, just as in fact you are doing.” -excerpt from 1 Thessalonians 4:13 - 5:11"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1e47b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "I’ve never watched "
+          },
+          {
+            "_key": "1e47b3s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "It’s Always Sunny in Philadelphia"
+          },
+          {
+            "_key": "1e47b3s2",
+            "_type": "span",
+            "marks": [],
+            "text": ", but my favorite meme comes from an episode where Charlie thinks he’s discovered a “major conspiracy.” It’s an older meme now, so you probably know what I’m talking about. There’s a picture of a typical office worker man. But upon further inspection, he has crazy eyes, a cigarette in one hand, and the other hand pointing behind him to a board covered in pictures, clues, and a red web of string that supposedly connects everything together in the conspiracy. It makes me laugh. Every. Time."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1e47b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Unfortunately, sometimes when people talk about scripture passages like 1 Thessalonians 4 or Revelation, they start to feel a little like this meme. They know Jesus is coming back. This is a GREAT thing! But they’ve gotten too caught up in trying to read the signs or figure out the details of when or how. And that’s when they’ve missed the point!"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1e47b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "2,000 years after this letter, what are we supposed to learn from the Thessalonians about the end times or Jesus’ return?"
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "1e47b6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "While Jesus was on earth, he taught often that the Kingdom of God had come. So when Jesus defeated death and told the disciples that he was coming back for them, the early church thought Jesus was coming back "
+          },
+          {
+            "_key": "1e47b6s1",
+            "_type": "span",
+            "marks": [
+              "strong",
+              "em"
+            ],
+            "text": "soon"
+          },
+          {
+            "_key": "1e47b6s2",
+            "_type": "span",
+            "marks": [],
+            "text": " after he ascended to heaven. Obviously, you don’t need me to tell you that Jesus still hasn’t returned. We’ve been waiting way longer than expected. This is a promise that the Church still waits on."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1e47b7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Waiting for God to fulfil his promises is hard. Sometimes it's hard for Christians to come to terms with the \"already but not yet\" nature of the Kingdom of God. We celebrate that Jesus is risen! But the world is so deeply broken that, if we're honest, sometimes it doesn't feel like it matters."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1e47b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b8s0",
+            "_type": "span",
+            "marks": [],
+            "text": "The Thessalonians could relate. In a season when persecution was prevalent against the early church, and many were killed for their faith, the grief could be overwhelming."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1e47b9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b9s0",
+            "_type": "span",
+            "marks": [],
+            "text": "But Paul encourages us that while it's okay to grieve, we have hope that overcomes our grief! Christ has risen, he has risen indeed! If Jesus delivered on that promise, we can certainly trust that he will follow through with his other promises. We can have hope that Christ will return and we are not lost to this looming death. Whether we wait our whole lives or only part, we "
+          },
+          {
+            "_key": "1e47b9s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "will"
+          },
+          {
+            "_key": "1e47b9s2",
+            "_type": "span",
+            "marks": [],
+            "text": " see Jesus again. We will be taken up with him. We will have a forever new life at a banquet that is beyond our wildest dreams! (The “Jesus Buffet,” as FBCM Kids like to call it!)"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1e47b10",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1e47b10s0",
+            "_type": "span",
+            "marks": [],
+            "text": "We need not get lost in the details. We need not worry about signs and details. God can take care of those. We are Easter people who grieve with hope."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "The Hopeful",
+      "asset": {
+        "_ref": "image-a1e23055fe92eb8d53015e27fc3dfedbd7b928dc-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "I’ve never watched It’s Always Sunny in Philadelphia, but my favorite meme comes from an episode where Charlie thinks he’s discovered a “major conspiracy.”",
+    "publishedAt": "2025-05-21T13:25:01.181Z",
+    "slug": "the-hopeful",
+    "tags": [
+      "Eastertide",
+      "1 Thessalonians",
+      "Hope",
+      "Return"
+    ],
+    "title": "The Hopeful"
+  },
+  {
+    "_createdAt": "2026-09-18T23:25:45Z",
+    "_id": "post-the-resurrection-the-life",
+    "_rev": "F5Duw02wR0YDcoTNSc7JER",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:17:04Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "66f4b0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "66f4b0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a sermon preview for a sermon in the \"I AM: Jesus in the Gospel of John\" series. "
+          },
+          {
+            "_key": "66f4b0s1",
+            "_type": "span",
+            "marks": [
+              "66f4b0m0",
+              "em",
+              "underline"
+            ],
+            "text": "The live stream recordings"
+          },
+          {
+            "_key": "66f4b0s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": " can be viewed online."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "66f4b0m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "66f4b1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "66f4b1s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Jesus said to her, “I am the resurrection and the life. The one who believes in me will live, even though they die; and whoever lives by believing in me will never die. Do you believe this?”"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "66f4b2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "66f4b2s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "-from John 11:17-43"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "66f4b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "66f4b3s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "\"The resurrection was indeed a miraculous display of God’s power, but we should not see it as a suspension of the natural order of the world. Rather it was the beginning of the restoration of the natural order of the world, the world as God intended it to be. . . ."
+          },
+          {
+            "_key": "66f4b3s1",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "66f4b3s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "The resurrection means not merely that Christians have a hope for the future but that they have a hope that comes from the future. The Bible’s startling message is that when Jesus rose, he brought the future kingdom of God into the present.\""
+          },
+          {
+            "_key": "66f4b3s3",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "66f4b3s4",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "- Tim Keller, Hope In Times of Fear"
+          }
+        ],
+        "markDefs": [],
+        "style": "blockquote"
+      },
+      {
+        "_key": "66f4b4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "66f4b4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "The startling message of Jesus is here: not just that the resurrection power of the last day, when God will set all things right, has invaded our world, but that it has done so through a person. Jesus IS the resurrection and the life. What God has given us is not life as a principle, or life as a plan, but life as a person."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "66f4b5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "66f4b5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Jesus is the resurrection and the life. What surprising and beautiful implications are here, and what lifetimes could be spent contemplating what it means to believe this, and to live as it is (because it is!) true!"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "The Resurrection & The Life",
+      "asset": {
+        "_ref": "image-150a3f748275085b1c8a4b983f587d250c1bdb0c-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "Jesus said to her, “I am the resurrection and the life. The one who believes in me will live, even though they die; and whoever lives by believing in me will never die. Do you believe this?” From John 11:17-43",
+    "publishedAt": "2025-09-30T19:48:38.424Z",
+    "slug": "the-resurrection-the-life",
+    "tags": [
+      "I AM",
+      "resurrection",
+      "john",
+      "gospel"
+    ],
+    "title": "The Resurrection & The Life"
+  },
+  {
+    "_createdAt": "2026-09-18T23:25:54Z",
+    "_id": "post-the-way-the-truth-the-life",
+    "_rev": "F5Duw02wR0YDcoTNSc7JER",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:17:04Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "0ffdb0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ffdb0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a sermon preview for a sermon in the \"I AM: Jesus in the Gospel of John\" series. "
+          },
+          {
+            "_key": "0ffdb0s1",
+            "_type": "span",
+            "marks": [
+              "0ffdb0m0",
+              "em",
+              "underline"
+            ],
+            "text": "The live stream recordings"
+          },
+          {
+            "_key": "0ffdb0s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": " can be viewed online."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "0ffdb0m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "0ffdb1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ffdb1s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "\"Jesus answered, “I am the way and the truth and the life. No one comes to the Father except through me."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0ffdb2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ffdb2s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "-from John 14:1-14"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0ffdb3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ffdb3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "When we say that Jesus is The Way, The Truth, And the Life (as we should, Jesus says those words about himself!), we often prioritize the Truth and Life. Those are surely important, but we should not neglect the way."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0ffdb4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ffdb4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "As Eugene Peterson in "
+          },
+          {
+            "_key": "0ffdb4s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "The Jesus Way:"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0ffdb5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ffdb5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "We cannot skip the way of Jesus in our hurry to get the truth of Jesus as he is worshiped and proclaimed. The way of Jesus is the way that we practice and come to understand the truth of Jesus, living Jesus in our homes and workplaces, with our friends and family."
+          }
+        ],
+        "markDefs": [],
+        "style": "blockquote"
+      },
+      {
+        "_key": "0ffdb6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ffdb6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Jesus doesn't provide a way, he is "
+          },
+          {
+            "_key": "0ffdb6s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "the way"
+          },
+          {
+            "_key": "0ffdb6s2",
+            "_type": "span",
+            "marks": [],
+            "text": ". And so to come to understand the Jesus Way is an indispensable step in allowing us to have \"have life, and have it to the full.\" (John 10:10"
+          },
+          {
+            "_key": "0ffdb6s3",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "b"
+          },
+          {
+            "_key": "0ffdb6s4",
+            "_type": "span",
+            "marks": [],
+            "text": "). The Jesus way is the way we abide, and Jesus's prayer is that his disciples abide in him (John 17)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0ffdb7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ffdb7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "As we gather for worship this week, we will consider anew the Jesus way, so we can grasp again, or for the first time, what it means that Jesus is "
+          },
+          {
+            "_key": "0ffdb7s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "The Way, The Truth & The Life"
+          },
+          {
+            "_key": "0ffdb7s2",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "The Way, The Truth, & the Life",
+      "asset": {
+        "_ref": "image-150a3f748275085b1c8a4b983f587d250c1bdb0c-940x726-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "When we say that Jesus is The Way, The Truth, And the Life (as we should, Jesus says those words about himself!), we often prioritize the Truth and Life. Those are surely important, but we should not neglect the way.",
+    "publishedAt": "2025-10-07T17:41:57.537Z",
+    "slug": "the-way-the-truth-the-life",
+    "tags": [
+      "John",
+      "I AM",
+      "Gospel",
+      "Way Truth and Life"
+    ],
+    "title": "The Way, The Truth, & the Life"
+  },
+  {
+    "_createdAt": "2026-09-18T23:26:33Z",
+    "_id": "post-we-believe-in-the-practices-of-the-church",
+    "_rev": "F5Duw02wR0YDcoTNScBq4W",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-20T18:54:14Z",
+    "author": "Jonathan Balmer",
+    "body": [
+      {
+        "_key": "53deb0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb0s0",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "This is a "
+          },
+          {
+            "_key": "53deb0s1",
+            "_type": "span",
+            "marks": [],
+            "text": "preview of"
+          },
+          {
+            "_key": "53deb0s2",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": " a sermon in the “We Believe: Back to Basics” series. "
+          },
+          {
+            "_key": "53deb0s3",
+            "_type": "span",
+            "marks": [
+              "53deb0m0",
+              "em",
+              "underline"
+            ],
+            "text": "To watch the recording of the sermons in this sermon series, visit our website"
+          },
+          {
+            "_key": "53deb0s4",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "."
+          }
+        ],
+        "markDefs": [
+          {
+            "_key": "53deb0m0",
+            "_type": "link",
+            "href": "https://fbcmuncie.churchcenter.com/channels/4999/series/30635"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb1s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "“I speak to sensible people; judge for yourselves what I say. Is not the cup of thanksgiving for which we give thanks a participation in the blood of Christ? And is not the bread that we break a participation in the body of Christ? Because there is one loaf, we, who are many, are one body, for we all share the one loaf.”"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb2s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "1 Corinthians 10:15-17 (NIV)"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb3s0",
+            "_type": "span",
+            "marks": [],
+            "text": "“We believe that the Christian baptism is the immersion in the water of a believer, into the"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb4s0",
+            "_type": "span",
+            "marks": [],
+            "text": "name of the Father, and Son, and Holy Ghost; to show forth in a solemn and beautiful"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb5s0",
+            "_type": "span",
+            "marks": [],
+            "text": "emblem, our faith in the crucified, buried and risen Saviour, with its effect, in our death"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb6s0",
+            "_type": "span",
+            "marks": [],
+            "text": "to sin and resurrection to a new life; that it is a prerequisite to the privileges of a church"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb7s0",
+            "_type": "span",
+            "marks": [],
+            "text": "relation, and to the Lord's Supper; in which the members of the church by the sacred use"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb8s0",
+            "_type": "span",
+            "marks": [],
+            "text": "of bread and wine, are to commemorate together the dying love of Christ; preceded"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb9s0",
+            "_type": "span",
+            "marks": [],
+            "text": "always by solemn self-examination.” "
+          },
+          {
+            "_key": "53deb9s1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Article XIV. Of Baptism & The Lord's Supper"
+          },
+          {
+            "_key": "53deb9s2",
+            "_type": "span",
+            "marks": [],
+            "text": " New Hampshire Confession of Faith 1833 (NHCF), 1833"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb10",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb10s0",
+            "_type": "span",
+            "marks": [],
+            "text": "“… We believe that the first day of the week is the Lord's Day or Christian Sabbath, and it is"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb11",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb11s0",
+            "_type": "span",
+            "marks": [],
+            "text": "to be kept sacred for religious purposes.” "
+          },
+          {
+            "_key": "53deb11s1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Article XV. Of The Christian Sabbath "
+          },
+          {
+            "_key": "53deb11s2",
+            "_type": "span",
+            "marks": [],
+            "text": "NHCF, 1833"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb12",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb12s0",
+            "_type": "span",
+            "marks": [],
+            "text": "---"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb13",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb13s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Nowhere are the divisions within the church more sharp than in teachings about Baptism and the Lord's Supper."
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "53deb14",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb14s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Baptists, in fact, are named after their peculiar (for the time) method of Baptizing only professing believers."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb15",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb15s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Other Christian traditions / denominations baptize infants."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb16",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb16s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Even within Baptists there are disagreements about whether those infant baptized as infants should be required to be re-baptized as believing adults. (FBCM does not require this, some other Baptist churches do)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb17",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb17s0",
+            "_type": "span",
+            "marks": [],
+            "text": "One friend I met during seminary was with me in my class about the church during the time of the Protestant Reformation. It was a time of a lot of change in the church. Many different denominations began during that era. Arguments on what happened during Baptism and at the Lord's table were "
+          },
+          {
+            "_key": "53deb17s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "very"
+          },
+          {
+            "_key": "53deb17s2",
+            "_type": "span",
+            "marks": [],
+            "text": " common. After reading several hundred pages on the conflict, she observed The Lord's Supper at the church she attended."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb18",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb18s0",
+            "_type": "span",
+            "marks": [],
+            "text": "\"I took the bread and cup and just thought about how many disagreements there are about what we were even doing.\" she told me."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb19",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb19s0",
+            "_type": "span",
+            "marks": [],
+            "text": "While those arguments were common "
+          },
+          {
+            "_key": "53deb19s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": "then"
+          },
+          {
+            "_key": "53deb19s2",
+            "_type": "span",
+            "marks": [],
+            "text": ", they remain today. Recently, confusion only increased with the Covid-19 pandemic and some deciding to practice communion privately in their homes, rather than gathered as a church."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb20",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb20s0",
+            "_type": "span",
+            "marks": [],
+            "text": "With so many arguments, there are some movements of Jesus followers who decided to give up on these practices all together (some Quakers and the Salvation Army)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb21",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb21s0",
+            "_type": "span",
+            "marks": [],
+            "text": "How do we understand Baptism, the Lord's Supper, and Worship on the Lord's day? Do they really matter? And if they do"
+          },
+          {
+            "_key": "53deb21s1",
+            "_type": "span",
+            "marks": [
+              "em"
+            ],
+            "text": " how"
+          },
+          {
+            "_key": "53deb21s2",
+            "_type": "span",
+            "marks": [],
+            "text": " do they matter?"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb22",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb22s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Join us this Sunday as we explore how Baptism and the Lord's Supper are intimately connected with being the body of Christ, the church"
+          },
+          {
+            "_key": "53deb22s1",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb23",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb23s0",
+            "_type": "span",
+            "marks": [],
+            "text": "And learn how we can honor other believers as we cherish the gifts Christ has given us in these sacraments / ordinances."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb24",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb24s0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Questions for Reflection:"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb25",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb25s0",
+            "_type": "span",
+            "marks": [],
+            "text": "What has your experience been with Baptism and the Lord's Supper?"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb26",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb26s0",
+            "_type": "span",
+            "marks": [],
+            "text": "Sunday is no longer a widely culturally recognized day of Worship. What does it mean to set aside a day for the Lord in an age which never stops?"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "53deb27",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "53deb27s0",
+            "_type": "span",
+            "marks": [],
+            "text": "How has God met us through these practices of the church (Baptism and the Lord's Supper)? What do they tell us about God's character and actions?"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "categories": [],
+    "coverImage": {
+      "_type": "image",
+      "alt": "We Believe: In The Practices of the Church",
+      "asset": {
+        "_ref": "image-a39d9fc7cb68ba1522f76c3c59c94254db5f6c44-1080x1080-png",
+        "_type": "reference"
+      }
+    },
+    "excerpt": "Nowhere are the divisions within the church more sharp than in teachings about Baptism and the Lord's Supper. How do we make sense of this",
+    "publishedAt": "2023-10-10T21:39:23.737Z",
+    "slug": "we-believe-in-the-practices-of-the-church",
+    "tags": [],
+    "title": "We Believe: In The Practices of the Church"
+  }
+]

@@ -1,0 +1,79 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// The category filter row (journal pass, 2026-09-22, "I1 Register"): text
+// links with their counts, replacing the boxed chips. "All posts" first, then
+// every category with at least one post, most posts first. The counts are
+// counted from the posts (categoryFilters in blog-derive.ts), never read off a
+// stored number, and the set is exactly the set /blog/category/[slug] builds,
+// so no link here can point at a page the build did not make.
+//
+// The current page is underlined in gold with aria-current.
+import { categoryFilters, type BlogEntry } from '@/lib/blog-derive';
+
+interface Props {
+  /** Every post on the site: the counts are the archive's, not this page's. */
+  entries: BlogEntry[];
+  /** The category being shown, or undefined. */
+  activeSlug?: string;
+  /** "All posts" is the current list (/blog and /blog/page/N). */
+  allCurrent?: boolean;
+}
+const { entries, activeSlug, allCurrent = false } = Astro.props as Props;
+const filters = categoryFilters(entries ?? []);
+---
+
+{
+  filters.length > 0 && (
+    <nav class="filters" aria-label="Post categories">
+      <a href="/blog/" aria-current={allCurrent ? 'page' : undefined}>
+        All posts<sup class="oldstyle">{entries.length}</sup>
+      </a>
+      {filters.map((f) => (
+        <a
+          href={`/blog/category/${f.slug}/`}
+          aria-current={activeSlug === f.slug ? 'page' : undefined}
+        >
+          {f.label}
+          <sup class="oldstyle">{f.count}</sup>
+        </a>
+      ))}
+    </nav>
+  )
+}
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 26px;
+    padding: 14px 0 15px;
+    border-top: 1px solid var(--hair-strong);
+    border-bottom: 1px solid var(--hair);
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    letter-spacing: 0.03em;
+  }
+  a {
+    text-decoration: none;
+    color: var(--muted-foreground);
+    padding-bottom: 2px;
+    background: linear-gradient(var(--color-gold), var(--color-gold)) 0 100% / 0 1px no-repeat;
+    transition:
+      background-size 0.26s,
+      color 0.2s;
+  }
+  a:hover,
+  a:focus-visible,
+  a[aria-current='page'] {
+    color: var(--foreground);
+    background-size: 100% 1px;
+  }
+  sup {
+    font-size: 0.75em;
+    margin-left: 3px;
+    color: var(--color-gold-ink);
+    vertical-align: 0.35em;
+    line-height: 0;
+  }
+</style>

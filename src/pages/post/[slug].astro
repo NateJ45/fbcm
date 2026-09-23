@@ -1,19 +1,31 @@
 ---
 // scaffold-file: journal
 // Safe to edit by hand for copy + structure changes.
-// Blog post detail page. Eyebrow (the category, or "Sermon preview, week of
-// <date>" on the 106 weekly previews), title + excerpt, cover image, body
-// Portable Text, tag chips, "More from this series" by shared tag, prev/next,
-// final CTA. BreadcrumbList + BlogPosting JSON-LD.
+// Blog post detail page, drawn as the "P2 Bulletin" (journal polish,
+// 2026-09-22; the prototype and its Rules drawer are
+// docs/superpowers/prototypes/2026-09-22-journal/index.html).
 //
-// Every one of those derived bits comes from src/lib/blog-derive.ts, which
-// reads the post's own categories and tags. None of it reads
-// journalEntry.featured (CLAUDE.md rule 15).
+// THE THESIS. Three posts in four are a weekly sermon preview, and a sermon
+// preview is a bulletin: which Sunday, which reading, who is preaching, where
+// to listen. So the masthead carries the ORDER beside the title as a ruled
+// list, and the reading opens the body between two rules. Every other post
+// gets the same frame with its own facts (posted, written by, takes, filed
+// under). Every one of those facts is DERIVED from the post itself, its date,
+// category and opening text (src/lib/sermon-derive.ts, src/lib/post-body.ts);
+// none of them is a field an editor keeps true by hand (CLAUDE.md rule 15).
+//
+// Layout: title and body share one left edge in columns 1 to 7; columns 9 to
+// 12 hold the order, then (sticky) the cover as a matted PLATE and an "In this
+// post" list. A cover that is a real photograph (w >= 2000 and w/h >= 1.3; 2
+// of the 141 covers, the rest are series slides with their own lettering) is
+// laid as a full-bleed GROUND under the masthead instead. The foot is Tagged,
+// More from this series, and two doors. No closing CTA band: the footer's
+// poster already says it, and three bands saying one sentence was the audit's
+// finding 10.
 //
 // Static-site routing: getStaticPaths enumerates every journalEntry slug at
-// build time. The query is duplicated (once for paths, once for the full doc)
-// — Astro caches each call per slug, so the perf hit is just the static map.
-
+// build time and works out the doors and the series rows there, once.
+//
 // This file lives at /post/[slug] on purpose (Task 6, 2026-09-18): it matches
 // the live Wix site's post URLs exactly so all 142 existing post addresses
 // survive the migration with no redirects. The listing lives at /blog.
@@ -26,66 +38,82 @@ import {
 } from '@/lib/queries';
 import { getSectionVisibility } from '@/lib/sectionVisibility';
 import { breadcrumbSchema, blogPostingSchema } from '@/lib/schemas';
-import { readingTimeFromPortableText, formatReadingTime } from '@/lib/reading-time';
-import { entryIsSermonPreview, weekOfEyebrow, seriesByTag, clean } from '@/lib/blog-derive';
+import { readingTimeFromPortableText } from '@/lib/reading-time';
+import {
+  entryIsSermonPreview,
+  weekOfEyebrow,
+  seriesByTag,
+  clean,
+  type BlogEntry,
+} from '@/lib/blog-derive';
+import { sundayOf, localDay, formatDay, isoDay, readingOf, seriesOf } from '@/lib/sermon-derive';
+import {
+  prepareBody,
+  ledeEchoes,
+  openingText,
+  listenHref,
+  assetRefOf,
+  type BodyNode,
+} from '@/lib/post-body';
+import { doorsFor, seriesRowOf, type Doors, type SeriesRow } from '@/lib/post-neighbours';
 import { slugify } from '@/lib/slugify';
 import { extractHeadings } from '@/lib/portable-text-headings';
 import { site } from '@/data/site';
-import { urlFor, parseSanityAssetDimensions } from '@/lib/sanity';
-import { PROSE_MEASURE } from '@/lib/prose';
+import { urlFor, parseSanityAssetDimensions, sanityFetch } from '@/lib/sanity';
 
 import SanityImage from '@/components/SanityImage.astro';
 import JournalPortableText from '@/components/JournalPortableText';
-import JournalCategoryChip from '@/components/JournalCategoryChip.astro';
 import ReadingProgress from '@/components/ReadingProgress.astro';
 import StickyCTAChip from '@/components/StickyCTAChip';
-import CaseStudyTOC from '@/components/CaseStudyTOC';
-import FinalCta from '@/components/FinalCta.astro';
 
-// Enumerate slugs + carry prev/next refs (newest-first iteration).
-// Returns [] when journal is off — no detail pages build and they 404.
+// Enumerate slugs, and carry the foot of each page (doors + series rows).
+// Returns [] when journal is off: no detail pages build and they 404.
 export async function getStaticPaths() {
-  const [entries, settings] = await Promise.all([
+  const [entries, settings, heads] = await Promise.all([
     getAllJournalEntries().catch(() => []),
     getSiteSettings().catch(() => null),
+    // The opening blocks of every post, for the reading a preview's door and
+    // series row print. The card projection carries no body, and this is a
+    // dozen blocks each rather than 142 whole bodies. Read here rather than in
+    // queries.ts because nothing else needs it yet.
+    sanityFetch<{ _id: string; head?: unknown[] }>(
+      `*[_type == "journalEntry"]{ _id, "head": body[_type == "block"][0...12]{ _type, style, listItem, children[]{ _type, text } } }`,
+      {},
+      [],
+    ).catch(() => []),
   ]);
   const visible = getSectionVisibility(settings?.sectionVisibility);
   if (!visible.journal) return [];
 
   if (!Array.isArray(entries) || entries.length === 0) return [];
 
-  return entries
-    .map((e, i) => {
-      const prev = entries[i - 1] ?? null; // newer post
-      const next = entries[i + 1] ?? null; // older post
-      return {
-        params: { slug: e.slug?.current ?? '' },
-        props: {
-          prev: prev ? { title: prev.title, slug: prev.slug?.current } : null,
-          next: next ? { title: next.title, slug: next.slug?.current } : null,
-          // "More from this series" is worked out per post from the shared tag
-          // vocabulary, so the whole card list travels with the path rather
-          // than being re-derived 142 times.
-          series: seriesByTag(e as any, entries as any[], 3),
-        },
-      };
-    })
+  const headById = new Map<string, string>();
+  for (const h of heads ?? []) if (h?._id) headById.set(h._id, openingText(h.head ?? []));
+  const opening = (e: BlogEntry) => headById.get(e._id ?? '') ?? '';
+  const all = entries as BlogEntry[];
+
+  return all
+    .map((e) => ({
+      params: { slug: e.slug?.current ?? '' },
+      props: {
+        doors: doorsFor(e, all, opening),
+        // "More from this series" is worked out per post from the shared tag
+        // vocabulary (seriesByTag, unchanged), so the rows travel with the path
+        // rather than being re-derived 142 times.
+        series: seriesByTag(e, all, 3).map((s) => seriesRowOf(s, opening)),
+      },
+    }))
     .filter((entry) => entry.params.slug);
 }
 
 const { slug } = Astro.params;
-const { prev, next, series } = Astro.props as {
-  prev: { title?: string; slug?: string } | null;
-  next: { title?: string; slug?: string } | null;
-  series: any[];
-};
+const { doors, series } = Astro.props as { doors: Doors; series: SeriesRow[] };
 
 const [entry, siteSettings, journalPage] = await Promise.all([
   getJournalEntryBySlug(slug as string),
   getSiteSettings().catch(() => null),
   // Pulled here purely so the sticky CTA chip label can come from
-  // journalPage.stickyCtaLabel without doubling up the singleton fetch
-  // elsewhere. Cached by the GROQ layer across getStaticPaths.
+  // journalPage.stickyCtaLabel. Cached by the GROQ layer across getStaticPaths.
   getJournalPage().catch(() => null),
 ]);
 
@@ -95,70 +123,110 @@ if (!entry) {
 
 // Meta
 // "Blog" is what this section is called here: the route is /blog and the nav
-// says Blog. "Studio Journal" was the starter's name for it and it was riding
-// on all 142 titles, og:title, twitter:title and og:image:alt.
+// says Blog.
 const title = entry.seoTitle ?? `${entry.title} · Blog`;
-// The third fallback used to read "A note from the studio.", starter residue
-// from the fork (CLAUDE.md rule 11) that no post has ever shipped: 0 of the 142
-// built post pages carry the string, because every entry has a seoDescription
-// or an excerpt. It was a trap rather than a defect, so it is replaced with the
-// one line about this church rather than a new label nobody would maintain.
 const description = entry.seoDescription ?? entry.excerpt ?? `Writing from ${site.name}.`;
 const coverOg = entry.coverImage?.asset
   ? urlFor(entry.coverImage).width(1200).height(630).fit('crop').quality(80).format('webp').url()
   : undefined;
 
-// Derived
-const readMinutes = readingTimeFromPortableText(entry.body);
-// TOC headings: pulled from the body's h2/h3/h4 blocks. When there's nothing
-// to show, hasToc=false collapses the body grid to a single article column
-// so we don't reserve a phantom 260 px sidebar slot.
-const headings = extractHeadings(entry.body);
-const hasToc = headings.length > 0;
+// ---- Derived -----------------------------------------------------------------
+const rawBody = (entry.body ?? []) as unknown as BodyNode[];
+const isPreview = entryIsSermonPreview(entry as unknown as BlogEntry);
+const primaryCategory = (entry.categories ?? [])[0] as
+  { title?: string | null; slug?: { current?: string | null } | null } | undefined;
+
 // THE EYEBROW. A weekly sermon preview says which week it is for; every other
-// post says its category. Which of the two it is, is derived from the category
-// itself (blog-derive.ts), never from a stored flag.
-const isPreview = entryIsSermonPreview(entry as any);
-const primaryCategory = (entry.categories ?? [])[0] as any;
+// post says its category. Derived from the category itself, never a flag.
 const eyebrowLabel = isPreview
   ? weekOfEyebrow(entry.publishedAt)
   : clean(primaryCategory?.title) || 'Blog';
+const categoryHref = primaryCategory?.slug?.current
+  ? `/blog/category/${clean(primaryCategory.slug.current)}/`
+  : '';
 
-// Tag chips. Each one is a built page (/blog/tag/<slug>/), and the slug is the
-// same slugify() the tag route builds its paths with, so a chip cannot point at
-// a URL that does not exist.
-const tagChips = (((entry as any).tags ?? []) as string[])
+// The body as the reader gets it: Wix residue repaired, tables, points, Q and
+// A, and a preview's reading found (src/lib/post-body.ts). Stored text is not
+// touched; this is a render pass.
+const body = prepareBody(rawBody, { coverRef: assetRefOf(entry.coverImage), preview: isPreview });
+
+// The lede is the excerpt, UNLESS the excerpt is the first paragraph again
+// (33 of 142 posts), in which case the reader would meet it twice in a screen.
+const showLede = !!entry.excerpt && !ledeEchoes(entry.excerpt, body);
+
+// "In this post": the section heads, numbered, only when there are three or
+// more. Ids from the same slugify the renderer uses, so every entry lands.
+const headings = extractHeadings(entry.body);
+const hasContents = headings.length >= 3;
+
+// THE ORDER (the ruled facts beside the title). Rows with no value are
+// omitted, never guessed.
+const opening = openingText(rawBody);
+const sunday = isPreview ? sundayOf(entry.publishedAt) : null;
+const postedDay = localDay(entry.publishedAt);
+const readMinutes = readingTimeFromPortableText(entry.body);
+const listen = isPreview ? listenHref(rawBody) : '';
+type Fact = { label: string; value: string; href?: string; datetime?: string; big?: boolean };
+const facts: Fact[] = (
+  isPreview
+    ? [
+        {
+          label: 'Sunday',
+          value: sunday ? formatDay(sunday) : '',
+          datetime: sunday ? isoDay(sunday) : undefined,
+          big: true,
+        },
+        { label: 'Reading', value: readingOf(opening) },
+        { label: 'Series', value: seriesOf(opening) },
+        { label: 'Preaching', value: clean(entry.author) },
+        { label: 'Listen', value: listen ? 'Livestream and recordings' : '', href: listen },
+      ]
+    : [
+        {
+          label: 'Posted',
+          value: postedDay ? formatDay(postedDay) : '',
+          datetime: postedDay ? isoDay(postedDay) : undefined,
+        },
+        { label: 'Written by', value: clean(entry.author) },
+        {
+          label: 'Takes',
+          value: readMinutes > 0 ? `${readMinutes} minute${readMinutes === 1 ? '' : 's'}` : '',
+        },
+        {
+          label: 'Filed under',
+          value: clean(primaryCategory?.title),
+          href: categoryHref || undefined,
+        },
+      ]
+).filter((f) => f.value);
+
+// THE COVER'S SHAPE DECIDES ITS FRAME. A photograph (at least 2000px wide and
+// at least 1.3:1) is laid as the full-bleed ground; anything else, which is
+// the series slides with their own lettering on them, hangs as a plate in the
+// right column. A cover with no recorded dimensions is treated as a slide.
+const cover = entry.coverImage?.asset ? entry.coverImage : null;
+const coverDims = cover ? parseSanityAssetDimensions(cover) : null;
+const coverIsPhoto = coverDims
+  ? coverDims.width >= 2000 && coverDims.width / coverDims.height >= 1.3
+  : false;
+const coverAlt = clean((cover as { alt?: string } | null)?.alt);
+const plateCaption = cover
+  ? clean((cover as { caption?: string }).caption) ||
+    (isPreview ? 'The series slide' : coverAlt || clean(entry.title))
+  : '';
+// When the caption already says what the alt would, the alt goes empty so a
+// screen reader does not hear it twice.
+const plateAlt = plateCaption === coverAlt ? '' : undefined;
+const hasPlate = !!cover && !coverIsPhoto;
+const titleIsLong = clean(entry.title).length > 34;
+
+// Tags, as text links at the foot. Each is a built page (/blog/tag/<slug>/),
+// with the same slugify() the tag route builds its paths with.
+const tagLinks = (((entry as { tags?: string[] }).tags ?? []) as string[])
   .map((t) => clean(t).trim())
   .filter(Boolean)
   .map((label) => ({ label, slug: slugify(label) }))
   .filter((t) => t.slug);
-
-const dateLabel = entry.publishedAt
-  ? new Date(entry.publishedAt).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    })
-  : '';
-const updatedLabel =
-  entry.updatedAt && entry.updatedAt !== entry.publishedAt
-    ? new Date(entry.updatedAt).toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-      })
-    : '';
-
-// THE COVER'S SHAPE DECIDES ITS FRAME (art-direction pass, task 11).
-// A landscape cover runs off the right edge of the screen, which is this
-// pass's one asymmetry and the same device the split hero and the image-text
-// bands use. A PORTRAIT cover cannot: bled to the edge it would stand taller
-// than the viewport and push the first line of the post off the bottom of the
-// screen, so it sits in the reading measure instead. No dimensions on the
-// asset ref (an upload from before Sanity recorded them) is treated as
-// landscape, which is what 139 of the 142 covers are.
-const coverDims = entry.coverImage?.asset ? parseSanityAssetDimensions(entry.coverImage) : null;
-const coverIsPortrait = coverDims ? coverDims.height > coverDims.width : false;
 
 const schemas = [
   breadcrumbSchema([
@@ -182,289 +250,219 @@ const schemas = [
   {/* 2px gold hairline tracking scroll through the article. */}
   <ReadingProgress />
 
-  {/* ------- 1. Article header --------------------------------------------- */}
-  <article>
-    {
-      /* THE POST OPENER (art-direction pass, task 11). One category line in
-        the UI face, the title in the titling capitals at h1, the excerpt as
-        the lede, then the facts about the post on one ruled row. It used to
-        be six stacked lines of small type (eyebrow + date + reading time,
-        then category chips, then a byline, then a tag cloud) above the
-        title's own weight, which read as a form rather than a masthead.
-        The category chips are gone because the line above the title already
-        names the category and links to it; the tags moved to the foot of the
-        article, where "more like this" is a question the reader has. */
-    }
-    <header class="bg-background">
-      <div class="mx-auto max-w-content px-gutter pt-section-lg pb-l">
-        <p class="font-ui text-ui text-gold-ink">
-          <a
-            href={isPreview || !primaryCategory?.slug?.current
-              ? '/blog'
-              : `/blog/category/${primaryCategory.slug.current}/`}
-            class="nav-underline transition-colors hover:text-foreground">{eyebrowLabel}</a
-          >
-        </p>
-        <h1
-          class="mt-5 max-w-[18ch] font-display text-h1 leading-none font-normal tracking-[0.01em] text-foreground uppercase"
-        >
-          {entry.title}
-        </h1>
-        {
-          entry.excerpt && (
-            <p class="lede mt-6 max-w-[46ch] font-body text-lede font-normal text-foreground/80 italic">
-              {entry.excerpt}
-            </p>
-          )
-        }
+  <article class="p2">
+    {/* ------- 1. Masthead: title left, the order right ------------------- */}
+    <header class="mx-auto max-w-content px-gutter">
+      <div class="p2-grid p2-mast">
+        <div class="p2-mast-l">
+          <p class="p2-cat font-ui text-ui text-gold-ink">
+            <a href={isPreview || !categoryHref ? '/blog' : categoryHref}>{eyebrowLabel}</a>
+          </p>
+          <h1 class:list={['p2-title', { 'p2-title-long': titleIsLong }]}>{entry.title}</h1>
+          {showLede && <p class="p2-lede">{entry.excerpt}</p>}
+        </div>
 
         {
-          /* The facts about the post, on one hairline-ruled row: when it was
-            written, who wrote it, how long it takes. A weekly preview's
-            category line already names its Sunday, so the date is not printed
-            a second time beside it. */
+          facts.length > 0 && (
+            <div class="p2-mast-r">
+              <p class="p2-order-h font-ui text-ui text-gold-ink">
+                {isPreview ? 'This Sunday’s order' : 'About this post'}
+              </p>
+              <dl class="p2-facts">
+                {facts.map((f) => (
+                  <div>
+                    <dt class="font-ui text-ui">{f.label}</dt>
+                    <dd class:list={{ 'p2-big': f.big }}>
+                      {f.href ? (
+                        <a href={f.href}>{f.value}</a>
+                      ) : f.datetime ? (
+                        <time datetime={f.datetime} class="oldstyle">
+                          {f.value}
+                        </time>
+                      ) : (
+                        f.value
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          )
         }
-        <div
-          class="mt-10 flex flex-wrap gap-6 border-y border-hair py-3 font-ui text-[0.8125rem] text-muted-foreground"
-        >
-          {
-            !isPreview && dateLabel && (
-              <time datetime={entry.publishedAt} class="oldstyle">
-                {dateLabel}
-              </time>
-            )
-          }
-          {entry.author && <span>{entry.author}</span>}
-          {readMinutes > 0 && <span class="oldstyle">{formatReadingTime(readMinutes)}</span>}
-          {updatedLabel && <span class="oldstyle">Updated {updatedLabel}</span>}
-        </div>
       </div>
     </header>
 
+    {/* ------- 2. The ground: a photograph cover, full bleed ------------- */}
     {
-      /* ------- 2. Cover image ----------------------------------------------
-        Landscape runs off the right edge of the screen; portrait stays in the
-        reading measure. See the note beside coverIsPortrait in the frontmatter
-        for why the two shapes cannot share one frame. */
-    }
-    {
-      entry.coverImage?.asset && (
+      cover && coverIsPhoto && (
         <div class="mx-auto max-w-content px-gutter">
-          <figure class:list={[coverIsPortrait ? 'max-w-[62ch]' : 'bleed-right']}>
+          <figure class="p2-ground">
             <SanityImage
-              source={entry.coverImage}
-              width={coverIsPortrait ? 1000 : 2000}
+              source={cover}
+              width={2400}
               loading="eager"
-              sizes={coverIsPortrait ? '(min-width: 920px) 62ch, 100vw' : '100vw'}
-              class="h-auto w-full"
+              fetchpriority="high"
+              sizes="100vw"
+              quality={70}
             />
-            {entry.coverImage.caption && (
-              <figcaption class="mt-3 max-w-[62ch] font-body text-sm text-muted-foreground italic">
-                {entry.coverImage.caption}
-              </figcaption>
-            )}
           </figure>
         </div>
       )
     }
 
-    {
-      /* ------- 3. Body + TOC ------------------------------------------------
-        The prose keeps the PAGE's left edge, at PROSE_MEASURE, and the TOC
-        sits to its right. It used to be the other way round with
-        `lg:justify-center`, which centred the pair and so gave the post a
-        second left edge about 200px in from the one the header, the cover and
-        every band below were drawn on (CLAUDE.md rule 17). The TOC is
-        `hidden lg:block` in its own component, so below lg this is a single
-        column either way. */
-    }
-    <div
-      class:list={[
-        'mx-auto grid max-w-content grid-cols-1 gap-x-16 gap-y-section-md px-gutter py-section-lg',
-        hasToc ? 'lg:grid-cols-[minmax(0,68ch)_minmax(0,1fr)]' : 'lg:grid-cols-1',
-      ]}
-    >
-      <div class:list={[PROSE_MEASURE]}>
-        {
-          /* `client:visible` defers Sanity client + the journal-specific renderers
-            (inline images, before/after slider, source cards, galleries) until
-            the visitor scrolls the body into view. The article HTML is still
-            server-rendered above the fold, so reading starts immediately. */
-        }
-        <JournalPortableText client:visible value={entry.body} />
+    {/* ------- 3. Body left, plate and contents right --------------------- */}
+    <div class="mx-auto max-w-content px-gutter">
+      <div class="p2-grid p2-main">
+        <div class="p2-body">
+          {
+            /* `client:visible` defers the Sanity client and the journal
+              renderers until the body scrolls into view. The article HTML is
+              server-rendered, so reading starts immediately. */
+          }
+          <JournalPortableText client:visible value={body} className="post-prose" />
+
+          {
+            entry.relatedProject?.slug?.current && (
+              <aside class="p2-related">
+                <p class="font-ui text-ui text-gold-ink">Related project</p>
+                <a href={`/portfolio/${entry.relatedProject.slug.current}`}>
+                  {entry.relatedProject.title}
+                </a>
+              </aside>
+            )
+          }
+
+          {
+            /* Tags, at the FOOT of the article, as text links: here a tag
+              means "more like the thing you just read", a question a reader
+              actually has once they have read it. */
+          }
+          {
+            tagLinks.length > 0 && (
+              <nav class="p2-tags" aria-label="Tags on this post">
+                <span class="font-ui text-ui text-gold-ink">Tagged</span>
+                {tagLinks.map((tag, i) => (
+                  <>
+                    <a href={`/blog/tag/${tag.slug}/`}>{tag.label}</a>
+                    {i < tagLinks.length - 1 && ', '}
+                  </>
+                ))}
+              </nav>
+            )
+          }
+        </div>
 
         {
-          /* Related project link (if this post walks through a specific portfolio piece).
-            Centered on mobile so the cross-link reads as a deliberate "go see
-            this project" affordance instead of a stray paragraph clinging to
-            the left edge. Desktop keeps left-aligned (still inside the
-            article column). */
-        }
-        {
-          entry.relatedProject?.slug?.current && (
-            <aside class="mt-section-lg border-t border-border-soft pt-l text-center md:text-left">
-              <p class="mb-s text-xs tracking-widest text-foreground/80 uppercase">
-                Related project
-              </p>
-              <a
-                href={`/portfolio/${entry.relatedProject.slug.current}`}
-                class="group inline-flex items-baseline gap-s text-foreground transition-colors hover:text-primary-dark"
-              >
-                <span class="font-display text-h3">{entry.relatedProject.title}</span>
-                <span
-                  aria-hidden="true"
-                  class="text-xl transition-transform group-hover:translate-x-1"
-                >
-                  →
-                </span>
-              </a>
-              {(entry.relatedProject.location || entry.relatedProject.year) && (
-                <p class="mt-xs text-sm text-muted-foreground">
-                  {entry.relatedProject.location}
-                  {entry.relatedProject.location && entry.relatedProject.year && <span> · </span>}
-                  {entry.relatedProject.year}
-                </p>
-              )}
+          (hasPlate || hasContents) && (
+            <aside class="p2-side" aria-label="About this post">
+              <div class="p2-side-in">
+                {hasPlate && cover && (
+                  <figure class="p2-plate">
+                    <div class="p2-print">
+                      <SanityImage
+                        source={cover}
+                        width={900}
+                        loading="eager"
+                        sizes="(min-width: 1024px) 30vw, 300px"
+                        alt={plateAlt}
+                      />
+                    </div>
+                    {plateCaption && (
+                      <figcaption class="pp-cap">
+                        <span class="pp-tick" aria-hidden="true" />
+                        {plateCaption}
+                      </figcaption>
+                    )}
+                  </figure>
+                )}
+                {hasContents && (
+                  <nav class="p2-contents" aria-label="In this post">
+                    <span class="font-ui text-ui text-gold-ink">In this post</span>
+                    <ol>
+                      {headings.map((h, i) => (
+                        <li>
+                          <a href={`#${h.id}`}>
+                            <span class="p2-n">{String(i + 1).padStart(2, '0')}</span>
+                            <span>{h.text}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ol>
+                  </nav>
+                )}
+              </div>
             </aside>
           )
         }
-
-        {
-          /* Tags, at the FOOT of the article. This is the ONLY place the 217
-            tags are offered, and the reason they are not a cloud on /blog:
-            here a tag means "more like the thing you just read", which is a
-            question a reader actually has, and asking it before they have
-            read anything is furniture. */
-        }
-        {
-          tagChips.length > 0 && (
-            <nav class="mt-section-md border-t border-hair pt-8" aria-label="Tags on this post">
-              <p class="mb-4 font-ui text-ui text-gold-ink">Tagged</p>
-              <ul class="flex list-none flex-wrap gap-2 p-0">
-                {tagChips.map((tag) => (
-                  <li>
-                    <JournalCategoryChip title={tag.label} href={`/blog/tag/${tag.slug}/`} />
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )
-        }
       </div>
-
-      {hasToc && <CaseStudyTOC client:idle headings={headings} />}
     </div>
   </article>
 
   {
-    /* ------- 4. More from this series --------------------------------------
-      The three posts sharing the most TAGS with this one, newest first
-      (seriesByTag in blog-derive.ts). It renders only when something really
-      does share a tag: the band this replaced fell back to "three recent posts
-      in the same category", which on 106 sermon previews meant three unrelated
-      previews under a heading promising a relationship, and a reader cannot
-      tell the two apart. Nothing is better than a claim that is not true.
-
-      It is drawn as the RULED LIST the home page's blog band uses (date left,
-      title and excerpt in the middle, category right, a hairline under each
-      row) rather than three cover cards. Three cards directly under a post
-      that has just ended is a second gallery; a list reads as a footnote,
-      which is what this is. */
+    /* ------- 4. More from this series ---------------------------------------
+      The three posts sharing the most TAGS with this one (seriesByTag,
+      unchanged). It renders only when something really does share a tag:
+      nothing is better than a claim that is not true. A preview's row says
+      its Sunday and its reading, which is what a reader scans for. */
   }
   {
-    Array.isArray(series) && series.length > 0 && (
-      <section class="bg-background" aria-labelledby="post-series-heading">
-        <div class="mx-auto max-w-content px-gutter py-section-lg">
-          <div class="flex items-baseline justify-between gap-6 border-b border-hair-strong pb-4">
-            <h2 id="post-series-heading" class="font-ui text-ui text-gold-ink">
-              More from this series
-            </h2>
-          </div>
-          {series.map((item: any) => (
-            <a
-              href={`/post/${item.slug?.current ?? ''}`}
-              class="group grid grid-cols-12 items-baseline gap-x-[clamp(16px,2.5vw,40px)] border-b border-hair py-8"
-            >
-              <span class="col-span-12 font-ui text-[0.8125rem] tracking-[.06em] text-muted-foreground oldstyle md:col-span-2">
-                {entryIsSermonPreview(item)
-                  ? weekOfEyebrow(item.publishedAt)
-                  : item.publishedAt
-                    ? new Date(item.publishedAt).toLocaleDateString('en-US', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })
-                    : ''}
-              </span>
-
-              <span class="col-span-12 md:col-span-6 md:col-start-3">
-                <span class="block font-body text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] leading-[1.15] font-normal text-foreground transition-colors group-hover:text-gold-ink">
-                  {item.title}
-                </span>
-                {item.excerpt && (
-                  <span class="mt-2.5 block max-w-[56ch] text-muted-foreground">
-                    {item.excerpt}
-                  </span>
-                )}
-              </span>
-
-              <span class="col-span-12 mt-2.5 font-ui text-ui text-muted-foreground md:col-span-3 md:col-start-10 md:mt-0 md:justify-self-end">
-                {item.categories?.[0]?.title}
-              </span>
-            </a>
-          ))}
-        </div>
+    series.length > 0 && (
+      <section
+        class="p2-series mx-auto max-w-content px-gutter"
+        aria-labelledby="post-series-heading"
+      >
+        <h2 id="post-series-heading" class="p2-series-h font-ui text-ui text-gold-ink">
+          More from this series
+        </h2>
+        {series.map((item) => (
+          <a href={`/post/${item.slug}`} class="p2-rrow">
+            <span class="p2-rrow-d oldstyle">{item.date}</span>
+            <span class="p2-rrow-t">
+              <span class="p2-rrow-title">{item.title}</span>
+              {item.excerpt && <span class="p2-rrow-ex">{item.excerpt}</span>}
+            </span>
+            <span class="p2-rrow-c font-ui text-ui">{item.meta}</span>
+          </a>
+        ))}
       </section>
     )
   }
 
-  {/* ------- 5. Next / previous post -------------------------------------- */}
   {
-    (prev || next) && (
-      <nav class="border-t border-hair bg-background" aria-label="More journal posts">
-        <div class="mx-auto grid max-w-content grid-cols-1 gap-m px-gutter py-l md:grid-cols-2">
-          {prev ? (
-            <a href={`/post/${prev.slug}`} class="group">
-              <p class="mb-2 font-ui text-ui text-gold-ink">Newer post</p>
-              <p class="font-body text-h3 font-normal text-foreground transition-colors group-hover:text-gold-ink">
-                &larr; {prev.title}
-              </p>
+    /* ------- 5. The doors ----------------------------------------------------
+      A preview's doors are the Sunday before and after, among previews; any
+      other post's are Older / Newer by date (src/lib/post-neighbours.ts). */
+  }
+  {
+    (doors.before || doors.after) && (
+      <nav class="mx-auto max-w-content px-gutter" aria-label="More posts">
+        <div class="p2-doors">
+          {doors.before ? (
+            <a href={`/post/${doors.before.slug}`}>
+              <span class="font-ui text-ui text-gold-ink">&larr; {doors.before.label}</span>
+              <span class="p2-door-t">{doors.before.title}</span>
+              {doors.before.sub && <span class="p2-door-s oldstyle">{doors.before.sub}</span>}
             </a>
           ) : (
-            <div />
+            <span />
           )}
-          {next ? (
-            <a href={`/post/${next.slug}`} class="group md:text-right">
-              <p class="mb-2 font-ui text-ui text-gold-ink">Older post</p>
-              <p class="font-body text-h3 font-normal text-foreground transition-colors group-hover:text-gold-ink">
-                {next.title} &rarr;
-              </p>
+          {doors.after ? (
+            <a href={`/post/${doors.after.slug}`}>
+              <span class="font-ui text-ui text-gold-ink">{doors.after.label} &rarr;</span>
+              <span class="p2-door-t">{doors.after.title}</span>
+              {doors.after.sub && <span class="p2-door-s oldstyle">{doors.after.sub}</span>}
             </a>
           ) : (
-            <div />
+            <span />
           )}
         </div>
       </nav>
     )
   }
 
-  {/* ------- 6. Final CTA -------------------------------------------------- */}
   {
-    /* The closing band is the journalPage singleton's, the same one /blog and
-      every archive page carries. It used to be the starter's own studio copy
-      hard-coded here, on all 142 posts. */
-  }
-  <FinalCta
-    headline={journalPage?.finalCtaHeadline}
-    subhead={journalPage?.finalCtaSubhead}
-    cta={journalPage?.finalCta}
-    backgroundImage={journalPage?.finalCtaBackgroundImage}
-  />
-
-  {
-    /* Sticky contextual CTA — appears past 50% scroll on long posts.
-      Label is Sanity-editable on journalPage; clearing the field hides the
-      chip across every journal post. */
+    /* Sticky contextual CTA: appears past 50% scroll on long posts. Label is
+      Sanity-editable on journalPage; clearing the field hides the chip. */
   }
   {
     journalPage?.stickyCtaLabel !== '' && (
@@ -476,3 +474,650 @@ const schemas = [
     )
   }
 </BaseLayout>
+
+<style is:global>
+  /* The P2 Bulletin post page and its reading styles. PAGE-SCOPED on purpose:
+     this block ships only with /post/* pages, while a Tailwind utility added
+     for the same job would land in the one global stylesheet every page
+     inlines, and the journal pass must leave every other page byte-identical.
+     Global (not Astro-scoped) because the body is rendered by a React island
+     whose markup carries no Astro scope attribute. Tokens only: every colour
+     is a theme variable, so light and dark both hold. */
+
+  /* ---- The grid ----------------------------------------------------------- */
+  .p2-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+  }
+  .p2-mast {
+    padding-top: var(--spacing-section-lg);
+    padding-bottom: clamp(40px, 5vw, 72px);
+    row-gap: 40px;
+  }
+  .p2-mast-l,
+  .p2-body {
+    grid-column: 1 / 8;
+    min-width: 0;
+  }
+  .p2-mast-r {
+    grid-column: 9 / 13;
+    align-self: end;
+  }
+  .p2-side {
+    grid-column: 9 / 13;
+  }
+  .p2-side-in {
+    position: sticky;
+    top: calc(var(--header-h, 88px) + 28px);
+  }
+  .p2-main {
+    padding-bottom: clamp(40px, 5vw, 64px);
+  }
+
+  /* ---- Masthead ----------------------------------------------------------- */
+  .p2-cat a {
+    text-decoration: none;
+  }
+  .p2-cat a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-underline-offset: 0.18em;
+  }
+  .p2-title {
+    margin-top: 20px;
+    max-width: 18ch;
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+    color: var(--color-foreground);
+  }
+  .p2-title-long {
+    font-size: clamp(2.1rem, 1rem + 4.2vw, 4.6rem);
+    max-width: 22ch;
+  }
+  .p2-lede {
+    margin-top: 24px;
+    max-width: 34em;
+    font-family: var(--font-body);
+    font-size: var(--text-lede);
+    font-style: italic;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
+  }
+  .p2-order-h {
+    margin-bottom: 10px;
+  }
+  .p2-facts {
+    margin: 0;
+    border-bottom: 1px solid var(--color-hair);
+  }
+  .p2-facts > div {
+    display: grid;
+    grid-template-columns: 7.5em minmax(0, 1fr);
+    gap: 12px;
+    align-items: baseline;
+    border-top: 1px solid var(--color-hair);
+    padding: 9px 0 10px;
+  }
+  .p2-facts > div:first-child {
+    border-top-color: var(--color-hair-strong);
+  }
+  .p2-facts dt {
+    color: var(--color-muted-foreground);
+  }
+  .p2-facts dd {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    color: var(--color-foreground);
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+  .p2-facts dd.p2-big {
+    font-size: 1.25rem;
+  }
+  .p2 a,
+  .p2-series a,
+  .p2-doors a {
+    color: inherit;
+  }
+  .p2-facts dd a,
+  .p2-tags a,
+  .p2-related a {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    transition: color 0.2s;
+  }
+  .p2-facts dd a:hover,
+  .p2-tags a:hover,
+  .p2-related a:hover {
+    color: var(--color-gold-ink);
+  }
+
+  /* ---- The ground (a photograph cover), full bleed ------------------------
+     100cqw against #main, NEVER 100vw (CLAUDE.md rule 19): 100vw includes the
+     scrollbar and would push the page sideways on a desktop browser. */
+  .p2-ground {
+    position: relative;
+    width: 100cqw;
+    margin: 0 0 clamp(48px, 6vw, 80px) calc(50% - 50cqw);
+    height: clamp(360px, 44cqw, 680px);
+    overflow: hidden;
+    background: var(--color-indigo-deep);
+  }
+  .p2-ground img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 40%;
+  }
+
+  /* ---- The plate (a slide cover) and the contents -------------------------- */
+  .p2-plate {
+    margin: 0;
+    background: var(--color-muted);
+    padding: clamp(18px, 2vw, 28px);
+  }
+  .p2-print {
+    position: relative;
+  }
+  .p2-print::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 1px solid var(--color-gold);
+    pointer-events: none;
+  }
+  .p2-print img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .p2-plate .pp-cap {
+    margin-top: 18px;
+  }
+  .p2-contents {
+    margin-top: 36px;
+  }
+  .p2-contents > span {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .p2-contents ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--color-hair);
+  }
+  .p2-contents li {
+    border-top: 1px solid var(--color-hair);
+  }
+  .p2-contents a {
+    display: grid;
+    grid-template-columns: 2.2em minmax(0, 1fr);
+    padding: 8px 0 9px;
+    font-family: var(--font-body);
+    font-size: 0.9875rem;
+    line-height: 1.35;
+    text-decoration: none;
+  }
+  .p2-contents .p2-n {
+    padding-top: 2px;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    letter-spacing: 0.1em;
+    color: var(--color-gold-ink);
+  }
+  .p2-contents a:hover span:last-child {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+  }
+
+  /* ---- Foot of the article -------------------------------------------------- */
+  .p2-tags,
+  .p2-related {
+    margin-top: 56px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-hair);
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+    color: var(--color-foreground);
+  }
+  .p2-tags > span:first-child {
+    margin-right: 10px;
+  }
+  .p2-tags a {
+    text-decoration-color: var(--color-hair-strong);
+  }
+  .p2-tags a:hover {
+    text-decoration-color: var(--color-gold);
+  }
+  .p2-related > a {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+  }
+
+  .p2-series {
+    padding-top: clamp(40px, 5vw, 64px);
+  }
+  .p2-series-h {
+    margin: 0;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--color-hair-strong);
+  }
+  .p2-rrow {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+    align-items: baseline;
+    padding: 22px 0 24px;
+    border-bottom: 1px solid var(--color-hair);
+    text-decoration: none;
+  }
+  .p2-rrow-d {
+    grid-column: 1 / 3;
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    color: var(--color-muted-foreground);
+  }
+  .p2-rrow-t {
+    grid-column: 3 / 9;
+    min-width: 0;
+  }
+  .p2-rrow-title {
+    display: block;
+    font-family: var(--font-body);
+    font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem);
+    line-height: 1.15;
+    color: var(--color-foreground);
+    transition: color 0.2s;
+  }
+  .p2-rrow-ex {
+    display: block;
+    margin-top: 8px;
+    max-width: 56ch;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--color-muted-foreground);
+  }
+  .p2-rrow-c {
+    grid-column: 10 / 13;
+    justify-self: end;
+    text-align: right;
+    color: var(--color-muted-foreground);
+  }
+  .p2-rrow:hover .p2-rrow-title,
+  .p2-rrow:focus-visible .p2-rrow-title {
+    color: var(--color-gold-ink);
+  }
+
+  .p2-doors {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(16px, 2.5vw, 40px);
+    margin-top: clamp(48px, 6vw, 80px);
+    margin-bottom: clamp(48px, 6vw, 80px);
+    border-top: 1px solid var(--color-hair-strong);
+  }
+  .p2-doors a {
+    display: block;
+    min-width: 0;
+    padding: 22px 0 26px;
+    text-decoration: none;
+  }
+  .p2-doors a + a,
+  .p2-doors span + a {
+    text-align: right;
+    border-left: 1px solid var(--color-hair);
+    padding-left: clamp(16px, 2.5vw, 40px);
+  }
+  .p2-doors a > span:first-child {
+    display: block;
+    margin-bottom: 8px;
+  }
+  .p2-door-t {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+    line-height: 1.2;
+    color: var(--color-foreground);
+    transition: color 0.2s;
+  }
+  .p2-door-s {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    color: var(--color-muted-foreground);
+  }
+  .p2-doors a:hover .p2-door-t,
+  .p2-doors a:focus-visible .p2-door-t {
+    color: var(--color-gold-ink);
+  }
+
+  /* ---- The reading (the body, rendered by JournalPortableText) ------------- */
+  .post-prose {
+    max-width: 62ch;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.72;
+    color: var(--color-foreground);
+  }
+  /* :where() keeps the spacing rule at zero specificity, so the element rules
+     below (headings, figures, the lection) set their own space above. */
+  :where(.post-prose) > :where(* + *) {
+    margin-top: 1em;
+  }
+  .post-prose p,
+  .post-prose ul,
+  .post-prose ol,
+  .post-prose figure,
+  .post-prose blockquote {
+    margin-bottom: 0;
+  }
+  .post-prose a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+  .post-prose a:hover {
+    color: var(--color-gold-ink);
+  }
+  /* Castoro has one weight: bold is a gold highlighter band, never faux bold. */
+  .post-prose strong {
+    font-weight: inherit;
+    box-shadow: inset 0 -0.34em 0 color-mix(in srgb, var(--color-gold) 20%, transparent);
+  }
+  .post-prose .pp-lead {
+    font-size: var(--text-lede);
+    font-style: italic;
+    line-height: 1.35;
+  }
+
+  /* One section head for h2, h3 and h4. */
+  .post-prose .pp-sh {
+    margin-top: 2.1em;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-hair-strong);
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+    font-weight: 400;
+    line-height: 1.15;
+    scroll-margin-top: calc(var(--header-h, 88px) + 24px);
+  }
+  .post-prose .pp-sh + * {
+    margin-top: 0.75em;
+  }
+
+  /* A quotation: italic at 1.125rem, the gold rule hung in the gutter. */
+  .post-prose blockquote {
+    position: relative;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    font-style: italic;
+    font-size: 1.125rem;
+    line-height: 1.62;
+  }
+  .post-prose blockquote::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * min(var(--spacing-gutter), 28px) + 4px);
+    top: 0.35em;
+    bottom: 0.35em;
+    width: 1px;
+    background: var(--color-gold);
+  }
+  .post-prose blockquote em {
+    font-style: normal;
+  }
+
+  /* Points and the Q and A. */
+  .post-prose .pp-point {
+    margin-top: 1.8em;
+    font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+    line-height: 1.3;
+  }
+  .post-prose .pp-pn {
+    display: block;
+    margin-bottom: 6px;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    letter-spacing: 0.14em;
+    color: var(--color-gold-ink);
+  }
+  .post-prose .pp-point + * {
+    margin-top: 0.6em;
+  }
+  .post-prose .pp-qa {
+    margin-top: 1.1em;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-hair);
+  }
+  .post-prose .pp-q {
+    font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+    line-height: 1.3;
+  }
+  .post-prose .pp-qa p + p {
+    margin-top: 0.4em;
+  }
+
+  /* Lists: a 12px gold rule for a bullet, an old-style gold numeral for a number. */
+  .post-prose ul,
+  .post-prose ol {
+    list-style: none;
+    padding: 0;
+  }
+  .post-prose ul > li {
+    position: relative;
+    padding-left: 1.6em;
+  }
+  .post-prose ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.86em;
+    width: 12px;
+    height: 1px;
+    background: var(--color-gold);
+  }
+  .post-prose ol {
+    counter-reset: pp-n;
+  }
+  .post-prose ol > li {
+    position: relative;
+    padding-left: 1.6em;
+    counter-increment: pp-n;
+  }
+  .post-prose ol > li::before {
+    content: counter(pp-n);
+    position: absolute;
+    left: 0;
+    font-variant-numeric: oldstyle-nums;
+    color: var(--color-gold-ink);
+  }
+  .post-prose li + li {
+    margin-top: 0.4em;
+  }
+  .post-prose li > ul,
+  .post-prose li > ol {
+    margin-top: 0.4em;
+  }
+
+  /* Figures: landscape in the measure, portrait capped at 360px. */
+  .post-prose .pp-fig {
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
+  .post-prose .pp-portrait {
+    max-width: min(100%, 360px);
+  }
+  .pp-cap {
+    margin-top: 14px;
+    max-width: 46ch;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--color-muted-foreground);
+    overflow-wrap: break-word;
+  }
+  .pp-tick {
+    display: block;
+    width: 28px;
+    height: 1px;
+    margin-bottom: 9px;
+    background: var(--color-gold);
+  }
+
+  /* Tables (the two middot lists). */
+  .post-prose .pp-table {
+    margin-top: 1.6em;
+    margin-bottom: 1.6em;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .post-prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    line-height: 1.4;
+    border-bottom: 1px solid var(--color-hair);
+  }
+  .post-prose th {
+    padding: 0 12px 8px 0;
+    border-bottom: 1px solid var(--color-hair-strong);
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-align: left;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
+  }
+  .post-prose td {
+    padding: 9px 12px 10px 0;
+    border-top: 1px solid var(--color-hair);
+    vertical-align: baseline;
+  }
+  .post-prose td.pp-num {
+    width: 2.4em;
+    white-space: nowrap;
+    font-variant-numeric: oldstyle-nums tabular-nums;
+    color: var(--color-gold-ink);
+  }
+  .post-prose td.pp-last {
+    font-style: italic;
+    color: var(--color-muted-foreground);
+  }
+
+  /* The lection: a preview's reading, between two rules. */
+  .post-prose .pp-lection {
+    margin-bottom: 2em;
+    padding: 18px 0 20px;
+    border-top: 1px solid var(--color-hair-strong);
+    border-bottom: 1px solid var(--color-hair);
+  }
+  .post-prose .pp-lection .pp-lection-h {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    font-style: normal;
+    color: var(--color-gold-ink);
+  }
+  .post-prose .pp-lection p,
+  .post-prose .pp-lection blockquote {
+    margin: 0;
+    font-size: 1.1875rem;
+    font-style: italic;
+    line-height: 1.55;
+  }
+  .post-prose .pp-lection blockquote::before {
+    display: none;
+  }
+  .post-prose .pp-lection p + p,
+  .post-prose .pp-lection p + blockquote,
+  .post-prose .pp-lection blockquote + p {
+    margin-top: 0.7em;
+  }
+  .post-prose .pp-lection strong {
+    box-shadow: none;
+  }
+
+  /* ---- Tablet and phone ------------------------------------------------------
+     One column. The order stays under the title; the plate (at most 300px)
+     comes up above the body; the contents list is dropped. */
+  @media (max-width: 1023px) {
+    .p2-mast-l,
+    .p2-mast-r,
+    .p2-body,
+    .p2-side {
+      grid-column: 1 / -1;
+    }
+    .p2-side {
+      order: -1;
+    }
+    .p2-side-in {
+      position: static;
+    }
+    .p2-contents {
+      display: none;
+    }
+    .p2-plate {
+      max-width: 300px;
+      margin-bottom: 36px;
+    }
+    .p2-rrow-d,
+    .p2-rrow-t,
+    .p2-rrow-c {
+      grid-column: 1 / -1;
+      justify-self: start;
+      text-align: left;
+    }
+    .p2-rrow-t {
+      margin-top: 6px;
+    }
+    .p2-rrow-c {
+      margin-top: 10px;
+    }
+  }
+  @media (max-width: 640px) {
+    .p2-doors {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .p2-doors a + a,
+    .p2-doors span + a {
+      text-align: left;
+      border-left: 0;
+      padding-left: 0;
+      border-top: 1px solid var(--color-hair);
+    }
+    .post-prose blockquote::before {
+      left: -12px;
+    }
+  }
+</style>

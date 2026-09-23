@@ -785,6 +785,35 @@ this branch):**
 
 ---
 
+## Journal polish landed (2026-09-22)
+
+Branch `feat/journal-polish`: Nathan picked P2 Bulletin (post page) and I1 Register
+(blog index and archives) from `docs/superpowers/prototypes/2026-09-22-journal/`,
+whose `audit.md` and Rules drawer are the spec. Zero schema changes, no dataset
+writes. What it leaves open:
+
+- **The "This Sunday" door on /blog has never rendered with real data.** It shows
+  only while the newest sermon preview's Sunday is still ahead, and the newest
+  preview is dated January 6, 2026, so every build shows the "Latest" door. The
+  swap script is tested in isolation; the first real proof is the church's next
+  preview.
+- **One excerpt keeps an em-dash, by Nathan's decision (2026-09-22).**
+  `the-road-not-taken` quotes Robert Frost ("and I—I took the one less
+  traveled by"); Nathan ruled the poem keeps its punctuation, a deliberate
+  exception to rule 2, so it renders on /blog/page/2 and the Ruminations
+  archive. `EXCERPT_EXEMPT` in `scripts/fix-journal-gaps.mjs` records it. The
+  rest of that script's plan was applied the same day (backup in
+  `scripts/data/backups/journalEntry-2026-09-22-journal-gaps.json`): 12
+  uncategorised previews now carry Sermon Preview, the podcast announcement
+  carries Church Resources, and the other excerpt dash became a comma
+  (declared on the approval note).
+- The two event tables are now real tables at RENDER time (`src/lib/post-body.ts`
+  reads the middot lists), which closes the reader-facing half of the "Post
+  bodies" note below. A `table` block on `journalEntry.body` is still the proper
+  editor-facing fix.
+
+---
+
 ## Art-direction pass landed (2026-09-21)
 
 Branch `feat/art-direction`, thirteen tasks run as subagent-driven development,
