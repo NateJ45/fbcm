@@ -123,28 +123,60 @@ test('a keyboard scroll right after a fragment landing is not undone', async ({ 
   ).toBeGreaterThanOrEqual(afterPresses - 5);
 });
 
-test('keyboard End hides the sticky header, Home shows it again', async ({ page }) => {
-  // /history is the ~33,000px page: End always lands well past HIDE_AFTER
-  // regardless of viewport height, and Home always lands at y=0.
+test('the header stays away on the way down and slides in on a scroll up', async ({ page }) => {
+  // /history is the ~33,000px page: End always lands well past PIN_AFTER
+  // regardless of viewport height, and Home always lands at y=0. Keyboard
+  // scrolls count as gestures, so direction applies to every step here.
   await page.goto('/history', { waitUntil: 'load' });
   await page.waitForTimeout(300); // let the polish script's initial landing settle (no hash here, so this is just wiring)
 
+  const state = () =>
+    page.evaluate(() => {
+      const h = document.querySelector('header.site-header')!;
+      return { pinned: h.hasAttribute('data-scrolled'), top: h.getBoundingClientRect().top };
+    });
+  const settle = () => page.waitForTimeout(700); // past the 360ms slide and any smooth scroll
+
   await page.keyboard.press('End');
-  await page.waitForTimeout(500); // past the header's 300ms CSS transition
-  const hiddenState = await page.evaluate(() =>
-    document.querySelector('header.site-header')?.getAttribute('data-state'),
-  );
-  expect(hiddenState, 'End should hide the header, same as scrolling down for real').toBe('hidden');
+  await settle();
+  const end = await state();
+  expect(end.pinned, 'scrolling down should not bring the header in').toBe(false);
+  expect(end.top, 'the header should be parked above the viewport').toBeLessThan(0);
+
+  await page.keyboard.press('PageUp');
+  await settle();
+  expect(await state(), 'a scroll up should pin the header at the top').toEqual({
+    pinned: true,
+    top: 0,
+  });
+
+  await page.keyboard.press('PageDown');
+  await settle();
+  expect((await state()).pinned, 'a scroll down should send it away again').toBe(false);
 
   await page.keyboard.press('Home');
-  await page.waitForTimeout(500);
-  const shownState = await page.evaluate(() =>
-    document.querySelector('header.site-header')?.getAttribute('data-state'),
-  );
-  expect(
-    shownState,
-    'Home should show the header again, same as scrolling to the top for real',
-  ).toBeNull();
+  await settle();
+  expect(await state(), 'at the top the header sits in its own slot').toEqual({
+    pinned: false,
+    top: 0,
+  });
+});
+
+// The regression this layout exists to prevent: the header coming or going must
+// never move the page under it. Measured on the home page, which opens with an
+// image hero, because overlay mode is where the shift used to live.
+test('pinning the header does not shift the content', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'load' });
+  const mainTop = () =>
+    page.evaluate(
+      () => document.getElementById('main')!.getBoundingClientRect().top + window.scrollY,
+    );
+  const before = await mainTop();
+  for (const y of [20, 150, 400, 1200, 0]) {
+    await page.evaluate((to) => window.scrollTo(0, to), y);
+    await page.waitForTimeout(100);
+    expect(await mainTop(), `main moved at scrollY ${y}`).toBeCloseTo(before, 0);
+  }
 });
 
 // =============================================================================

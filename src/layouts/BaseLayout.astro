@@ -525,10 +525,12 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           }
         }
 
-        // ---- Sticky-header hide on scroll-down --------------------------
-        // The header is position:sticky via .site-header. We swap a data-state
-        // attribute that the CSS translates into a translateY(-100%) when the
-        // user scrolls downward past the hero band.
+        // ---- Sticky header: pin after a scroll, plus fragment landing ----
+        // The header is position:sticky via .site-header. We set data-scrolled
+        // once the page is well down, which the CSS turns into a slide-in over
+        // the content (see the data-scrolled block below). The gesture gate
+        // that follows was written for the old hide-on-scroll-down; it now
+        // decides only whether the pin animates, and keepLanding still uses it.
         const header = document.querySelector<HTMLElement>('.site-header');
         if (header && !(header as any).__polishWired) {
           (header as any).__polishWired = true;
@@ -600,18 +602,24 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           window.addEventListener('keydown', markGesture, { passive: true });
           window.addEventListener('pointerdown', markGesture, { passive: true });
 
-          const HIDE_AFTER = 120;    // don't hide until past hero band
-
-          // ---- data-scrolled ---------------------------------------------
-          // Independent of the hide/show heuristic below it, and deliberately
-          // NOT gated on the gesture flag: "has this page moved off the top"
-          // is true however the page got there (a fragment landing, a restored
-          // scroll position, a real gesture), and the overlay header's whole
-          // job is to stop being transparent the moment the picture starts
-          // leaving the top of the screen. 8px is small enough to feel
-          // immediate and large enough to ignore rubber-banding. The custom
-          // event lets the header's own inline logo-swap script re-run without
-          // it having to watch the DOM for the attribute.
+          // ---- data-scrolled: the pinned bar ------------------------------
+          // Reworked 2026-09-23. This used to be set at 8px, and it also
+          // took overlay mode's negative margin off, so every image-hero page
+          // jumped by a header height on the first scroll; a separate
+          // hide-on-scroll-down (`data-state="hidden"`) rode alongside it.
+          // Both are gone. The header now scrolls away with the page. Once
+          // the page is past PIN_AFTER, scrolling UP pins it (it slides in
+          // over the content) and scrolling down releases it again; at the
+          // very top it is released for good, where its pinned and natural
+          // positions are the same place. The layout slot never changes
+          // (globals.css).
+          //
+          // The direction logic only runs for a real gesture. A page that
+          // arrives already scrolled (a fragment landing, a restored
+          // position) has no direction, so it pins from position alone,
+          // instantly, which is what the anchor landings measure against.
+          // The custom event lets the header's own inline logo-swap script
+          // re-run without it having to watch the DOM for the attribute.
           //
           // It is a named function, and it is CALLED ONCE AT WIRING TIME as
           // well as from the scroll handler, because a page can become
@@ -621,13 +629,26 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           // do exactly that. Wired from the scroll handler alone, an overlay
           // header in that situation stays transparent with paper lettering
           // over opaque page content until the visitor happens to scroll.
-          const syncScrolled = (y: number) => {
-            const scrolled = y > 8;
-            if (scrolled !== header.hasAttribute('data-scrolled')) {
-              if (scrolled) header.setAttribute('data-scrolled', '');
-              else header.removeAttribute('data-scrolled');
-              window.dispatchEvent(new CustomEvent('header:scrolled'));
+          const PIN_AFTER = 150;
+          // `dy` is the scroll delta for a real gesture, and null for a
+          // scroll nobody made (a fragment landing, a restored position).
+          const syncScrolled = (y: number, dy: number | null = null) => {
+            const animate = dy !== null;
+            const pinned = header.hasAttribute('data-scrolled');
+            let next = pinned;
+            if (y <= 0) next = false;
+            else if (dy === null) next = pinned || y > PIN_AFTER;
+            else if (dy > 4) next = false;
+            else if (dy < -4 && y > PIN_AFTER) next = true;
+            if (next === pinned) return;
+            if (!animate) header.style.transition = 'none';
+            if (next) header.setAttribute('data-scrolled', '');
+            else header.removeAttribute('data-scrolled');
+            if (!animate) {
+              void header.offsetHeight; // commit the jump before transitions return
+              header.style.transition = '';
             }
+            window.dispatchEvent(new CustomEvent('header:scrolled'));
           };
 
           const onScroll = () => {
@@ -635,22 +656,13 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
             ticking = true;
             requestAnimationFrame(() => {
               const y = window.scrollY;
-              const dy = y - lastY;
-
-              syncScrolled(y);
-
               const isUserScroll = performance.now() - lastGestureAt <= GESTURE_WINDOW_MS;
-              if (isUserScroll) {
-                if (reduceMotion) {
-                  header.removeAttribute('data-state');
-                } else if (y < HIDE_AFTER) {
-                  header.removeAttribute('data-state');
-                } else if (dy > 4) {
-                  header.setAttribute('data-state', 'hidden');
-                } else if (dy < -4) {
-                  header.removeAttribute('data-state');
-                }
-              }
+              // A scroll with no gesture behind it (a momentum tail, a
+              // programmatic scroll) only ever releases the bar at the top.
+              // Pinning from position alone is kept for the seed below and the
+              // fragment landing, which call syncScrolled(y) directly.
+              if (isUserScroll) syncScrolled(y, y - lastY);
+              else if (y <= 0) syncScrolled(y, 0);
               lastY = y;
               ticking = false;
             });
@@ -719,6 +731,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
               const offset = parseFloat(getComputedStyle(hashTarget).scrollMarginTop) || 0;
               const y = window.scrollY + hashTarget.getBoundingClientRect().top - offset;
               window.scrollTo(0, Math.max(0, y));
+              syncScrolled(window.scrollY);
               // Keep the hide/show heuristic's own tracking in sync so a
               // real scroll right after we finish reads its delta from
               // where we actually left the page, not from before we moved

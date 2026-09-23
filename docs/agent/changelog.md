@@ -10,6 +10,16 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-23 — The header no longer shifts the page when you scroll._
+
+On every image-hero page the first 8px of scroll removed overlay mode's negative
+margin, so the whole page dropped by a header height (measured on the live home
+page: `#main` from 0 to 89px). The header is now sticky at minus its own height, so
+it scrolls away with the page, and once past 150px a scroll up pins it: `top` eases
+to 0 and the bar slides in over the content, and a scroll down slides it away again.
+The layout slot never changes (`#main` holds still at every scroll position, 375
+and 1440, both themes), and a new test in `tests/anchors.spec.ts` guards it.
+
 _2026-09-22 — Five branches integrated to `main` (`integrate/2026-09-23`)._
 
 The RichText Ledger and photo shapes, `chore/cleanup`, the Studio pass
