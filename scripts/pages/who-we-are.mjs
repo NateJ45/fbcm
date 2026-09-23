@@ -251,7 +251,7 @@ export default {
     // girl among the coneflowers on the right (Hero.astro draws frames[1],
     // frames[0], frames[2]).
     const frames = [
-      await photo('wwa-hero-girls', 0.66, 0.4, { _key: 'frame-1' }),
+      await photo('wwa-hero-girls', 0.6, 0.38, { _key: 'frame-1' }),
       await photo('wwa-hero-couple', 0.58, 0.4, { _key: 'frame-2' }),
       await photo('wwa-hero-child', 0.68, 0.4, { _key: 'frame-3' }),
     ];

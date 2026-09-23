@@ -2680,7 +2680,9 @@ body::before {
 .hw-window {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1.45fr 1fr;
+  /* The middle light is the wide one (2026-09-23): a two-person photo must
+     keep both faces, so it is about 0.8 wide to 1 tall, still the tallest. */
+  grid-template-columns: 1fr 2.1fr 1fr;
   gap: clamp(8px, 1.4vw, 20px);
   align-items: end;
 }
@@ -2698,7 +2700,7 @@ body::before {
   --arch-ratio: 100 / 228;
 }
 .hw-mid {
-  --arch-ratio: 100 / 212;
+  --arch-ratio: 100 / 122;
 }
 .hw-rays {
   position: absolute;
@@ -2733,14 +2735,14 @@ body::before {
 @media (max-width: 620px) {
   .hw-window {
     margin-inline: calc(8px - var(--spacing-gutter));
-    grid-template-columns: 0.78fr 1.9fr 0.78fr;
+    grid-template-columns: 0.7fr 2.3fr 0.7fr;
     gap: 8px;
   }
   .hw-side {
     --arch-ratio: 100 / 250;
   }
   .hw-mid {
-    --arch-ratio: 100 / 158;
+    --arch-ratio: 100 / 122;
   }
   .hw-rays {
     width: 40%;
@@ -3086,9 +3088,13 @@ body::before {
   padding-block: clamp(80px, 9vw, 140px);
 }
 .gl-head {
+  /* The glyph sits above the name (2026-09-23), so the name has its whole
+     column; the column is the container its size is fitted to. */
   display: flex;
-  align-items: flex-end;
-  gap: clamp(14px, 1.6vw, 22px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(10px, 1.2vw, 16px);
+  container-type: inline-size;
 }
 .gl-glyph {
   flex: none;
@@ -3097,14 +3103,12 @@ body::before {
   color: var(--gl-hi);
 }
 .gl-name {
-  /* min-width: 0 lets the heading shrink below its own unbroken content width
-     inside the .gl-head flex row (CLAUDE.md rule 18); overflow-wrap: anywhere
-     is the fallback for a long one-word name (no space to wrap on) once the
-     620px-and-under 13.2vw size below still outruns the room beside the
-     glyph. */
-  min-width: 0;
-  overflow-wrap: anywhere;
-  font-size: clamp(64px, 8.4vw, 132px);
+  /* A goal name never breaks inside a word (2026-09-23: overflow-wrap:
+     anywhere split "WITNESS" as WITNE / SS). Its size is capped so the longest
+     word among the band's names (--gl-chars, set by GoalsBand from cleaned
+     text) fits its own column; a Castoro Titling capital is about 0.74em. */
+  max-width: 100%;
+  font-size: min(clamp(64px, 8.4vw, 132px), 100cqi / (var(--gl-chars, 1) * 0.74));
   line-height: 0.84;
   letter-spacing: 0.005em;
 }
@@ -3193,6 +3197,10 @@ body::before {
    capital of Castoro Titling measures about 0.7em; --gn-chars is set by
    GoalsBand from the stega-cleaned name). So a long name wraps to two lines
    at most, clear of the rising lancets, and never runs off a phone. */
+.gn-cap .gl-head {
+  /* Not a container here: --gn-room measures 100cqw against #main. */
+  container-type: normal;
+}
 .gn-cap .gl-name {
   font-size: min(clamp(76px, 10.4vw, 168px), var(--gn-room) / (var(--gn-chars, 1) * 0.74));
 }
@@ -3479,7 +3487,7 @@ body::before {
     width: 32px;
   }
   .gl-name {
-    font-size: 13.2vw;
+    font-size: min(13.2vw, 100cqi / (var(--gl-chars, 1) * 0.74));
   }
   .gn-bleed {
     min-height: 118vw;

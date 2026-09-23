@@ -29,8 +29,8 @@
           "alt": "Two smiling girls, one with red hair, pose together in front of colorful stained glass windows.",
           "hotspot": {
             "_type": "sanity.imageHotspot",
-            "x": 0.66,
-            "y": 0.4,
+            "x": 0.6,
+            "y": 0.38,
             "width": 0.3,
             "height": 0.3
           },

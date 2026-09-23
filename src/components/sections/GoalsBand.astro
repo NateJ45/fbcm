@@ -99,6 +99,21 @@ const goals = (block.goals ?? [])
     };
   });
 
+// The non-nave goal names share one size, fitted to the longest single word
+// among them, so "Witness" never outgrows its column and the names match.
+const bandChars = Math.max(
+  1,
+  ...goals
+    .filter((g) => g.layout !== 'nave')
+    .map((g) =>
+      Math.max(
+        ...clean(g.goal.name)
+          .split(/\s+/)
+          .map((w) => w.length),
+      ),
+    ),
+);
+
 /** A point's label on the drawing: its short label, or its title. */
 const label = (p: Point) => p.short || p.title;
 /** The short label is only worth printing apart from the title when it differs. */
@@ -135,6 +150,7 @@ const RADII = [15, 27, 40, 52];
   goals.length > 0 && (
     <section
       class="goals bg-background text-foreground"
+      style={`--gl-chars:${bandChars}`}
       aria-labelledby={heading ? headingId : undefined}
     >
       <div class="gx-top mx-auto max-w-content px-gutter">
