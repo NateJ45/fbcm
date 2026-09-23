@@ -1730,16 +1730,13 @@
    NOT inside a prefers-reduced-motion query: the global reduced-motion reset
    zeroes every transition-duration, and a rule hidden behind no-preference
    could never be overridden back on. */
-.zoom-img img,
-.zoom-img .zoom-img-target {
+.zoom-img img {
   transition: transform 1200ms cubic-bezier(0.2, 0.7, 0.2, 1);
   will-change: transform;
 }
 a:hover .zoom-img img,
-a:hover .zoom-img .zoom-img-target,
 a:focus-visible .zoom-img img,
-.zoom-img:hover img,
-.zoom-img:hover .zoom-img-target {
+.zoom-img:hover img {
   transform: scale(1.02);
 }
 
@@ -1836,30 +1833,6 @@ a:focus-visible .zoom-img img,
       box-shadow, transform, opacity;
     transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     transition-duration: 440ms;
-  }
-}
-
-/* Portfolio filter visibility. The chips island toggles .is-filtered-out on
-   non-matching items; CSS handles the fade-and-shrink so the grid stays
-   considered while items leave or rejoin. */
-.is-filtered-out {
-  opacity: 0;
-  transform: scale(0.96);
-  pointer-events: none;
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
-/* Custom portfolio cursor zone. Hide the native cursor on desktop+hover
-   devices while the bronze chip stands in. Touch and reduced-motion users
-   keep the native cursor (the chip bails out in JS for them). */
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  [data-portfolio-cursor-zone],
-  [data-portfolio-cursor-zone] a,
-  [data-portfolio-cursor-zone] a * {
-    cursor: none;
   }
 }
 
@@ -2188,44 +2161,6 @@ a:focus-visible .zoom-img img,
   }
 }
 
-/* ---- Drop cap -- float cap on the first paragraph of every journal post.
-   JournalPortableText.tsx adds .prose-drop-cap to the first <p> only. ---- */
-.prose-drop-cap::first-letter {
-  font-family: var(--font-display);
-  font-size: 4.5em;
-  line-height: 0.72;
-  float: left;
-  color: var(--primary);
-  margin-right: 0.08em;
-  margin-top: 0.06em;
-  font-weight: 400;
-}
-
-/* ---- Blockquote -- 3px left border, display serif italic. Replaces the
-   inline Tailwind classes previously on <blockquote> in JournalPortableText. ---- */
-.prose-blockquote {
-  border-left: 3px solid var(--primary);
-  padding: 0.5rem 0 0.5rem 1.25rem;
-  margin: var(--spacing-m) 0;
-}
-.prose-blockquote p {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1rem, 2vw, 1.15rem);
-  line-height: 1.65;
-  color: var(--foreground);
-  margin: 0;
-}
-.prose-blockquote cite {
-  display: block;
-  font-size: 0.65rem;
-  font-style: normal;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-eyebrow);
-  color: var(--primary);
-  margin-top: 0.5rem;
-}
-
 /* ---- Grid stagger entrance. Add data-stagger-grid to any card grid container.
    The BaseLayout observer adds .is-staggered on intersection. ---- */
 [data-stagger-grid] > * {
@@ -2261,22 +2196,6 @@ a:focus-visible .zoom-img img,
 }
 [data-stagger-grid].is-staggered > *:nth-child(n + 5) {
   transition-delay: 400ms, 400ms, 0ms, 0ms, 0ms;
-}
-
-/* Portfolio filter override: re-assert .is-filtered-out at specificity (0,2,0)
-   so it beats the [data-stagger-grid].is-staggered > * rule (also 0,2,0 but
-   declared earlier). The !important guards prevent any future stagger rule
-   from silently winning again. pointer-events + display collapse are already
-   handled by .is-filtered-out itself and are not overridden here. */
-[data-stagger-grid] > .is-filtered-out {
-  opacity: 0 !important;
-  transform: scale(0.96) !important;
-  /* Filtering owns its timing so the fade and shrink stay in sync and are not
-     split by the per-property hover/entrance durations on the stagger rule
-     above. Zero delay so filtered items leave together, not in a stagger. */
-  transition-property: opacity, transform !important;
-  transition-duration: 360ms !important;
-  transition-delay: 0s !important;
 }
 
 /* ---- Image curtain reveal — a Soft Linen panel scales away from the top
@@ -2456,12 +2375,7 @@ body::before {
   /* Hide site chrome + interactive elements that don't translate to paper. */
   .site-header,
   footer,
-  nav[aria-label='More projects'],
-  nav[aria-label='More journal posts'],
-  .reading-progress,
-  [data-back-to-top],
-  [data-portfolio-cursor-zone] ~ * [aria-label='View →'],
-  .no-print {
+  .reading-progress {
     display: none !important;
   }
 
