@@ -30,6 +30,22 @@ import { loadEnv } from './lib/loadEnv.mjs';
 import * as copy from './lib/page-copy.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+
+// A page module reads --apply out of process.argv itself (that is how it
+// knows to run its --apply-only steps, like who-we-are.mjs uploading its
+// booklet PDF). This script is READ-ONLY by construction (see the header
+// comment above): it never passes a write token, so an --apply-only step
+// would fail loudly rather than write, but "fail loudly" still means a
+// module can attempt a Sanity mutation from a script whose whole point is
+// that it does not. Refuse before that can happen.
+if (process.argv.includes('--apply')) {
+  throw new Error(
+    'page-fixture: refusing to run with --apply. This script is read-only by ' +
+      'construction; --apply belongs to the page module itself (e.g. ' +
+      '`node scripts/pages/<slug>.mjs --apply`), never to page-fixture.mjs.',
+  );
+}
+
 const slug = process.argv[2];
 if (!slug) {
   console.error('Usage: node scripts/page-fixture.mjs <page slug>');
