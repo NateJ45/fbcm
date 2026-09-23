@@ -153,7 +153,7 @@ export const guides: Guide[] = [
           '**Pages**: Home, and every other page of the site (Visit, Who We Are, Beliefs, Ministries, Staff, History, Wedding, Give, Contact).',
           '**Blog**: the posts, including the sermon previews, and their categories.',
           '**People**: the staff members shown on the Staff page.',
-          '**Ministries**: see the ministries guide before you edit these.',
+          '**Ministries**: each ministry’s words, photo and the people to talk to. The Ministries page reads from here.',
           '**Site settings**: the service time, the address, office hours, the menus, the notice banner and old web addresses.',
           '**Help**: these guides.',
         ],
@@ -426,14 +426,10 @@ export const guides: Guide[] = [
         kind: 'p',
         text: 'Open them and switch off `Show on the Staff page`, then publish. They come off the website at the next rebuild but stay in the Studio, marked "(hidden)" in the list, so switching it back on is all it takes if they return. Only `Delete` someone (in the `...` menu beside `Publish`) if you are sure they are not coming back.',
       },
+      { kind: 'h', text: 'Deacons' },
       {
-        kind: 'callout',
-        tone: 'default',
-        title: 'There is no separate list of deacons yet.',
-        text:
-          'The site has staff, pastors and the Church Coordination Team, but no deacons list. If the church would like deacons shown, ask ' +
-          SITE.contactName +
-          ' rather than adding them as staff, so they can be shown the way the church wants.',
+        kind: 'p',
+        text: 'The deacons are not staff members. They are listed in the "Our deacons" band on the Staff page, under the group photograph, with the deacon chair’s email. To change the list, open the Staff page in `Presentation`, click the names and type. If the photograph changes, keep the "left to right" order of the names matching it.',
       },
       {
         kind: 'seealso',
@@ -447,38 +443,41 @@ export const guides: Guide[] = [
     category: 'Blog, staff and ministries',
     title: 'Update a ministry and who leads it',
     icon: 'heart',
-    lead: 'The Ministries page is a page like any other. Edit it there.',
-    diy: 'mixed',
+    lead: 'Each ministry has one home in the Studio. The Ministries page reads from it.',
+    diy: 'self',
     body: [
       {
-        kind: 'callout',
-        tone: 'caution',
-        title: 'Edit the Ministries PAGE, not the Ministries list.',
-        text:
-          'There is a `Ministries` entry in the menu on the left, but the website does not read it at the moment. Changes made there will not appear anywhere. Until ' +
-          SITE.contactName +
-          ' connects it or removes it, everything a visitor sees about the ministries is on the Ministries page itself.',
-      },
-      {
         kind: 'path',
-        items: ['Presentation', 'Ministries'],
-        link: { tool: 'presentation' },
+        items: ['Ministries', 'the ministry'],
+        link: { pane: 'ministry' },
       },
       {
         kind: 'steps',
         items: [
-          'Click `Presentation` at the top and choose the Ministries page from the list.',
-          'Scroll to the ministry. Worship, Children, Youth, Adults and Outreach each have their own band.',
-          'Click the words you want to change and type.',
-          'Publish.',
+          'Open `Ministries` in the menu on the left and choose one: Worship, Children, Youth, Adult or Outreach.',
+          'Change the `Small line above the heading`, the `Headline`, the `Photo` or the `Text`.',
+          'Publish. The Ministries page shows the change after the rebuild.',
         ],
       },
       { kind: 'h', text: 'When a coordinator changes' },
       {
+        kind: 'p',
+        text: 'Under `People to talk to`, remove the person who has stepped down and add the new one from the staff list. The line at the end of the ministry’s band ("Molly Flodder, Worship Coordinator, worship@fbcmuncie.org") is written from their staff details, so their name, role and email are always the ones on the Staff page.',
+      },
+      {
         kind: 'bullets',
         items: [
-          '**"The people to talk to" band** lists the Church Coordination Team from the staff members. Change the person under `People`, then `Staff members`, and this band follows by itself.',
-          '**The closing lines of each ministry’s band** name the person to talk to about it. Those lines were typed in, so change them by hand on the Ministries page as well.',
+          'Someone new has to be a staff member first. Add them under `People`, then `Staff members`, then pick them here.',
+          'The "The people to talk to" band near the foot of the Ministries page lists everyone in the `Church Coordination Team` group, and follows by itself too.',
+          '_The Studio will not let you delete a staff member who is still named on a ministry. Take them off the ministry first._',
+        ],
+      },
+      { kind: 'h', text: 'Photos and the rest of the page' },
+      {
+        kind: 'bullets',
+        items: [
+          'A ministry with no `Photo` shows its text on its own, full width. Adult and Outreach are like that today.',
+          'Everything else on the Ministries page (the Sunday timeline, "Sunday, room by room", the parents’ questions) is ordinary page bands. Change those on the page in `Presentation`.',
         ],
       },
       { kind: 'seealso', items: ['Add, change or remove a staff member'] },

@@ -518,8 +518,11 @@ changing the guide that mentions it in the same commit.
   the new "Used on" entry (`ministry` -> /preview/ministries in resolve.ts)
   because its `RENDERED_BY` map lives in the PORTABLE copy; add
   `ministry: ['ministrySection']` upstream (starter findings).
-- **No deacons.** Nothing in the schema or data represents them. Ask the
-  church how they want them shown before adding a group option.
+- ~~**No deacons.**~~ Corrected 2026-09-22: the deacons ARE on the site, as
+  the "Our deacons" band (`st-deacons`, an imageTextSection) on the Staff page:
+  a group photo and a typed name list with the deacon chair's email. The first
+  pass of the guides missed it; the `staff` guide now says where they live.
+  A structured deacons list is still possible later, if the church wants one.
 - ~~**A new post's Author defaults to "Your Name"**~~ Fixed 2026-09-22
   (feat/settings-placeholders): no initial value; blank means no byline. All
   142 existing posts already carry a real author.
@@ -571,6 +574,38 @@ changing the guide that mentions it in the same commit.
   > portrait appears higher up, it takes the window and the old window becomes
   > a framed portrait. Look at the whole page in Presentation before you
   > publish.
+
+### Found while connecting the ministries (2026-09-22)
+
+- ~~**Four pages could not be published.**~~ Fixed 2026-09-22
+  (feat/ministry-bands): the page-section link field validated with
+  `R.uri({ allowRelative: true })`, which allows only http/https, so every
+  seeded `mailto:` contact line (Contact, Ministries, Staff, Wedding: eight
+  links) was a validation error, and Sanity will not publish a document with
+  one. `sections.ts` and `richSections.ts` now allow mailto and tel, as
+  `ctaBlock` already did. No data or render change.
+- **Removing the `church` scaffold capability is broken, and was before this
+  work.** `npm run scaffold -- --remove church --write` on the parent commit
+  c6bcd4e leaves 9 type errors and 1 failing unit test (identical counts on
+  feat/ministry-bands): `structure.ts` and `blog-derive.ts` import
+  `church-derive`, which the removal deletes, and SectionRenderer props go
+  `unknown`. Rule 14 says a capability must be removable; this one is not.
+- **`audit:studio` check 5 cannot see the ministry "Used on" entry**: its
+  `RENDERED_BY` map in the PORTABLE `scripts/audit-studio.mjs` needs
+  `ministry: ['ministrySection']`. Upstream first (starter), then sync.
+- **The committed parity baselines are stale for the blog.** Something outside
+  these sessions updated 14 `journalEntry` documents at 2026-09-23T00:07:15Z
+  and uploaded 68 file assets (PDFs) around 00:09. Against the committed
+  baselines the build scores 120/162, all 42 diffs blog/post pages; against a
+  fresh capture of the parent on the same data, 162/162. Recapture once that
+  work lands, and prove the fixpoint.
+- **Run order for the two data migrations**, both from the main checkout after
+  the stacked branches are merged AND deployed: `settings-placeholders.mjs`
+  (dry, then `--write`), then `connect-ministries.mjs` (dry, then `--write`).
+  The ministries migration drops the old Wix photos from all five Ministry
+  documents (Adult and Outreach to none, the others to the photo their band
+  shows today); the backup keeps them and the assets stay in the library.
+  Writing it before the deploy would empty five bands on the live page.
 
 ### For ncs-astro-sanity-starter (the library of record), found on this fork
 
