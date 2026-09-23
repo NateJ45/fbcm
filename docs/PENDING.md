@@ -693,7 +693,33 @@ now ties the schema max and the slice with a drift test.
   `/styleguide/who-we-are`. The module throws if any `fbcmuncie.org/_files` link
   reaches the page, so the Wix copy (which dies at cutover) can never be seeded.
 - **The page is composed but not applied.** Deploy the branch (the schema carries the
-  new church sections), then `npm run seed-pages -- --only who-we-are --apply`.
+  new church sections), then `npm run seed-pages -- --only who-we-are` (read the plan)
+  and `npm run seed-pages -- --only who-we-are --apply` (backup first). Let the
+  publish webhook rebuild, then shoot `/who-we-are` in production at 1440 and 375,
+  light and dark, beside the prototype. Until this runs, `/who-we-are` still shows the
+  old composition and parity reports it unchanged.
+- **New copy awaiting the church's approval.** Every sentence the composition adds or
+  re-cases is listed in `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`
+  (the Who We Are entries, 2026-09-23). The seed writes them; the church has not yet
+  seen them.
+- **The Worship goal needs a front-on congregation photograph.** Its lead (the NAVE
+  composition's full-bleed photo) is `wwa-worship-nave`, the sanctuary seen from the
+  balcony, so the congregation is seen from behind. A shot from the front of the
+  sanctuary, faces toward the camera, is the one to ask the church for; swap it in
+  `scripts/data/page-images.json` or in the Studio.
+- **The window hero shows no mint accent word.** The window layout sets the hero's
+  `scriptAccent` word in mint, but the composed hero carries no `scriptAccent`, so the
+  headline (the Site settings tagline) is one colour. Pick a word with the church
+  ("Spirit-led" is the obvious one) and set it in the Studio or in the page module.
+- **Goal anchor ids are deduplicated within the goals block only.** `GoalsBand`
+  derives each goal's id from `slugify(name)` and adds a suffix on a clash inside the
+  block, but nothing checks the rest of the page, so a section anchor or another goals
+  block with the same slug (`worship`, `the-way`, `witness`, `work`) would give the
+  page two elements with one id. Harmless on the composed page today (its section
+  anchors are `watchword`, `goals`, `pledge`, `letter`, `next`).
+- **The "Meet Our Staff" door shows one pastor.** Its photo is `wwa-next-kendall`, a
+  single person, for a card about the whole staff. A group photograph of the staff
+  would say what the card says.
 - **Clean-up once `/who-we-are` itself shows the composition.** Delete
   `src/pages/styleguide/who-we-are.astro`, the `'/styleguide/who-we-are'` line and its
   comment in `tests/routes.ts`, and `scripts/data/fixtures/who-we-are.json`. KEEP

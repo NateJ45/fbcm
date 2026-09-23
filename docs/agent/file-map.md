@@ -2,6 +2,8 @@
 
 Moved out of CLAUDE.md on 2026-09-22. Still starter-shaped in places; the FBCM-specific additions (the church section components, src/lib/spare-images.ts, src/lib/live-sunday.ts) follow the same foundation rules as their neighbours.
 
+The church identity pass (2026-09-23) added `src/components/church/` (ArchFrame, BuildingGlyph, WatchwordMark, SeasonLine), four section components (WatchwordBand, GoalsBand, PledgeReading, PastorsLetter) and three pure modules (`src/lib/church-year.ts`, `goal-layout.ts`, `highlight-words.ts`). Each file's header marks it `// Safe to edit by hand`, but they lean on two foundation pieces: the identity tokens in globals.css `@theme` and `.dark` (gated by `theme-tokens.test.ts`, so a colour change there must still pass it) and the `/* Church identity (2026-09-23) */` CSS block, which counts against the inline-sheet ceiling (CLAUDE.md rule 20). `highlight-words.ts` imports `RUN_SOURCE` from the PORTABLE `preview-stega.ts` (PORTS.md card 29).
+
 ## Safe to edit by hand
 
 These are the files where a project maintainer can make changes without risk of breaking the underlying architecture:
