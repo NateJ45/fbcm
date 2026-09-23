@@ -178,7 +178,8 @@ export function sectionsProjection(field = 'pageBuilder'): string {
         title,
         body,
         cta${CTA_PROJECTION},
-        image${IMAGE_PROJECTION}
+        image${IMAGE_PROJECTION},
+        glyph
       }
     },
     // A Ministry band holds only a reference. Everything it draws is on the

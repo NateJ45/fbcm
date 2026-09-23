@@ -568,6 +568,32 @@ export const linkCardsSection = defineType({
                 }),
               ],
             }),
+            // 2026-09-23 (Home identity, Task 2): optional. `glyph` picks which
+            // of the four building drawings draws beside the card's title, the
+            // same component switch as goalsSection's `goal.glyph` above (a
+            // component switch, not display text, so 'glyph' is already on
+            // NON_STEGA_FIELDS by name). Give EVERY card in the band one and,
+            // with every card already pictured (the arched-door look above),
+            // the band also switches to the indigo-dark ground and the CTA
+            // draws as a text link instead of the gold plate: this is the four
+            // goals as the home page's ways in. Leave any card's glyph blank
+            // and the band with images stays exactly the arched-door look it
+            // is today (Who We Are's "Where To Go Next"); parity proves it.
+            defineField({
+              name: 'glyph',
+              title: 'Building drawing',
+              type: 'string',
+              description: 'Optional. Give every card one to draw the goals band.',
+              options: {
+                list: [
+                  { title: 'Window', value: 'window' },
+                  { title: 'Door', value: 'door' },
+                  { title: 'Rose window', value: 'rose' },
+                  { title: 'Basin niche', value: 'basin' },
+                ],
+                layout: 'radio',
+              },
+            }),
           ],
           preview: { select: { title: 'title', subtitle: 'body', media: 'image' } },
         }),

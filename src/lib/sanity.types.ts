@@ -817,6 +817,7 @@ export type LinkCardsSection = {
     body?: string;
     cta?: CtaBlock;
     image?: LinkCardImage;
+    glyph?: 'window' | 'door' | 'rose' | 'basin';
     _type: 'linkCard';
     _key: string;
   }>;

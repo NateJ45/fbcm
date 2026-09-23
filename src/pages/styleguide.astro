@@ -1103,6 +1103,84 @@ const DOOR_CARDS_FIXTURE = {
     },
   ],
 };
+
+// Four cards, each pictured AND glyphed: the goals variant of the arched
+// doors (Task 2, Home identity plan, 2026-09-23). Same shape as
+// DOOR_CARDS_FIXTURE, plus `glyph`, which is what switches the band to
+// indigo-dark and the CTA to a text link.
+// The heading reads "Our Goals, as link cards" rather than plain "Our Goals":
+// the page also carries GOALS_FIXTURE's own "Our Goals" heading (the
+// goalsSection church block, styleguide-goals), and two landmarks with the
+// same accessible name fail axe's landmark-unique rule (caught by
+// tests/a11y.spec.ts). On the real pages this never collides: the home page
+// carries this band alone, and goalsSection lives only on Who We Are.
+const GOALS_CARDS_FIXTURE = {
+  eyebrow: 'First Baptist Muncie',
+  heading: 'Our Goals, as link cards',
+  intro: 'We’re a Spirit-led people gathered to join Christ’s presence in our community.',
+  cards: [
+    {
+      _key: 'gc-worship',
+      _type: 'linkCard' as const,
+      title: 'Worship',
+      body: 'FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.',
+      glyph: 'window' as const,
+      cta: {
+        label: 'Plan a visit',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/visit',
+        openInNewTab: false,
+      },
+      image: P.nave,
+    },
+    {
+      _key: 'gc-way',
+      _type: 'linkCard' as const,
+      title: 'The Way',
+      body: 'We offer a growth track to help us all come and see who Jesus is and grow spiritually.',
+      glyph: 'door' as const,
+      cta: {
+        label: 'Who we are',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/who-we-are',
+        openInNewTab: false,
+      },
+      image: P.deacons,
+    },
+    {
+      _key: 'gc-witness',
+      _type: 'linkCard' as const,
+      title: 'Witness',
+      body: 'FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.',
+      glyph: 'rose' as const,
+      cta: {
+        label: 'Our ministries',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/ministries',
+        openInNewTab: false,
+      },
+      image: P.children,
+    },
+    {
+      _key: 'gc-work',
+      _type: 'linkCard' as const,
+      title: 'Work',
+      body: 'We actively and practically help and work alongside our neighbors.',
+      glyph: 'basin' as const,
+      cta: {
+        label: 'How we serve',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/ministries',
+        openInNewTab: false,
+      },
+      image: P.building,
+    },
+  ],
+};
 // scaffold:end
 ---
 
@@ -1458,6 +1536,17 @@ const DOOR_CARDS_FIXTURE = {
       heading={DOOR_CARDS_FIXTURE.heading}
       cards={DOOR_CARDS_FIXTURE.cards}
       headingId="styleguide-linkcards-doors-h"
+    />
+  </div>
+
+  {/* Every card also glyphed: the goals variant, indigo-dark ground and a text-link CTA. */}
+  <div id="styleguide-linkcards-goals">
+    <LinkCards
+      eyebrow={GOALS_CARDS_FIXTURE.eyebrow}
+      heading={GOALS_CARDS_FIXTURE.heading}
+      intro={GOALS_CARDS_FIXTURE.intro}
+      cards={GOALS_CARDS_FIXTURE.cards}
+      headingId="styleguide-linkcards-goals-h"
     />
   </div>
 

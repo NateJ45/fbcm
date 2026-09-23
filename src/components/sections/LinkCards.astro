@@ -57,12 +57,26 @@
 // (WCAG technique H2). The band's eyebrow sits above the heading in brand
 // gold (5.60:1 on the indigo, theme-tokens.test.ts).
 //
+// THE GOALS (2026-09-23, Home identity plan, Task 2). When every pictured
+// card ALSO carries a `glyph`, the doors draw as the four goals: the band
+// drops to the indigo-DARK ground (`bg-band-deep`) instead of indigo, each
+// door's paper panel goes away, and its title, glyph and body sit straight on
+// the dark ground with the CTA as a text link, not the gold plate (Nathan's
+// binding decision for the goals variant). No new colour token pairs: title,
+// glyph and the link all reuse `color-gold` on `color-band-deep`, already
+// gated in theme-tokens.test.ts ("heading, highlighted words, PROCLAIM, the
+// link"), and the body reuses `color-bg` on `color-band-deep` ("body text on
+// the Watchword band"). Who We Are's "Where To Go Next" cards carry no glyph,
+// so `glyphed` is false there and the band renders exactly as it does today;
+// `npm run parity compare` is what proves that.
+//
 // A CONTENT block: the alternating surface arrives as a prop from
 // SectionRenderer, and is ignored in the statement and door forms, which
 // paint their own.
 import SectionHeading from '@/components/SectionHeading.astro';
 import SanityImage from '@/components/SanityImage.astro';
 import ArchFrame from '@/components/church/ArchFrame.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { surfaceClass } from '@/lib/surfaces';
 import { resolveCtaHref } from '@/lib/cta-href';
 import { cardsPictured } from '@/lib/spare-images';
@@ -104,6 +118,11 @@ const bg = surfaceClass(surface);
 // A card with no title is a card nobody can read, so it never renders.
 const shown = cards.filter((c) => c?.title);
 const doors = cardsPictured(shown);
+// Every shown card carries a glyph: the goals variant (see the comment
+// above). Checked only when `doors` already holds, so a plain row with a
+// stray glyph field (there is none in the schema today, but nothing stops a
+// future one) never trips this.
+const glyphed = doors && shown.every((c) => !!c.glyph);
 const hasFrame = !doors && !!frame?.asset;
 const dark = onDark ?? hasFrame;
 
@@ -122,7 +141,7 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
 {
   doors && (
     <section
-      class="lc-band bg-band-indigo text-white-pure"
+      class:list={['lc-band', glyphed ? 'bg-band-deep' : 'bg-band-indigo', 'text-white-pure']}
       aria-labelledby={heading ? headingId : undefined}
     >
       <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
@@ -146,19 +165,38 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
                   grade="warm"
                   style={`transition-delay: ${i * 100}ms`}
                 />
-                <span class="lc-body bg-background text-foreground">
-                  <span class="font-display text-h3 leading-[1.05] text-indigo">{card.title}</span>
-                  {card.body && (
-                    <span class="mt-2.5 mb-6 text-lg leading-[1.45] text-muted-foreground">
-                      {card.body}
+                {glyphed ? (
+                  <span class="lc-body">
+                    <span class="mb-2 flex items-center gap-3 text-gold">
+                      <BuildingGlyph name={card.glyph ?? 'window'} class="w-9 shrink-0" />
+                      <span class="font-display text-h3 leading-[1.05]">{card.title}</span>
                     </span>
-                  )}
-                  {card.cta?.label && (
-                    <span class="mt-auto inline-flex min-h-[44px] items-center self-start rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] transition-transform group-hover:-translate-y-px">
-                      {card.cta.label}
+                    {card.body && (
+                      <span class="mb-5 text-lg leading-[1.45] text-bg">{card.body}</span>
+                    )}
+                    {card.cta?.label && (
+                      <span class="mt-auto inline-flex w-fit items-center gap-2 border-b border-current pb-1 font-ui text-ui font-semibold text-gold">
+                        {card.cta.label}
+                      </span>
+                    )}
+                  </span>
+                ) : (
+                  <span class="lc-body bg-background text-foreground">
+                    <span class="font-display text-h3 leading-[1.05] text-indigo">
+                      {card.title}
                     </span>
-                  )}
-                </span>
+                    {card.body && (
+                      <span class="mt-2.5 mb-6 text-lg leading-[1.45] text-muted-foreground">
+                        {card.body}
+                      </span>
+                    )}
+                    {card.cta?.label && (
+                      <span class="mt-auto inline-flex min-h-[44px] items-center self-start rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] transition-transform group-hover:-translate-y-px">
+                        {card.cta.label}
+                      </span>
+                    )}
+                  </span>
+                )}
               </a>
             </li>
           ))}
