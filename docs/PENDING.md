@@ -533,12 +533,18 @@ writes. What it leaves open:
   preview is dated January 6, 2026, so every build shows the "Latest" door. The
   swap script is tested in isolation; the first real proof is the church's next
   preview.
-- **13 posts have no category**, including a sermon preview (`multiplied`), so
-  they get no Sunday or reading and no filter. A content fix in the Studio.
-- **Two excerpts still carry em-dashes** (`justified-by-faith-empowered-by-the-spirit`,
-  `the-road-not-taken`); `convert-body.ts` normalised bodies only. They now render
-  on /blog/page/2 and /blog/category/sermon-preview. Needs a dry-run-first
-  script (rule 16), not a render hack (rule 2 is absolute for Sanity content).
+- **13 posts have no category and two excerpts carry em-dashes: the fix is
+  written, dry-run clean, and waits on Nathan's go-ahead for a dataset write.**
+  `node scripts/fix-journal-gaps.mjs` plans 15 patches: 12 posts that open as
+  sermon previews get Sermon Preview (Wix never categorised them either), the
+  sermon podcast announcement gets Church Resources, and the excerpts of
+  `justified-by-faith-empowered-by-the-spirit` and `the-road-not-taken` go
+  through the same `normalizeDashes` the bodies did. The second is inside a
+  Robert Frost quotation ("and I, I took the one less traveled by"), the same
+  call as the Romans bio (P30). On `--apply` it backs up first; then declare the
+  two excerpt edits in `scripts/pages/blog.mjs` `edits` and regenerate the
+  approval note with a dry `node scripts/seed-pages.mjs`, then rebuild (the
+  register's filters and doors change) and recapture parity.
 - The two event tables are now real tables at RENDER time (`src/lib/post-body.ts`
   reads the middot lists), which closes the reader-facing half of the "Post
   bodies" note below. A `table` block on `journalEntry.body` is still the proper
