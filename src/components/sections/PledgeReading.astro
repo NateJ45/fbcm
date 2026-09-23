@@ -1,0 +1,149 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: the pledge as a responsive reading (2026-09-23, the Who
+// We Are "alive" pass; the prototype's `.pledge`). The heading, the short
+// introduction and the photo in a door arch sit in the left column; the right
+// column is set like a bulletin's responsive reading: the instruction as an
+// italic rubric, the opening line large, then each line said together with
+// "All" in the left margin and its scripture reference in the right margin
+// (at 620px and below the margin notes drop under the line). Each line rises
+// in on the reveal observer, a step later than the one before. The text after
+// the pledge follows in one column under a small window ornament.
+//
+// THE TURN. A line that has a clause after its last comma or colon ("Bearing
+// your burdens, as you bear ours.") sets that clause on its own indented
+// italic line, as the prototype does. The split point is found in the stega-
+// CLEANED text and the raw string is only cut when its head is the same
+// characters (the preview appends its payload at the end, which then rides
+// on the turn), so click-to-edit survives and no stega string is measured.
+//
+// THE PHOTO COLUMN. The prototype's photo column stopped well short of the
+// reading at 1440, leaving an empty patch under the photo. Here the door is
+// the flexible part of the left column: at 901px and up it stretches to fill
+// whatever height the reading gives it (within a floor and a ceiling), so the
+// two columns end together and the photo never makes the band taller.
+//
+// On the site's soft-paper ground (bg-muted), so it follows the theme; the
+// purple and gold-brown inks both flip under .dark and are measured on the
+// ground each theme paints (theme-tokens.test.ts, THEMED_IDENTITY_PAIRS).
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import PortableText from '@/components/PortableText';
+import { splitStega } from '@/lib/preview-stega';
+import type { ProjectedPledgeSection } from '@/lib/pageBuilder.types';
+import type { PortableTextBlock } from '@portabletext/types';
+
+interface Props {
+  block: ProjectedPledgeSection;
+  headingId: string;
+}
+
+const { block, headingId } = Astro.props as Props;
+const { heading, intro, instruction, opening, lines, after, image } = block;
+
+/** Split a line at its last ", " or ": " into the said part and the turn. */
+function turn(raw: string): { head: string; tail: string } {
+  const cleaned = splitStega(raw).cleaned;
+  const at = Math.max(cleaned.lastIndexOf(', '), cleaned.lastIndexOf(': '));
+  // A turn needs a real clause on both sides.
+  if (at < 8 || cleaned.length - at < 10) return { head: raw, tail: '' };
+  const head = cleaned.slice(0, at + 1);
+  if (!raw.startsWith(head)) return { head: raw, tail: '' };
+  return { head, tail: raw.slice(at + 2) };
+}
+
+const said = (lines ?? []).filter((l) => l?.text);
+const afterBlocks = (after ?? []) as PortableTextBlock[];
+const QF =
+  'M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z';
+---
+
+<section class="bg-muted text-foreground" aria-labelledby={heading ? headingId : undefined}>
+  <div class="pl-grid mx-auto max-w-content px-gutter py-section-lg">
+    <div class="pl-side">
+      {
+        heading && (
+          <h2 id={headingId} class="font-display text-title leading-none text-purple-ink">
+            {heading}
+          </h2>
+        )
+      }
+      {intro && <p class="mt-5 max-w-[17em] text-lede text-muted-foreground">{intro}</p>}
+      <ArchFrame
+        image={image}
+        shape="door"
+        width={700}
+        sizes="(min-width: 901px) 26vw, 90vw"
+        alt={image?.alt ?? ''}
+        class="pl-door"
+        style="--arch-mould: var(--color-purple-ink)"
+      />
+    </div>
+
+    <div>
+      {
+        instruction && (
+          <p class="pl-rubric font-body text-purple-ink italic">
+            <svg viewBox="-20 -20 40 40" aria-hidden="true">
+              <path d={QF} fill="currentColor" />
+            </svg>
+            {instruction}
+          </p>
+        )
+      }
+      <ol>
+        {
+          opening && (
+            <li class="pl-rd pl-open" data-reveal>
+              <span class="pl-who font-display text-purple-ink">All</span>
+              <p class="font-body text-purple-ink italic">{opening}</p>
+            </li>
+          )
+        }
+        {
+          said.map((line, i) => {
+            const { head, tail } = turn(line.text ?? '');
+            const delay = (i + 1) * 110;
+            return (
+              <li class="pl-rd" data-reveal style={`transition-delay: ${delay}ms`}>
+                <span class="pl-who font-display text-purple-ink">All</span>
+                <p class="font-body">
+                  {head}
+                  {tail && ' '}
+                  {tail && <span class="pl-turn text-purple-ink italic">{tail}</span>}
+                </p>
+                {line.reference && (
+                  <span class="pl-ref font-body text-gold-ink italic">{line.reference}</span>
+                )}
+              </li>
+            );
+          })
+        }
+      </ol>
+
+      {
+        afterBlocks.length > 0 && (
+          <div class="pl-after">
+            <svg
+              class="pl-sep text-purple-ink"
+              viewBox="0 0 440 22"
+              preserveAspectRatio="xMinYMid meet"
+              aria-hidden="true"
+            >
+              <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                <path d="M0 11H178" opacity=".5" />
+                <path d="M190 20V12A8 8 0 0 1 196 3A8 8 0 0 1 202 12V20" />
+                <path d={QF} transform="translate(220 11) scale(.5)" />
+                <path d="M238 20V12A8 8 0 0 1 244 3A8 8 0 0 1 250 12V20" />
+                <path d="M262 11H440" opacity=".5" />
+              </g>
+            </svg>
+            <div class="space-y-4 text-muted-foreground">
+              <PortableText value={afterBlocks} variant="bare" />
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

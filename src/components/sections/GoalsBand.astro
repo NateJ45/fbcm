@@ -1,0 +1,371 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: the church's goals, each in its own colour and its own
+// composition (2026-09-23, the Who We Are "alive" pass; the prototype's
+// `section[aria-labelledby="t-goals"]`). The heading and introduction on the
+// page's own ground, a colour-coded index of anchor links, then one <article>
+// per goal:
+//
+//   NAVE  (Worship, green) the first photo full bleed with the name over it,
+//         the later photos as lancets rising over its edge, the points in two
+//         columns below.
+//   PATH  (The Way, gold) the pull quote large, then one door-arch step per
+//         point along a dotted trail, turning into a vertical trail at 900px
+//         and below.
+//   RINGS (Witness, purple) the photos as lancets in an arc, then one set of
+//         widening rings per point, labelled by the point's short label.
+//   DOORS (Work, brown) one door per point, its photo inside, labelled by the
+//         short label in display capitals.
+//
+// Composition and colour come from the goal's POSITION through goalLayout()
+// (src/lib/goal-layout.ts), never from a field (CLAUDE.md rule 9); a goal that
+// cannot fill its composition falls back to the nave in its own colour. The
+// building glyph is the editor's `glyph` radio (a NON_STEGA field), with the
+// position's own drawing as the fallback.
+//
+// THE NAVE TITLE OVER ANY PHOTO. The name and subtitle sit on a scrim that is
+// part of the caption box itself: it fades in above the words and holds at
+// 66% night green behind every line of them, so however tall the words wrap,
+// no letter sits on less. Night at 66% over a PURE WHITE pixel composites to
+// a ground of relative luminance 0.145: white measures 5.4:1 there and mint or
+// gold-light 3.4 to 3.5:1, and both lines are large text (28px and up), whose
+// AA floor is 3:1. A pure white photograph is the worst case, so the title
+// holds on any photograph an editor picks. Only below the words does the
+// scrim turn into the band's own colour.
+//
+// No visible captions (the site owner's ruling, 2026-09-23): alt text stays on
+// every image, and nothing prints it.
+//
+// Dark BY TYPE: each goal paints its own band colour, so the block is on no
+// cadence and carries no colour field. Every ink on those grounds is measured
+// in both themes in theme-tokens.test.ts (IDENTITY_PAIRS); the index inks sit
+// on the page's own ground and flip with the theme (THEMED_IDENTITY_PAIRS).
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import SanityImage from '@/components/SanityImage.astro';
+import { goalLayout } from '@/lib/goal-layout';
+import { splitStega } from '@/lib/preview-stega';
+import { slugify } from '@/lib/slugify';
+import type { ProjectedGoal, ProjectedGoalsSection } from '@/lib/pageBuilder.types';
+
+interface Props {
+  block: ProjectedGoalsSection;
+  headingId: string;
+  /**
+   * Put in front of each goal's anchor id ("worship", "the-way"). Empty on a
+   * page, which carries one goals block; the styleguide shows two.
+   */
+  anchorPrefix?: string;
+}
+
+const { block, headingId, anchorPrefix = '' } = Astro.props as Props;
+const { heading, intro } = block;
+
+type Glyph = 'window' | 'door' | 'rose' | 'basin';
+const GLYPHS: Glyph[] = ['window', 'door', 'rose', 'basin'];
+type Point = NonNullable<ProjectedGoal['points']>[number];
+
+const hasAsset = (img: unknown): boolean => !!(img as { asset?: unknown } | null)?.asset;
+const clean = (s: string | undefined | null) => splitStega(s ?? '').cleaned.trim();
+
+/** The nave name's fitting length: its longest word, or half its letters. */
+function nameChars(name: string): number {
+  const longest = Math.max(1, ...name.split(/\s+/).map((w) => w.length));
+  return Math.max(longest, Math.ceil(name.length / 2));
+}
+
+// Anchor ids from the goal's name, made unique on the page.
+const used = new Set<string>();
+const goals = (block.goals ?? [])
+  .filter((g) => g?.name)
+  .map((goal, i) => {
+    const photos = (goal.photos ?? []).filter(hasAsset);
+    const points = (goal.points ?? []).filter((p) => p?.title);
+    const { layout, colour } = goalLayout(i, { points, photos });
+    let id = anchorPrefix + (slugify(clean(goal.name)) || `goal-${i + 1}`);
+    if (used.has(id)) id = `${id}-${i + 1}`;
+    used.add(id);
+    return {
+      goal,
+      photos,
+      points,
+      layout,
+      colour,
+      id,
+      nameId: `${headingId}-${id}`,
+      glyph: goal.glyph ?? GLYPHS[i % 4],
+      chars: nameChars(clean(goal.name)),
+    };
+  });
+
+/** A point's label on the drawing: its short label, or its title. */
+const label = (p: Point) => p.short || p.title;
+/** The short label is only worth printing apart from the title when it differs. */
+const hasOwnShort = (p: Point) => !!p.short && clean(p.short) !== clean(p.title);
+
+/** The dotted trail through n steps, in a 1000 x 600 box stretched to the path. */
+function trail(n: number): string {
+  const at = (i: number) => [((i + 0.5) / n) * 1000, 150 + (i * 300) / Math.max(1, n - 1)];
+  const [x0, y0] = at(0);
+  let d = `M${x0} ${y0}`;
+  for (let i = 1; i < n; i++) {
+    const [x, y] = at(i);
+    const dx = 1000 / n;
+    d +=
+      i === 1
+        ? `C${x0 + dx * 0.4} ${y0} ${x - dx * 0.6} ${y} ${x} ${y}`
+        : `S${x - dx * 0.4} ${y + 10} ${x} ${y}`;
+  }
+  return d;
+}
+
+/** The crowd's arc: the middle lancets tallest, as 100/h aspect ratios. */
+function arc(i: number, n: number): number {
+  const mid = (n - 1) / 2;
+  const d = mid === 0 ? 0 : Math.abs(i - mid) / mid;
+  return Math.round(150 + 50 * (1 - d ** 1.6));
+}
+
+/** Ring radii, one more ring per point: the church, the city, everywhere. */
+const RADII = [15, 27, 40, 52];
+---
+
+{
+  goals.length > 0 && (
+    <section
+      class="goals bg-background text-foreground"
+      aria-labelledby={heading ? headingId : undefined}
+    >
+      <div class="gx-top mx-auto max-w-content px-gutter">
+        {(heading || intro) && (
+          <div class="gx-intro">
+            {heading && (
+              <h2 id={headingId} class="font-display text-title leading-none text-green-ink">
+                {heading}
+              </h2>
+            )}
+            {intro && <p class="max-w-[32em] text-lede text-muted-foreground">{intro}</p>}
+          </div>
+        )}
+        <ul class="gx-index">
+          {goals.map((g) => (
+            <li class:list={['gx-item', `gl-${g.colour}`]}>
+              <a href={`#${g.id}`}>
+                <BuildingGlyph name={g.glyph} class="gx-glyph" />
+                <span class="gx-name font-display">{g.goal.name}</span>
+                {(g.goal.aside || g.goal.subtitle) && (
+                  <small class="font-ui text-base text-muted-foreground">
+                    {g.goal.aside || g.goal.subtitle}
+                  </small>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {goals.map((g) => {
+        const { goal, photos, points } = g;
+        const head = (
+          <Fragment>
+            <div class="gl-head">
+              <BuildingGlyph name={g.glyph} class="gl-glyph" />
+              <h3 id={g.nameId} class="gl-name font-display" style={`--gn-chars:${g.chars}`}>
+                {goal.name}
+              </h3>
+            </div>
+            {goal.aside && <p class="gl-also font-ui">{goal.aside}</p>}
+            {goal.subtitle && <p class="gl-title italic">{goal.subtitle}</p>}
+          </Fragment>
+        );
+        const pointText = (p: Point) => (
+          <Fragment>
+            <h4 class="gl-pt-title font-ui font-bold">{p.title}</h4>
+            {p.body && <p class="gl-pt-body">{p.body}</p>}
+          </Fragment>
+        );
+        return (
+          <article
+            id={g.id}
+            class:list={['gl scroll-mt-[var(--header-offset)]', `gl-${g.colour}`, `gl-${g.layout}`]}
+            aria-labelledby={g.nameId}
+          >
+            {g.layout === 'nave' ? (
+              <Fragment>
+                {photos[0] ? (
+                  <div class="gn-bleed">
+                    <SanityImage
+                      source={photos[0]}
+                      width={2400}
+                      sizes="100vw"
+                      quality={70}
+                      alt={photos[0].alt ?? ''}
+                      class="gn-photo graded"
+                      style={
+                        typeof photos[0].hotspot?.x === 'number' &&
+                        typeof photos[0].hotspot?.y === 'number'
+                          ? `object-position: ${(photos[0].hotspot.x * 100).toFixed(2)}% ${(photos[0].hotspot.y * 100).toFixed(2)}%;`
+                          : undefined
+                      }
+                    />
+                    <div class="gn-cap">
+                      <div class="mx-auto max-w-content px-gutter">{head}</div>
+                    </div>
+                  </div>
+                ) : (
+                  <div class="gl-pad-top mx-auto max-w-content px-gutter">{head}</div>
+                )}
+                {(goal.quote || goal.summary || points.length > 0 || photos.length > 1) && (
+                  <div
+                    class:list={[
+                      'gn-body mx-auto max-w-content px-gutter',
+                      photos.length > 1 && 'gn-has-pics',
+                    ]}
+                  >
+                    <div class="gn-main">
+                      {goal.quote && <p class="gl-quote italic">{goal.quote}</p>}
+                      {goal.summary && <p class="gn-lead italic">{goal.summary}</p>}
+                      {points.length > 0 && (
+                        <div class="gn-points">
+                          {points.map((p, i) => (
+                            <div class="gn-pt" data-reveal style={`transition-delay:${i * 110}ms`}>
+                              {pointText(p)}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {photos.length > 1 && (
+                      <div class="gn-pics">
+                        {photos.slice(1).map((photo) => (
+                          <ArchFrame
+                            image={photo}
+                            shape="lancet"
+                            width={640}
+                            sizes="(min-width: 1121px) 220px, 45vw"
+                            alt={photo.alt ?? ''}
+                            grade="warm"
+                            style="--arch-ratio: 100 / 190"
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Fragment>
+            ) : (
+              <div class="gl-wrap mx-auto max-w-content px-gutter">
+                <div class="gl-top">
+                  <div>{head}</div>
+                  <div>
+                    {goal.quote &&
+                      (g.layout === 'path' ? (
+                        <p class="gp-come italic">{goal.quote}</p>
+                      ) : (
+                        <p class="gl-quote italic">{goal.quote}</p>
+                      ))}
+                    {goal.summary && <p class="gl-lead">{goal.summary}</p>}
+                  </div>
+                </div>
+
+                {g.layout === 'path' && (
+                  <div class="gp-wrap">
+                    <svg
+                      class="gp-trail"
+                      viewBox="0 0 1000 600"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <path d={trail(points.length)} />
+                    </svg>
+                    <ol class="gp-steps" style={`--n:${points.length}`}>
+                      {points.map((p, i) => (
+                        <li class="gp-step" style={`--i:${i}`}>
+                          <ArchFrame
+                            image={photos[i]}
+                            shape="door"
+                            width={720}
+                            sizes="(min-width: 901px) 30vw, 60vw"
+                            alt={photos[i]?.alt ?? ''}
+                            grade="warm"
+                            style="--arch-ratio: 100 / 112"
+                          />
+                          <div class="gp-pt">{pointText(p)}</div>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
+                {g.layout === 'rings' && (
+                  <Fragment>
+                    <div class="gr-crowd" style={`--n:${photos.length}`}>
+                      {photos.map((photo, i) => (
+                        <ArchFrame
+                          image={photo}
+                          shape="lancet"
+                          width={480}
+                          sizes="(min-width: 621px) 16vw, 30vw"
+                          alt={photo.alt ?? ''}
+                          grade="warm"
+                          style={`--arch-ratio: 100 / ${arc(i, photos.length)}; transition-delay: ${i * 80}ms`}
+                        />
+                      ))}
+                    </div>
+                    {points.length > 0 && (
+                      <ul class="gr-rings" style={`--n:${points.length}`}>
+                        {points.map((p, i) => {
+                          const r = RADII[Math.min(i, RADII.length - 1)] as number;
+                          const box = 2 * (r + 2);
+                          const c = box / 2;
+                          return (
+                            <li data-reveal style={`transition-delay:${i * 110}ms`}>
+                              <svg viewBox={`0 0 ${box} ${box}`} width={box} aria-hidden="true">
+                                <circle class="gr-core" cx={c} cy={c} r={Math.max(3, 7 - i)} />
+                                {RADII.slice(0, i + 1).map((ring) => (
+                                  <circle cx={c} cy={c} r={ring} />
+                                ))}
+                              </svg>
+                              <div>
+                                {hasOwnShort(p) && <p class="gr-scope font-ui">{p.short}</p>}
+                                {pointText(p)}
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </Fragment>
+                )}
+
+                {g.layout === 'doors' && (
+                  <ul class="gd-doors" style={`--n:${points.length}`}>
+                    {points.map((p, i) => (
+                      <li class:list={['gd-door', !photos[i] && 'gd-bare']}>
+                        <ArchFrame
+                          image={photos[i]}
+                          shape="door"
+                          width={720}
+                          sizes="(min-width: 621px) 30vw, 45vw"
+                          alt={photos[i]?.alt ?? ''}
+                          grade="warm"
+                          style={`--arch-ratio: 100 / 118; transition-delay: ${i * 120}ms`}
+                        />
+                        <h4 class="gd-word font-display">{label(p)}</h4>
+                        <div class="gd-text">
+                          {hasOwnShort(p) && <p class="font-ui font-bold">{p.title}</p>}
+                          {p.body && <p>{p.body}</p>}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+          </article>
+        );
+      })}
+    </section>
+  )
+}

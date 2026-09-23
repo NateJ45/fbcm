@@ -1,0 +1,98 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: a letter (2026-09-23, the Who We Are "alive" pass; the
+// prototype's `.letter`). The portrait in a tall lancet on the left, held in
+// view while the letter scrolls past at 901px and up; on the right a sheet
+// with a letterhead (the church's name and street, both from Site settings,
+// over a gold rule), the heading, the letter in one column at a 62 to 68ch
+// measure with a drop cap on its first paragraph only, and the signature in
+// Castoro italic, turned a few degrees, over a gold underline that draws in
+// once on reveal. The note under the signature closes it.
+//
+// On the page's own paper (bg-background), so it follows the theme: the green
+// ink flips to mint and the gold-brown drop cap to its dark value under .dark,
+// both measured in theme-tokens.test.ts (THEMED_IDENTITY_PAIRS).
+//
+// The letter body is Portable Text rendered "bare" (no prose margins), so
+// every rule about its spacing, the first paragraph and the quote is in one
+// place: `.lt-body` in the Church identity block of globals.css.
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import PortableText from '@/components/PortableText';
+import { getSiteSettings } from '@/lib/queries';
+import { splitStega, reattachStega } from '@/lib/preview-stega';
+import { site } from '@/data/site';
+import type { ProjectedLetterSection, SectionSiteSettings } from '@/lib/pageBuilder.types';
+import type { PortableTextBlock } from '@portabletext/types';
+
+interface Props {
+  block: ProjectedLetterSection;
+  headingId: string;
+  /** Site settings from the route (see SectionRenderer). Absent: fetched here. */
+  settings?: SectionSiteSettings | null;
+}
+
+const { block, headingId, settings: settingsProp } = Astro.props as Props;
+const { heading, body, signature, signatureNote, portrait } = block;
+const settings: SectionSiteSettings | null =
+  settingsProp !== undefined ? settingsProp : await getSiteSettings();
+
+// The letterhead: the first line of the street address, then city and state,
+// cleaned of stega before it is split and trimmed, with the payload put back
+// on the street line (the same handling as SundayTimes' address card).
+const addressSplit = splitStega(typeof settings?.address === 'string' ? settings.address : '');
+const street = addressSplit.cleaned.split('\n')[0]?.trim() ?? '';
+const letterhead = [
+  street ? reattachStega(street, addressSplit.encoded) : '',
+  [settings?.city, settings?.state].filter(Boolean).join(', '),
+]
+  .filter(Boolean)
+  .join(', ');
+const churchName = settings?.title || site.name;
+const letter = (body ?? []) as PortableTextBlock[];
+---
+
+<section
+  class="bg-background py-section-lg text-foreground"
+  aria-labelledby={heading ? headingId : undefined}
+>
+  <div class="lt-grid mx-auto max-w-content px-gutter">
+    <ArchFrame
+      image={portrait}
+      shape="lancet"
+      width={900}
+      sizes="(min-width: 901px) 38vw, 84vw"
+      alt={portrait?.alt ?? ''}
+      class="lt-portrait"
+    />
+    <article class="lt-sheet">
+      <div
+        class="mb-8 flex flex-wrap justify-between gap-x-5 gap-y-1.5 border-b-2 border-gold pb-3.5 font-ui text-muted-foreground lg:mb-12"
+      >
+        <b class="font-display font-normal text-green-ink">{churchName}</b>
+        {letterhead && <span>{letterhead}</span>}
+      </div>
+      {
+        heading && (
+          <h2 id={headingId} class="mb-8 font-display text-title leading-none text-green-ink">
+            {heading}
+          </h2>
+        )
+      }
+      <div class="lt-body">
+        <PortableText value={letter} variant="bare" />
+      </div>
+      {
+        (signature || signatureNote) && (
+          <div class="lt-sign" data-reveal="sign">
+            {signature && <p class="lt-names font-body text-green-ink italic">{signature}</p>}
+            <svg viewBox="0 0 340 30" aria-hidden="true">
+              <path d="M4 20C60 8 120 26 180 16S290 4 336 14" />
+            </svg>
+            {signatureNote && <p class="mt-2.5 font-ui text-muted-foreground">{signatureNote}</p>}
+          </div>
+        )
+      }
+    </article>
+  </div>
+</section>

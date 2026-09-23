@@ -34,11 +34,16 @@ import GiveBand from '@/components/sections/GiveBand.astro';
 import Hours from '@/components/sections/Hours.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
 import LinkCards from '@/components/sections/LinkCards.astro';
+import WatchwordBand from '@/components/sections/WatchwordBand.astro';
+import PledgeReading from '@/components/sections/PledgeReading.astro';
+import PastorsLetter from '@/components/sections/PastorsLetter.astro';
+import GoalsBand from '@/components/sections/GoalsBand.astro';
+import { goalsEndDark } from '@/lib/goal-layout';
 import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
 import { splitStega } from '@/lib/preview-stega';
-import { assignSpareImages } from '@/lib/spare-images';
+import { assignSpareImages, cardsPictured } from '@/lib/spare-images';
 import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
 import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
@@ -283,8 +288,17 @@ const isDarkBand = (block: unknown, index: number): boolean => {
     case 'faqSection':
     case 'heritageBandSection':
       return true;
+    // scaffold: church
+    // The Watchword band is night green by type; the goals end on their last
+    // goal's band, dark unless that lands on gold (goalsEndDark).
+    case 'watchwordSection':
+      return true;
+    case 'goalsSection':
+      return goalsEndDark((b as { goals?: unknown }).goals);
+    // scaffold:end
     case 'linkCardsSection':
-      return index === spares.statementIndex;
+      // The statement, or the arched doors on green (cardsPictured).
+      return index === spares.statementIndex || cardsPictured((b as { cards?: unknown }).cards);
     default:
       return false;
   }
@@ -317,6 +331,10 @@ const wrapAttrs = (key: string | undefined) =>
             secondaryCta={s.secondaryCta}
             size={s.size ?? 'short'}
             serviceTime={settings?.serviceTime}
+            dropInto={
+              (rows[blockIndex + 1]?.block as { _type?: string } | undefined)?._type ===
+              'watchwordSection'
+            }
             headingId={headingId}
           />
         ) : s._type === 'ctaBandSection' ? (
@@ -422,7 +440,7 @@ const wrapAttrs = (key: string | undefined) =>
             heightHint={s.heightHint ?? 'medium'}
             headingId={headingId}
           />
-        ) : /* scaffold: church */ s._type === 'sundayTimesSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'sundayTimesSection' ? (
           <SundayTimes
             eyebrow={s.eyebrow}
             heading={s.heading}
@@ -433,7 +451,7 @@ const wrapAttrs = (key: string | undefined) =>
             headingId={headingId}
             settings={settings}
           />
-        ) : s._type === 'timelineSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'timelineSection' ? (
           <Timeline
             eyebrow={s.eyebrow}
             heading={s.heading}
@@ -441,7 +459,7 @@ const wrapAttrs = (key: string | undefined) =>
             surface={surface ?? 'background'}
             headingId={headingId}
           />
-        ) : s._type === 'staffGridSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'staffGridSection' ? (
           <StaffGrid
             eyebrow={s.eyebrow}
             heading={s.heading}
@@ -451,21 +469,21 @@ const wrapAttrs = (key: string | undefined) =>
             surface={surface ?? 'background'}
             headingId={headingId}
           />
-        ) : s._type === 'faqSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'faqSection' ? (
           <FaqBand
             eyebrow={s.eyebrow}
             heading={s.heading}
             items={s.items ?? []}
             headingId={headingId}
           />
-        ) : s._type === 'scriptureBandSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'scriptureBandSection' ? (
           <ScriptureBand
             verse={s.verse}
             reference={s.reference}
             accentWord={s.accentWord}
             headingId={headingId}
           />
-        ) : s._type === 'heritageBandSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'heritageBandSection' ? (
           <HeritageBand
             eyebrow={s.eyebrow}
             heading={s.heading}
@@ -478,7 +496,7 @@ const wrapAttrs = (key: string | undefined) =>
             level={openingLevel(blockIndex)}
             headingId={headingId}
           />
-        ) : s._type === 'giveBandSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'giveBandSection' ? (
           <GiveBand
             heading={s.heading}
             body={s.body}
@@ -490,7 +508,7 @@ const wrapAttrs = (key: string | undefined) =>
             headingId={headingId}
             settings={settings}
           />
-        ) : s._type === 'hoursSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'hoursSection' ? (
           <Hours
             eyebrow={s.eyebrow}
             heading={s.heading}
@@ -498,7 +516,7 @@ const wrapAttrs = (key: string | undefined) =>
             headingId={headingId}
             settings={settings}
           />
-        ) : s._type === 'documentListSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'documentListSection' ? (
           <DocumentList
             eyebrow={s.eyebrow}
             heading={s.heading}
@@ -506,7 +524,7 @@ const wrapAttrs = (key: string | undefined) =>
             surface={surface ?? 'background'}
             headingId={headingId}
           />
-        ) : s._type === 'linkCardsSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'linkCardsSection' ? (
           <LinkCards
             eyebrow={s.eyebrow}
             heading={s.heading}
@@ -516,7 +534,15 @@ const wrapAttrs = (key: string | undefined) =>
             frame={blockIndex === spares.statementIndex ? spares.statement : null}
             headingId={headingId}
           />
-        ) : /* scaffold:end */ s._type === 'dynamicListSection' ? (
+        ) : /* scaffold-branch: church */ s._type === 'watchwordSection' ? (
+          <WatchwordBand block={s} headingId={headingId} />
+        ) : /* scaffold-branch: church */ s._type === 'pledgeSection' ? (
+          <PledgeReading block={s} headingId={headingId} />
+        ) : /* scaffold-branch: church */ s._type === 'letterSection' ? (
+          <PastorsLetter block={s} headingId={headingId} settings={settings} />
+        ) : /* scaffold-branch: church */ s._type === 'goalsSection' ? (
+          <GoalsBand block={s} headingId={headingId} />
+        ) : s._type === 'dynamicListSection' ? (
           <DynamicList
             eyebrow={s.eyebrow}
             headline={s.headline}

@@ -484,6 +484,59 @@ export const guides: Guide[] = [
     ],
   },
 
+  {
+    slug: 'who-we-are',
+    category: 'Blog, staff and ministries',
+    title: 'Update the Who We Are page',
+    icon: 'heart',
+    lead: 'Four bands new to this page: the Watchword, Our goals, the Pledge, and the pastors’ letter.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'path',
+        items: ['Pages', 'Who We Are'],
+        link: { pane: 'page' },
+      },
+      {
+        kind: 'p',
+        text: 'Like every page, open it in `Presentation` and click the words to edit them, or open the page document and add one of these four bands from the `Church` group in the "Add item" menu.',
+      },
+      { kind: 'h', text: 'Watchword (Praise and Proclaim)' },
+      {
+        kind: 'p',
+        text: 'Our watchword: Isaiah 12:4, "Praise the Lord, proclaim his name." `Heading` is the band title ("Our Watchword"). `Short introduction` is two or three sentences shown beside the mark; `Read more` is the longer explanation, shown only when a visitor opens it. `Verse` is the verse itself, without quotation marks, and `Reference` is where it is from. The words **praise** and **proclaim** are highlighted in the verse automatically, so type them as ordinary words. `What "Praise" means` and `What "Proclaim" means` are one or two sentences each.',
+      },
+      { kind: 'h', text: 'Our goals (four bands)' },
+      {
+        kind: 'p',
+        text: 'Up to four goals, each with its own colour: green, gold, purple, brown, in the order you list them. Each goal has a `Name` ("Worship"), a `Subtitle` ("Worshiping as the Body of Christ"), and an optional `In brackets` word ("Discipleship"). `Building drawing` picks which of the four drawings of the building the band shows beside its words: window, door, rose window, or basin niche. `Opening sentence` introduces the goal, and `Pull quote` is an optional short line shown large, normally on the second goal only.',
+      },
+      {
+        kind: 'p',
+        text: 'Up to four `Points` per goal, each a `Title`, an optional `Short label` (one or two words for the drawing itself, like "Serve"; leave blank to reuse the title), and a sentence of `Text`. Up to six `Photos` of people doing this, the first shown largest. Every photo needs `Describe the photo` filled in (see "Add or change a photo" below); this page does not show captions.',
+      },
+      { kind: 'h', text: 'Pledge (said together)' },
+      {
+        kind: 'p',
+        text: 'The pledge the church says together when a member joins. `Introduction` sets the scene; `Instruction line` is the sentence explaining when it is said ("When a member joins..."); `Opening line` is the line just before the pledge itself. `Lines said together` are the pledge\'s own lines, each with an optional `Scripture` reference. `Text after the pledge` is an optional closing paragraph, and `Photo` is optional too.',
+      },
+      { kind: 'h', text: 'Letter' },
+      {
+        kind: 'p',
+        text: 'A note from the pastors. `Heading` is the band title ("A Note From Our Pastors"). `Letter` is the body, written as ordinary paragraphs. `Signed` is how they sign it ("Kendall & Jonathan") and `Under the signature` is the line below that ("Co-Pastors, First Baptist Church Muncie"). `Portrait` is optional.',
+      },
+      { kind: 'h', text: 'Where To Go Next (cards)' },
+      {
+        kind: 'p',
+        text: 'Give every one of the closing cards a photo and the row draws as arched doors, the way this page does today; leave even one card without a photo and the whole row falls back to plain cards instead.',
+      },
+      {
+        kind: 'seealso',
+        items: ['Add or change a photo'],
+      },
+    ],
+  },
+
   // ── Pictures ──────────────────────────────────────────────────────────────
   {
     slug: 'photos',

@@ -18,7 +18,6 @@
 // inverts, in the preview only, where nobody has a baseline to compare against.
 
 import { isSermonPreview } from './import-post.ts';
-import { weekOfLabel } from './church-derive.ts';
 import { splitStega } from './preview-stega.ts';
 import { localDay, sundayOf, formatDay, isoDay, readingOf } from './sermon-derive.ts';
 
@@ -204,6 +203,41 @@ export function tagIndex<T extends BlogEntry>(
   return [...groups.values()].sort((a, b) =>
     a.label.localeCompare(b.label, 'en', { sensitivity: 'base' }),
   );
+}
+
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+/**
+ * "Sermon preview, week of January 17, 2024". Falls back to the bare eyebrow.
+ *
+ * US date order (month first), because every other date on this site is
+ * written that way: JournalCard and the post header both format with
+ * `toLocaleDateString('en-US')`. It read "15 January 2024" while nothing
+ * imported it, which is the moment to fix it rather than ship two orders.
+ *
+ * Lived in church-derive.ts until 2026-09-23: it was the one function in that
+ * file a non-church consumer (this one) needed, and importing across a
+ * scaffold-file boundary meant `npm run scaffold -- --remove church` broke
+ * the blog archive even though the blog itself is the `journal` capability.
+ * Moved here so weekOfEyebrow only ever depends on its own capability.
+ */
+export function weekOfLabel(publishedAt: string): string {
+  const d = new Date(publishedAt);
+  if (Number.isNaN(d.getTime())) return 'Sermon preview';
+  return `Sermon preview, week of ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 }
 
 /**

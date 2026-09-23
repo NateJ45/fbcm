@@ -36,6 +36,10 @@ import type {
   HoursSection as _HoursSection,
   DocumentListSection as _DocumentListSection,
   LinkCardsSection as _LinkCardsSection,
+  WatchwordSection as _WatchwordSection,
+  GoalsSection as _GoalsSection,
+  PledgeSection as _PledgeSection,
+  LetterSection as _LetterSection,
   // scaffold:end
   // U7 new blocks — hand-authored below since typegen has not run yet
   // FaqSection, LogoStripSection, TeamSection, EmbedSection — not imported from
@@ -384,8 +388,13 @@ export type ProjectedListedDocument = Omit<
 };
 
 /** One link card after its ctaBlock is resolved by CTA_PROJECTION. */
-export type ProjectedLinkCard = Omit<NonNullable<_LinkCardsSection['cards']>[number], 'cta'> & {
+export type ProjectedLinkCard = Omit<
+  NonNullable<_LinkCardsSection['cards']>[number],
+  'cta' | 'image'
+> & {
   cta?: ProjectedCtaBlock | null;
+  /** Optional; every card having one turns the band into arched doors. */
+  image?: ProjectedImage | null;
 };
 
 /** linkCardsSection — two to four doors into the rest of the site. */
@@ -431,6 +440,33 @@ export interface ProjectedMinistrySection extends AnchoredSection {
   ministry?: ProjectedMinistry | null;
   imageSide?: 'left' | 'right' | null;
 }
+
+/** watchwordSection — no image field, so the raw generated type is exact. */
+export type ProjectedWatchwordSection = { _key: string } & _WatchwordSection;
+
+/**
+ * One goal after `photos[]` resolves through IMAGE_PROJECTION. Per the site
+ * owner's ruling (Task 3, 2026-09-23): no caption field anywhere, so a goal
+ * photo carries only its required alt text.
+ */
+export type ProjectedGoal = Omit<NonNullable<_GoalsSection['goals']>[number], 'photos'> & {
+  photos?: ProjectedImage[] | null;
+};
+
+/** goalsSection — the four bands, each resolved through ProjectedGoal. */
+export type ProjectedGoalsSection = { _key: string } & Omit<_GoalsSection, 'goals'> & {
+    goals?: ProjectedGoal[];
+  };
+
+/** pledgeSection — the lines said together, plus the resolved photo. */
+export type ProjectedPledgeSection = { _key: string } & Omit<_PledgeSection, 'image'> & {
+    image?: ProjectedImage | null;
+  };
+
+/** letterSection — the pastors' letter, plus the resolved portrait. */
+export type ProjectedLetterSection = { _key: string } & Omit<_LetterSection, 'portrait'> & {
+    portrait?: ProjectedImage | null;
+  };
 // scaffold:end
 
 // ---------------------------------------------------------------------------
@@ -464,7 +500,11 @@ export type PageBuilderBlock =
   | ProjectedHoursSection
   | ProjectedDocumentListSection
   | ProjectedLinkCardsSection
-  | ProjectedMinistrySection;
+  | ProjectedMinistrySection
+  | ProjectedWatchwordSection
+  | ProjectedGoalsSection
+  | ProjectedPledgeSection
+  | ProjectedLetterSection;
 // scaffold:end
 
 /**

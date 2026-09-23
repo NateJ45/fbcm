@@ -3,13 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs'; // scaffold: church
-import {
-  groupStaff,
-  weekOfLabel,
-  sortDocsByYearDesc,
-  groupDocsByYear,
-  STAFF_GROUPS,
-} from './church-derive.ts';
+import { groupStaff, sortDocsByYearDesc, groupDocsByYear, STAFF_GROUPS } from './church-derive.ts';
 
 test('staff group order is pastors, coordination, support, and unknown lands in support', () => {
   assert.deepEqual(STAFF_GROUPS, ['pastors', 'coordination', 'support']);
@@ -42,15 +36,6 @@ test('within a group, order wins and name breaks ties', () => {
     g.coordination.map((m) => m.name),
     ['Bob', 'Amy', 'Zed'],
   );
-});
-
-test('week-of label reads as a sentence with the month and day', () => {
-  // Month first, matching every other date the site prints (see weekOfLabel).
-  assert.equal(weekOfLabel('2024-01-15T10:00:00.000Z'), 'Sermon preview, week of January 15, 2024');
-});
-
-test('an unparseable date yields the plain eyebrow rather than "Invalid Date"', () => {
-  assert.equal(weekOfLabel('not a date'), 'Sermon preview');
 });
 
 test('documents sort newest year first, undated last, ties keep their order', () => {

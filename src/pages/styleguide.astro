@@ -40,6 +40,11 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import { site } from '@/data/site';
 import { surfaceClass } from '@/lib/surfaces';
+// Church identity primitives (2026-09-23, the Who We Are "alive" pass).
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import WatchwordMark from '@/components/church/WatchwordMark.astro';
+import SeasonLine from '@/components/church/SeasonLine.astro';
 // scaffold: church
 // The church blocks (Task 6, plus link cards from task 5b), fixtured with real
 // church content so a pixel diff here means the design moved, not the content.
@@ -54,6 +59,20 @@ import GiveBand from '@/components/sections/GiveBand.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
 import LinkCards from '@/components/sections/LinkCards.astro';
 import Hours from '@/components/sections/Hours.astro';
+// The Who We Are bands (Task 4, 2026-09-23).
+import WatchwordBand from '@/components/sections/WatchwordBand.astro';
+import PledgeReading from '@/components/sections/PledgeReading.astro';
+import PastorsLetter from '@/components/sections/PastorsLetter.astro';
+// The goals (Task 5, 2026-09-23).
+import GoalsBand from '@/components/sections/GoalsBand.astro';
+import type {
+  ProjectedWatchwordSection,
+  ProjectedGoalsSection,
+  ProjectedImage,
+  ProjectedPledgeSection,
+  ProjectedLetterSection,
+  SanityImageObject,
+} from '@/lib/pageBuilder.types';
 // scaffold:end
 // Task 7: temporary hero fixtures (frames, layout, facts). No hero with frames
 // exists in the dataset yet (plan 2b seeds one) so these two calls are the
@@ -103,6 +122,73 @@ const HEADINGS = [
 /** Fixed CTA stand-ins. Never read from Sanity: that is the whole point. */
 const PRIMARY_CTA = { label: 'Plan your visit', linkType: 'external' as const, externalUrl: '#' };
 const SECONDARY_CTA = { label: 'Watch a service', linkType: 'external' as const, externalUrl: '#' };
+
+// =============================================================================
+// Church identity fixtures (2026-09-23)
+// =============================================================================
+/** The identity palette, swatched in both themes (every one flips in .dark). */
+const IDENTITY_TOKENS = [
+  '--color-season-green',
+  '--color-season-violet',
+  '--color-season-purple',
+  '--color-season-red',
+  '--color-season-gold',
+  '--color-season-white',
+  '--color-goal-green',
+  '--color-goal-gold',
+  '--color-goal-purple',
+  '--color-goal-brown',
+  '--color-goal-ink-on-gold',
+  '--color-mint',
+  '--color-gold-light',
+  '--color-season-deep',
+  '--color-gold-hover',
+];
+
+// One FIXED date per season, so the season line is part of the baseline and
+// never moves with the build date. Each sits on its own band colour, written
+// out as a literal class (Tailwind reads source text).
+const SEASON_FIXTURES = [
+  { date: new Date('2026-12-06T12:00:00Z'), band: 'bg-season-violet' },
+  { date: new Date('2026-12-28T12:00:00Z'), band: 'bg-season-white' },
+  { date: new Date('2027-01-20T12:00:00Z'), band: 'bg-season-green' },
+  { date: new Date('2027-03-01T12:00:00Z'), band: 'bg-season-purple' },
+  { date: new Date('2027-04-10T12:00:00Z'), band: 'bg-season-gold' },
+  { date: new Date('2027-05-16T12:00:00Z'), band: 'bg-season-red' },
+  { date: new Date('2026-09-23T12:00:00Z'), band: 'bg-season-green' },
+];
+
+// Real photographs from this project's own library (the church's own blog),
+// the ones the prototype framed or their nearest library twin, each with a
+// hotspot so the frame's crop follows it. Alt text is the library's own; no
+// names are attached.
+const ARCH_FIXTURES = {
+  girls: {
+    asset: { _ref: 'image-bad93d7a2b560248a8b1b249154c4bbc1ed83af5-1600x1064-jpg' },
+    hotspot: { x: 0.66, y: 0.4 },
+    alt: 'Two smiling girls, one with red hair, pose together in front of colorful stained glass windows.',
+  },
+  coneflowers: {
+    asset: { _ref: 'image-4f64da601a5d01fae1fa8ac50a3898207b6e7f24-2400x1600-jpg' },
+    hotspot: { x: 0.68, y: 0.4 },
+    alt: 'A young girl smiles outdoors, standing among tall purple coneflowers in a garden.',
+  },
+  bibles: {
+    asset: { _ref: 'image-50fe129b92b4673a51bf94b9408c5c8a22346ce4-2400x1136-jpg' },
+    hotspot: { x: 0.5, y: 0.45 },
+    alt: 'Three girls sitting together in a pew, smiling, with open Bibles on their laps.',
+  },
+  balcony: {
+    asset: { _ref: 'image-d7aa65ea099b67f8adb73eb7f5bed6855f907133-2400x1714-jpg' },
+    alt: 'A man and a woman smiling together in the sanctuary balcony, arched windows and pews visible behind them.',
+  },
+};
+const RULE_CTA = { label: 'Plan your visit', linkType: 'external' as const, externalUrl: '#' };
+const RULE_CTA_DARK = {
+  label: 'Praise & Proclaim, our watchword',
+  linkType: 'external' as const,
+  externalUrl: '#',
+};
 
 // scaffold: church
 // =============================================================================
@@ -481,6 +567,504 @@ const LINK_CARDS_FIXTURE = {
     },
   ],
 };
+
+// =============================================================================
+// The Who We Are bands (Task 4, 2026-09-23)
+// =============================================================================
+// The church's own words from the approved prototype (and the live Wix page
+// before it), and photographs from this project's own library with the
+// library's alt text. The window hero's season is pinned to a fixed date so
+// the band colour is part of the baseline and never moves with the build.
+const WINDOW_DATE = new Date('2026-09-23T12:00:00Z');
+const WINDOW_FRAMES: SanityImageObject[] = [
+  {
+    asset: { _ref: 'image-bad93d7a2b560248a8b1b249154c4bbc1ed83af5-1600x1064-jpg' },
+    hotspot: { x: 0.66, y: 0.4 },
+    alt: 'Two smiling girls, one with red hair, pose together in front of colorful stained glass windows.',
+  },
+  {
+    asset: { _ref: 'image-a851f71a5d2f049740bbc1a4fbe3b71222be5ef3-3000x1203-jpg' },
+    hotspot: { x: 0.58, y: 0.4 },
+    alt: 'An older man and woman posing together in a kitchen.',
+  },
+  {
+    asset: { _ref: 'image-4f64da601a5d01fae1fa8ac50a3898207b6e7f24-2400x1600-jpg' },
+    hotspot: { x: 0.68, y: 0.4 },
+    alt: 'A young girl smiles outdoors, standing among tall purple coneflowers in a garden.',
+  },
+];
+const WINDOW_HERO = {
+  eyebrow: 'Who We Are',
+  headline: 'We’re a Spirit-led people gathered to join Christ’s presence in our community.',
+  scriptAccent: 'Christ’s presence',
+  primaryCta: {
+    label: 'Praise & Proclaim, our watchword',
+    linkType: 'external' as const,
+    externalUrl: '#styleguide-watchword',
+    openInNewTab: false,
+  },
+  secondaryCta: {
+    label: 'A note from our pastors',
+    linkType: 'external' as const,
+    externalUrl: '#styleguide-letter',
+    openInNewTab: false,
+  },
+};
+
+/** Portable Text paragraphs (and a quote) for a fixture, keyed. */
+function ptBlocks(prefix: string, paras: Array<string | { quote: string }>) {
+  return paras.map((p, i) => ({
+    _type: 'block' as const,
+    _key: `${prefix}-${i}`,
+    style: typeof p === 'string' ? ('normal' as const) : ('blockquote' as const),
+    markDefs: [],
+    children: [
+      {
+        _type: 'span' as const,
+        _key: `${prefix}-${i}-s`,
+        marks: [],
+        text: typeof p === 'string' ? p : p.quote,
+      },
+    ],
+  }));
+}
+
+const WATCHWORD_FIXTURE: ProjectedWatchwordSection = {
+  _key: 'sg-watchword',
+  _type: 'watchwordSection',
+  heading: 'Our Watchword',
+  verse:
+    'Give praise to the Lord, proclaim his name; make known among the nations what he has done, and proclaim that his name is exalted.',
+  reference: 'Isaiah 12:4',
+  intro:
+    'This statement is our congregational watchword. A watchword is a short reminder and a promise from scripture about who God is and who he has called his people to be.',
+  more: ptBlocks('ww', [
+    'When the people of God were in exile, the prophet Isaiah spoke. He delivered a message from God about what it would be like “in that day” when they returned. The people would return, praising and proclaiming the name of the Lord, and making him known to all nations.',
+    'At First Baptist Church Muncie, we believe the day of the Lord’s favor has come in Jesus. The short of it is that Jesus really does change everything. And our goal for this season is to praise and proclaim his name.',
+  ]),
+  praise: 'That our purpose is worship, lifting up the name of God: Father, Son and Holy Spirit.',
+  proclaim: 'That our joy is to share the Good News of Jesus with our neighbors and the world.',
+};
+
+const PLEDGE_FIXTURE: ProjectedPledgeSection = {
+  _key: 'sg-pledge',
+  _type: 'pledgeSection',
+  heading: 'Our Pledge',
+  intro: 'Our commitment to one another is drawn from scripture. And it’s this:',
+  instruction: 'When a member joins, we say this pledge together as a church.',
+  opening: 'We pledge ourselves to be the family of God for you in this place:',
+  lines: [
+    {
+      _key: 'pl-1',
+      _type: 'pledgeLine',
+      text: 'Bearing your burdens, as you bear ours.',
+      reference: 'Galatians 6:2',
+    },
+    {
+      _key: 'pl-2',
+      _type: 'pledgeLine',
+      text: 'Encouraging you in the faith, as we are encouraged by you.',
+      reference: '1 Thessalonians 5:11',
+    },
+    {
+      _key: 'pl-3',
+      _type: 'pledgeLine',
+      text: 'Delighting in the Lord’s ways.',
+      reference: 'Psalm 86:11–13, Psalm 37:3–6',
+    },
+    {
+      _key: 'pl-4',
+      _type: 'pledgeLine',
+      text: 'Offering our lives as a living sacrifice: holy and pleasing to God.',
+      reference: 'Romans 12:1',
+    },
+  ],
+  after: ptBlocks('pa', [
+    'The life of faith isn’t meant to be lived alone. Before he was crucified, Christ’s prayer to the Father was that his disciples, and all believers after them, would be one, as he and the Father are one (John 17:20–22).',
+    'At the same time, that unity comes with wonderful God-given differences. We’re not clones who all think, look, or act exactly alike! That is what the Apostle Paul means when he talks about the church as the body of Christ, with many different parts and many different gifts (1 Corinthians 12:12–30).',
+  ]),
+  image: {
+    _type: 'image',
+    asset: { _ref: 'image-e7d5db277cd8080b0eb570aa873ab6ac198dd999-2257x2257-jpg' },
+    hotspot: { x: 0.58, y: 0.4 },
+    alt: 'Two young women smiling together in the baptismal pool, one of them just baptized.',
+  },
+};
+
+const LETTER_FIXTURE: ProjectedLetterSection = {
+  _key: 'sg-letter',
+  _type: 'letterSection',
+  heading: 'A Note From Our Pastors',
+  body: ptBlocks('lt', [
+    'If you’re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you’re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we’d love for you to join us for worship too!',
+    'After all, Jesus did not say to his first followers: “Figure it all out, and then get back to me.” He said to them,',
+    { quote: '“Come and see.” John 1:39' },
+    'Even so, we know people curious about a church wonder what a particular church, including its pastors, “are all about.”',
+    'We love the Good News, the Gospel, that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He ascended to heaven, and he will come again in glory to make all that is wrong right. That’s life-changing, and truly good, news. It’s news good enough to set all of us free.',
+    'Finally, we would love for you to join us this Sunday, or anytime we’re gathered to encounter the same Christ who was, and is, and will come again, as we meet him in worship, the word, and the Lord’s table. “Come and see!”',
+  ]),
+  signature: 'Kendall & Jonathan',
+  signatureNote: 'Co-Pastors, First Baptist Church Muncie',
+  portrait: {
+    _type: 'image',
+    asset: { _ref: 'image-d7aa65ea099b67f8adb73eb7f5bed6855f907133-2400x1714-jpg' },
+    hotspot: { x: 0.71, y: 0.5 },
+    alt: 'A man and a woman smiling together in the sanctuary balcony, arched windows and pews visible behind them.',
+  },
+};
+/** The letterhead reads Site settings; fixed here so the baseline never moves. */
+const LETTER_SETTINGS = {
+  title: 'First Baptist Church Muncie',
+  address: '309 East Adams Street',
+  city: 'Muncie',
+  state: 'Indiana',
+};
+
+// =============================================================================
+// The goals and the arched link cards (Task 5, 2026-09-23)
+// =============================================================================
+// The church's own words from the approved prototype, and the prototype's own
+// photographs, found in this project's library by their library alt text.
+const photo = (ref: string, alt: string, x = 0.5, y = 0.45): ProjectedImage => ({
+  _type: 'image',
+  asset: { _ref: ref },
+  hotspot: { x, y },
+  alt,
+});
+const point = (key: string, title: string, body: string, short?: string) => ({
+  _key: key,
+  _type: 'goalPoint' as const,
+  title,
+  body,
+  ...(short ? { short } : {}),
+});
+const P = {
+  nave: photo(
+    'image-03d6da95af3fbc02c3ba9eaa95ab533dbdfa8b4b-2400x1309-jpg',
+    'The sanctuary is seen from the balcony, with the congregation standing in the pews below and a worship team at the front under tall arched windows.',
+    0.5,
+    0.82,
+  ),
+  singer: photo(
+    'image-806ba4dc0d6828ac89e8a5c01ab05b3445f5aaf7-1600x1067-jpg',
+    'A guitarist, a singer holding a microphone, and a second guitarist perform together indoors.',
+    0.56,
+    0.4,
+  ),
+  table: photo(
+    'image-651ea65b35de1790bec98a228f47452e964cd46c-2400x1600-jpg',
+    'Two women and a man handle silver communion trays and a cloth at a table, preparing the elements.',
+    0.3,
+  ),
+  door: photo(
+    'image-760632d0beb693093f78334d0a515564aa2b8529-2400x1138-jpg',
+    'At the sanctuary door, a man hands a woman a set of assisted-listening headphones.',
+    0.4,
+  ),
+  deacons: photo(
+    'image-86ea34a0c404d24e71e4253242061def78b627c7-1600x800-jpg',
+    'Five adults posed together at the communion table, a wooden cross and communion trays in front of them.',
+    0.46,
+    0.4,
+  ),
+  bibles: photo(
+    'image-50fe129b92b4673a51bf94b9408c5c8a22346ce4-2400x1136-jpg',
+    'Three girls sitting together in a pew, smiling, with open Bibles on their laps.',
+  ),
+  children: photo(
+    'image-e7b7e945ad95143ef6a2513b12d3f48d90244b64-2400x1600-jpg',
+    'Four young children hold hands and smile, posed together outside the church’s arched entrance.',
+    0.57,
+  ),
+  mascot: photo(
+    'image-2ebbbdca19b840e40a2dd398573a30aa8f570bab-697x697-jpg',
+    'A group of women in orange shirts pose with the Ball State Cardinals mascot under a Ball State tent at an outdoor event.',
+    0.3,
+  ),
+  singing: photo(
+    'image-9445495cb95b7c03a8788b38a1d4a1ce0138d6f5-1600x1067-jpg',
+    'Two teenage girls sing together into microphones at an indoor event, with greenery behind them.',
+    0.24,
+    0.4,
+  ),
+  backpacks: photo(
+    'image-21db96f59d2c41eec5e07709a3f0569ad2863bee-2400x1441-jpg',
+    'Children sit on the chancel steps around Kendall as she reads to them, at the blessing of the backpacks.',
+    0.62,
+  ),
+  serveCity: photo(
+    'image-efd8bf5a21f666ffe139b50d94378bc596622c5c-2400x1285-jpg',
+    'A large group of adults and children posed together indoors, some holding a team t-shirt reading Serve Your City.',
+    0.5,
+    0.4,
+  ),
+  boxes: photo(
+    'image-9f75b53b36c2ca2a5530e1bba56ed91d74a7823d-2400x1921-jpg',
+    'Children and adults gather around a display of blue and yellow decorated boxes and a fabric backdrop at an indoor event.',
+    0.55,
+  ),
+  building: photo(
+    'image-b7e993e6ee329c47f478e7289fc3af64ad0557c6-2400x1136-jpg',
+    'A group of volunteers working together on an outdoor building project during a mission trip.',
+    0.62,
+  ),
+  frame: photo(
+    'image-25c93a161fc4fbb25f3b87f80522315e3596ea70-1159x643-jpg',
+    'A mission trip group posed together under a wooden building frame they are constructing outdoors.',
+    0.42,
+    0.6,
+  ),
+  breakfast: photo(
+    'image-2f1ce4c6714c166672b1b80501b21e545ad14bc2-2400x1596-jpg',
+    'Women of the church sit together at a round table set for a fellowship breakfast.',
+    0.38,
+    0.55,
+  ),
+};
+
+const GOALS_FIXTURE: ProjectedGoalsSection = {
+  _key: 'sg-goals',
+  _type: 'goalsSection',
+  heading: 'Our Goals',
+  intro:
+    'Our Church Coordination Team has set these goals for our church this season, in pursuit of the calling God has given us as a congregation in different areas of our life together.',
+  goals: [
+    {
+      _key: 'g-worship',
+      _type: 'goal',
+      name: 'Worship',
+      subtitle: 'Worshiping as the Body of Christ',
+      glyph: 'window',
+      summary:
+        'FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.',
+      points: [
+        point(
+          'w1',
+          'Following God’s Word',
+          'Our times of worship are rooted in scripture and prayer-filled so that our body can collectively hear from God, discern the next right step, and follow the Holy Spirit.',
+        ),
+        point(
+          'w2',
+          'Enjoying Fellowship',
+          'We set aside time to personally greet and encourage one another. Passing of the peace, sharing the good news through personal testimonies, and prayer are ways we participate in the shared life God has given us.',
+        ),
+        point(
+          'w3',
+          'Participating in Practices Christ Gave Us',
+          'FBCM prepares new believers for baptism, the time when they publicly proclaim God has become their salvation and join the body of Christ. FBCM celebrates the Lord’s Supper monthly during intergenerational worship so that all may take part.',
+        ),
+      ],
+      photos: [P.nave, P.singer, P.table],
+    },
+    {
+      _key: 'g-way',
+      _type: 'goal',
+      name: 'The Way',
+      aside: 'Discipleship',
+      subtitle: 'Seeking Understanding',
+      glyph: 'door',
+      quote: '“Come and see.”',
+      summary:
+        'FBCM proclaims God’s faithfulness with people who are curious about faith, as well as new believers. We offer a growth track to help us all “come and see” who Jesus is and grow spiritually (John 1:39–41).',
+      points: [
+        point(
+          'y1',
+          'Welcoming Worship',
+          'FBCM invites everyone to join our worship services, no matter their background or beliefs. We show the hospitality Christ has first shown us.',
+        ),
+        point(
+          'y2',
+          'Caring Mentorship',
+          'Each regular attendee is connected with a deacon who offers prayer and support.',
+        ),
+        point(
+          'y3',
+          'Spiritual Friendship',
+          'We provide small group meetings where we can learn together about the Bible, theology, and living in Christian community.',
+        ),
+      ],
+      photos: [P.door, P.deacons, P.bibles],
+    },
+    {
+      _key: 'g-witness',
+      _type: 'goal',
+      name: 'Witness',
+      aside: 'Evangelism',
+      subtitle: 'Inviting to Church and to Know Christ',
+      glyph: 'rose',
+      summary:
+        'To make known what God has done, FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.',
+      points: [
+        point(
+          'x1',
+          'Engaged Membership',
+          'Church members actively talk about their faith and aim to live in a way that reflects Jesus.',
+          'In the church',
+        ),
+        point(
+          'x2',
+          'Local Partnership',
+          'We believe God has placed us in downtown Muncie for a reason. We work with local groups to bring light and hope to our community.',
+          'In Muncie',
+        ),
+        point(
+          'x3',
+          'Kingdom Citizenship',
+          'Jesus told us to share the good news everywhere. We support Global Servants (missionaries) and pray for people from all over the world to follow Jesus. We also celebrate the wonderful diversity of God’s Kingdom, the Global Church.',
+          'Everywhere',
+        ),
+      ],
+      photos: [P.children, P.mascot, P.singing, P.backpacks, P.serveCity, P.boxes],
+    },
+    {
+      _key: 'g-work',
+      _type: 'goal',
+      name: 'Work',
+      aside: 'Acts of mercy',
+      subtitle: 'Gifts for Service',
+      glyph: 'basin',
+      summary:
+        'FBCM exalts God by following Jesus’ example of serving others, rather than seeking to be served ourselves (Mark 10:45).',
+      points: [
+        point('k1', 'Serve', 'We actively and practically help and work alongside our neighbors.'),
+        point(
+          'k2',
+          'Support',
+          'We give sacrificially to help those in need through regular offerings and donations.',
+        ),
+        point(
+          'k3',
+          'Share',
+          'We care for church members who are sick, home bound, or struggling, making sure they remain part of our life together.',
+        ),
+      ],
+      photos: [P.building, P.frame, P.breakfast],
+    },
+  ],
+};
+
+// A long nave name that must wrap clear of the rising lancets, then every
+// fallback at once: The Way with one point, Witness with two photos and
+// Work with nothing at all each fall back to the nave in their own colour.
+// The Way's photo is the brightest landscape in the fixture set, the stress
+// case for the title over a photograph; Work's nave has no photo, so its words
+// stand on the band alone.
+const GOALS_FALLBACK_FIXTURE: ProjectedGoalsSection = {
+  _key: 'sg-goals-fallback',
+  _type: 'goalsSection',
+  heading: 'Our Goals, every fallback',
+  goals: [
+    {
+      ...GOALS_FIXTURE.goals![0]!,
+      _key: 'f-worship',
+      name: 'Worship and Word Together',
+    },
+    {
+      ...GOALS_FIXTURE.goals![1]!,
+      _key: 'f-way',
+      points: GOALS_FIXTURE.goals![1]!.points!.slice(0, 1),
+      photos: [P.breakfast, P.deacons],
+    },
+    {
+      ...GOALS_FIXTURE.goals![2]!,
+      _key: 'f-witness',
+      photos: [P.children, P.mascot],
+    },
+    { ...GOALS_FIXTURE.goals![3]!, _key: 'f-work', points: [], photos: [] },
+  ],
+};
+
+// The edge cases: an empty nave (a name and nothing else), a path with no
+// photographs, rings with photographs but no points, and doors with a photo
+// in the first door only.
+const GOALS_EDGE_FIXTURE: ProjectedGoalsSection = {
+  _key: 'sg-goals-edge',
+  _type: 'goalsSection',
+  heading: 'Our Goals, the edge cases',
+  goals: [
+    { _key: 'e-worship', _type: 'goal', name: 'Worship', glyph: 'window' },
+    { ...GOALS_FIXTURE.goals![1]!, _key: 'e-way', photos: [] },
+    { ...GOALS_FIXTURE.goals![2]!, _key: 'e-witness', points: [] },
+    { ...GOALS_FIXTURE.goals![3]!, _key: 'e-work', photos: [P.building] },
+  ],
+};
+
+// Four cards, each with its own photograph: the arched-door form.
+const DOOR_CARDS_FIXTURE = {
+  eyebrow: 'First Baptist Muncie',
+  heading: 'Where To Go Next',
+  cards: [
+    {
+      _key: 'dc-1',
+      _type: 'linkCard' as const,
+      title: 'Sunday Worship',
+      body: 'Find out what you can expect this Sunday.',
+      cta: {
+        label: 'Read more',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/visit',
+        openInNewTab: false,
+      },
+      image: photo(
+        'image-5e43886b3b78c982482701d221a582112b692682-2400x1358-jpg',
+        'Musicians performing on piano, guitar and vocals at the front of the sanctuary, song lyrics on a screen behind them.',
+      ),
+    },
+    {
+      _key: 'dc-2',
+      _type: 'linkCard' as const,
+      title: 'Contact Us',
+      body: 'Get in touch with us with our virtual contact card.',
+      cta: {
+        label: 'Contact',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/contact',
+        openInNewTab: false,
+      },
+      image: photo(
+        'image-5a8447ef907f07745850dee413b168cdeaa0ea0e-2400x1600-jpg',
+        'A group of adults standing together in a church kitchen, food laid out on the counter in front of them.',
+        0.4,
+        0.35,
+      ),
+    },
+    {
+      _key: 'dc-3',
+      _type: 'linkCard' as const,
+      title: 'Meet Our Staff',
+      body: 'Read our staff bios and meet the people of FBCM.',
+      cta: {
+        label: 'Read more',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/staff',
+        openInNewTab: false,
+      },
+      image: photo(
+        'image-7c2f716730179bcbecc59a170ff97f8c39b39f25-2806x4209-jpg',
+        'Kendall Ellis smiles for a staff portrait, with colorful stained glass filling the background.',
+        0.5,
+        0.3,
+      ),
+    },
+    {
+      _key: 'dc-4',
+      _type: 'linkCard' as const,
+      title: 'Find Out More',
+      body: 'Download our Welcome Booklet.',
+      cta: {
+        label: 'Download',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/visit',
+        openInNewTab: false,
+      },
+      image: P.singer,
+    },
+  ],
+};
 // scaffold:end
 ---
 
@@ -631,6 +1215,142 @@ const LINK_CARDS_FIXTURE = {
     </div>
   </section>
 
+  {
+    /* Church identity (2026-09-23): the primitives the Who We Are "alive"
+       page is built from, each against the band it is made for. */
+  }
+  <section class="bg-background py-section-lg" aria-labelledby="styleguide-identity">
+    <div class="mx-auto w-full max-w-content px-6">
+      <h2 id="styleguide-identity" class="font-display text-h3">Church identity</h2>
+      <p class="mt-2 max-w-[60ch] text-sm text-muted-foreground">
+        The season and goal bands, the two arches drawn from the building, the four building glyphs,
+        the watchword mark and the rule button. Every text pair here is measured in both themes in
+        theme-tokens.test.ts.
+      </p>
+
+      <h3 class="mt-10 font-display text-h5">Identity palette</h3>
+      <ul class="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {
+          IDENTITY_TOKENS.map((t) => (
+            <li class="rounded-lg border border-border p-3">
+              <span
+                class="block h-12 w-full rounded border border-foreground/20"
+                style={`background: var(${t})`}
+              />
+              <code class="mt-2 block font-mono text-[0.6875rem] break-all">{t}</code>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3 class="mt-10 font-display text-h5">The season line, one fixed date per season</h3>
+      <ul class="mt-5 grid gap-2">
+        {
+          SEASON_FIXTURES.map(({ date, band }) => (
+            <li class={`${band} px-6 py-4`}>
+              <SeasonLine date={date} />
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3 class="mt-10 font-display text-h5">Arch frames</h3>
+      <div class="mt-8 grid grid-cols-2 items-end gap-x-6 gap-y-8 md:grid-cols-4">
+        <ArchFrame
+          image={ARCH_FIXTURES.girls}
+          shape="lancet"
+          width={600}
+          sizes="(min-width: 768px) 25vw, 50vw"
+          alt={ARCH_FIXTURES.girls.alt}
+        />
+        <ArchFrame
+          image={ARCH_FIXTURES.coneflowers}
+          shape="lancet"
+          width={600}
+          sizes="(min-width: 768px) 25vw, 50vw"
+          alt={ARCH_FIXTURES.coneflowers.alt}
+          grade="warm"
+          style="--arch-ratio: 100/190"
+        />
+        <ArchFrame
+          image={ARCH_FIXTURES.bibles}
+          shape="door"
+          width={600}
+          sizes="(min-width: 768px) 25vw, 50vw"
+          alt={ARCH_FIXTURES.bibles.alt}
+        />
+        <ArchFrame
+          image={ARCH_FIXTURES.balcony}
+          shape="door"
+          width={600}
+          sizes="(min-width: 768px) 25vw, 50vw"
+          alt={ARCH_FIXTURES.balcony.alt}
+          grade="warm"
+          reveal={false}
+          style="--arch-ratio: 100/118"
+        />
+      </div>
+
+      <h3 class="mt-10 font-display text-h5">Building glyphs</h3>
+      {
+        /* Each glyph on its own goal band, in that band's accent. Inline styles,
+           not utilities: this is a styleguide-only arrangement and must not add
+           bytes to every page's inlined sheet (CLAUDE.md rule 20). */
+      }
+      <ul class="mt-5 flex flex-wrap items-end gap-6">
+        <li class="p-3" style="background: var(--color-goal-green); color: var(--color-mint)">
+          <BuildingGlyph name="window" class="w-12" />
+        </li>
+        <li
+          class="p-3"
+          style="background: var(--color-goal-gold); color: var(--color-goal-ink-on-gold)"
+        >
+          <BuildingGlyph name="door" class="w-12" />
+        </li>
+        <li
+          class="p-3"
+          style="background: var(--color-goal-purple); color: var(--color-gold-light)"
+        >
+          <BuildingGlyph name="rose" class="w-12" />
+        </li>
+        <li class="p-3" style="background: var(--color-goal-brown); color: var(--color-gold-light)">
+          <BuildingGlyph name="basin" class="w-12" />
+        </li>
+        <li class="text-foreground"><BuildingGlyph name="window" class="w-16" /></li>
+      </ul>
+
+      <h3 class="mt-10 font-display text-h5">The rule button</h3>
+      <p class="mt-2 max-w-[60ch] text-sm text-muted-foreground">
+        Square, with the gold rule beneath. Hover or focus it: the rays spread.
+      </p>
+      <div class="mt-6 flex flex-wrap items-center gap-6">
+        <CtaLink cta={RULE_CTA} variant="rule" />
+        <CtaLink cta={SECONDARY_CTA} variant="rule" />
+      </div>
+    </div>
+  </section>
+
+  <section class="overflow-x-clip bg-season-green py-section-lg" aria-label="The watchword mark">
+    <div class="mx-auto w-full max-w-content px-6">
+      <SeasonLine date={new Date('2026-09-23T12:00:00Z')} />
+      <div class="mt-10">
+        <WatchwordMark size="band" />
+      </div>
+      <div class="mt-14">
+        <WatchwordMark size="hero" />
+      </div>
+      <div class="mt-12 flex flex-wrap items-center gap-6">
+        <CtaLink cta={RULE_CTA_DARK} variant="rule" onDark />
+        <div class="flex items-end gap-6 text-mint">
+          <BuildingGlyph name="window" class="w-10" />
+          <BuildingGlyph name="door" class="w-10" />
+          <BuildingGlyph name="rose" class="w-10" />
+          <BuildingGlyph name="basin" class="w-10" />
+        </div>
+      </div>
+    </div>
+  </section>
+
   {/* scaffold: church */}
   <section class="bg-background py-section-lg">
     <div class="mx-auto w-full max-w-content px-6">
@@ -644,6 +1364,85 @@ const LINK_CARDS_FIXTURE = {
       </p>
     </div>
   </section>
+
+  {
+    /* The Who We Are bands (Task 4), in page order: the window hero drops
+      its lancets into the Watchword band that follows it. */
+  }
+  <Hero
+    eyebrow={WINDOW_HERO.eyebrow}
+    headline={WINDOW_HERO.headline}
+    scriptAccent={WINDOW_HERO.scriptAccent}
+    backgroundImages={WINDOW_FRAMES}
+    primaryCta={WINDOW_HERO.primaryCta}
+    secondaryCta={WINDOW_HERO.secondaryCta}
+    layout="window"
+    date={WINDOW_DATE}
+    dropInto
+    headingId="styleguide-hero-window"
+  />
+  <div id="styleguide-watchword">
+    <WatchwordBand block={WATCHWORD_FIXTURE} headingId="styleguide-watchword-h" />
+  </div>
+  {/* The same hero before any other band: the window stays in its own band. */}
+  <div id="styleguide-hero-window-nodrop">
+    <Hero
+      eyebrow={WINDOW_HERO.eyebrow}
+      headline="The window hero, kept inside its own band."
+      scriptAccent={WINDOW_HERO.scriptAccent}
+      backgroundImages={WINDOW_FRAMES}
+      layout="window"
+      date={WINDOW_DATE}
+      headingId="styleguide-hero-window-2"
+    />
+  </div>
+  <PledgeReading block={PLEDGE_FIXTURE} headingId="styleguide-pledge" />
+  {/* And with no photographs: the words alone, one column. */}
+  <div id="styleguide-hero-window-bare">
+    <Hero
+      eyebrow={WINDOW_HERO.eyebrow}
+      headline="The window hero with no photographs."
+      scriptAccent={WINDOW_HERO.scriptAccent}
+      primaryCta={WINDOW_HERO.primaryCta}
+      layout="window"
+      date={WINDOW_DATE}
+      dropInto
+      headingId="styleguide-hero-window-3"
+    />
+  </div>
+  <div id="styleguide-letter">
+    <PastorsLetter
+      block={LETTER_FIXTURE}
+      settings={LETTER_SETTINGS}
+      headingId="styleguide-letter-h"
+    />
+  </div>
+
+  {/* The goals (Task 5): the four compositions, then every fallback. */}
+  <GoalsBand block={GOALS_FIXTURE} headingId="styleguide-goals" />
+  <div id="styleguide-goals-fallback">
+    <GoalsBand
+      block={GOALS_FALLBACK_FIXTURE}
+      headingId="styleguide-goals-fallback-h"
+      anchorPrefix="fallback-"
+    />
+  </div>
+  <div id="styleguide-goals-edge">
+    <GoalsBand
+      block={GOALS_EDGE_FIXTURE}
+      headingId="styleguide-goals-edge-h"
+      anchorPrefix="edge-"
+    />
+  </div>
+  {/* Link cards with a photo on every card: the arched doors. */}
+  <div id="styleguide-linkcards-doors">
+    <LinkCards
+      eyebrow={DOOR_CARDS_FIXTURE.eyebrow}
+      heading={DOOR_CARDS_FIXTURE.heading}
+      cards={DOOR_CARDS_FIXTURE.cards}
+      headingId="styleguide-linkcards-doors-h"
+    />
+  </div>
 
   {/* Task 7: temporary hero fixtures, see the note by the fixture data above. */}
   <Hero

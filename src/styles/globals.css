@@ -238,6 +238,37 @@
      taupe 7.42:1. Both asserted in theme-tokens.test.ts. */
   --color-indigo-deep: #1b1a3a;
 
+  /* Church identity (2026-09-23, the Who We Are "alive" pass). Band FILLS and
+     the two accent inks that sit on them, from the approved prototype
+     (docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html). Every
+     text pair on these grounds is measured in BOTH themes in
+     theme-tokens.test.ts (IDENTITY_PAIRS), and every token is redeclared
+     under .dark. The season six are keyed by src/lib/church-year.ts: green,
+     violet, purple and red carry white with a mint / gold-light accent; gold
+     and white are light grounds and carry --color-goal-ink-on-gold. */
+  --color-season-green: #1d5a3a; /* Ordinary Time and Epiphany */
+  --color-season-violet: #3b2a6b; /* Advent */
+  --color-season-purple: #46275e; /* Lent and Holy Week */
+  --color-season-red: #8e1f24; /* Pentecost */
+  --color-season-gold: #c9972c; /* Easter */
+  --color-season-white: #ede4cf; /* Christmas */
+  --color-goal-green: #1d5a3a; /* Worship */
+  --color-goal-gold: #c9972c; /* The Way */
+  --color-goal-purple: #46275e; /* Witness */
+  --color-goal-brown: #6a3d20; /* Work */
+  --color-goal-ink-on-gold: #2c1a0f; /* ink on the gold and white grounds */
+  --color-mint: #a9dcbf; /* accent text on green, never on paper */
+  --color-gold-light: #f0c86a; /* accent text on violet, purple, red, brown */
+  --color-season-deep: #113a26; /* the rule button's hover fill, under white */
+  --color-gold-hover: #dcae4a; /* the onDark rule button's hover fill, under ink */
+  /* Task 4 (2026-09-23): the Watchword band's night ground, and the two inks
+     the pledge and the letter set on paper. Both inks flip to a light value
+     under .dark; every pair is measured in theme-tokens.test.ts. */
+  --color-night: #0c241a; /* the Watchword band */
+  --color-purple-ink: #46275e; /* the pledge on soft paper */
+  --color-green-ink: #113a26; /* the letter on paper */
+  --color-brown-ink: #6a3d20; /* Work in the goals index, on paper */
+
   /* Fonts. Three faces, and the family names are exactly what the installed
      @fontsource packages declare. No " Variable" suffix on either Castoro:
      @fontsource/castoro-titling and @fontsource/castoro both ship STATIC 400
@@ -606,6 +637,29 @@
      flip, not a `dark:text-gold` at each call site: the call sites are the
      thing that would drift. */
   --color-gold-ink: #d59b29;
+
+  /* Church identity, dark: every band drops in luminance so it stays rich
+     against the #14121b page without glaring; the gold ground keeps its dark
+     ink (still AA, measured in theme-tokens.test.ts) rather than flipping. */
+  --color-season-green: #174a30;
+  --color-season-violet: #30245a;
+  --color-season-purple: #3b2150;
+  --color-season-red: #74191e;
+  --color-season-gold: #ad8127;
+  --color-season-white: #cfc5ae;
+  --color-goal-green: #174a30;
+  --color-goal-gold: #ad8127;
+  --color-goal-purple: #3b2150;
+  --color-goal-brown: #56321b;
+  --color-goal-ink-on-gold: #1f1208;
+  --color-mint: #9fd3b5;
+  --color-gold-light: #e8c068;
+  --color-season-deep: #0f3522;
+  --color-gold-hover: #c4973a;
+  --color-night: #0a1e15;
+  --color-purple-ink: #d9c8ea;
+  --color-green-ink: #a9dcbf;
+  --color-brown-ink: #e3c1a0;
 
   /* The alternating "muted" surface's real dark value. Unlike --color-bg-soft
      (which this gate forbids .dark from touching), --surface-soft is a plain
@@ -2314,6 +2368,1187 @@ body::before {
 .dark body::before {
   opacity: 0.06;
   mix-blend-mode: screen;
+}
+
+/* Church identity (2026-09-23) ----------------------------------------------
+   The Who We Are "alive" primitives: the two arches (ArchFrame.astro), the
+   shared photo grade, the watchword mark's two sizes (WatchwordMark.astro),
+   and the two reveal variants they ride on. Ported from the approved
+   prototype, docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html.
+   What lives here is what utilities cannot say (masks, clip-path reveals,
+   the grade filter, the ray draw) plus the one-off measurements of the mark
+   and the rule button: each arbitrary-value utility costs more bytes in the
+   inlined sheet than its share of one combined rule (CLAUDE.md rule 20).
+   Colours stay utilities on the tokens. Every initial "hidden" state sits inside
+   prefers-reduced-motion: no-preference, so a visitor who asked for less
+   motion gets the final state with nothing to wait for. */
+
+/* The two arches, drawn from the building: the lancet window and the
+   four-centred door head. Masks stretch to the frame (preserveAspectRatio
+   none), so a caller's --arch-ratio changes the proportion, never the arch. */
+.arch {
+  position: relative;
+  overflow: hidden;
+  background: rgb(0 0 0 / 0.12);
+  mask-image: var(--arch-mask);
+  mask-size: 100% 100%;
+}
+.arch-lancet {
+  --arch-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150' preserveAspectRatio='none'%3E%3Cpath d='M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z'/%3E%3C/svg%3E");
+  aspect-ratio: var(--arch-ratio, 100 / 150);
+}
+.arch-door {
+  --arch-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 130' preserveAspectRatio='none'%3E%3Cpath d='M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130Z'/%3E%3C/svg%3E");
+  aspect-ratio: var(--arch-ratio, 100 / 130);
+}
+/* The thin outline, 9px proud of the arch on three sides (6px on a phone). */
+.arch-mould {
+  position: absolute;
+  inset: -9px -9px 0;
+  width: calc(100% + 18px);
+  height: calc(100% + 9px);
+  overflow: visible;
+  pointer-events: none;
+}
+.arch-mould path {
+  fill: none;
+  stroke: var(--arch-mould, var(--color-gold));
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+}
+@media (max-width: 620px) {
+  .arch-mould {
+    inset: -6px -6px 0;
+    width: calc(100% + 12px);
+    height: calc(100% + 6px);
+  }
+}
+/* One grade for every amateur photograph: a touch warmer, a touch firmer. */
+.graded {
+  filter: saturate(0.9) contrast(1.05) sepia(0.07) brightness(1.02);
+}
+
+/* The season line's rule. */
+.season-line::before {
+  content: '';
+  flex: none;
+  width: 34px;
+  height: 2px;
+  background: currentColor;
+}
+
+/* The building glyphs: line art at a constant 2px whatever the size. */
+.building-glyph {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.building-glyph * {
+  vector-effect: non-scaling-stroke;
+}
+
+/* The rule button (CtaLink variant="rule"): square, a 3px rule 3px beneath,
+   and three rays at the right edge that spread on hover and focus. */
+.btn-rule {
+  position: relative;
+  min-height: 48px;
+  padding: 0.55em 1.2em 0.45em 1.3em;
+  font-size: 1.0625rem;
+  line-height: 1.1;
+}
+.btn-rule::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -6px;
+  height: 3px;
+  background: var(--btn-rule, var(--color-gold));
+  pointer-events: none;
+}
+.btn-rule:focus-visible {
+  outline: 2px solid var(--btn-ring, var(--ring));
+  outline-offset: 8px;
+}
+.btn-rule-dark {
+  --btn-rule: var(--color-bg);
+  --btn-ring: #fff;
+}
+.btn-rule svg {
+  flex: none;
+  width: 13px;
+  height: 22px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+.btn-rule path {
+  transition: translate 0.3s;
+}
+.btn-rule:is(:hover, :focus-visible) path:first-child,
+.group:is(:hover, :focus-visible) .btn-rule path:first-child {
+  translate: 2px -2px;
+}
+.btn-rule:is(:hover, :focus-visible) path:nth-child(2),
+.group:is(:hover, :focus-visible) .btn-rule path:nth-child(2) {
+  translate: 3px 0;
+}
+.btn-rule:is(:hover, :focus-visible) path:last-child,
+.group:is(:hover, :focus-visible) .btn-rule path:last-child {
+  translate: 2px 2px;
+}
+
+/* The watchword mark's two sizes. --mark-a sets "Praise &", --mark-b sets
+   PROCLAIM; the rays and ampersand are em-sized from those. */
+.mark-band {
+  --mark-a: clamp(96px, 17.5vw, 272px);
+  --mark-b: clamp(52px, 11.4vw, 176px);
+}
+.mark-hero {
+  --mark-a: clamp(56px, 8.4vw, 136px);
+  --mark-b: clamp(32px, 5.5vw, 88px);
+}
+@media (max-width: 620px) {
+  .mark-band {
+    --mark-a: 21vw;
+    --mark-b: 12.6vw;
+  }
+  .mark-hero {
+    --mark-a: 15vw;
+    --mark-b: 9vw;
+  }
+}
+.watchword-mark {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 0.8;
+}
+.mark-row {
+  display: flex;
+  align-items: baseline;
+  font-size: var(--mark-a);
+}
+.mark-praise {
+  position: relative;
+  z-index: 2;
+  padding-right: 0.04em;
+  letter-spacing: -0.025em;
+}
+.mark-amp {
+  position: relative;
+  z-index: 1;
+  margin-left: 0.02em;
+  font-size: 1.62em;
+  line-height: 0.7;
+  transform-origin: 30% 80%;
+}
+.mark-proclaim {
+  position: relative;
+  z-index: 2;
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.08em;
+  margin-top: 0.1em;
+  font-size: var(--mark-b);
+  letter-spacing: 0.015em;
+}
+.mark-rays {
+  width: 0.44em;
+  height: 0.96em;
+}
+.mark-rays path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+/* Reveal variants, on the BaseLayout [data-reveal] observer. The figure and
+   the mark stay at full opacity and in place (the observer needs a box to
+   see); what moves is inside them. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal='arch'],
+  [data-reveal='mark'],
+  [data-reveal='sign'] {
+    opacity: 1;
+    translate: none;
+  }
+  [data-reveal='arch'] .arch {
+    transition: clip-path 1.25s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  [data-reveal='arch'] .arch img {
+    transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  [data-reveal='arch'] .arch-mould {
+    transition: opacity 1s 0.5s;
+  }
+  /* Lancets rise from the sill; doors open from the centre. */
+  [data-reveal='arch']:not(.is-visible) .arch-lancet {
+    clip-path: inset(100% 0 0 0);
+  }
+  [data-reveal='arch']:not(.is-visible) .arch-door {
+    clip-path: inset(0 50% 0 50%);
+  }
+  [data-reveal='arch']:not(.is-visible) .arch img {
+    transform: scale(1.08);
+  }
+  [data-reveal='arch']:not(.is-visible) .arch-mould {
+    opacity: 0;
+  }
+  [data-reveal='arch'].is-visible .arch {
+    clip-path: inset(0);
+  }
+  /* The ampersand turns into place; the rays draw outwards from PROCLAIM. */
+  [data-reveal='mark'] .mark-amp {
+    transition:
+      transform 1.4s cubic-bezier(0.2, 0.7, 0.1, 1),
+      opacity 1.2s;
+  }
+  [data-reveal='mark']:not(.is-visible) .mark-amp {
+    opacity: 0;
+    transform: scale(0.8) rotate(-8deg);
+  }
+  [data-reveal='mark'] .mark-rays path {
+    stroke-dasharray: 80;
+    transition: stroke-dashoffset 0.9s 0.3s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  [data-reveal='mark'] .mark-rays path:nth-child(n + 2) {
+    transition-delay: 0.42s;
+  }
+  [data-reveal='mark'] .mark-rays path:nth-child(n + 4) {
+    transition-delay: 0.54s;
+  }
+  [data-reveal='mark']:not(.is-visible) .mark-rays path {
+    stroke-dashoffset: 80;
+  }
+  /* The letter's gold underline draws in under the signature. */
+  [data-reveal='sign'] path {
+    stroke-dasharray: 420;
+    transition: stroke-dashoffset 1.4s 0.3s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  [data-reveal='sign']:not(.is-visible) path {
+    stroke-dashoffset: 420;
+  }
+}
+
+/* The four Who We Are bands (Task 4): the window hero, the Watchword band,
+   the pledge and the letter. Layout that utilities cannot say cheaply; the
+   colours stay token utilities in the components. */
+
+/* The window hero. The triple lancet stays inside the band unless the hero
+   is `.hw-drop` (SectionRenderer sets it only when the next block is the
+   Watchword band, which reads --after-window to clear the drop). */
+.hw-drop + *,
+:has(> .hw-drop) + * {
+  --after-window: clamp(64px, 7.5vw, 110px);
+}
+.hw-grid {
+  display: grid;
+  gap: clamp(28px, 4vw, 72px);
+  align-items: end;
+  padding-block: clamp(40px, 6vw, 88px) clamp(40px, 5vw, 72px);
+}
+.hw-drop .hw-grid {
+  padding-bottom: 0;
+}
+.hw-drop .hw-window {
+  margin-bottom: calc(-1 * clamp(64px, 7.5vw, 110px));
+}
+.hw-text {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 40px;
+}
+.hw-text .season-line {
+  margin-bottom: clamp(22px, 3vw, 40px);
+}
+.hw-label {
+  margin: 0 0 0.5em;
+  font-size: clamp(26px, 2.4vw, 34px);
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+.hw-statement {
+  margin: 0 0 clamp(28px, 3.4vw, 48px);
+  font-size: clamp(40px, 4.3vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+}
+.hw-window {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.45fr 1fr;
+  gap: clamp(8px, 1.4vw, 20px);
+  align-items: end;
+}
+.hw-window[data-count='2'] {
+  grid-template-columns: 1fr 1fr;
+  width: 70%;
+  justify-self: center;
+}
+.hw-window[data-count='1'] {
+  grid-template-columns: 1fr;
+  width: 46%;
+  justify-self: center;
+}
+.hw-side {
+  --arch-ratio: 100 / 228;
+}
+.hw-mid {
+  --arch-ratio: 100 / 212;
+}
+.hw-rays {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 46%;
+  transform: translate(-50%, 6%);
+  pointer-events: none;
+}
+.hw-rays .mark-rays {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+@media (min-width: 901px) {
+  .hw-grid:has(.hw-window) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  /* Room for the rays inside the window's own box, so they never rise past
+     the band's top edge when the words are shorter than the window. */
+  .hw-window {
+    padding-top: 20%;
+  }
+  .hw-rays {
+    top: 0;
+    bottom: auto;
+  }
+  .hw-text {
+    padding-bottom: clamp(56px, 7vw, 112px);
+  }
+}
+@media (max-width: 620px) {
+  .hw-window {
+    margin-inline: calc(8px - var(--spacing-gutter));
+    grid-template-columns: 0.78fr 1.9fr 0.78fr;
+    gap: 8px;
+  }
+  .hw-side {
+    --arch-ratio: 100 / 250;
+  }
+  .hw-mid {
+    --arch-ratio: 100 / 158;
+  }
+  .hw-rays {
+    width: 40%;
+  }
+}
+
+/* The Watchword band. */
+.ww-wrap {
+  padding-block: calc(clamp(80px, 9vw, 150px) + var(--after-window, 0px)) clamp(72px, 9vw, 140px);
+}
+.ww-verse {
+  display: grid;
+  gap: 18px 40px;
+  align-items: end;
+  margin: clamp(48px, 6vw, 96px) 0 0;
+}
+.ww-verse p {
+  max-width: 21em;
+  font-size: clamp(27px, 3.3vw, 48px);
+  line-height: 1.2;
+  text-indent: -0.42em;
+}
+.ww-verse cite {
+  font-size: 20px;
+}
+.ww-body {
+  display: grid;
+  font-size: 19px;
+  gap: clamp(32px, 6vw, 100px);
+  align-items: start;
+  margin-top: clamp(56px, 6vw, 96px);
+}
+.ww-more summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 1em;
+  border-bottom: 2px solid;
+  cursor: pointer;
+  list-style: none;
+}
+.ww-more summary::-webkit-details-marker,
+.ww-more[open] .ww-rm,
+.ww-more:not([open]) .ww-rl {
+  display: none;
+}
+.ww-pair {
+  border-top: 1px solid rgb(201 151 44 / 0.5);
+}
+.ww-pair > div {
+  display: grid;
+  gap: 8px 20px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-bottom: 1px solid rgb(201 151 44 / 0.5);
+}
+.ww-pair dt {
+  font-size: 44px;
+  line-height: 1;
+}
+.ww-pair dt.font-display {
+  font-size: 32px;
+}
+.ww-pair dd {
+  font-size: 20px;
+  line-height: 1.45;
+}
+
+@media (min-width: 621px) {
+  .ww-verse {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .ww-pair > div {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+}
+
+/* The pledge: a responsive reading. */
+.pl-grid {
+  display: grid;
+  gap: clamp(40px, 6vw, 100px);
+}
+.pl-side {
+  display: flex;
+  flex-direction: column;
+}
+.pl-door {
+  max-width: 360px;
+  margin-top: 40px;
+}
+.pl-rubric {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 34px;
+  font-size: 20px;
+}
+.pl-rubric svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  translate: 0 2px;
+}
+.pl-rd {
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr) 8.4em;
+  column-gap: clamp(14px, 2vw, 28px);
+  align-items: baseline;
+  padding: 26px 0;
+  border-top: 1px solid var(--hair);
+}
+.pl-rd p {
+  font-size: clamp(25px, 2.4vw, 35px);
+  line-height: 1.2;
+}
+.pl-open {
+  padding-top: 0;
+  border-top: 0;
+}
+.pl-open p {
+  font-size: clamp(32px, 3.4vw, 50px);
+  line-height: 1.1;
+}
+.pl-who {
+  font-size: 19px;
+  letter-spacing: 0.06em;
+}
+.pl-turn {
+  display: block;
+  padding-left: 1.3em;
+}
+.pl-ref {
+  font-size: 17px;
+  line-height: 1.35;
+  text-align: right;
+}
+.pl-after {
+  margin: clamp(40px, 5vw, 72px) 0 0 calc(3em + clamp(14px, 2vw, 28px));
+  max-width: 33em;
+  font-size: 19.5px;
+  line-height: 1.6;
+}
+.pl-sep {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  height: 22px;
+  margin-bottom: 30px;
+}
+@media (min-width: 901px) {
+  .pl-grid {
+    grid-template-columns: minmax(0, 3.5fr) minmax(0, 8.5fr);
+  }
+  /* The door takes whatever height the reading leaves it, so the two columns
+     end together (the prototype left an empty patch under the photo). */
+  .pl-door {
+    flex: 1;
+    max-width: none;
+    min-height: 320px;
+    max-height: 820px;
+  }
+  .pl-door .arch {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}
+@media (max-width: 620px) {
+  .pl-rd {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 8px;
+    padding: 22px 0;
+  }
+  .pl-who {
+    font-size: 16px;
+  }
+  .pl-ref {
+    text-align: left;
+  }
+  .pl-turn {
+    padding-left: 0.9em;
+  }
+  .pl-after {
+    margin-left: 0;
+  }
+}
+
+/* The letter. */
+.lt-grid {
+  display: grid;
+  gap: clamp(40px, 6vw, 110px);
+  align-items: start;
+}
+.lt-portrait {
+  margin-inline: 8%;
+}
+.lt-sheet {
+  max-width: 66ch;
+}
+.lt-body {
+  font-size: 21px;
+  line-height: 1.66;
+}
+.lt-body > * + * {
+  margin-top: 1em;
+}
+.lt-body > p:first-child {
+  font-size: 24px;
+  line-height: 1.52;
+  color: var(--color-green-ink);
+}
+.lt-body > p:first-child::first-letter {
+  float: left;
+  padding: 0.05em 0.1em 0 0;
+  font-family: var(--font-display);
+  font-size: 3.5em;
+  line-height: 0.8;
+  color: var(--color-gold-ink);
+}
+.lt-body blockquote {
+  margin-block: 1.3em;
+  font-size: clamp(28px, 2.6vw, 36px);
+  font-style: italic;
+  line-height: 1.25;
+  color: var(--color-green-ink);
+}
+.lt-sign {
+  display: inline-block;
+  margin-top: 44px;
+}
+.lt-names {
+  font-size: clamp(46px, 4.6vw, 66px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transform: rotate(-4deg);
+  transform-origin: left bottom;
+}
+.lt-sign svg {
+  display: block;
+  width: clamp(240px, 24vw, 340px);
+  margin: -2px 0 0 -6px;
+  fill: none;
+  stroke: var(--color-gold);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+@media (min-width: 901px) {
+  .ww-body {
+    grid-template-columns: minmax(0, 33em) minmax(0, 1fr);
+  }
+  .lt-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  .lt-portrait {
+    position: sticky;
+    top: calc(var(--header-offset) + 2rem);
+    margin: 0;
+  }
+}
+@media (max-width: 620px) {
+  .lt-body {
+    font-size: 19px;
+  }
+  .lt-body > p:first-child {
+    font-size: 21px;
+  }
+}
+
+/* The goals (Task 5): GoalsBand.astro. Each goal band sets its ground, ink,
+   accent (--gl-hi), secondary text (--gl-soft), hairline and arch outline by
+   the colour class of its position; the index on the page ground reads
+   --gl-mark, an ink that flips with the theme. Every pair is measured in
+   theme-tokens.test.ts. */
+.gl-green {
+  --gl-bg: var(--color-goal-green);
+  --gl-mark: var(--color-green-ink);
+  --gl-hi: var(--color-mint);
+}
+.gl-gold {
+  --gl-bg: var(--color-goal-gold);
+  --gl-mark: var(--color-gold-ink);
+  --gl-ink: var(--color-goal-ink-on-gold);
+  --gl-hi: var(--gl-ink);
+  --gl-soft: var(--gl-ink);
+  --gl-rule: rgb(44 26 15 / 0.4);
+  --arch-mould: var(--gl-ink);
+}
+.gl-purple {
+  --gl-bg: var(--color-goal-purple);
+  --gl-mark: var(--color-purple-ink);
+}
+.gl-brown {
+  --gl-bg: var(--color-goal-brown);
+  --gl-mark: var(--color-brown-ink);
+}
+.gl-purple,
+.gl-brown {
+  --gl-hi: var(--color-gold-light);
+  --arch-mould: var(--gl-hi);
+}
+.gl {
+  background: var(--gl-bg);
+  color: var(--gl-ink, #fff);
+}
+.gx-top {
+  padding-block: clamp(72px, 9vw, 140px) clamp(48px, 5vw, 80px);
+}
+.gx-intro,
+.gl-top {
+  display: grid;
+  gap: clamp(24px, 5vw, 88px);
+  align-items: end;
+}
+.gx-index {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px clamp(12px, 2vw, 28px);
+  margin-top: clamp(40px, 4vw, 64px);
+}
+.gx-index a {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 16px;
+  align-items: center;
+  min-height: 44px;
+  padding: 18px 0 6px;
+  border-top: 6px solid var(--gl-bg);
+  color: var(--gl-mark);
+  text-decoration: none;
+}
+.gx-glyph {
+  grid-row: 1 / 3;
+  width: 40px;
+}
+.gx-name {
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: 1;
+}
+.gx-index a:hover .gx-name {
+  text-decoration: underline 2px;
+  text-underline-offset: 5px;
+}
+.gl-wrap {
+  padding-block: clamp(80px, 9vw, 140px);
+}
+.gl-head {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(14px, 1.6vw, 22px);
+}
+.gl-glyph {
+  flex: none;
+  width: clamp(46px, 5vw, 72px);
+  margin-bottom: 0.1em;
+  color: var(--gl-hi);
+}
+.gl-name {
+  /* min-width: 0 lets the heading shrink below its own unbroken content width
+     inside the .gl-head flex row (CLAUDE.md rule 18); overflow-wrap: anywhere
+     is the fallback for a long one-word name (no space to wrap on) once the
+     313px-and-under 13.2vw size below still outruns the room beside the
+     glyph. */
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: clamp(64px, 8.4vw, 132px);
+  line-height: 0.84;
+  letter-spacing: 0.005em;
+}
+.gl-also {
+  margin-top: 14px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.gl-also,
+.gl-pt-body,
+.gd-text {
+  color: var(--gl-soft, rgb(255 255 255 / 0.86));
+}
+.gl-title {
+  margin-top: clamp(16px, 2vw, 26px);
+  font-size: clamp(28px, 2.7vw, 40px);
+  line-height: 1.12;
+  color: var(--gl-hi);
+}
+.gl-lead {
+  max-width: 30em;
+  font-size: clamp(20px, 1.6vw, 23px);
+  line-height: 1.5;
+}
+.gl-quote {
+  margin-bottom: 18px;
+  font-size: clamp(26px, 2.4vw, 34px);
+  line-height: 1.2;
+  color: var(--gl-hi);
+}
+.gl-pt-title {
+  margin-bottom: 6px;
+  font-size: 21px;
+  line-height: 1.2;
+}
+.gl-pt-body {
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+/* NAVE. The caption carries its own scrim: it fades in above the words,
+   holds at 66% night behind every line (white 5.4:1, mint and gold-light
+   3.4:1 or better even over a pure white photo; both lines are large text),
+   and only below the words turns into the band colour. */
+.gn-bleed {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(520px, 64vw, 860px);
+  overflow: hidden;
+}
+.gn-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gn-cap {
+  --gl-hi: var(--color-gold-light);
+  --gl-soft: #fff;
+  --gn-scrim: color-mix(in srgb, var(--color-night) 66%, transparent);
+  --gn-tail: clamp(28px, 3vw, 48px);
+  position: relative;
+  width: 100%;
+  padding-block: clamp(120px, 14vw, 220px) var(--gn-tail);
+  color: #fff;
+  background: linear-gradient(
+    transparent,
+    var(--gn-scrim) clamp(96px, 11vw, 180px),
+    var(--gn-scrim) calc(100% - var(--gn-tail)),
+    var(--gl-bg)
+  );
+}
+.gl-green .gn-cap {
+  --gl-hi: var(--color-mint);
+}
+.gn-cap {
+  /* The room the name has beside its glyph. */
+  --gn-room: calc(
+    min(100cqw, var(--container-content)) - 2 * var(--spacing-gutter) - clamp(60px, 7vw, 94px)
+  );
+}
+/* The nave name is poster size, shrunk only when its own words need it: it
+   fits its longest word, and half its letters, on one line of the room (a
+   capital of Castoro Titling measures about 0.7em; --gn-chars is set by
+   GoalsBand from the stega-cleaned name). So a long name wraps to two lines
+   at most, clear of the rising lancets, and never runs off a phone. */
+.gn-cap .gl-name {
+  font-size: min(clamp(76px, 10.4vw, 168px), var(--gn-room) / (var(--gn-chars, 1) * 0.74));
+}
+.gn-body {
+  display: grid;
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+  padding-block: clamp(24px, 3vw, 40px) clamp(72px, 8vw, 128px);
+}
+.gl-pad-top {
+  padding-top: clamp(80px, 9vw, 140px);
+}
+/* A nave with nothing under its name still closes its band. */
+.gl-pad-top:last-child {
+  padding-bottom: clamp(72px, 8vw, 128px);
+}
+.gn-main {
+  display: grid;
+  gap: clamp(28px, 3vw, 44px);
+  align-content: start;
+}
+.gn-lead {
+  max-width: 24em;
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: 1.3;
+}
+.gn-points {
+  columns: 2;
+  column-gap: clamp(24px, 3vw, 48px);
+}
+.gn-pt {
+  break-inside: avoid;
+  margin-bottom: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--gl-rule, rgb(255 255 255 / 0.4));
+}
+.gn-pics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: end;
+  max-width: 560px;
+}
+.gn-pics > :first-child {
+  margin-bottom: 48px;
+}
+
+/* PATH. Steps descend along a dotted trail; at 900px and below the trail
+   turns downhill, a dotted line on the left with a dot at each step. */
+.gp-come {
+  margin-bottom: 0.35em;
+  font-size: clamp(34px, 3.6vw, 54px);
+  line-height: 1.08;
+}
+.gp-wrap {
+  position: relative;
+  margin-top: clamp(56px, 6vw, 96px);
+}
+.gp-trail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-dasharray: 2 12;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+.gp-trail path {
+  vector-effect: non-scaling-stroke;
+}
+.gp-steps,
+.gr-crowd,
+.gr-rings,
+.gd-doors {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 64px);
+}
+.gp-step {
+  position: relative;
+  margin-top: calc(var(--i) * clamp(60px, 7vw, 120px));
+}
+.gp-pt {
+  max-width: 22em;
+  margin-top: 22px;
+}
+.gp-pt .gl-pt-title {
+  font-size: 24px;
+}
+
+/* RINGS. The crowd of lancets in an arc, then the widening rings. */
+.gr-crowd {
+  gap: clamp(8px, 1.2vw, 18px);
+  align-items: end;
+  margin-top: clamp(56px, 6vw, 96px);
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgb(240 200 106 / 0.55);
+}
+.gr-crowd .arch-mould {
+  display: none;
+}
+.gr-rings {
+  margin-top: clamp(48px, 5vw, 80px);
+}
+.gr-rings li {
+  display: grid;
+  grid-template-rows: 84px auto;
+}
+.gr-rings svg {
+  align-self: end;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 18px;
+  overflow: visible;
+  fill: none;
+  stroke: var(--gl-hi);
+  stroke-width: 1.6;
+}
+.gr-rings circle {
+  vector-effect: non-scaling-stroke;
+}
+.gr-rings .gr-core {
+  fill: var(--gl-hi);
+  stroke: none;
+}
+.gr-scope {
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gl-hi);
+}
+
+/* DOORS. One door per point; the word shrinks as the doors multiply. */
+.gd-doors {
+  gap: clamp(16px, 3vw, 48px);
+  margin-top: clamp(56px, 6vw, 96px);
+}
+.gd-word {
+  margin: 26px 0 12px;
+  font-size: clamp(40px, calc(13.8vw / var(--n)), 72px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--gl-hi);
+}
+.gd-text {
+  max-width: 20em;
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+/* Link cards as arched doors (LinkCards.astro, every card pictured). */
+.lc-doors {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 28px);
+}
+.lc-door {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+}
+.lc-door figure {
+  --arch-ratio: 100 / 92;
+}
+.lc-door .arch {
+  background: var(--color-season-deep);
+}
+.lc-door:focus-visible {
+  outline: 3px solid var(--color-gold-light);
+  outline-offset: 6px;
+}
+.lc-door .arch-mould {
+  display: none;
+}
+.lc-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 22px 22px 30px;
+}
+
+@media (min-width: 901px) {
+  .gx-intro {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  }
+  .gl-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  }
+  .gx-index {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1121px) {
+  .gn-has-pics {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 3.4fr);
+  }
+  .gn-has-pics .gn-pics {
+    position: relative;
+    z-index: 2;
+    margin-top: calc(-1 * clamp(160px, 17vw, 280px));
+  }
+  /* Keep the words clear of the lancets rising into the caption. */
+  .gl-nave:has(.gn-has-pics) .gn-cap :is(.gl-head, .gl-title) {
+    max-width: 66%;
+  }
+  .gl-nave:has(.gn-has-pics) .gn-cap {
+    --gn-room: calc(
+      0.66 * (min(100cqw, var(--container-content)) - 2 * var(--spacing-gutter)) - 94px
+    );
+  }
+}
+@media (max-width: 1120px) {
+  .lc-doors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  .gp-trail {
+    display: none;
+  }
+  .gp-steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding-left: 34px;
+  }
+  .gp-steps::before {
+    content: '';
+    position: absolute;
+    inset: 10px auto 10px 8px;
+    border-left: 3px dotted;
+    opacity: 0.6;
+  }
+  .gp-step {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 20px;
+    align-items: center;
+    margin-top: 0;
+  }
+  .gp-step::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -33px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 5px var(--gl-bg);
+  }
+  .gp-pt {
+    margin-top: 0;
+  }
+  .gr-rings {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+  .gr-rings li {
+    grid-template-columns: 90px minmax(0, 1fr);
+    grid-template-rows: none;
+    column-gap: 18px;
+    align-items: start;
+  }
+  .gr-rings svg {
+    align-self: start;
+    justify-self: center;
+    margin: 0;
+  }
+}
+@media (max-width: 620px) {
+  .gx-index a {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .gx-glyph {
+    grid-row: auto;
+    width: 32px;
+  }
+  .gl-name {
+    font-size: 13.2vw;
+  }
+  .gn-bleed {
+    min-height: 118vw;
+  }
+  .gn-cap .gl-name {
+    font-size: min(14.5vw, var(--gn-room) / (var(--gn-chars, 1) * 0.74));
+  }
+  .gn-points {
+    columns: 1;
+  }
+  .gn-pics {
+    gap: 10px;
+  }
+  .gn-pics > :first-child {
+    margin-bottom: 32px;
+  }
+  .gp-step {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gp-step figure {
+    max-width: 260px;
+  }
+  .gp-step::before {
+    top: 30px;
+  }
+  .gr-crowd {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 22px;
+  }
+  .gd-doors {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .gd-door {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 0 18px;
+    align-items: end;
+  }
+  .gd-door figure {
+    grid-row: 1 / 3;
+  }
+  .gd-word {
+    margin: 0 0 8px;
+    font-size: 9vw;
+  }
+  .gd-text {
+    grid-column: 2;
+    font-size: 17.5px;
+  }
+  .gd-door:nth-child(even):not(.gd-bare) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    text-align: right;
+  }
+  .gd-door:nth-child(even) figure {
+    grid-column: 2;
+  }
+  .gd-door:nth-child(even) > :not(figure) {
+    grid-column: 1;
+  }
+  .gd-bare {
+    display: block;
+  }
+  .lc-doors {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lc-door figure {
+    --arch-ratio: 100 / 70;
+  }
 }
 
 /* ---------- Reduced motion -------------------------------------------- */

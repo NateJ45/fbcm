@@ -1,0 +1,74 @@
+---
+// Safe to edit by hand
+// The four goal glyphs, each drawn from the building: the two-light WINDOW
+// (Worship), the Tudor DOOR (The Way), the ROSE window (Witness) and the
+// piscina BASIN (Work). Ported from the prototype's `#i-window`, `#i-door`,
+// `#i-rose` and `#i-basin` symbols; the shared `#qf` quatrefoil is inlined
+// with the transform each symbol gave its `<use>`, so no page needs a global
+// <defs> sprite. Line art in currentColor at a constant 2px stroke whatever
+// the size, and always decorative: the goal's name beside it is the label.
+
+interface Props {
+  name: 'window' | 'door' | 'rose' | 'basin';
+  class?: string;
+}
+
+const { name, class: extraClass = 'w-12' } = Astro.props;
+
+/** The quatrefoil: four circles of radius 9 around the origin. */
+const QF =
+  'M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z';
+---
+
+<svg
+  viewBox="0 0 48 64"
+  aria-hidden="true"
+  focusable="false"
+  class:list={['building-glyph h-auto', extraClass]}
+  data-glyph={name}
+>
+  {
+    name === 'window' && (
+      <>
+        <path d="M5 62V30C5 16 14 7 24 3C34 7 43 16 43 30V62" />
+        <path d="M10 62V36A12 12 0 0 1 16 25A12 12 0 0 1 22 36V62" />
+        <path d="M26 62V36A12 12 0 0 1 32 25A12 12 0 0 1 38 36V62" />
+        <path d={QF} transform="translate(24 16) scale(.36)" />
+        <path d="M2 62H46" />
+      </>
+    )
+  }
+  {
+    name === 'door' && (
+      <>
+        <path d="M7 58V28C7 18 16 13 24 9C32 13 41 18 41 28V58" />
+        <path d="M12 58V30C12 23 18 19 24 16C30 19 36 23 36 30V58" />
+        <path d="M24 16V58" />
+        <circle cx="20.5" cy="40" r="1" />
+        <circle cx="27.5" cy="40" r="1" />
+        <path d="M3 58H45M1 62H47" />
+      </>
+    )
+  }
+  {
+    name === 'rose' && (
+      <>
+        <circle cx="24" cy="34" r="15" />
+        <path d={QF} transform="translate(24 34) scale(.9)" />
+        <path d="M24 13V9M24 55V59M3 34H7M41 34H45M9.2 19.2L12 22M38.8 19.2L36 22M9.2 48.8L12 46M38.8 48.8L36 46" />
+      </>
+    )
+  }
+  {
+    name === 'basin' && (
+      <>
+        <path d="M9 60V28A15 15 0 0 1 24 12A15 15 0 0 1 39 28V60" />
+        <path d="M16 26A5 5 0 0 1 24 20A5 5 0 0 1 32 26" />
+        <path d="M6 42H42" />
+        <path d="M12 42C14 51 34 51 36 42" />
+        <path d="M24 49V56" />
+        <path d="M4 60H44" />
+      </>
+    )
+  }
+</svg>

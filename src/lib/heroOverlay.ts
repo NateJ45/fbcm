@@ -62,6 +62,9 @@ export function shouldOverlayHeader(sections: MaybeBlock[] | null | undefined): 
   if (!first || first._type !== 'heroSection') return false;
   // 'full' is heroSection's initialValue, so an older document that predates
   // the field and has no `layout` at all is a full-bleed hero, not a split one.
-  if (first.layout === 'split') return false;
+  // 'window' (2026-09-23) is a season-coloured band with arched photos
+  // beside the words, not a photograph behind them, so it keeps the paper bar
+  // for the same reason 'split' does.
+  if (first.layout === 'split' || first.layout === 'window') return false;
   return hasImage(first);
 }

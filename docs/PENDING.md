@@ -680,6 +680,57 @@ projection (`[0...limit]`, a field reference as a slice bound) failed the ENTIRE
 home page query and fell back to defaults on a green build. `DYNAMIC_LIST_MAX`
 now ties the schema max and the slice with a drift test.
 
+### Who We Are "alive": before the page is applied (2026-09-23)
+
+- **The Welcome Booklet is uploaded on `--apply`, not before.** The "Find Out More"
+  card on the composed Who We Are page (`scripts/pages/who-we-are.mjs`) links the
+  Sanity file asset that `../fbcm-archive/files/08181c_75a0565927c14a929d1ebee1565e638c.pdf`
+  becomes, `file-3a0aedfcc69aaee01054ce3ec21fc2ac048292ec-pdf`. A Sanity asset id is
+  the SHA-1 of the file's bytes, so the CDN URL is known before the upload. The dry
+  run prints the upload as a planned step; `--apply` performs it through
+  `makeUploader().uploadFile()` (as `beliefs.mjs` and `wedding.mjs` do) and throws if
+  Sanity returns any other id. Until the apply, that CDN URL answers 404, including on
+  `/styleguide/who-we-are`. The module throws if any `fbcmuncie.org/_files` link
+  reaches the page, so the Wix copy (which dies at cutover) can never be seeded.
+- **The page is composed but not applied.** Deploy the branch (the schema carries the
+  new church sections), then `npm run seed-pages -- --only who-we-are` (read the plan)
+  and `npm run seed-pages -- --only who-we-are --apply` (backup first). Let the
+  publish webhook rebuild, then shoot `/who-we-are` in production at 1440 and 375,
+  light and dark, beside the prototype. Until this runs, `/who-we-are` still shows the
+  old composition and parity reports it unchanged.
+- **New copy awaiting the church's approval.** Every sentence the composition adds or
+  re-cases is listed in `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`
+  (the Who We Are entries, 2026-09-23). The seed writes them; the church has not yet
+  seen them.
+- **The Worship goal needs a front-on congregation photograph.** Its lead (the NAVE
+  composition's full-bleed photo) is `wwa-worship-nave`, the sanctuary seen from the
+  balcony, so the congregation is seen from behind. A shot from the front of the
+  sanctuary, faces toward the camera, is the one to ask the church for; swap it in
+  `scripts/data/page-images.json` or in the Studio.
+- **The window hero shows no mint accent word.** The window layout can render the
+  hero's `scriptAccent` word in mint, but `heroSection` has no `scriptAccent` field
+  (only `richTextSection` and its siblings do) and `SectionRenderer` does not pass one
+  through to `Hero.astro` either way, so the headline (the Site settings tagline) is
+  one colour regardless of what a page module sets. Showing the mint word needs a
+  small follow-up: add `scriptAccent` to the `heroSection` schema and thread it
+  through `SectionRenderer`'s hero branch, not a Studio edit.
+- **Goal anchor ids are deduplicated within the goals block only.** `GoalsBand`
+  derives each goal's id from `slugify(name)` and adds a suffix on a clash inside the
+  block, but nothing checks the rest of the page, so a section anchor or another goals
+  block with the same slug (`worship`, `the-way`, `witness`, `work`) would give the
+  page two elements with one id. Harmless on the composed page today (its section
+  anchors are `watchword`, `goals`, `pledge`, `letter`, `next`).
+- **The "Meet Our Staff" door shows one pastor.** Its photo is `wwa-next-kendall`, a
+  single person, for a card about the whole staff. A group photograph of the staff
+  would say what the card says.
+- **Clean-up once `/who-we-are` itself shows the composition.** Delete
+  `src/pages/styleguide/who-we-are.astro`, the `'/styleguide/who-we-are'` line and its
+  comment in `tests/routes.ts`, and `scripts/data/fixtures/who-we-are.json`. KEEP
+  `scripts/page-fixture.mjs` and the `scripts/data/fixtures/` folder: the script is
+  page-agnostic (`node scripts/page-fixture.mjs <slug>` builds any page module
+  read-only into `scripts/data/fixtures/<slug>.json`) and is how the next page composed
+  ahead of its schema deploy gets looked at.
+
 ---
 
 ## Photo library uploaded (2026-09-23)

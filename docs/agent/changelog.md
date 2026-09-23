@@ -10,6 +10,46 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-23 — Who We Are "alive": the church identity pass (`feat/who-we-are-alive`)._
+
+The Who We Are page was rebuilt from the prototype
+(`docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html`) as a set of
+reusable church sections, so the identity can reach other pages later. New
+primitives in `src/components/church/` (ArchFrame, BuildingGlyph,
+WatchwordMark, SeasonLine) and a `rule` variant on CtaLink (square, gold rule
+beneath: the site owner rejected the prototype's arched button head, and ruled
+out visible photo captions anywhere). New identity tokens in globals.css
+`@theme` and `.dark`, every pair gated in `theme-tokens.test.ts`, with the
+geometry in a `/* Church identity (2026-09-23) */` block. The season of the
+church year is derived from the date (`src/lib/church-year.ts`, rule 15), so
+the hero band and the season line turn over with the daily scheduled deploy
+(`.github/workflows/deploy.yml`, 05:15 UTC).
+
+Four new blocks in `churchSections.ts`: `watchwordSection` (WatchwordBand,
+with `src/lib/highlight-words.ts` picking out "praise" and "proclaim"
+stega-safely; `RUN_SOURCE` is now exported from `preview-stega.ts`, noted on
+PORTS.md card 29), `goalsSection` (GoalsBand, four goals in four compositions
+and colours chosen by position through `src/lib/goal-layout.ts`),
+`pledgeSection` (PledgeReading) and `letterSection` (PastorsLetter). Hero
+gained `layout: 'window'` (the season band with a triple lancet, dropping into
+the Watchword band when that is the next block, through SectionRenderer's
+`dropInto`), and `linkCard` gained an optional `image`: when every card has
+one, LinkCards draws arched doors. `glyph` joined `NON_STEGA_FIELDS`;
+`isDarkBand` and `heroOverlay.ts` learned the new bands; the Help guides cover
+each block. The site sheet is 120,810 B inline after the merge of the dead-CSS
+trim, and the CSS inline ceiling moved to 155,648 B (rule 20). 767 unit tests
+across 51 files.
+
+`scripts/pages/who-we-are.mjs` is recomposed around the new blocks but NOT
+applied: the schema has to deploy first, then
+`npm run seed-pages -- --only who-we-are --apply` uploads the Welcome Booklet
+and writes the page. Until then `/styleguide/who-we-are` renders the
+composition from `scripts/data/fixtures/who-we-are.json`
+(`scripts/page-fixture.mjs`, page-agnostic). Parity recaptured: before the
+recapture every page differed only in its inline sheet, and `/styleguide` in
+its new fixtures; after it, 163/163 PASS with the sheet at 120,810 B on both
+builds. Open loops are in `docs/PENDING.md` under "Who We Are alive".
+
 _2026-09-23 — Dead CSS trimmed from the inline stylesheet (about 34 KB per page)._
 
 The inline site sheet was close to its 147,456 B ceiling (CLAUDE.md rule 20):

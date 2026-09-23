@@ -43,18 +43,37 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 ### New sentences
 
-- Where to park, when to arrive, and what happens once you are inside. (link cards, Plan a visit)
+- Praise & Proclaim, our watchword (hero button, jumps to the watchword)
+- In the church (Our goals, Witness: label on the first ring, for "Engaged Membership")
+- In Muncie (Our goals, Witness: label on the second ring, for "Local Partnership")
+- Everywhere (Our goals, Witness: label on the third ring, for "Kingdom Citizenship")
+- Co-Pastors, First Baptist Church Muncie (under the signature of the pastors’ letter)
 
 ### Edits to the church’s own text
 
 - growth track: "We offer a growth track, a step by step path into the life of this church, to help us all..." (Our goals, The Way. The inserted clause explains the church’s own term, which the Wix site never does.)
 - deacon: "...connected with a deacon, a church member chosen to care for others, who offers prayer and support." (Our goals, The Way.)
-- Cut: the sentence naming Global Servants ("Kingdom Citizenship...") falls outside the Witness pillar and is not on the page.
-- Em-dash to comma (CLAUDE.md rule 2), inside a verbatim scripture quotation: Kendall Ellis’s staff bio quotes Romans 8:17 (NIV) as “...then we are heirs—heirs of God and co-heirs with Christ...” and it now reads “...then we are heirs, heirs of God...”. No other word changes. The bio is a field on her staff document rather than a sentence this module builds, so the change was made by scripts/fix-bio-em-dashes.mjs (backed up first); it is declared here because this is one of the two pages that print it.
+- One word added: "lifting up the name of God" (the Wix page reads "lifting up name of God"). (Our watchword, what "Praise" means.)
+- Em-dash to comma (CLAUDE.md rule 2): "...would be one, as he and the Father are one." (Our pledge, after the pledge.)
+- Em-dash to comma (CLAUDE.md rule 2): "...calling a married couple to be Co-Pastors, both of us preaching the word..." (A note from our pastors.)
+- Lifted, not written: "“Come and see.”" is set large as the pull quote of The Way. It is the pastors’ letter’s own quotation of John 1:39, which The Way’s opening sentence also quotes.
+- Not repeated: the Worship goal’s closing sentence, "We are a Spirit-led people gathered to join Christ’s presence in our community.", is the headline at the top of the page, so the Worship goal stops before it.
+- The headline at the top of the page is the Site settings tagline, 'We're a Spirit-led people gathered to join Christ's presence in our community.', a contraction of the church’s own 'We are a Spirit-led people...' (the closing line of the Worship goal).
+- Cut, a whole sentence: "This watchword, “Praise & Proclaim” reminds us of the importance of each:" (Our watchword). The two meanings it introduced are printed beside the mark under their own headings, "Praise" and "Proclaim".
+- Re-cased: the hero button "A note from our pastors" is the church’s heading "A Note From Our Pastors" set as a sentence.
+- Re-cased from the Wix card style (every word capitalised) to sentences: "Find out what you can expect this Sunday.", "Get in touch with us with our virtual contact card.", "Read our staff bios and meet the people of FBCM.", "Download our Welcome Booklet." and the button "Read more". (Where to go next.)
 
 ### Photos of children
 
-- (none)
+- wwa-hero-girls: Two smiling girls, one with red hair, pose together in front of colorful stained glass windows.
+- wwa-hero-child: A young girl smiles outdoors, standing among tall purple coneflowers in a garden.
+- wwa-way-bibles: Three girls sitting together in a pew, smiling, with open Bibles on their laps.
+- wwa-witness-children: Four young children hold hands and smile, posed together outside the church's arched entrance.
+- wwa-witness-singing: Two teenage girls sing together into microphones at an indoor event, with greenery behind them.
+- wwa-witness-steps: Children sit on the chancel steps around Kendall as she reads to them, at the blessing of the backpacks.
+- wwa-witness-serve: A large group of adults and children posed together indoors, some holding a team t-shirt reading Serve Your City.
+- wwa-witness-boxes: Children and adults gather around a display of blue and yellow decorated boxes and a fabric backdrop at an indoor event.
+- wwa-work-frame: A mission trip group posed together under a wooden building frame they are constructing outdoors.
 
 ## /beliefs
 

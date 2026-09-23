@@ -35,6 +35,15 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
 };
 
+export type LinkCardImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "linkCard.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  _type: 'image';
+};
+
 export type Photo = {
   asset?: SanityImageAssetReference;
   media?: unknown; // Unable to locate the referenced type "photo.media" in schema
@@ -131,6 +140,18 @@ export type SectionPreset = {
     | ({
         _key: string;
       } & MinistrySection)
+    | ({
+        _key: string;
+      } & WatchwordSection)
+    | ({
+        _key: string;
+      } & GoalsSection)
+    | ({
+        _key: string;
+      } & PledgeSection)
+    | ({
+        _key: string;
+      } & LetterSection)
     | ({
         _key: string;
       } & TeamSection)
@@ -583,6 +604,143 @@ export type TeamSection = {
   }>;
 };
 
+export type LetterSection = {
+  _type: 'letterSection';
+  heading?: string;
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+  signature?: string;
+  signatureNote?: string;
+  portrait?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  anchor?: Slug;
+};
+
+export type PledgeSection = {
+  _type: 'pledgeSection';
+  heading?: string;
+  intro?: string;
+  instruction?: string;
+  opening?: string;
+  lines?: Array<{
+    text?: string;
+    reference?: string;
+    _type: 'pledgeLine';
+    _key: string;
+  }>;
+  after?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  anchor?: Slug;
+};
+
+export type GoalsSection = {
+  _type: 'goalsSection';
+  heading?: string;
+  intro?: string;
+  goals?: Array<{
+    name?: string;
+    subtitle?: string;
+    aside?: string;
+    glyph?: 'window' | 'door' | 'rose' | 'basin';
+    summary?: string;
+    quote?: string;
+    points?: Array<{
+      title?: string;
+      short?: string;
+      body?: string;
+      _type: 'goalPoint';
+      _key: string;
+    }>;
+    photos?: Array<{
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: 'image';
+      _key: string;
+    }>;
+    _type: 'goal';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
+export type WatchwordSection = {
+  _type: 'watchwordSection';
+  heading?: string;
+  intro?: string;
+  more?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+  verse?: string;
+  reference?: string;
+  praise?: string;
+  proclaim?: string;
+  anchor?: Slug;
+};
+
 export type MinistryReference = {
   _ref: string;
   _type: 'reference';
@@ -658,6 +816,7 @@ export type LinkCardsSection = {
     title?: string;
     body?: string;
     cta?: CtaBlock;
+    image?: LinkCardImage;
     _type: 'linkCard';
     _key: string;
   }>;
@@ -1000,7 +1159,7 @@ export type HeroSection = {
     alt?: string;
     _type: 'image';
   };
-  layout?: 'full' | 'split';
+  layout?: 'full' | 'split' | 'window';
   frames?: Array<{
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1164,6 +1323,18 @@ export type Page = {
     | ({
         _key: string;
       } & MinistrySection)
+    | ({
+        _key: string;
+      } & WatchwordSection)
+    | ({
+        _key: string;
+      } & GoalsSection)
+    | ({
+        _key: string;
+      } & PledgeSection)
+    | ({
+        _key: string;
+      } & LetterSection)
   >;
   addToMainNav?: boolean;
   navGroup?: 'top' | 'services' | 'resources';
@@ -1470,6 +1641,18 @@ export type JournalPage = {
     | ({
         _key: string;
       } & MinistrySection)
+    | ({
+        _key: string;
+      } & WatchwordSection)
+    | ({
+        _key: string;
+      } & GoalsSection)
+    | ({
+        _key: string;
+      } & PledgeSection)
+    | ({
+        _key: string;
+      } & LetterSection)
   >;
 };
 
@@ -1546,6 +1729,18 @@ export type HomePage = {
     | ({
         _key: string;
       } & MinistrySection)
+    | ({
+        _key: string;
+      } & WatchwordSection)
+    | ({
+        _key: string;
+      } & GoalsSection)
+    | ({
+        _key: string;
+      } & PledgeSection)
+    | ({
+        _key: string;
+      } & LetterSection)
     | ({
         _key: string;
       } & TeamSection)
@@ -1675,6 +1870,7 @@ export type AllSanitySchemaTypes =
   | SanityFileAssetReference
   | ListedDocumentFile
   | SanityImageAssetReference
+  | LinkCardImage
   | Photo
   | Redirect
   | SectionPreset
@@ -1696,6 +1892,10 @@ export type AllSanitySchemaTypes =
   | NavLink
   | DynamicListSection
   | TeamSection
+  | LetterSection
+  | PledgeSection
+  | GoalsSection
+  | WatchwordSection
   | MinistryReference
   | MinistrySection
   | StaffMemberReference

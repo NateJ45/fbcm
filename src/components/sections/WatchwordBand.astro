@@ -1,0 +1,113 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: the Watchword band (2026-09-23, the Who We Are "alive"
+// pass; the prototype's `.watch`). "Our Watchword", the Praise and Proclaim
+// mark at poster size, Isaiah 12:4 with the words praise and proclaim picked
+// out in mint italic, the reference, a short introduction beside the two
+// meanings, and the long explanation behind a native <details> "Read more"
+// (plan spec change 2).
+//
+// The ground is --color-night, dark BY TYPE (so it is on no cadence and
+// carries no colour field, CLAUDE.md rule 9). Every ink on it is measured in
+// both themes in theme-tokens.test.ts: paper for reading, white for "Praise",
+// mint for the highlighted words, gold-light for the link, brand gold for the
+// heading and the reference.
+//
+// The verse highlight goes through highlightWords(), which matches on the
+// stega-CLEANED text and slices the RAW string, so in the preview the verse
+// keeps its click-to-edit payload (CLAUDE.md, the preview rules).
+//
+// When this band follows the window hero, the hero's lancets hang over its
+// top edge (SectionRenderer passes the hero `dropInto` for exactly this
+// neighbour); globals.css gives the band the extra top padding they need
+// (`--after-window`, set only on the block after a `.hw-drop` hero).
+import WatchwordMark from '@/components/church/WatchwordMark.astro';
+import PortableText from '@/components/PortableText';
+import { highlightWords } from '@/lib/highlight-words';
+import type { ProjectedWatchwordSection } from '@/lib/pageBuilder.types';
+import type { PortableTextBlock } from '@portabletext/types';
+
+interface Props {
+  block: ProjectedWatchwordSection;
+  headingId: string;
+}
+
+const { block, headingId } = Astro.props as Props;
+const { heading, intro, more, verse, reference, praise, proclaim } = block;
+const verseParts = verse ? highlightWords(verse, ['praise', 'proclaim']) : [];
+const moreBlocks = (more ?? []) as PortableTextBlock[];
+const hasBody = !!(intro || moreBlocks.length || praise || proclaim);
+---
+
+<section
+  class="ww-band relative overflow-hidden bg-night text-bg"
+  aria-labelledby={heading ? headingId : undefined}
+>
+  <div class="ww-wrap mx-auto max-w-content px-gutter">
+    {
+      heading && (
+        <h2 id={headingId} class="font-display text-h2 leading-none font-normal text-gold">
+          {heading}
+        </h2>
+      )
+    }
+    <WatchwordMark size="band" class="mt-6 lg:mt-10" />
+
+    {
+      verseParts.length > 0 && (
+        <blockquote class="ww-verse">
+          <p class="font-body">
+            &ldquo;
+            {verseParts.map((part) =>
+              part.hit ? (
+                <mark class="bg-transparent text-mint italic">{part.text}</mark>
+              ) : (
+                part.text
+              ),
+            )}
+            &rdquo;
+          </p>
+          {reference && <cite class="font-ui font-bold text-gold not-italic">{reference}</cite>}
+        </blockquote>
+      )
+    }
+
+    {
+      hasBody && (
+        <div class="ww-body">
+          <div>
+            {intro && <p class="whitespace-pre-line">{intro}</p>}
+            {moreBlocks.length > 0 && (
+              <details class="ww-more">
+                <summary class="font-ui font-bold text-gold-light">
+                  <span class="ww-rm">Read more</span>
+                  <span class="ww-rl">Read less</span>
+                </summary>
+                <div class="mt-4 space-y-4">
+                  <PortableText value={moreBlocks} variant="bare" />
+                </div>
+              </details>
+            )}
+          </div>
+          {(praise || proclaim) && (
+            <dl class="ww-pair">
+              {praise && (
+                <div>
+                  <dt class="font-body text-white-pure italic">Praise</dt>
+                  <dd>{praise}</dd>
+                </div>
+              )}
+              {proclaim && (
+                <div>
+                  <dt class="font-display text-mint">Proclaim</dt>
+                  <dd>{proclaim}</dd>
+                </div>
+              )}
+            </dl>
+          )}
+        </div>
+      )
+    }
+  </div>
+</section>
