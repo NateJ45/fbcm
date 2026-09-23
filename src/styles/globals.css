@@ -141,6 +141,12 @@
   --color-gold-light: #f0c86a; /* accent text on violet, purple, red, brown */
   --color-season-deep: #113a26; /* the rule button's hover fill, under white */
   --color-gold-hover: #dcae4a; /* the onDark rule button's hover fill, under ink */
+  /* Task 4 (2026-09-23): the Watchword band's night ground, and the two inks
+     the pledge and the letter set on paper. Both inks flip to a light value
+     under .dark; every pair is measured in theme-tokens.test.ts. */
+  --color-night: #0c241a; /* the Watchword band */
+  --color-purple-ink: #46275e; /* the pledge on soft paper */
+  --color-green-ink: #113a26; /* the letter on paper */
 
   /* Fonts. Three faces, and the family names are exactly what the installed
      @fontsource packages declare. No " Variable" suffix on either Castoro:
@@ -602,6 +608,9 @@
   --color-gold-light: #e8c068;
   --color-season-deep: #0f3522;
   --color-gold-hover: #c4973a;
+  --color-night: #0a1e15;
+  --color-purple-ink: #d9c8ea;
+  --color-green-ink: #a9dcbf;
 
   /* The alternating "muted" surface's real dark value. Unlike --color-bg-soft
      (which this gate forbids .dark from touching), --surface-soft is a plain
@@ -2637,7 +2646,8 @@ body::before {
    see); what moves is inside them. */
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal='arch'],
-  [data-reveal='mark'] {
+  [data-reveal='mark'],
+  [data-reveal='sign'] {
     opacity: 1;
     translate: none;
   }
@@ -2688,6 +2698,388 @@ body::before {
   }
   [data-reveal='mark']:not(.is-visible) .mark-rays path {
     stroke-dashoffset: 80;
+  }
+  /* The letter's gold underline draws in under the signature. */
+  [data-reveal='sign'] path {
+    stroke-dasharray: 420;
+    transition: stroke-dashoffset 1.4s 0.3s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  [data-reveal='sign']:not(.is-visible) path {
+    stroke-dashoffset: 420;
+  }
+}
+
+/* The four Who We Are bands (Task 4): the window hero, the Watchword band,
+   the pledge and the letter. Layout that utilities cannot say cheaply; the
+   colours stay token utilities in the components. */
+
+/* The window hero. The triple lancet drops --window-drop over the band's
+   bottom edge; the block after it reads --after-window to clear it. */
+.hero-window,
+.hero-window + *,
+:has(> .hero-window) + * {
+  --window-drop: clamp(64px, 7.5vw, 110px);
+}
+.hero-window + *,
+:has(> .hero-window) + * {
+  --after-window: var(--window-drop);
+}
+.hw-grid {
+  display: grid;
+  gap: clamp(28px, 4vw, 72px);
+  align-items: end;
+  padding-top: clamp(40px, 6vw, 88px);
+}
+.hw-text {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 40px;
+}
+.hw-text .season-line {
+  margin-bottom: clamp(22px, 3vw, 40px);
+}
+.hw-label {
+  margin: 0 0 0.5em;
+  font-size: clamp(26px, 2.4vw, 34px);
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+.hw-statement {
+  margin: 0 0 clamp(28px, 3.4vw, 48px);
+  font-size: clamp(40px, 4.3vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+}
+.hw-window {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.45fr 1fr;
+  gap: clamp(8px, 1.4vw, 20px);
+  align-items: end;
+  margin-bottom: calc(-1 * var(--window-drop));
+}
+.hw-window[data-count='2'] {
+  grid-template-columns: 1fr 1fr;
+  width: 70%;
+  justify-self: center;
+}
+.hw-window[data-count='1'] {
+  grid-template-columns: 1fr;
+  width: 46%;
+  justify-self: center;
+}
+.hw-side {
+  --arch-ratio: 100 / 228;
+}
+.hw-mid {
+  --arch-ratio: 100 / 212;
+}
+.hw-rays {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 46%;
+  transform: translate(-50%, 6%);
+  pointer-events: none;
+}
+.hw-rays .mark-rays {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+@media (min-width: 901px) {
+  .hw-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  .hw-text {
+    padding-bottom: clamp(56px, 7vw, 112px);
+  }
+}
+@media (max-width: 620px) {
+  .hw-window {
+    margin-inline: calc(8px - var(--spacing-gutter));
+    grid-template-columns: 0.78fr 1.9fr 0.78fr;
+    gap: 8px;
+  }
+  .hw-side {
+    --arch-ratio: 100 / 250;
+  }
+  .hw-mid {
+    --arch-ratio: 100 / 158;
+  }
+  .hw-rays {
+    width: 40%;
+  }
+}
+
+/* The Watchword band. */
+.ww-wrap {
+  padding-block: calc(clamp(80px, 9vw, 150px) + var(--after-window, 0px)) clamp(72px, 9vw, 140px);
+}
+.ww-verse {
+  display: grid;
+  gap: 18px 40px;
+  align-items: end;
+  margin: clamp(48px, 6vw, 96px) 0 0;
+}
+.ww-verse p {
+  max-width: 21em;
+  margin: 0;
+  font-size: clamp(27px, 3.3vw, 48px);
+  line-height: 1.2;
+  text-indent: -0.42em;
+}
+.ww-verse cite {
+  font-size: 20px;
+}
+.ww-body {
+  display: grid;
+  font-size: 19px;
+  gap: clamp(32px, 6vw, 100px);
+  align-items: start;
+  margin-top: clamp(56px, 6vw, 96px);
+}
+.ww-more summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 1em;
+  border-bottom: 2px solid;
+  cursor: pointer;
+  list-style: none;
+}
+.ww-more summary::-webkit-details-marker {
+  display: none;
+}
+.ww-pair {
+  margin: 0;
+  border-top: 1px solid rgb(201 151 44 / 0.5);
+}
+.ww-pair > div {
+  display: grid;
+  gap: 8px 20px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-bottom: 1px solid rgb(201 151 44 / 0.5);
+}
+.ww-pair dt {
+  font-size: 44px;
+  line-height: 1;
+}
+.ww-pair dt.font-display {
+  font-size: 32px;
+}
+.ww-pair dd {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.45;
+}
+
+@media (min-width: 621px) {
+  .ww-verse {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .ww-pair > div {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+}
+
+/* The pledge: a responsive reading. */
+.pl-grid {
+  display: grid;
+  gap: clamp(40px, 6vw, 100px);
+}
+.pl-side {
+  display: flex;
+  flex-direction: column;
+}
+.pl-door {
+  max-width: 360px;
+  margin-top: 40px;
+}
+.pl-rubric {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin: 0 0 34px;
+  font-size: 20px;
+}
+.pl-rubric svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  transform: translateY(2px);
+}
+.pl-reading {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pl-rd {
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr) 8.4em;
+  column-gap: clamp(14px, 2vw, 28px);
+  align-items: baseline;
+  padding: 26px 0;
+  border-top: 1px solid var(--hair);
+}
+.pl-rd p {
+  margin: 0;
+  font-size: clamp(25px, 2.4vw, 35px);
+  line-height: 1.2;
+}
+.pl-open {
+  padding-top: 0;
+  border-top: 0;
+}
+.pl-open p {
+  font-size: clamp(32px, 3.4vw, 50px);
+  line-height: 1.1;
+}
+.pl-who {
+  font-size: 19px;
+  letter-spacing: 0.06em;
+}
+.pl-turn {
+  display: block;
+  padding-left: 1.3em;
+}
+.pl-ref {
+  font-size: 17px;
+  line-height: 1.35;
+  text-align: right;
+}
+.pl-after {
+  margin: clamp(40px, 5vw, 72px) 0 0 calc(3em + clamp(14px, 2vw, 28px));
+  max-width: 33em;
+  font-size: 19.5px;
+  line-height: 1.6;
+}
+.pl-sep {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  height: 22px;
+  margin-bottom: 30px;
+}
+@media (min-width: 901px) {
+  .pl-grid {
+    grid-template-columns: minmax(0, 3.5fr) minmax(0, 8.5fr);
+  }
+  /* The door takes whatever height the reading leaves it, so the two columns
+     end together (the prototype left an empty patch under the photo). */
+  .pl-door {
+    flex: 1;
+    max-width: none;
+    min-height: 320px;
+    max-height: 820px;
+  }
+  .pl-door .arch {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}
+@media (max-width: 620px) {
+  .pl-rd {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 8px;
+    padding: 22px 0;
+  }
+  .pl-who {
+    font-size: 16px;
+  }
+  .pl-ref {
+    text-align: left;
+  }
+  .pl-turn {
+    padding-left: 0.9em;
+  }
+  .pl-after {
+    margin-left: 0;
+  }
+}
+
+/* The letter. */
+.lt-grid {
+  display: grid;
+  gap: clamp(40px, 6vw, 110px);
+  align-items: start;
+}
+.lt-portrait {
+  margin-inline: 8%;
+}
+.lt-sheet {
+  max-width: 66ch;
+}
+.lt-body {
+  font-size: 21px;
+  line-height: 1.66;
+}
+.lt-body > * + * {
+  margin-top: 1em;
+}
+.lt-body > p:first-child {
+  font-size: 24px;
+  line-height: 1.52;
+  color: var(--color-green-ink);
+}
+.lt-body > p:first-child::first-letter {
+  float: left;
+  padding: 0.05em 0.1em 0 0;
+  font-family: var(--font-display);
+  font-size: 3.5em;
+  line-height: 0.8;
+  color: var(--color-gold-ink);
+}
+.lt-body blockquote {
+  margin-block: 1.3em;
+  font-size: clamp(28px, 2.6vw, 36px);
+  font-style: italic;
+  line-height: 1.25;
+  color: var(--color-green-ink);
+}
+.lt-sign {
+  display: inline-block;
+  margin-top: 44px;
+}
+.lt-names {
+  margin: 0;
+  font-size: clamp(46px, 4.6vw, 66px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transform: rotate(-4deg);
+  transform-origin: left bottom;
+}
+.lt-sign svg {
+  display: block;
+  width: clamp(240px, 24vw, 340px);
+  margin: -2px 0 0 -6px;
+  overflow: visible;
+  fill: none;
+  stroke: var(--color-gold);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+@media (min-width: 901px) {
+  .ww-body {
+    grid-template-columns: minmax(0, 33em) minmax(0, 1fr);
+  }
+  .lt-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  .lt-portrait {
+    position: sticky;
+    top: calc(var(--header-offset) + 2rem);
+    margin: 0;
+  }
+}
+@media (max-width: 620px) {
+  .lt-body {
+    font-size: 19px;
+  }
+  .lt-body > p:first-child {
+    font-size: 21px;
   }
 }
 

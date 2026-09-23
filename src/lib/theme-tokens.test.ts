@@ -341,6 +341,31 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
   ['color-goal-ink-on-gold', 'color-gold-hover', 'the onDark rule button label, hovered', 'body'],
   // The watchword mark's ampersand and rays: brand gold, only ever 24px+.
   ['color-gold', 'color-season-green', 'the mark ampersand on a green band', 'large'],
+  // The window hero (Task 4): the small "Who We Are" label on the green band.
+  ['color-gold-light', 'color-season-green', 'the window hero label on the green band', 'body'],
+  // The Watchword band's night ground (Task 4): every ink set on it.
+  ['color-white-pure', 'color-night', 'the mark "Praise" on the night band', 'body'],
+  ['color-bg', 'color-night', 'body text on the night band', 'body'],
+  ['color-mint', 'color-night', 'the highlighted verse words and PROCLAIM', 'body'],
+  ['color-gold-light', 'color-night', 'the "Read more" link on the night band', 'body'],
+  ['color-gold', 'color-night', 'the heading, the reference and the ampersand', 'body'],
+];
+
+// Inks that FLIP with the theme, measured on the ground each theme actually
+// paints under them. The light ground is a brand @theme token; the dark one is
+// the shadcn semantic the band resolves to under .dark (read through the whole
+// dark scope), because --color-bg and --color-bg-soft deliberately never flip.
+// [ink, light ground, dark ground, why]
+const THEMED_IDENTITY_PAIRS: Array<[string, string, string, string]> = [
+  ['color-purple-ink', 'color-bg-soft', 'muted', 'the pledge heading, rubric and turns'],
+  ['color-gold-ink', 'color-bg-soft', 'muted', 'the pledge references'],
+  [
+    'color-green-ink',
+    'color-bg',
+    'background',
+    'the letter heading, first paragraph and signature',
+  ],
+  ['color-gold-ink', 'color-bg', 'background', "the letter's drop cap"],
 ];
 
 const IDENTITY_TOKENS = [
@@ -359,6 +384,9 @@ const IDENTITY_TOKENS = [
   'color-gold-light',
   'color-season-deep',
   'color-gold-hover',
+  'color-night',
+  'color-purple-ink',
+  'color-green-ink',
 ];
 
 test('every church identity token is declared in @theme AND redeclared in .dark', () => {
@@ -367,6 +395,19 @@ test('every church identity token is declared in @theme AND redeclared in .dark'
   const missingDark = IDENTITY_TOKENS.filter((n) => !dark[`--${n}`]);
   assert.deepEqual(missingLight, [], `@theme is missing ${missingLight.join(', ')}`);
   assert.deepEqual(missingDark, [], `.dark does not redeclare ${missingDark.join(', ')}`);
+});
+
+test('every themed church ink clears AA on the ground each theme paints', (t) => {
+  for (const [fg, lightBg, darkBg, why] of THEMED_IDENTITY_PAIRS) {
+    for (const [scope, r] of [
+      ['light', contrastRatio(token(fg), token(lightBg))],
+      ['dark', contrastRatio(darkToken(fg), darkToken(darkBg))],
+    ] as const) {
+      const bg = scope === 'light' ? lightBg : darkBg;
+      t.diagnostic(`${scope}, ${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
+      assert.ok(r >= AA_BODY_TEXT, `${scope}, ${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
+    }
+  }
 });
 
 for (const scope of ['light', 'dark'] as const) {

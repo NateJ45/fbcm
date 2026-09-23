@@ -34,6 +34,9 @@ import GiveBand from '@/components/sections/GiveBand.astro';
 import Hours from '@/components/sections/Hours.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
 import LinkCards from '@/components/sections/LinkCards.astro';
+import WatchwordBand from '@/components/sections/WatchwordBand.astro';
+import PledgeReading from '@/components/sections/PledgeReading.astro';
+import PastorsLetter from '@/components/sections/PastorsLetter.astro';
 import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
@@ -516,6 +519,16 @@ const wrapAttrs = (key: string | undefined) =>
             frame={blockIndex === spares.statementIndex ? spares.statement : null}
             headingId={headingId}
           />
+        ) : s._type === 'watchwordSection' ? (
+          <WatchwordBand block={s} headingId={headingId} />
+        ) : s._type === 'pledgeSection' ? (
+          <PledgeReading block={s} headingId={headingId} />
+        ) : s._type === 'letterSection' ? (
+          <PastorsLetter block={s} headingId={headingId} settings={settings} />
+        ) : s._type === 'goalsSection' ? (
+          // The four goal bands arrive in Task 5; until then the block renders
+          // nothing, rather than falling through to the unknown-type warning.
+          <Fragment />
         ) : /* scaffold:end */ s._type === 'dynamicListSection' ? (
           <DynamicList
             eyebrow={s.eyebrow}

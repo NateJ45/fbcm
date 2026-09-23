@@ -59,6 +59,16 @@ import GiveBand from '@/components/sections/GiveBand.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
 import LinkCards from '@/components/sections/LinkCards.astro';
 import Hours from '@/components/sections/Hours.astro';
+// The Who We Are bands (Task 4, 2026-09-23).
+import WatchwordBand from '@/components/sections/WatchwordBand.astro';
+import PledgeReading from '@/components/sections/PledgeReading.astro';
+import PastorsLetter from '@/components/sections/PastorsLetter.astro';
+import type {
+  ProjectedWatchwordSection,
+  ProjectedPledgeSection,
+  ProjectedLetterSection,
+  SanityImageObject,
+} from '@/lib/pageBuilder.types';
 // scaffold:end
 // Task 7: temporary hero fixtures (frames, layout, facts). No hero with frames
 // exists in the dataset yet (plan 2b seeds one) so these two calls are the
@@ -553,6 +563,158 @@ const LINK_CARDS_FIXTURE = {
     },
   ],
 };
+
+// =============================================================================
+// The Who We Are bands (Task 4, 2026-09-23)
+// =============================================================================
+// The church's own words from the approved prototype (and the live Wix page
+// before it), and photographs from this project's own library with the
+// library's alt text. The window hero's season is pinned to a fixed date so
+// the band colour is part of the baseline and never moves with the build.
+const WINDOW_DATE = new Date('2026-09-23T12:00:00Z');
+const WINDOW_FRAMES: SanityImageObject[] = [
+  {
+    asset: { _ref: 'image-bad93d7a2b560248a8b1b249154c4bbc1ed83af5-1600x1064-jpg' },
+    hotspot: { x: 0.66, y: 0.4 },
+    alt: 'Two smiling girls, one with red hair, pose together in front of colorful stained glass windows.',
+  },
+  {
+    asset: { _ref: 'image-a851f71a5d2f049740bbc1a4fbe3b71222be5ef3-3000x1203-jpg' },
+    hotspot: { x: 0.58, y: 0.4 },
+    alt: 'An older man and woman posing together in a kitchen.',
+  },
+  {
+    asset: { _ref: 'image-4f64da601a5d01fae1fa8ac50a3898207b6e7f24-2400x1600-jpg' },
+    hotspot: { x: 0.68, y: 0.4 },
+    alt: 'A young girl smiles outdoors, standing among tall purple coneflowers in a garden.',
+  },
+];
+const WINDOW_HERO = {
+  eyebrow: 'Who We Are',
+  headline: 'We’re a Spirit-led people gathered to join Christ’s presence in our community.',
+  scriptAccent: 'Christ’s presence',
+  primaryCta: {
+    label: 'Praise & Proclaim, our watchword',
+    linkType: 'external' as const,
+    externalUrl: '#styleguide-watchword',
+    openInNewTab: false,
+  },
+  secondaryCta: {
+    label: 'A note from our pastors',
+    linkType: 'external' as const,
+    externalUrl: '#styleguide-letter',
+    openInNewTab: false,
+  },
+};
+
+/** Portable Text paragraphs (and a quote) for a fixture, keyed. */
+function ptBlocks(prefix: string, paras: Array<string | { quote: string }>) {
+  return paras.map((p, i) => ({
+    _type: 'block' as const,
+    _key: `${prefix}-${i}`,
+    style: typeof p === 'string' ? ('normal' as const) : ('blockquote' as const),
+    markDefs: [],
+    children: [
+      {
+        _type: 'span' as const,
+        _key: `${prefix}-${i}-s`,
+        marks: [],
+        text: typeof p === 'string' ? p : p.quote,
+      },
+    ],
+  }));
+}
+
+const WATCHWORD_FIXTURE: ProjectedWatchwordSection = {
+  _key: 'sg-watchword',
+  _type: 'watchwordSection',
+  heading: 'Our Watchword',
+  verse:
+    'Give praise to the Lord, proclaim his name; make known among the nations what he has done, and proclaim that his name is exalted.',
+  reference: 'Isaiah 12:4',
+  intro:
+    'This statement is our congregational watchword. A watchword is a short reminder and a promise from scripture about who God is and who he has called his people to be.',
+  more: ptBlocks('ww', [
+    'When the people of God were in exile, the prophet Isaiah spoke. He delivered a message from God about what it would be like “in that day” when they returned. The people would return, praising and proclaiming the name of the Lord, and making him known to all nations.',
+    'At First Baptist Church Muncie, we believe the day of the Lord’s favor has come in Jesus. The short of it is that Jesus really does change everything. And our goal for this season is to praise and proclaim his name.',
+  ]),
+  praise: 'That our purpose is worship, lifting up the name of God: Father, Son and Holy Spirit.',
+  proclaim: 'That our joy is to share the Good News of Jesus with our neighbors and the world.',
+};
+
+const PLEDGE_FIXTURE: ProjectedPledgeSection = {
+  _key: 'sg-pledge',
+  _type: 'pledgeSection',
+  heading: 'Our Pledge',
+  intro: 'Our commitment to one another is drawn from scripture. And it’s this:',
+  instruction: 'When a member joins, we say this pledge together as a church.',
+  opening: 'We pledge ourselves to be the family of God for you in this place:',
+  lines: [
+    {
+      _key: 'pl-1',
+      _type: 'pledgeLine',
+      text: 'Bearing your burdens, as you bear ours.',
+      reference: 'Galatians 6:2',
+    },
+    {
+      _key: 'pl-2',
+      _type: 'pledgeLine',
+      text: 'Encouraging you in the faith, as we are encouraged by you.',
+      reference: '1 Thessalonians 5:11',
+    },
+    {
+      _key: 'pl-3',
+      _type: 'pledgeLine',
+      text: 'Delighting in the Lord’s ways.',
+      reference: 'Psalm 86:11–13, Psalm 37:3–6',
+    },
+    {
+      _key: 'pl-4',
+      _type: 'pledgeLine',
+      text: 'Offering our lives as a living sacrifice: holy and pleasing to God.',
+      reference: 'Romans 12:1',
+    },
+  ],
+  after: ptBlocks('pa', [
+    'The life of faith isn’t meant to be lived alone. Before he was crucified, Christ’s prayer to the Father was that his disciples, and all believers after them, would be one, as he and the Father are one (John 17:20–22).',
+    'At the same time, that unity comes with wonderful God-given differences. We’re not clones who all think, look, or act exactly alike! That is what the Apostle Paul means when he talks about the church as the body of Christ, with many different parts and many different gifts (1 Corinthians 12:12–30).',
+  ]),
+  image: {
+    _type: 'image',
+    asset: { _ref: 'image-e7d5db277cd8080b0eb570aa873ab6ac198dd999-2257x2257-jpg' },
+    hotspot: { x: 0.58, y: 0.4 },
+    alt: 'Two young women smiling together in the baptismal pool, one of them just baptized.',
+  },
+};
+
+const LETTER_FIXTURE: ProjectedLetterSection = {
+  _key: 'sg-letter',
+  _type: 'letterSection',
+  heading: 'A Note From Our Pastors',
+  body: ptBlocks('lt', [
+    'If you’re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you’re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we’d love for you to join us for worship too!',
+    'After all, Jesus did not say to his first followers: “Figure it all out, and then get back to me.” He said to them,',
+    { quote: '“Come and see.” John 1:39' },
+    'Even so, we know people curious about a church wonder what a particular church, including its pastors, “are all about.”',
+    'We love the Good News, the Gospel, that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He ascended to heaven, and he will come again in glory to make all that is wrong right. That’s life-changing, and truly good, news. It’s news good enough to set all of us free.',
+    'Finally, we would love for you to join us this Sunday, or anytime we’re gathered to encounter the same Christ who was, and is, and will come again, as we meet him in worship, the word, and the Lord’s table. “Come and see!”',
+  ]),
+  signature: 'Kendall & Jonathan',
+  signatureNote: 'Co-Pastors, First Baptist Church Muncie',
+  portrait: {
+    _type: 'image',
+    asset: { _ref: 'image-d7aa65ea099b67f8adb73eb7f5bed6855f907133-2400x1714-jpg' },
+    hotspot: { x: 0.71, y: 0.5 },
+    alt: 'A man and a woman smiling together in the sanctuary balcony, arched windows and pews visible behind them.',
+  },
+};
+/** The letterhead reads Site settings; fixed here so the baseline never moves. */
+const LETTER_SETTINGS = {
+  title: 'First Baptist Church Muncie',
+  address: '309 East Adams Street',
+  city: 'Muncie',
+  state: 'Indiana',
+};
 // scaffold:end
 ---
 
@@ -852,6 +1014,33 @@ const LINK_CARDS_FIXTURE = {
       </p>
     </div>
   </section>
+
+  {
+    /* The Who We Are bands (Task 4), in page order: the window hero drops
+      its lancets into the Watchword band that follows it. */
+  }
+  <Hero
+    eyebrow={WINDOW_HERO.eyebrow}
+    headline={WINDOW_HERO.headline}
+    scriptAccent={WINDOW_HERO.scriptAccent}
+    backgroundImages={WINDOW_FRAMES}
+    primaryCta={WINDOW_HERO.primaryCta}
+    secondaryCta={WINDOW_HERO.secondaryCta}
+    layout="window"
+    date={WINDOW_DATE}
+    headingId="styleguide-hero-window"
+  />
+  <div id="styleguide-watchword">
+    <WatchwordBand block={WATCHWORD_FIXTURE} headingId="styleguide-watchword-h" />
+  </div>
+  <PledgeReading block={PLEDGE_FIXTURE} headingId="styleguide-pledge" />
+  <div id="styleguide-letter">
+    <PastorsLetter
+      block={LETTER_FIXTURE}
+      settings={LETTER_SETTINGS}
+      headingId="styleguide-letter-h"
+    />
+  </div>
 
   {/* Task 7: temporary hero fixtures, see the note by the fixture data above. */}
   <Hero

@@ -11,6 +11,15 @@
 //      the photo first on mobile.
 //   3) "text" hero (interior pages with no photograph) — clean editorial
 //      heading on paper with eyebrow + headline + subhead.
+//   4) "window" hero (layout="window", 2026-09-23, the Who We Are "alive"
+//      pass; the prototype's `.opener`) — a band in the colour of the church
+//      season (churchSeason(), the same date SeasonLine reads), the season
+//      line, the eyebrow as a small gold label, the headline as a sentence in
+//      Castoro italic with the script-accent word in mint, and the first
+//      three frames as a triple lancet (middle largest, rays above it) that
+//      drops over the band's bottom edge into the next band. Two frames draw
+//      two lancets, one draws one; none draws the words alone. The header does
+//      NOT overlay it (heroOverlay.ts): the band is a colour, not a picture.
 //
 // THE HEADER OVERLAYS THIS SECTION (plan 3 task 3). On a page that opens with
 // an image hero the bar is transparent and is pulled down onto the picture by
@@ -34,6 +43,9 @@ import { splitHeadingAccent } from '@/lib/heading-accent';
 import { splitStega } from '@/lib/preview-stega';
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
 import { staticSunday, timeOnly } from '@/lib/live-sunday';
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import SeasonLine from '@/components/church/SeasonLine.astro';
+import { churchSeason, type SeasonToken } from '@/lib/church-year';
 
 interface CtaBlock {
   label?: string;
@@ -66,10 +78,9 @@ interface Props {
   /**
    * "full" (default when unset) = photo behind the words, full-bleed, as the
    * hero always rendered. "split" = cream two-column band, words left, first
-   * photo right. "window" = three arched photos, the middle one largest
-   * (schema option added Task 3, 2026-09-23; this component does not draw it
-   * yet, so it renders as "full" until a later task implements it). Only
-   * "full"/"split" are meaningful when an image is present.
+   * photo right. "window" = the season band with up to three arched
+   * photos, the middle one largest (2026-09-23). "window" draws with or
+   * without photos; "full"/"split" only differ when an image is present.
    */
   layout?: 'full' | 'split' | 'window';
   /** Up to three short facts (when, where, online) shown under the subhead. */
@@ -100,6 +111,9 @@ interface Props {
    * their own scriptAccent value through to this component.
    */
   scriptAccent?: string;
+  /** The window layout's season date. Defaults to now (the build date); the
+      styleguide pins it so its baseline never moves with the calendar. */
+  date?: Date;
 }
 
 const {
@@ -116,6 +130,7 @@ const {
   size = 'short',
   serviceTime,
   scriptAccent,
+  date,
 } = Astro.props as Props;
 
 const heroFacts = (facts ?? []).filter((f) => f?.label || f?.value).slice(0, 3);
@@ -211,9 +226,120 @@ const imageHeroHeight = size === 'tall' ? 'min-h-[100svh]' : 'min-h-[72svh]';
 const headlineOpts = { tall: size === 'tall' };
 const scale = headlineScale(headline, headlineOpts);
 const displayHeadlineClass = headlineClass(scale, headlineOpts);
+
+// THE WINDOW LAYOUT. The band takes the colour of the church season from the
+// same pure function SeasonLine reads (CLAUDE.md rule 15: derived from the
+// date, never a field), so the line and the band always agree. Classes are
+// written out in full because Tailwind reads source text. Gold (Easter) and
+// white (Christmas) are light grounds: the ink turns dark, the accent word is
+// told apart by its roman face alone, and both buttons become the season-green
+// rule button, whose white label is measured on its own fill.
+const isWindow = layout === 'window';
+const seasonDate = date ?? new Date();
+const seasonToken: SeasonToken = churchSeason(seasonDate).token;
+interface WindowTone {
+  band: string;
+  ink: string;
+  accent: string;
+  label: string;
+  light: boolean;
+}
+const DARK_INK = { ink: 'text-white-pure', label: 'text-gold-light', light: false };
+const LIGHT_INK = { ink: 'text-goal-ink-on-gold', label: 'text-goal-ink-on-gold', light: true };
+const WINDOW_TONE: Record<SeasonToken, WindowTone> = {
+  green: { band: 'bg-season-green', accent: 'text-mint', ...DARK_INK },
+  violet: { band: 'bg-season-violet', accent: 'text-gold-light', ...DARK_INK },
+  purple: { band: 'bg-season-purple', accent: 'text-gold-light', ...DARK_INK },
+  red: { band: 'bg-season-red', accent: 'text-gold-light', ...DARK_INK },
+  gold: { band: 'bg-season-gold', accent: '', ...LIGHT_INK },
+  white: { band: 'bg-season-white', accent: '', ...LIGHT_INK },
+};
+const tone = WINDOW_TONE[seasonToken];
+// Up to three frames. With three, the middle (largest) light is frames[0],
+// the one the editor put first ("put the best one first"), flanked by the
+// second and third. Two or one sit centred.
+const windowFrames = isWindow ? effectiveImages.slice(0, 3) : [];
+const windowOrder =
+  windowFrames.length === 3 ? [windowFrames[1], windowFrames[0], windowFrames[2]] : windowFrames;
+const middleIndex = windowFrames.length === 3 ? 1 : windowFrames.length === 1 ? 0 : -1;
 ---
 
-{hasImage && layout === 'split' ? (
+{isWindow ? (
+  <section
+    class:list={['hero-window relative z-[2] overflow-x-clip', tone.band, tone.ink]}
+    aria-labelledby={headingId}
+  >
+    <div class="hw-grid mx-auto max-w-content px-gutter">
+      <div class="hw-text">
+        <SeasonLine date={seasonDate} />
+        {eyebrow && <p class:list={['hw-label font-display uppercase', tone.label]}>{eyebrow}</p>}
+        {/* The sentence treatment from headline-scale (reading face, sentence
+            case), in italic at the prototype's size; the accent word is the
+            one existing script-accent split, set roman in the accent ink
+            rather than in the script face. */}
+        <h1
+          id={headingId}
+          class:list={[headlineClass('sentence', headlineOpts), 'hw-statement italic']}
+        >
+          {scriptFound ? (
+            <>
+              {scriptBefore}<em class:list={['not-italic', tone.accent]}>{scriptWord}</em>{scriptAfter}
+            </>
+          ) : (
+            headline
+          )}
+        </h1>
+        {subhead && (
+          <p class="lede mb-8 max-w-[34ch] font-body text-lede">
+            {subheadParts.map((part) => (part.type === 'em' ? <em>{part.value}</em> : part.value))}
+          </p>
+        )}
+        {(primaryCta || secondaryCta) && (
+          <div class="flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
+            {primaryCta && <CtaLink cta={primaryCta} variant="rule" onDark={!tone.light} />}
+            {secondaryCta &&
+              (tone.light ? (
+                <CtaLink cta={secondaryCta} variant="rule" />
+              ) : (
+                <CtaLink cta={secondaryCta} variant="link" onDark />
+              ))}
+          </div>
+        )}
+      </div>
+      {windowOrder.length > 0 && (
+        <div class="hw-window" data-count={windowOrder.length}>
+          {/* The watchword's rays, drawn once over the middle (or only) light.
+              The outer box positions them; the inner one rides the reveal
+              observer, whose reduced-motion reset would cancel a transform. */}
+          {middleIndex >= 0 && (
+            <div class:list={['hw-rays', tone.accent]} aria-hidden="true">
+              <div data-reveal="mark">
+                <svg class="mark-rays" viewBox="0 0 200 90">
+                  <path d="M100 80V14" />
+                  <path d="M84 80L56 26" />
+                  <path d="M116 80L144 26" />
+                  <path d="M70 84L20 50" />
+                  <path d="M130 84L180 50" />
+                </svg>
+              </div>
+            </div>
+          )}
+          {windowOrder.map((frame, i) => (
+            <ArchFrame
+              image={frame}
+              shape="lancet"
+              width={i === middleIndex ? 900 : 600}
+              sizes={i === middleIndex ? '(min-width: 901px) 24vw, 52vw' : '(min-width: 901px) 17vw, 22vw'}
+              alt={frame?.alt ?? ''}
+              loading="eager"
+              class={i === middleIndex ? 'hw-mid' : 'hw-side'}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+) : hasImage && layout === 'split' ? (
   <section class="bg-background text-foreground" aria-labelledby={headingId}>
     {/* Split hero: words left, photo right, 7:5 at lg. Stacked with the photo
         first on mobile so the page doesn't open on a wall of text. The words
