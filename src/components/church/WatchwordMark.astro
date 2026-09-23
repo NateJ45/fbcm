@@ -9,9 +9,10 @@
 // is the same mark at roughly half the scale. Both sizes are set in the
 // "Church identity" block of globals.css (`.mark-band` / `.mark-hero`).
 //
-// Colours are fixed, because the mark is only ever set on a dark green band:
-// white, brand gold (3.32:1 on the lightest green, large text only, asserted
-// in theme-tokens.test.ts) and mint. It is one image to a screen reader
+// Colours are fixed, because the mark is only ever set on a dark brand band
+// (indigo or indigo-dark): white "Praise", and brand gold for the ampersand,
+// PROCLAIM and the rays (AA body text on both grounds, asserted in
+// theme-tokens.test.ts). It is one image to a screen reader
 // ("Praise and Proclaim"), with the visible letters hidden, so nobody hears
 // "Praise ampersand Proclaim" spelled out in pieces.
 //
@@ -37,7 +38,7 @@ const { size, class: extraClass = '' } = Astro.props;
     <span class="mark-praise font-body text-white-pure italic">Praise</span>
     <span class="mark-amp font-body text-gold italic">&amp;</span>
   </span>
-  <span class="mark-proclaim font-display text-mint" aria-hidden="true">
+  <span class="mark-proclaim font-display text-gold" aria-hidden="true">
     Proclaim
     <svg class="mark-rays text-gold" viewBox="128 0 74 160">
       <path d="M150 80 H198"></path>

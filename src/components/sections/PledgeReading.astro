@@ -25,7 +25,7 @@
 // two columns end together and the photo never makes the band taller.
 //
 // On the site's soft-paper ground (bg-muted), so it follows the theme; the
-// purple and gold-brown inks both flip under .dark and are measured on the
+// brand indigo and gold-brown inks both flip under .dark and are measured on the
 // ground each theme paints (theme-tokens.test.ts, THEMED_IDENTITY_PAIRS).
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import PortableText from '@/components/PortableText';
@@ -63,7 +63,7 @@ const QF =
     <div class="pl-side">
       {
         heading && (
-          <h2 id={headingId} class="font-display text-title leading-none text-purple-ink">
+          <h2 id={headingId} class="font-display text-title leading-none text-indigo">
             {heading}
           </h2>
         )
@@ -76,14 +76,14 @@ const QF =
         sizes="(min-width: 901px) 26vw, 90vw"
         alt={image?.alt ?? ''}
         class="pl-door"
-        style="--arch-mould: var(--color-purple-ink)"
+        style="--arch-mould: var(--color-indigo)"
       />
     </div>
 
     <div>
       {
         instruction && (
-          <p class="pl-rubric font-body text-purple-ink italic">
+          <p class="pl-rubric font-body text-indigo italic">
             <svg viewBox="-20 -20 40 40" aria-hidden="true">
               <path d={QF} fill="currentColor" />
             </svg>
@@ -95,8 +95,8 @@ const QF =
         {
           opening && (
             <li class="pl-rd pl-open" data-reveal>
-              <span class="pl-who font-display text-purple-ink">All</span>
-              <p class="font-body text-purple-ink italic">{opening}</p>
+              <span class="pl-who font-display text-indigo">All</span>
+              <p class="font-body text-indigo italic">{opening}</p>
             </li>
           )
         }
@@ -106,11 +106,11 @@ const QF =
             const delay = (i + 1) * 110;
             return (
               <li class="pl-rd" data-reveal style={`transition-delay: ${delay}ms`}>
-                <span class="pl-who font-display text-purple-ink">All</span>
+                <span class="pl-who font-display text-indigo">All</span>
                 <p class="font-body">
                   {head}
                   {tail && ' '}
-                  {tail && <span class="pl-turn text-purple-ink italic">{tail}</span>}
+                  {tail && <span class="pl-turn text-indigo italic">{tail}</span>}
                 </p>
                 {line.reference && (
                   <span class="pl-ref font-body text-gold-ink italic">{line.reference}</span>
@@ -125,7 +125,7 @@ const QF =
         afterBlocks.length > 0 && (
           <div class="pl-after">
             <svg
-              class="pl-sep text-purple-ink"
+              class="pl-sep text-indigo"
               viewBox="0 0 440 22"
               preserveAspectRatio="xMinYMid meet"
               aria-hidden="true"

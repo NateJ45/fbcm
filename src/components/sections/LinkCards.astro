@@ -45,8 +45,8 @@
 //
 // THE DOORS (2026-09-23, the Who We Are "alive" pass; the prototype's
 // `.next`). When EVERY card carries its own photograph (the optional `image`
-// on a card, added then), the band is drawn as arched doors on the green
-// ground instead: each photo in a door arch, the title, the sentence and a
+// on a card, added then), the band is drawn as arched doors on the brand
+// indigo ground instead: each photo in a door arch, the title, the sentence and a
 // rule button on a paper panel beneath it, the whole card still the one link.
 // cardsPictured() in src/lib/spare-images.ts is the test, and the same test
 // keeps such a band out of the spare-image hand-out, so it is never also the
@@ -54,8 +54,8 @@
 // half a row of doors is not a designed state. Inside a door the photo is
 // decorative (alt=""): the card's visible title already names the link, and
 // the destination, not the picture, is what the link's name should say
-// (WCAG technique H2). The band's eyebrow sits above the heading in gold-light
-// (5.11:1 on the green, theme-tokens.test.ts).
+// (WCAG technique H2). The band's eyebrow sits above the heading in brand
+// gold (5.60:1 on the indigo, theme-tokens.test.ts).
 //
 // A CONTENT block: the alternating surface arrives as a prop from
 // SectionRenderer, and is ignored in the statement and door forms, which
@@ -122,11 +122,11 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
 {
   doors && (
     <section
-      class="lc-band bg-season-green text-white-pure"
+      class="lc-band bg-band-indigo text-white-pure"
       aria-labelledby={heading ? headingId : undefined}
     >
       <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
-        {eyebrow && <p class="mb-4 font-ui text-ui text-gold-light">{eyebrow}</p>}
+        {eyebrow && <p class="mb-4 font-ui text-ui text-gold">{eyebrow}</p>}
         {heading && (
           <h2 id={headingId} class="mb-[clamp(36px,4vw,64px)] font-display text-title leading-none">
             {heading}
@@ -147,16 +147,14 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
                   style={`transition-delay: ${i * 100}ms`}
                 />
                 <span class="lc-body bg-background text-foreground">
-                  <span class="font-display text-h3 leading-[1.05] text-green-ink">
-                    {card.title}
-                  </span>
+                  <span class="font-display text-h3 leading-[1.05] text-indigo">{card.title}</span>
                   {card.body && (
                     <span class="mt-2.5 mb-6 text-lg leading-[1.45] text-muted-foreground">
                       {card.body}
                     </span>
                   )}
                   {card.cta?.label && (
-                    <span class="btn-rule mt-auto inline-flex items-center gap-3 self-start bg-season-green font-ui font-bold text-white-pure transition-colors group-hover:bg-season-deep">
+                    <span class="btn-rule mt-auto inline-flex items-center gap-3 self-start bg-band-indigo font-ui font-bold text-white-pure transition-colors group-hover:bg-band-deep">
                       {card.cta.label}
                       <svg aria-hidden="true" viewBox="0 0 13 22">
                         <path d="M2 5L10 1" />

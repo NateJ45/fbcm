@@ -97,6 +97,8 @@ the existing stack; none needs a new dependency.
    Computed at build time from the date (CLAUDE.md rule 15: derived, never typed), so
    the site changes with the season on its own. The nightly rebuild is already there.
    Very few church sites do this, and it is exactly what a church would notice.
+   _Dropped by the owner on 2026-09-23: a Baptist church does not follow the church
+   year; the bands use the church's own brand colours instead._
 2. **Praise and Proclaim as a mark.** A typographic lockup of the two words, used once
    per page at most: the home hero, the Who We Are opener, the footer.
 3. **The four W's.** Worship, The Way, Witness, Work, each with a small drawn glyph in

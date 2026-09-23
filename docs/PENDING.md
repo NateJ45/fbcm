@@ -707,11 +707,11 @@ now ties the schema max and the slice with a drift test.
   balcony, so the congregation is seen from behind. A shot from the front of the
   sanctuary, faces toward the camera, is the one to ask the church for; swap it in
   `scripts/data/page-images.json` or in the Studio.
-- **The window hero shows no mint accent word.** The window layout can render the
-  hero's `scriptAccent` word in mint, but `heroSection` has no `scriptAccent` field
+- **The window hero shows no gold accent word.** The window layout can render the
+  hero's `scriptAccent` word in brand gold, but `heroSection` has no `scriptAccent` field
   (only `richTextSection` and its siblings do) and `SectionRenderer` does not pass one
   through to `Hero.astro` either way, so the headline (the Site settings tagline) is
-  one colour regardless of what a page module sets. Showing the mint word needs a
+  one colour regardless of what a page module sets. Showing the gold word needs a
   small follow-up: add `scriptAccent` to the `heroSection` schema and thread it
   through `SectionRenderer`'s hero branch, not a Studio edit.
 - **Goal anchor ids are deduplicated within the goals block only.** `GoalsBand`

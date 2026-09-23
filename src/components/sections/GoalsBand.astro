@@ -7,15 +7,15 @@
 // page's own ground, a colour-coded index of anchor links, then one <article>
 // per goal:
 //
-//   NAVE  (Worship, green) the first photo full bleed with the name over it,
+//   NAVE  (Worship, indigo) the first photo full bleed with the name over it,
 //         the later photos as lancets rising over its edge, the points in two
 //         columns below.
 //   PATH  (The Way, gold) the pull quote large, then one door-arch step per
 //         point along a dotted trail, turning into a vertical trail at 900px
 //         and below.
-//   RINGS (Witness, purple) the photos as lancets in an arc, then one set of
+//   RINGS (Witness, brown) the photos as lancets in an arc, then one set of
 //         widening rings per point, labelled by the point's short label.
-//   DOORS (Work, brown) one door per point, its photo inside, labelled by the
+//   DOORS (Work, taupe) one door per point, its photo inside, labelled by the
 //         short label in display capitals.
 //
 // Composition and colour come from the goal's POSITION through goalLayout()
@@ -26,11 +26,11 @@
 //
 // THE NAVE TITLE OVER ANY PHOTO. The name and subtitle sit on a scrim that is
 // part of the caption box itself: it fades in above the words and holds at
-// 66% night green behind every line of them, so however tall the words wrap,
-// no letter sits on less. Night at 66% over a PURE WHITE pixel composites to
-// a ground of relative luminance 0.145: white measures 5.4:1 there and mint or
-// gold-light 3.4 to 3.5:1, and both lines are large text (28px and up), whose
-// AA floor is 3:1. A pure white photograph is the worst case, so the title
+// 80% indigo-dark behind every line of them, so however tall the words wrap,
+// no letter sits on less. Indigo-dark at 80% over a PURE WHITE pixel
+// composites to a ground where white measures 8.7:1 and brand gold 3.5:1, and
+// the gold lines are large text (28px and up), whose AA floor is 3:1 (both
+// pairs measured in theme-tokens.test.ts). A pure white photograph is the worst case, so the title
 // holds on any photograph an editor picks. Only below the words does the
 // scrim turn into the band's own colour.
 //
@@ -157,7 +157,7 @@ const RADII = [15, 27, 40, 52];
         {(heading || intro) && (
           <div class="gx-intro">
             {heading && (
-              <h2 id={headingId} class="font-display text-title leading-none text-green-ink">
+              <h2 id={headingId} class="font-display text-title leading-none text-indigo">
                 {heading}
               </h2>
             )}

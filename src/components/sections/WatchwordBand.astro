@@ -4,15 +4,15 @@
 // Page-builder block: the Watchword band (2026-09-23, the Who We Are "alive"
 // pass; the prototype's `.watch`). "Our Watchword", the Praise and Proclaim
 // mark at poster size, Isaiah 12:4 with the words praise and proclaim picked
-// out in mint italic, the reference, a short introduction beside the two
+// out in gold italic, the reference, a short introduction beside the two
 // meanings, and the long explanation behind a native <details> "Read more"
 // (plan spec change 2).
 //
-// The ground is --color-night, dark BY TYPE (so it is on no cadence and
-// carries no colour field, CLAUDE.md rule 9). Every ink on it is measured in
-// both themes in theme-tokens.test.ts: paper for reading, white for "Praise",
-// mint for the highlighted words, gold-light for the link, brand gold for the
-// heading and the reference.
+// The ground is --color-band-deep (the brand's indigo-dark), dark BY TYPE (so
+// it is on no cadence and carries no colour field, CLAUDE.md rule 9). Every
+// ink on it is measured in both themes in theme-tokens.test.ts: paper for
+// reading, white for "Praise", and brand gold for everything picked out (the
+// heading, the highlighted words, PROCLAIM, the reference and the link).
 //
 // The verse highlight goes through highlightWords(), which matches on the
 // stega-CLEANED text and slices the RAW string, so in the preview the verse
@@ -41,7 +41,7 @@ const hasBody = !!(intro || moreBlocks.length || praise || proclaim);
 ---
 
 <section
-  class="ww-band relative overflow-hidden bg-night text-bg"
+  class="ww-band relative overflow-hidden bg-band-deep text-bg"
   aria-labelledby={heading ? headingId : undefined}
 >
   <div class="ww-wrap mx-auto max-w-content px-gutter">
@@ -61,7 +61,7 @@ const hasBody = !!(intro || moreBlocks.length || praise || proclaim);
             &ldquo;
             {verseParts.map((part) =>
               part.hit ? (
-                <mark class="bg-transparent text-mint italic">{part.text}</mark>
+                <mark class="bg-transparent text-gold italic">{part.text}</mark>
               ) : (
                 part.text
               ),
@@ -80,7 +80,7 @@ const hasBody = !!(intro || moreBlocks.length || praise || proclaim);
             {intro && <p class="whitespace-pre-line">{intro}</p>}
             {moreBlocks.length > 0 && (
               <details class="ww-more">
-                <summary class="font-ui font-bold text-gold-light">
+                <summary class="font-ui font-bold text-gold">
                   <span class="ww-rm">Read more</span>
                   <span class="ww-rl">Read less</span>
                 </summary>
@@ -100,7 +100,7 @@ const hasBody = !!(intro || moreBlocks.length || praise || proclaim);
               )}
               {proclaim && (
                 <div>
-                  <dt class="font-display text-mint">Proclaim</dt>
+                  <dt class="font-display text-gold">Proclaim</dt>
                   <dd>{proclaim}</dd>
                 </div>
               )}
