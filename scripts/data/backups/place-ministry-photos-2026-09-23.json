@@ -1,0 +1,530 @@
+[
+  {
+    "_createdAt": "2026-09-18T23:30:06Z",
+    "_id": "ministry-adult",
+    "_rev": "PwVRqMM9lzIWA1u8PaHz0V",
+    "_type": "ministry",
+    "_updatedAt": "2026-09-23T03:32:44Z",
+    "body": [
+      {
+        "_key": "ad-a-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-a-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "From College and Career to Retirees, FBCM's Adult Ministry aims to engage adults of all ages in intentional discipleship so we may follow Jesus and become more like him - full of grace and truth."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-h1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-h1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Sunday morning"
+          }
+        ],
+        "markDefs": [],
+        "style": "h3"
+      },
+      {
+        "_key": "ad-b-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-b-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Every Sunday morning, there are classes for Adults (in addition for classes for teenagers, children, and nursery) at 9:30 a.m."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-c-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-c-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Friendship Class taught by Pastor Jonathan. This class alternates between theological topics and biblical studies on the Christian life. This class meets in B-05."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-c-2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-c-2s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Intergenerational Bible Study class taught by Jim Butler. The class meets in B-04."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-h2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-h2s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Life Groups"
+          }
+        ],
+        "markDefs": [],
+        "style": "h3"
+      },
+      {
+        "_key": "ad-d-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-d-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "We also have various Life groups that meet in set seasons. In between the seasons, we have times of “All Church Discipleship” where all adults gather for Bible study or a teaching series."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-e-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-e-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "We have several life groups which meet at various days & times for discipleship, Bible study, and encouragement."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-f-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-f-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Charis Student Ministry | For college students and those in early career. Led by Daniel Harris, the director of Charis student ministries. This group explores how faith intersects with everyday moments in life. For meeting times and details, contact daniel@charismuncie.org."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-f-2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-f-2s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Faithful Fellowship | This life group meets every season on the first and third Sundays at the church. This group enjoys snacks together while exploring theology as it relates to the mission of the church. This group typically meets on Sunday evenings."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-f-3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-f-3s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Jane Patton Life Group | This life group, convened by Jane Patton, meets at her home. The life group meets at 4 p.m. twice a month on Sundays during the fall and spring seasons."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-f-4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-f-4s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Snowbirds Life Group | Locations vary for this life group which meets during the summer and fall life groups seasons. The snowbirds group engages in Bible study and snacks are provided. It meets mid-week (typically Thursdays) in room B-05."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-f-5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-f-5s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Julie Davis Life Group | This life group, taught by Julie Davis, meets at the home of Brian and Deena Green. It involves extended Bible Study, a meal, and even some take-home work. The life group meets twice a month during the fall and spring seasons, starting at 5:30 p.m."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-h3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-h3s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Fellowship and other events"
+          }
+        ],
+        "markDefs": [],
+        "style": "h3"
+      },
+      {
+        "_key": "ad-h4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-h4s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Women's Ministry - \"Fresh Brewed Life\""
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "ad-g-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-g-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Meeting throughout the year, these events include breakfast and hospitality for women of all ages. Come to share life together!"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-h5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-h5s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Church Friends Lunch"
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "ad-h-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-h-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "These post-worship luncheons are opportunities for fun, food, and fellowship multiple times a year. These usually take place at the church fellowship hall."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad-h6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-h6s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Service Trips"
+          }
+        ],
+        "markDefs": [],
+        "style": "h4"
+      },
+      {
+        "_key": "ad-i-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad-i-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "All church trips for service and worship allow us to serve together as a church family. Whether assisting communities in medium-to-long-term disaster relief or helping partner organizations with projects they need help with, these are great opportunities to draw close to communities in need, one another, and God."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "contacts": [
+      {
+        "_key": "contact-staff-cheryl-flaherty",
+        "_ref": "staff-cheryl-flaherty",
+        "_type": "reference"
+      }
+    ],
+    "eyebrow": "Adults",
+    "headline": "Sunday classes, Life Groups and more",
+    "order": 40,
+    "slug": {
+      "_type": "slug",
+      "current": "adult"
+    },
+    "title": "Adult"
+  },
+  {
+    "_createdAt": "2026-09-18T23:30:00Z",
+    "_id": "ministry-children",
+    "_rev": "PwVRqMM9lzIWA1u8PaHz0V",
+    "_type": "ministry",
+    "_updatedAt": "2026-09-23T03:32:44Z",
+    "body": [
+      {
+        "_key": "ch-a-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ch-a-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Holistic and safe. We care for the spiritual, emotional, social, and physical needs of children from infancy through 5th grade. To create a safe environment for our children, FBC Muncie requires that all Children’s Ministry volunteers be background checked and children can only be picked up by a parent/guardian with a matching security tag. For more information on FBC Muncie’s Child Protection Policy or the pick-up/drop-off safety procedures, go to the “Frequently Asked Questions” section below."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ch-b-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ch-b-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Age-appropriate. FBC Muncie has three classroom experiences, each designed with the specific age and developmental stages of children in mind. While in their classrooms, you can expect your children to learn biblical teachings through play areas with age-appropriate toys, group activities, books, and crafts."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ch-c-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ch-c-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Part of the life of the entire congregation. FBC Muncie believes that God created the church to be intergenerational. Children bring new gifts, energy, and perspectives that encourage the adults, while adults model for children what it looks like to worship and live out the Christian faith. For these reasons, FBC Muncie is committed to creating regular opportunities for children to be involved in worship and community service alongside the adult members of the congregation."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "contacts": [
+      {
+        "_key": "contact-staff-jaden-johnson",
+        "_ref": "staff-jaden-johnson",
+        "_type": "reference"
+      }
+    ],
+    "eyebrow": "Children",
+    "headline": "Nursery through fifth grade",
+    "image": {
+      "_type": "image",
+      "alt": "Children gathered under the sanctuary arch",
+      "asset": {
+        "_ref": "image-e7b7e945ad95143ef6a2513b12d3f48d90244b64-2400x1600-jpg",
+        "_type": "reference"
+      }
+    },
+    "order": 20,
+    "slug": {
+      "_type": "slug",
+      "current": "children"
+    },
+    "title": "Children"
+  },
+  {
+    "_createdAt": "2026-09-18T23:30:09Z",
+    "_id": "ministry-outreach",
+    "_rev": "PwVRqMM9lzIWA1u8PaHz0V",
+    "_type": "ministry",
+    "_updatedAt": "2026-09-23T03:32:44Z",
+    "body": [
+      {
+        "_key": "ou-a-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ou-a-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "FBCM desires to join Christ where he is already at work in our world, in Muncie and across the globe. We do so personally, by sharing the mercy and love that God has shown us with others. We also do this with community partners, stewarding our resources to support them in their work."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ou-h1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ou-h1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Ways You Can Connect With FBCM to serve our community"
+          }
+        ],
+        "markDefs": [],
+        "style": "h3"
+      },
+      {
+        "_key": "ou-c-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ou-c-1s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Volunteering with our partner organizations or at community events."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ou-c-2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ou-c-2s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Special offerings and projects for disaster relief, mission work, and other needs."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ou-c-3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ou-c-3s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Sewing Group (Rm 203) - A multi-aged, monthly group which sews pillowcases for those in need."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ou-c-4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ou-c-4s1",
+            "_type": "span",
+            "marks": [],
+            "text": "Use our building for something great! FBCM offers our facilities to host outside events and organizations. Our website has links to our building use policy "
+          },
+          {
+            "_key": "ou-c-4s2",
+            "_type": "span",
+            "marks": [
+              "ou-c-4l1"
+            ],
+            "text": "here"
+          },
+          {
+            "_key": "ou-c-4s3",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "level": 1,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "ou-c-4l1",
+            "_type": "link",
+            "href": "/wedding#building-use"
+          }
+        ],
+        "style": "normal"
+      }
+    ],
+    "contacts": [
+      {
+        "_key": "contact-staff-dana-davis",
+        "_ref": "staff-dana-davis",
+        "_type": "reference"
+      }
+    ],
+    "eyebrow": "Outreach",
+    "headline": "Joining Christ where he is already at work",
+    "order": 50,
+    "slug": {
+      "_type": "slug",
+      "current": "outreach"
+    },
+    "title": "Outreach"
+  }
+]

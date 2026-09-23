@@ -5,6 +5,10 @@
 //
 // Manifest entries in scripts/data/page-images.json come in two shapes:
 //   { "file": "<archive filename>", "alt": "...", "maxWidth": N, "crop"?, "consent"?, "format"? }
+//   { "library": "<archive filename>", "alt": "..." }  -- a photo already in the Sanity
+//     media library (scripts/upload-photo-library.mjs). Nothing is resized or uploaded:
+//     the asset is found by its source marker (source.name "fbcm-wix-archive",
+//     source.id = the archive filename), so a page uses the library's one copy.
 //   { "same": "<other key>", "alt": "..." }  -- an alias: resolves to the target key's
 //     resized file and asset, so a photo reused on several pages is uploaded exactly
 //     once, under the target key's cache filename. The alias's own "alt" wins for the
@@ -76,7 +80,32 @@ export function makePageImages(uploadClient) {
   /** Returns a block-ready image object, or null when the manifest has no file for this
    *  key (following aliases). The alt text is the CALLING key's own alt (so an alias can
    *  override it), falling back to the target entry's alt if the alias didn't set one. */
+  /** The media-library asset for an archive filename, found by the source marker the
+   *  photo-library uploader sets. Throws when the photo is not in the library, rather
+   *  than uploading a second copy of it. */
+  const libraryIds = new Map();
+  async function libraryAsset(file) {
+    if (libraryIds.has(file)) return libraryIds.get(file);
+    const id = await uploadClient.fetch(
+      `*[_type == "sanity.imageAsset" && source.name == "fbcm-wix-archive" && source.id == $file][0]._id`,
+      { file },
+    );
+    if (!id) {
+      throw new Error(
+        `page-images: ${file} is not in the media library. Run scripts/upload-photo-library.mjs.`,
+      );
+    }
+    libraryIds.set(file, id);
+    return id;
+  }
+
   async function image(key) {
+    const target = resolveEntry(manifest, key).entry;
+    if (target.library) {
+      const _ref = await libraryAsset(target.library);
+      const alt = manifest[key]?.alt ?? target.alt;
+      return { _type: 'image', asset: { _type: 'reference', _ref }, alt };
+    }
     const r = await resized(key);
     if (!r) return null;
     const rel = `scripts/.page-images/${r.targetKey}.${r.format}`;

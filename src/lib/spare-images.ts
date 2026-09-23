@@ -216,6 +216,41 @@ export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
     replacements.set(row.index, replacement);
   }
 
+  // THE STRIP NEVER REPEATS WHAT THE READER HAS SCROLLED PAST (2026-09-23).
+  // The strip is drawn by the first heritage band. A picture that an
+  // image+text band or a gallery ABOVE that band already draws in place is
+  // not shown again in it: /visit showed the children band's photograph
+  // full-bleed and then again in "Built in 1929" three screens later. A band
+  // BELOW the strip is still fair game, which is what lets /history's opening
+  // band preview the era photographs the page reaches later.
+  // Nor does it show the hero's first photograph through another band that
+  // points at the same asset: home's heritage band carries the tower the hero
+  // opens on. The first frame is never lent (above), and this closes the side
+  // door. A page with no hero (/history) is untouched.
+  for (const row of rows) {
+    if (row._type !== 'heroSection') continue;
+    const frames = Array.isArray(row.frames) ? row.frames : [];
+    const first = (frames[0] ?? row.backgroundImage) as SanityImageObject | undefined;
+    const key = assetKey(first);
+    if (key) onThePage.add(key);
+    break;
+  }
+  const heritageAt = rows.findIndex((row) => row._type === 'heritageBandSection');
+  if (heritageAt !== -1) {
+    rows.slice(0, heritageAt).forEach((row, index) => {
+      if (row._type === 'imageTextSection') {
+        const drawn = replacements.has(index) ? replacements.get(index) : row.image;
+        const key = assetKey(drawn as SanityImageObject | null | undefined);
+        if (key) onThePage.add(key);
+      } else if (row._type === 'gallerySection' && Array.isArray(row.images)) {
+        for (const image of row.images) {
+          const key = assetKey(image as SanityImageObject);
+          if (key) onThePage.add(key);
+        }
+      }
+    });
+  }
+
   // A consumer that asked for a picture and found an empty pool keeps no
   // index: a renderer testing the index must never be told "this block has one"
   // when it has none.

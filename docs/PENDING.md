@@ -720,12 +720,50 @@ from the old site is approved by the church.
   that: their alt was the person's name and becomes the library's sentence (for
   example "Kendall Ellis smiling in front of stained glass"). Nathan approved this.
   Asset uploads do not trigger a rebuild (the webhook filter excludes asset types).
-- **Still to do: the placement pass.** No page document was edited. Choosing which
-  library photos go on which page (more congregation, fewer empty rooms, the
-  children photos) is a separate pass. Start from the People and Children tags.
-- **Waiting on Nathan:** the photo of children sitting on the chancel steps around
-  a woman reading is in none of the 501 archived files. It may have been a Wix video
-  background, or an email or social post never on the site.
+- **Placement pass done (2026-09-23, `feat/photo-placement`).** Nathan approved each
+  placement from a before/after sheet; the dataset writes ran backup-first
+  (`scripts/data/backups/*-2026-09-23*`).
+  - Home "What a first Sunday is like": a man handing a woman assisted-listening
+    headphones at the sanctuary door (was the empty sanctuary).
+  - /visit "Where the children go": children on the chancel steps with Kendall.
+    The hero gained a second frame, the front of the building, so the spare-image
+    pool lends THAT to "Doors, parking and access" and the children band keeps its
+    own photograph.
+  - /beliefs: a new "Baptism" band after "Four things Baptists hold to", beside a
+    baptism from the old /baptists page. The church's three baptism paragraphs moved
+    into it unchanged.
+  - /wedding: the hero is a ceremony at the chancel; a new "Weddings here" gallery
+    (three landscapes) follows the testimonial, then the church's own credit lines
+    ("Photos used with permission from the couples and the photographers.", and the
+    photographers' names), which the page had cut on the wrong reading that no
+    couple's photo was on it.
+  - /ministries: Adult (a women's fellowship breakfast) and Outreach (the Serve Your
+    City team) have photos for the first time; Children is now VBS singing, so the
+    four-children photo is not used three times. These live on the ministry
+    documents, set by `scripts/place-ministry-photos.mjs` (dry by default).
+  - How: a `page-images.json` entry can now be `{ "library": "<archive file>" }`,
+    resolved to the existing media-library asset, never a second upload.
+- **Spare-image rule added (`src/lib/spare-images.ts`, unit-tested).** The heritage
+  band's strip no longer repeats a photograph a band above it already draws, nor the
+  hero's first photograph through another band. It changed exactly two pages
+  (measured by building with and without it): /visit had shown Kendall's photo twice
+  (the tower, before this pass), and home would have shown the first-Sunday photo
+  twice. /history's opening strip still previews its era photos, on purpose.
+- **Parity: recapture home and /visit after this merges.** Against `main`'s
+  2026-09-23 baselines (captured after the placement writes) this branch is 160/162:
+  home and /visit differ, and in both the only change is the heritage strip's second
+  copy of a photo going away. The production site showed those repeats from the
+  12:19 UTC publish rebuild until this branch deploys.
+- **Seeding from a nested worktree** needs `<worktrees>/fbcm-archive` to resolve
+  (a directory junction to `Projects/fbcm-archive` was made on 2026-09-23) AND the
+  worktree's `scripts/.asset-map.json` filled from the dataset first: `seed-pages`
+  uploads photos even in a dry run, so an empty cache means duplicate uploads. The
+  2026-09-23 run filled it by matching `<key>.jpg` asset names and checked the asset
+  count was unchanged after the dry run.
+- **Correction:** the photo of children on the chancel steps around a woman
+  reading WAS in the archive, filed under Youth as "Blessing of the backpacks
+  gathering" (Wix alt "Kendall and kids blessing of backpacks 2025"). It is now on
+  /visit.
 - **Found, not investigated:** `npm run dev` fails in a fresh worktree after
   `npm ci`. Vite's dependency optimizer reports 346 `MISSING_EXPORT` errors from
   `node_modules/sanity/lib/presentation.js`, the first being `"FormRow" is not

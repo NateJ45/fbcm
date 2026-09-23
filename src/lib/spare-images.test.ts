@@ -281,3 +281,51 @@ test('the asset ref is what identifies a picture, not the object', () => {
   assert.equal(out.statement, one);
   assert.equal(out.replacements.get(1), spare);
 });
+
+test('the strip never repeats a picture a band above it already draws', () => {
+  // The /visit shape (2026-09-23): the children band draws its own photograph
+  // full-bleed, and the heritage band further down must not show it again.
+  const girls = img('girls');
+  const building = img('building');
+  const kendall = img('kendall');
+  const tower = img('tower');
+  const out = assignSpareImages([
+    { _type: 'heroSection', frames: [girls, building] },
+    { _type: 'sundayTimesSection' },
+    { _type: 'imageTextSection', image: kendall },
+    { _type: 'heritageBandSection', image: tower },
+  ]);
+  assert.equal(out.door, building);
+  assert.deepEqual(out.strip, [tower]);
+});
+
+test('the strip may preview a picture a band below it draws', () => {
+  // The /history shape: the opening heritage band previews the era photographs
+  // the page reaches later.
+  const tower = img('tower');
+  const era1 = img('era1');
+  const era2 = img('era2');
+  const out = assignSpareImages([
+    { _type: 'heritageBandSection', image: tower },
+    { _type: 'imageTextSection', image: era1 },
+    { _type: 'imageTextSection', image: era2 },
+  ]);
+  assert.deepEqual(out.strip, [tower, era1, era2]);
+});
+
+test("the strip never shows the hero's first photograph, even from another band", () => {
+  // The home shape: the heritage band carries the same tower the hero opens on.
+  const tower = img('tower');
+  const towerAgain = img('tower');
+  const congregation = img('congregation');
+  const door = img('door');
+  const sunday = img('sunday');
+  const out = assignSpareImages([
+    { _type: 'heroSection', frames: [tower, door, congregation] },
+    { _type: 'sundayTimesSection' },
+    { _type: 'imageTextSection', image: sunday },
+    { _type: 'heritageBandSection', image: towerAgain },
+  ]);
+  assert.equal(out.door, door);
+  assert.deepEqual(out.strip, [congregation]);
+});

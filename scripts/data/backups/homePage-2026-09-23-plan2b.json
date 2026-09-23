@@ -1,0 +1,323 @@
+{
+  "_createdAt": "2026-09-19T22:38:46Z",
+  "_id": "homePage",
+  "_rev": "Yg84KDHscU4NDc84ofNZaO",
+  "_type": "homePage",
+  "_updatedAt": "2026-09-23T03:32:35Z",
+  "pageBuilder": [
+    {
+      "_key": "home-hero",
+      "_type": "heroSection",
+      "eyebrow": "A downtown church in Muncie, Indiana",
+      "facts": [
+        {
+          "_key": "fact-1",
+          "_type": "heroFact",
+          "label": "Sundays",
+          "value": "{time}"
+        },
+        {
+          "_key": "fact-2",
+          "_type": "heroFact",
+          "label": "Where",
+          "value": "{address}"
+        },
+        {
+          "_key": "fact-3",
+          "_type": "heroFact",
+          "label": "Online",
+          "value": "Live on YouTube"
+        }
+      ],
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "The limestone bell tower of First Baptist Church against a blue sky",
+          "asset": {
+            "_ref": "image-1a41db0a8944c3ca0243432d2e1f6e4930537aab-2400x1596-jpg",
+            "_type": "reference"
+          }
+        },
+        {
+          "_key": "frame-2",
+          "_type": "image",
+          "alt": "The sanctuary from the balcony, light through the stained glass",
+          "asset": {
+            "_ref": "image-4f97d6a7a89d4d8631d2f7249e58a7e2b5ad510e-2400x1596-jpg",
+            "_type": "reference"
+          }
+        },
+        {
+          "_key": "frame-3",
+          "_type": "image",
+          "alt": "Children gathered under the sanctuary arch",
+          "asset": {
+            "_ref": "image-e7b7e945ad95143ef6a2513b12d3f48d90244b64-2400x1600-jpg",
+            "_type": "reference"
+          }
+        },
+        {
+          "_key": "frame-4",
+          "_type": "image",
+          "alt": "The congregation standing to sing on a Sunday morning",
+          "asset": {
+            "_ref": "image-03d6da95af3fbc02c3ba9eaa95ab533dbdfa8b4b-2400x1309-jpg",
+            "_type": "reference"
+          }
+        },
+        {
+          "_key": "frame-5",
+          "_type": "image",
+          "alt": "The corner of the church at Adams and Jefferson",
+          "asset": {
+            "_ref": "image-b25b1dd66a7db3b86f1716653999abff376e4533-2400x2574-jpg",
+            "_type": "reference"
+          }
+        }
+      ],
+      "headline": "Praise and proclaim.",
+      "layout": "full",
+      "primaryCta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-visit",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Plan a visit",
+        "linkType": "internal"
+      },
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+        "label": "Watch online",
+        "linkType": "external",
+        "openInNewTab": true
+      },
+      "size": "tall",
+      "subhead": "We're a Spirit-led people gathered to join Christ's presence in our community."
+    },
+    {
+      "_key": "home-sundays",
+      "_type": "sundayTimesSection",
+      "eyebrow": "Sundays",
+      "heading": "When we gather",
+      "items": [
+        {
+          "_key": "time-1",
+          "_type": "timeItem",
+          "big": "{time}",
+          "body": "Worship is at {time} each Sunday.",
+          "label": "Worship"
+        },
+        {
+          "_key": "time-2",
+          "_type": "timeItem",
+          "big": "{short address}",
+          "body": "Downtown, at the corner of Adams and Jefferson.",
+          "label": "Find us"
+        },
+        {
+          "_key": "time-3",
+          "_type": "timeItem",
+          "big": "Online",
+          "body": "For live streams, please visit our YouTube channel.",
+          "label": "Can't be there?"
+        }
+      ],
+      "showMap": true
+    },
+    {
+      "_key": "home-first-sunday",
+      "_type": "imageTextSection",
+      "body": [
+        {
+          "_key": "wte-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "wte-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "At each entrance, all ages are invited to check-in with a greeter."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "wte-a-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "wte-a-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The Greeters can direct you where you need to go, and answer questions you may have."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "wte-a-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "wte-a-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Children will receive a name tag for nursery or children's church."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "wte-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "wte-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "For children ages 3 and younger, nursery care is available throughout the service."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "cta": {
+        "_key": "cta-3",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-visit",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Plan a visit",
+        "linkType": "internal"
+      },
+      "eyebrow": "Your first Sunday",
+      "heading": "What a first Sunday is like",
+      "image": {
+        "_type": "image",
+        "alt": "The sanctuary from the balcony, light through the stained glass",
+        "asset": {
+          "_ref": "image-4f97d6a7a89d4d8631d2f7249e58a7e2b5ad510e-2400x1596-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "right"
+    },
+    {
+      "_key": "home-three-up",
+      "_type": "linkCardsSection",
+      "cards": [
+        {
+          "_key": "door-1",
+          "_type": "linkCard",
+          "body": "We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself.",
+          "cta": {
+            "_key": "cta-4",
+            "_type": "ctaBlock",
+            "internalLink": {
+              "_ref": "page-beliefs",
+              "_type": "reference",
+              "_weak": true
+            },
+            "label": "Our beliefs",
+            "linkType": "internal"
+          },
+          "title": "What we believe"
+        },
+        {
+          "_key": "door-2",
+          "_type": "linkCard",
+          "body": "Sunday school, music, youth, and work with partners across Muncie and beyond.",
+          "cta": {
+            "_key": "cta-5",
+            "_type": "ctaBlock",
+            "internalLink": {
+              "_ref": "page-ministries",
+              "_type": "reference",
+              "_weak": true
+            },
+            "label": "Ministries",
+            "linkType": "internal"
+          },
+          "title": "How we serve"
+        },
+        {
+          "_key": "door-3",
+          "_type": "linkCard",
+          "body": "The congregation has met in downtown Muncie since 1859, and in this building since 1929.",
+          "cta": {
+            "_key": "cta-6",
+            "_type": "ctaBlock",
+            "internalLink": {
+              "_ref": "page-history",
+              "_type": "reference",
+              "_weak": true
+            },
+            "label": "Our history",
+            "linkType": "internal"
+          },
+          "title": "Where we’ve been"
+        }
+      ],
+      "eyebrow": "First Baptist Muncie",
+      "heading": "A Baptist church in the heart of downtown since 1859."
+    },
+    {
+      "_key": "home-heritage",
+      "_type": "heritageBandSection",
+      "body": "The tower, the oak pews and the stained glass have been in daily use for more than a century.",
+      "cta": {
+        "_key": "cta-7",
+        "_type": "ctaBlock",
+        "externalUrl": "/history#building",
+        "label": "The building's story",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "eyebrow": "The building",
+      "heading": "Limestone, oak and glass",
+      "image": {
+        "_type": "image",
+        "alt": "The limestone bell tower of First Baptist Church against a blue sky",
+        "asset": {
+          "_ref": "image-1a41db0a8944c3ca0243432d2e1f6e4930537aab-2400x1596-jpg",
+          "_type": "reference"
+        }
+      }
+    },
+    {
+      "_key": "home-blog",
+      "_type": "dynamicListSection",
+      "cta": {
+        "_key": "cta-8",
+        "_type": "ctaBlock",
+        "externalUrl": "/blog",
+        "label": "All posts",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "headline": "From the blog",
+      "limit": 3,
+      "source": "journal"
+    },
+    {
+      "_key": "home-give",
+      "_type": "giveBandSection",
+      "body": "Gifts pay the staff, keep the building open and fund the work this church does in Muncie.",
+      "heading": "Support the work of this church"
+    }
+  ],
+  "seoDescription": "We're a Spirit-led people gathered to join Christ's presence in our community. {address}, Muncie, Indiana.",
+  "seoTitle": "First Baptist Church Muncie | Sundays {time}, downtown Muncie"
+}
