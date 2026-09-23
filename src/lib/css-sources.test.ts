@@ -3,11 +3,16 @@
 // INSIDE src/. Tailwind generates a utility only when it finds the class in a
 // scanned file, so a component that is excluded there and later imported would
 // render with its classes silently missing from the stylesheet. This test makes
-// that trap loud: nothing under src/ may import a file the stylesheet has told
-// Tailwind to skip. Added 2026-09-23 with the dead-CSS trim.
+// that trap loud: no rendered file under src/ may import a COMPONENT (an
+// .astro / .tsx / .jsx file, or anything under src/components/, where even a
+// .ts file can hold class strings, e.g. a variants map) from a path the
+// stylesheet has told Tailwind to skip. Importing plain data or logic modules
+// from an excluded tree is fine: src/lib/convert-body.ts reading a schema
+// type from src/sanity/ renders no class. Unit tests never render, so their
+// imports are not checked. Added 2026-09-23 with the dead-CSS trim.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 const STYLES_DIR = path.resolve('src/styles');
@@ -40,6 +45,22 @@ function resolveSpecifier(file: string, spec: string): string | null {
   return null;
 }
 
+const COMPONENTS = path.join(SRC, 'components');
+
+/** The file an extensionless specifier resolves to, or the path itself. */
+function resolveFile(abs: string): string {
+  for (const cand of [abs, ...['.astro', '.tsx', '.jsx', '.ts', '.mjs', '.js'].map((e) => abs + e)])
+    if (existsSync(cand) && statSync(cand).isFile()) return cand;
+  for (const idx of ['index.ts', 'index.tsx', 'index.js']) {
+    const cand = path.join(abs, idx);
+    if (existsSync(cand)) return cand;
+  }
+  return abs;
+}
+
+const rendersClasses = (file: string) =>
+  /\.(astro|tsx|jsx)$/.test(file) || file.startsWith(COMPONENTS + path.sep);
+
 const stripExt = (p: string) => p.replace(/\.(astro|tsx?|mjs|jsx?)$/, '');
 const isInside = (p: string, target: string) => {
   const t = stripExt(target);
@@ -58,16 +79,17 @@ describe('globals.css @source not exclusions inside src/', () => {
     for (const p of excluded) assert.doesNotThrow(() => statSync(p), `missing: ${p}`);
   });
 
-  it('nothing outside an excluded path imports into one', () => {
+  it('no rendered file imports a component from an excluded path', () => {
     const offenders: string[] = [];
     for (const file of walk(SRC)) {
-      if (excluded.some((e) => isInside(file, e))) continue;
+      if (file.endsWith('.test.ts') || excluded.some((e) => isInside(file, e))) continue;
       const text = readFileSync(file, 'utf8');
       for (const m of text.matchAll(/(?:from\s+|import\s*\(\s*|import\s+)['"]([^'"]+)['"]/g)) {
         const abs = resolveSpecifier(file, m[1]);
         if (!abs) continue;
         const hit = excluded.find((e) => isInside(abs, e));
-        if (hit) offenders.push(`${path.relative(SRC, file)} imports ${m[1]}`);
+        if (hit && rendersClasses(resolveFile(abs)))
+          offenders.push(`${path.relative(SRC, file)} imports ${m[1]}`);
       }
     }
     assert.deepEqual(
