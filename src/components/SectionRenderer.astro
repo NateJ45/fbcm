@@ -38,6 +38,7 @@ import WatchwordBand from '@/components/sections/WatchwordBand.astro';
 import PledgeReading from '@/components/sections/PledgeReading.astro';
 import PastorsLetter from '@/components/sections/PastorsLetter.astro';
 import GoalsBand from '@/components/sections/GoalsBand.astro';
+import { goalsEndDark } from '@/lib/goal-layout';
 import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
@@ -287,6 +288,12 @@ const isDarkBand = (block: unknown, index: number): boolean => {
     case 'faqSection':
     case 'heritageBandSection':
       return true;
+    // The Watchword band is night green by type; the goals end on their last
+    // goal's band, dark unless that lands on gold (goalsEndDark).
+    case 'watchwordSection':
+      return true;
+    case 'goalsSection':
+      return goalsEndDark((b as { goals?: unknown }).goals);
     case 'linkCardsSection':
       // The statement, or the arched doors on green (cardsPictured).
       return index === spares.statementIndex || cardsPictured((b as { cards?: unknown }).cards);

@@ -25,3 +25,16 @@ export function goalLayout(
     (wanted === 'doors' && points >= 2);
   return { layout: fits ? wanted : 'nave', colour };
 }
+
+/**
+ * Does a goals block END on a dark band? Its last NAMED goal (GoalsBand skips
+ * unnamed ones) paints the bottom edge, and only the gold position is a light
+ * ground. SectionRenderer's isDarkBand asks, so a give band placed after the
+ * goals never paints dark against dark.
+ */
+export function goalsEndDark(goals: unknown): boolean {
+  if (!Array.isArray(goals)) return false;
+  const named = goals.filter((g) => !!(g as { name?: unknown } | null)?.name).length;
+  if (named === 0) return false;
+  return goalLayout(named - 1, {}).colour !== 'gold';
+}

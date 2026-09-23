@@ -1,7 +1,7 @@
 // src/lib/goal-layout.test.ts
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { goalLayout } from './goal-layout.ts';
+import { goalLayout, goalsEndDark } from './goal-layout.ts';
 
 const g = (points: number, photos: number) => ({
   points: Array(points).fill({}),
@@ -23,4 +23,16 @@ test('a layout the goal cannot fill falls back to nave, keeping its colour', () 
 
 test('missing arrays are treated as empty', () => {
   assert.deepEqual(goalLayout(1, {}), { layout: 'nave', colour: 'gold' });
+});
+
+test('a goals block ends dark unless its last named goal lands on gold', () => {
+  const named = (n: number) => Array.from({ length: n }, (_, i) => ({ name: `Goal ${i + 1}` }));
+  assert.equal(goalsEndDark(named(4)), true); // brown
+  assert.equal(goalsEndDark(named(3)), true); // purple
+  assert.equal(goalsEndDark(named(2)), false); // gold
+  assert.equal(goalsEndDark(named(1)), true); // green
+  // An unnamed goal never renders, so it does not count.
+  assert.equal(goalsEndDark([...named(2), { name: '' }]), false);
+  assert.equal(goalsEndDark([]), false);
+  assert.equal(goalsEndDark(undefined), false);
 });

@@ -69,6 +69,12 @@ type Point = NonNullable<ProjectedGoal['points']>[number];
 const hasAsset = (img: unknown): boolean => !!(img as { asset?: unknown } | null)?.asset;
 const clean = (s: string | undefined | null) => splitStega(s ?? '').cleaned.trim();
 
+/** The nave name's fitting length: its longest word, or half its letters. */
+function nameChars(name: string): number {
+  const longest = Math.max(1, ...name.split(/\s+/).map((w) => w.length));
+  return Math.max(longest, Math.ceil(name.length / 2));
+}
+
 // Anchor ids from the goal's name, made unique on the page.
 const used = new Set<string>();
 const goals = (block.goals ?? [])
@@ -89,6 +95,7 @@ const goals = (block.goals ?? [])
       id,
       nameId: `${headingId}-${id}`,
       glyph: goal.glyph ?? GLYPHS[i % 4],
+      chars: nameChars(clean(goal.name)),
     };
   });
 
@@ -164,7 +171,7 @@ const RADII = [15, 27, 40, 52];
           <Fragment>
             <div class="gl-head">
               <BuildingGlyph name={g.glyph} class="gl-glyph" />
-              <h3 id={g.nameId} class="gl-name font-display">
+              <h3 id={g.nameId} class="gl-name font-display" style={`--gn-chars:${g.chars}`}>
                 {goal.name}
               </h3>
             </div>
@@ -209,41 +216,43 @@ const RADII = [15, 27, 40, 52];
                 ) : (
                   <div class="gl-pad-top mx-auto max-w-content px-gutter">{head}</div>
                 )}
-                <div
-                  class:list={[
-                    'gn-body mx-auto max-w-content px-gutter',
-                    photos.length > 1 && 'gn-has-pics',
-                  ]}
-                >
-                  <div class="gn-main">
-                    {goal.quote && <p class="gl-quote italic">{goal.quote}</p>}
-                    {goal.summary && <p class="gn-lead italic">{goal.summary}</p>}
-                    {points.length > 0 && (
-                      <div class="gn-points">
-                        {points.map((p, i) => (
-                          <div class="gn-pt" data-reveal style={`transition-delay:${i * 110}ms`}>
-                            {pointText(p)}
-                          </div>
+                {(goal.quote || goal.summary || points.length > 0 || photos.length > 1) && (
+                  <div
+                    class:list={[
+                      'gn-body mx-auto max-w-content px-gutter',
+                      photos.length > 1 && 'gn-has-pics',
+                    ]}
+                  >
+                    <div class="gn-main">
+                      {goal.quote && <p class="gl-quote italic">{goal.quote}</p>}
+                      {goal.summary && <p class="gn-lead italic">{goal.summary}</p>}
+                      {points.length > 0 && (
+                        <div class="gn-points">
+                          {points.map((p, i) => (
+                            <div class="gn-pt" data-reveal style={`transition-delay:${i * 110}ms`}>
+                              {pointText(p)}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {photos.length > 1 && (
+                      <div class="gn-pics">
+                        {photos.slice(1).map((photo) => (
+                          <ArchFrame
+                            image={photo}
+                            shape="lancet"
+                            width={640}
+                            sizes="(min-width: 1121px) 220px, 45vw"
+                            alt={photo.alt ?? ''}
+                            grade="warm"
+                            style="--arch-ratio: 100 / 190"
+                          />
                         ))}
                       </div>
                     )}
                   </div>
-                  {photos.length > 1 && (
-                    <div class="gn-pics">
-                      {photos.slice(1).map((photo) => (
-                        <ArchFrame
-                          image={photo}
-                          shape="lancet"
-                          width={640}
-                          sizes="(min-width: 1121px) 220px, 45vw"
-                          alt={photo.alt ?? ''}
-                          grade="warm"
-                          style="--arch-ratio: 100 / 190"
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
+                )}
               </Fragment>
             ) : (
               <div class="gl-wrap mx-auto max-w-content px-gutter">
@@ -304,27 +313,29 @@ const RADII = [15, 27, 40, 52];
                         />
                       ))}
                     </div>
-                    <ul class="gr-rings" style={`--n:${points.length}`}>
-                      {points.map((p, i) => {
-                        const r = RADII[Math.min(i, RADII.length - 1)] as number;
-                        const box = 2 * (r + 2);
-                        const c = box / 2;
-                        return (
-                          <li data-reveal style={`transition-delay:${i * 110}ms`}>
-                            <svg viewBox={`0 0 ${box} ${box}`} width={box} aria-hidden="true">
-                              <circle class="gr-core" cx={c} cy={c} r={Math.max(3, 7 - i)} />
-                              {RADII.slice(0, i + 1).map((ring) => (
-                                <circle cx={c} cy={c} r={ring} />
-                              ))}
-                            </svg>
-                            <div>
-                              {hasOwnShort(p) && <p class="gr-scope font-ui">{p.short}</p>}
-                              {pointText(p)}
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                    {points.length > 0 && (
+                      <ul class="gr-rings" style={`--n:${points.length}`}>
+                        {points.map((p, i) => {
+                          const r = RADII[Math.min(i, RADII.length - 1)] as number;
+                          const box = 2 * (r + 2);
+                          const c = box / 2;
+                          return (
+                            <li data-reveal style={`transition-delay:${i * 110}ms`}>
+                              <svg viewBox={`0 0 ${box} ${box}`} width={box} aria-hidden="true">
+                                <circle class="gr-core" cx={c} cy={c} r={Math.max(3, 7 - i)} />
+                                {RADII.slice(0, i + 1).map((ring) => (
+                                  <circle cx={c} cy={c} r={ring} />
+                                ))}
+                              </svg>
+                              <div>
+                                {hasOwnShort(p) && <p class="gr-scope font-ui">{p.short}</p>}
+                                {pointText(p)}
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
                   </Fragment>
                 )}
 

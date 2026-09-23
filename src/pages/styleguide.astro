@@ -943,7 +943,8 @@ const GOALS_FIXTURE: ProjectedGoalsSection = {
   ],
 };
 
-// Every fallback at once: The Way with one point, Witness with two photos and
+// A long nave name that must wrap clear of the rising lancets, then every
+// fallback at once: The Way with one point, Witness with two photos and
 // Work with nothing at all each fall back to the nave in their own colour.
 // The Way's photo is the brightest landscape in the fixture set, the stress
 // case for the title over a photograph; Work's nave has no photo, so its words
@@ -953,7 +954,11 @@ const GOALS_FALLBACK_FIXTURE: ProjectedGoalsSection = {
   _type: 'goalsSection',
   heading: 'Our Goals, every fallback',
   goals: [
-    { ...GOALS_FIXTURE.goals![0]!, _key: 'f-worship', photos: [P.nave] },
+    {
+      ...GOALS_FIXTURE.goals![0]!,
+      _key: 'f-worship',
+      name: 'Worship and Word Together',
+    },
     {
       ...GOALS_FIXTURE.goals![1]!,
       _key: 'f-way',
@@ -969,8 +974,24 @@ const GOALS_FALLBACK_FIXTURE: ProjectedGoalsSection = {
   ],
 };
 
+// The edge cases: an empty nave (a name and nothing else), a path with no
+// photographs, rings with photographs but no points, and doors with a photo
+// in the first door only.
+const GOALS_EDGE_FIXTURE: ProjectedGoalsSection = {
+  _key: 'sg-goals-edge',
+  _type: 'goalsSection',
+  heading: 'Our Goals, the edge cases',
+  goals: [
+    { _key: 'e-worship', _type: 'goal', name: 'Worship', glyph: 'window' },
+    { ...GOALS_FIXTURE.goals![1]!, _key: 'e-way', photos: [] },
+    { ...GOALS_FIXTURE.goals![2]!, _key: 'e-witness', points: [] },
+    { ...GOALS_FIXTURE.goals![3]!, _key: 'e-work', photos: [P.building] },
+  ],
+};
+
 // Four cards, each with its own photograph: the arched-door form.
 const DOOR_CARDS_FIXTURE = {
+  eyebrow: 'First Baptist Muncie',
   heading: 'Where To Go Next',
   cards: [
     {
@@ -1406,9 +1427,17 @@ const DOOR_CARDS_FIXTURE = {
       anchorPrefix="fallback-"
     />
   </div>
+  <div id="styleguide-goals-edge">
+    <GoalsBand
+      block={GOALS_EDGE_FIXTURE}
+      headingId="styleguide-goals-edge-h"
+      anchorPrefix="edge-"
+    />
+  </div>
   {/* Link cards with a photo on every card: the arched doors. */}
   <div id="styleguide-linkcards-doors">
     <LinkCards
+      eyebrow={DOOR_CARDS_FIXTURE.eyebrow}
       heading={DOOR_CARDS_FIXTURE.heading}
       cards={DOOR_CARDS_FIXTURE.cards}
       headingId="styleguide-linkcards-doors-h"

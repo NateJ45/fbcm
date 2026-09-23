@@ -3175,8 +3175,19 @@ body::before {
 .gl-green .gn-cap {
   --gl-hi: var(--color-mint);
 }
+.gn-cap {
+  /* The room the name has beside its glyph. */
+  --gn-room: calc(
+    min(100cqw, var(--container-content)) - 2 * var(--spacing-gutter) - clamp(60px, 7vw, 94px)
+  );
+}
+/* The nave name is poster size, shrunk only when its own words need it: it
+   fits its longest word, and half its letters, on one line of the room (a
+   capital of Castoro Titling measures about 0.7em; --gn-chars is set by
+   GoalsBand from the stega-cleaned name). So a long name wraps to two lines
+   at most, clear of the rising lancets, and never runs off a phone. */
 .gn-cap .gl-name {
-  font-size: clamp(76px, 10.4vw, 168px);
+  font-size: min(clamp(76px, 10.4vw, 168px), var(--gn-room) / (var(--gn-chars, 1) * 0.74));
 }
 .gn-body {
   display: grid;
@@ -3186,6 +3197,10 @@ body::before {
 }
 .gl-pad-top {
   padding-top: clamp(80px, 9vw, 140px);
+}
+/* A nave with nothing under its name still closes its band. */
+.gl-pad-top:last-child {
+  padding-bottom: clamp(72px, 8vw, 128px);
 }
 .gn-main {
   display: grid;
@@ -3379,8 +3394,14 @@ body::before {
     z-index: 2;
     margin-top: calc(-1 * clamp(160px, 17vw, 280px));
   }
-  .gn-cap .gl-title {
+  /* Keep the words clear of the lancets rising into the caption. */
+  .gl-nave:has(.gn-has-pics) .gn-cap :is(.gl-head, .gl-title) {
     max-width: 66%;
+  }
+  .gl-nave:has(.gn-has-pics) .gn-cap {
+    --gn-room: calc(
+      0.66 * (min(100cqw, var(--container-content)) - 2 * var(--spacing-gutter)) - 94px
+    );
   }
 }
 @media (max-width: 1120px) {
@@ -3457,7 +3478,7 @@ body::before {
     min-height: 118vw;
   }
   .gn-cap .gl-name {
-    font-size: 14.5vw;
+    font-size: min(14.5vw, var(--gn-room) / (var(--gn-chars, 1) * 0.74));
   }
   .gn-points {
     columns: 1;
@@ -3502,7 +3523,7 @@ body::before {
     grid-column: 2;
     font-size: 17.5px;
   }
-  .gd-door:nth-child(even) {
+  .gd-door:nth-child(even):not(.gd-bare) {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     text-align: right;
   }

@@ -51,7 +51,11 @@
 // cardsPictured() in src/lib/spare-images.ts is the test, and the same test
 // keeps such a band out of the spare-image hand-out, so it is never also the
 // statement. One card without a photo and the band is the ruled row again:
-// half a row of doors is not a designed state.
+// half a row of doors is not a designed state. Inside a door the photo is
+// decorative (alt=""): the card's visible title already names the link, and
+// the destination, not the picture, is what the link's name should say
+// (WCAG technique H2). The band's eyebrow sits above the heading in gold-light
+// (5.11:1 on the green, theme-tokens.test.ts).
 //
 // A CONTENT block: the alternating surface arrives as a prop from
 // SectionRenderer, and is ignored in the statement and door forms, which
@@ -122,6 +126,7 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
       aria-labelledby={heading ? headingId : undefined}
     >
       <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
+        {eyebrow && <p class="mb-4 font-ui text-ui text-gold-light">{eyebrow}</p>}
         {heading && (
           <h2 id={headingId} class="mb-[clamp(36px,4vw,64px)] font-display text-title leading-none">
             {heading}
@@ -137,7 +142,7 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
                   shape="door"
                   width={720}
                   sizes="(min-width: 1121px) 300px, (min-width: 621px) 45vw, 100vw"
-                  alt={card.image?.alt ?? ''}
+                  alt=""
                   grade="warm"
                   style={`transition-delay: ${i * 100}ms`}
                 />

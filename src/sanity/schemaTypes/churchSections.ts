@@ -499,7 +499,8 @@ export const linkCardsSection = defineType({
               name: 'cta',
               title: 'Link',
               type: 'ctaBlock',
-              description: 'Where the card goes. It draws as a text link, never a button.',
+              description:
+                'Where the card goes. The whole card is the link: in the plain row the label draws as a text link, and when every card has a photo it draws as a button under the door.',
             }),
             // 2026-09-23 (Who We Are "alive", Task 5): optional. When EVERY card
             // has one, the band draws the cards as arched doors on green.
