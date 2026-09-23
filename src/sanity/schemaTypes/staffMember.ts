@@ -61,6 +61,14 @@ export const staffMember = defineType({
       description: 'Pick one. Pastors show first on the Staff page.',
     }),
     defineField({
+      name: 'showOnSite',
+      title: 'Show on the Staff page',
+      type: 'boolean',
+      description:
+        'Turn off to take this person off the website without deleting them. Their details stay here.',
+      initialValue: true,
+    }),
+    defineField({
       name: 'bio',
       title: 'About them',
       type: 'array',
@@ -82,5 +90,12 @@ export const staffMember = defineType({
     }),
   ],
   orderings: [{ title: 'List order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],
-  preview: { select: { title: 'name', subtitle: 'role', media: 'photo' } },
+  preview: {
+    select: { title: 'name', subtitle: 'role', media: 'photo', showOnSite: 'showOnSite' },
+    prepare: ({ title, subtitle, media, showOnSite }) => ({
+      title: title ?? 'Untitled',
+      subtitle: showOnSite === false ? `${subtitle ? `${subtitle} ` : ''}(hidden)` : subtitle,
+      media,
+    }),
+  },
 });

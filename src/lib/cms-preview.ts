@@ -21,6 +21,13 @@
 // =============================================================================
 import { createClient, type SanityClient } from '@sanity/client';
 import { env } from 'cloudflare:workers';
+import {
+  PLACEHOLDER_SETTINGS_QUERY,
+  fillPlaceholders,
+  hasPlaceholder,
+  placeholderValues,
+  type PlaceholderSettings,
+} from './settings-placeholders.ts';
 
 export const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID as string;
 export const dataset = (import.meta.env.PUBLIC_SANITY_DATASET as string) || 'production';
@@ -177,5 +184,20 @@ export async function previewFetch<T>(
   query: string,
   params: Record<string, unknown> = {},
 ): Promise<T> {
-  return getPreviewClient(draftMode).fetch<T>(query, params);
+  const client = getPreviewClient(draftMode);
+  const result = await client.fetch<T>(query, params);
+  if (!hasPlaceholder(result)) return result;
+  // Site settings placeholders ({time}, {address}...), filled the same way the
+  // build fills them (src/lib/settings-placeholders.ts), so the preview shows
+  // the real text while the box an editor clicks into still holds {time}.
+  // Read in the SAME perspective (a draft service time previews too) but with
+  // stega OFF: the filled-in value must not carry a second edit payload inside
+  // the string it lands in. The placeholder's own string keeps its payload at
+  // the end, so click-to-edit still opens the field that holds {time}.
+  const settings = await client.fetch<PlaceholderSettings | null>(
+    PLACEHOLDER_SETTINGS_QUERY,
+    {},
+    { stega: false },
+  );
+  return fillPlaceholders(result, placeholderValues(settings));
 }

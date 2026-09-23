@@ -134,7 +134,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     // they vanish from the site entirely while still existing in the dataset.
     _type == "staffGridSection" => {
       ...,
-      "members": *[_type == "staffMember" && (coalesce(^.group, "all") == "all" || group == coalesce(^.group, "all") || (coalesce(^.group, "all") == "support" && !defined(group)))] | order(order asc, name asc) {
+      "members": *[_type == "staffMember" && showOnSite != false && (coalesce(^.group, "all") == "all" || group == coalesce(^.group, "all") || (coalesce(^.group, "all") == "support" && !defined(group)))] | order(order asc, name asc) {
         _id, name, "slug": slug.current, role, email, phone, group, order, bio,
         photo{ ..., asset->, "alt": coalesce(alt, asset->altText, name) }
       }
@@ -176,6 +176,23 @@ export function sectionsProjection(field = 'pageBuilder'): string {
         title,
         body,
         cta${CTA_PROJECTION}
+      }
+    },
+    // A Ministry band holds only a reference. Everything it draws is on the
+    // ministry document, dereferenced here, and so are the people it names:
+    // src/lib/ministry-band.ts builds one contact line per person from these
+    // fields, and drops anyone whose Staff page is hidden (showOnSite false).
+    // The same projection feeds /preview/**, where both hops read drafts.
+    _type == "ministrySection" => {
+      ...,
+      "ministry": ministry->{
+        _id,
+        title,
+        eyebrow,
+        headline,
+        body,
+        image${IMAGE_PROJECTION},
+        "contacts": contacts[]->{ _id, name, role, email, showOnSite }
       }
     }
     // scaffold:end

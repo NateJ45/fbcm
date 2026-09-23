@@ -461,15 +461,12 @@ leaves open, with what closes each.
   `scripts/.parity` locally for this (that happens once, at the end of plan
   2c, per the task-6 brief). Refresh the CI baseline itself with `visual.yml`'s
   own `update` input the first time it runs against this change.
-- **`src/sanity/guides/content.ts` is still the starter's generic "Help & Guide"
-  template** ("THIS IS A TEMPLATE. REWRITE IT PER PROJECT" at its own header),
-  written for a design studio, not a church. Task 10 (2026-09-19) unhooked it
-  from the desk rather than half-rewrite it under a task scoped to
-  `structure.ts` and the `studioGuide` seed: the desk's Help group now holds
-  only "How the website works" (studioGuide) and "Your church at a glance"
-  (studioNotes), both rewritten for a church secretary. If this guide system is
-  wanted back, it needs its own pass over `content.ts`'s guide list, in the
-  church's own language, before it is wired back into `structure.ts`.
+- ~~**`src/sanity/guides/content.ts` is still the starter's generic "Help & Guide"
+  template**~~ Closed 2026-09-22 (feat/editor-guide): rewritten as ten guides
+  for the church secretary in five categories and wired back into the desk's
+  Help group under the two existing panels. Every click path was walked in the
+  real Studio. The walk turned up the items in "Editor guide: what the Studio
+  cannot do yet" below.
 - **Sign-in to the Studio at a local origin needs a one-time CORS grant.**
   Verifying Task 10's desk in a real browser (`npm run preview`, `/studio`)
   reached the Sanity "Connect this Studio to your project" screen every time,
@@ -479,6 +476,145 @@ leaves open, with what closes each.
   confirm). Registering `npx sanity cors add http://127.0.0.1:<port> --credentials`
   is the fix, same family as item 1a above; nobody has done it for this project
   yet.
+
+### Editor guide: what the Studio cannot do yet (found 2026-09-22)
+
+Found while writing and walking the Help guides (feat/editor-guide). Each one
+is described to the secretary honestly in the guides today; fixing it means
+changing the guide that mentions it in the same commit.
+
+- **The service time is copied into about fifteen bands.** CODE DONE
+  2026-09-22 (feat/settings-placeholders); ONE DATA STEP LEFT. Site settings
+  placeholders (`{service time}`, `{time}`, `{service length}`, `{address}`,
+  `{short address}`, `{city}`, `{phone}`, `{email}`) are filled at the two
+  fetch chokepoints (`sanityFetch`, `previewFetch`) from
+  `src/lib/settings-placeholders.ts`, and `seed-pages` converts typed copies
+  before it writes, so a re-seed cannot bring them back. Proven render-neutral
+  with no placeholders in the data (parity 162/162), and proven end to end by
+  a local build that simulated the migrated data (the only rendered change is
+  "10:45 AM"/"10:45 a.m." printing as "10:45 am"; the fellowship-hour range
+  and "Mark 10:45" untouched). **Remaining, in this order:** merge and deploy
+  the branch, THEN from the main checkout run
+  `node scripts/settings-placeholders.mjs` (dry; expect 46 changes in 14
+  documents plus 17 staff members), then `--write` (backup-first, one
+  transaction, revision-guarded). Writing before the deploy would show a
+  literal `{time}` on the live site. Afterwards `--check` is the audit (exit 1
+  if a typed copy is back). Left typed on purpose: the two `mailto:` link
+  targets (the URL field rejects braces; the visible text becomes `{email}`),
+  Sunday school at 9:30 am and the 10:15-10:45 fellowship hour (not settings),
+  and every blog post (dated writing).
+- **The `ministry` documents are not read by any page.** CODE DONE
+  2026-09-22 (feat/ministry-bands); ONE DATA STEP LEFT. The ministry document
+  is now each ministry's one home (small line, headline, photo with alt text,
+  text, "People to talk to"), and a new "Ministry" band (`ministrySection`,
+  church blocks) only points at one. `src/lib/ministry-band.ts` turns the band
+  into the exact image band or text band it draws as BEFORE the cadence and
+  the spare-image pool see it, and generates each contact line at build time
+  from the people the document names (hidden staff are not listed).
+  `scripts/pages/ministries.mjs` now seeds the five pointers and refuses while
+  a ministry is unconnected. Proven render-neutral on the current data, and
+  proven end to end by a local build that applied the migration's own plan in
+  memory: /ministries byte-identical. **Remaining, in this order:** merge and
+  deploy, THEN from the main checkout run `node scripts/connect-ministries.mjs`
+  (dry; expect 5 ministries and 5 bands), then `--write` (backup-first, one
+  transaction, revision-guarded). Writing before the deploy would drop all
+  five bands from the live page. The run REMOVES the five old Wix photos from
+  the ministry documents (three replaced by the band photos, adult and
+  outreach unset because their bands have none); the dry run lists them and
+  the backup keeps them. The `ministries` guide (src/sanity/guides/content.ts)
+  still tells the secretary to edit the page's typed contact lines and must
+  be rewritten when the data step lands. `audit:studio` check 5 cannot see
+  the new "Used on" entry (`ministry` -> /preview/ministries in resolve.ts)
+  because its `RENDERED_BY` map lives in the PORTABLE copy; add
+  `ministry: ['ministrySection']` upstream (starter findings).
+- ~~**No deacons.**~~ Corrected 2026-09-22: the deacons ARE on the site, as
+  the "Our deacons" band (`st-deacons`, an imageTextSection) on the Staff page:
+  a group photo and a typed name list with the deacon chair's email. The first
+  pass of the guides missed it; the `staff` guide now says where they live.
+  A structured deacons list is still possible later, if the church wants one.
+- ~~**A new post's Author defaults to "Your Name"**~~ Fixed 2026-09-22
+  (feat/settings-placeholders): no initial value; blank means no byline. All
+  142 existing posts already carry a real author.
+- **"Publish automatically at" is switched on, waiting on one secret.**
+  2026-09-22 (feat/settings-placeholders): `publish-due.yml` runs every half
+  hour and falls back to the existing `PUBLIC_SANITY_PROJECT_ID` variable. It
+  skips with a warning until the `SANITY_AUTH_TOKEN` repo secret (an Editor
+  token) exists. When it does, replace the `who-to-ask` guide's "leave it
+  empty for now" callout with a short how-to.
+- ~~**The workspace is still titled "My Studio"**~~ Fixed 2026-09-22
+  (feat/studio-readability): now "First Baptist Studio", which is also what
+  every image menu calls the Studio's own photo source.
+- ~~**The Presentation page list shows the Blog page as "Journal"**~~ Fixed
+  2026-09-22: the label is "Blog" (a fixed label in `PreviewNavigator.tsx`).
+  Custom pages still list by their own titles ("Plan a visit"), which is
+  right; the guides say so where it matters.
+- **Media library asset names are full local file paths**
+  (`C:\Users\natha\Documents\Claude\Proje...`), from the import scripts'
+  upload filenames. Cosmetic, but it is what the secretary reads when choosing
+  a photo. The photo-library work is the natural place to fix it.
+- **Staff photos and Ministry photos have no alt-text field.** StaffGrid
+  passes no alt, so the image renders `alt=""` beside the printed name, which
+  is acceptable; the guide says so.
+- ~~**There is no Unpublish for staff members**~~ Fixed 2026-09-22: a "Show on
+  the Staff page" switch (`showOnSite`, unset means shown) filters the one
+  staff query (`queries.ts` staffGridSection), which the preview shares; the
+  Studio list tags hidden people "(hidden)". The migration above stores `true`
+  on the 17 existing people so the switch does not draw as grey "not set".
+- ~~**GuideView's "Take me there" links produce `#//structure/...`**~~ Fixed
+  2026-09-22 (trailing slash stripped from basePath before joining). GuideView
+  carries no PORTABLE marker, but the same line is in the starter's copy: note
+  it on PORTS.md card 41 at the next sync.
+- **Held guide: how a band's picture decides its shape.** Waits for
+  feat/richtext-ledger-photo-shapes to reach main. Draft, for `content.ts`
+  (category "Pictures"), to check against the merged code before adding:
+  > **How a picture decides the shape of its band.** You never choose a
+  > band's layout; the picture does. A tall portrait becomes a pointed-arch
+  > **window**, like a church window, but only the first tall portrait on a
+  > page gets one; any later tall portrait is hung as a **framed portrait**.
+  > A very wide picture whose text has a "left to right" line followed by a
+  > short list of names becomes a **legend**, the picture with the names laid
+  > out under it. A picture whose alt text or small line above the heading
+  > mentions a year before 1950 is treated as an old photograph and set as a
+  > **plate**. A large, wide landscape can become a full-width **backdrop**
+  > behind the band, at most twice on a page and never straight after an
+  > opening photo. Everything else sits beside its text. Because the page is
+  > worked out from the top down, changing one band's picture, or moving a
+  > band, can change the shape of another band further down: if a new tall
+  > portrait appears higher up, it takes the window and the old window becomes
+  > a framed portrait. Look at the whole page in Presentation before you
+  > publish.
+
+### Found while connecting the ministries (2026-09-22)
+
+- ~~**Four pages could not be published.**~~ Fixed 2026-09-22
+  (feat/ministry-bands): the page-section link field validated with
+  `R.uri({ allowRelative: true })`, which allows only http/https, so every
+  seeded `mailto:` contact line (Contact, Ministries, Staff, Wedding: eight
+  links) was a validation error, and Sanity will not publish a document with
+  one. `sections.ts` and `richSections.ts` now allow mailto and tel, as
+  `ctaBlock` already did. No data or render change.
+- **Removing the `church` scaffold capability is broken, and was before this
+  work.** `npm run scaffold -- --remove church --write` on the parent commit
+  c6bcd4e leaves 9 type errors and 1 failing unit test (identical counts on
+  feat/ministry-bands): `structure.ts` and `blog-derive.ts` import
+  `church-derive`, which the removal deletes, and SectionRenderer props go
+  `unknown`. Rule 14 says a capability must be removable; this one is not.
+- **`audit:studio` check 5 cannot see the ministry "Used on" entry**: its
+  `RENDERED_BY` map in the PORTABLE `scripts/audit-studio.mjs` needs
+  `ministry: ['ministrySection']`. Upstream first (starter), then sync.
+- **The committed parity baselines are stale for the blog.** Something outside
+  these sessions updated 14 `journalEntry` documents at 2026-09-23T00:07:15Z
+  and uploaded 68 file assets (PDFs) around 00:09. Against the committed
+  baselines the build scores 120/162, all 42 diffs blog/post pages; against a
+  fresh capture of the parent on the same data, 162/162. Recapture once that
+  work lands, and prove the fixpoint.
+- **Run order for the two data migrations**, both from the main checkout after
+  the stacked branches are merged AND deployed: `settings-placeholders.mjs`
+  (dry, then `--write`), then `connect-ministries.mjs` (dry, then `--write`).
+  The ministries migration drops the old Wix photos from all five Ministry
+  documents (Adult and Outreach to none, the others to the photo their band
+  shows today); the backup keeps them and the assets stay in the library.
+  Writing it before the deploy would empty five bands on the live page.
 
 ### For ncs-astro-sanity-starter (the library of record), found on this fork
 

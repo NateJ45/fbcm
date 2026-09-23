@@ -1,5 +1,5 @@
 // scaffold: church
-// The nine blocks a church page needs and a service business does not. Every
+// The church blocks: what a church page needs and a service business does not. Every
 // description says what to TYPE. No block carries a colour field: the dark bands
 // (sundayTimes is cream, faq/scripture/give are indigo, heritage is brown) are dark
 // by TYPE, which is what keeps SectionRenderer's cadence the only source of surface.
@@ -13,6 +13,7 @@
 // overlay registry.
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { anchorField } from './_anchorField';
+import { sideOptions } from '../../lib/layout-variants';
 
 const eyebrow = defineField({
   name: 'eyebrow',
@@ -513,6 +514,55 @@ export const linkCardsSection = defineType({
   },
 });
 
+// A Ministry band (2026-09-22). It holds NO words of its own: it points at one
+// ministry document, and the band is drawn from that document's small line,
+// headline, photo and text, with a contact line per person it names generated
+// at build time from their Staff page (src/lib/ministry-band.ts). With a photo
+// it draws exactly as an "Image + text" band; without one, exactly as a "Text
+// block". So it has only the two things that belong to the PAGE rather than to
+// the ministry: which side the photo runs off, and the jump-to id.
+//
+// `imageSide` keeps the image band's own field name on purpose: it is already
+// on NON_STEGA_FIELDS in src/lib/cms-preview.ts (CLAUDE.md rule 8b), and a
+// ministry band converted from an image band carries its stored value across.
+export const ministrySection = defineType({
+  name: 'ministrySection',
+  title: 'Ministry',
+  type: 'object',
+  description:
+    'One ministry, drawn from its own page under Ministries in the menu on the left. Change its words, photo and people there.',
+  fields: [
+    defineField({
+      name: 'ministry',
+      title: 'Ministry',
+      type: 'reference',
+      to: [{ type: 'ministry' }],
+      description:
+        'Pick one. Its words, photo and the people to talk to come from the ministry itself, under Ministries in the menu on the left.',
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'imageSide',
+      title: 'Photo side',
+      type: 'string',
+      initialValue: 'left',
+      options: { list: sideOptions('Photo'), layout: 'radio' },
+      description: 'Which edge the photo runs off. A ministry with no photo ignores this.',
+    }),
+    anchorField(),
+  ],
+  preview: {
+    select: { title: 'ministry.title', headline: 'ministry.headline', media: 'ministry.image' },
+    // Strings only: a preview title that is not a string crashes the whole
+    // array field (audit:studio check 2).
+    prepare: ({ title, headline, media }) => ({
+      title: typeof title === 'string' && title ? title : 'Ministry',
+      subtitle: typeof headline === 'string' && headline ? `Ministry: ${headline}` : 'Ministry',
+      media,
+    }),
+  },
+});
+
 export const CHURCH_SECTION_TYPES = [
   sundayTimesSection,
   timelineSection,
@@ -524,5 +574,6 @@ export const CHURCH_SECTION_TYPES = [
   hoursSection,
   documentListSection,
   linkCardsSection,
+  ministrySection,
 ];
 // scaffold:end

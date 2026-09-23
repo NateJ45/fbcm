@@ -100,7 +100,7 @@ export default function BusinessOverview() {
         {/* Header */}
         <Box>
           <Heading as="h1" size={3}>
-            Your business at a glance
+            Your church at a glance
           </Heading>
           <Box marginTop={3}>
             <Text muted size={1}>

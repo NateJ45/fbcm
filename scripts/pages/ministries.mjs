@@ -10,15 +10,23 @@
 //
 // Seven things about this file are deliberate.
 //
+// THE FIVE MINISTRY BANDS ARE NOT COMPOSED HERE ANY MORE (2026-09-22). They
+// are "Ministry" bands pointing at the five ministry documents, which own the
+// words; scripts/connect-ministries.mjs moved them there. The notes below still
+// describe how those words were cut from the captures, because that is what
+// the church is asked to approve.
+//
 // 1. EVERY PARAGRAPH IS READ OFF A CAPTURE, NEVER TYPED FROM MEMORY. line()
 //    and linesBetween() THROW when an anchor phrase moves, so a band that
 //    would have seeded empty, or half-empty, fails the run instead.
 //
 // 2. THE COORDINATORS ARE DERIVED FROM THE STAFF DOCUMENTS (CLAUDE.md rule
 //    15). Not one name, role or address on this page is typed here. Each
-//    contact line is built at seed time from the staffMember document whose
-//    role matches, and the "Get involved" band is a staffGridSection that is
-//    derived LIVE at build time, so it cannot go stale at all. This also
+//    ministry band's contact lines are generated at BUILD time from the
+//    people its ministry document names (since 2026-09-22; before that they
+//    were typed here at seed time, see "The five ministry bands" below), and
+//    the "Get involved" band is a staffGridSection that is also derived LIVE
+//    at build time, so neither can go stale. This also
 //    settles the children's-ministry name conflict the content map flagged:
 //    the Wix page said Jennifer Durke, the staff table says Jaden Johnson, and
 //    this page says whatever the staff document says, once.
@@ -114,7 +122,7 @@ export default {
   photoConsent: ['ministries-children', 'ministries-youth'],
 
   async build(ctx) {
-    const { images, copy, settings, staff } = ctx;
+    const { images, copy, settings, ministries } = ctx;
     const { linesBetween, paragraphs, bullets, heading, ctaAnchor, ctaInternal, decodeEntities } =
       copy;
 
@@ -125,13 +133,6 @@ export default {
           'address off it rather than retyping them.',
       );
     }
-    if (!Array.isArray(staff) || staff.length === 0) {
-      throw new Error(
-        'ministries.mjs: no staffMember documents. Every coordinator on this page is DERIVED ' +
-          'from them (CLAUDE.md rule 15); there is nothing to fall back on, on purpose.',
-      );
-    }
-
     // -- Facts, derived from settings ---------------------------------------
     const serviceTime = String(settings.serviceTime ?? '')
       .replace(/^Sundays at /i, '')
@@ -156,29 +157,6 @@ export default {
       return decodeEntities(found).trim();
     };
 
-    /**
-     * The first non-empty line AFTER the first line containing `phrase`. The
-     * Wix layout broke two of the youth schedule's sentences across four lines
-     * each, and the tail of one of them ("Youth Center)") is a phrase that also
-     * appears earlier in the same file, so it cannot be found by content.
-     */
-    const lineAfter = (slug, phrase) => {
-      const lines = copy.textFile(slug).split(/\r?\n/);
-      const at = lines.findIndex((l) => l.includes(phrase));
-      if (at === -1) {
-        throw new Error(
-          `ministries.mjs: "${phrase}" is not in scripts/data/pages/${slug}.txt any more`,
-        );
-      }
-      const next = lines.slice(at + 1).find((l) => l.trim());
-      if (next === undefined) {
-        throw new Error(
-          `ministries.mjs: nothing follows "${phrase}" in scripts/data/pages/${slug}.txt`,
-        );
-      }
-      return decodeEntities(next).trim();
-    };
-
     /** Replace one phrase with another, throwing when the phrase has moved. */
     const swap = (sentence, find, replaceWith) => {
       if (!sentence.includes(find)) {
@@ -190,78 +168,56 @@ export default {
       return sentence.replace(find, replaceWith);
     };
 
-    /** An em-dash between words becomes a comma (CLAUDE.md rule 2). Throws if there is none. */
-    const comma = (sentence) => {
-      if (!sentence.includes('—')) {
-        throw new Error(
-          `ministries.mjs: expected an em-dash to fix in "${sentence.slice(0, 60)}..."; ` +
-            'the capture no longer has one, so drop this call.',
-        );
-      }
-      return sentence.replace(/\s*—\s*/g, ', ');
-    };
-
     /** The nursery / family room ruling, applied to one sentence (note 5 above). */
     const roomRuling = (sentence, find, replaceWith) => swap(sentence, find, replaceWith);
 
-    // ── The coordinators, derived from the staff documents ──────────────────
-    //
-    // NOTHING HERE IS TYPED. `person()` finds the staffMember document whose
-    // role matches, and throws when no document carries that role or when two
-    // do: a page that silently dropped a coordinator's name would be worse
-    // than a run that fails. Re-seeding after a staff change refreshes every
-    // one of these lines, and the "Get involved" band below does not even need
-    // that, because it is a staffGridSection resolved at BUILD time.
-    const person = (role) => {
-      const matches = staff.filter(
-        (s) => String(s.role ?? '').toLowerCase() === role.toLowerCase(),
-      );
-      if (matches.length === 0) {
-        throw new Error(
-          `ministries.mjs: no staffMember document has the role "${role}". The contact lines on ` +
-            'this page are derived from the staff documents, so the role has to exist there.',
-        );
-      }
-      if (matches.length > 1) {
-        throw new Error(
-          `ministries.mjs: ${matches.length} staffMember documents carry the role "${role}" ` +
-            `(${matches.map((m) => m.name).join(', ')}). One role, one person, or the page cannot ` +
-            'say who to talk to.',
-        );
-      }
-      const { name, email } = matches[0];
-      // The email is a mailto link when the document carries one. When it does
-      // not (today: the children's ministry), the line sends the reader to the
-      // contact page instead of ending on a name with no way to reach it.
-      return email
-        ? `${name}, ${matches[0].role}, [${email}](mailto:${email})`
-        : `${name}, ${matches[0].role}. [Contact the church office](/contact).`;
-    };
-
-    /**
-     * One contact paragraph PER role, keyed for stability. Two names on one
-     * line read as one person with two jobs, which the worship band would have
-     * said about Cynthia Smith and Molly Flodder.
-     */
-    const contact = (roles, keyPrefix) => paragraphs(roles.map(person).join('\n\n'), keyPrefix);
-
     // -- Photos --------------------------------------------------------------
-    // Three of the five ministry bands have a photograph in the manifest;
-    // adults and outreach have none, so those two bands are richTextSections
-    // rather than imageTextSections. A band with an empty image slot would
-    // render as a half-width column of text beside nothing.
+    // Only the hero's photograph is the page's own now. The ministry bands draw
+    // their photographs from the ministry documents (see ministryBand below).
     const worshipTeam = await images.image('ministries-worship-team');
-    const handbells = await images.image('ministries-handbells');
-    const children = await images.image('ministries-children');
-    const youth = await images.image('ministries-youth');
-    for (const [key, img] of [
-      ['ministries-worship-team', worshipTeam],
-      ['ministries-handbells', handbells],
-      ['ministries-children', children],
-      ['ministries-youth', youth],
-    ]) {
-      if (!img) throw new Error(`ministries.mjs: no photo in the manifest for "${key}"`);
+    if (!worshipTeam) {
+      throw new Error('ministries.mjs: no photo in the manifest for "ministries-worship-team"');
     }
+
+    // ── The five ministry bands, POINTERS to the ministry documents ─────────
+    //
+    // Since 2026-09-22 (CLAUDE.md rule 15) each ministry's small line,
+    // headline, photo, text and people to talk to live on its `ministry`
+    // document, and the band on this page is a ministrySection that only points
+    // at it. The contact lines are generated at BUILD time from the people the
+    // document names (src/lib/ministry-band.ts), so they cannot go stale the
+    // way the lines this module used to type did.
+    //
+    // This module composed those five texts from the Wix captures until then
+    // (git history before that date has every line() call, and the `edits`
+    // above still describe what was done to the church's words on the way).
+    // scripts/connect-ministries.mjs moved them into the documents, and the
+    // Studio owns them now. So a re-seed writes the same five pointers the
+    // migration wrote, and REFUSES while any of the five documents is not yet
+    // connected: pointing a band at a document still holding the unedited Wix
+    // text would publish that text over the page.
+    const ministryBand = (key, anchor, id, imageSide) => {
+      const doc = (ministries ?? []).find((m) => m._id === id);
+      if (!doc) {
+        throw new Error(
+          `ministries.mjs: no ministry document "${id}" to point the ${key} band at.`,
+        );
+      }
+      if (!doc.headline || !Array.isArray(doc.contacts) || doc.contacts.length === 0) {
+        throw new Error(
+          `ministries.mjs: ${id} has not been connected yet (no headline or no people to talk to). ` +
+            'Run node scripts/connect-ministries.mjs first; re-seeding before it would show the ' +
+            'old Wix text on the page.',
+        );
+      }
+      return {
+        _type: 'ministrySection',
+        _key: key,
+        ministry: { _type: 'reference', _ref: id },
+        ...(imageSide ? { imageSide } : {}),
+        anchor: { _type: 'slug', current: anchor },
+      };
+    };
 
     // ── 1. The Sunday schedule ──────────────────────────────────────────────
     // scripts/data/pages/what-to-expect.txt, the same capture /visit reads, so
@@ -331,54 +287,15 @@ export default {
       ),
     ];
 
-    // ── 2. Worship arts ─────────────────────────────────────────────────────
-    // scripts/data/pages/worship.txt. The five jobs worship leaders do are one
-    // line each in the capture and are set as the list they are.
-    const worshipLeaderLines = linesBetween(
-      'worship',
-      'When we gather, worship leaders help us by:',
-      'Praise Team & Instrumentalists',
-    );
-    const worshipJobs = worshipLeaderLines.map((l) => decodeEntities(l).trim()).filter(Boolean);
-    if (worshipJobs.length !== 5) {
-      throw new Error(
-        'ministries.mjs: expected 5 things worship leaders do in scripts/data/pages/worship.txt, ' +
-          `found ${worshipJobs.length}`,
-      );
-    }
-
-    const worshipBody = [
-      ...paragraphs(line('worship', 'Christian worship is a lifestyle'), 'wa-a'),
-      ...paragraphs(line('worship', 'When we gather, worship leaders help us by:'), 'wa-b'),
-      ...bullets(worshipJobs, 'wa-c'),
-      ...paragraphs(line('worship', 'Our Praise Team consists of'), 'wa-d'),
-      ...paragraphs(line('worship', 'hand bell choir'), 'wa-e'),
-      // Derived (note 2). Re-seeding refreshes both names, roles and addresses.
-      ...contact(['Worship Arts Director', 'Worship Coordinator'], 'wa-f'),
-    ];
-
-    // ── 3. Children ─────────────────────────────────────────────────────────
+    // ── 3. Children: the rooms ──────────────────────────────────────────────
     // scripts/data/pages/children.txt, with the two room numbers forced to the
     // ruling (note 5) and the repeated nursery card cut.
-    // The band is SPLIT IN TWO, and the measurement is the reason. Written as
-    // one imageTextSection the children's material ran 3,804px tall beside a
-    // 385px photograph: 3,400px of empty column, because the band lays image
-    // and text out as two halves of one grid row. So the image band carries
-    // what the church says its children's ministry IS, which is the length a
-    // photograph can sit beside, and the room-by-room detail follows it as a
-    // full-width text band at the page's own left edge. /children still lands
-    // on the image band, so the redirect is unaffected.
-    const childrenBody = [
-      // The three things the church says its children's ministry is, lines 11,
-      // 13 and 15, whole. The first sends the reader to the questions band,
-      // which is directly below this one.
-      ...paragraphs(line('children', 'Holistic and safe'), 'ch-a'),
-      ...paragraphs(line('children', 'Age-appropriate'), 'ch-b'),
-      ...paragraphs(line('children', 'Part of the life of the entire congregation'), 'ch-c'),
-
-      ...contact(["Children's Ministry Coordinator"], 'ch-w'),
-    ];
-
+    // The children's material is SPLIT IN TWO, and the measurement is the
+    // reason. Written as one image band it ran 3,804px tall beside a 385px
+    // photograph. So the Children ministry band carries what the church says its
+    // children's ministry IS, and the room-by-room detail follows it here as a
+    // full-width text band at the page's own left edge. /children still lands on
+    // the ministry band, so the redirect is unaffected.
     const childrenRooms = [
       heading('Sunday school', 3, 'ch-h1'),
       ...paragraphs(line('children', '“Sunday School” refers to a time of small group'), 'ch-d'),
@@ -462,132 +379,6 @@ export default {
         ],
         'ch-v',
       ),
-    ];
-
-    // ── 4. Youth ────────────────────────────────────────────────────────────
-    // scripts/data/pages/youth.txt. The two schedule blocks are each four Wix
-    // layout lines and are joined back into one sentence apiece.
-    const otherYouthLines = linesBetween('youth', 'Other Youth Events Include', 'Get Involved');
-    const otherYouth = otherYouthLines.map((l) => decodeEntities(l).trim()).filter(Boolean);
-    if (otherYouth.length !== 6) {
-      throw new Error(
-        'ministries.mjs: expected 6 other youth events in scripts/data/pages/youth.txt, found ' +
-          otherYouth.length,
-      );
-    }
-
-    const youthBody = [
-      ...paragraphs(line('youth', 'students grades 6-12'), 'yo-a'),
-
-      heading('Large group meeting', 3, 'yo-h1'),
-      ...paragraphs(
-        `${line('youth', 'Every Sunday, 9:30-10:15 a.m.')} ${line('youth', '(FBCM Youth Center)')}`,
-        'yo-b',
-      ),
-      ...paragraphs(line('youth', 'Our main teaching time'), 'yo-c'),
-      ...paragraphs(line('youth', 'Donut (Semi) Hour'), 'yo-d'),
-
-      heading('City Life Club', 3, 'yo-h2'),
-      // The 7:17 is the church's own and is kept (note 7).
-      ...paragraphs(
-        [
-          `${line('youth', 'Wednesdays During School Year').replace('During School Year', 'during school year')},`,
-          line('youth', '7:17 - 8:45 p.m.'),
-          // "(FBCM Fellowship Hall/" and "Youth Center)" are two lines of one
-          // parenthesis, and the second is found by POSITION because the same
-          // words appear earlier in the file as the Youth Center's own line.
-          `${line('youth', '(FBCM Fellowship Hall/')}${lineAfter('youth', '(FBCM Fellowship Hall/')}`.replace(
-            'Hall/Youth',
-            'Hall / Youth',
-          ),
-        ].join(' '),
-        'yo-e',
-      ),
-      ...paragraphs(line('youth', 'All students grades 6 - 12 are welcome'), 'yo-f'),
-      ...paragraphs(line('youth', 'We begin with a meal'), 'yo-g'),
-      ...paragraphs(line('youth', 'fun and games and end with a Bible study'), 'yo-h'),
-
-      heading('Other youth events', 3, 'yo-h3'),
-      ...bullets(otherYouth, 'yo-i'),
-
-      ...contact(['Youth Coordinator'], 'yo-j'),
-    ];
-
-    // ── 5. Adults ───────────────────────────────────────────────────────────
-    // scripts/data/pages/adult.txt. No photograph in the manifest for adults,
-    // so this band is a richTextSection (see the photo note above).
-    const lifeGroupLines = linesBetween('adult', 'Life Groups', 'Fellowship And Other Events');
-    const lifeGroups = lifeGroupLines
-      .map((l) => decodeEntities(l).trim())
-      .filter((l) => l.includes(' | '));
-    if (lifeGroups.length !== 5) {
-      throw new Error(
-        'ministries.mjs: expected 5 life groups in scripts/data/pages/adult.txt, found ' +
-          lifeGroups.length,
-      );
-    }
-
-    const adultBody = [
-      ...paragraphs(line('adult', 'From College and Career to Retirees'), 'ad-a'),
-
-      heading('Sunday morning', 3, 'ad-h1'),
-      ...paragraphs(line('adult', 'there are classes for Adults'), 'ad-b'),
-      ...bullets(
-        [
-          line('adult', 'Friendship Class taught by'),
-          line('adult', 'Intergenerational Bible Study class'),
-        ],
-        'ad-c',
-      ),
-
-      heading('Life Groups', 3, 'ad-h2'),
-      ...paragraphs(line('adult', 'various Life groups that meet in set seasons'), 'ad-d'),
-      ...paragraphs(line('adult', 'several life groups which meet at various days'), 'ad-e'),
-      ...bullets(
-        lifeGroups.map((g) => (g.includes('Led by by') ? swap(g, 'Led by by', 'Led by') : g)),
-        'ad-f',
-      ),
-
-      heading('Fellowship and other events', 3, 'ad-h3'),
-      heading(line('adult', 'Fresh Brewed Life'), 4, 'ad-h4'),
-      ...paragraphs(line('adult', 'breakfast and hospitality for women'), 'ad-g'),
-      heading(line('adult', 'Church Friends Lunch'), 4, 'ad-h5'),
-      ...paragraphs(line('adult', 'post-worship luncheons'), 'ad-h'),
-      heading(line('adult', 'Service Trips'), 4, 'ad-h6'),
-      ...paragraphs(line('adult', 'All church trips for service and worship'), 'ad-i'),
-
-      ...contact(['Adult Coordinator'], 'ad-j'),
-    ];
-
-    // ── 6. Outreach ─────────────────────────────────────────────────────────
-    // scripts/data/pages/outreach.txt, the shortest of the five sources at 149
-    // words, and whole. No photograph in the manifest for outreach either.
-    const outreachLines = linesBetween(
-      'outreach',
-      'Ways You Can Connect With FBCM to serve our community',
-      'Get Involved',
-    );
-    const outreachWays = outreachLines.map((l) => decodeEntities(l).trim()).filter(Boolean);
-    if (outreachWays.length !== 4) {
-      throw new Error(
-        'ministries.mjs: expected 4 ways to connect in scripts/data/pages/outreach.txt, found ' +
-          outreachWays.length,
-      );
-    }
-
-    const outreachBody = [
-      // Their own opening sentence, with its em-dash made a comma.
-      ...paragraphs(comma(line('outreach', 'join Christ where he is already at work')), 'ou-a'),
-      heading(line('outreach', 'Ways You Can Connect With FBCM'), 3, 'ou-h1'),
-      ...bullets(
-        outreachWays.map((w) =>
-          w.includes('building use policy')
-            ? swap(w, 'policy here.', 'policy [here](/wedding#building-use).')
-            : w,
-        ),
-        'ou-c',
-      ),
-      ...contact(['Outreach Coordinator'], 'ou-d'),
     ];
 
     // ── 7. Stay updated ─────────────────────────────────────────────────────
@@ -678,28 +469,10 @@ export default {
         },
 
         // 3. Worship arts. Where /worship lands.
-        {
-          _type: 'imageTextSection',
-          _key: 'ministries-worship',
-          anchor: { _type: 'slug', current: 'worship' },
-          image: handbells,
-          imageSide: 'right',
-          eyebrow: 'Worship arts',
-          heading: 'Praise team, instruments and handbells',
-          body: worshipBody,
-        },
+        ministryBand('ministries-worship', 'worship', 'ministry-worship', 'right'),
 
         // 4. Children. Where /children lands.
-        {
-          _type: 'imageTextSection',
-          _key: 'ministries-children',
-          anchor: { _type: 'slug', current: 'children' },
-          image: children,
-          imageSide: 'left',
-          eyebrow: 'Children',
-          heading: 'Nursery through fifth grade',
-          body: childrenBody,
-        },
+        ministryBand('ministries-children', 'children', 'ministry-children', 'left'),
 
         // 5. The rooms, in their own words, at the page's own left edge (see
         //    the note by childrenRooms above).
@@ -721,37 +494,14 @@ export default {
         },
 
         // 7. Youth. Where /youth lands.
-        {
-          _type: 'imageTextSection',
-          _key: 'ministries-youth',
-          anchor: { _type: 'slug', current: 'youth' },
-          image: youth,
-          imageSide: 'right',
-          eyebrow: 'Youth',
-          heading: 'Grades 6 to 12',
-          body: youthBody,
-        },
+        ministryBand('ministries-youth', 'youth', 'ministry-youth', 'right'),
 
-        // 8. Adults. Where /adult lands. A text band, not an image band: the
-        //    manifest has no adult photograph (see the photo note above).
-        {
-          _type: 'richTextSection',
-          _key: 'ministries-adult',
-          anchor: { _type: 'slug', current: 'adult' },
-          eyebrow: 'Adults',
-          heading: 'Sunday classes, Life Groups and more',
-          body: adultBody,
-        },
+        // 8. Adults. Where /adult lands. The ministry has no photograph, so
+        //    the band draws as a text band.
+        ministryBand('ministries-adult', 'adult', 'ministry-adult'),
 
-        // 9. Outreach. Where /outreach lands. A text band for the same reason.
-        {
-          _type: 'richTextSection',
-          _key: 'ministries-outreach',
-          anchor: { _type: 'slug', current: 'outreach' },
-          eyebrow: 'Outreach',
-          heading: 'Joining Christ where he is already at work',
-          body: outreachBody,
-        },
+        // 9. Outreach. Where /outreach lands. No photograph either.
+        ministryBand('ministries-outreach', 'outreach', 'ministry-outreach'),
 
         // 10. Get involved, once, for the whole Church Coordination Team. This
         //    band is LIVE-derived: the query behind staffGridSection reads the

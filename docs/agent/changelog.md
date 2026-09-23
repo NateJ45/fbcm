@@ -92,6 +92,53 @@ lists, piped table, run-in labels, the lancet heading/body/caption, and the
 legend names. Open items, content findings and parked minors are in
 `docs/PENDING.md`.
 
+_2026-09-22 — The service time, address, phone and email live in one place._
+
+The page seeds had typed Site settings values into 46 places across 14 documents, so a
+new service time meant a hunt. Site settings placeholders (`{time}`, `{address}` and six
+more, `src/lib/settings-placeholders.ts`) are now filled at the two fetch chokepoints,
+`sanityFetch` for the build and `previewFetch` for Presentation, so no component needed to
+change and the editor sees the real value in the preview. `seed-pages` converts typed
+copies before writing, and `scripts/settings-placeholders.mjs` is both the one-time,
+backup-first migration and the standing audit (`--check`). The converter is narrow on
+purpose: "(Mark 10:45)" and the "10:15-10:45 a.m." fellowship hour look like the service
+time and are left alone, and the script refuses to write if any change fails to fill back
+to the church's text. Parity was 162/162 with no placeholders in the data, and a local
+build that simulated the migration changed only "10:45 AM" to "10:45 am". Same branch:
+blog posts no longer default their Author to "Your Name", staff members get a "Show on
+the Staff page" switch, Presentation labels the Blog page "Blog", guide links lost a double
+slash, and scheduled publishing is switched on pending one repo secret.
+
+_2026-09-22 — The Studio made easier to read._
+
+Nathan found the Studio hard to read. The cause was measurable: every label, list row
+and form field was set in Castoro, the site's reading serif, at Sanity's small UI sizes,
+and the Help guides drew their prose in the theme's muted grey (6.73:1 in the dark
+scheme against about 14.6:1 for ordinary text). The interface stack is now the system
+sans (his choice), with Castoro Titling kept for pane headings; `brand.config.json`'s
+`studio.fonts.body` was changed with it so `apply-brand` writes the same line back. The
+guides' paragraphs and leads are no longer muted (14.59:1 dark, 14.61:1 light). The guide
+icons are `@sanity/icons` components chosen by name (`src/sanity/guides/icons.ts`)
+instead of emoji, which Windows drew small and unevenly. The workspace title "My Studio",
+which also named the Studio's own photo source in every image menu, is now "First
+Baptist Studio", and the church-at-a-glance pane no longer says "business".
+
+_2026-09-22 — The Studio's Help guides, rewritten for the church secretary (PORTS.md card 41)._
+
+`src/sanity/guides/content.ts` was still the starter's design-studio template and had
+been unhooked from the desk on 2026-09-19. It is now ten guides in five categories
+(Start here; Sundays and notices; Blog, staff and ministries; Pictures; When something
+is wrong), each one a job the secretary will actually do, following the stonesteps-50k
+rewrite. They sit in the Help group under "How the website works" and "Your church at a
+glance". Every click path was checked against the schemas and then walked in the real
+Studio, which corrected several guesses (there is no Discard or Unpublish in these
+menus, the Media tool's tags sit on the right, and Presentation lists pages by their own
+titles). The walk also found things the Studio cannot do yet, most importantly that the
+service time was copied into about fifteen bands at seed time and that the `ministry`
+documents are read by no page; those are listed in `docs/PENDING.md`. A guide on how a
+band's picture decides its shape is drafted there and waits for
+feat/richtext-ledger-photo-shapes to merge.
+
 _2026-09-21 — The art-direction pass: a full identity and layout rebuild off the generic starter look._
 
 Nathan's read on the deployed plan-2 site was blunt: "very generic and plain... not

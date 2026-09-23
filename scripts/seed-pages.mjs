@@ -55,11 +55,13 @@
 //                                    // with identifiable children in them
 //   };
 //
-//   ctx = { images, copy, settings, staff, keys }
+//   ctx = { images, copy, settings, staff, ministries, keys }
 //     images   makePageImages(client).image(key) -> a block-ready image object
 //     copy     everything scripts/lib/page-copy.mjs exports
 //     settings the live siteSettings document
 //     staff    the live staffMember documents, ordered
+//     ministries the live ministry documents (ministries.mjs refuses to point
+//              a band at one that scripts/connect-ministries.mjs has not filled)
 //     keys     keys('hero') -> a function yielding 'hero-1', 'hero-2', ...
 
 import { readdirSync, writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
@@ -68,6 +70,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createClient } from '@sanity/client';
 import { loadEnv } from './lib/loadEnv.mjs';
 import * as copy from './lib/page-copy.mjs';
+import { placeholdersForTypedCopies } from '../src/lib/settings-placeholders.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
@@ -329,15 +332,17 @@ async function makeContext() {
   };
   let settings = null;
   let staff = [];
+  let ministries = [];
 
   if (configured) {
     const { makePageImages } = await import('./lib/page-images.mjs');
     images = makePageImages(client);
     settings = await client.fetch('*[_type == "siteSettings"][0]');
     staff = await client.fetch('*[_type == "staffMember"]|order(order asc, name asc)');
+    ministries = await client.fetch('*[_type == "ministry"]');
   }
 
-  return { images, copy, settings, staff, keys: copy.keyer };
+  return { images, copy, settings, staff, ministries, keys: copy.keyer };
 }
 
 // ── Backups ─────────────────────────────────────────────────────────────────
@@ -477,7 +482,12 @@ async function main() {
   for (const mod of wanted) {
     copy.resetCtaKeys();
     const built = await mod.build(ctx);
-    const doc = { _id: mod.id, _type: mod.type, ...built };
+    // The modules read Site settings to write the service time, the address,
+    // the phone and the email into their bands. Those become placeholders here
+    // ({time}, {address}...), so the value lives once, in Site settings, and a
+    // re-seed can never type the copies back in (src/lib/settings-placeholders.ts).
+    const raw = { _id: mod.id, _type: mod.type, ...built };
+    const doc = ctx.settings ? placeholdersForTypedCopies(raw, ctx.settings) : raw;
 
     console.log(`${mod.id}  (${mod.type})  /${mod.slug}`);
 

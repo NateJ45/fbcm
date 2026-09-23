@@ -77,6 +77,9 @@ export const resolve: PresentationPluginOptions['resolve'] = {
     },
     // scaffold:end
     journalCategory: { locations: [{ title: 'Blog', href: '/preview/blog' }] }, // scaffold: journal
+    // A ministry is drawn on the Ministries page by its "Ministry" band
+    // (ministrySection), so that is where opening one points the preview.
+    ministry: { locations: [{ title: 'Ministries', href: '/preview/ministries' }] }, // scaffold: church
     announcement: { locations: [{ title: 'Home', href: '/preview' }] },
     siteSettings: { locations: [{ title: 'Home', href: '/preview' }] },
     businessInfo: { locations: [{ title: 'Home', href: '/preview' }] },

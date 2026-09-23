@@ -86,7 +86,13 @@ const proseBody = (name = 'body', title = 'Text') =>
                   name: 'href',
                   title: 'URL',
                   type: 'url',
-                  validation: (R) => R.uri({ allowRelative: true }),
+                  // mailto: and tel: allowed, as ctaBlock already allows them. With
+                  // the default (http/https only) every seeded contact line such
+                  // as "worship@fbcmuncie.org" failed validation, and a page with
+                  // a validation error cannot be published (found 2026-09-22 on
+                  // Contact, Ministries, Staff and Wedding).
+                  validation: (R) =>
+                    R.uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] }),
                 }),
               ],
             },
@@ -714,6 +720,7 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
         'hoursSection',
         'documentListSection',
         'linkCardsSection',
+        'ministrySection',
       ],
     },
     // scaffold:end
