@@ -18,6 +18,7 @@ Machine.
 | `nav.json`               | The header menu tree and the footer links, as the old site rendered them |
 | `outbound-links.json`    | Every third-party link, by host and frequency: the record of which platforms the church depends on |
 | `binary-manifest.json`   | All 424 captured binaries with byte size, SHA-256 and source URL |
+| `photo-library.json`     | All 453 archived images classified, with the media-library upload plan (title, alt text, tags) that `../upload-photo-library.mjs` applies |
 | `images-manifest.json`, `files-manifest.json` | Per-asset detail from the two crawlers    |
 | `wayback-inventory.json` | Every URL the Internet Archive has seen on this domain since 2001, diffed against the current sitemaps |
 | `capture-report.md`, `blog-capture-report.md`, `wayback-report.md` | What was captured and what was not |

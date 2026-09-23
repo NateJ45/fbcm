@@ -556,8 +556,10 @@ changing the guide that mentions it in the same commit.
   right; the guides say so where it matters.
 - **Media library asset names are full local file paths**
   (`C:\Users\natha\Documents\Claude\Proje...`), from the import scripts'
-  upload filenames. Cosmetic, but it is what the secretary reads when choosing
-  a photo. The photo-library work is the natural place to fix it.
+  upload filenames. Half fixed 2026-09-23 (feat/photo-library-upload): every
+  PHOTOGRAPH now has a readable name. About 130 graphics from the post import
+  (sermon art, announcement cards) still show the path. Renaming them is one
+  small patch pass over assets with no `source` marker, if it is worth doing.
 - **Staff photos and Ministry photos have no alt-text field.** StaffGrid
   passes no alt, so the image renders `alt=""` beside the printed name, which
   is acceptable; the guide says so.
@@ -677,6 +679,58 @@ Also worth a note on card 8/`sanityFetch`: a GROQ parse error in one section's
 projection (`[0...limit]`, a field reference as a slice bound) failed the ENTIRE
 home page query and fell back to defaults on a green build. `DYNAMIC_LIST_MAX`
 now ties the schema max and the slice with a drift test.
+
+---
+
+## Photo library uploaded (2026-09-23)
+
+Branch `feat/photo-library-upload`. Every church photograph captured from the old
+Wix site is now in the Sanity media library, tagged and described, so an editor can
+find and pick one from the image picker at any time. Nathan: "Put them all on the
+site so they can be picked at any time by a future person." Every photo of a child
+from the old site is approved by the church.
+
+- **What is there.** 138 photographs: 84 uploaded by this pass, resized to 2400px on
+  the long edge (25.7 MB), and 54 that the page seeds and the post import had already
+  uploaded, tagged and described in place rather than uploaded twice. Each has a
+  title, alt text, description and a readable filename. People are named only where
+  the Wix alt text named them (the staff portraits, Dan Mattox, Cassius M. Carter).
+  Every asset this pass touched carries `source.name == "fbcm-wix-archive"` and
+  `source.id` = the archive filename.
+- **The record.** `scripts/data/photo-library.json` classifies all 453 archived
+  images, with an `upload` flag and, for the 315 left out, a reason: 287 graphics,
+  logos and sermon or event art, 16 Unsplash stock, 10 exact duplicates, one stock
+  office tower, and one personal holiday selfie from a blog post. Soft, poor or
+  sub-1000px photos are kept and tagged "Needs a better copy".
+- **The tag vocabulary** (sanity-plugin-media `media.tag` documents, ids
+  `media-tag-<slug>`): People, Children, Worship, Youth, Fellowship, Service,
+  Portraits, Building interior, Building exterior, Wedding venue, Historic, Needs a
+  better copy. Wedding venue marks the /wedding page's building shots (sanctuary,
+  parlor, bridal suite, exterior) and the wedding photographs themselves. Tag new
+  photos from this list; add a tag only when none fits.
+- **How to add photos.** An editor: Media tab, "Upload assets", then open the photo
+  and set its tags, title and alt text. In bulk: add rows to `photo-library.json`
+  (`upload: true`, title, altText, description, tags) with the file in
+  `fbcm-archive/images/`, run `node scripts/upload-photo-library.mjs` (dry by
+  default, one line per photo, writes nothing), then `--apply`. A second run reports
+  `cached` for everything. `--overwrite-meta` replaces metadata an asset already has;
+  without it only empty fields are filled, so editors' changes survive a re-run.
+- **Side effect at the next rebuild.** `queries.ts` falls back to the asset's
+  `altText` when an image has no alt of its own. Only the 17 Staff page photos do
+  that: their alt was the person's name and becomes the library's sentence (for
+  example "Kendall Ellis smiling in front of stained glass"). Nathan approved this.
+  Asset uploads do not trigger a rebuild (the webhook filter excludes asset types).
+- **Still to do: the placement pass.** No page document was edited. Choosing which
+  library photos go on which page (more congregation, fewer empty rooms, the
+  children photos) is a separate pass. Start from the People and Children tags.
+- **Waiting on Nathan:** the photo of children sitting on the chancel steps around
+  a woman reading is in none of the 501 archived files. It may have been a Wix video
+  background, or an email or social post never on the site.
+- **Found, not investigated:** `npm run dev` fails in a fresh worktree after
+  `npm ci`. Vite's dependency optimizer reports 346 `MISSING_EXPORT` errors from
+  `node_modules/sanity/lib/presentation.js`, the first being `"FormRow" is not
+exported by "node_modules/sanity/package.json"`. This pass verified in the
+  deployed Studio instead.
 
 ---
 
