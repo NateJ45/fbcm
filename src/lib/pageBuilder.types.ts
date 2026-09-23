@@ -397,6 +397,40 @@ export type ProjectedLinkCardsSection = { _key: string } & Omit<_LinkCardsSectio
 export type ProjectedDocumentListSection = { _key: string } & Omit<_DocumentListSection, 'docs'> & {
     docs?: ProjectedListedDocument[];
   };
+
+/** One "People to talk to" entry after `contacts[]->` dereferences it. */
+export interface ProjectedMinistryContact {
+  _id?: string;
+  name?: string | null;
+  role?: string | null;
+  email?: string | null;
+  showOnSite?: boolean | null;
+}
+
+/** The ministry document a ministrySection points at, as the projection reads it. */
+export interface ProjectedMinistry {
+  _id?: string;
+  title?: string | null;
+  eyebrow?: string | null;
+  headline?: string | null;
+  body?: unknown[] | null;
+  image?: ProjectedImage | null;
+  /** Null entries are references that no longer resolve (a deleted person). */
+  contacts?: (ProjectedMinistryContact | null)[] | null;
+}
+
+/**
+ * ministrySection: a POINTER to one ministry document. Never rendered as
+ * itself: src/lib/ministry-band.ts turns it into the imageTextSection or
+ * richTextSection it draws as, before the cadence and the spare-image pool
+ * see it (see RenderedBlock below).
+ */
+export interface ProjectedMinistrySection extends AnchoredSection {
+  _type: 'ministrySection';
+  _key: string;
+  ministry?: ProjectedMinistry | null;
+  imageSide?: 'left' | 'right' | null;
+}
 // scaffold:end
 
 // ---------------------------------------------------------------------------
@@ -429,8 +463,17 @@ export type PageBuilderBlock =
   | ProjectedGiveBandSection
   | ProjectedHoursSection
   | ProjectedDocumentListSection
-  | ProjectedLinkCardsSection;
+  | ProjectedLinkCardsSection
+  | ProjectedMinistrySection;
 // scaffold:end
+
+/**
+ * What SectionRenderer actually draws: every block EXCEPT a ministrySection,
+ * which is resolved into the band it renders as before anything else looks at
+ * the array. Written against the literal rather than the named type so it
+ * still compiles in a fork whose scaffold removed the church blocks.
+ */
+export type RenderedBlock = Exclude<PageBuilderBlock, { _type: 'ministrySection' }>;
 
 // ---------------------------------------------------------------------------
 // Site settings, as a page-builder block sees them

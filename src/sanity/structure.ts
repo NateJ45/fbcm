@@ -248,6 +248,10 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
       // ── Ministries ───────────────────────────────────────────────────────
       // Flat, not nested: a ministry IS the whole group, there is nothing else
       // under it, so it opens straight to the list rather than a one-item menu.
+      // Since 2026-09-22 these documents FEED THE MINISTRIES PAGE: each band
+      // there is a "Ministry" band pointing at one of them, and draws its small
+      // line, headline, photo, text and contact lines from it
+      // (src/lib/ministry-band.ts). Editing a ministry here edits the page.
       S.documentTypeListItem('ministry')
         .title('Ministries')
         .icon(HeartIcon)

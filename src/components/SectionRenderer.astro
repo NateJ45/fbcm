@@ -34,11 +34,12 @@ import GiveBand from '@/components/sections/GiveBand.astro';
 import Hours from '@/components/sections/Hours.astro';
 import DocumentList from '@/components/sections/DocumentList.astro';
 import LinkCards from '@/components/sections/LinkCards.astro';
+import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
 import { splitStega } from '@/lib/preview-stega';
 import { assignSpareImages } from '@/lib/spare-images';
-import type { PageBuilderBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
+import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
 
@@ -83,7 +84,18 @@ interface Props {
 }
 
 const { sections = [], idPrefix = 'section', editDoc, settings } = Astro.props as Props;
-const rows = classifySections<PageBuilderBlock>(sections as PageBuilderBlock[], idPrefix);
+// A MINISTRY BAND IS RESOLVED FIRST (2026-09-22). A ministrySection only points
+// at a ministry document; src/lib/ministry-band.ts swaps it for the exact
+// imageTextSection (the ministry has a photo) or richTextSection (it has none)
+// it draws as, with the contact lines generated from the people the document
+// names. Doing it HERE, before the cadence and the spare-image pool below,
+// means both treat it as the band it renders as, so a page that trades a typed
+// band for a Ministry band changes nothing else about itself.
+let blocks = sections as RenderedBlock[];
+// scaffold: church
+blocks = resolveMinistryBands(sections as PageBuilderBlock[]);
+// scaffold:end
+const rows = classifySections<RenderedBlock>(blocks, idPrefix);
 
 // THE SPARE-IMAGE POOL, computed ONCE for the whole page.
 //

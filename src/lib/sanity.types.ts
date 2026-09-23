@@ -130,6 +130,9 @@ export type SectionPreset = {
       } & LinkCardsSection)
     | ({
         _key: string;
+      } & MinistrySection)
+    | ({
+        _key: string;
       } & TeamSection)
     | ({
         _key: string;
@@ -199,43 +202,6 @@ export type Slug = {
   _type: 'slug';
   current?: string;
   source?: string;
-};
-
-export type Ministry = {
-  _id: string;
-  _type: 'ministry';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  summary?: string;
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: 'span';
-      _key: string;
-    }>;
-    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
-    listItem?: 'bullet' | 'number';
-    markDefs?: Array<{
-      href?: string;
-      _type: 'link';
-      _key: string;
-    }>;
-    level?: number;
-    _type: 'block';
-    _key: string;
-  }>;
-  image?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  order?: number;
 };
 
 export type JournalCategory = {
@@ -615,6 +581,72 @@ export type TeamSection = {
     _type: 'teamMember';
     _key: string;
   }>;
+};
+
+export type MinistryReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'ministry';
+};
+
+export type MinistrySection = {
+  _type: 'ministrySection';
+  ministry?: MinistryReference;
+  imageSide?: 'left' | 'right';
+  anchor?: Slug;
+};
+
+export type StaffMemberReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'staffMember';
+};
+
+export type Ministry = {
+  _id: string;
+  _type: 'ministry';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  eyebrow?: string;
+  headline?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal' | 'h2' | 'h3' | 'h4' | 'blockquote';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+  contacts?: Array<
+    {
+      _key: string;
+    } & StaffMemberReference
+  >;
+  summary?: string;
+  order?: number;
 };
 
 export type LinkCardsSection = {
@@ -1129,6 +1161,9 @@ export type Page = {
     | ({
         _key: string;
       } & LinkCardsSection)
+    | ({
+        _key: string;
+      } & MinistrySection)
   >;
   addToMainNav?: boolean;
   navGroup?: 'top' | 'services' | 'resources';
@@ -1432,6 +1467,9 @@ export type JournalPage = {
     | ({
         _key: string;
       } & LinkCardsSection)
+    | ({
+        _key: string;
+      } & MinistrySection)
   >;
 };
 
@@ -1505,6 +1543,9 @@ export type HomePage = {
     | ({
         _key: string;
       } & LinkCardsSection)
+    | ({
+        _key: string;
+      } & MinistrySection)
     | ({
         _key: string;
       } & TeamSection)
@@ -1641,7 +1682,6 @@ export type AllSanitySchemaTypes =
   | SanityImageCrop
   | SanityImageHotspot
   | Slug
-  | Ministry
   | JournalCategory
   | Announcement
   | StudioNotes
@@ -1656,6 +1696,10 @@ export type AllSanitySchemaTypes =
   | NavLink
   | DynamicListSection
   | TeamSection
+  | MinistryReference
+  | MinistrySection
+  | StaffMemberReference
+  | Ministry
   | LinkCardsSection
   | DocumentListSection
   | HoursSection

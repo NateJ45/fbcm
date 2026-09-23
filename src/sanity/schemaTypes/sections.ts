@@ -713,6 +713,7 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
         'hoursSection',
         'documentListSection',
         'linkCardsSection',
+        'ministrySection',
       ],
     },
     // scaffold:end
