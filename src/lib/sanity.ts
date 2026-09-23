@@ -80,10 +80,15 @@ export const client: SanityClient = createClient({
   projectId: projectId || 'unconfigured',
   dataset,
   apiVersion,
-  // CDN is incompatible with token-based reads (Sanity rejects token + useCdn:true).
-  // When no token, we can use the CDN safely; it serves the same anon-filtered subset
-  // as the API anyway.
-  useCdn: !readToken,
+  // ALWAYS the CDN (2026-09-23). This used to be `useCdn: !readToken`, on the
+  // belief that the CDN rejects a token; the API CDN has accepted authenticated
+  // requests since API version 2021-03-25. With a token in .env every LOCAL build
+  // read the uncached API instead: a full build is several hundred queries, a
+  // day of agent builds, parity rebuilds and Playwright webServer builds spent
+  // 325k API requests against the plan's 250k monthly quota, while CI (no token)
+  // stayed on the CDN. Published reads through the CDN are what a static build
+  // wants anyway; the preview has its own draft client.
+  useCdn: true,
   perspective: 'published',
   ...(readToken ? { token: readToken } : {}),
 });
@@ -155,6 +160,12 @@ export async function sanityFetch<T>(
     // the cheap scan.
     return hasPlaceholder(result) ? fillPlaceholders(result, await settingsValues()) : result;
   } catch (err) {
+    // A production build must not quietly ship placeholder content: if Sanity is
+    // unreachable or refusing requests (a quota block, an outage), fail the
+    // build so the deploy stops and the live site keeps its last good build.
+    if (import.meta.env.PROD) {
+      throw new Error(`[sanity] fetch failed during a production build: ${String(err)}`);
+    }
     console.warn('[sanity] fetch error (returning empty fallback):', err);
     return fallback;
   }

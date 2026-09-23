@@ -634,6 +634,8 @@ changing the guide that mentions it in the same commit.
 
 ### For ncs-astro-sanity-starter (the library of record), found on this fork
 
+- **Build reads must use the Sanity CDN even with a token (2026-09-23).** `src/lib/sanity.ts` had `useCdn: !readToken`, so any build with `SANITY_API_READ_TOKEN` in `.env` read the uncached API. On FBCM a day of local and agent builds spent 325k API requests against the 250k monthly quota while CI (no token) stayed on the CDN. Fixed here (`useCdn: true`; the CDN accepts tokens since API 2021-03-25), and `sanityFetch` now throws in a production build instead of silently returning fallback content, so a quota block or outage fails the deploy rather than shipping an empty site. Port both to the starter and every family repo.
+
 Six findings, each general, each worth a PORTS.md card. Two are already fixed in
 PORTABLE files here and marked in their headers for the sync session.
 
