@@ -93,8 +93,14 @@ const SITE_ASSET_INLINE_LIMIT = 131072;
 // comments on `build.inlineStylesheets` and on `assetsInlineLimit` below.
 // Raised again 2026-09-23 to 152 KiB: the Who We Are identity primitives took
 // the site sheet to ~140 KB, too close to 144 KiB for the tasks still to come.
-// 155648 is still ~9.4 KB under the Studio's 165,056 B sheet.
-const CSS_INLINE_LIMIT = 155648;
+// 155648 was ~9.4 KB under the Studio's 165,056 B sheet.
+// Brought back down to 144 KiB the same day (2026-09-23), after the dead-CSS
+// trim that followed the Who We Are branch's final review left the site sheet
+// at 120,810 B: 152 KiB was headroom the branch no longer needed, and 144 KiB
+// restores the original margin (17.6 KB below the Studio's 165,056 B sheet,
+// 26.6 KB above the 120,810 B site sheet). Re-raise deliberately, the same
+// way, if a later change pushes the sheet back up near this ceiling.
+const CSS_INLINE_LIMIT = 147456;
 
 // Pages the editor keeps out of search. "Keep this page out of Google"
 // (page.hideFromSearch) has to do two things: put a robots tag on the page
@@ -167,6 +173,8 @@ export default defineConfig({
     // the font-bundling regression from the 2026-09-20 note above returns.
     // 2026-09-23: the Who We Are identity primitives took the site sheet to
     // ~140 KB, so CSS_INLINE_LIMIT moved to 152 KiB, still under the Studio.
+    // Brought back to 144 KiB the same day once the dead-CSS trim left the
+    // site sheet at 120,810 B (see CSS_INLINE_LIMIT above).
     inlineStylesheets: 'auto',
   },
   // `imageService: 'compile'` tells @astrojs/cloudflare to process images
@@ -250,12 +258,13 @@ export default defineConfig({
       // bytes, the @sanity/ui bundle).
       //
       // 2026-09-22: `.css` files get their own, higher ceiling,
-      // CSS_INLINE_LIMIT (147456 bytes / 144 KiB then; 155648 / 152 KiB since
+      // CSS_INLINE_LIMIT (147456 bytes / 144 KiB then; 155648 / 152 KiB from
       // 2026-09-23, when the Who We Are identity primitives took the site
-      // sheet to ~140 KB), because this branch's
-      // Ledger and photo-shape CSS grew the site sheet to 133,535 bytes,
-      // past SITE_ASSET_INLINE_LIMIT. 147456 sits with margin above the
-      // 133,535-byte site sheet and below the Studio's still-165,056-byte
+      // sheet to ~140 KB; back to 147456 / 144 KiB later the same day once
+      // the dead-CSS trim left the site sheet at 120,810 B), because this
+      // branch's Ledger and photo-shape CSS grew the site sheet to 133,535
+      // bytes, past SITE_ASSET_INLINE_LIMIT. 147456 sits with margin above
+      // the 120,810-byte site sheet and below the Studio's still-165,056-byte
       // sheet. Every OTHER non-font asset type deliberately stays on the
       // narrower SITE_ASSET_INLINE_LIMIT -- widening it for everything
       // would reopen the font-bundling regression described above, where a
