@@ -525,6 +525,11 @@ export const guides: Guide[] = [
         kind: 'p',
         text: 'A note from the pastors. `Heading` is the band title ("A Note From Our Pastors"). `Letter` is the body, written as ordinary paragraphs. `Signed` is how they sign it ("Kendall & Jonathan") and `Under the signature` is the line below that ("Co-Pastors, First Baptist Church Muncie"). `Portrait` is optional.',
       },
+      { kind: 'h', text: 'Where To Go Next (cards)' },
+      {
+        kind: 'p',
+        text: 'Give every one of the closing cards a photo and the row draws as arched doors, the way this page does today; leave even one card without a photo and the whole row falls back to plain cards instead.',
+      },
       {
         kind: 'seealso',
         items: ['Add or change a photo'],
