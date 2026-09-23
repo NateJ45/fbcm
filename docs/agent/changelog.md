@@ -10,6 +10,32 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-23 — Who We Are: brand palette only, church year removed, window proportions (`fix/window-height`)._
+
+The site owner reviewed the identity pass below and ruled on three things.
+**Brand colours only.** The off-brand identity tokens (the six season fills,
+goal green and purple, mint, gold-light, night green, season-deep and the
+purple and green inks) are gone from `@theme` and `.dark`; the bands now read
+`--color-band-indigo` (#292854), `-deep` (#1c1b3a), `-gold` (#d59b29),
+`-brown` (#39251e), `-taupe` (#b5aba3) and `-ink` (#1c1b3a), with the brand's
+own dark values (#22214a, #1b1a3a, #2b1b16) under `.dark`. The window hero is
+indigo with gold accents, the Watchword band indigo-dark, the goals indigo,
+gold, brown, taupe (dark, light, dark, light: brown-mid could not carry the
+gold accent at body size, so Witness took brown and Work taupe), the pledge
+indigo, the letter brown-mid, the link-card doors indigo, and the rule button
+indigo (gold on dark bands). The nave scrim is 80% indigo-dark, measured over
+pure white. `theme-tokens.test.ts` measures every pair in both themes.
+**No church year.** A Baptist church does not follow it: `church-year.ts`,
+its test, `SeasonLine.astro`, the season lookup in Hero, the styleguide's
+season fixtures and the daily 05:15 UTC deploy schedule are removed.
+**The window fills its column.** The arches started ~290px below the words at
+1440; from 1200px the window now takes 8/12 of the grid, the headline is a
+modest `clamp(36px, 3.5vw, 54px)` and the text's bottom padding shrank, so
+the middle arch's top sits within ~30 to 65px of the label's top at 1024 to
+1920, both faces still inside it. Sheet 119,658 B inline on the home page
+(from 120,848 B); 760 unit tests across 50 files. Parity 163/163 after the
+recapture.
+
 _2026-09-23 — Who We Are "alive": the church identity pass (`feat/who-we-are-alive`)._
 
 The Who We Are page was rebuilt from the prototype
