@@ -3100,7 +3100,7 @@ body::before {
   /* min-width: 0 lets the heading shrink below its own unbroken content width
      inside the .gl-head flex row (CLAUDE.md rule 18); overflow-wrap: anywhere
      is the fallback for a long one-word name (no space to wrap on) once the
-     313px-and-under 13.2vw size below still outruns the room beside the
+     620px-and-under 13.2vw size below still outruns the room beside the
      glyph. */
   min-width: 0;
   overflow-wrap: anywhere;

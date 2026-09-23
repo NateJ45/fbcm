@@ -37,8 +37,8 @@ the Watchword band when that is the next block, through SectionRenderer's
 one, LinkCards draws arched doors. `glyph` joined `NON_STEGA_FIELDS`;
 `isDarkBand` and `heroOverlay.ts` learned the new bands; the Help guides cover
 each block. The site sheet is 120,810 B inline after the merge of the dead-CSS
-trim, and the CSS inline ceiling moved to 155,648 B (rule 20). 767 unit tests
-across 51 files.
+trim; the CSS inline ceiling went to 155,648 B mid-branch and came back to
+147,456 B once the trim landed (rule 20). 765 unit tests across 51 files.
 
 `scripts/pages/who-we-are.mjs` is recomposed around the new blocks but NOT
 applied: the schema has to deploy first, then
