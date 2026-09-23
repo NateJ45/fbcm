@@ -37,6 +37,14 @@
 @source not '../../tests';
 @source not '../../prototypes';
 @source not '../../playwright*.config.ts';
+/* Also never rendered: the Studio's own code (src/sanity/, styled by Sanity
+   UI; its Help guides are prose), public/ (served verbatim, and llms-full.txt
+   is the whole site as prose), brand/ (apply-brand's input) and the root
+   config files. */
+@source not '../sanity';
+@source not '../../public';
+@source not '../../brand';
+@source not '../../*.{json,jsonc,js,mjs,ts}';
 
 /* Component-library files that ship with the starter but nothing on this site
    imports (found 2026-09-23, same trim): eleven shadcn / Magic UI primitives,
