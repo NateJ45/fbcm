@@ -1,6 +1,7 @@
+// scaffold-file: church
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { boardRows, clockOf, readBig, noteGlyph } from './hymn-board.ts';
+import { boardRows, clockOf, readBig, sameTime } from './hymn-board.ts';
 import { splitStega } from './preview-stega.ts';
 
 // A stega run as the preview client appends it: a U+200B prefix and base-4
@@ -140,6 +141,22 @@ test('empty items are dropped and missing keys are filled', () => {
   assert.equal(rows[0]?.kind, 'none');
 });
 
-test('each note takes a glyph by position: door, basin, window, then round again', () => {
-  assert.deepEqual([0, 1, 2, 3].map(noteGlyph), ['door', 'basin', 'window', 'door']);
+test('the meridiem must agree when both sides carry one', () => {
+  assert.equal(sameTime('10:45 pm', '10:45 am'), false);
+  assert.equal(sameTime('10:45 am', 'Sundays at 10:45 AM'), true);
+  assert.equal(sameTime('10:45', 'Sundays at 10:45 am'), true);
+  assert.equal(sameTime('10:45 pm', '10:45'), true);
+  assert.equal(sameTime('10:45 am', '10:15 am'), false);
+  const rows = boardRows(
+    [
+      { label: 'Evening prayer', big: '10:45 pm' },
+      { label: 'Worship', big: '10:45 am' },
+    ],
+    [],
+    'Sundays at 10:45 am',
+  );
+  assert.deepEqual(
+    rows.map((r) => r.main),
+    [false, true],
+  );
 });

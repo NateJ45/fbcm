@@ -32,7 +32,9 @@
 // board sits alone, centred.
 //
 // The `notes` go under the pictures (under the board when there are none),
-// each with a small building glyph: a door, the basin, a window, by position.
+// each with the same small gold quatrefoil. Not a building glyph: the four
+// glyphs stand for the four goals (Worship, The Way, Witness, Work) and the
+// goals band follows this one on the home page (controller ruling, fix 1).
 //
 // On a long board (Visit's three doors) the picture holds its place at the
 // top of the viewport while the board scrolls past it, so the left half is
@@ -43,10 +45,11 @@
 // The address and the directions link come from Site settings, so the church
 // types them once. The address is printed under the board. The band's `rule`
 // button is its own `cta` when an editor set one, with the directions as a
-// text link beside the address; with no `cta` the directions link is the
-// rule button. The address is the one thing this band must never fail to
-// show when it has no picture: `showMap` off only hides it (and the
-// directions with it) when there is a picture beside the board.
+// text link beside it; with no `cta` the directions link is the rule button.
+// The directions link shows whenever Site settings has one. The address is
+// the one thing this band must never fail to show when it has no picture:
+// `showMap` off only hides the address when there is a picture beside the
+// board.
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import ArchFrame from '@/components/church/ArchFrame.astro';
@@ -59,7 +62,11 @@ import type {
   SanityImageObject,
 } from '@/lib/pageBuilder.types';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
-import { boardRows, noteGlyph, type BoardItem, type BoardDoor } from '@/lib/hymn-board';
+import { boardRows, type BoardItem, type BoardDoor } from '@/lib/hymn-board';
+
+/** The notes' neutral mark: a quatrefoil, four circles of radius 9 (BuildingGlyph's QF). */
+const QUATREFOIL =
+  'M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z';
 
 interface Props {
   eyebrow?: string | null;
@@ -144,15 +151,17 @@ const addressLines: string[] = [
   .map((line, i) => (i === 0 ? reattachStega(line, addressSplit.encoded) : line));
 const showAddress = addressLines.length > 0 && (showMap !== false || !hasPicture);
 
-const directionsCta =
-  directionsUrl && showAddress
-    ? {
-        label: 'Open in Google Maps',
-        linkType: 'external' as const,
-        externalUrl: directionsUrl,
-        openInNewTab: true,
-      }
-    : null;
+// The directions link shows whenever Site settings has one, even on a band
+// whose address is hidden (a picture beside the board and `showMap` off):
+// that was the old band's behaviour, and a visitor can still use the link.
+const directionsCta = directionsUrl
+  ? {
+      label: 'Open in Google Maps',
+      linkType: 'external' as const,
+      externalUrl: directionsUrl,
+      openInNewTab: true,
+    }
+  : null;
 const hasCta = !!cta?.label;
 const stickyPicture = hasPicture && validNotes.length === 0;
 ---
@@ -309,20 +318,25 @@ const stickyPicture = hasPicture && validNotes.length === 0;
 
       {
         showAddress && (
-          <div class="mt-7 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
+          <div class="mt-7">
             <address class="font-body text-body leading-snug not-italic oldstyle">
               {addressLines.map((line) => (
                 <span class="block">{line}</span>
               ))}
             </address>
-            {hasCta && directionsCta && <CtaLink cta={directionsCta} variant="link" onDark />}
           </div>
         )
       }
       {
         (hasCta || directionsCta) && (
-          <div class:list={[showAddress ? 'mt-7' : 'mt-9', 'pb-1.5']}>
+          <div
+            class:list={[
+              showAddress ? 'mt-7' : 'mt-9',
+              'flex flex-wrap items-center gap-x-[34px] gap-y-[22px] pb-1.5',
+            ]}
+          >
             <CtaLink cta={hasCta ? cta : directionsCta} variant="rule" onDark />
+            {hasCta && directionsCta && <CtaLink cta={directionsCta} variant="link" onDark />}
           </div>
         )
       }
@@ -330,9 +344,16 @@ const stickyPicture = hasPicture && validNotes.length === 0;
       {
         !hasPicture && validNotes.length > 0 && (
           <ul class="mt-10 grid max-w-[32em] gap-3.5">
-            {validNotes.map((note, i) => (
-              <li class="grid grid-cols-[26px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
-                <BuildingGlyph name={noteGlyph(i)} class="-mt-0.5 w-[26px] text-gold" />
+            {validNotes.map((note) => (
+              <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
+                <svg
+                  viewBox="-19 -19 38 38"
+                  aria-hidden="true"
+                  focusable="false"
+                  class="building-glyph mt-[.3em] w-[18px] text-gold"
+                >
+                  <path d={QUATREFOIL} />
+                </svg>
                 <span>{note}</span>
               </li>
             ))}
@@ -345,9 +366,16 @@ const stickyPicture = hasPicture && validNotes.length === 0;
       /* ── The notes, under the pictures ─────────────────────────────────── */
       hasPicture && validNotes.length > 0 && (
         <ul class="grid max-w-[32em] content-start gap-3.5 self-start lg:col-span-6 lg:row-start-2">
-          {validNotes.map((note, i) => (
-            <li class="grid grid-cols-[26px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
-              <BuildingGlyph name={noteGlyph(i)} class="-mt-0.5 w-[26px] text-gold" />
+          {validNotes.map((note) => (
+            <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
+              <svg
+                viewBox="-19 -19 38 38"
+                aria-hidden="true"
+                focusable="false"
+                class="building-glyph mt-[.3em] w-[18px] text-gold"
+              >
+                <path d={QUATREFOIL} />
+              </svg>
               <span>{note}</span>
             </li>
           ))}

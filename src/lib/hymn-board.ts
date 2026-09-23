@@ -1,4 +1,5 @@
 // Safe to edit by hand
+// scaffold-file: church
 // The hymn board (2026-09-23, the Home identity pass): how a Sunday-times
 // band's items and doors become the rows of the board SundayTimes.astro sets
 // straight onto its brown band.
@@ -15,7 +16,8 @@
 //     component draws the door glyph in its first cell.
 //
 // THE MAIN ROW IS DERIVED, NOT CHOSEN (CLAUDE.md rule 15). The row drawn
-// largest is the one whose clock time is the service time in Site settings,
+// largest is the one whose clock time is the service time in Site settings
+// (and, when both carry an am/pm, the same one: 10:45 pm is not 10:45 am),
 // so when the church moves the service the emphasis moves with it and there is
 // no "main" switch for an editor to leave on the wrong row. With no match, no
 // row is main.
@@ -59,14 +61,33 @@ export interface BoardRow {
 
 const TIME = /^(\d{1,2}(?:[:.]\d{2})?)\s*([ap])\.?\s*m\.?$|^(\d{1,2}[:.]\d{2})$/i;
 
+/** The clock and meridiem a string names, if any. */
+function timeOf(
+  text: string | null | undefined,
+): { clock: string; meridiem: 'am' | 'pm' | null } | null {
+  const cleaned = splitStega(text ?? '').cleaned;
+  const withMeridiem = cleaned.match(/(\d{1,2})(?:[:.](\d{2}))?\s*([ap])\.?\s*m\b/i);
+  const m = withMeridiem ?? cleaned.match(/(\d{1,2})[:.](\d{2})/);
+  if (!m) return null;
+  const meridiem = withMeridiem ? (withMeridiem[3]?.toLowerCase() === 'p' ? 'pm' : 'am') : null;
+  return { clock: `${Number(m[1])}:${m[2] ?? '00'}`, meridiem };
+}
+
 /** "10:45 am" -> "10:45"; "11 AM" -> "11:00"; "Sundays at 10:45 am" -> "10:45"; no time -> null. */
 export function clockOf(text: string | null | undefined): string | null {
-  const cleaned = splitStega(text ?? '').cleaned;
-  const m =
-    cleaned.match(/(\d{1,2})(?:[:.](\d{2}))?\s*(?:[ap]\.?\s*m\b)/i) ??
-    cleaned.match(/(\d{1,2})[:.](\d{2})/);
-  if (!m) return null;
-  return `${Number(m[1])}:${m[2] ?? '00'}`;
+  return timeOf(text)?.clock ?? null;
+}
+
+/**
+ * Whether two strings name the same time: the same clock, and the same
+ * meridiem when BOTH carry one ("10:45 pm" is not "10:45 am"; a bare "10:45"
+ * matches either).
+ */
+export function sameTime(a: string | null | undefined, b: string | null | undefined): boolean {
+  const x = timeOf(a);
+  const y = timeOf(b);
+  if (!x || !y || x.clock !== y.clock) return false;
+  return x.meridiem === null || y.meridiem === null || x.meridiem === y.meridiem;
 }
 
 /** Classify one big line and split it into numeral and meridiem. */
@@ -91,7 +112,7 @@ export function boardRows(
   doors: readonly (BoardDoor | null | undefined)[] = [],
   serviceTime?: string | null,
 ): BoardRow[] {
-  const serviceClock = clockOf(serviceTime);
+  const hasServiceTime = clockOf(serviceTime) !== null;
   let mainTaken = false;
   const rows: BoardRow[] = [];
 
@@ -101,8 +122,8 @@ export function boardRows(
     const main =
       !mainTaken &&
       read.kind === 'time' &&
-      serviceClock !== null &&
-      clockOf(`${splitStega(read.big).cleaned} ${read.meridiem}`) === serviceClock;
+      hasServiceTime &&
+      sameTime(`${splitStega(read.big).cleaned} ${read.meridiem}`, serviceTime);
     if (main) mainTaken = true;
     rows.push({
       key: item._key ?? `item-${i}`,
@@ -129,10 +150,4 @@ export function boardRows(
   });
 
   return rows;
-}
-
-/** The glyph beside each note, by position: a door, the basin, a window. */
-export const NOTE_GLYPHS = ['door', 'basin', 'window'] as const;
-export function noteGlyph(index: number): (typeof NOTE_GLYPHS)[number] {
-  return NOTE_GLYPHS[index % NOTE_GLYPHS.length] as (typeof NOTE_GLYPHS)[number];
 }
