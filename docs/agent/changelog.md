@@ -10,6 +10,26 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-23 — No more visible captions printing the photograph's alt text._
+
+The owner: "we don't need the photos on the website to have captions like
+this, the pictures speak for themselves." `ImageText.astro` printed the
+image's alt text under every shape as a `figcaption` (a policy from the
+RichText Ledger and photo-shapes pass, "THE CAPTION IS THE ALT TEXT"), and
+`SundayTimes.astro` did the same for its borrowed frame photograph. Both are
+now silent: the alt text stays on the `<img>` for screen readers, nothing
+prints it as reading copy. The P2 Bulletin's plate caption
+(`src/pages/post/[slug].astro`) had a related but narrower bug: when a series
+slide's cover carried no editor-typed caption, it fell back to the cover's
+alt text; that fallback is gone too, and the plate now falls back to the post
+title instead. Kept as-is: `GalleryGrid`'s per-image caption and
+`VideoEmbed`'s caption, both real editor-typed fields distinct from alt, not
+a restatement of it. Dead CSS removed with the markup: `.ph-cap`, `.ph-gcap`
+and their shape-specific margin overrides; `.ph-tick` stays, it is also the
+band eyebrow's hairline. The site stylesheet dropped from 134,013 B to
+133,305 B; the parity baseline was recaptured (162/162 PASS, the recapture
+and rebuild agree on the byte count, the fixpoint CLAUDE.md rule 20 asks for).
+
 _2026-09-23 — The header no longer shifts the page when you scroll._
 
 On every image-hero page the first 8px of scroll removed overlay mode's negative

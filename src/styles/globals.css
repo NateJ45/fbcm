@@ -1221,17 +1221,6 @@
   height: 1px;
   background: var(--color-gold);
 }
-.ph-cap {
-  margin-top: 14px;
-  font-style: italic;
-  font-size: 0.9375rem;
-  line-height: 1.45;
-  color: var(--muted-foreground);
-  max-width: 40ch;
-}
-.ph-cap .ph-tick {
-  margin-bottom: 9px;
-}
 .ph-hung {
   position: relative;
 }
@@ -1304,21 +1293,6 @@
   width: 100%;
   height: auto;
 }
-/* A bled row's caption starts on the grid, not at the bled edge: the margin
-   is the negation of .bleed-left's pull (and of the phone's gutter pull for
-   both sides, below). */
-.ph-beside .bleed-left .ph-cap {
-  margin-left: max(
-    var(--spacing-gutter),
-    calc((100cqw - var(--container-content)) / 2 + var(--spacing-gutter))
-  );
-}
-@media (max-width: 900px) {
-  .ph-beside .bleed-left .ph-cap,
-  .ph-beside .bleed-right .ph-cap {
-    margin-left: var(--spacing-gutter);
-  }
-}
 /* PLATE */
 .ph-plate {
   background: var(--mat);
@@ -1334,9 +1308,6 @@
   inset: -6px;
   border: 1px solid var(--color-gold);
   pointer-events: none;
-}
-.ph-plate .ph-cap {
-  margin-top: 22px;
 }
 /* WINDOW */
 .ph-window-wrap {
@@ -1377,9 +1348,6 @@
   stroke: var(--color-gold);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
-}
-.ph-window-wrap .ph-cap {
-  margin-top: 23px;
 }
 .ph-beside.is-window .ph-fig {
   grid-column: 9 / 13;
@@ -1447,17 +1415,6 @@
   line-height: 1.35;
   color: rgb(244 239 230 / 92%);
 }
-.ph-gcap {
-  grid-column: 1 / -1;
-  margin: 0 0 clamp(48px, 6vw, 80px);
-  display: flex;
-  gap: 14px;
-  align-items: baseline;
-}
-.ph-gcap .ph-tick {
-  flex: none;
-  transform: translateY(-4px);
-}
 .ph-gbody {
   grid-column: 1 / 11;
 }
@@ -1500,9 +1457,6 @@
   margin-top: 12px;
   color: var(--muted-foreground);
   font-size: 0.9375rem;
-}
-.ph-legend .ph-cap {
-  margin-top: 26px;
 }
 .ph-legend-rest {
   grid-column: 1 / 11;

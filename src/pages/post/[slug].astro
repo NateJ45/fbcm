@@ -209,13 +209,20 @@ const coverDims = cover ? parseSanityAssetDimensions(cover) : null;
 const coverIsPhoto = coverDims
   ? coverDims.width >= 2000 && coverDims.width / coverDims.height >= 1.3
   : false;
+// NO VISIBLE CAPTION DERIVED FROM ALT (2026-09-23, the owner: "the pictures
+// speak for themselves"). This plate used to fall back to the cover's alt
+// text when the editor had not typed an explicit caption. It no longer does:
+// the plate shows the editor's own `caption` field (a real, separately typed
+// field on coverImage, distinct from alt), or in preview the generic "The
+// series slide" label, or the post title. The alt text stays on the <img>
+// for screen readers either way.
 const coverAlt = clean((cover as { alt?: string } | null)?.alt);
 const plateCaption = cover
   ? clean((cover as { caption?: string }).caption) ||
-    (isPreview ? 'The series slide' : coverAlt || clean(entry.title))
+    (isPreview ? 'The series slide' : clean(entry.title))
   : '';
-// When the caption already says what the alt would, the alt goes empty so a
-// screen reader does not hear it twice.
+// When the caption happens to say exactly what the alt would, the alt goes
+// empty so a screen reader does not hear it twice.
 const plateAlt = plateCaption === coverAlt ? '' : undefined;
 const hasPlate = !!cover && !coverIsPhoto;
 const titleIsLong = clean(entry.title).length > 34;

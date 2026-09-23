@@ -109,6 +109,12 @@ const hasFrame = !!frame?.asset;
 // An unreadable ref is treated as landscape, the commonest shape in the pool.
 // An editor's hotspot sets the crop point; without one the crop keeps the top
 // of the picture, where the faces are (the same default as the split hero).
+//
+// NO VISIBLE CAPTION (2026-09-23, the owner: "the pictures speak for
+// themselves"). The frame used to print the borrowed photo's alt text under
+// it as a figcaption. The alt text still lives on the <img> via SanityImage's
+// default (it reads source.alt when no explicit alt prop is passed), for
+// screen readers, but nothing prints it as reading copy any more.
 const frameAspect = hasFrame ? photoAspect(frame) : null;
 const frameShape: 'landscape' | 'square' | 'portrait' = !frameAspect
   ? 'landscape'
@@ -283,12 +289,6 @@ const directionsCta = directionsUrl
                 style={`object-position: ${frameObjectPosition};`}
               />
             </div>
-            {frame?.alt && (
-              <figcaption class="ph-cap">
-                <span class="ph-tick" />
-                {frame.alt}
-              </figcaption>
-            )}
           </figure>
         ) : showTheMap ? (
           <figure class="bleed-right" data-reveal>
