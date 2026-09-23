@@ -16,8 +16,10 @@
 // side stops a match, so "praised" is not "praise"). Every occurrence is
 // highlighted, not just the first: the verse says "proclaim" twice.
 
-/** Mirrors RUN_SOURCE in preview-stega.ts: 4+ characters of either encoding. */
-const STEGA_RUN = /[​‌‍⁠⁡⁢⁣﻿\u{1d173}-\u{1d17a}]{4,}/gu;
+import { RUN_SOURCE } from './preview-stega.ts';
+
+/** The preview's own run pattern (4+ characters of either encoding). */
+const STEGA_RUN = new RegExp(RUN_SOURCE, 'gu');
 
 export interface HighlightPart {
   text: string;

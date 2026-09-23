@@ -320,6 +320,10 @@ const wrapAttrs = (key: string | undefined) =>
             secondaryCta={s.secondaryCta}
             size={s.size ?? 'short'}
             serviceTime={settings?.serviceTime}
+            dropInto={
+              (rows[blockIndex + 1]?.block as { _type?: string } | undefined)?._type ===
+              'watchwordSection'
+            }
             headingId={headingId}
           />
         ) : s._type === 'ctaBandSection' ? (

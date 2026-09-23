@@ -2046,6 +2046,12 @@ WRITE through it; the starter only reads, so the single `getDocument().getSnapsh
 call lives inside `useInstantText` itself. Both swallow the throw a cold frame produces
 rather than warning once per keystroke.
 
+**Pending for the next sync (fbcm, 2026-09-23):** fbcm's `preview-stega.ts` now
+EXPORTS `RUN_SOURCE` (one keyword, no behaviour change), so a caller that must find
+stega runs by position (fbcm's `highlight-words.ts`) builds its regex from the one
+pattern instead of keeping a copy. General, not site-specific: fold it into the
+starter's canonical copy so `sync-check` stops reporting the one-word drift.
+
 ## Card 29a: The local edit-state channel (2026-08-28)
 
 **Canonical:** `src/lib/preview-live-draft.ts` (+ `.test.ts`).

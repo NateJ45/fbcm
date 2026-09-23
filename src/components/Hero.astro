@@ -16,8 +16,10 @@
 //      season (churchSeason(), the same date SeasonLine reads), the season
 //      line, the eyebrow as a small gold label, the headline as a sentence in
 //      Castoro italic with the script-accent word in mint, and the first
-//      three frames as a triple lancet (middle largest, rays above it) that
-//      drops over the band's bottom edge into the next band. Two frames draw
+//      three frames as a triple lancet (middle largest, rays above it). With
+//      `dropInto` (set by SectionRenderer only when the next block is the
+//      Watchword band) the window drops over the band's bottom edge into that
+//      band; otherwise it stays inside its own band. Two frames draw
 //      two lancets, one draws one; none draws the words alone. The header does
 //      NOT overlay it (heroOverlay.ts): the band is a colour, not a picture.
 //
@@ -114,6 +116,11 @@ interface Props {
   /** The window layout's season date. Defaults to now (the build date); the
       styleguide pins it so its baseline never moves with the calendar. */
   date?: Date;
+  /** The window layout only: let the lancets hang over the band's bottom
+      edge into the next block. SectionRenderer sets it only when that block
+      is the Watchword band, the one band that pads its top to clear them; on
+      any other neighbour (or the footer) the window stays inside the band. */
+  dropInto?: boolean;
 }
 
 const {
@@ -131,6 +138,7 @@ const {
   serviceTime,
   scriptAccent,
   date,
+  dropInto = false,
 } = Astro.props as Props;
 
 const heroFacts = (facts ?? []).filter((f) => f?.label || f?.value).slice(0, 3);
@@ -262,11 +270,18 @@ const windowFrames = isWindow ? effectiveImages.slice(0, 3) : [];
 const windowOrder =
   windowFrames.length === 3 ? [windowFrames[1], windowFrames[0], windowFrames[2]] : windowFrames;
 const middleIndex = windowFrames.length === 3 ? 1 : windowFrames.length === 1 ? 0 : -1;
+// No frames, nothing to drop: the flag only takes effect with a window.
+const windowDrops = dropInto && windowOrder.length > 0;
 ---
 
 {isWindow ? (
   <section
-    class:list={['hero-window relative z-[2] overflow-x-clip', tone.band, tone.ink]}
+    class:list={[
+      'hero-window relative z-[2] overflow-x-clip',
+      windowDrops && 'hw-drop',
+      tone.band,
+      tone.ink,
+    ]}
     aria-labelledby={headingId}
   >
     <div class="hw-grid mx-auto max-w-content px-gutter">

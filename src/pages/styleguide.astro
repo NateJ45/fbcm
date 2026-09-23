@@ -1028,12 +1028,38 @@ const LETTER_SETTINGS = {
     secondaryCta={WINDOW_HERO.secondaryCta}
     layout="window"
     date={WINDOW_DATE}
+    dropInto
     headingId="styleguide-hero-window"
   />
   <div id="styleguide-watchword">
     <WatchwordBand block={WATCHWORD_FIXTURE} headingId="styleguide-watchword-h" />
   </div>
+  {/* The same hero before any other band: the window stays in its own band. */}
+  <div id="styleguide-hero-window-nodrop">
+    <Hero
+      eyebrow={WINDOW_HERO.eyebrow}
+      headline={WINDOW_HERO.headline}
+      scriptAccent={WINDOW_HERO.scriptAccent}
+      backgroundImages={WINDOW_FRAMES}
+      layout="window"
+      date={WINDOW_DATE}
+      headingId="styleguide-hero-window-2"
+    />
+  </div>
   <PledgeReading block={PLEDGE_FIXTURE} headingId="styleguide-pledge" />
+  {/* And with no photographs: the words alone, one column. */}
+  <div id="styleguide-hero-window-bare">
+    <Hero
+      eyebrow={WINDOW_HERO.eyebrow}
+      headline={WINDOW_HERO.headline}
+      scriptAccent={WINDOW_HERO.scriptAccent}
+      primaryCta={WINDOW_HERO.primaryCta}
+      layout="window"
+      date={WINDOW_DATE}
+      dropInto
+      headingId="styleguide-hero-window-3"
+    />
+  </div>
   <div id="styleguide-letter">
     <PastorsLetter
       block={LETTER_FIXTURE}

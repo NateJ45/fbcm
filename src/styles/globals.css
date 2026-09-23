@@ -2713,22 +2713,24 @@ body::before {
    the pledge and the letter. Layout that utilities cannot say cheaply; the
    colours stay token utilities in the components. */
 
-/* The window hero. The triple lancet drops --window-drop over the band's
-   bottom edge; the block after it reads --after-window to clear it. */
-.hero-window,
-.hero-window + *,
-:has(> .hero-window) + * {
-  --window-drop: clamp(64px, 7.5vw, 110px);
-}
-.hero-window + *,
-:has(> .hero-window) + * {
-  --after-window: var(--window-drop);
+/* The window hero. The triple lancet stays inside the band unless the hero
+   is `.hw-drop` (SectionRenderer sets it only when the next block is the
+   Watchword band, which reads --after-window to clear the drop). */
+.hw-drop + *,
+:has(> .hw-drop) + * {
+  --after-window: clamp(64px, 7.5vw, 110px);
 }
 .hw-grid {
   display: grid;
   gap: clamp(28px, 4vw, 72px);
   align-items: end;
-  padding-top: clamp(40px, 6vw, 88px);
+  padding-block: clamp(40px, 6vw, 88px) clamp(40px, 5vw, 72px);
+}
+.hw-drop .hw-grid {
+  padding-bottom: 0;
+}
+.hw-drop .hw-window {
+  margin-bottom: calc(-1 * clamp(64px, 7.5vw, 110px));
 }
 .hw-text {
   position: relative;
@@ -2756,7 +2758,6 @@ body::before {
   grid-template-columns: 1fr 1.45fr 1fr;
   gap: clamp(8px, 1.4vw, 20px);
   align-items: end;
-  margin-bottom: calc(-1 * var(--window-drop));
 }
 .hw-window[data-count='2'] {
   grid-template-columns: 1fr 1fr;
@@ -2786,11 +2787,19 @@ body::before {
   display: block;
   width: 100%;
   height: auto;
-  overflow: visible;
 }
 @media (min-width: 901px) {
-  .hw-grid {
+  .hw-grid:has(.hw-window) {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  /* Room for the rays inside the window's own box, so they never rise past
+     the band's top edge when the words are shorter than the window. */
+  .hw-window {
+    padding-top: 20%;
+  }
+  .hw-rays {
+    top: 0;
+    bottom: auto;
   }
   .hw-text {
     padding-bottom: clamp(56px, 7vw, 112px);
@@ -2825,7 +2834,6 @@ body::before {
 }
 .ww-verse p {
   max-width: 21em;
-  margin: 0;
   font-size: clamp(27px, 3.3vw, 48px);
   line-height: 1.2;
   text-indent: -0.42em;
@@ -2849,11 +2857,12 @@ body::before {
   cursor: pointer;
   list-style: none;
 }
-.ww-more summary::-webkit-details-marker {
+.ww-more summary::-webkit-details-marker,
+.ww-more[open] .ww-rm,
+.ww-more:not([open]) .ww-rl {
   display: none;
 }
 .ww-pair {
-  margin: 0;
   border-top: 1px solid rgb(201 151 44 / 0.5);
 }
 .ww-pair > div {
@@ -2871,7 +2880,6 @@ body::before {
   font-size: 32px;
 }
 .ww-pair dd {
-  margin: 0;
   font-size: 20px;
   line-height: 1.45;
 }
@@ -2902,19 +2910,14 @@ body::before {
   display: flex;
   gap: 12px;
   align-items: baseline;
-  margin: 0 0 34px;
+  margin-bottom: 34px;
   font-size: 20px;
 }
 .pl-rubric svg {
   flex: none;
   width: 16px;
   height: 16px;
-  transform: translateY(2px);
-}
-.pl-reading {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  translate: 0 2px;
 }
 .pl-rd {
   display: grid;
@@ -2925,7 +2928,6 @@ body::before {
   border-top: 1px solid var(--hair);
 }
 .pl-rd p {
-  margin: 0;
   font-size: clamp(25px, 2.4vw, 35px);
   line-height: 1.2;
 }
@@ -3044,7 +3046,6 @@ body::before {
   margin-top: 44px;
 }
 .lt-names {
-  margin: 0;
   font-size: clamp(46px, 4.6vw, 66px);
   line-height: 1;
   letter-spacing: -0.01em;
@@ -3055,7 +3056,6 @@ body::before {
   display: block;
   width: clamp(240px, 24vw, 340px);
   margin: -2px 0 0 -6px;
-  overflow: visible;
   fill: none;
   stroke: var(--color-gold);
   stroke-width: 3;

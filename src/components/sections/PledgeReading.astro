@@ -91,7 +91,7 @@ const QF =
           </p>
         )
       }
-      <ol class="pl-reading">
+      <ol>
         {
           opening && (
             <li class="pl-rd pl-open" data-reveal>
@@ -105,15 +105,11 @@ const QF =
             const { head, tail } = turn(line.text ?? '');
             const delay = (i + 1) * 110;
             return (
-              <li
-                class="pl-rd"
-                data-reveal
-                data-reveal-delay={delay}
-                style={`transition-delay: ${delay}ms`}
-              >
+              <li class="pl-rd" data-reveal style={`transition-delay: ${delay}ms`}>
                 <span class="pl-who font-display text-purple-ink">All</span>
                 <p class="font-body">
                   {head}
+                  {tail && ' '}
                   {tail && <span class="pl-turn text-purple-ink italic">{tail}</span>}
                 </p>
                 {line.reference && (

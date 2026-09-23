@@ -19,8 +19,9 @@
 // keeps its click-to-edit payload (CLAUDE.md, the preview rules).
 //
 // When this band follows the window hero, the hero's lancets hang over its
-// top edge; globals.css gives the band the extra top padding they need
-// (`--after-window`, set only on the block after a `.hero-window`).
+// top edge (SectionRenderer passes the hero `dropInto` for exactly this
+// neighbour); globals.css gives the band the extra top padding they need
+// (`--after-window`, set only on the block after a `.hw-drop` hero).
 import WatchwordMark from '@/components/church/WatchwordMark.astro';
 import PortableText from '@/components/PortableText';
 import { highlightWords } from '@/lib/highlight-words';
@@ -79,7 +80,10 @@ const hasBody = !!(intro || moreBlocks.length || praise || proclaim);
             {intro && <p class="whitespace-pre-line">{intro}</p>}
             {moreBlocks.length > 0 && (
               <details class="ww-more">
-                <summary class="font-ui font-bold text-gold-light">Read more</summary>
+                <summary class="font-ui font-bold text-gold-light">
+                  <span class="ww-rm">Read more</span>
+                  <span class="ww-rl">Read less</span>
+                </summary>
                 <div class="mt-4 space-y-4">
                   <PortableText value={moreBlocks} variant="bare" />
                 </div>
