@@ -493,8 +493,11 @@ changing the guide that mentions it in the same commit.
   with no placeholders in the data (parity 162/162), and proven end to end by
   a local build that simulated the migrated data (the only rendered change is
   "10:45 AM"/"10:45 a.m." printing as "10:45 am"; the fellowship-hour range
-  and "Mark 10:45" untouched). **Remaining, in this order:** merge and deploy
-  the branch, THEN from the main checkout run
+  and "Mark 10:45" untouched). **DONE 2026-09-23:** merged and deployed at
+  `fda1214`, then `--write` patched 31 documents in one transaction
+  (`Yg84KDHscU4NDc84ofNZaO`), backup committed at
+  `scripts/data/backups/settings-placeholders-2026-09-23.json`. The steps, kept
+  for reference: merge and deploy the branch, THEN from the main checkout run
   `node scripts/settings-placeholders.mjs` (dry; expect 46 changes in 14
   documents plus 17 staff members), then `--write` (backup-first, one
   transaction, revision-guarded). Writing before the deploy would show a
@@ -514,8 +517,11 @@ changing the guide that mentions it in the same commit.
   `scripts/pages/ministries.mjs` now seeds the five pointers and refuses while
   a ministry is unconnected. Proven render-neutral on the current data, and
   proven end to end by a local build that applied the migration's own plan in
-  memory: /ministries byte-identical. **Remaining, in this order:** merge and
-  deploy, THEN from the main checkout run `node scripts/connect-ministries.mjs`
+  memory: /ministries byte-identical. **DONE 2026-09-23:** merged and deployed
+  at `fda1214`, then `--write` patched 6 documents in one transaction
+  (`PwVRqMM9lzIWA1u8PaHz0V`), backup committed at
+  `scripts/data/backups/connect-ministries-2026-09-23.json`. The steps, kept
+  for reference: merge and deploy, THEN from the main checkout run `node scripts/connect-ministries.mjs`
   (dry; expect 5 ministries and 5 bands), then `--write` (backup-first, one
   transaction, revision-guarded). Writing before the deploy would drop all
   five bands from the live page. The run REMOVES the five old Wix photos from
@@ -607,11 +613,16 @@ changing the guide that mentions it in the same commit.
   162/162 on a second build with the inline stylesheet at 133,382 B on both.
   Original note: something outside
   these sessions updated 14 `journalEntry` documents at 2026-09-23T00:07:15Z
-  and uploaded 68 file assets (PDFs) around 00:09. Against the committed
+  and uploaded 68 file assets (PDFs) around 00:09. (Explained 2026-09-23: the
+  14 posts are the journal session's own approved write,
+  `scripts/fix-journal-gaps.mjs`, 13 categorised plus one excerpt; and no
+  file asset has been CREATED since the plan 2b import on 2026-09-20, so the
+  "68 uploads" were existing assets, not new ones. Read-only GROQ checks.) Against the committed
   baselines the build scores 120/162, all 42 diffs blog/post pages; against a
   fresh capture of the parent on the same data, 162/162. Recapture once that
   work lands, and prove the fixpoint.
-- **Run order for the two data migrations**, both from the main checkout after
+- **(DONE 2026-09-23, in this order, after `fda1214` deployed; see the two
+  entries above.) Run order for the two data migrations**, both from the main checkout after
   the stacked branches are merged AND deployed: `settings-placeholders.mjs`
   (dry, then `--write`), then `connect-ministries.mjs` (dry, then `--write`).
   The ministries migration drops the old Wix photos from all five Ministry

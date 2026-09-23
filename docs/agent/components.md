@@ -14,7 +14,7 @@ When building UI, reach for components in this order:
 
 File naming:
 
-- PascalCase for top-level components (`Hero.astro`, `ServiceCard.astro`, `JournalCard.astro`)
+- PascalCase for top-level components (`Hero.astro`, `ImageText.astro`, `RichBody.astro`)
 - kebab-case for shadcn primitives in `src/components/ui/` (matches shadcn CLI convention)
 
 ### Radix-based primitives server-render fine, so hydrate them at `client:idle`
@@ -50,7 +50,7 @@ The core component set, by role. All in `src/components/` unless noted.
 **Marketing cards (all share the brand-stripe + resting-shadow rhythm):**
 
 - `ServiceCard.astro` -- service tier (price + features + best-for + CTA).
-- `JournalCard.astro` -- journal index card (featured variant spans 2 cols). Hero image uses `.img-zoom` + `.img-tint-light` hover treatment.
+- `JournalCard.astro` -- deleted 2026-09-22 by the journal polish (the blog index and archives are now the "I1 Register" dated list; see `docs/agent/changelog.md`).
 - `TestimonialCard.astro` -- quote card with monogram fallback when no photo. Renders a project link when `relatedProject` reference is set.
 - `FeaturedTestimonial.astro` -- large editorial pull-quote variant of TestimonialCard.
 
