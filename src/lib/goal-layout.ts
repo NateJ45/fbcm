@@ -1,5 +1,6 @@
 // src/lib/goal-layout.ts
 // Safe to edit by hand
+// scaffold-file: church
 // Each of the four goals is drawn in its own composition and colour, decided by
 // its POSITION (the church's order is Worship, The Way, Witness, Work), never by
 // a field (CLAUDE.md rule 9). A composition the goal cannot fill falls back to

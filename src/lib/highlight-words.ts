@@ -1,4 +1,5 @@
 // Safe to edit by hand
+// scaffold-file: church
 // Highlight whole words inside a string that may carry a preview stega run
 // (2026-09-23, the Watchword band: "praise" and "proclaim" in Isaiah 12:4).
 //

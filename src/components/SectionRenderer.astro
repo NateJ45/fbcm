@@ -288,12 +288,14 @@ const isDarkBand = (block: unknown, index: number): boolean => {
     case 'faqSection':
     case 'heritageBandSection':
       return true;
+    // scaffold: church
     // The Watchword band is night green by type; the goals end on their last
     // goal's band, dark unless that lands on gold (goalsEndDark).
     case 'watchwordSection':
       return true;
     case 'goalsSection':
       return goalsEndDark((b as { goals?: unknown }).goals);
+    // scaffold:end
     case 'linkCardsSection':
       // The statement, or the arched doors on green (cardsPictured).
       return index === spares.statementIndex || cardsPictured((b as { cards?: unknown }).cards);

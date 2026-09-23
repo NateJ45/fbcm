@@ -1,4 +1,5 @@
 // src/lib/goal-layout.test.ts
+// scaffold-file: church
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { goalLayout, goalsEndDark } from './goal-layout.ts';
