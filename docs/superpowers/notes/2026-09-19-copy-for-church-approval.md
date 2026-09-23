@@ -258,6 +258,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Corrected: the two issues the Wix buttons label "Feburary" are seeded as "February". It is a typo in a button label, not a word of the church's own prose.
 - Renamed: the "Download Latest Issue" button becomes an issue row like the others, titled with its month, under the church's own heading for it ("Current Visitor") on publications.txt line 9. The old label described the button, not the issue.
 - Dropped: the "Other Updates" block from publications.txt (Church Connect sign-up and "see our Blog"). The first belongs on a page about the app and the second points at the page this list now lives on.
+- Em-dash to comma (CLAUDE.md rule 2), in the post summary of "Justified by Faith, Empowered by the Spirit" (shown under its title and on /blog): "the Holy Spirit’s role in giving us up— Hope which does not put us to shame" now reads "...giving us up, Hope which...". No other word changes. The summary is a field on the post, not a sentence this module builds, so the change was made by scripts/fix-journal-gaps.mjs (backed up first). The Robert Frost quotation in the summary of "The Road Not Taken" keeps its dash, by decision.
 
 ### Facts to confirm from this page
 

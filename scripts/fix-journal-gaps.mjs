@@ -57,6 +57,11 @@ const PREVIEWS = [
 ];
 const RESOURCES = ['fbcm-sermon-podcast-now-available'];
 
+// Excerpts left as written, by Nathan's ruling (2026-09-22): the-road-not-taken
+// quotes Robert Frost ("and I—I took the one less traveled by"), and a poem's
+// own punctuation stays. A deliberate exception to rule 2, recorded in PENDING.
+const EXCERPT_EXEMPT = ['the-road-not-taken'];
+
 // The preview's own words, in the first text blocks. no-rest-for-the-wicked opens
 // on its two readings and says "This is the third week of our Advent 2024 series"
 // in its third block, so the guard reads the first three.
@@ -105,7 +110,7 @@ async function main() {
       }
     }
 
-    if (typeof doc.excerpt === 'string') {
+    if (typeof doc.excerpt === 'string' && !EXCERPT_EXEMPT.includes(doc.slug)) {
       const { text, changed } = normalizeDashes(doc.excerpt);
       if (changed > 0) {
         change.excerpt = text;
