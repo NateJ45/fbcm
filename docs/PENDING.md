@@ -749,10 +749,11 @@ from the old site is approved by the church.
   (measured by building with and without it): /visit had shown Kendall's photo twice
   (the tower, before this pass), and home would have shown the first-Sunday photo
   twice. /history's opening strip still previews its era photos, on purpose.
-- **Parity baselines are stale.** `npm run parity compare` is 1/162 on this tree
-  because the baselines predate the 2026-09-22 content migrations (shared header and
-  footer text changed), not because of this branch. Recapture on `main` after a
-  deploy before relying on it again.
+- **Parity: recapture home and /visit after this merges.** Against `main`'s
+  2026-09-23 baselines (captured after the placement writes) this branch is 160/162:
+  home and /visit differ, and in both the only change is the heritage strip's second
+  copy of a photo going away. The production site showed those repeats from the
+  12:19 UTC publish rebuild until this branch deploys.
 - **Seeding from a nested worktree** needs `<worktrees>/fbcm-archive` to resolve
   (a directory junction to `Projects/fbcm-archive` was made on 2026-09-23) AND the
   worktree's `scripts/.asset-map.json` filled from the dataset first: `seed-pages`
