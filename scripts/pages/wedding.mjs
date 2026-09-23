@@ -62,6 +62,8 @@ export default {
     'The kitchen. (gallery caption)',
     'The youth center. (gallery caption)',
     'A wedding party at the red doors. (gallery caption)',
+    'Weddings here (gallery heading, 2026-09-23)',
+    'Hanna and Nathan. (gallery caption; the names are the Wix alt text on that photograph and the testimonial above it)',
     'Read the contract and the bridal packet, then reserve your date with the church office. (heading, "Reserving your wedding" band lead-in, built from wedding.txt\'s "you will need to mail the contract, the information sheet, and a deposit to" and the church\'s mailing address)',
     "Mail the signed contract, the information sheet and a deposit to the church office. (reservation step, built from wedding.txt's own mailing instructions and address)",
     'Fill out the wedding information form online. (reservation step, built from the Bridal Packet button\'s own label, "Fill Out Informational Form")',
@@ -77,7 +79,7 @@ export default {
     'Cut, twice: "The Bridal Suite" and "Sanctuary" / "The Sanctuary" are each printed once on the Wix page as a heading with nothing but a photo carousel under it. Both are represented once each in the gallery below instead, each with a caption of its own (declared above).',
     'Cut: "Exterior" as a bare heading over a photo carousel, for the same reason.',
     'Re-cased: "Hanna & Nathan" (a Wix profile heading, not the church\'s prose) becomes "Hanna and Nathan" for the quote\'s attribution, since it names two people rather than a company. The quote itself is unchanged.',
-    'Cut: "Photos used with permission from the couples and the photographers." and the photo-credit sentence naming the three photographers. Neither photograph on this page is one of theirs; the manifest photographs are the church building itself.',
+    'Restored 2026-09-23: "Photos used with permission from the couples and the photographers." and the photo-credit sentence naming the three photographers, printed under the "Weddings here" gallery. They were cut on the reading that no couple\'s photograph was on the page, which was never quite true (the wedding party at the red doors is one) and stopped being true when the gallery of weddings was added. The sentences are the church\'s own, with "&" set as "and".',
     'Linked, so it still works: "please see our wedding page" (reservation.txt) is cut, since the reader is already on that page (this page IS both pages now).',
     'Joined into one paragraph: reservation.txt\'s three short paragraphs about the online form and the paper form ("Please fill out an online Building Use Request Form...", "Those who do not fill out the online form...") are kept as written but printed as consecutive paragraphs, not re-split.',
   ],
@@ -93,9 +95,10 @@ export default {
     '"Christian wedding" (wedding.txt line 3, "the facilities can be reserved for Christian weddings"): the page keeps this exactly as the church wrote it, per spec 5.8. Neither wedding.txt nor any other capture says what it requires of a couple who asks, for example whether one or both must profess Christian faith, be church members, or simply want a Christian ceremony performed by a pastor. Ella Mae Lemen or the church office needs to be the one who answers that question for anyone who books, and it may be worth a sentence on the page once the church tells us what to say.',
   ],
 
-  // The gallery is six photographs of the building and one wedding party
-  // (wedding-exterior) at a distance, not portraits; the hero is the sanctuary,
-  // empty. No band on this page shows an identifiable face up close.
+  // No photograph on this page shows a child. The couples in the hero and the
+  // "Weddings here" gallery were on the church's own /wedding page under its
+  // line "Photos used with permission from the couples and the photographers",
+  // which this page prints under that gallery.
   photoConsent: [],
 
   async build(ctx) {
@@ -186,10 +189,31 @@ export default {
         'wedding.mjs: none of the six wedding gallery photos have a file. Check the manifest.',
       );
     }
-    const sanctuaryHero = await images.image('wedding-sanctuary');
+    // The hero is a wedding at the chancel, from the church's own /wedding page
+    // (placed 2026-09-23). The empty sanctuary stays first in "Our spaces".
+    const sanctuaryHero = await images.image('wedding-ceremony');
     if (!sanctuaryHero) {
-      throw new Error('wedding.mjs: no photo in the manifest for "wedding-sanctuary"');
+      throw new Error('wedding.mjs: no photo in the manifest for "wedding-ceremony"');
     }
+
+    // Weddings here: three more from the same Wix page, landscape so the row sits
+    // level (the tall balcony view left a gap beside them), all media-library photos.
+    const weddingKeys = [
+      ['wedding-processional', 'Hanna and Nathan.'],
+      ['wedding-bubbles', null],
+      ['wedding-pew', null],
+    ];
+    const weddingImages = [];
+    for (const [key, caption] of weddingKeys) {
+      const img = await images.image(key);
+      if (!img) throw new Error(`wedding.mjs: no photo in the manifest for "${key}"`);
+      weddingImages.push({ ...img, _key: `gw-${key}`, ...(caption ? { caption } : {}) });
+    }
+    // The church's own credit lines, from wedding.txt, printed under that gallery.
+    const creditBody = [
+      ...paragraphs(line('wedding', 'Photos used with permission'), 'cr-a'),
+      ...paragraphs(line('wedding', 'Special thanks to').replace(/ & /g, ' and '), 'cr-b'),
+    ];
 
     // ── The five PDFs and forms ──────────────────────────────────────────
     // Uploaded from the archive with the shared uploader, which caches asset
@@ -311,6 +335,22 @@ export default {
           quote:
             'Looking back at our wedding, we are very thankful to have chosen First Baptist Muncie for our ceremony and to have had the pleasure to work with their staff. The care and help we received was genuine and thorough and the beauty of the building is unparalleled. Mrs. Lemen was always very quick to answer any questions and help with any accommodations. When it is all said and done, they celebrate the gift of marriage with you like family.',
           attribution: 'Hanna and Nathan',
+        },
+
+        // 4b. Weddings here: the church's own wedding photographs, then the
+        //     church's own credit lines for them (restored 2026-09-23).
+        {
+          _type: 'gallerySection',
+          _key: 'wed-weddings',
+          heading: 'Weddings here',
+          images: weddingImages,
+          columns: 3,
+        },
+        {
+          _type: 'richTextSection',
+          _key: 'wed-credits',
+          width: 'narrow',
+          body: creditBody,
         },
 
         // 5. Reserving your wedding, then the documents. Where /wedding#reserve

@@ -1,0 +1,503 @@
+{
+  "_createdAt": "2026-09-20T03:23:24Z",
+  "_id": "page-wedding",
+  "_rev": "Yg84KDHscU4NDc84ofNZaO",
+  "_type": "page",
+  "_updatedAt": "2026-09-23T03:32:35Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "wed-hero",
+      "_type": "heroSection",
+      "eyebrow": "Weddings",
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "The sanctuary from the balcony, light through the stained glass",
+          "asset": {
+            "_ref": "image-4f97d6a7a89d4d8631d2f7249e58a7e2b5ad510e-2400x1596-jpg",
+            "_type": "reference"
+          }
+        }
+      ],
+      "headline": "Married here.",
+      "layout": "split",
+      "primaryCta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "externalUrl": "/wedding#reserve",
+        "label": "Reserving your wedding",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "/wedding#building-use",
+        "label": "Building use",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "size": "short"
+    },
+    {
+      "_key": "wed-why",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "wh-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "wh-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "First Baptist Church is a fitting wedding location and the facilities can be reserved for Christian weddings."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "wh-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "wh-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Building rentals for this purpose is something we do to share our building with sisters and brothers in Christ in the area so they might celebrate at a reasonable cost. Any associated fees are used exclusively for the cost of utilities, maintaining our building, and accounting for the time of our wedding coordinator, and others, who help make wedding ceremonies possible."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "wh-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "wh-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "If you are interested, please read the following information and requirements for using our building and decide if our church may be right for your wedding ceremony."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "wh-coord",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "wh-coords1",
+              "_type": "span",
+              "marks": [
+                "wh-coordl1"
+              ],
+              "text": "Ella Mae Lemen, Wedding Coordinator"
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "wh-coordl1",
+              "_type": "link",
+              "href": "mailto:wedding@fbcmuncie.org"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "wh-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "wh-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Ella Mae is a long-time member of First Baptist Church who also serves as our Wedding Coordinator. She is the appropriate person to contact if you are interested in celebrating a Christian wedding ceremony at First Baptist."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Why here",
+      "heading": "A wedding at First Baptist"
+    },
+    {
+      "_key": "wed-spaces",
+      "_type": "gallerySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "spaces"
+      },
+      "columns": 3,
+      "heading": "Our spaces",
+      "images": [
+        {
+          "_key": "gi-wedding-sanctuary",
+          "_type": "image",
+          "alt": "The sanctuary from the balcony, light through the stained glass",
+          "asset": {
+            "_ref": "image-4f97d6a7a89d4d8631d2f7249e58a7e2b5ad510e-2400x1596-jpg",
+            "_type": "reference"
+          },
+          "caption": "Sanctuary."
+        },
+        {
+          "_key": "gi-wedding-bridal-suite",
+          "_type": "image",
+          "alt": "The bridal suite lounge",
+          "asset": {
+            "_ref": "image-4c49abdadc1909cc14276e1859b43a4e2ad6bb90-1600x758-jpg",
+            "_type": "reference"
+          },
+          "caption": "The bridal suite, ready for a wedding morning."
+        },
+        {
+          "_key": "gi-wedding-fellowship-hall",
+          "_type": "image",
+          "alt": "The fellowship hall",
+          "asset": {
+            "_ref": "image-c5a42d891105ad8f64b165b5ddff0f8aeb20afb3-1600x1066-jpg",
+            "_type": "reference"
+          },
+          "caption": "The fellowship hall."
+        },
+        {
+          "_key": "gi-wedding-kitchen",
+          "_type": "image",
+          "alt": "The church kitchen",
+          "asset": {
+            "_ref": "image-cd0adc05ff989be1e46911194a02535e37e5783c-1600x758-jpg",
+            "_type": "reference"
+          },
+          "caption": "The kitchen."
+        },
+        {
+          "_key": "gi-wedding-youth-center",
+          "_type": "image",
+          "alt": "The youth center",
+          "asset": {
+            "_ref": "image-ebe114dd802c81d5b793574b1be9ac99c3451a1e-1600x758-jpg",
+            "_type": "reference"
+          },
+          "caption": "The youth center."
+        },
+        {
+          "_key": "gi-wedding-exterior",
+          "_type": "image",
+          "alt": "A wedding party celebrating in front of the church's red doors",
+          "asset": {
+            "_ref": "image-655381cf942bc373a180b84516ae3f0a36532608-1600x1067-jpg",
+            "_type": "reference"
+          },
+          "caption": "A wedding party at the red doors."
+        }
+      ]
+    },
+    {
+      "_key": "wed-quote",
+      "_type": "quoteSection",
+      "attribution": "Hanna and Nathan",
+      "quote": "Looking back at our wedding, we are very thankful to have chosen First Baptist Muncie for our ceremony and to have had the pleasure to work with their staff. The care and help we received was genuine and thorough and the beauty of the building is unparalleled. Mrs. Lemen was always very quick to answer any questions and help with any accommodations. When it is all said and done, they celebrate the gift of marriage with you like family."
+    },
+    {
+      "_key": "wed-reserve",
+      "_type": "richTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "reserve"
+      },
+      "body": [
+        {
+          "_key": "rs-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "rs-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Mail the signed contract, the information sheet and a deposit to First Baptist Church, {address}."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "rs-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "rs-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Fill out the wedding information form online."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "rs-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "rs-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Talk with Ella Mae Lemen, the wedding coordinator, about your date and the building."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "rs-fee-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "rs-fee-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The documents below carry the fees."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Reserving your wedding",
+      "heading": "How to reserve the church"
+    },
+    {
+      "_key": "wed-documents",
+      "_type": "documentListSection",
+      "docs": [
+        {
+          "_key": "wd-1",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-18eeefe48def84d54fbfd1f9b55d3f8846e3a287-pdf",
+              "_type": "reference"
+            }
+          },
+          "note": "To reserve your date",
+          "title": "Wedding Contract"
+        },
+        {
+          "_key": "wd-2",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-dc34fd458246f098ff395ee7a6211c9e6721fb38-pdf",
+              "_type": "reference"
+            }
+          },
+          "note": "Everything to plan the day",
+          "title": "Bridal Packet"
+        },
+        {
+          "_key": "wd-3",
+          "_type": "listedDocument",
+          "note": "Fill this in online",
+          "title": "Wedding information form",
+          "url": "https://fbcmuncie.churchcenter.com/people/forms/243785"
+        }
+      ],
+      "eyebrow": "Wedding documents",
+      "heading": "Three documents"
+    },
+    {
+      "_key": "wed-building-use",
+      "_type": "richTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "building-use"
+      },
+      "body": [
+        {
+          "_key": "bu-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bu-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Throughout our history and into the present, First Baptist has opened up its facilities for use by friends and community organizations."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bu-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bu-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "If you would like to use our building on a short term basis in some other way, you will need to complete a building usage form. Please fill out an online Building Use Request Form. If the online building request form is filled out, only the signed Property Use Agreement (Release and Indemnity Agreement / Acceptance of Responsibility) must be signed and turned into the office, and you will not be required to fill out all the information about your event by hand. Those who do not fill out the online form will need to fill out the entire building use form by hand and turn it into the Church Office, before the building use request can be considered."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bu-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bu-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Exterior Building"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bu-c-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bu-c-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Fellowship Hall"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bu-c-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bu-c-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Kitchen"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bu-c-4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bu-c-4s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Youth Center"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "bu-fee-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "bu-fee-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The documents below carry the fees."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Building use",
+      "heading": "Using the building for other events"
+    },
+    {
+      "_key": "wed-building-documents",
+      "_type": "documentListSection",
+      "docs": [
+        {
+          "_key": "bd-1",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-1420de4d03a3693029ac7ab78f94a784c1b3f2dd-pdf",
+              "_type": "reference"
+            }
+          },
+          "note": "Sign and return this to the office",
+          "title": "Building Reservation Agreement"
+        },
+        {
+          "_key": "bd-2",
+          "_type": "listedDocument",
+          "note": "Fill this in online",
+          "title": "Online request form",
+          "url": "https://fbcmuncie.churchcenter.com/people/forms/520312"
+        }
+      ],
+      "eyebrow": "Building documents",
+      "heading": "Reservation agreement and request form"
+    },
+    {
+      "_key": "wed-cta",
+      "_type": "ctaBandSection",
+      "cta": {
+        "_key": "cta-3",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-contact",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Contact us",
+        "linkType": "internal"
+      },
+      "eyebrow": "Questions?",
+      "headline": "Talk to the office.",
+      "secondaryCta": {
+        "_key": "cta-4",
+        "_type": "ctaBlock",
+        "externalUrl": "mailto:wedding@fbcmuncie.org",
+        "label": "Email the wedding coordinator",
+        "linkType": "external",
+        "openInNewTab": true
+      },
+      "subhead": "{service time}. {address}."
+    }
+  ],
+  "seoDescription": "Weddings and building use at First Baptist Church Muncie: reserve the sanctuary for a Christian wedding, or the fellowship hall, kitchen or youth center for another event.",
+  "seoTitle": "Weddings and building use | First Baptist Church Muncie",
+  "slug": {
+    "_type": "slug",
+    "current": "wedding"
+  },
+  "title": "Weddings and building use"
+}

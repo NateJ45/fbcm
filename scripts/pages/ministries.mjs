@@ -119,7 +119,9 @@ export default {
   ],
 
   // Bands with identifiable children in them, for the consent conversation.
-  photoConsent: ['ministries-children', 'ministries-youth'],
+  // The children's band photo lives on the ministry-children document (set by
+  // scripts/place-ministry-photos.mjs); ministry-children-vbs is its manifest record.
+  photoConsent: ['ministry-children-vbs', 'ministries-youth'],
 
   async build(ctx) {
     const { images, copy, settings, ministries } = ctx;

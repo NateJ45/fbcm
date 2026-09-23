@@ -88,7 +88,9 @@ export default {
       frames.push({ ...img, _key: frameKey() });
     }
 
-    const sanctuary = await images.image('hero-sanctuary');
+    // A welcome at the sanctuary door beside the church's arrival paragraphs, in
+    // place of the empty sanctuary the hero already shows (placed 2026-09-23).
+    const firstSunday = await images.image('home-first-sunday');
     const tower = await images.image('hero-tower');
 
     // ── The first-Sunday body ───────────────────────────────────────────────
@@ -177,11 +179,11 @@ export default {
           showMap: true,
         },
 
-        // 3. What a first Sunday is like. Their words, their sanctuary.
+        // 3. What a first Sunday is like. Their words, a welcome at their door.
         {
           _type: 'imageTextSection',
           _key: 'home-first-sunday',
-          image: sanctuary,
+          image: firstSunday,
           imageSide: 'right',
           eyebrow: 'Your first Sunday',
           heading: 'What a first Sunday is like',

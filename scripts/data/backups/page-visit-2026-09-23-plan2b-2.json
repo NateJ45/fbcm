@@ -1,0 +1,761 @@
+{
+  "_createdAt": "2026-09-19T23:15:23Z",
+  "_id": "page-visit",
+  "_rev": "r3OMep2eOIG3C5V36yfxVA",
+  "_type": "page",
+  "_updatedAt": "2026-09-23T12:07:11Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "visit-hero",
+      "_type": "heroSection",
+      "eyebrow": "Plan a visit",
+      "facts": [
+        {
+          "_key": "fact-1",
+          "_type": "heroFact",
+          "label": "Sundays",
+          "value": "{time}"
+        },
+        {
+          "_key": "fact-2",
+          "_type": "heroFact",
+          "label": "Where",
+          "value": "{address}"
+        },
+        {
+          "_key": "fact-3",
+          "_type": "heroFact",
+          "label": "How long",
+          "value": "{service length}"
+        }
+      ],
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "Two girls in front of a stained glass window",
+          "asset": {
+            "_ref": "image-bad93d7a2b560248a8b1b249154c4bbc1ed83af5-1600x1064-jpg",
+            "_type": "reference"
+          }
+        }
+      ],
+      "headline": "Your first Sunday, start to finish.",
+      "layout": "split",
+      "primaryCta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "externalUrl": "https://fbcmuncie.churchcenter.com/people/forms/159198",
+        "label": "Fill in a visitor card",
+        "linkType": "external",
+        "openInNewTab": true
+      },
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+        "label": "Watch a service",
+        "linkType": "external",
+        "openInNewTab": true
+      },
+      "size": "short",
+      "subhead": "Here is what a Sunday morning looks like, from the parking lot to the last hymn."
+    },
+    {
+      "_key": "visit-timeline",
+      "_type": "timelineSection",
+      "eyebrow": "Sunday morning",
+      "heading": "How the morning runs",
+      "rows": [
+        {
+          "_key": "row-1",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "ss-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Intergenerational Bible Study (B-04): Led by Jim Butler, this intergenerational Bible Study includes adults of all ages."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-2",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-2s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Friendship Class (B-05): Led by Pastor Jonathan, this class primarily consists of a mix of couples with children at home, but is open to adults of all ages."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-3",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-3s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Youth Large Group (201): Sixth through twelfth (6th-12th) grade students join in discussions about life and faith."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-4",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-4s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Children's Sunday School (B-03 & 104): Children's Worship Arts Play and practice in music, choir, scripture reading, and more (B-03)."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-5",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-5s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "6 weeks - 3 years: Nursery (104)"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "9:30 am",
+          "title": "Sunday school"
+        },
+        {
+          "_key": "row-2",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "donut-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "donut-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Between Bible study and Worship, join in a time of fellowship (and, of course, donuts)!"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "10:15 am",
+          "title": "Donut hour"
+        },
+        {
+          "_key": "row-3",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "w-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "w-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Worship is at {time} each Sunday."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "wr-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wr-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Nursery care is in room 104 and the family room is 105."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "{time}",
+          "title": "Worship"
+        },
+        {
+          "_key": "row-4",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "com-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "com-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "A service with the whole church family."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "com-2",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "com-2s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "The first Sunday of each month is communion Sunday."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "com-3",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "com-3s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "To allow the whole church family to participate, there is no Children's Church (nursery care and our \"family room\" are always available)."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "com-4",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "com-4s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "We will all worship together in a service intentionally planned for all ages."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "First Sundays",
+          "title": "Communion"
+        }
+      ]
+    },
+    {
+      "_key": "visit-getting-in",
+      "_type": "sundayTimesSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "accessibility"
+      },
+      "doors": [
+        {
+          "_key": "door-1",
+          "_type": "door",
+          "body": "Our wheelchair accessible entrance is off our circular drive, on the Adams street side of the building. Those wishing to use our automatic door should use the circular drive entrance. The door opener is on the side of our mailbox, close to the door on its right. Once inside, there is an elevator which will go to any floor: our lower level (B) which houses our fellowship hall, the first floor (where the sanctuary and offices are) or the second floor (which hosts classrooms and our youth center).",
+          "name": "Adams Street circular drive"
+        },
+        {
+          "_key": "door-2",
+          "_type": "door",
+          "body": "The large wooden front doors which go into the sanctuary.",
+          "name": "The wooden front doors"
+        },
+        {
+          "_key": "door-3",
+          "_type": "door",
+          "body": "The Jefferson Street side doors which enter our main hallway near the church offices.",
+          "name": "Jefferson Street side doors"
+        }
+      ],
+      "eyebrow": "Getting in",
+      "heading": "Doors, parking and access",
+      "items": [
+        {
+          "_key": "time-1",
+          "_type": "timeItem",
+          "big": "{time}",
+          "body": "Worship is at {time} each Sunday.",
+          "label": "Worship"
+        },
+        {
+          "_key": "time-2",
+          "_type": "timeItem",
+          "big": "{short address}",
+          "body": "Our parking lot is located on the Adams Street side.",
+          "label": "Find us"
+        },
+        {
+          "_key": "time-3",
+          "_type": "timeItem",
+          "big": "Available",
+          "body": "On Sundays, if you would like an assisted listening device, please ask one of our greeters or the Welcome Center and they will be happy to give you one.",
+          "label": "Assisted listening"
+        }
+      ],
+      "showMap": true
+    },
+    {
+      "_key": "visit-children",
+      "_type": "imageTextSection",
+      "body": [
+        {
+          "_key": "kids-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "kids-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Nursery Care (104)"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "kids-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "kids-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "For children ages 3 and younger, nursery care is available throughout the service."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "kids-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "kids-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Family Room (105)"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "kids-4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "kids-4s1",
+              "_type": "span",
+              "marks": [],
+              "text": "For little ones and parents who need to step out during service, this room provides toys, a live stream, rocking chairs, nursing privacy, and a changing table for all who desire it."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "kids-5",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "kids-5s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Children's Church (B-03 & 102)"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "kids-6",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "kids-6s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Students preschool - fifth grade will be dismissed to Children's Church during the service."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "kids-7",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "kids-7s1",
+              "_type": "span",
+              "marks": [],
+              "text": "There are two classes."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "kids-8",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "kids-8s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Preschool - 2nd grade: Kickstart Children's Church (102)"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "kids-9",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "kids-9s1",
+              "_type": "span",
+              "marks": [],
+              "text": "3rd - 5th grade: The Underground Children's Church (B-03)"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "cta": {
+        "_key": "cta-3",
+        "_type": "ctaBlock",
+        "externalUrl": "/ministries#children",
+        "label": "Children's ministry",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "eyebrow": "Children",
+      "heading": "Where the children go",
+      "image": {
+        "_type": "image",
+        "alt": "Children sit on the chancel steps around Kendall as she reads to them",
+        "asset": {
+          "_ref": "image-21db96f59d2c41eec5e07709a3f0569ad2863bee-2400x1441-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "left"
+    },
+    {
+      "_key": "visit-faq",
+      "_type": "faqSection",
+      "eyebrow": "Questions",
+      "heading": "Questions people ask",
+      "items": [
+        {
+          "_key": "q-1",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a1-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "The church is located in downtown Muncie at {address}. Google maps will take you to the correct place. Our parking lot is located on the Adams Street side. The most common doors people use are the Adams Street entrance at our circular drive (wheelchair accessible), the large wooden front doors which go into the sanctuary, or the Jefferson Street side doors which enter our main hallway near the church offices."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "How do I find the church?"
+        },
+        {
+          "_key": "q-2",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a2-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a2-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Casual dress is welcome. People wear a variety of styles of clothes from short sleeves (especially in the summer), to suit jackets and “Sunday dresses.” Please dress comfortably and in a way which allows you to devote attention to worship."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "What should I wear?"
+        },
+        {
+          "_key": "q-3",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a3-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a3-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "There are. Nursery is available in room 104 for children under three. Greeters will help you check in and direct you. Each child will be given a name tag.  Children up to fifth grade will be dismissed to Children’s Church every week except communion Sunday (first week of the month, nursery care is still available). We also have a “Family Room” with rocking chairs, toys, a changing table, and a live stream of the service, for families and little ones who want to step out of worship at any time."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "Are there nursery care or children’s worship during service?"
+        },
+        {
+          "_key": "q-4",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a4-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a4-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "We have a wheel-chair accessible door, an elevator, two wheelchair-accessible bathrooms, and assisted listening devices available upon request. Our building was built in 1929, and is therefore not officially ADA compliant– though we have made efforts to retrofit our building to make it as accessible as possible. For more information "
+                },
+                {
+                  "_key": "a4-1s2",
+                  "_type": "span",
+                  "marks": [
+                    "a4-1l1"
+                  ],
+                  "text": "see our accessibility page"
+                },
+                {
+                  "_key": "a4-1s3",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "."
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "a4-1l1",
+                  "_type": "link",
+                  "href": "https://fbcmuncie.org/accessibility"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "question": "Is your building accessible / ADA compliant?"
+        },
+        {
+          "_key": "q-5",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a5-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a5-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "We believe it is the Lord’s table, and all who believe in him and have been baptized may partake. This includes believing Christians, no matter their particular denomination."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "Am I allowed to take the Lord’s Supper (communion?)"
+        },
+        {
+          "_key": "q-6",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a6-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a6-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "It won’t be a problem at all! Anyone is welcome to attend our time of Worship. You may participate (in singing, the prayers, in Sunday Bible study) as you wish. And, if you want to see a service before you attend in-person, "
+                },
+                {
+                  "_key": "a6-1s2",
+                  "_type": "span",
+                  "marks": [
+                    "a6-1l1"
+                  ],
+                  "text": "check out our live streams"
+                },
+                {
+                  "_key": "a6-1s3",
+                  "_type": "span",
+                  "marks": [],
+                  "text": ". Please know the pastoral staff is always happy to discuss any questions you might have about our faith in God: Father, Son, & Holy Spirit."
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "a6-1l1",
+                  "_type": "link",
+                  "href": "https://fbcmuncie.churchcenter.com/channels/4999"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "question": "I don’t have a background in the Christian religion / I’m not sure what I believe. Will that be a problem if I want to visit?"
+        },
+        {
+          "_key": "q-7",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a7-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a7-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Please contact the office. "
+                },
+                {
+                  "_key": "a7-1s2",
+                  "_type": "span",
+                  "marks": [
+                    "a7-1l1"
+                  ],
+                  "text": "You can find our contact form here"
+                },
+                {
+                  "_key": "a7-1s3",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "."
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "a7-1l1",
+                  "_type": "link",
+                  "href": "https://fbcmuncie.churchcenter.com/people/forms/159198"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "question": "What if I have other questions?"
+        }
+      ]
+    },
+    {
+      "_key": "visit-heritage",
+      "_type": "heritageBandSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "building"
+      },
+      "body": "First Baptist’s third, and most recent, building was completed in 1929. It has been on the National Register of Historic Places since 1988. For students and lovers of architecture it’s a striking work.",
+      "cta": {
+        "_key": "cta-4",
+        "_type": "ctaBlock",
+        "externalUrl": "/history#building",
+        "label": "Its history",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "eyebrow": "The building",
+      "heading": "Built in 1929",
+      "image": {
+        "_type": "image",
+        "alt": "The limestone bell tower of First Baptist Church against a blue sky",
+        "asset": {
+          "_ref": "image-1a41db0a8944c3ca0243432d2e1f6e4930537aab-2400x1596-jpg",
+          "_type": "reference"
+        }
+      }
+    },
+    {
+      "_key": "visit-cta",
+      "_type": "ctaBandSection",
+      "cta": {
+        "_key": "cta-5",
+        "_type": "ctaBlock",
+        "externalUrl": "https://fbcmuncie.churchcenter.com/people/forms/159198",
+        "label": "Fill in a visitor card",
+        "linkType": "external",
+        "openInNewTab": true
+      },
+      "eyebrow": "We’d love to meet you",
+      "headline": "Come as you are.",
+      "secondaryCta": {
+        "_key": "cta-6",
+        "_type": "ctaBlock",
+        "externalUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+        "label": "Watch live",
+        "linkType": "external",
+        "openInNewTab": true
+      },
+      "subhead": "{service time}. {address}."
+    }
+  ],
+  "seoDescription": "First Baptist Church Muncie gathers for worship at {time} every Sunday at {address} in downtown Muncie.",
+  "seoTitle": "Plan a visit | First Baptist Church Muncie",
+  "slug": {
+    "_type": "slug",
+    "current": "visit"
+  },
+  "title": "Plan a visit"
+}

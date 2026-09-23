@@ -66,7 +66,7 @@ export default {
   // Bands with identifiable children in them, for the consent conversation.
   // ministries-children is an alias of the hero children frame; see
   // scripts/data/page-images.json.
-  photoConsent: ['visit-children', 'ministries-children'],
+  photoConsent: ['visit-children', 'visit-children-steps'],
 
   async build(ctx) {
     const { images, copy, settings } = ctx;
@@ -93,11 +93,19 @@ export default {
 
     // -- Photos --------------------------------------------------------------
     const children = await images.image('visit-children');
-    const childrenAgain = await images.image('ministries-children');
+    // The children's band: children on the chancel steps with Kendall, a Sunday
+    // moment in the room itself (a media-library photo, placed 2026-09-23).
+    const childrenAgain = await images.image('visit-children-steps');
+    // The hero's second frame: the front of the building. The spare-image pool
+    // lends hero frames after the first before any band's own photo, so the
+    // "Doors, parking and access" band borrows this and "Where the children go"
+    // keeps its own photograph (src/lib/spare-images.ts).
+    const building = await images.image('visit-building');
     const tower = await images.image('hero-tower');
     for (const [key, img] of [
       ['visit-children', children],
-      ['ministries-children', childrenAgain],
+      ['visit-children-steps', childrenAgain],
+      ['visit-building', building],
       ['hero-tower', tower],
     ]) {
       if (!img) throw new Error(`visit.mjs: no photo in the manifest for "${key}"`);
@@ -231,7 +239,10 @@ export default {
           headline: 'Your first Sunday, start to finish.',
           subhead:
             'Here is what a Sunday morning looks like, from the parking lot to the last hymn.',
-          frames: [{ ...children, _key: 'frame-1' }],
+          frames: [
+            { ...children, _key: 'frame-1' },
+            { ...building, _key: 'frame-2' },
+          ],
           facts: [
             { _type: 'heroFact', _key: 'fact-1', label: 'Sundays', value: serviceTime },
             { _type: 'heroFact', _key: 'fact-2', label: 'Where', value: streetLine },

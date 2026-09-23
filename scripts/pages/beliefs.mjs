@@ -62,10 +62,11 @@ export default {
   type: 'page',
   slug: 'beliefs',
 
-  // Every sentence on this page that did not exist on the Wix site. ONE: the
-  // search description. Everything a visitor reads on the page itself is the
+  // Every sentence on this page that did not exist on the Wix site: the search
+  // description, and one band heading, "Baptism" (added 2026-09-23). Everything a visitor reads on the page itself is the
   // church's own text, cut.
   newCopy: [
+    'Baptism (heading of the band beside the baptism photograph, 2026-09-23)',
     'First Baptist Church Muncie is an American Baptist church in downtown Muncie: we hold to one triune God, to the Bible as our source for faith and practice, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself under the Lordship of Christ. (search description)',
   ],
 
@@ -84,12 +85,13 @@ export default {
     'De-gendered: "during the individual’s stay in Muncie and retain membership in his/her home church" becomes "during their stay in Muncie and retain membership in their home church".',
     'De-gendered: "Such membership terminates upon completion of his/her temporary stay" becomes "...upon completion of their temporary stay".',
     'Moved, so it is said once: the immersion sentence under Full Member ("Although Muncie First Baptist Church only baptizes believers by immersion...") now sits under Being Baptist, where the page reconciles all three sources. Its second sentence, about the confirmation class, stays under Full member.',
+    'Moved, 2026-09-23: the three paragraphs on baptism at the end of "Church of Believers" ("Our own practice of baptism...", the immersion sentence, and the note on re-baptism) now sit in their own band, "Baptism", directly after "Four things Baptists hold to", beside a photograph of a baptism from the church’s /baptists page. Their words and order are unchanged.',
     'Linked: "For more information see our Constitution and Bylaws" now links to the document list on this page.',
     'Cut: "You can read the document split into two parts below" (nothing on this page is split in two: the four beliefs the 2005 statement gathers under "THEREFORE" are quoted in full instead) and "For more on our church beliefs and the beliefs of our denomination, see our Beliefs page" (the reader is on it).',
   ],
 
-  // No band on this page shows a photograph of a person at all: the only image
-  // is the hero's stained glass.
+  // No photograph on this page shows a child. The baptism band's two young
+  // women were on the church's own /baptists page.
   photoConsent: [],
 
   async build(ctx) {
@@ -111,6 +113,11 @@ export default {
     // -- The photo -----------------------------------------------------------
     const glass = await images.image('beliefs-glass');
     if (!glass) throw new Error('beliefs.mjs: no photo in the manifest for "beliefs-glass"');
+    // A baptism, from the church's /baptists page (media library, placed 2026-09-23).
+    const baptismPhoto = await images.image('beliefs-baptism');
+    if (!baptismPhoto) {
+      throw new Error('beliefs.mjs: no photo in the manifest for "beliefs-baptism"');
+    }
 
     // -- The three PDFs ------------------------------------------------------
     // Uploaded from the archive with the shared uploader, which caches asset
@@ -263,6 +270,11 @@ export default {
         ),
         'bp-h',
       ),
+    ];
+
+    // The church's baptism paragraphs, moved whole into the band beside the
+    // baptism photograph (edits list above).
+    const baptism = [
       ...paragraphs(
         cutLead(pick(believers, 'our own practice of baptism', 'baptists'), 'At the same time,'),
         'bp-i',
@@ -515,6 +527,17 @@ export default {
           heading: 'Four things Baptists hold to',
           width: 'narrow',
           body: baptist,
+        },
+
+        // 3b. Baptism, beside a baptism. Where /beliefs#baptism lands.
+        {
+          _type: 'imageTextSection',
+          _key: 'beliefs-baptism',
+          anchor: { _type: 'slug', current: 'baptism' },
+          image: baptismPhoto,
+          imageSide: 'right',
+          heading: 'Baptism',
+          body: baptism,
         },
 
         // 4. The common statement, on the indigo field, "charity" in gold.
