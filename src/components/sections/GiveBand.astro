@@ -29,6 +29,7 @@
 // themes) rather than text-cream (which flips to ink under .dark).
 import { getImage } from 'astro:assets';
 import SectionHeading from '@/components/SectionHeading.astro';
+import { headlineScale } from '@/lib/headline-scale';
 import CtaLink from '@/components/CtaLink.astro';
 // The same photograph the mobile menu sheet, the footer and ScriptureBand use.
 // When this band paints indigo it is a dark FIELD with nothing in it but words,
@@ -144,6 +145,7 @@ const giveCta = href
         headline={heading}
         headingId={headingId}
         level={level}
+        scale={level === 'h1' ? headlineScale(heading, { tall: false }) : undefined}
         align="left"
         tone={dark ? 'band' : 'default'}
       />

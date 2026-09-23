@@ -54,7 +54,7 @@ Brand-primary underline that slides in from the center on hover and locks full-w
 
 ### Sticky header behavior (`.site-header`)
 
-The header has `position: sticky; top: 0`. A scroll listener in BaseLayout sets `data-state="hidden"` on it when the user scrolls down past 120px, which CSS translates to `translateY(-100%)`. Scroll up = the header reveals. Pinned permanently under reduced-motion.
+The header is `position: sticky` with `top` set to minus its own height (`--header-h`; an overlay header parks at 1.9x so its scrim leaves the screen too), so it scrolls away with the page like any other block. Once the page is past 150px, a scroll UP makes the listener in BaseLayout set `data-scrolled` (pinned): `top` transitions to 0 and the bar slides in OVER the content. A scroll down slides it away again, and at scrollY 0 it is released into its slot, where the pinned and natural positions coincide. Because sticky never leaves the flow and overlay mode's negative margin now applies in every state, the header's layout slot never changes, so nothing below it moves (`tests/anchors.spec.ts` guards this). Direction only counts for a real gesture; a page that arrives already past 150px (fragment landing, restored position) pins instantly from position alone, with the transition suppressed.
 
 ### Reading progress (`.reading-progress`)
 

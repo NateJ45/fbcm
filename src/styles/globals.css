@@ -146,6 +146,10 @@
      in Castoro Titling capitals measured 299px against a 280px column on a
      320px phone. */
   --text-h1: clamp(2.35rem, 1rem + 5.4vw, 6rem);
+  /* The hero TITLE scale (2026-09-23, src/lib/headline-scale.ts): a medium
+     headline one step under h1, still titling capitals. The 2rem floor holds
+     a 12-capital word inside the 280px column of a 320px phone. */
+  --text-title: clamp(2rem, 1rem + 3.6vw, 4.25rem);
   /* Bigger than h1: the one poster-scale line a page is allowed. */
   --text-display: clamp(2.9rem, 1rem + 8.4vw, 8rem);
   /* The standfirst under a hero heading. */
@@ -1618,20 +1622,28 @@
   }
 }
 
-/* Sticky header behavior.
-   Two independent state attributes ride on this element, both written by the
-   polish script in BaseLayout:
-     data-state="hidden"  the gesture-gated hide-on-scroll-down (unchanged)
-     data-scrolled        set the moment scrollY > 8, removed at the top
-   and one written at render time by the layout:
+/* Sticky header behavior (reworked 2026-09-23: no layout shift on scroll).
+   One state attribute is written by the polish script in BaseLayout:
+     data-scrolled        the bar is PINNED: set by a scroll UP once the page
+                          is past 150px, cleared by a scroll down or at the top
+   and one at render time by the layout:
      data-overlay         this page opens with an IMAGE hero, so the header
                           should sit ON the picture rather than above it.
+   THE HEADER'S LAYOUT SLOT NEVER CHANGES. It used to: overlay mode's negative
+   margin-bottom came off at 8px of scroll, and every image-hero page dropped
+   by a full header height the moment a visitor started scrolling. Now the
+   header is sticky with `top` set to minus its own height, so while it is
+   unpinned it scrolls away with the page like any other block. Pinning moves
+   `top` to 0 and the bar slides down OVER the content (sticky never leaves the
+   flow, so nothing below it moves); unpinning slides it back up. At scrollY 0
+   the pinned and the natural positions coincide, so the bar settles back into
+   its slot without a jump. `top` is what transitions; the script switches the
+   state instantly (transition suppressed) when the scroll was not a gesture,
+   so a fragment landing or a restored position never measures a bar mid-slide.
    Overlay mode is the art-direction pass's one piece of theatre: over the
    tower photo the bar has no background, no rule, and paper lettering, and it
-   becomes the ordinary paper bar after 8px of scroll. The negative
-   margin-bottom is what lets the hero start underneath: the header still takes
-   part in layout (it is sticky, not fixed), so without it the picture would
-   begin below the bar and there would be nothing to overlay.
+   becomes the ordinary paper bar once pinned. The negative margin-bottom is
+   what lets the hero start underneath, and it now applies in every state.
    `color` is var(--color-bg) rather than a theme token on purpose: --color-bg
    is paper in BOTH themes (`.dark` never redeclares it), and the lettering
    here sits on a dark photograph either way. The base background, by
@@ -1639,22 +1651,35 @@
    surface. */
 .site-header {
   position: sticky;
-  top: 0;
+  top: calc(-1 * var(--header-h, 88px));
   z-index: 50;
   background: var(--background);
   border-bottom: 1px solid var(--hair);
   transition:
-    transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    top 360ms cubic-bezier(0.22, 1, 0.36, 1),
     background 300ms,
     border-color 300ms,
     color 300ms;
-  will-change: transform;
+}
+/* Pinned. Only `top` animates on the way in: the colours switch at once, so an
+   overlay bar never slides in see-through with paper lettering over the page. */
+.site-header[data-scrolled] {
+  top: 0;
+  transition: top 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.site-header[data-overlay] {
+  margin-bottom: calc(-1 * var(--header-h, 88px));
+}
+/* Unpinned, an overlay bar parks far enough up that its scrim (::before,
+   1.9x the bar's height) has left the screen too; at minus one bar height the
+   scrim's tail hung at the top edge as a dark band over the photograph. */
+.site-header[data-overlay]:not([data-scrolled]) {
+  top: calc(-1.9 * var(--header-h, 88px));
 }
 .site-header[data-overlay]:not([data-scrolled]) {
   background: transparent;
   border-bottom-color: transparent;
   color: var(--color-bg);
-  margin-bottom: calc(-1 * var(--header-h, 88px));
 }
 /* THE SCRIM, and why a transparent bar still needs one.
    tests/contrast.spec.ts measures the text against the PIXELS behind it, which
@@ -1689,9 +1714,6 @@
    is excluded here. */
 .site-header[data-overlay]:not([data-scrolled]) :where(a, button, summary):not(.header-give) {
   color: inherit;
-}
-.site-header[data-state='hidden'] {
-  transform: translateY(-100%);
 }
 
 /* THE CARD LIFT IS GONE (2026-09-21, plan 3 task 12, the motion pass).

@@ -59,13 +59,18 @@ async function whenScrolledSeeded(page: import('@playwright/test').Page, budget 
   );
 }
 
-test('data-scrolled tracks the scroll position, and survives a restore', async ({ page }) => {
+test('data-scrolled follows a scroll up, and is seeded on a restore', async ({ page }) => {
   const header = page.locator('.site-header');
 
   await page.goto('/', { waitUntil: 'load' });
   await expect(header).not.toHaveAttribute('data-scrolled', /.*/);
 
-  await page.evaluate(() => window.scrollTo(0, 600));
+  // Real wheel gestures: down keeps the bar away, up brings it in.
+  await page.mouse.move(720, 450);
+  await page.mouse.wheel(0, 600);
+  await page.waitForTimeout(700);
+  await expect(header).not.toHaveAttribute('data-scrolled', /.*/);
+  await page.mouse.wheel(0, -100);
   await expect(header).toHaveAttribute('data-scrolled', /.*/);
 
   // A real in-page link click, so the View Transitions router handles it, and
