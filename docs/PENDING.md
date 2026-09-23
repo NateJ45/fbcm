@@ -680,6 +680,23 @@ projection (`[0...limit]`, a field reference as a slice bound) failed the ENTIRE
 home page query and fell back to defaults on a green build. `DYNAMIC_LIST_MAX`
 now ties the schema max and the slice with a drift test.
 
+### Who We Are "alive": before the page is applied (2026-09-23)
+
+- **The Welcome Booklet still points at Wix.** The "Find Out More" card on the
+  composed Who We Are page (`scripts/pages/who-we-are.mjs`) links
+  `https://www.fbcmuncie.org/_files/ugd/08181c_75a0565927c14a929d1ebee1565e638c.pdf`,
+  the capture's own button, because the PDF is not in Sanity and a dry run must not
+  upload it. That URL dies at cutover. Upload
+  `../fbcm-archive/files/08181c_75a0565927c14a929d1ebee1565e638c.pdf` (the shared
+  uploader, as `wedding.mjs` does its PDFs) and point the card at the asset before or
+  with the `--apply` of this page.
+- **The page is composed but not applied.** Deploy the branch (the schema carries the
+  new church sections), then `npm run seed-pages -- --only who-we-are --apply`. Until
+  then `/styleguide/who-we-are` shows the composition from
+  `scripts/data/fixtures/who-we-are.json` (rebuild it with
+  `node scripts/page-fixture.mjs who-we-are`), and can be deleted once the live page
+  shows it.
+
 ---
 
 ## Photo library uploaded (2026-09-23)

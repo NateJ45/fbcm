@@ -1,51 +1,76 @@
 // scripts/pages/who-we-are.mjs
 //
-// The Who We Are page, composed exactly as section 5.3 of
-// docs/superpowers/specs/2026-09-19-fbcm-plan2-pages-design.md describes it:
-// the church-specific "about" that replaces the starter's `about` capability.
-// The source is 1,332 words of theology, so the design is progressive
-// disclosure: their own sentence first, then the theology in the order they
-// wrote it, cut but never rewritten.
+// The Who We Are page, composed from the church sections built for it on
+// 2026-09-23 (the "Who We Are alive" plan,
+// docs/superpowers/plans/2026-09-23-fbcm-who-we-are-alive.md). The visual spec
+// is the approved prototype,
+// docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html: it says which
+// photograph goes where and the order the page reads in. The words are the
+// church's own, from scripts/data/pages/who-we-are.txt, in the order the church
+// wrote them:
 //
-// Five things about this file are deliberate.
+//   heroSection (window)  their sentence, three faces in a triple lancet
+//   watchwordSection      Our Watchword: Isaiah 12:4, praise and proclaim
+//   goalsSection          Our Goals: Worship, The Way, Witness, Work
+//   pledgeSection         Our Pledge, said together when a member joins
+//   letterSection         A Note From Our Pastors, the whole letter
+//   linkCardsSection      Where To Go Next, four cards as arched doors
 //
-// 1. THEIR SENTENCE IS THE HEADLINE, AND IT IS NOT RETYPED. The hero headline
-//    is siteSettings.tagline, which is the line the church closes its Worship
-//    section with ("We are a Spirit-led people gathered to join Christ's
-//    presence in our community.", scripts/data/pages/who-we-are.txt line 53).
-//    Because the hero already says it, the Worship pillar below deliberately
-//    stops before it rather than saying it twice (CLAUDE.md rule 15).
+// Six things about this file are deliberate.
 //
-// 2. THE CAPTURE OPENS WITH A TABLE OF CONTENTS, SO SOME HEADINGS ARE NOT
-//    WHERE THEY LOOK. Lines 3 to 11 of the capture are five contents lines:
-//    "Our Watchword", "Our Goals", "Our Pledge", "A Note From Our Pastors",
-//    "Where To Go Next". Four of those five NEVER APPEAR AGAIN: the sections
-//    they point at carry no heading of their own in the capture. So the
-//    watchword, the pledge and the pastors' letter are anchored on the first
-//    line of their own PROSE instead ("(Isaiah 12:4)", "Our commitment to one
-//    another", "Pastors Kendall & Jonathan"), and every anchor in this file is
-//    a first occurrence, which is what linesBetween() takes. Nothing here
-//    slices the file by line number.
+// 1. WHAT CAME OFF, AND WHY. The previous composition (plan 2b) set this page
+//    as a scripture band, three text blocks, a staff grid, link cards and a
+//    closing call-to-action band. Every one of those is replaced, not moved:
+//    the scripture band's verse is now inside the watchword band; the three
+//    text blocks (watchword, goals, pledge) are now bands of their own; the
+//    letter, which plan 2b cut to three paragraphs and a link to /staff, is
+//    now here whole; the staff grid lives on /staff, which is where the
+//    "Meet Our Staff" card goes; and the closing "Join us this Sunday" band is
+//    dropped because the prototype ends on the four doors, the first of which
+//    is Sunday worship. No link anywhere on the site, in Sanity or in code,
+//    pointed at an anchor on the old page (checked 2026-09-23), so nothing
+//    that disappears was a link target.
 //
-// 3. EVERY CUT IS A WHOLE SENTENCE, NEVER A REWORDING. pick() finds one line
-//    of a span by a distinctive phrase and THROWS when it cannot, so a cut is
-//    a decision recorded in code rather than a paragraph quietly going
-//    missing. The sentences left out are listed in the task report.
+// 2. THEIR SENTENCE IS THE HEADLINE, AND IT IS NOT RETYPED. The hero headline
+//    is siteSettings.tagline, the line the church closes its Worship goal with
+//    ("We are a Spirit-led people gathered to join Christ's presence in our
+//    community.", who-we-are.txt). Because the hero says it, the Worship goal
+//    below stops before it rather than saying it twice (CLAUDE.md rule 15).
 //
-// 4. TWO PIECES OF IN-HOUSE VOCABULARY GET ONE CLAUSE EACH, AND NOTHING ELSE
-//    CHANGES. "growth track" and "deacon" are explained in place with a single
-//    inserted clause (spec 5.3, "Fixes"); the third term the spec names,
-//    "Global Servants", is in a sentence that the 60-word Witness pillar does
-//    not reach, so it is simply cut. These are EDITS to the church's own
-//    sentences, so they are not `newCopy`: gloss() below does each one and
-//    throws if the sentence it is glossing has moved.
+// 3. THE CAPTURE OPENS WITH A TABLE OF CONTENTS. Lines 3 to 11 are the five
+//    headings ("Our Watchword" ... "Where To Go Next"), and four of them never
+//    appear again: the sections they name carry no heading in the capture. So
+//    those headings are typed here, exactly as the contents list spells them,
+//    and every span below is anchored on a first line of PROSE, never on a
+//    line number. pick() finds one line of a span by a distinctive phrase and
+//    THROWS when it cannot, so a moved or reworded line fails the build of
+//    this page instead of seeding an empty field.
 //
-// 5. THE STAFF BAND IS HEADED BY WHAT IT ACTUALLY RENDERS. `group: 'pastors'`
-//    returns three people today, not two: Kendall Ellis and Jonathan Balmer,
-//    the Co-Pastors, and Cynthia Smith, the Worship Arts Director, who is
-//    filed in the same group. So the heading says so. If the church later
-//    gives worship staff a group of their own, this heading goes back to
-//    naming the two.
+// 4. EVERY CHANGE TO THEIR WORDS IS A NAMED HELPER THAT THROWS. gloss()
+//    inserts a clause (the plan 2b explanations of "growth track" and
+//    "deacon", carried forward), dashToComma() swaps an em-dash for a comma
+//    (CLAUDE.md rule 2), and recase() turns a Wix title-case line into a
+//    sentence. Each throws when the sentence it edits has changed underneath
+//    it, and each edit is listed in `edits` for the approval note.
+//
+// 5. PHOTOS COME FROM THE MEDIA LIBRARY, BY ARCHIVE FILENAME. Every photo is a
+//    `library` entry in scripts/data/page-images.json (keys `wwa-*`), so the
+//    page uses the library's one copy and nothing is resized or uploaded. The
+//    alt text on each entry is the library's own altText
+//    (scripts/data/photo-library.json). The library carries no hotspot, so the
+//    crop each frame needs is set here, from the prototype's object-position.
+//    No photo on this page has a caption (Nathan's ruling, 2026-09-23).
+//
+// 6. ONE LINK STILL POINTS AT WIX. The Welcome Booklet is a PDF on the Wix
+//    file host (the capture's own button). It is not in Sanity yet, and a
+//    dry run must not upload it, so the card links the Wix copy until it is
+//    uploaded; docs/PENDING.md carries that before cutover.
+
+/** A hotspot centred on (x, y), kept inside the frame so the Studio accepts it. */
+function hotspot(x, y) {
+  const size = Math.min(0.3, 2 * Math.min(x, 1 - x), 2 * Math.min(y, 1 - y));
+  return { _type: 'sanity.imageHotspot', x, y, width: size, height: size };
+}
 
 export default {
   id: 'page-who-we-are',
@@ -55,53 +80,51 @@ export default {
   // Every sentence below that did not exist on the Wix site. The generated note
   // (docs/superpowers/notes/2026-09-19-copy-for-church-approval.md) puts these
   // in front of the church before launch.
-  //
-  // ONE sentence, not three. The link-cards band carries three card sentences;
-  // two of them are the home page's own Beliefs and Ministries sentences,
-  // reused word for word, so they are already in the note under Home and are
-  // not declared a second time here. Only the Visit card needed a sentence of
-  // its own, because Home's third door is History, not Visit.
   newCopy: [
-    'Where to park, when to arrive, and what happens once you are inside. (link cards, Plan a visit)',
+    'Praise & Proclaim, our watchword (hero button, jumps to the watchword)',
+    'In the church (Our goals, Witness: label on the first ring, for "Engaged Membership")',
+    'In Muncie (Our goals, Witness: label on the second ring, for "Local Partnership")',
+    'Everywhere (Our goals, Witness: label on the third ring, for "Kingdom Citizenship")',
+    'Co-Pastors, First Baptist Church Muncie (under the signature of the pastors’ letter)',
   ],
 
-  // Edits to the church's own sentences (ruling P16): a clause inserted, a word
-  // replaced, or a term cut. The words are still theirs, so these are not
-  // `newCopy`; they go in their own list in the approval note, because they ask
-  // the church a different question. gloss() below makes the first two and
-  // throws if the sentence it is glossing has moved.
+  // Edits to the church's own sentences (ruling P16). The words are still
+  // theirs, so these are not `newCopy`; each is made by a helper below that
+  // throws if the sentence it edits has moved.
   edits: [
     'growth track: "We offer a growth track, a step by step path into the life of this church, to help us all..." (Our goals, The Way. The inserted clause explains the church’s own term, which the Wix site never does.)',
     'deacon: "...connected with a deacon, a church member chosen to care for others, who offers prayer and support." (Our goals, The Way.)',
-    'Cut: the sentence naming Global Servants ("Kingdom Citizenship...") falls outside the Witness pillar and is not on the page.',
-    'Em-dash to comma (CLAUDE.md rule 2), inside a verbatim scripture quotation: Kendall Ellis’s staff bio quotes Romans 8:17 (NIV) as “...then we are heirs—heirs of God and co-heirs with Christ...” and it now reads “...then we are heirs, heirs of God...”. No other word changes. The bio is a field on her staff document rather than a sentence this module builds, so the change was made by scripts/fix-bio-em-dashes.mjs (backed up first); it is declared here because this is one of the two pages that print it.',
+    'One word added: "lifting up the name of God" (the Wix page reads "lifting up name of God"). (Our watchword, what "Praise" means.)',
+    'Em-dash to comma (CLAUDE.md rule 2): "...would be one, as he and the Father are one." (Our pledge, after the pledge.)',
+    'Em-dash to comma (CLAUDE.md rule 2): "...calling a married couple to be Co-Pastors, both of us preaching the word..." (A note from our pastors.)',
+    'Lifted, not written: "“Come and see.”" is set large as the pull quote of The Way. It is the pastors’ letter’s own quotation of John 1:39, which The Way’s opening sentence also quotes.',
+    'Not repeated: the Worship goal’s closing sentence, "We are a Spirit-led people gathered to join Christ’s presence in our community.", is the headline at the top of the page, so the Worship goal stops before it.',
+    'Re-cased from the Wix card style (every word capitalised) to sentences: "Find out what you can expect this Sunday.", "Get in touch with us with our virtual contact card.", "Read our staff bios and meet the people of FBCM.", "Download our Welcome Booklet." and the button "Read more". (Where to go next.)',
   ],
 
-  // No band on this page shows an identifiable child. The congregation photo
-  // is adults, from behind, mid-hymn.
-  photoConsent: [],
+  // Page-images manifest keys of the photos on this page that show an
+  // identifiable child (photo-library.json `children: true`).
+  photoConsent: [
+    'wwa-hero-girls',
+    'wwa-hero-child',
+    'wwa-way-bibles',
+    'wwa-witness-children',
+    'wwa-witness-singing',
+    'wwa-witness-steps',
+    'wwa-witness-serve',
+    'wwa-witness-boxes',
+    'wwa-work-frame',
+  ],
 
   async build(ctx) {
     const { images, copy, settings } = ctx;
-    const { linesBetween, paragraphs, bullets, heading, ctaInternal, ctaExternal, decodeEntities } =
-      copy;
+    const { linesBetween, paragraphs, ctaInternal, ctaExternal, ctaAnchor, decodeEntities } = copy;
 
     if (!settings) {
       throw new Error(
-        'who-we-are.mjs: siteSettings is not available. This page reads the tagline, the ' +
-          'service time, the street and the visitor form from it rather than retyping them.',
+        'who-we-are.mjs: siteSettings is not available. This page reads the tagline and the ' +
+          'visitor form from it rather than retyping them.',
       );
-    }
-
-    // -- Facts, derived from settings ---------------------------------------
-    const streetLine = String(settings.address ?? '')
-      .split(/\r?\n/)[0]
-      .trim();
-
-    // -- The photo ----------------------------------------------------------
-    const congregation = await images.image('whoweare-congregation');
-    if (!congregation) {
-      throw new Error('who-we-are.mjs: no photo in the manifest for "whoweare-congregation"');
     }
 
     // -- Reading the capture -------------------------------------------------
@@ -118,11 +141,10 @@ export default {
       return decodeEntities(hit[0]).trim();
     };
 
-    /**
-     * Insert one explanatory clause into a sentence the church wrote, and throw
-     * if the sentence has changed underneath it. Nothing else about the
-     * sentence moves.
-     */
+    /** A scripture reference line, "(Galatians 6:2)", without its brackets. */
+    const reference = (lines, phrase) => pick(lines, phrase).replace(/^\(/, '').replace(/\)$/, '');
+
+    /** Insert one clause into a sentence the church wrote; throw if it moved. */
     const gloss = (sentence, find, replaceWith) => {
       if (!sentence.includes(find)) {
         throw new Error(
@@ -133,11 +155,59 @@ export default {
       return sentence.replace(find, replaceWith);
     };
 
-    // 1. The verse. Lines 15 to 17, the three lines the church sets Isaiah 12:4
-    //    on, joined into one. The outer curly quotes come off: the band IS the
-    //    quotation (src/components/sections/ScriptureBand.astro draws a
-    //    blockquote), so keeping them would set the verse in quote marks
-    //    inside a quotation. Punctuation only; no word changes.
+    /** The one em-dash between words becomes a comma (CLAUDE.md rule 2). */
+    const dashToComma = (sentence) => {
+      if (!/\s—\s/.test(sentence)) {
+        throw new Error(
+          `who-we-are.mjs: expected an em-dash to fix in "${sentence.slice(0, 60)}..."; the ` +
+            'capture no longer carries one.',
+        );
+      }
+      return sentence.replace(/\s—\s/, ', ');
+    };
+
+    /**
+     * A Wix title-case line as a sentence. `wanted` is typed out in full (so
+     * "Sunday" and "Welcome Booklet" keep their capitals); this only checks
+     * that it is the same words, letter for letter, as the church's line.
+     */
+    const recase = (original, wanted) => {
+      if (wanted.replace(/\.$/, '').toLowerCase() !== original.toLowerCase()) {
+        throw new Error(`who-we-are.mjs: "${wanted}" is not a re-casing of "${original}".`);
+      }
+      return wanted;
+    };
+
+    /** "Following God's Word - Our times of worship..." -> { title, body }. */
+    const titled = (line) => {
+      const m = /^(.+?)\s+[-–]\s+(.+)$/.exec(line);
+      if (!m) throw new Error(`who-we-are.mjs: no title before a dash in "${line.slice(0, 60)}"`);
+      return { title: m[1].trim(), body: m[2].trim() };
+    };
+
+    // -- Photos -----------------------------------------------------------------
+
+    /** A media-library photo from the manifest, with the crop the frame needs. */
+    const photo = async (key, x, y, extra = {}) => {
+      const img = await images.image(key);
+      if (!img) throw new Error(`who-we-are.mjs: no photo in the manifest for "${key}"`);
+      return { ...img, hotspot: hotspot(x, y), ...extra };
+    };
+
+    // -- 1. Hero ------------------------------------------------------------------
+    // Three faces, the middle (largest) lancet first: the two girls at the
+    // glass in the middle, the couple in the kitchen on the left, the small
+    // girl among the coneflowers on the right (Hero.astro draws frames[1],
+    // frames[0], frames[2]).
+    const frames = [
+      await photo('wwa-hero-girls', 0.66, 0.4, { _key: 'frame-1' }),
+      await photo('wwa-hero-couple', 0.58, 0.4, { _key: 'frame-2' }),
+      await photo('wwa-hero-child', 0.68, 0.4, { _key: 'frame-3' }),
+    ];
+
+    // -- 2. The watchword -------------------------------------------------------
+    // The verse is the three lines under "Praise & Proclaim", joined, with the
+    // outer quotation marks off: the band sets them itself.
     const verse = decodeEntities(
       linesBetween('who-we-are', 'Praise & Proclaim', '(Isaiah 12:4)')
         .filter((l) => l.trim())
@@ -147,237 +217,331 @@ export default {
       .replace(/^[“"]/, '')
       .replace(/[”"]$/, '');
 
-    // 2. The watchword. Everything between the reference under the verse and
-    //    the Church Coordination Team's goals: lines 21 to 37, which is 164
-    //    words, already inside the spec's ~200 budget, so nothing is cut. The
-    //    two bare words in the middle of the span, "Praise" and "Proclaim",
-    //    are the church's own sub-headings and are lifted to h3.
-    const watchwordLines = linesBetween('who-we-are', '(Isaiah 12:4)', 'Our Church Coordination');
-    const watchword = [];
-    let wN = 0;
-    for (const raw of watchwordLines) {
-      const text = decodeEntities(raw).trim();
-      if (!text) continue;
-      wN += 1;
-      watchword.push(
-        text === 'Praise' || text === 'Proclaim'
-          ? heading(text, 3, `ww-${wN}`)
-          : paragraphs(text, `ww-${wN}`)[0],
-      );
-    }
+    // The watchword text: its first two sentences (the first paragraph) are
+    // the introduction; the rest, whole and in order, is behind "Read more";
+    // the two meanings under "Praise" and "Proclaim" have fields of their own.
+    const ww = linesBetween('who-we-are', '(Isaiah 12:4)', 'Our Church Coordination');
+    const watchwordIntro = pick(ww, 'This statement is our congregational');
+    const watchwordMore = [
+      ...paragraphs(pick(ww, 'When the people of God were in exile'), 'ww-a'),
+      ...paragraphs(pick(ww, 'At First Baptist Church Muncie, we believe'), 'ww-b'),
+      ...paragraphs(pick(ww, 'And our goal for this season'), 'ww-c'),
+      ...paragraphs(pick(ww, 'reminds us of the importance of each'), 'ww-d'),
+    ];
+    const praise = gloss(pick(ww, 'That our Purpose'), 'lifting up name', 'lifting up the name');
+    const proclaim = pick(ww, 'That our Joy');
 
-    // 3. The four pillars, each an h3 followed by about sixty words of the
-    //    church's own prose. Each span runs from one pillar heading to the
-    //    next; the last runs into the first line of the pledge, which is the
-    //    only thing after "Work" in the capture.
+    // -- 3. The goals -------------------------------------------------------------
+    const goalsIntro = pick(
+      linesBetween('who-we-are', 'That our Joy', 'Worship'),
+      'Our Church Coordination Team',
+    );
     const worshipLines = linesBetween('who-we-are', 'Worship', 'The Way');
     const wayLines = linesBetween('who-we-are', 'The Way', 'Witness');
     const witnessLines = linesBetween('who-we-are', 'Witness', 'Work');
     const workLines = linesBetween('who-we-are', 'Work', 'Our commitment to one another');
 
-    const pillars = [
-      heading('Worship', 3, 'p4-h1'),
-      // 50 words. Their opening sentence and "Following God's Word". The
-      // closing sentence of this section is the site tagline, and the hero at
-      // the top of this page already says it.
-      ...paragraphs(pick(worshipLines, 'FBCM gives praise to the Lord'), 'p4-a'),
-      ...paragraphs(pick(worshipLines, "Following God's Word"), 'p4-b'),
+    /** A point from a "Title - body" line of the capture. */
+    const point = (_key, lines, phrase, { short, edit } = {}) => {
+      const { title, body } = titled(pick(lines, phrase));
+      return {
+        _type: 'goalPoint',
+        _key,
+        title,
+        ...(short ? { short } : {}),
+        body: edit ? edit(body) : body,
+      };
+    };
 
-      heading('The Way', 3, 'p4-h2'),
-      // 52 words, with the two glosses. "growth track" is the church's own
-      // name for its path into the life of the church and is never explained
-      // on the Wix site; "deacon" is a role a first-time reader will not know.
-      ...paragraphs(
-        gloss(
+    const goals = [
+      {
+        _type: 'goal',
+        _key: 'goal-worship',
+        name: 'Worship',
+        subtitle: pick(worshipLines, 'Worshiping as the Body of Christ'),
+        glyph: 'window',
+        summary: pick(worshipLines, 'FBCM gives praise to the Lord'),
+        points: [
+          point('worship-1', worshipLines, "Following God's Word"),
+          point('worship-2', worshipLines, 'Enjoying Fellowship'),
+          point('worship-3', worshipLines, 'Participating in Practices'),
+        ],
+        // The whole body in the sanctuary, full bleed, then the two lancets:
+        // leading the songs, and setting the Lord's table.
+        photos: [
+          await photo('wwa-worship-nave', 0.5, 0.82, { _key: 'worship-nave' }),
+          await photo('wwa-worship-singer', 0.56, 0.4, { _key: 'worship-singer' }),
+          await photo('wwa-worship-table', 0.3, 0.5, { _key: 'worship-table' }),
+        ],
+      },
+      {
+        _type: 'goal',
+        _key: 'goal-way',
+        name: 'The Way',
+        aside: reference(wayLines, '(Discipleship)'),
+        subtitle: pick(wayLines, 'Seeking Understanding'),
+        glyph: 'door',
+        quote: '“Come and see.”',
+        summary: gloss(
           pick(wayLines, 'FBCM proclaims God'),
           'We offer a growth track to help us all',
           'We offer a growth track, a step by step path into the life of this church, to help us all',
         ),
-        'p4-c',
-      ),
-      ...paragraphs(
-        gloss(
-          pick(wayLines, 'Caring Mentorship'),
-          'connected with a deacon who offers',
-          'connected with a deacon, a church member chosen to care for others, who offers',
-        ),
-        'p4-d',
-      ),
-
-      heading('Witness', 3, 'p4-h3'),
-      // 50 words. "Kingdom Citizenship", the sentence carrying "Global
-      // Servants", falls outside the sixty and is cut rather than glossed.
-      ...paragraphs(pick(witnessLines, 'To make known what God has done'), 'p4-e'),
-      ...paragraphs(pick(witnessLines, 'Local Partnership'), 'p4-f'),
-
-      heading('Work', 3, 'p4-h4'),
-      // 69 words: this pillar is short enough to keep whole, and Serve,
-      // Support and Share are a set that does not survive losing one.
-      ...paragraphs(pick(workLines, 'FBCM exalts God'), 'p4-g'),
-      ...paragraphs(pick(workLines, 'Serve '), 'p4-h'),
-      ...paragraphs(pick(workLines, 'Support '), 'p4-i'),
-      ...paragraphs(pick(workLines, 'Share '), 'p4-j'),
+        points: [
+          point('way-1', wayLines, 'Welcoming Worship'),
+          point('way-2', wayLines, 'Caring Mentorship', {
+            edit: (body) =>
+              gloss(
+                body,
+                'connected with a deacon who offers',
+                'connected with a deacon, a church member chosen to care for others, who offers',
+              ),
+          }),
+          point('way-3', wayLines, 'Spiritual Friendship'),
+        ],
+        // One door-arch step per point: the welcome at the door, the deacons,
+        // friends with open Bibles.
+        photos: [
+          await photo('wwa-way-door', 0.4, 0.45, { _key: 'way-door' }),
+          await photo('wwa-way-deacons', 0.46, 0.4, { _key: 'way-deacons' }),
+          await photo('wwa-way-bibles', 0.5, 0.45, { _key: 'way-bibles' }),
+        ],
+      },
+      {
+        _type: 'goal',
+        _key: 'goal-witness',
+        name: 'Witness',
+        aside: reference(witnessLines, '(Evangelism)'),
+        subtitle: pick(witnessLines, 'Inviting to Church'),
+        glyph: 'rose',
+        summary: pick(witnessLines, 'To make known what God has done'),
+        // The ring labels are new copy (declared above): one widening ring per
+        // point, the church, then Muncie, then everywhere.
+        points: [
+          point('witness-1', witnessLines, 'Engaged Membership', { short: 'In the church' }),
+          point('witness-2', witnessLines, 'Local Partnership', { short: 'In Muncie' }),
+          point('witness-3', witnessLines, 'Kingdom Citizenship', { short: 'Everywhere' }),
+        ],
+        // Faces of the church, at the door, in town, on the steps, on mission.
+        photos: [
+          await photo('wwa-witness-children', 0.57, 0.5, { _key: 'witness-children' }),
+          await photo('wwa-witness-mascot', 0.3, 0.5, { _key: 'witness-mascot' }),
+          await photo('wwa-witness-singing', 0.24, 0.4, { _key: 'witness-singing' }),
+          await photo('wwa-witness-steps', 0.62, 0.5, { _key: 'witness-steps' }),
+          await photo('wwa-witness-serve', 0.5, 0.4, { _key: 'witness-serve' }),
+          await photo('wwa-witness-boxes', 0.55, 0.5, { _key: 'witness-boxes' }),
+        ],
+      },
+      {
+        _type: 'goal',
+        _key: 'goal-work',
+        name: 'Work',
+        aside: reference(workLines, '(Acts of Mercy)'),
+        subtitle: pick(workLines, 'Gifts For Service'),
+        glyph: 'basin',
+        summary: pick(workLines, 'FBCM exalts God'),
+        // Serve, Support and Share are the church's own point titles, and the
+        // word each door carries.
+        points: [
+          point('work-1', workLines, 'Serve ', { short: 'Serve' }),
+          point('work-2', workLines, 'Support ', { short: 'Support' }),
+          point('work-3', workLines, 'Share ', { short: 'Share' }),
+        ],
+        photos: [
+          await photo('wwa-work-building', 0.62, 0.5, { _key: 'work-building' }),
+          await photo('wwa-work-frame', 0.42, 0.6, { _key: 'work-frame' }),
+          await photo('wwa-work-breakfast', 0.38, 0.55, { _key: 'work-breakfast' }),
+        ],
+      },
     ];
 
-    // 4. The pastors' letter, 183 of its 434 words. The three kept are the
-    //    welcome, their own account of what this church is, and the closing
-    //    invitation. Task 10 puts the whole letter on /staff, which is what
-    //    the last line points at.
-    const letterLines = linesBetween('who-we-are', 'Pastors Kendall & Jonathan', 'Sunday Worship');
-    const letter = [
-      ...paragraphs(pick(letterLines, 'If you'), 'lt-a'),
-      ...paragraphs(pick(letterLines, 'all about the church'), 'lt-b'),
-      ...paragraphs(pick(letterLines, 'Finally, we would love'), 'lt-c'),
-      ...paragraphs('[Read the full letter on the Staff page](/staff)', 'lt-d'),
-    ];
-
-    // 5. The pledge, verbatim and whole. The capture writes each commitment on
-    //    one line and its reference on the next, which would seed eight
-    //    one-line paragraphs; the two are paired back together here, exactly
-    //    as the page reads them aloud.
+    // -- 4. The pledge ----------------------------------------------------------
+    // Verbatim and whole, each line with its reference, then the two
+    // paragraphs the church sets after it, each with its reference.
     const pledgeLines = linesBetween(
       'who-we-are',
-      'Our commitment to one another',
-      'The life of faith',
+      'Gifts For Service',
+      'Pastors Kendall & Jonathan',
     );
-    const commitment = (phrase, reference) => `${pick(pledgeLines, phrase)} ${reference}`;
-    const pledge = [
-      ...paragraphs(pick(pledgeLines, 'We pledge ourselves'), 'pl-a'),
-      ...bullets(
-        [
-          commitment('Bearing your burdens', pick(pledgeLines, 'Galatians 6:2')),
-          commitment('Encouraging you in the faith', pick(pledgeLines, '1 Thess. 5:11')),
-          commitment('Delighting in the Lord', pick(pledgeLines, 'Ps. 86:11-13')),
-          commitment('Offering our lives', pick(pledgeLines, 'Romans 12:1')),
-        ],
-        'pl-b',
+    const pledgeLine = (_key, phrase, refPhrase) => ({
+      _type: 'pledgeLine',
+      _key,
+      text: pick(pledgeLines, phrase),
+      reference: reference(pledgeLines, refPhrase),
+    });
+    const after = [
+      ...paragraphs(
+        `${dashToComma(pick(pledgeLines, 'The life of faith'))} ${pick(pledgeLines, '(John 17:20-22)')}`,
+        'pa-a',
       ),
-      ...paragraphs(pick(pledgeLines, 'When a member joins'), 'pl-c'),
+      ...paragraphs(
+        `${pick(pledgeLines, 'At the same time, that unity')} ${pick(pledgeLines, '(1 Corinthians 12:12-30)')}`,
+        'pa-b',
+      ),
     ];
 
-    return {
+    // -- 5. The letter ------------------------------------------------------------
+    // The whole letter, every paragraph in order, between the sign-off line the
+    // capture opens it with and the first link card.
+    const letterSpan = linesBetween('who-we-are', 'Pastors Kendall & Jonathan', 'Sunday Worship')
+      .map((l) => decodeEntities(l).trim())
+      .filter(Boolean);
+    if (!letterSpan[0]?.startsWith('If you') || !letterSpan.at(-1)?.startsWith('Finally')) {
+      throw new Error(
+        'who-we-are.mjs: the pastors’ letter no longer runs from "If you..." to "Finally...". ' +
+          'Re-read the capture before changing this.',
+      );
+    }
+    // The one em-dash in the letter is in the Co-Pastors paragraph; dashToComma
+    // throws if it has gone.
+    const letter = letterSpan.flatMap((para, i) =>
+      paragraphs(
+        para.includes('calling a married couple') ? dashToComma(para) : para,
+        `lt-${i + 1}`,
+      ),
+    );
+    const signature = pick(
+      linesBetween('who-we-are', 'Our commitment to one another', 'If you'),
+      'Pastors Kendall & Jonathan',
+    ).replace(/^Pastors\s+/, '');
+
+    // -- 6. Where to go next ----------------------------------------------------
+    const cardLines = linesBetween('who-we-are', 'Finally, we would love');
+    const button = (n) => {
+      const hits = cardLines.filter((l) => l.startsWith('[Button]'));
+      const m = /->\s*(\S+)/.exec(hits[n] ?? '');
+      if (!m) throw new Error(`who-we-are.mjs: link card button ${n + 1} is not in the capture`);
+      return m[1];
+    };
+    const readMore = recase(
+      pick(cardLines, '[Button] Read More').split('->')[0].replace('[Button]', '').trim(),
+      'Read more',
+    );
+
+    const cards = [
+      {
+        _type: 'linkCard',
+        _key: 'next-1',
+        title: pick(cardLines, 'Sunday Worship'),
+        body: recase(
+          pick(cardLines, 'Find Out What You Can Expect'),
+          'Find out what you can expect this Sunday.',
+        ),
+        // The Wix card went to /what-to-expect, which this site retired into /visit.
+        cta: ctaInternal(readMore, 'visit'),
+        image: await photo('wwa-next-worship', 0.5, 0.5),
+      },
+      {
+        _type: 'linkCard',
+        _key: 'next-2',
+        title: pick(cardLines, 'Contact Us'),
+        body: recase(
+          pick(cardLines, 'Get In Touch With Us'),
+          'Get in touch with us with our virtual contact card.',
+        ),
+        // The capture's own form (button 2), read from Site settings, where it lives once.
+        cta: ctaExternal('Contact', settings.visitorFormUrl ?? button(1)),
+        image: await photo('wwa-next-kitchen', 0.4, 0.35),
+      },
+      {
+        _type: 'linkCard',
+        _key: 'next-3',
+        title: pick(cardLines, 'Meet Our Staff'),
+        body: recase(
+          pick(cardLines, 'Read our staff bios'),
+          'Read our staff bios and meet the people of FBCM.',
+        ),
+        // The Wix card went to /ministers, which is /staff here.
+        cta: ctaInternal(readMore, 'staff'),
+        image: await photo('wwa-next-kendall', 0.5, 0.3),
+      },
+      {
+        _type: 'linkCard',
+        _key: 'next-4',
+        title: pick(cardLines, 'Find Out More'),
+        body: recase(
+          pick(cardLines, 'Download Our Welcome Booklet'),
+          'Download our Welcome Booklet.',
+        ),
+        // See note 6 at the top of this file: still the Wix copy of the PDF.
+        cta: ctaExternal('Download', button(3)),
+        image: await photo('wwa-next-doors', 0.5, 0.78),
+      },
+    ];
+
+    const page = {
       title: 'Who we are',
       slug: { _type: 'slug', current: 'who-we-are' },
       // The main menu is seeded on siteSettings, not page by page.
       addToMainNav: false,
 
       pageBuilder: [
-        // 1. Hero. Their sentence, at full size, with the congregation beside
-        //    it. No subhead and no facts: the sentence is the whole point of
-        //    the band, and the times belong on /visit.
         {
           _type: 'heroSection',
           _key: 'wwa-hero',
-          layout: 'split',
-          size: 'short',
-          eyebrow: 'Who we are',
+          layout: 'window',
+          eyebrow: 'Who We Are',
           headline: settings.tagline,
-          frames: [{ ...congregation, _key: 'frame-1' }],
-          primaryCta: ctaInternal('Plan a visit', 'visit'),
-          secondaryCta: ctaInternal('What we believe', 'beliefs'),
+          frames,
+          primaryCta: ctaAnchor('Praise & Proclaim, our watchword', '/who-we-are#watchword'),
+          secondaryCta: ctaAnchor('A note from our pastors', '/who-we-are#letter'),
         },
-
-        // 2. The verse the whole page hangs on, on the indigo field, with
-        //    "proclaim" in gold.
         {
-          _type: 'scriptureBandSection',
-          _key: 'wwa-scripture',
-          verse,
-          reference: 'Isaiah 12:4',
-          accentWord: 'proclaim',
-        },
-
-        // 3. Why that verse: the watchword, whole.
-        {
-          _type: 'richTextSection',
+          _type: 'watchwordSection',
           _key: 'wwa-watchword',
-          eyebrow: 'Our watchword',
-          heading: 'Praise and proclaim',
-          body: watchword,
+          heading: 'Our Watchword',
+          intro: watchwordIntro,
+          more: watchwordMore,
+          verse,
+          reference: reference(
+            linesBetween('who-we-are', 'Praise & Proclaim', 'This statement is'),
+            '(Isaiah 12:4)',
+          ),
+          praise,
+          proclaim,
+          anchor: { _type: 'slug', current: 'watchword' },
         },
-
-        // 4. The four commitments the Church Coordination Team set, in the
-        //    order the church wrote them.
         {
-          _type: 'richTextSection',
+          _type: 'goalsSection',
           _key: 'wwa-goals',
-          eyebrow: 'Our goals',
-          heading: 'Four commitments',
-          body: pillars,
+          heading: 'Our Goals',
+          intro: goalsIntro,
+          goals,
+          anchor: { _type: 'slug', current: 'goals' },
         },
-
-        // 5. The people. See note 5 at the top of this file for the heading.
         {
-          _type: 'staffGridSection',
-          _key: 'wwa-pastors',
-          eyebrow: 'Our leadership',
-          heading: 'Our pastors and worship arts director',
-          group: 'pastors',
-          showBios: true,
-        },
-
-        // 6. Their letter, shortened, pointing at the whole of it on /staff.
-        {
-          _type: 'richTextSection',
-          _key: 'wwa-letter',
-          eyebrow: 'A note from our pastors',
-          heading: 'From Kendall and Jonathan',
-          body: letter,
-        },
-
-        // 7. The pledge the church says out loud when a member joins.
-        {
-          _type: 'richTextSection',
+          _type: 'pledgeSection',
           _key: 'wwa-pledge',
-          eyebrow: 'Our pledge',
-          heading: 'What we promise',
-          body: pledge,
+          heading: 'Our Pledge',
+          intro: pick(pledgeLines, 'Our commitment to one another'),
+          instruction: pick(pledgeLines, 'When a member joins'),
+          opening: pick(pledgeLines, 'We pledge ourselves'),
+          lines: [
+            pledgeLine('pledge-1', 'Bearing your burdens', '(Galatians 6:2)'),
+            pledgeLine('pledge-2', 'Encouraging you in the faith', '(1 Thess. 5:11)'),
+            pledgeLine('pledge-3', 'Delighting in the Lord', '(Ps. 86:11-13'),
+            pledgeLine('pledge-4', 'Offering our lives', '(Romans 12:1)'),
+          ],
+          after,
+          image: await photo('wwa-pledge-baptism', 0.7, 0.3),
+          anchor: { _type: 'slug', current: 'pledge' },
         },
-
-        // 8. Three doors on. The first two sentences are the home page's own,
-        //    word for word (scripts/pages/home.mjs, the link-cards band), so a
-        //    reader who arrives here first and a reader who arrives at Home
-        //    first are told the same thing.
+        {
+          _type: 'letterSection',
+          _key: 'wwa-letter',
+          heading: 'A Note From Our Pastors',
+          body: letter,
+          signature,
+          signatureNote: 'Co-Pastors, First Baptist Church Muncie',
+          portrait: await photo('wwa-letter-pastors', 0.71, 0.5),
+          anchor: { _type: 'slug', current: 'letter' },
+        },
         {
           _type: 'linkCardsSection',
-          _key: 'wwa-three-up',
-          eyebrow: 'Where to go next',
-          heading: 'Three doors',
-          cards: [
-            {
-              _type: 'linkCard',
-              _key: 'door-1',
-              title: 'What we believe',
-              body: 'We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself.',
-              cta: ctaInternal('Beliefs', 'beliefs'),
-            },
-            {
-              _type: 'linkCard',
-              _key: 'door-2',
-              title: 'How we serve',
-              body: 'Sunday school, music, youth, and work with partners across Muncie and beyond.',
-              cta: ctaInternal('Ministries', 'ministries'),
-            },
-            {
-              _type: 'linkCard',
-              _key: 'door-3',
-              title: 'Plan a visit',
-              body: 'Where to park, when to arrive, and what happens once you are inside.',
-              cta: ctaInternal('Visit', 'visit'),
-            },
-          ],
-        },
-
-        // 9. Closing band, with both buttons (plan 2b ruling P13) and a subhead
-        //    built from Site settings rather than retyped.
-        {
-          _type: 'ctaBandSection',
-          _key: 'wwa-cta',
-          eyebrow: 'Come and see',
-          headline: 'Join us this Sunday.',
-          subhead: `${settings.serviceTime}. ${streetLine}.`,
-          cta: ctaExternal('Fill in a visitor card', settings.visitorFormUrl),
-          secondaryCta: ctaInternal('Plan a visit', 'visit'),
+          _key: 'wwa-next',
+          heading: 'Where To Go Next',
+          cards,
+          anchor: { _type: 'slug', current: 'next' },
         },
       ],
 
@@ -387,5 +551,15 @@ export default {
       // Baptist affiliation is scripts/data/pages/baptists.txt line 83.
       seoDescription: `${settings.tagline} An American Baptist church in downtown Muncie since 1859.`,
     };
+
+    // No em-dash reaches the page (CLAUDE.md rule 2), whatever the capture
+    // carries: the two the church wrote are turned into commas above.
+    const dash = JSON.stringify(page).indexOf('—');
+    if (dash !== -1) {
+      throw new Error(
+        `who-we-are.mjs: an em-dash reached the page: ${JSON.stringify(page).slice(dash - 60, dash + 20)}`,
+      );
+    }
+    return page;
   },
 };
