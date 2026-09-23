@@ -34,6 +34,10 @@ async function main() {
       console.log(`${key.padEnd(28)} -> alias of "${entry.same}"`);
       continue;
     }
+    if (entry.library) {
+      console.log(`${key.padEnd(28)} -> library photo ${entry.library}`);
+      continue;
+    }
     if (!entry.file) {
       console.log(`${key.padEnd(28)} -> NULL (no archive candidate)`);
       continue;
@@ -82,7 +86,11 @@ async function main() {
       console.log(`${key.padEnd(28)} -> skipped (null)`);
       continue;
     }
-    const label = before ? 'cached' : 'uploaded';
+    const label = resolveEntry(manifest, key).entry.library
+      ? 'library'
+      : before
+        ? 'cached'
+        : 'uploaded';
     console.log(`${key.padEnd(28)} -> ${label} asset=${result.asset._ref}`);
     uploaded++;
   }
