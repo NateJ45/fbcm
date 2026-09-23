@@ -19,9 +19,10 @@
 //    body render so the page never says it twice. The Ledger classifier is
 //    called with hasHead: false so it never takes a second one.
 //
-// 2. THE CAPTION IS THE ALT TEXT. A figure with no caption looks unfinished,
-//    and the alt is the one description the editor has already written. It is
-//    not a second field to keep in step.
+// 2. NO VISIBLE CAPTIONS (2026-09-23, the owner: "the pictures speak for
+//    themselves"). This block used to print the image's alt text under every
+//    photograph as a figcaption. The alt text still lives on the <img>, for
+//    screen readers, but nothing prints it as reading copy any more.
 //
 // 3. THE PICTURE IS ALSO THE PAGE'S SPARE, AND MAY NOT BE THIS ONE.
 //    src/lib/spare-images.ts reads `imageTextSection.image` into the pool the
@@ -73,11 +74,10 @@ const mat = surface === 'muted' ? 'var(--color-background)' : 'var(--color-muted
 const blocks: PtBlock[] = Array.isArray(body) ? body : [];
 const hasPicture = !!image?.asset;
 const assigned: PhotoShape = hasPicture ? shapeProp : 'row';
-// The alt ATTRIBUTE and every test run on the cleaned string; the visible
-// caption prints the RAW alt, so in the preview its stega payload survives and
-// the caption stays click-to-edit (note 2).
+// The alt ATTRIBUTE and every test run on this cleaned string, stega stripped
+// so the alt read by screen readers and the alt test comparisons never carry
+// the preview's invisible markers.
 const alt = splitStega(image?.alt ?? '').cleaned;
-const caption: string = image?.alt ?? '';
 const dims = photoAspect(image);
 
 // The lede: one rule for the whole site (src/lib/rich-shape.ts isLedeParagraph).
@@ -141,14 +141,8 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
             </div>
           </div>
         </div>
-        <div class="mx-auto max-w-content px-gutter pt-[clamp(20px,2.4vw,28px)] pb-section-lg">
+        <div class="mx-auto max-w-content px-gutter pt-[clamp(40px,5vw,64px)] pb-section-lg">
           <div class="rt-g">
-            {alt && (
-              <p class="ph-gcap">
-                <span class="ph-tick" />
-                <span class="ph-cap mt-0">{caption}</span>
-              </p>
-            )}
             <div class="ph-gbody rt-g">
               <RichBody pieces={layout.pieces} />
             </div>
@@ -209,12 +203,6 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                     <PortableText value={toPt(legendFoot)} variant="bare" />
                   </div>
                 )}
-                {alt && (
-                  <figcaption class="ph-cap">
-                    <span class="ph-tick" />
-                    {caption}
-                  </figcaption>
-                )}
               </figure>
               <div class="ph-legend-rest rt-g">
                 {ledeBlock && (
@@ -237,12 +225,6 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                   {shape === 'window' ? (
                     <figure class="ph-window-wrap">
                       <Lancet image={image} alt={alt} uid={headingId} />
-                      {alt && (
-                        <figcaption class="ph-cap">
-                          <span class="ph-tick" />
-                          {caption}
-                        </figcaption>
-                      )}
                     </figure>
                   ) : shape === 'plate' ? (
                     <figure class="ph-plate">
@@ -256,12 +238,6 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                           class="ph-img"
                         />
                       </div>
-                      {alt && (
-                        <figcaption class="ph-cap">
-                          <span class="ph-tick" />
-                          {caption}
-                        </figcaption>
-                      )}
                     </figure>
                   ) : shape === 'frame' ? (
                     <figure class="ph-frame">
@@ -275,12 +251,6 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                           class="ph-img"
                         />
                       </div>
-                      {alt && (
-                        <figcaption class="ph-cap">
-                          <span class="ph-tick" />
-                          {caption}
-                        </figcaption>
-                      )}
                     </figure>
                   ) : (
                     <figure
@@ -294,12 +264,6 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                         alt={alt}
                         class="ph-img"
                       />
-                      {alt && (
-                        <figcaption class="ph-cap">
-                          <span class="ph-tick" />
-                          {caption}
-                        </figcaption>
-                      )}
                     </figure>
                   )}
                 </div>

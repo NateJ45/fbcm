@@ -24,8 +24,58 @@
 @source not '../../docs';
 @source not '../../*.md';
 
+/* Code that is tracked but never rendered by the site (found 2026-09-23, the
+   dead-CSS trim). archive/ and modules/ are staged starter modules: enabling
+   one COPIES it into src/, which is scanned, so excluding the staging copies
+   costs nothing. scripts/ (seeders, importers, harnesses), tests/ and
+   prototypes/ (static HTML mock-ups with their own CSS) and the Playwright
+   configs never reach a page either. Together they kept roughly 6.5 KB of
+   utilities in every page's inline stylesheet that no built page uses. */
+@source not '../../archive';
+@source not '../../modules';
+@source not '../../scripts';
+@source not '../../tests';
+@source not '../../prototypes';
+@source not '../../playwright*.config.ts';
+/* Also never rendered: the Studio's own code (src/sanity/, styled by Sanity
+   UI; its Help guides are prose), public/ (served verbatim, and llms-full.txt
+   is the whole site as prose), brand/ (apply-brand's input) and the root
+   config files. */
+@source not '../sanity';
+@source not '../../public';
+@source not '../../brand';
+@source not '../../*.{json,jsonc,js,mjs,ts}';
+
+/* Component-library files that ship with the starter but nothing on this site
+   imports (found 2026-09-23, same trim): eleven shadcn / Magic UI primitives,
+   all four Starwind families, the PrimeReact wrapper, and the orphaned
+   CopyEmailButton. Their class strings were generating about 21 KB of
+   utilities, keyframes and theme variables that no page renders. IMPORTING ONE OF
+   THESE FILES MEANS DELETING ITS LINE HERE, or its classes silently never
+   generate. src/lib/css-sources.test.ts fails if anything in src/ imports a
+   file excluded below, so the trap is loud rather than silent. The three
+   primitives the site does use (button, sheet, sonner) stay scanned. */
+@source not '../components/ui/accordion.tsx';
+@source not '../components/ui/animated-beam.tsx';
+@source not '../components/ui/bento-grid.tsx';
+@source not '../components/ui/card.tsx';
+@source not '../components/ui/dropdown-menu.tsx';
+@source not '../components/ui/input.tsx';
+@source not '../components/ui/label.tsx';
+@source not '../components/ui/marquee.tsx';
+@source not '../components/ui/separator.tsx';
+@source not '../components/ui/spotlight.tsx';
+@source not '../components/ui/textarea.tsx';
+@source not '../components/starwind';
+@source not '../components/primereact';
+@source not '../components/CopyEmailButton.tsx';
+
+/* Unit tests never render, but they name classes and tokens in fixtures and
+   assertions (theme-tokens.test.ts names every palette token, which kept
+   theme variables such as --color-taupe emitted with nothing reading them). */
+@source not '../**/*.test.ts';
+
 @import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
 @import '@fontsource/castoro-titling';
 @import '@fontsource/castoro';
 @import '@fontsource/castoro/400-italic.css';
@@ -38,6 +88,76 @@
    it would be silently deleted by the next `npm run apply-brand`. The blank
    line ends the run and keeps this import out of the rewrite. */
 @import '@fontsource-variable/sofia-sans-semi-condensed';
+
+/* shadcn's custom data-state variants, vendored from shadcn/tailwind.css
+   (shadcn 4.19.0, lines 28-87), in place of `@import 'shadcn/tailwind.css'`
+   (2026-09-23, dead-CSS trim). That import also registers @property rules for
+   its scroll-fade and shimmer utilities and a reduced-motion .shimmer rule,
+   which Tailwind emits whether or not anything uses them: 887 bytes in every
+   page's inline stylesheet, and nothing here uses scroll-fade, shimmer,
+   no-scrollbar or the accordion keyframes. The variants below are what
+   src/components/ui/sheet.tsx (the mobile menu) needs. If a shadcn component
+   added later uses any of those utilities, restore the import (and remove this
+   block, or Tailwind will see each variant registered twice). */
+@custom-variant data-open {
+  &:where([data-state='open']),
+  &:where([data-open]:not([data-open='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-closed {
+  &:where([data-state='closed']),
+  &:where([data-closed]:not([data-closed='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-checked {
+  &:where([data-state='checked']),
+  &:where([data-checked]:not([data-checked='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-unchecked {
+  &:where([data-state='unchecked']),
+  &:where([data-unchecked]:not([data-unchecked='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-selected {
+  &:where([data-selected='true']) {
+    @slot;
+  }
+}
+
+@custom-variant data-disabled {
+  &:where([data-disabled='true']),
+  &:where([data-disabled]:not([data-disabled='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-active {
+  &:where([data-state='active']),
+  &:where([data-active]:not([data-active='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-horizontal {
+  &:where([data-orientation='horizontal']) {
+    @slot;
+  }
+}
+
+@custom-variant data-vertical {
+  &:where([data-orientation='vertical']) {
+    @slot;
+  }
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -239,19 +359,6 @@
 @theme inline {
   --font-heading: var(--font-display);
   --font-sans: var(--font-body);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -440,41 +547,9 @@
   --ring: #292854;
   --link: #17151f; /* 15.76:1 on #f4efe6 — passes AA */
 
-  /* Charts (kept neutral, not used at launch) */
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-
   --radius: 0.125rem;
 
-  /* Sidebar (reserved for Studio-style admin contexts, not used on site) */
-  --sidebar: #f4efe6;
-  --sidebar-foreground: #17151f;
-  --sidebar-primary: #292854;
-  --sidebar-primary-foreground: #f4efe6;
-  --sidebar-accent: #ebe4d8;
-  --sidebar-accent-foreground: #17151f;
-  --sidebar-border: #dcd5c9;
-  --sidebar-ring: #292854;
-
   --tint-rgb: 41, 40, 84;
-
-  /* Starwind UI extra semantic tokens — not in shadcn's default set.
-       Values are harmonized to the existing neutral palette so the starter
-       renders sensibly out of the box. apply-brand rewrites these. */
-  --primary-accent: #1c1b3a; /* darker shade of --primary for hover states */
-  --secondary-accent: #17151f; /* dark ink — active/pressed secondary */
-  --info: #93c5fd; /* soft blue, harmonized with slate primary */
-  --info-foreground: #1e3a5f; /* deep blue for text on info surfaces */
-  --success: #86efac; /* soft green */
-  --success-foreground: #14532d; /* deep green for text on success surfaces */
-  --warning: #fde68a; /* soft amber */
-  --warning-foreground: #713f12; /* deep amber for text on warning surfaces */
-  --error: oklch(0.577 0.245 27.325); /* matches --destructive */
-  --error-foreground: #ffffff;
-  --outline: #292854; /* matches --ring */
 
   /* The alternating "muted" section surface's soft band, semantically indirect
      for the same reason --color-accent points at var(--accent): the palette
@@ -518,35 +593,7 @@
   --ring: #d59b29;
   --link: #f1ece3;
 
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-
-  --sidebar: #1c1926;
-  --sidebar-foreground: #f1ece3;
-  --sidebar-primary: #f1ece3;
-  --sidebar-primary-foreground: #14121b;
-  --sidebar-accent: #26222f;
-  --sidebar-accent-foreground: #f1ece3;
-  --sidebar-border: oklch(1 0 0 / 14%);
-  --sidebar-ring: #d59b29;
-
   --tint-rgb: 213, 155, 41;
-
-  /* Starwind UI extra semantic tokens — dark mode variants. */
-  --primary-accent: #f1ece3; /* lifted primary for dark hover states */
-  --secondary-accent: #f1ece3; /* near-white for dark active secondary */
-  --info: #93c5fd; /* same soft blue works on dark surfaces */
-  --info-foreground: #1e3a5f;
-  --success: #86efac;
-  --success-foreground: #14532d;
-  --warning: #fde68a;
-  --warning-foreground: #713f12;
-  --error: oklch(0.704 0.191 22.216); /* matches dark --destructive */
-  --error-foreground: #ffffff;
-  --outline: #d59b29; /* matches dark --ring */
 
   /* Dark mode: indigo becomes paper, cream becomes ink. Gold and the browns do not move.
      --color-bg-soft is deliberately NOT redeclared here even though the task brief that
@@ -1273,17 +1320,6 @@
   height: 1px;
   background: var(--color-gold);
 }
-.ph-cap {
-  margin-top: 14px;
-  font-style: italic;
-  font-size: 0.9375rem;
-  line-height: 1.45;
-  color: var(--muted-foreground);
-  max-width: 40ch;
-}
-.ph-cap .ph-tick {
-  margin-bottom: 9px;
-}
 .ph-hung {
   position: relative;
 }
@@ -1356,21 +1392,6 @@
   width: 100%;
   height: auto;
 }
-/* A bled row's caption starts on the grid, not at the bled edge: the margin
-   is the negation of .bleed-left's pull (and of the phone's gutter pull for
-   both sides, below). */
-.ph-beside .bleed-left .ph-cap {
-  margin-left: max(
-    var(--spacing-gutter),
-    calc((100cqw - var(--container-content)) / 2 + var(--spacing-gutter))
-  );
-}
-@media (max-width: 900px) {
-  .ph-beside .bleed-left .ph-cap,
-  .ph-beside .bleed-right .ph-cap {
-    margin-left: var(--spacing-gutter);
-  }
-}
 /* PLATE */
 .ph-plate {
   background: var(--mat);
@@ -1386,9 +1407,6 @@
   inset: -6px;
   border: 1px solid var(--color-gold);
   pointer-events: none;
-}
-.ph-plate .ph-cap {
-  margin-top: 22px;
 }
 /* WINDOW */
 .ph-window-wrap {
@@ -1429,9 +1447,6 @@
   stroke: var(--color-gold);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
-}
-.ph-window-wrap .ph-cap {
-  margin-top: 23px;
 }
 .ph-beside.is-window .ph-fig {
   grid-column: 9 / 13;
@@ -1499,17 +1514,6 @@
   line-height: 1.35;
   color: rgb(244 239 230 / 92%);
 }
-.ph-gcap {
-  grid-column: 1 / -1;
-  margin: 0 0 clamp(48px, 6vw, 80px);
-  display: flex;
-  gap: 14px;
-  align-items: baseline;
-}
-.ph-gcap .ph-tick {
-  flex: none;
-  transform: translateY(-4px);
-}
 .ph-gbody {
   grid-column: 1 / 11;
 }
@@ -1552,9 +1556,6 @@
   margin-top: 12px;
   color: var(--muted-foreground);
   font-size: 0.9375rem;
-}
-.ph-legend .ph-cap {
-  margin-top: 26px;
 }
 .ph-legend-rest {
   grid-column: 1 / 11;
@@ -1789,16 +1790,13 @@
    NOT inside a prefers-reduced-motion query: the global reduced-motion reset
    zeroes every transition-duration, and a rule hidden behind no-preference
    could never be overridden back on. */
-.zoom-img img,
-.zoom-img .zoom-img-target {
+.zoom-img img {
   transition: transform 1200ms cubic-bezier(0.2, 0.7, 0.2, 1);
   will-change: transform;
 }
 a:hover .zoom-img img,
-a:hover .zoom-img .zoom-img-target,
 a:focus-visible .zoom-img img,
-.zoom-img:hover img,
-.zoom-img:hover .zoom-img-target {
+.zoom-img:hover img {
   transform: scale(1.02);
 }
 
@@ -1895,30 +1893,6 @@ a:focus-visible .zoom-img img,
       box-shadow, transform, opacity;
     transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     transition-duration: 440ms;
-  }
-}
-
-/* Portfolio filter visibility. The chips island toggles .is-filtered-out on
-   non-matching items; CSS handles the fade-and-shrink so the grid stays
-   considered while items leave or rejoin. */
-.is-filtered-out {
-  opacity: 0;
-  transform: scale(0.96);
-  pointer-events: none;
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
-/* Custom portfolio cursor zone. Hide the native cursor on desktop+hover
-   devices while the bronze chip stands in. Touch and reduced-motion users
-   keep the native cursor (the chip bails out in JS for them). */
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  [data-portfolio-cursor-zone],
-  [data-portfolio-cursor-zone] a,
-  [data-portfolio-cursor-zone] a * {
-    cursor: none;
   }
 }
 
@@ -2247,44 +2221,6 @@ a:focus-visible .zoom-img img,
   }
 }
 
-/* ---- Drop cap -- float cap on the first paragraph of every journal post.
-   JournalPortableText.tsx adds .prose-drop-cap to the first <p> only. ---- */
-.prose-drop-cap::first-letter {
-  font-family: var(--font-display);
-  font-size: 4.5em;
-  line-height: 0.72;
-  float: left;
-  color: var(--primary);
-  margin-right: 0.08em;
-  margin-top: 0.06em;
-  font-weight: 400;
-}
-
-/* ---- Blockquote -- 3px left border, display serif italic. Replaces the
-   inline Tailwind classes previously on <blockquote> in JournalPortableText. ---- */
-.prose-blockquote {
-  border-left: 3px solid var(--primary);
-  padding: 0.5rem 0 0.5rem 1.25rem;
-  margin: var(--spacing-m) 0;
-}
-.prose-blockquote p {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1rem, 2vw, 1.15rem);
-  line-height: 1.65;
-  color: var(--foreground);
-  margin: 0;
-}
-.prose-blockquote cite {
-  display: block;
-  font-size: 0.65rem;
-  font-style: normal;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-eyebrow);
-  color: var(--primary);
-  margin-top: 0.5rem;
-}
-
 /* ---- Grid stagger entrance. Add data-stagger-grid to any card grid container.
    The BaseLayout observer adds .is-staggered on intersection. ---- */
 [data-stagger-grid] > * {
@@ -2320,22 +2256,6 @@ a:focus-visible .zoom-img img,
 }
 [data-stagger-grid].is-staggered > *:nth-child(n + 5) {
   transition-delay: 400ms, 400ms, 0ms, 0ms, 0ms;
-}
-
-/* Portfolio filter override: re-assert .is-filtered-out at specificity (0,2,0)
-   so it beats the [data-stagger-grid].is-staggered > * rule (also 0,2,0 but
-   declared earlier). The !important guards prevent any future stagger rule
-   from silently winning again. pointer-events + display collapse are already
-   handled by .is-filtered-out itself and are not overridden here. */
-[data-stagger-grid] > .is-filtered-out {
-  opacity: 0 !important;
-  transform: scale(0.96) !important;
-  /* Filtering owns its timing so the fade and shrink stay in sync and are not
-     split by the per-property hover/entrance durations on the stagger rule
-     above. Zero delay so filtered items leave together, not in a stagger. */
-  transition-property: opacity, transform !important;
-  transition-duration: 360ms !important;
-  transition-delay: 0s !important;
 }
 
 /* ---- Image curtain reveal — a Soft Linen panel scales away from the top
@@ -3150,12 +3070,7 @@ body::before {
   /* Hide site chrome + interactive elements that don't translate to paper. */
   .site-header,
   footer,
-  nav[aria-label='More projects'],
-  nav[aria-label='More journal posts'],
-  .reading-progress,
-  [data-back-to-top],
-  [data-portfolio-cursor-zone] ~ * [aria-label='View →'],
-  .no-print {
+  .reading-progress {
     display: none !important;
   }
 
