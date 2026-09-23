@@ -39,6 +39,7 @@ import PledgeReading from '@/components/sections/PledgeReading.astro';
 import PastorsLetter from '@/components/sections/PastorsLetter.astro';
 import GoalsBand from '@/components/sections/GoalsBand.astro';
 import { goalsEndDark } from '@/lib/goal-layout';
+import { heritageDates, type HeritageDateInput } from '@/lib/heritage-dates';
 import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
@@ -286,8 +287,13 @@ const isDarkBand = (block: unknown, index: number): boolean => {
     case 'ctaBandSection':
     case 'scriptureBandSection':
     case 'faqSection':
-    case 'heritageBandSection':
       return true;
+    // scaffold: church
+    // The heritage band is brown unless it carries dates, in which case it is
+    // the cream "Our Building" band (HeritageBand.astro note 5).
+    case 'heritageBandSection':
+      return heritageDates((b as { dates?: HeritageDateInput[] }).dates, new Date()).length === 0;
+    // scaffold:end
     // scaffold: church
     // The Watchword band is night green by type; the goals end on their last
     // goal's band, dark unless that lands on gold (goalsEndDark).
@@ -493,6 +499,8 @@ const wrapAttrs = (key: string | undefined) =>
             heading={s.heading}
             body={s.body}
             image={s.image}
+            archive={s.archive}
+            dates={s.dates}
             cta={s.cta}
             extraImages={spares.strip.slice(0, 2)}
             heroFirstRef={heroFirstRef}

@@ -869,6 +869,21 @@ export type HeritageBandSection = {
     alt?: string;
     _type: 'image';
   };
+  archive?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  dates?: Array<{
+    now?: boolean;
+    year?: string;
+    text?: string;
+    _type: 'heritageDate';
+    _key: string;
+  }>;
   cta?: CtaBlock;
   anchor?: Slug;
 };

@@ -373,12 +373,17 @@ export type ProjectedFaqSection = { _key: string } & _FaqSection;
 /** scriptureBandSection — verse, reference and the one gold accent word. */
 export type ProjectedScriptureBandSection = { _key: string } & _ScriptureBandSection;
 
-/** heritageBandSection — the brown band: text left, photo right. */
+/**
+ * heritageBandSection — the brown band, or (with dates) the cream "Our
+ * Building" band: the drawing, an old photograph in a door arch, and a dated
+ * list that ends in the present.
+ */
 export type ProjectedHeritageBandSection = { _key: string } & Omit<
   _HeritageBandSection,
-  'image' | 'cta'
+  'image' | 'archive' | 'cta'
 > & {
     image?: ProjectedImage | null;
+    archive?: ProjectedImage | null;
     cta?: ProjectedCtaBlock | null;
   };
 

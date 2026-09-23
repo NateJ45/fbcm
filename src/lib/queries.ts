@@ -151,6 +151,8 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     _type == "heritageBandSection" => {
       ...,
       image${IMAGE_PROJECTION},
+      archive${IMAGE_PROJECTION},
+      dates[]{ _key, year, text, now },
       cta${CTA_PROJECTION}
     },
     _type == "giveBandSection" => {

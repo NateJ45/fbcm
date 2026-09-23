@@ -333,6 +333,12 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
   ['color-band-taupe', 'color-band-brown', "each hymn-board row's small line", 'body'],
   // Work.
   ['color-band-ink', 'color-band-taupe', 'ink on the Work band', 'body'],
+  // Our Building (HeritageBand with dates, 2026-09-23, the Home pass): a FIXED
+  // cream band in both themes (--color-bg never flips), so its inks are the
+  // band tokens and brown-mid, none of which may flip to a light value.
+  ['color-band-indigo', 'color-bg', 'Our Building: heading, lead, the years and each date', 'body'],
+  ['color-band-brown', 'color-bg', 'Our Building: the text beside each date', 'body'],
+  ['color-brown-mid', 'color-bg', 'Our Building: the eyebrow and the ampersand', 'body'],
 ];
 
 // Inks that FLIP with the theme, measured on the ground each theme actually

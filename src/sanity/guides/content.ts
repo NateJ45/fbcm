@@ -219,6 +219,18 @@ export const guides: Guide[] = [
         title: 'There is no switch to hide a band for a while.',
         text: 'Taking a band off the page removes it. If you might want it back, save a copy first: click the `...` button beside `Publish`, choose `Save a section as preset...` and pick the band. It then waits under `Pages`, then `Saved sections`, and you can add it back from the `Saved sections` list in Presentation.',
       },
+      { kind: 'h', text: 'The building band and its dates' },
+      {
+        kind: 'p',
+        text: 'The `Building band` is brown with a row of photos across the top. Give it `Dates` and it becomes the cream band from the home page instead: the first and last years large beside the heading, the `Photo` set straight onto the page (a drawing of the building suits it best), the `Old photograph` in an arched frame, and the dates listed underneath.',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          'Each date is a `Year` and one sentence of `What happened`, up to six, in order.',
+          'Tick `This year` on the last one to say what the church is doing now. Its year is filled in when the site is built, so it never goes out of date.',
+        ],
+      },
       { kind: 'h', text: 'Before you publish a big change' },
       {
         kind: 'p',

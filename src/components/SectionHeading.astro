@@ -25,6 +25,12 @@
 //     identity gives the eyebrow on a dark band the brand gold, which neither
 //     of the other two tones can express, and putting it here keeps the five
 //     dark-band components from each inventing their own eyebrow.
+//     "paper" (2026-09-23, the Home pass) is the FIXED cream band: the
+//     heritage band with dates, which stays cream in both themes so the
+//     drawing on it can blend into the paper. Indigo headline, brown-mid
+//     eyebrow, brown subhead, none of which flips, because the ground does
+//     not either ("default" and "church" flip with the page and would set
+//     paper-coloured ink on cream in dark mode).
 //
 // Script accent:
 //   - scriptAccent?: optional single word/phrase from the headline to render
@@ -81,7 +87,7 @@ interface Props {
   headingId: string;
   level?: 'h1' | 'h2' | 'h3';
   align?: 'left' | 'center';
-  tone?: 'default' | 'inverse' | 'band' | 'church';
+  tone?: 'default' | 'inverse' | 'band' | 'church' | 'paper';
   /**
    * Optional single word/phrase from the headline to render in handwritten
    * the script accent font. Matched case-insensitively against the headline,
@@ -166,16 +172,31 @@ const wrapperAlign = align === 'center' ? 'text-center mx-auto' : 'text-left';
 // text-bg, never text-cream, on anything that sits on a FIXED dark band:
 // --color-cream flips to ink under .dark (globals.css) while --color-bg stays
 // paper-white in both themes.
-const toneHeadline = tone === 'default' || tone === 'church' ? 'text-foreground' : 'text-bg';
+const toneHeadline =
+  tone === 'paper'
+    ? 'text-band-indigo'
+    : tone === 'default' || tone === 'church'
+      ? 'text-foreground'
+      : 'text-bg';
 // Default tone swapped from text-secondary (Warm Taupe, fails AA at 12px) to
 // text-foreground/80 (4.77:1 on Cream). Inverse tone (used on FinalCta's
 // dark Charcoal panel) keeps cream-on-dark.
 // Eyebrow colour. On paper (default / church) the eyebrow is the darkened
 // gold that carries a label at AA; on a dark band or an inverse panel it is
 // the brand gold itself, which is a fill and an on-dark ink.
-const toneEyebrow = tone === 'band' || tone === 'inverse' ? 'text-gold' : 'text-gold-ink';
+const toneEyebrow =
+  tone === 'paper'
+    ? 'text-brown-mid'
+    : tone === 'band' || tone === 'inverse'
+      ? 'text-gold'
+      : 'text-gold-ink';
 // Subhead colour: full-strength foreground on paper, lifted paper on dark.
-const toneSub = tone === 'band' || tone === 'inverse' ? 'text-bg/85' : 'text-foreground';
+const toneSub =
+  tone === 'paper'
+    ? 'text-band-brown'
+    : tone === 'band' || tone === 'inverse'
+      ? 'text-bg/85'
+      : 'text-foreground';
 ---
 
 <div class:list={[wrapperAlign, 'max-w-3xl', extraClass]}>

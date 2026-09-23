@@ -2,7 +2,8 @@
 // The church blocks: what a church page needs and a service business does not. Every
 // description says what to TYPE. No block carries a colour field: the dark bands
 // (sundayTimes and heritage are brown, faq/scripture/give are indigo) are dark
-// by TYPE, which is what keeps SectionRenderer's cadence the only source of surface.
+// by TYPE (a heritage band that carries dates draws on cream instead, from its
+// content), which is what keeps SectionRenderer's cadence the only source of surface.
 //
 // scriptureBandSection.accentWord is a plain string, not a headingAccentField().
 // It is deliberately NOT registered in src/lib/section-fields.ts: that registry's
@@ -345,7 +346,7 @@ export const scriptureBandSection = defineType({
 
 export const heritageBandSection = defineType({
   name: 'heritageBandSection',
-  title: 'Building band (brown)',
+  title: 'Building band',
   type: 'object',
   fields: [
     eyebrow,
@@ -362,7 +363,8 @@ export const heritageBandSection = defineType({
       title: 'Photo',
       type: 'image',
       options: { hotspot: true },
-      description: 'A photo of the building or the glass.',
+      description:
+        'A photo of the building or the glass. When the band has dates, this is the large picture beside the heading, so a drawing of the building suits it best.',
       // SanityImage.astro reads `source.alt` for every image it draws, so this
       // block always intended to carry alt text; the field was simply never
       // declared. Without it the Studio renders a stored alt as "Unknown field
@@ -376,6 +378,75 @@ export const heritageBandSection = defineType({
         }),
       ],
     }),
+    // The Home identity pass (2026-09-23): an old photograph and a dated list
+    // that ends in the present. Both optional, so /history's opener and
+    // /visit's building band keep drawing as the brown band. A band WITH dates
+    // draws as the cream "Our Building" band instead (HeritageBand.astro): the
+    // look follows the content, never a colour field (CLAUDE.md rule 9).
+    defineField({
+      name: 'archive',
+      title: 'Old photograph (optional)',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'An old photograph shown beside the dates.',
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Describe the photo',
+          type: 'string',
+          validation: (r) => r.required(),
+        }),
+      ],
+    }),
+    defineField({
+      name: 'dates',
+      title: 'Dates (optional)',
+      type: 'array',
+      validation: (r) => r.max(6),
+      description:
+        "Dates in order. Tick 'This year' on the last one to show what the church is doing now: its year is filled in when the site is built.",
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'heritageDate',
+          title: 'Date',
+          fields: [
+            defineField({
+              name: 'now',
+              title: 'This year',
+              type: 'boolean',
+              initialValue: false,
+              description:
+                'Tick for what the church is doing now. The year is filled in when the site is built.',
+            }),
+            defineField({
+              name: 'year',
+              title: 'Year',
+              type: 'string',
+              description: 'For example 1859.',
+              // The present-day entry's year is derived at build time
+              // (src/lib/heritage-dates.ts), so there is nothing to type.
+              // Never required, so hiding it can never trap a document.
+              hidden: ({ parent }) => (parent as { now?: boolean } | undefined)?.now === true,
+            }),
+            defineField({
+              name: 'text',
+              title: 'What happened',
+              type: 'text',
+              rows: 2,
+              description: 'One sentence.',
+            }),
+          ],
+          preview: {
+            select: { year: 'year', text: 'text', now: 'now' },
+            prepare: ({ year, text, now }) => ({
+              title: now ? 'This year' : typeof year === 'string' && year ? year : 'Date',
+              subtitle: typeof text === 'string' ? text : undefined,
+            }),
+          },
+        }),
+      ],
+    }),
     defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
     anchorField(),
   ],
@@ -383,7 +454,7 @@ export const heritageBandSection = defineType({
     select: { title: 'heading', media: 'image' },
     prepare: ({ title, media }) => ({
       title: title || 'Building band',
-      subtitle: 'Building band (brown)',
+      subtitle: 'Building band',
       media,
     }),
   },
