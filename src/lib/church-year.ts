@@ -1,7 +1,8 @@
 // Safe to edit by hand
 // The church year, derived from the date at build time (CLAUDE.md rule 15:
-// computed, never a field an editor retypes). The site rebuilds nightly, so the
-// season line and the season colour turn over on their own. Western calendar;
+// computed, never a field an editor retypes). The site rebuilds daily on a
+// scheduled deploy (.github/workflows/deploy.yml, 05:15 UTC), so the season
+// line and the season colour turn over on their own. Western calendar;
 // all arithmetic in UTC so a build in any timezone agrees.
 export type Season =
   'advent' | 'christmas' | 'epiphany' | 'lent' | 'holy-week' | 'easter' | 'pentecost' | 'ordinary';

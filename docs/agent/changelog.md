@@ -22,7 +22,8 @@ out visible photo captions anywhere). New identity tokens in globals.css
 `@theme` and `.dark`, every pair gated in `theme-tokens.test.ts`, with the
 geometry in a `/* Church identity (2026-09-23) */` block. The season of the
 church year is derived from the date (`src/lib/church-year.ts`, rule 15), so
-the hero band and the season line turn over with the nightly rebuild.
+the hero band and the season line turn over with the daily scheduled deploy
+(`.github/workflows/deploy.yml`, 05:15 UTC).
 
 Four new blocks in `churchSections.ts`: `watchwordSection` (WatchwordBand,
 with `src/lib/highlight-words.ts` picking out "praise" and "proclaim"
