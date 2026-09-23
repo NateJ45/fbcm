@@ -9,7 +9,7 @@
 //   - Falls back to a tap-to-toggle behavior under prefers-reduced-motion
 //     (the global CSS rule kills the slider transition; clicks still work)
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { urlFor } from '@/lib/sanity';
 
 interface SanityImage {

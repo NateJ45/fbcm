@@ -15,19 +15,9 @@
 // See the classification table in the Phase B plan for reasoning.
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
-import {
-  UserIcon,
-  ThLargeIcon,
-  StarIcon,
-  DocumentTextIcon,
-  BulbOutlineIcon,
-  OlistIcon,
-  UsersIcon,
-  HelpCircleIcon,
-  SyncIcon,
-} from '@sanity/icons';
+import { UsersIcon, SyncIcon } from '@sanity/icons';
 import { SECTION_TYPES } from './sections';
-import { columnsField, headingAccentField, hideWhenRich, richTwin } from './_appearanceFields';
+import { columnsField, hideWhenRich, richTwin } from './_appearanceFields';
 import { DYNAMIC_LIST_MAX } from '../../lib/dynamicListLimits';
 import { anchorField } from './_anchorField';
 
@@ -47,51 +37,6 @@ const imageWithAlt = (name = 'image', title = 'Image') =>
         type: 'string',
         description: 'Describe the photo in a few words, for screen readers and search engines.',
         validation: (R) => R.required(),
-      }),
-    ],
-  });
-
-// Prose body identical to sections.ts proseBody
-const proseBody = (name = 'body', title = 'Text') =>
-  defineField({
-    name,
-    title,
-    type: 'array',
-    of: [
-      defineArrayMember({
-        type: 'block',
-        styles: [
-          { title: 'Normal', value: 'normal' },
-          { title: 'Heading', value: 'h2' },
-          { title: 'Subheading', value: 'h3' },
-          { title: 'Small heading', value: 'h4' },
-          { title: 'Quote', value: 'blockquote' },
-        ],
-        lists: [
-          { title: 'Bullet', value: 'bullet' },
-          { title: 'Numbered', value: 'number' },
-        ],
-        marks: {
-          decorators: [
-            { title: 'Bold', value: 'strong' },
-            { title: 'Italic', value: 'em' },
-          ],
-          annotations: [
-            {
-              name: 'link',
-              type: 'object',
-              title: 'Link',
-              fields: [
-                defineField({
-                  name: 'href',
-                  title: 'URL',
-                  type: 'url',
-                  validation: (R) => R.uri({ allowRelative: true }),
-                }),
-              ],
-            },
-          ],
-        },
       }),
     ],
   });

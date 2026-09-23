@@ -22,7 +22,6 @@
  */
 
 import fs from 'node:fs/promises';
-import fssync from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -32,7 +31,6 @@ const POSTS_DIR = path.join(DATA_DIR, 'posts');
 const IMAGES_DIR = path.join(DATA_DIR, 'images');
 
 const SITEMAP = 'https://www.fbcmuncie.org/blog-posts-sitemap.xml';
-const ORIGIN = 'https://www.fbcmuncie.org';
 const UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 

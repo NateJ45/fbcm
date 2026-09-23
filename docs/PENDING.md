@@ -254,17 +254,24 @@ summary still reads 30 with the same 14/14/2 split, nothing has moved and this e
 If the numbers differ, find out which root moved before editing anything, and re-read the
 `--force` warning above before touching a dependency.
 
-### 5. Eighteen eslint warnings, all unused bindings
+### 5. One eslint warning, in a PORTABLE file
 
-`npm run lint` is a CI step now (2026-09-06) and exits clean, but it still prints
-`@typescript-eslint/no-unused-vars` warnings: unused imports in `Footer.astro`,
-`BusinessOverview.tsx`, the journal index and a couple of others, plus one unused
-`SHOW_THRESHOLD` in `BaseLayout.astro`. Warnings do not fail the run. The count grew
-from seven to eighteen in the art-direction pass (2026-09-21): mostly retired icon
-imports in `richSections.ts` and a couple of now-unused locals left behind when
-sections were rewritten. Triage them in a slop sweep (card 16); each is either a dead
-import to delete or a binding that was meant to be used and is not, which is the more
-interesting kind.
+`npm run lint` is a CI step now (2026-09-06) and exits clean. Warnings do not fail
+the run. The count grew from seven to eighteen in the art-direction pass
+(2026-09-21) and came down from eighteen to **one** in the 2026-09-22 cleanup
+(`chore/cleanup`). All seventeen fixed were dead: retired icon imports, an unused
+`headingAccentField` import and a never-called `proseBody` helper in
+`richSections.ts`, `useEffect` in `BeforeAfterSlider.tsx`, the unread catch binding
+in `CopyEmailButton.tsx` (now `catch {}`), `SHOW_THRESHOLD` in `BaseLayout.astro`
+(the header's show/hide runs on a +/-4px scroll delta and `HIDE_AFTER`; the 80px
+constant has been unread since the fork), and unused locals in `capture-blog.mjs`,
+`capture-pages.mjs`, `generate-logo-variants.mjs` and `pages/ministries.mjs` (an
+unused `pick` helper). None was a binding that was meant to be used and is not.
+
+The one left is `statSync`, imported and never used at line 93 of
+`scripts/scaffold.mjs`. That file is PORTABLE (the starter owns it), so the fix belongs in
+`ncs-astro-sanity-starter` first and comes here through `npm run sync-check`, not
+as a local edit.
 
 ### 7. Two PORTABLE scripts are excluded from prettier
 
@@ -445,7 +452,9 @@ leaves open, with what closes each.
 - CLAUDE.md and README.md: only the opening paragraph says what this repo is; the
   body still documents the starter. Rewrite for this site.
 - Dead `Service` interface and `serviceListSchema()` in `src/lib/schemas.ts`.
-- **The `/styleguide` visual baseline needs a refresh on CI once Task 6 lands.**
+- ~~**The `/styleguide` visual baseline needs a refresh on CI once Task 6 lands.**~~
+  Closed: refreshed on CI by `39ffca0` (2026-09-20) and again, after the
+  art-direction pass, by `bda0dcb` (2026-09-22).
   Task 6 (2026-09-19) added the eight church-block fixtures to the page, which
   changes its rendered output; `visual.yml`'s stored baseline for that route is
   now stale and will report a diff on the next run. Do NOT regenerate
@@ -697,18 +706,29 @@ merged to `main` at `183a61f` and deployed. Full account of what changed is in
   prose that lived only in that ledger. Nothing to do about it now, but it's
   why this entry has to reconstruct the fix above from the CI log and the
   diff rather than pointing at a ledger entry.
-- **`scripts/lib/lib/render-og.mjs` still duplicates `scripts/lib/render-og.mjs`,
-  and the two differ.** The art-direction plan's own Task 13 cleanup item said
-  to delete the `lib/lib` directory only if the files inside are byte-identical
-  to their real counterparts; `diff` says they are not, so it was left in
-  place per that conditional instruction. Whoever touches OG image generation
-  next should work out which copy is live (check what actually imports from
-  `scripts/lib/lib/`) and delete the other.
-- **The `/styleguide` visual-regression baseline is stale** (light and dark
-  both failed in the first post-merge CI run, `expect(page).toHaveScreenshot`).
-  Expected: the art-direction pass changed the page's rendered output from top
-  to bottom. Refresh it with `visual.yml`'s own `update` input, the same
-  pattern used for plan 2c's Task 6 refresh above.
+- ~~**`scripts/lib/lib/render-og.mjs` still duplicates `scripts/lib/render-og.mjs`,
+  and the two differ.**~~ Closed 2026-09-22 (`chore/cleanup`): the whole
+  `scripts/lib/lib/` directory is gone. Nothing imported from it (the only
+  import inside it was its own `sanity-lib.mjs` reaching its own
+  `loadEnv.mjs`); the live copy is `scripts/lib/render-og.mjs`, imported by
+  both `generate-og-*.mjs` scripts and rewritten by `apply-brand`. The
+  lib/lib copy differed only in its brand-inputs block, which still held the
+  starter's slate palette and Libre Baskerville, so it was a stale fork
+  leftover; the other four files were byte-identical duplicates. Proof:
+  `npm run og` wrote the same bytes before and after the delete (sha256
+  `cf0dd25d...`), and `npm run sync-check` went from 93 same / 0 drifted to
+  88 same / 0 drifted. (That `og` output differs from the committed
+  `public/og-default.png` because the generator falls back to the CSS font
+  stack, "No @fontsource display file found"; the committed PNG was left
+  as it is.)
+- ~~**The `/styleguide` visual-regression baseline is stale** (light and dark
+  both failed in the first post-merge CI run, `expect(page).toHaveScreenshot`).~~
+  Closed 2026-09-22 by `bda0dcb` "test: regenerate visual baselines", the
+  `visual.yml` update run (github-actions, 18:00 UTC), which rewrote both
+  `styleguide-light.png` and `styleguide-dark.png`. The next push-triggered
+  Visual regression run, on `6f01bfa` at 18:22 UTC, passed, and that push
+  also carried `5066b5d` (the bleed and `--text-h1` fix), so the baseline
+  holds after it.
 - **A production Lighthouse re-measure is owed**, same as plan 2c left open:
   the branch changed layout, fonts and motion on every page, and the last
   recorded Lighthouse numbers predate all of it.
@@ -840,9 +860,9 @@ still open, all closing in plan 2b/2c:
 - `npm run parity compare` is intentionally all-red: the header and footer
   changed on every page, so every baseline in `scripts/.parity/` differs. Do
   not recapture now; plan 2c recaptures once, after the eleven pages land.
-- `visual.yml`'s CI-stored `/styleguide` baseline is stale after Task 6's eight
-  block fixtures; refresh it on CI with the workflow's own `update` input the
-  next time it runs, not by regenerating `scripts/.parity` locally.
+- ~~`visual.yml`'s CI-stored `/styleguide` baseline is stale after Task 6's eight
+  block fixtures.~~ Closed: refreshed on CI by `39ffca0` (2026-09-20), and
+  again by `bda0dcb` (2026-09-22) after the art-direction pass.
 - ~~`public/favicon.svg` is still the starter's roundel, not the church's mark.~~
   Closed 2026-09-20 (plan 2c task 1): the icon set is the tower from the
   church's own wordmark, on a navy plate, and `npm run favicon` regenerates

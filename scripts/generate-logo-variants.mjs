@@ -16,8 +16,8 @@
 //   4. Join the alpha mask onto the canvas → transparent PNG with colored ink.
 //
 // Input: a raster logo file (JPG or PNG) with a white/near-white background
-// and dark ink. Pass the path as the first CLI argument, or set a default
-// source path in the `sourceFile` variable below.
+// and dark ink. Pass the path as the first CLI argument; with no argument the
+// script reads src/assets/logo-source.jpg.
 //
 // Run with: node scripts/generate-logo-variants.mjs [path/to/source-logo.jpg]
 
@@ -43,7 +43,6 @@ const assetsDir = resolve(root, 'src', 'assets');
 // used directly by Header.astro / Footer.astro.
 const sourceArg = process.argv[2];
 const src = sourceArg ? resolve(process.cwd(), sourceArg) : resolve(assetsDir, 'logo-source.jpg');
-const sourceFile = src.split(/[\\/]/).pop();
 console.log(`Source logo: ${src}`);
 
 if (!existsSync(src)) {

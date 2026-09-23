@@ -179,17 +179,6 @@ export default {
       return decodeEntities(next).trim();
     };
 
-    /** The one line of `lines` containing `phrase`, decoded and trimmed. */
-    const pick = (lines, phrase, slug) => {
-      const hit = lines.filter((l) => l.includes(phrase));
-      if (hit.length === 0) {
-        throw new Error(
-          `ministries.mjs: "${phrase}" is no longer in that span of scripts/data/pages/${slug}.txt`,
-        );
-      }
-      return decodeEntities(hit[0]).trim();
-    };
-
     /** Replace one phrase with another, throwing when the phrase has moved. */
     const swap = (sentence, find, replaceWith) => {
       if (!sentence.includes(find)) {

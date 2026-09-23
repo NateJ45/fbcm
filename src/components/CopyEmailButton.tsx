@@ -31,7 +31,7 @@ export default function CopyEmailButton({ email, label, variant = 'link' }: Prop
       setCopied(true);
       toast.success('Email copied to clipboard', { duration: 2000 });
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
+    } catch {
       // Clipboard API requires HTTPS or localhost; on failure, fall back to
       // launching the mail client with the address pre-filled.
       window.location.href = `mailto:${email}`;
