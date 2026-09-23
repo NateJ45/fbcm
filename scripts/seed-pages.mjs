@@ -55,11 +55,13 @@
 //                                    // with identifiable children in them
 //   };
 //
-//   ctx = { images, copy, settings, staff, keys }
+//   ctx = { images, copy, settings, staff, ministries, keys }
 //     images   makePageImages(client).image(key) -> a block-ready image object
 //     copy     everything scripts/lib/page-copy.mjs exports
 //     settings the live siteSettings document
 //     staff    the live staffMember documents, ordered
+//     ministries the live ministry documents (ministries.mjs refuses to point
+//              a band at one that scripts/connect-ministries.mjs has not filled)
 //     keys     keys('hero') -> a function yielding 'hero-1', 'hero-2', ...
 
 import { readdirSync, writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
@@ -330,15 +332,17 @@ async function makeContext() {
   };
   let settings = null;
   let staff = [];
+  let ministries = [];
 
   if (configured) {
     const { makePageImages } = await import('./lib/page-images.mjs');
     images = makePageImages(client);
     settings = await client.fetch('*[_type == "siteSettings"][0]');
     staff = await client.fetch('*[_type == "staffMember"]|order(order asc, name asc)');
+    ministries = await client.fetch('*[_type == "ministry"]');
   }
 
-  return { images, copy, settings, staff, keys: copy.keyer };
+  return { images, copy, settings, staff, ministries, keys: copy.keyer };
 }
 
 // ── Backups ─────────────────────────────────────────────────────────────────

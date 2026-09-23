@@ -494,10 +494,30 @@ changing the guide that mentions it in the same commit.
   targets (the URL field rejects braces; the visible text becomes `{email}`),
   Sunday school at 9:30 am and the 10:15-10:45 fellowship hour (not settings),
   and every blog post (dated writing).
-- **The `ministry` documents are not read by any page.** Nathan chose
-  (2026-09-22) to CONNECT them to the site rather than hide the list. Design
-  to be agreed before building; see the proposal in that session. Until then
-  the `ministries` guide keeps telling the secretary to edit the page.
+- **The `ministry` documents are not read by any page.** CODE DONE
+  2026-09-22 (feat/ministry-bands); ONE DATA STEP LEFT. The ministry document
+  is now each ministry's one home (small line, headline, photo with alt text,
+  text, "People to talk to"), and a new "Ministry" band (`ministrySection`,
+  church blocks) only points at one. `src/lib/ministry-band.ts` turns the band
+  into the exact image band or text band it draws as BEFORE the cadence and
+  the spare-image pool see it, and generates each contact line at build time
+  from the people the document names (hidden staff are not listed).
+  `scripts/pages/ministries.mjs` now seeds the five pointers and refuses while
+  a ministry is unconnected. Proven render-neutral on the current data, and
+  proven end to end by a local build that applied the migration's own plan in
+  memory: /ministries byte-identical. **Remaining, in this order:** merge and
+  deploy, THEN from the main checkout run `node scripts/connect-ministries.mjs`
+  (dry; expect 5 ministries and 5 bands), then `--write` (backup-first, one
+  transaction, revision-guarded). Writing before the deploy would drop all
+  five bands from the live page. The run REMOVES the five old Wix photos from
+  the ministry documents (three replaced by the band photos, adult and
+  outreach unset because their bands have none); the dry run lists them and
+  the backup keeps them. The `ministries` guide (src/sanity/guides/content.ts)
+  still tells the secretary to edit the page's typed contact lines and must
+  be rewritten when the data step lands. `audit:studio` check 5 cannot see
+  the new "Used on" entry (`ministry` -> /preview/ministries in resolve.ts)
+  because its `RENDERED_BY` map lives in the PORTABLE copy; add
+  `ministry: ['ministrySection']` upstream (starter findings).
 - **No deacons.** Nothing in the schema or data represents them. Ask the
   church how they want them shown before adding a group option.
 - ~~**A new post's Author defaults to "Your Name"**~~ Fixed 2026-09-22
