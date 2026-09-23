@@ -10,6 +10,35 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-23 — Hero headlines sized by their own length; the Sunday band's photograph hung in the grid._
+
+The RichText Ledger and photo shapes fixed the text and text-and-photo bands but left
+two things the site owner still called out on production. Every hero h1 was titling
+capitals at `text-h1` (or `text-display` on the home hero) inside a 12ch measure
+whatever its length, so the 76-character /who-we-are statement set as nine lines of
+capitals and /visit, /beliefs and /give each filled the first screen with four. And
+the home page's Sunday band hard-coded its borrowed photograph as a half-page 4:3
+`bleed-right` crop.
+
+`src/lib/headline-scale.ts` now classifies a headline from its stega-cleaned text
+into `poster` (short: today's look, unchanged), `title` (medium: capitals one size
+down at the new `--text-title`, 18ch) or `sentence` (long: Castoro, sentence case,
+`text-h2`, 22ch), with the longest word demoting a headline whose widest word would
+not fit a 320px phone at that scale. Hero, the text-only hero through
+`SectionHeading`'s new `scale` prop, the band-opening h1 of `GiveBand` and
+`HeritageBand`, and the journal `Opener` all use it. Measured at 1280px: /who-we-are
+went from 9 lines and 766px to 4 lines and 233px; /visit and /beliefs from 4 lines
+(341px) to 3 (190px); /give from 4 (341px) to 3 (190px); /ministries, /staff and
+/blog from 3 to 2. The posters (/history, /wedding, /contact, home) are byte-identical.
+A sweep from 320px to 1680px in 16px steps found no word split across lines and no
+horizontal overflow on any of the eleven pages.
+
+`SundayTimes` now hangs the photograph inside the grid in ImageText's frame (`.ph-hung`
+hairline, `.ph-cap` caption), sized from the asset's own aspect via `photoAspect()`:
+landscape fills the right column at 3:2, squarish and portrait pictures are held to
+26rem and 20rem at 4:5. At 1280px it is 373px tall against a 581px left door (it was
+468px, bled to the viewport edge).
+
 _2026-09-22 — Five branches integrated to `main` (`integrate/2026-09-23`)._
 
 The RichText Ledger and photo shapes, `chore/cleanup`, the Studio pass

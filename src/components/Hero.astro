@@ -32,6 +32,7 @@ import CtaLink from '@/components/CtaLink.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { splitHeadingAccent } from '@/lib/heading-accent';
 import { splitStega } from '@/lib/preview-stega';
+import { headlineScale, headlineClass } from '@/lib/headline-scale';
 import { staticSunday, timeOnly } from '@/lib/live-sunday';
 
 interface CtaBlock {
@@ -197,12 +198,16 @@ const splitObjectPosition =
 // viewport (home) and a deep interior band, with nothing subtracted.
 const imageHeroHeight = size === 'tall' ? 'min-h-[100svh]' : 'min-h-[72svh]';
 
-// The headline's one scale decision: poster scale on the home hero, h1
-// everywhere else. Both are the titling face, capitals only.
-const displayHeadlineClass =
-  size === 'tall'
-    ? 'font-display uppercase tracking-[0.01em] font-normal text-display max-w-[12ch]'
-    : 'font-display uppercase tracking-[0.01em] font-normal text-h1 leading-none max-w-[12ch]';
+// The headline's scale is decided by the headline itself (headline-scale.ts,
+// 2026-09-23): a short line is a poster (the art-direction pass's look, text-
+// display on the home hero and text-h1 elsewhere), a medium one steps down a
+// size and widens, and a long sentence leaves the titling capitals for the
+// reading face. The classifier reads the stega-CLEANED text; the h1 below
+// still renders the raw `headline`, so click-to-edit survives in the preview.
+// The text-only branch hands the same scale to SectionHeading.
+const headlineOpts = { tall: size === 'tall' };
+const scale = headlineScale(headline, headlineOpts);
+const displayHeadlineClass = headlineClass(scale, headlineOpts);
 ---
 
 {hasImage && layout === 'split' ? (
@@ -366,6 +371,7 @@ const displayHeadlineClass =
         headingId={headingId}
         level="h1"
         tone="church"
+        scale={headlineScale(headline, { tall: false })}
       />
     </div>
   </section>

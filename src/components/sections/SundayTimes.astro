@@ -33,6 +33,7 @@ import { getSiteSettings } from '@/lib/queries';
 import type { SectionSiteSettings, SanityImageObject } from '@/lib/pageBuilder.types';
 import { site } from '@/data/site';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
+import { photoAspect } from '@/lib/photo-shape';
 
 interface TimeItem {
   _key?: string;
@@ -92,6 +93,42 @@ const settings: SectionSiteSettings | null =
 const mapImage = settings?.mapImage;
 const directionsUrl: string | undefined = settings?.directionsUrl ?? undefined;
 const hasFrame = !!frame?.asset;
+
+// THE BORROWED PHOTOGRAPH IS PLACED BY ITS OWN SHAPE (2026-09-23). It used to
+// be a 4:3 `bleed-right` crop across half the page whatever the picture was,
+// and on the home page it read as a stock photograph towering over the 10:45
+// block. It now hangs INSIDE the grid as a framed picture (the gold hairline
+// of ImageText's `frame` shape, `.ph-hung`), sized from the asset's own
+// dimensions (photoAspect, the same reader photo-shape.ts uses; it cleans
+// stega from the ref first), so its height stays under the left door's:
+//   landscape (w/h >= 1.25): the full right column, cropped to 3:2 (held
+//     to 36rem while the doors stack below lg, so a tablet does not get a
+//     full-width poster of it)
+//   squarish (0.85 < w/h < 1.25): at most 26rem wide, 4:5 crop
+//   portrait (w/h <= 0.85): at most 20rem wide, 4:5 crop
+// An unreadable ref is treated as landscape, the commonest shape in the pool.
+// An editor's hotspot sets the crop point; without one the crop keeps the top
+// of the picture, where the faces are (the same default as the split hero).
+const frameAspect = hasFrame ? photoAspect(frame) : null;
+const frameShape: 'landscape' | 'square' | 'portrait' = !frameAspect
+  ? 'landscape'
+  : frameAspect.a <= 0.85
+    ? 'portrait'
+    : frameAspect.a < 1.25
+      ? 'square'
+      : 'landscape';
+const frameWidth =
+  frameShape === 'landscape'
+    ? 'w-full max-w-[36rem] lg:max-w-none'
+    : frameShape === 'square'
+      ? 'max-w-[26rem]'
+      : 'max-w-[20rem]';
+const frameCrop = frameShape === 'landscape' ? 'aspect-[3/2]' : 'aspect-[4/5]';
+const frameHotspot = frame?.hotspot;
+const frameObjectPosition =
+  typeof frameHotspot?.x === 'number' && typeof frameHotspot?.y === 'number'
+    ? `${(frameHotspot.x * 100).toFixed(2)}% ${(frameHotspot.y * 100).toFixed(2)}%`
+    : '50% 25%';
 const showTheMap = showMap !== false && !!mapImage?.asset;
 
 // The address card's lines. `address` is a plain string in Site settings and may
@@ -231,17 +268,25 @@ const directionsCta = directionsUrl
     <div class="col-span-12 lg:col-span-6 lg:col-start-7">
       {
         hasFrame ? (
-          <figure class="bleed-right" data-reveal>
-            <SanityImage
-              source={frame}
-              width={1800}
-              sizes="(min-width:1024px) 55vw, 100vw"
-              quality={75}
-              class="aspect-[4/3] w-full object-cover"
-            />
+          <figure class={frameWidth} data-reveal>
+            <div class="ph-hung">
+              <SanityImage
+                source={frame}
+                width={1200}
+                sizes={
+                  frameShape === 'landscape'
+                    ? '(min-width:1024px) 45vw, 100vw'
+                    : '(min-width:1024px) 26rem, 100vw'
+                }
+                quality={78}
+                class={`block w-full object-cover ${frameCrop}`}
+                style={`object-position: ${frameObjectPosition};`}
+              />
+            </div>
             {frame?.alt && (
-              <figcaption class="mt-3.5 flex justify-between gap-5 font-ui text-[0.75rem] tracking-[.06em] text-muted-foreground">
-                <span>{frame.alt}</span>
+              <figcaption class="ph-cap">
+                <span class="ph-tick" />
+                {frame.alt}
               </figcaption>
             )}
           </figure>
