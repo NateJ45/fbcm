@@ -602,7 +602,10 @@ changing the guide that mentions it in the same commit.
 - **`audit:studio` check 5 cannot see the ministry "Used on" entry**: its
   `RENDERED_BY` map in the PORTABLE `scripts/audit-studio.mjs` needs
   `ministry: ['ministrySection']`. Upstream first (starter), then sync.
-- **The committed parity baselines are stale for the blog.** Something outside
+- ~~**The committed parity baselines are stale for the blog.**~~ Closed
+  2026-09-22: recaptured once on the integrated tree (`integrate/2026-09-23`),
+  162/162 on a second build with the inline stylesheet at 133,382 B on both.
+  Original note: something outside
   these sessions updated 14 `journalEntry` documents at 2026-09-23T00:07:15Z
   and uploaded 68 file assets (PDFs) around 00:09. Against the committed
   baselines the build scores 120/162, all 42 diffs blog/post pages; against a
