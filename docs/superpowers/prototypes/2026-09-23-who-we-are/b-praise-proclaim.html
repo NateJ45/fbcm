@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who We Are, Praise and Proclaim (prototype B)</title>
+<!--
+  Prototype B, "Praise & Proclaim". Design exploration only, not production code.
+  The voice and the people lead. Ordinary Time green leads the palette (late September),
+  with the church's historic brown, gold and glass purple in support.
+-->
+<style>
+@font-face{font-family:"Castoro Titling";src:url("../../../../node_modules/@fontsource/castoro-titling/files/castoro-titling-latin-400-normal.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Castoro";src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-normal.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Castoro";font-style:italic;src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-italic.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Sofia Sans SC";font-weight:100 900;src:url("../../../../node_modules/@fontsource-variable/sofia-sans-semi-condensed/files/sofia-sans-semi-condensed-latin-wght-normal.woff2") format("woff2");font-display:swap}
+
+:root{
+  /* The church year: Ordinary Time. The accent below is what the build would derive from the date. */
+  --season:#1d5a3a;          /* liturgical green */
+  --season-deep:#113a26;
+  --season-night:#0c241a;    /* the chalkboard of the church's own series graphics */
+  --season-mint:#a9dcbf;     /* the megaphone line colour from the Praise / Proclaim graphics */
+  --paper:#f6f0e2;
+  --paper-2:#efe5cf;
+  --ink:#1f1a14;
+  --ink-soft:#4a4036;
+  --gold:#c9972c;
+  --gold-ink:#8a5d06;        /* gold dark enough for text on paper */
+  --brown:#6a3d20;
+  --brown-deep:#2c1a0f;
+  --purple:#46275e;
+  --purple-deep:#2e1843;
+  --display:"Castoro Titling",Georgia,serif;
+  --read:"Castoro",Georgia,serif;
+  --ui:"Sofia Sans SC","Arial Narrow",system-ui,sans-serif;
+  --gut:clamp(16px,4vw,64px);
+  --max:1320px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--read);font-size:19px;line-height:1.6;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0 0 1em}
+h1,h2,h3,h4{margin:0;font-weight:400}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+.ui{font-family:var(--ui)}
+
+/* ---------- header ---------- */
+.site-head{background:var(--paper);border-bottom:1px solid rgba(31,26,20,.12)}
+.site-head .wrap{display:flex;align-items:center;gap:24px;min-height:84px}
+.brand{display:flex;flex-direction:column;text-decoration:none;line-height:1}
+.brand b{font-family:var(--display);font-weight:400;font-size:25px;letter-spacing:.02em;color:var(--season-deep)}
+.brand span{font-family:var(--ui);font-size:14px;color:var(--ink-soft);margin-top:6px}
+.nav{margin-left:auto;display:flex;gap:26px;font-family:var(--ui);font-size:17px;font-weight:500}
+.nav a{text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav a[aria-current]{border-color:var(--season);color:var(--season)}
+.nav a:hover{border-color:var(--gold)}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--ui);font-weight:700;font-size:17px;text-decoration:none;padding:13px 22px;border-radius:999px;background:var(--season);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{background:var(--season-deep);transform:translateY(-1px)}
+.btn:focus-visible,.nav a:focus-visible,.door a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.btn.gold{background:var(--gold);color:var(--brown-deep)}
+.btn.gold:hover{background:#dcae4a}
+.btn.ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 2px currentColor}
+.menu-btn{display:none;margin-left:auto;font-family:var(--ui);font-weight:700;font-size:17px;background:none;border:2px solid var(--season-deep);color:var(--season-deep);border-radius:999px;padding:8px 16px}
+
+/* ---------- opener ---------- */
+.opener{background:var(--season);color:#fff;position:relative;overflow:hidden}
+.opener .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:center;padding-top:clamp(48px,7vw,104px);padding-bottom:clamp(56px,8vw,120px)}
+.season{display:inline-flex;align-items:center;gap:10px;font-family:var(--ui);font-size:17px;font-weight:600;background:rgba(0,0,0,.18);padding:7px 16px 7px 10px;border-radius:999px;margin-bottom:clamp(24px,3vw,40px)}
+.season i{width:14px;height:14px;border-radius:50%;background:var(--season-mint);box-shadow:0 0 0 4px rgba(169,220,191,.25)}
+.opener h1{font-family:var(--display);font-size:clamp(58px,9.2vw,142px);line-height:.9;letter-spacing:-.005em}
+.opener .lede{font-style:italic;font-size:clamp(26px,2.9vw,42px);line-height:1.22;margin:clamp(20px,2.4vw,34px) 0 clamp(28px,3vw,40px);max-width:17em}
+.opener .lede em{font-style:normal;color:var(--season-mint)}
+.opener .acts{display:flex;flex-wrap:wrap;gap:14px}
+.faces{position:relative;min-height:clamp(420px,46vw,640px)}
+.faces figure{margin:0;position:absolute;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.55)}
+.faces img{width:100%;height:100%;object-fit:cover}
+.faces .f1{right:0;top:0;width:74%;height:78%;border-radius:0 0 0 200px}
+.faces .f1 img{object-position:58% 30%}
+.faces .f2{left:0;bottom:0;width:48%;height:44%;border:8px solid var(--season);border-radius:24px}
+.faces .f3{right:6%;bottom:-2%;width:34%;height:30%;border:8px solid var(--season);border-radius:24px}
+.faces .f3 img{object-position:50% 40%}
+.rays{position:absolute;pointer-events:none}
+
+/* ---------- watchword ---------- */
+.watch{background:var(--season-night);color:#f4efe4;position:relative;overflow:hidden}
+.watch .wrap{padding-top:clamp(64px,8vw,128px);padding-bottom:clamp(64px,8vw,128px)}
+.h2{font-family:var(--display);font-size:clamp(30px,3.2vw,44px);line-height:1.05}
+.watch .h2{color:var(--gold)}
+.lockup{margin:clamp(28px,4vw,56px) 0 0;line-height:.82;position:relative}
+.lockup .praise{display:block;font-family:var(--read);font-style:italic;font-size:clamp(92px,17vw,262px);letter-spacing:-.02em;color:#fff}
+.lockup .amp{font-family:var(--read);font-style:italic;color:var(--gold);font-size:.62em;margin:0 .06em 0 .02em}
+.lockup .proclaim{display:block;font-family:var(--display);font-size:clamp(60px,12.4vw,190px);letter-spacing:.01em;color:var(--season-mint);padding-left:clamp(0px,9vw,150px);margin-top:.08em}
+.lockup .proclaim{position:relative;display:inline-block}
+.lockup .rays{left:100%;top:-6%;width:.4em;height:.86em;margin-left:.1em;color:var(--gold)}
+.verse{margin:clamp(48px,6vw,88px) 0 0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:end;border:0;padding:0}
+.verse p{font-size:clamp(28px,3.4vw,50px);line-height:1.2;margin:0;max-width:22em}
+.verse p mark{background:none;color:var(--season-mint);font-style:italic}
+.verse cite{font-family:var(--ui);font-style:normal;font-weight:700;font-size:20px;color:var(--gold);white-space:nowrap}
+.watch-body{display:grid;grid-template-columns:minmax(0,34em) minmax(0,1fr);gap:clamp(32px,6vw,96px);margin-top:clamp(56px,6vw,88px);align-items:start}
+.watch-body .col p{color:#e7e0d1}
+.watch-body .col p:first-child::first-line{color:#fff}
+.pair{display:grid;gap:18px}
+.pair div{border-radius:24px;padding:26px 28px 24px}
+.pair .p1{background:var(--season)}
+.pair .p2{background:var(--gold);color:var(--brown-deep)}
+.pair b{display:block;font-family:var(--read);font-style:italic;font-weight:400;font-size:40px;line-height:1;margin-bottom:10px}
+.pair .p2 b{font-family:var(--display);font-style:normal;font-size:34px}
+.pair p{margin:0;font-size:20px;line-height:1.45}
+
+/* ---------- goals ---------- */
+.goals{padding:clamp(72px,9vw,140px) 0 0}
+.goals-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(24px,5vw,80px);align-items:end}
+.goals-intro .h2{font-size:clamp(44px,5.6vw,84px);color:var(--season-deep)}
+.goals-intro p{font-size:21px;color:var(--ink-soft);margin:0;max-width:32em}
+.wdex{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:clamp(36px,4vw,56px) 0 clamp(56px,6vw,96px);padding:0;list-style:none}
+.wdex a{display:flex;align-items:center;gap:14px;text-decoration:none;color:#fff;border-radius:18px;padding:18px 20px;font-family:var(--display);font-size:clamp(22px,2vw,30px);line-height:1;transition:transform .15s}
+.wdex a:hover{transform:translateY(-3px)}
+.wdex a:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.wdex svg{width:44px;height:44px;flex:none}
+.wdex small{display:block;font-family:var(--ui);font-size:15px;margin-top:5px;opacity:.9}
+.c-worship{--g:var(--season);--on:#fff;--soft:#dcefe3;--hi:var(--season-mint)}
+.c-way{--g:var(--gold);--on:var(--brown-deep);--soft:#3b2612;--hi:var(--brown-deep)}
+.c-witness{--g:var(--purple);--on:#fff;--soft:#e7dcf0;--hi:#f0c86a}
+.c-work{--g:var(--brown);--on:#fff;--soft:#f0e2d2;--hi:#f0c86a}
+.wdex li a{background:var(--g);color:var(--on)}
+
+.goal{background:var(--g);color:var(--on);scroll-margin-top:0}
+.goal-in{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(36px,5.5vw,96px);align-items:center;padding-top:clamp(64px,7vw,110px);padding-bottom:clamp(64px,7vw,110px)}
+.goal.flip .g-pics{order:2}
+.g-pics{position:relative;padding-bottom:clamp(40px,5vw,80px)}
+.g-pics .main{width:100%;aspect-ratio:5/4;object-fit:cover;border-radius:32px}
+.g-pics .inset{position:absolute;width:44%;aspect-ratio:1/1;object-fit:cover;bottom:0;right:-5%;border-radius:50%;border:10px solid var(--g)}
+.goal.flip .g-pics .inset{right:auto;left:-5%}
+.g-head{display:flex;align-items:center;gap:18px}
+.g-head svg{width:64px;height:64px;flex:none;color:var(--hi)}
+.g-name{font-family:var(--display);font-size:clamp(56px,6.6vw,104px);line-height:.9}
+.g-also{font-family:var(--ui);font-weight:600;font-size:18px;margin:10px 0 0 82px;color:var(--soft)}
+.g-title{font-family:var(--read);font-style:italic;font-size:clamp(28px,2.6vw,38px);line-height:1.15;margin:clamp(22px,2.6vw,34px) 0 12px;color:var(--hi)}
+.g-lead{font-size:21px;margin-bottom:28px}
+.g-points{margin:0;padding:0;list-style:none;display:grid;gap:20px}
+.g-points li{padding-left:24px;position:relative}
+.g-points li::before{content:"";position:absolute;left:0;top:.45em;width:10px;height:10px;border-radius:50%;background:var(--hi)}
+.g-points b{display:block;font-family:var(--ui);font-weight:700;font-size:20px;line-height:1.2;margin-bottom:3px}
+.g-points span{font-size:18px;line-height:1.55;color:var(--soft)}
+.ref{font-family:var(--ui);font-weight:600;font-size:.86em;color:var(--gold-ink);white-space:nowrap}
+.goal .ref{color:var(--hi)}
+
+/* ---------- pledge ---------- */
+.pledge{background:var(--paper-2);color:var(--ink);position:relative;overflow:hidden}
+.pledge .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:clamp(40px,6vw,100px);padding-top:clamp(72px,9vw,130px);padding-bottom:clamp(72px,9vw,130px)}
+.pledge .h2{color:var(--purple);font-size:clamp(40px,4.6vw,68px)}
+.pledge .intro{font-size:22px;margin:22px 0 32px;color:var(--ink-soft);max-width:18em}
+.pledge figure{margin:0;position:sticky;top:24px}
+.pledge figure img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:50% 50% 28px 28px}
+.pledge figcaption{font-family:var(--ui);font-size:16px;color:var(--ink-soft);margin-top:14px}
+.reading{margin:0;padding:0;list-style:none}
+.reading .all{display:flex;align-items:baseline;gap:14px;font-family:var(--ui);font-weight:700;font-size:18px;color:var(--purple);margin-bottom:18px}
+.reading .all b{background:var(--purple);color:#fff;border-radius:999px;padding:3px 14px;font-weight:700}
+.reading .all span{font-weight:500;color:var(--ink-soft)}
+.reading .open{font-family:var(--read);font-style:italic;font-size:clamp(30px,3vw,44px);line-height:1.18;color:var(--purple-deep);margin:0 0 30px}
+.reading li.line{display:grid;grid-template-columns:minmax(0,1fr) 10em;gap:24px;align-items:baseline;padding:22px 0;border-top:2px solid rgba(70,39,94,.18)}
+.reading li.line p{margin:0;font-size:clamp(24px,2.2vw,32px);line-height:1.28}
+.reading li.line p em{color:var(--purple)}
+.reading li.line .ref{color:var(--gold-ink);font-size:17px;text-align:right}
+.reading .rubric{font-style:italic;color:var(--ink-soft);font-size:19px;margin-top:22px;padding-top:22px;border-top:2px solid rgba(70,39,94,.18)}
+.unity{max-width:34em;margin-top:clamp(40px,5vw,64px)}
+.unity p{color:var(--ink-soft)}
+
+/* ---------- letter ---------- */
+.letter{padding:clamp(80px,10vw,150px) 0}
+.letter .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,34em);gap:clamp(40px,6vw,100px);align-items:start}
+.portrait{position:sticky;top:24px;margin:0}
+.portrait img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:62% 50%;border-radius:999px 999px 28px 28px}
+.portrait figcaption{font-family:var(--ui);font-size:16px;color:var(--ink-soft);margin-top:14px}
+.letter .h2{color:var(--season-deep);font-size:clamp(40px,4.4vw,64px);margin-bottom:clamp(28px,3vw,44px)}
+.letter-body p{font-size:21px;line-height:1.65}
+.letter-body p:first-child{font-size:25px;line-height:1.5;color:var(--season-deep)}
+.letter-body blockquote{margin:1.4em 0;padding:0 0 0 24px;border-left:4px solid var(--gold);font-style:italic;font-size:24px;line-height:1.4}
+.sign{margin-top:36px}
+.sign .names{font-style:italic;font-size:clamp(40px,4vw,56px);line-height:1;color:var(--season-deep)}
+.sign .role{font-family:var(--ui);font-size:17px;color:var(--ink-soft);margin-top:10px}
+
+/* ---------- next ---------- */
+.next{background:var(--season);color:#fff;padding:clamp(72px,9vw,130px) 0}
+.next .h2{font-size:clamp(44px,5.6vw,84px);margin-bottom:clamp(32px,4vw,56px)}
+.doors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.door{background:var(--paper);color:var(--ink);border-radius:26px;overflow:hidden;display:flex;flex-direction:column}
+.door .pic{aspect-ratio:4/3;overflow:hidden;position:relative}
+.door .pic img{width:100%;height:100%;object-fit:cover}
+.door .pic.two{display:grid;grid-template-columns:1fr 1fr}
+.door .board{position:absolute;left:14px;bottom:14px;background:var(--brown-deep);color:#f5e7c6;font-family:var(--ui);font-weight:700;font-size:16px;line-height:1.2;padding:8px 12px;border-radius:10px}
+.door .board b{display:block;font-family:var(--read);font-weight:400;font-size:24px;color:var(--gold)}
+.door .body{padding:24px 24px 26px;display:flex;flex-direction:column;flex:1}
+.door h3{font-family:var(--display);font-size:28px;line-height:1.05;color:var(--season-deep)}
+.door p{font-size:18px;line-height:1.45;color:var(--ink-soft);margin:10px 0 22px}
+.door .btn{margin-top:auto;align-self:flex-start;font-size:16px;padding:11px 18px}
+.door.booklet{background:var(--gold)}
+.door.booklet .pic{background:var(--brown-deep);display:grid;place-items:center}
+.door.booklet h3,.door.booklet p{color:var(--brown-deep)}
+.door.booklet .btn{background:var(--brown-deep);color:#fff}
+
+/* ---------- footer ---------- */
+.foot{background:var(--brown-deep);color:#eadfca;padding:clamp(56px,6vw,88px) 0 40px;font-family:var(--ui);font-size:17px}
+.foot .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+.foot .mark{font-family:var(--read);font-size:44px;line-height:.9;color:#fff}
+.foot .mark i{color:var(--gold)}
+.foot .mark span{display:block;font-family:var(--display);font-size:32px;color:var(--season-mint);margin-top:4px}
+.foot h4{font-family:var(--display);font-size:20px;color:var(--gold);margin-bottom:12px}
+.foot ul{list-style:none;margin:0;padding:0;line-height:1.9}
+.foot a{text-decoration:none}
+.foot a:hover{text-decoration:underline}
+.foot .base{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.14);padding-top:22px;margin-top:10px;color:#c9baa0;font-size:15px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .nav{gap:18px;font-size:16px}
+  .site-head .btn{display:none}
+  .doors{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wdex{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:860px){
+  .nav{display:none}
+  .menu-btn{display:inline-block}
+  .opener .wrap,.watch-body,.goals-intro,.goal-in,.pledge .wrap,.letter .wrap{grid-template-columns:minmax(0,1fr)}
+  .goal.flip .g-pics{order:0}
+  .faces{min-height:0;height:min(112vw,560px)}
+  .pledge figure{position:static}
+  .portrait{position:static;max-width:520px}
+  .pledge figure{max-width:420px}
+  .verse{grid-template-columns:minmax(0,1fr);gap:18px}
+  .foot .wrap{grid-template-columns:1fr 1fr}
+  .foot .brandcol{grid-column:1/-1}
+}
+@media (max-width:560px){
+  body{font-size:18px}
+  .brand b{font-size:21px}
+  .brand span{font-size:13px}
+  .site-head .wrap{min-height:72px}
+  .faces .f1{width:82%;height:74%;border-radius:0 0 0 120px}
+  .faces .f2{width:56%;height:40%;border-width:6px}
+  .faces .f3{width:40%;height:30%;border-width:6px;right:0}
+  .lockup .proclaim{padding-left:0;font-size:12.5vw}
+  .lockup .praise{font-size:24vw}
+  .g-name{font-size:12vw}
+  .opener h1{font-size:17vw}
+  .season{font-size:14.5px}
+  .wdex{grid-template-columns:minmax(0,1fr)}
+  .g-also{margin-left:0}
+  .g-head svg{width:48px;height:48px}
+  .g-pics .inset{width:48%;right:-2%;border-width:7px}
+  .goal.flip .g-pics .inset{left:-2%}
+  .reading li.line{grid-template-columns:minmax(0,1fr);gap:6px}
+  .reading li.line .ref{text-align:left}
+  .letter-body p{font-size:19px}
+  .doors{grid-template-columns:minmax(0,1fr)}
+  .foot .wrap{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- Reusable drawn glyphs: rays (the megaphone lines of the church's own Praise / Proclaim series) and the four W marks -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="rays" viewBox="128 0 74 160">
+      <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
+        <path d="M150 80 H198"/><path d="M146 58 L190 30"/><path d="M146 102 L190 130"/>
+        <path d="M136 40 L160 6"/><path d="M136 120 L160 154"/>
+      </g>
+    </symbol>
+    <!-- Worship: the cup of the Lord's Supper -->
+    <symbol id="g-worship" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 14h28c0 14-5 22-14 22S18 28 18 14z"/><path d="M32 36v14"/><path d="M22 52h20"/><path d="M32 4v4M22 7l2 3M42 7l-2 3"/></g></symbol>
+    <!-- The Way: a path with a walker's step -->
+    <symbol id="g-way" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 60 L28 26"/><path d="M58 60 L36 26"/><path d="M32 56v-6M32 43v-5M32 33v-3"/><path d="M32 4v16M26 10h12"/></g></symbol>
+    <!-- Witness: the megaphone, drawn in the church's own series style -->
+    <symbol id="g-witness" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 28v10l8 1 22 12V15L16 27z"/><path d="M14 39l3 12h6l-2-10"/><path d="M46 33h12M45 22l9-6M45 44l9 6"/></g></symbol>
+    <!-- Work: basin and towel, "not to be served, but to serve" -->
+    <symbol id="g-work" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 34h48c0 12-10 20-24 20S8 46 8 34z"/><path d="M20 42c4 2 8 2 12 0s8-2 12 0"/><path d="M40 34V14c0-4 6-4 6 0v20"/><path d="M22 26c0-6 6-6 6-12"/></g></symbol>
+  </defs>
+</svg>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#"><b>First Baptist Muncie</b><span>309 East Adams Street, since 1859</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#">Visit</a>
+      <a href="#" aria-current="page">Who We Are</a>
+      <a href="#">Ministries</a>
+      <a href="#">Staff</a>
+      <a href="#">History</a>
+      <a href="#">Blog</a>
+      <a href="#">Give</a>
+    </nav>
+    <a class="btn" href="#">Plan your visit</a>
+    <button class="menu-btn" type="button">Menu</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ OPENER ============ -->
+<section class="opener" aria-labelledby="t-who">
+  <div class="wrap">
+    <div>
+      <p class="season"><i></i>Ordinary Time, the season after Pentecost</p>
+      <h1 id="t-who">Who We Are</h1>
+      <p class="lede">We're a Spirit-led people gathered to join <em>Christ's presence</em> in our community.</p>
+      <div class="acts">
+        <a class="btn gold" href="#watchword">Our watchword</a>
+        <a class="btn ghost" href="#letter">A note from our pastors</a>
+      </div>
+    </div>
+    <div class="faces">
+      <figure class="f1"><img src="../../../../../fbcm-archive/images/08181c_cb74be6da795403791604886a27141a3_tilde_mv2.jpg" alt="Two smiling girls, one with red hair, in front of the church's stained glass windows."></figure>
+      <figure class="f2"><img src="../../../../../fbcm-archive/images/08181c_b178e014f570469ba249e1dd6f8c4122_tilde_mv2.jpg" alt="Four young children holding hands outside the church's arched limestone entrance."></figure>
+      <figure class="f3"><img src="../../../../../fbcm-archive/images/08181c_360b7e1579244dbc95697ca78172c167_tilde_mv2.jpg" alt="Two guitarists and a singer leading worship."></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WATCHWORD ============ -->
+<section class="watch" id="watchword" aria-labelledby="t-watch">
+  <div class="wrap">
+    <h2 class="h2" id="t-watch">Our Watchword</h2>
+    <p class="lockup" aria-label="Praise and Proclaim">
+      <span class="praise">Praise<span class="amp">&amp;</span></span>
+      <span class="proclaim">Proclaim<svg class="rays" viewBox="0 0 74 160" aria-hidden="true"><use href="#rays"/></svg></span>
+    </p>
+
+    <blockquote class="verse">
+      <p>&ldquo;Give <mark>praise</mark> to the Lord, <mark>proclaim</mark> his name; make known among the nations what he has done, and <mark>proclaim</mark> that his name is exalted.&rdquo;</p>
+      <cite>Isaiah 12:4</cite>
+    </blockquote>
+
+    <div class="watch-body">
+      <div class="col">
+        <p>This statement is our congregational watchword. A watchword is a short reminder and a promise from scripture about who God is and who he has called his people to be.</p>
+        <p>When the people of God were in exile, the prophet Isaiah spoke. He delivered a message from God about what it would be like &ldquo;in that day&rdquo; when they returned. The people would return, praising and proclaiming the name of the Lord, and making him known to all nations.</p>
+        <p>At First Baptist Church Muncie, we believe the day of the Lord's favor has come in Jesus. The short of it is that Jesus really does change everything. And our goal for this season is to praise and proclaim his name.</p>
+      </div>
+      <div class="pair">
+        <p style="margin:0 0 4px;color:#e7e0d1">This watchword reminds us of the importance of each:</p>
+        <div class="p1"><b>Praise</b><p>That our purpose is worship, lifting up the name of God: Father, Son and Holy Spirit.</p></div>
+        <div class="p2"><b>Proclaim</b><p>That our joy is to share the Good News of Jesus with our neighbors and the world.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GOALS ============ -->
+<section class="goals" aria-labelledby="t-goals">
+  <div class="wrap">
+    <div class="goals-intro">
+      <h2 class="h2" id="t-goals">Our Goals</h2>
+      <p>Our Church Coordination Team has set these goals for our church this season, in pursuit of the calling God has given us as a congregation in different areas of our life together.</p>
+    </div>
+    <ul class="wdex">
+      <li class="c-worship"><a href="#worship"><svg aria-hidden="true"><use href="#g-worship"/></svg><span>Worship<small>Gathering as one body</small></span></a></li>
+      <li class="c-way"><a href="#way"><svg aria-hidden="true"><use href="#g-way"/></svg><span>The Way<small>Discipleship</small></span></a></li>
+      <li class="c-witness"><a href="#witness"><svg aria-hidden="true"><use href="#g-witness"/></svg><span>Witness<small>Evangelism</small></span></a></li>
+      <li class="c-work"><a href="#work"><svg aria-hidden="true"><use href="#g-work"/></svg><span>Work<small>Acts of mercy</small></span></a></li>
+    </ul>
+  </div>
+
+    <!-- Worship -->
+    <article class="goal c-worship" id="worship"><div class="wrap goal-in">
+      <div class="g-pics">
+        <img class="main" src="../../../../../fbcm-archive/images/08181c_37d562a315d04a83afc879ec7ee9a460_tilde_mv2.jpg" alt="The congregation standing to sing in the sanctuary, seen from the balcony.">
+        <img class="inset" src="../../../../../fbcm-archive/images/08181c_8a3de1c55df544a49b041c05bdade510_tilde_mv2.jpg" alt="Members preparing the silver communion trays for the Lord's Supper.">
+      </div>
+      <div>
+        <div class="g-head"><svg aria-hidden="true"><use href="#g-worship"/></svg><h3 class="g-name">Worship</h3></div>
+        <p class="g-title">Worshiping as the Body of Christ</p>
+        <p class="g-lead">FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.</p>
+        <ul class="g-points">
+          <li><b>Following God's Word</b><span>Our times of worship are rooted in scripture and prayer-filled so that our body can collectively hear from God, discern the next right step, and follow the Holy Spirit.</span></li>
+          <li><b>Enjoying Fellowship</b><span>We set aside time to personally greet and encourage one another. Passing of the peace, sharing the good news through personal testimonies, and prayer are ways we participate in the shared life God has given us.</span></li>
+          <li><b>Participating in Practices Christ Gave Us</b><span>FBCM prepares new believers for baptism, the time when they publicly proclaim God has become their salvation and join the body of Christ. FBCM celebrates the Lord's Supper monthly during intergenerational worship so that all may take part.</span></li>
+        </ul>
+      </div>
+    </div></article>
+
+    <!-- The Way -->
+    <article class="goal flip c-way" id="way"><div class="wrap goal-in">
+      <div class="g-pics">
+        <img class="main" src="../../../../../fbcm-archive/images/08181c_59662d549c1740c09d1e0ab31e2183f5_tilde_mv2.jpg" alt="Four teenagers around a table with open Bibles, reading together.">
+        <img class="inset" src="../../../../../fbcm-archive/images/08181c_5d24ca0140994eb3957782aec035415f_tilde_mv2.jpg" alt="An older woman reaching out to greet a man at a doorway in the church." style="object-position:30% 50%">
+      </div>
+      <div>
+        <div class="g-head"><svg aria-hidden="true"><use href="#g-way"/></svg><h3 class="g-name">The Way</h3></div>
+        <p class="g-also">Discipleship</p>
+        <p class="g-title">Seeking Understanding</p>
+        <p class="g-lead">FBCM proclaims God's faithfulness with people who are curious about faith, as well as new believers. We offer a growth track to help us all &ldquo;come and see&rdquo; who Jesus is and grow spiritually <span class="ref">John 1:39&ndash;41</span></p>
+        <ul class="g-points">
+          <li><b>Welcoming Worship</b><span>FBCM invites everyone to join our worship services, no matter their background or beliefs. We show the hospitality Christ has first shown us.</span></li>
+          <li><b>Caring Mentorship</b><span>Each regular attendee is connected with a deacon who offers prayer and support.</span></li>
+          <li><b>Spiritual Friendship</b><span>We provide small group meetings where we can learn together about the Bible, theology, and living in Christian community.</span></li>
+        </ul>
+      </div>
+    </div></article>
+
+    <!-- Witness -->
+    <article class="goal c-witness" id="witness"><div class="wrap goal-in">
+      <div class="g-pics">
+        <img class="main" src="../../../../../fbcm-archive/images/81f7ac_4dfaba15047d43a696c7e8f53df065b8_tilde_mv2.jpg" alt="A large group of adults and children from the church, some holding a Serve Your City t-shirt." style="object-position:50% 40%">
+        <img class="inset" src="../../../../../fbcm-archive/images/08181c_bd84e59bfef54197913ce668c2d84726_tilde_mv2.jpg" alt="Women from the church in orange shirts with the Ball State Cardinals mascot at a community event.">
+      </div>
+      <div>
+        <div class="g-head"><svg aria-hidden="true"><use href="#g-witness"/></svg><h3 class="g-name">Witness</h3></div>
+        <p class="g-also">Evangelism</p>
+        <p class="g-title">Inviting to Church and to Know Christ</p>
+        <p class="g-lead">To make known what God has done, FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.</p>
+        <ul class="g-points">
+          <li><b>Engaged Membership</b><span>Church members actively talk about their faith and aim to live in a way that reflects Jesus.</span></li>
+          <li><b>Local Partnership</b><span>We believe God has placed us in downtown Muncie for a reason. We work with local groups to bring light and hope to our community.</span></li>
+          <li><b>Kingdom Citizenship</b><span>Jesus told us to share the good news everywhere. We support Global Servants (missionaries) and pray for people from all over the world to follow Jesus. We also celebrate the wonderful diversity of God's Kingdom, the Global Church.</span></li>
+        </ul>
+      </div>
+    </div></article>
+
+    <!-- Work -->
+    <article class="goal flip c-work" id="work"><div class="wrap goal-in">
+      <div class="g-pics">
+        <img class="main" src="../../../../../fbcm-archive/images/81f7ac_42e3d9d713cd4ce2ba5736e886d9d805_tilde_mv2.jpg" alt="Volunteers working together on an outdoor building project during a mission trip." style="object-position:40% 50%">
+        <img class="inset" src="../../../../../fbcm-archive/images/b98776_46a45e062a994a32bb3a6fd407690ba9_tilde_mv2.jpg" alt="A group of adults in the church kitchen with food laid out on the counter." style="object-position:45% 40%">
+      </div>
+      <div>
+        <div class="g-head"><svg aria-hidden="true"><use href="#g-work"/></svg><h3 class="g-name">Work</h3></div>
+        <p class="g-also">Acts of mercy</p>
+        <p class="g-title">Gifts for Service</p>
+        <p class="g-lead">FBCM exalts God by following Jesus' example of serving others, rather than seeking to be served ourselves <span class="ref">Mark 10:45</span></p>
+        <ul class="g-points">
+          <li><b>Serve</b><span>We actively and practically help and work alongside our neighbors.</span></li>
+          <li><b>Support</b><span>We give sacrificially to help those in need through regular offerings and donations.</span></li>
+          <li><b>Share</b><span>We care for church members who are sick, home bound, or struggling, making sure they remain part of our life together.</span></li>
+        </ul>
+      </div>
+    </div></article>
+</section>
+
+<!-- ============ PLEDGE ============ -->
+<section class="pledge" aria-labelledby="t-pledge">
+  <div class="wrap">
+    <div>
+      <h2 class="h2" id="t-pledge">Our Pledge</h2>
+      <p class="intro">Our commitment to one another is drawn from scripture. And it's this:</p>
+      <figure>
+        <img src="../../../../../fbcm-archive/images/81f7ac_ee96a9da57554d48b92008a87a38e1e3_tilde_mv2.jpg" alt="Two young women smiling together in the baptismal pool, one of them just baptized.">
+        <figcaption>A baptism at First Baptist. When a member joins, the whole church answers.</figcaption>
+      </figure>
+    </div>
+    <div>
+      <ol class="reading">
+        <li class="all"><b>All</b><span>said together by the church</span></li>
+        <li class="open">We pledge ourselves to be the family of God for you in this place:</li>
+        <li class="line"><p>Bearing your burdens, <em>as you bear ours.</em></p><span class="ref">Galatians 6:2</span></li>
+        <li class="line"><p>Encouraging you in the faith, <em>as we are encouraged by you.</em></p><span class="ref">1 Thessalonians 5:11</span></li>
+        <li class="line"><p>Delighting in the Lord's ways.</p><span class="ref">Psalm 86:11&ndash;13<br>Psalm 37:3&ndash;6</span></li>
+        <li class="line"><p>Offering our lives as a living sacrifice: <em>holy and pleasing to God.</em></p><span class="ref">Romans 12:1</span></li>
+      </ol>
+      <p class="rubric">When a member joins, we say this pledge together as a church.</p>
+      <div class="unity">
+      <p>The life of faith isn't meant to be lived alone. Before he was crucified, Christ's prayer to the Father was that his disciples, and all believers after them, would be one, as he and the Father are one <span class="ref">John 17:20&ndash;22</span></p>
+      <p>At the same time, that unity comes with wonderful God-given differences. We're not clones who all think, look, or act exactly alike! That is what the Apostle Paul means when he talks about the church as the body of Christ, with many different parts and many different gifts <span class="ref">1 Corinthians 12:12&ndash;30</span></p>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LETTER ============ -->
+<section class="letter" id="letter" aria-labelledby="t-letter">
+  <div class="wrap">
+    <figure class="portrait">
+      <img src="../../../../../fbcm-archive/images/08181c_ff83101f12a94fe48c8618e84825faaa_tilde_mv2.jpg" alt="Pastors Kendall Ellis and Jonathan Balmer smiling together in the sanctuary balcony.">
+      <figcaption>Kendall and Jonathan in the balcony of the sanctuary.</figcaption>
+    </figure>
+    <article>
+      <h2 class="h2" id="t-letter">A Note From Our Pastors</h2>
+      <div class="letter-body">
+        <p>If you're looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you're unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we'd love for you to join us for worship too!</p>
+        <p>After all, Jesus did not say to his first followers:</p>
+        <blockquote>&ldquo;Figure it all out, and then get back to me.&rdquo; He said to them, &ldquo;Come and see.&rdquo; <span class="ref">John 1:39</span></blockquote>
+        <p>Even so, we know people curious about a church wonder what a particular church, including its pastors, &ldquo;are all about.&rdquo;</p>
+        <p>We love the Good News, the Gospel, that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He ascended to heaven, and he will come again in glory to make all that is wrong right. That's life-changing, and truly good, news. It's news good enough to set all of us free.</p>
+        <p>We're all about the church. This church is made up of people who are all imperfect, all of us with our own struggles, all of us failing, falling into our old selfish ways, and getting up again only by God's grace. And those same people are also filled by God's own Spirit, have a sincere desire to be &ldquo;good news&rdquo; people, and to serve one another as we grow in our love of Christ together.</p>
+        <p>We're honored to serve as Co-Pastors here. And it's not only because First Baptist decided to do something a little unusual in calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God's people in this community.</p>
+        <p>We love to serve here because we love being part of this Spirit-led people gathered to join Christ's presence in our community.</p>
+        <p>Finally, we would love for you to join us this Sunday, or anytime we're gathered to encounter the same Christ who was, and is, and will come again, as we meet him in worship, the word, and the Lord's table. &ldquo;Come and see!&rdquo;</p>
+      </div>
+      <div class="sign">
+        <div class="names">Kendall &amp; Jonathan</div>
+        <div class="role">Co-Pastors, First Baptist Church Muncie</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ WHERE TO GO NEXT ============ -->
+<section class="next" aria-labelledby="t-next">
+  <div class="wrap">
+    <h2 class="h2" id="t-next">Where To Go Next</h2>
+    <div class="doors">
+      <div class="door">
+        <div class="pic">
+          <img src="../../../../../fbcm-archive/images/81f7ac_bd44352f9ed34f33bedd96f24b8d912c_tilde_mv2.jpg" alt="Musicians on piano, guitar and vocals leading worship at the front of the sanctuary.">
+          <span class="board">Sundays<b>10:45 a.m.</b></span>
+        </div>
+        <div class="body"><h3>Sunday Worship</h3><p>Find out what you can expect this Sunday.</p><a class="btn" href="https://www.fbcmuncie.org/what-to-expect">Read more</a></div>
+      </div>
+      <div class="door">
+        <div class="pic"><img src="../../../../../fbcm-archive/images/b98776_03ffce9e792442fd8570453a6c420eec_tilde_mv2.jpg" alt="An older man and woman from the church smiling together in a kitchen."></div>
+        <div class="body"><h3>Contact Us</h3><p>Get in touch with us with our virtual contact card.</p><a class="btn" href="https://fbcmuncie.churchcenter.com/people/forms/159198">Contact</a></div>
+      </div>
+      <div class="door">
+        <div class="pic two">
+          <img src="../../../../../fbcm-archive/images/08181c_496101713a394635b5bb1c3f0cd91db4_tilde_mv2.jpg" alt="Pastor Kendall Ellis in front of stained glass.">
+          <img src="../../../../../fbcm-archive/images/08181c_85e57ed38e8542679c46cebf54d15e36_tilde_mv2.jpg" alt="Pastor Jonathan Balmer in front of stained glass.">
+        </div>
+        <div class="body"><h3>Meet Our Staff</h3><p>Read our staff bios and meet the people of FBCM.</p><a class="btn" href="https://www.fbcmuncie.org/ministers">Read more</a></div>
+      </div>
+      <div class="door booklet">
+        <div class="pic" aria-hidden="true">
+          <svg viewBox="0 0 200 150" width="62%"><rect x="46" y="14" width="108" height="122" rx="4" fill="#f6f0e2"/><rect x="46" y="14" width="10" height="122" fill="#c9972c"/><text x="105" y="58" text-anchor="middle" font-family="Castoro, Georgia, serif" font-style="italic" font-size="20" fill="#1d5a3a">Welcome</text><text x="105" y="80" text-anchor="middle" font-family="Castoro Titling, Georgia, serif" font-size="9.5" fill="#2c1a0f">FIRST BAPTIST</text><text x="105" y="93" text-anchor="middle" font-family="Castoro Titling, Georgia, serif" font-size="9.5" fill="#2c1a0f">MUNCIE</text><g stroke="#1d5a3a" stroke-width="2.4" stroke-linecap="round"><path d="M122 114h14M121 106l10-6M121 122l10 6"/></g></svg>
+        </div>
+        <div class="body"><h3>Find Out More</h3><p>Download our Welcome Booklet.</p><a class="btn" href="https://www.fbcmuncie.org/_files/ugd/08181c_75a0565927c14a929d1ebee1565e638c.pdf">Download</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="brandcol">
+      <div class="mark">Praise <i>&amp;</i><span>Proclaim</span></div>
+      <p style="margin-top:22px;max-width:22em">First Baptist Church Muncie<br>309 East Adams Street, Muncie, Indiana 47305<br>(765) 284-7749</p>
+    </div>
+    <div><h4>Worship</h4><ul><li><a href="#">Sundays at 10:45 a.m.</a></li><li><a href="#">Classes at 9:30 a.m.</a></li><li><a href="#">What to expect</a></li></ul></div>
+    <div><h4>The Way</h4><ul><li><a href="#">Who We Are</a></li><li><a href="#">Beliefs</a></li><li><a href="#">History</a></li></ul></div>
+    <div><h4>Witness &amp; Work</h4><ul><li><a href="#">Ministries</a></li><li><a href="#">Staff</a></li><li><a href="#">Give</a></li></ul></div>
+    <p class="base">An American Baptist congregation in downtown Muncie since 1859.</p>
+  </div>
+</footer>
+
+</body>
+</html>

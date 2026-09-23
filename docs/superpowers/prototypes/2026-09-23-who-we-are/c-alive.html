@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who We Are, Alive (prototype C)</title>
+<meta name="description" content="Prototype C for the First Baptist Church Muncie Who We Are page: Direction B's colour and voice, with Direction A's arch frames and building glyphs.">
+<!--
+  Prototype C, "Alive". Design exploration only, not production code.
+  B's colour, scale and watchword; A's lancet and door-arch frames and the four glyphs
+  drawn from the building (two-light window, Tudor door, rose, piscina).
+  Every goal has its own composition. Motion is IntersectionObserver-driven, runs once,
+  and is skipped entirely under prefers-reduced-motion (and when JS is off).
+-->
+<style>
+@font-face{font-family:"Castoro Titling";src:url("../../../../node_modules/@fontsource/castoro-titling/files/castoro-titling-latin-400-normal.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Castoro";src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-normal.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Castoro";font-style:italic;src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-italic.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Sofia Sans SC";font-weight:100 900;src:url("../../../../node_modules/@fontsource-variable/sofia-sans-semi-condensed/files/sofia-sans-semi-condensed-latin-wght-normal.woff2") format("woff2");font-display:swap}
+
+:root{
+  --season:#1d5a3a; --season-deep:#113a26; --night:#0c241a; --mint:#a9dcbf;
+  --paper:#f6f0e2; --paper-2:#efe5cf; --sheet:#fffaf0;
+  --ink:#1f1a14; --ink-soft:#4a4036;
+  --gold:#c9972c; --gold-ink:#8a5d06; --gold-light:#f0c86a;
+  --brown:#6a3d20; --brown-deep:#2c1a0f;
+  --purple:#46275e; --purple-deep:#2e1843; --lilac:#d9c8ea;
+  --display:"Castoro Titling",Georgia,serif;
+  --read:"Castoro",Georgia,serif;
+  --ui:"Sofia Sans SC","Arial Narrow",system-ui,sans-serif;
+  --gut:clamp(16px,4vw,64px);
+  --max:1320px;
+  --ease:cubic-bezier(.2,.7,.1,1);
+  /* the two frames, drawn from the building: the lancet window and the four-centred door */
+  --lancet:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150' preserveAspectRatio='none'%3E%3Cpath d='M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z'/%3E%3C/svg%3E");
+  --door:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 130' preserveAspectRatio='none'%3E%3Cpath d='M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130Z'/%3E%3C/svg%3E");
+  --door-wide:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V34C0 12 44 6 80 0C116 6 160 12 160 34V100Z'/%3E%3C/svg%3E");
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+main{overflow-x:clip}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--read);font-size:19px;line-height:1.6;overflow-x:hidden;
+  font-feature-settings:"kern","liga","onum";-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0 0 1em;text-wrap:pretty}
+h1,h2,h3,h4{margin:0;font-weight:400;text-wrap:balance}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ref{font-family:var(--ui);font-weight:600;font-size:.84em;white-space:nowrap;font-feature-settings:"lnum"}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+/* ---------- the door button: squared, a low four-centred head, a gold sill, the watchword's rays ---------- */
+.btn{--bg:var(--season);--fg:#fff;--sill:var(--gold);
+  position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:12px;min-height:50px;padding:9px 20px 7px 22px;
+  font-family:var(--ui);font-weight:700;font-size:17px;line-height:1.1;text-decoration:none;color:var(--fg)}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--bg);
+  clip-path:polygon(0 10px,3% 7px,8% 4.6px,16% 2.6px,28% 1.1px,40% .3px,50% 0,60% .3px,72% 1.1px,84% 2.6px,92% 4.6px,97% 7px,100% 10px,100% 100%,0 100%);transition:background .2s}
+.btn::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:4px;background:var(--sill);transform-origin:left;transition:transform .25s var(--ease)}
+.btn svg{width:13px;height:22px;flex:none;overflow:visible}
+.btn svg path{stroke:currentColor;stroke-width:2.2;stroke-linecap:round;fill:none;transition:transform .25s var(--ease)}
+.btn:hover::before{background:var(--bg-h,var(--season-deep))}
+.btn:hover svg .r1{transform:translate(2px,-2px)} .btn:hover svg .r3{transform:translate(2px,2px)} .btn:hover svg .r2{transform:translateX(3px)}
+.btn:focus-visible{outline-offset:8px}
+.btn.gold{--bg:var(--gold);--bg-h:#dcae4a;--fg:var(--brown-deep);--sill:var(--paper)}
+.btn.paper{--bg:var(--paper);--bg-h:#fff;--fg:var(--season-deep);--sill:var(--gold)}
+.btn.brown{--bg:var(--brown-deep);--bg-h:#000;--fg:#fff;--sill:var(--season)}
+.textlink{font-family:var(--ui);font-weight:700;font-size:17px;text-decoration:none;border-bottom:2px solid currentColor;padding:12px 0 2px;display:inline-block}
+.textlink:hover{border-bottom-color:var(--gold)}
+
+/* ---------- header ---------- */
+.site-head{background:var(--paper);position:relative;z-index:5}
+.site-head .wrap{display:flex;align-items:center;gap:24px;min-height:84px}
+.brand{display:flex;flex-direction:column;text-decoration:none;line-height:1}
+.brand b{font-family:var(--display);font-weight:400;font-size:25px;letter-spacing:.02em;color:var(--season-deep)}
+.brand span{font-family:var(--ui);font-size:14px;color:var(--ink-soft);margin-top:6px}
+.nav{margin-left:auto;display:flex;gap:26px;font-family:var(--ui);font-size:17px;font-weight:500}
+.nav a{text-decoration:none;padding:12px 0 8px;border-bottom:2px solid transparent}
+.nav a[aria-current]{border-color:var(--season);color:var(--season)}
+.nav a:hover{border-color:var(--gold)}
+.menu-btn{display:none;margin-left:auto;font-family:var(--ui);font-weight:700;font-size:17px;background:none;border:0;border-bottom:2px solid var(--season-deep);color:var(--season-deep);min-height:44px;padding:8px 2px 4px;cursor:pointer}
+
+/* ---------- arch frames ---------- */
+.fr{position:relative;margin:0}
+.arch{position:relative;overflow:hidden;background:rgba(0,0,0,.12);
+  -webkit-mask:var(--m,var(--lancet)) center/100% 100% no-repeat;mask:var(--m,var(--lancet)) center/100% 100% no-repeat}
+.arch.l{--m:var(--lancet)}
+.arch.d{--m:var(--door)}
+.arch.dw{--m:var(--door-wide)}
+.arch img{width:100%;height:100%;object-fit:cover;
+  /* one grade for every amateur photo: a touch warmer, a touch firmer, never waxy */
+  filter:saturate(.9) contrast(1.05) sepia(.07) brightness(1.02)}
+.arch::after{content:"";position:absolute;inset:0;pointer-events:none;background:var(--tint,transparent);mix-blend-mode:soft-light;opacity:.5}
+.arch::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,236,190,.14),rgba(0,0,0,0) 40%,rgba(0,0,0,.12))}
+.mould{position:absolute;inset:-9px -9px 0 -9px;width:calc(100% + 18px);height:calc(100% + 9px);pointer-events:none;overflow:visible}
+.mould path{fill:none;stroke:var(--mould,var(--gold));stroke-width:1.4;vector-effect:non-scaling-stroke}
+.fr figcaption{font-family:var(--ui);font-size:15px;line-height:1.35;margin-top:12px}
+
+/* reveals: only when JS runs and motion is welcome. Otherwise everything is simply there. */
+@media (prefers-reduced-motion:no-preference){
+  .js .arch[data-rv]{transition:clip-path 1.25s var(--ease)}
+  .js .arch[data-rv] img{transition:transform 1.6s var(--ease)}
+  .js .arch.l[data-rv]:not(.in){clip-path:inset(100% 0 0 0)}
+  .js .arch.d[data-rv]:not(.in),.js .arch.dw[data-rv]:not(.in){clip-path:inset(0 50% 0 50%)}
+  .js .arch[data-rv]:not(.in) img{transform:scale(1.08)}
+  .js .arch[data-rv].in{clip-path:inset(0)}
+  .js .mould{transition:opacity 1s .5s}
+  .js .fr:has(.arch[data-rv]:not(.in)) .mould{opacity:0}
+  .js [data-up]{transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--i,0) * 110ms)}
+  .js [data-up]:not(.in){opacity:0;transform:translateY(22px)}
+}
+
+/* ---------- opener ---------- */
+.opener{background:var(--season);color:#fff;position:relative;z-index:2;overflow-x:clip}
+.opener .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,72px);align-items:end;padding-top:clamp(40px,6vw,88px)}
+.op-text{padding-bottom:clamp(56px,7vw,112px);position:relative;z-index:2}
+.season{display:flex;align-items:center;gap:12px;font-family:var(--ui);font-size:16.5px;font-weight:600;color:var(--mint);margin:0 0 clamp(22px,3vw,40px)}
+.season::before{content:"";width:34px;height:2px;background:var(--mint)}
+.opener h1{font-family:var(--display);font-size:clamp(26px,2.4vw,34px);letter-spacing:.06em;color:var(--gold-light);line-height:1;margin-bottom:.5em}
+.statement{font-style:italic;font-size:clamp(40px,4.3vw,64px);line-height:1.05;letter-spacing:-.012em;margin:0 0 clamp(28px,3.4vw,48px);text-wrap:balance}
+.statement em{font-style:normal;color:var(--mint)}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px}
+.window{position:relative;display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:clamp(8px,1.4vw,20px);align-items:end;margin-bottom:calc(-1 * clamp(64px,7.5vw,110px))}
+.window .fr:nth-child(2) .arch,.window .fr:nth-child(4) .arch{aspect-ratio:100/228}
+.window .fr:nth-child(3) .arch{aspect-ratio:100/212}
+.window .fr{--tint:rgba(29,90,58,.0)}
+.window .glow{position:absolute;left:50%;bottom:100%;width:46%;transform:translate(-50%,6%);overflow:visible;color:var(--mint);pointer-events:none}
+.bigamp{position:absolute;right:-4%;top:-14%;font-family:var(--read);font-style:italic;font-size:clamp(320px,40vw,640px);line-height:1;color:rgba(169,220,191,.10);pointer-events:none;z-index:0;user-select:none}
+
+/* rays draw once */
+.rays path{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round}
+@media (prefers-reduced-motion:no-preference){
+  .js .rays path{stroke-dasharray:80;stroke-dashoffset:0;transition:stroke-dashoffset .9s var(--ease)}
+  .js .rays:not(.in) path{stroke-dashoffset:80}
+  .js .rays path:nth-child(2),.js .rays path:nth-child(3){transition-delay:.12s}
+  .js .rays path:nth-child(4),.js .rays path:nth-child(5){transition-delay:.24s}
+}
+
+/* ---------- watchword ---------- */
+.watch{background:var(--night);color:#f4efe4;position:relative;overflow:hidden}
+.watch .wrap{padding-top:calc(clamp(80px,9vw,150px) + clamp(56px,6vw,100px));padding-bottom:clamp(72px,9vw,140px)}
+.h2{font-family:var(--display);font-size:clamp(30px,3.2vw,46px);line-height:1.05;letter-spacing:.02em}
+.watch .h2{color:var(--gold)}
+.lockup{margin:clamp(20px,3vw,40px) 0 0;display:flex;flex-direction:column;line-height:.8;position:relative}
+.lockup .row1{display:flex;align-items:baseline;font-size:clamp(96px,17.5vw,272px)}
+.lockup .praise{font-style:italic;font-size:1em;letter-spacing:-.025em;color:#fff;position:relative;z-index:2;padding-right:.04em}
+.lockup .amp{font-style:italic;font-size:1.62em;line-height:.7;color:var(--gold);margin:0 0 0 .02em;position:relative;z-index:1;transform-origin:30% 80%}
+.lockup .proclaim{align-self:flex-end;display:inline-flex;align-items:center;gap:.08em;font-family:var(--display);font-size:clamp(52px,11.4vw,176px);letter-spacing:.015em;color:var(--mint);position:relative;z-index:2;margin-top:.1em}
+.lockup .rays{width:.44em;height:.96em;color:var(--gold)}
+@media (prefers-reduced-motion:no-preference){
+  .js .lockup .amp{transition:transform 1.4s var(--ease),opacity 1.2s}
+  .js .lockup:not(.in) .amp{transform:scale(.8) rotate(-8deg);opacity:0}
+}
+.verse{margin:clamp(48px,6vw,96px) 0 0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 40px;align-items:end;padding:0;border:0}
+.verse p{font-size:clamp(27px,3.3vw,48px);line-height:1.2;margin:0;max-width:21em;text-indent:-.42em}
+.verse mark{background:none;color:var(--mint);font-style:italic}
+.verse cite{font-family:var(--ui);font-style:normal;font-weight:700;font-size:20px;color:var(--gold)}
+.watch-body{display:grid;grid-template-columns:minmax(0,33em) minmax(0,1fr);gap:clamp(32px,6vw,100px);margin-top:clamp(56px,6vw,96px);align-items:start}
+.watch-body .col p{color:#e7e0d1}
+.pair{display:grid;gap:0;border-top:1px solid rgba(201,151,44,.5)}
+.pair>p{font-family:var(--ui);font-size:17px;color:#d8cfbd;margin:14px 0 6px}
+.pair .def{display:grid;grid-template-columns:190px minmax(0,1fr);gap:20px;align-items:baseline;padding:22px 0;border-bottom:1px solid rgba(201,151,44,.5)}
+.pair b{font-weight:400;line-height:1}
+.pair .d1 b{font-style:italic;font-size:44px;color:#fff}
+.pair .d2 b{font-family:var(--display);font-size:32px;color:var(--mint)}
+.pair .def p{margin:0;font-size:20px;line-height:1.45;color:#ede6d6}
+.pair .def em{font-style:italic;color:var(--gold-light)}
+
+/* ---------- goals: intro and the four-W index ---------- */
+.goals-top{padding:clamp(72px,9vw,140px) 0 clamp(48px,5vw,80px)}
+.goals-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(24px,5vw,80px);align-items:end}
+.goals-intro .h2{font-size:clamp(46px,6vw,92px);color:var(--season-deep)}
+.goals-intro p{font-size:21px;color:var(--ink-soft);margin:0;max-width:32em}
+.wdex{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,2vw,28px);margin:clamp(40px,4vw,64px) 0 0;padding:0;list-style:none}
+.wdex a{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center;text-decoration:none;padding:18px 0 6px;border-top:6px solid var(--g);min-height:44px}
+.wdex svg{grid-row:1/3;width:40px;height:54px;color:var(--gi)}
+.wdex b{font-family:var(--display);font-weight:400;font-size:clamp(24px,2.2vw,32px);line-height:1;color:var(--gi)}
+.wdex small{font-family:var(--ui);font-size:16px;color:var(--ink-soft)}
+.wdex a:hover b{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.c-worship{--g:var(--season);--gi:var(--season)}
+.c-way{--g:var(--gold);--gi:var(--gold-ink)}
+.c-witness{--g:var(--purple);--gi:var(--purple)}
+.c-work{--g:var(--brown);--gi:var(--brown)}
+.glyph{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.glyph *{vector-effect:non-scaling-stroke}
+
+/* shared goal heading */
+.goal{position:relative}
+.g-head{display:flex;align-items:flex-end;gap:clamp(14px,1.6vw,22px)}
+.g-head svg{width:clamp(46px,5vw,72px);height:auto;aspect-ratio:48/64;flex:none;color:var(--hi);margin-bottom:.1em}
+.g-name{font-family:var(--display);font-size:clamp(64px,8.4vw,132px);line-height:.84;letter-spacing:.005em}
+.g-also{font-family:var(--ui);font-weight:600;font-size:18px;color:var(--soft);margin:14px 0 0}
+.g-title{font-style:italic;font-size:clamp(28px,2.7vw,40px);line-height:1.12;margin:clamp(16px,2vw,26px) 0 0;color:var(--hi)}
+.g-lead{font-size:clamp(20px,1.6vw,23px);line-height:1.5}
+.pt h4{font-family:var(--ui);font-weight:700;font-size:21px;line-height:1.2;margin-bottom:6px}
+.pt p{font-size:18px;line-height:1.55;margin:0;color:var(--soft)}
+
+/* WORSHIP: the whole body, full bleed */
+.g-worship{background:var(--season);color:#fff;--hi:var(--mint);--soft:#dcefe3;--tint:rgba(29,90,58,.9)}
+.bleed{position:relative;min-height:clamp(520px,64vw,860px);display:flex;align-items:flex-end;overflow:hidden}
+.bleed>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 82%;filter:saturate(.88) contrast(1.06) sepia(.08)}
+.bleed::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(12,36,26,.62) 0%,rgba(12,36,26,.35) 45%,rgba(12,36,26,0) 70%),
+  linear-gradient(180deg,rgba(12,36,26,.3) 0%,rgba(12,36,26,0) 20%,rgba(29,90,58,0) 50%,rgba(29,90,58,.84) 80%,var(--season) 100%)}
+.bleed .wrap{position:relative;z-index:1;width:100%;padding-bottom:clamp(28px,3vw,48px)}
+.bleed .g-name{font-size:clamp(76px,10.4vw,168px);text-shadow:0 2px 30px rgba(0,0,0,.25)}
+.bleed .g-title{text-shadow:0 1px 16px rgba(0,0,0,.35)}
+.w-body{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,3.4fr);gap:clamp(28px,4vw,64px);align-items:start;padding-top:clamp(24px,3vw,40px);padding-bottom:clamp(72px,8vw,128px)}
+.w-body .g-lead{font-style:italic;font-size:clamp(24px,2.2vw,32px);line-height:1.3}
+.w-main{display:grid;gap:clamp(28px,3vw,44px);align-content:start}
+.w-body .g-lead{max-width:24em;margin:0}
+.w-pts{columns:2;column-gap:clamp(24px,3vw,48px)}
+.w-pts .pt{break-inside:avoid;margin-bottom:28px}
+.w-pts .pt{padding-top:18px;border-top:1px solid rgba(169,220,191,.45)}
+.w-pics{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end;margin-top:calc(-1 * clamp(160px,17vw,280px));position:relative;z-index:2}
+.w-pics .fr:first-child{margin-bottom:48px}
+.w-pics .arch{aspect-ratio:100/190}
+.w-pics figcaption{color:#dcefe3;grid-column:1/-1}
+.w-cap{grid-column:1/-1;font-family:var(--ui);font-size:15px;color:#dcefe3;margin:0}
+
+/* THE WAY: a path of three steps */
+.g-way{background:var(--gold);color:var(--brown-deep);--hi:var(--brown-deep);--soft:#3b2612;--tint:rgba(201,151,44,.7);--mould:var(--brown-deep)}
+.g-way .wrap{padding-top:clamp(80px,9vw,140px);padding-bottom:clamp(80px,9vw,150px)}
+.way-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(28px,5vw,88px);align-items:end}
+.come{font-style:italic;font-size:clamp(34px,3.6vw,54px);line-height:1.08;margin:0 0 .35em;color:var(--brown-deep)}
+.come .ref{font-style:normal;font-size:17px;vertical-align:.5em;margin-left:.3em}
+.way-top .g-lead{margin:0;max-width:30em}
+.path-wrap{position:relative;margin:clamp(56px,6vw,96px) 0 0}
+.path{position:relative;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,4vw,72px)}
+.path-wrap .trail{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.path-wrap .trail path{fill:none;stroke:var(--brown-deep);stroke-width:2.5;stroke-dasharray:2 12;stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:.55}
+.step{position:relative;z-index:1}
+.step:nth-child(2){margin-top:clamp(60px,7vw,120px)}
+.step:nth-child(3){margin-top:clamp(120px,14vw,240px)}
+.step .arch{aspect-ratio:100/112}
+.step .pt{margin-top:22px;max-width:22em}
+.step .pt h4{font-size:24px}
+.step .pt p{color:#2c1a0f;font-size:18.5px}
+.step .fr figcaption{color:#3b2612}
+
+/* WITNESS: faces going out into Muncie */
+.g-witness{background:var(--purple);color:#fff;--hi:var(--gold-light);--soft:#e7dcf0;--tint:rgba(70,39,94,.75);--mould:var(--gold-light)}
+.g-witness .wrap{padding-top:clamp(80px,9vw,140px);padding-bottom:clamp(80px,9vw,140px)}
+.wit-top{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(28px,5vw,88px);align-items:end}
+.wit-top .g-lead{margin:0;max-width:28em}
+.crowd{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(8px,1.2vw,18px);align-items:end;margin:clamp(56px,6vw,96px) 0 0}
+.crowd .arch{aspect-ratio:100/var(--h,180)}
+.crowd .fr:nth-child(1){--h:150}.crowd .fr:nth-child(2){--h:178}.crowd .fr:nth-child(3){--h:200}
+.crowd .fr:nth-child(4){--h:200}.crowd .fr:nth-child(5){--h:178}.crowd .fr:nth-child(6){--h:150}
+.street{display:flex;align-items:center;gap:14px;margin:18px 0 0;font-family:var(--ui);font-size:16px;color:#e7dcf0}
+.street::before,.street::after{content:"";height:1px;flex:1;background:rgba(240,200,106,.55)}
+.rings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,4vw,64px);margin:clamp(48px,5vw,80px) 0 0;padding:0;list-style:none}
+.rings li{display:grid;grid-template-rows:84px auto 1fr}
+.rings svg{height:auto;margin-bottom:18px;overflow:visible;align-self:end}
+.rings circle{fill:none;stroke:var(--gold-light);stroke-width:1.6;vector-effect:non-scaling-stroke}
+.rings circle.core{fill:var(--gold-light);stroke:none}
+.rings li:nth-child(1) svg{width:44px}.rings li:nth-child(2) svg{width:64px}.rings li:nth-child(3) svg{width:84px}
+.rings .scope{font-family:var(--ui);font-size:15px;font-weight:600;color:var(--gold-light);margin:0 0 6px}
+
+/* WORK: hands at work in three doors */
+.g-work{background:var(--brown);color:#fff;--hi:var(--gold-light);--soft:#f0e2d2;--tint:rgba(106,61,32,.8);--mould:var(--gold-light)}
+.g-work .wrap{padding-top:clamp(80px,9vw,140px);padding-bottom:clamp(80px,9vw,140px)}
+.work-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,88px);align-items:end}
+.work-top .g-lead{margin:0;max-width:28em}
+.serve-quote{font-style:italic;font-size:clamp(26px,2.4vw,34px);line-height:1.2;color:var(--gold-light);margin:0 0 18px}
+.triptych{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,3vw,48px);margin:clamp(56px,6vw,96px) 0 0;padding:0;list-style:none}
+.triptych .arch{aspect-ratio:100/118}
+.triptych .word{font-family:var(--display);font-size:clamp(40px,4.6vw,72px);line-height:1;color:var(--gold-light);margin:26px 0 12px;letter-spacing:.01em}
+.triptych p{font-size:19px;line-height:1.5;color:#f0e2d2;margin:0;max-width:20em}
+
+/* ---------- pledge: a responsive reading ---------- */
+.pledge{background:var(--paper-2);color:var(--ink);--tint:rgba(70,39,94,.35);--mould:var(--purple)}
+.pledge>.wrap{display:grid;grid-template-columns:minmax(0,3.5fr) minmax(0,8.5fr);gap:clamp(40px,6vw,100px);padding-top:clamp(80px,9vw,140px);padding-bottom:clamp(80px,9vw,140px)}
+.pledge .h2{color:var(--purple);font-size:clamp(44px,5vw,76px)}
+.pledge .intro{font-size:22px;margin:22px 0 40px;color:var(--ink-soft);max-width:17em}
+.p-side{position:sticky;top:28px;align-self:start}
+.p-side .arch{aspect-ratio:100/150}
+.p-side figcaption{color:var(--ink-soft)}
+.rubric{font-style:italic;color:var(--purple);font-size:20px;margin:0 0 34px;display:flex;gap:12px;align-items:baseline}
+.rubric svg{width:16px;height:16px;flex:none;color:var(--purple);transform:translateY(2px)}
+.reading{margin:0;padding:0;list-style:none}
+.rd{display:grid;grid-template-columns:3em minmax(0,1fr) 8.4em;column-gap:clamp(14px,2vw,28px);align-items:baseline;padding:26px 0;border-top:1px solid rgba(70,39,94,.22)}
+.rd .who{font-family:var(--display);font-size:19px;letter-spacing:.06em;color:var(--purple)}
+.rd .says{margin:0;font-size:clamp(25px,2.4vw,35px);line-height:1.2;color:var(--ink)}
+.rd .says .turn{display:block;font-style:italic;color:var(--purple);padding-left:1.3em}
+.rd .ref{font-family:var(--read);font-style:italic;font-weight:400;font-size:17px;white-space:normal;color:#6b4f14;text-align:right;line-height:1.35}
+.rd.open{border-top:0;padding-top:0}
+.rd.open .says{font-style:italic;font-size:clamp(32px,3.4vw,50px);line-height:1.1;color:var(--purple-deep)}
+.after{margin-top:clamp(40px,5vw,72px)}
+.after .rd{border-top:0;padding:0 0 18px}
+.after .rd .says{font-size:19.5px;line-height:1.6;color:var(--ink-soft);max-width:33em}
+.after .rd .ref{font-size:16px}
+.sep{display:block;width:100%;max-width:440px;height:22px;margin:0 0 30px calc(3em + clamp(14px,2vw,28px));color:var(--purple)}
+
+/* ---------- letter ---------- */
+.letter{background:var(--paper);padding:clamp(88px,10vw,160px) 0;--tint:rgba(29,90,58,.3)}
+.letter .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px,6vw,110px);align-items:start}
+.portrait{position:sticky;top:28px}
+.portrait .arch{aspect-ratio:100/150}
+.portrait img{object-position:71% 50%}
+.portrait figcaption{color:var(--ink-soft)}
+.sheet{max-width:36em}
+.lhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 20px;font-family:var(--ui);font-size:15.5px;color:var(--ink-soft);padding-bottom:14px;border-bottom:2px solid var(--gold);margin-bottom:clamp(32px,4vw,52px)}
+.lhead b{font-family:var(--display);font-weight:400;font-size:17px;letter-spacing:.04em;color:var(--season-deep)}
+.letter .h2{color:var(--season-deep);font-size:clamp(40px,4.4vw,64px);margin-bottom:clamp(28px,3vw,44px)}
+.letter-body p{font-size:21px;line-height:1.66}
+.letter-body>p:first-child{font-size:24px;line-height:1.52;color:var(--season-deep)}
+.letter-body>p:first-child::first-letter{font-family:var(--display);float:left;font-size:3.5em;line-height:.8;padding:.05em .1em 0 0;color:var(--gold-ink)}
+.letter-body blockquote{margin:1.3em 0 1.3em -.42em;font-style:italic;font-size:clamp(28px,2.6vw,36px);line-height:1.25;color:var(--season-deep)}
+.letter-body blockquote .ref{font-style:normal;font-size:17px;color:var(--gold-ink)}
+.sign{margin-top:44px;position:relative;display:inline-block}
+.sign .names{font-style:italic;font-size:clamp(46px,4.6vw,66px);line-height:1;color:var(--season-deep);transform:rotate(-4deg);transform-origin:left bottom;letter-spacing:-.01em}
+.sign svg{display:block;width:clamp(240px,24vw,340px);height:auto;margin:-2px 0 0 -6px;color:var(--gold);overflow:visible}
+.sign svg path{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round}
+.sign .role{font-family:var(--ui);font-size:17px;color:var(--ink-soft);margin:10px 0 0}
+@media (prefers-reduced-motion:no-preference){
+  .js .sign svg path{stroke-dasharray:420;transition:stroke-dashoffset 1.4s .3s var(--ease)}
+  .js .sign:not(.in) svg path{stroke-dashoffset:420}
+}
+
+/* ---------- where to go next: four doors ---------- */
+.next{background:var(--season);color:#fff;padding:clamp(80px,9vw,140px) 0}
+.next .h2{font-size:clamp(46px,6vw,92px);margin-bottom:clamp(36px,4vw,64px)}
+.doors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,2vw,28px);list-style:none;margin:0;padding:0;--tint:rgba(29,90,58,.25)}
+.door{display:flex;flex-direction:column;height:100%}
+.door .arch{aspect-ratio:100/92;background:var(--season-deep)}
+.door .arch>img{position:absolute;inset:0}
+.door .body{background:var(--paper);color:var(--ink);padding:22px 22px 30px;display:flex;flex-direction:column;flex:1}
+.door h3{font-family:var(--display);font-size:27px;line-height:1.05;color:var(--season-deep)}
+.door p{font-size:18px;line-height:1.45;color:var(--ink-soft);margin:10px 0 24px}
+.door .btn{margin-top:auto;align-self:flex-start}
+.board{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:2;background:var(--brown-deep);color:#f5e7c6;font-family:var(--ui);font-weight:700;font-size:14px;letter-spacing:.06em;line-height:1.2;padding:8px 14px 9px;text-align:center;border:1px solid var(--gold);white-space:nowrap}
+.board b{display:block;font-family:var(--read);font-weight:400;letter-spacing:0;font-size:26px;color:var(--gold-light);margin-top:2px}
+.door.booklet .arch{background:var(--brown-deep);display:grid;place-items:center}
+.door.booklet .body{background:var(--gold)}
+.door.booklet h3,.door.booklet p{color:var(--brown-deep)}
+.pics2{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr}
+.pics2 img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:saturate(.9) contrast(1.05) sepia(.07)}
+
+/* ---------- footer ---------- */
+.foot{background:var(--brown-deep);color:#eadfca;padding:clamp(56px,6vw,88px) 0 40px;font-family:var(--ui);font-size:17px}
+.foot .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+.foot .mark{font-family:var(--read);font-style:italic;font-size:46px;line-height:.9;color:#fff}
+.foot .mark i{color:var(--gold)}
+.foot .mark span{display:block;font-style:normal;font-family:var(--display);font-size:32px;color:var(--mint);margin-top:4px}
+.foot h4{font-family:var(--display);font-size:20px;color:var(--gold);margin-bottom:12px}
+.foot ul{list-style:none;margin:0;padding:0;line-height:1.9}
+.foot a{text-decoration:none;display:inline-block;padding:2px 0}
+.foot a:hover{text-decoration:underline}
+.foot .base{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.14);padding-top:22px;margin-top:10px;color:#c9baa0;font-size:15px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1120px){
+  .nav{gap:18px;font-size:16px}
+  .site-head .btn{display:none}
+  .doors{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .w-body{grid-template-columns:minmax(0,1fr)}
+  .w-pics{margin-top:0;max-width:560px}
+}
+@media (max-width:900px){
+  .nav{display:none}
+  .menu-btn{display:inline-block}
+  .opener .wrap{grid-template-columns:minmax(0,1fr)}
+  .op-text{padding-bottom:12px}
+  .watch-body,.goals-intro,.way-top,.wit-top,.work-top,.pledge>.wrap,.letter .wrap{grid-template-columns:minmax(0,1fr)}
+  .wdex{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .p-side{position:static}
+  .portrait{position:relative;top:auto}
+  .p-side .fr{max-width:360px}
+  .portrait{max-width:440px}
+  .verse{grid-template-columns:minmax(0,1fr)}
+  .foot .wrap{grid-template-columns:1fr 1fr}
+  .foot .brandcol{grid-column:1/-1}
+  /* the path turns downhill: a trail on the left, doors and words beside it */
+  .path{grid-template-columns:minmax(0,1fr);gap:40px;padding-left:34px}
+  .path-wrap .trail{display:none}
+  .path::before{content:"";position:absolute;left:8px;top:10px;bottom:10px;border-left:3px dotted rgba(44,26,15,.6)}
+  .step{margin-top:0!important;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:20px;align-items:center}
+  .step::before{content:"";position:absolute;left:-33px;top:50%;width:15px;height:15px;border-radius:50%;background:var(--brown-deep);box-shadow:0 0 0 5px var(--gold)}
+  .step .pt{margin-top:0}
+  .rings{grid-template-columns:minmax(0,1fr);gap:30px}
+  .rings li{grid-template-columns:90px minmax(0,1fr);grid-template-rows:auto auto;column-gap:18px;align-items:start}
+  .rings li svg{grid-row:1/4;margin:0;justify-self:center;align-self:start}
+}
+@media (max-width:620px){
+  body{font-size:18px}
+  .brand b{font-size:21px}
+  .brand span{font-size:13px}
+  .site-head .wrap{min-height:72px}
+  .window{margin-left:calc(-1 * var(--gut) + 8px);margin-right:calc(-1 * var(--gut) + 8px);grid-template-columns:.78fr 1.9fr .78fr;gap:8px}
+  .window .fr:nth-child(3) .arch{aspect-ratio:100/158}
+  .window .fr:nth-child(2) .arch,.window .fr:nth-child(4) .arch{aspect-ratio:100/250}
+  .window .glow{width:40%}
+  .op-text{padding-bottom:40px}
+  .mould{inset:-6px -6px 0 -6px;width:calc(100% + 12px);height:calc(100% + 6px)}
+  .lockup .row1{font-size:21vw}
+  .lockup .amp{font-size:1.45em}
+  .lockup .proclaim{font-size:12.6vw}
+  .pair .def{grid-template-columns:minmax(0,1fr);gap:8px}
+  .wdex{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  .wdex a{grid-template-columns:minmax(0,1fr);gap:6px}
+  .wdex svg{grid-row:auto;width:32px;height:43px}
+  .g-name{font-size:13.2vw}
+  .bleed{min-height:118vw}
+  .bleed .g-name{font-size:14.5vw}
+  .bleed>img{object-position:55% 50%}
+  .w-pts{columns:1}
+  .w-pics{margin-top:0;gap:10px}
+  .w-pics .fr:first-child{margin-bottom:32px}
+  .step{grid-template-columns:minmax(0,1fr)}
+  .step .arch{max-width:260px}
+  .step::before{top:30px}
+  .crowd{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:22px}
+  .crowd .fr:nth-child(1),.crowd .fr:nth-child(4){--h:170}
+  .crowd .fr:nth-child(2),.crowd .fr:nth-child(5){--h:200}
+  .crowd .fr:nth-child(3),.crowd .fr:nth-child(6){--h:170}
+  .triptych{grid-template-columns:minmax(0,1fr);gap:40px}
+  .triptych li{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:0 18px;align-items:end}
+  .triptych .fr{grid-row:1/3}
+  .triptych .word{margin:0 0 8px;font-size:40px}
+  .triptych p{grid-column:2;font-size:17.5px}
+  .triptych li:nth-child(2){grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}
+  .triptych li:nth-child(2) .fr{grid-column:2}
+  .triptych li:nth-child(2) .word,.triptych li:nth-child(2) p{grid-column:1;grid-row:auto;text-align:right}
+  .triptych li:nth-child(2) .word{grid-row:1}
+  .triptych li:nth-child(2) p{grid-row:2}
+  .rd{grid-template-columns:minmax(0,1fr);row-gap:8px;padding:22px 0}
+  .rd .who{font-size:16px}
+  .rd .ref{text-align:left;grid-row:3}
+  .rd .says .turn{padding-left:.9em}
+  .after .rd .who{display:none}
+  .sep{margin-left:0}
+  .letter-body p{font-size:19px}
+  .letter-body>p:first-child{font-size:21px}
+  .portrait{max-width:none;margin:0 8%}
+  .doors{grid-template-columns:minmax(0,1fr)}
+  .door .arch{aspect-ratio:100/70}
+  .foot .wrap{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="qf" d="M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z"/>
+    <!-- the four goals, each drawn from the building (after Direction A) -->
+    <symbol id="i-window" viewBox="0 0 48 64"><path d="M5 62V30C5 16 14 7 24 3C34 7 43 16 43 30V62"/><path d="M10 62V36A12 12 0 0 1 16 25A12 12 0 0 1 22 36V62"/><path d="M26 62V36A12 12 0 0 1 32 25A12 12 0 0 1 38 36V62"/><use href="#qf" transform="translate(24 16) scale(.36)"/><path d="M2 62H46"/></symbol>
+    <symbol id="i-door" viewBox="0 0 48 64"><path d="M7 58V28C7 18 16 13 24 9C32 13 41 18 41 28V58"/><path d="M12 58V30C12 23 18 19 24 16C30 19 36 23 36 30V58"/><path d="M24 16V58"/><circle cx="20.5" cy="40" r="1"/><circle cx="27.5" cy="40" r="1"/><path d="M3 58H45M1 62H47"/></symbol>
+    <symbol id="i-rose" viewBox="0 0 48 64"><circle cx="24" cy="34" r="15"/><use href="#qf" transform="translate(24 34) scale(.9)"/><path d="M24 13V9M24 55V59M3 34H7M41 34H45M9.2 19.2L12 22M38.8 19.2L36 22M9.2 48.8L12 46M38.8 48.8L36 46"/></symbol>
+    <symbol id="i-basin" viewBox="0 0 48 64"><path d="M9 60V28A15 15 0 0 1 24 12A15 15 0 0 1 39 28V60"/><path d="M16 26A5 5 0 0 1 24 20A5 5 0 0 1 32 26"/><path d="M6 42H42"/><path d="M12 42C14 51 34 51 36 42"/><path d="M24 49V56"/><path d="M4 60H44"/></symbol>
+    <!-- the watchword's megaphone rays, small, for buttons -->
+    <symbol id="ray3" viewBox="0 0 13 22"><path class="r1" d="M2 5L10 1"/><path class="r2" d="M3 11H12"/><path class="r3" d="M2 17L10 21"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#"><b>First Baptist Muncie</b><span>309 East Adams Street, since 1859</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#">Visit</a>
+      <a href="#" aria-current="page">Who We Are</a>
+      <a href="#">Ministries</a>
+      <a href="#">Staff</a>
+      <a href="#">History</a>
+      <a href="#">Blog</a>
+      <a href="#">Give</a>
+    </nav>
+    <a class="btn" href="#">Plan your visit<svg aria-hidden="true"><use href="#ray3"/></svg></a>
+    <button class="menu-btn" type="button">Menu</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ OPENER: the statement, and three faces in a triple lancet ============ -->
+<section class="opener" aria-labelledby="t-who">
+    <div class="wrap">
+    <div class="op-text">
+      <p class="season">Ordinary Time, the season after Pentecost</p>
+      <h1 id="t-who">Who We Are</h1>
+      <p class="statement">We&rsquo;re a Spirit-led people gathered to join <em>Christ&rsquo;s presence</em> in our community.</p>
+      <div class="acts">
+        <a class="btn gold" href="#watchword">Praise &amp; Proclaim, our watchword<svg aria-hidden="true"><use href="#ray3"/></svg></a>
+        <a class="textlink" href="#letter">A note from our pastors</a>
+      </div>
+    </div>
+    <div class="window">
+      <svg class="glow rays" viewBox="0 0 200 90" aria-hidden="true">
+        <path d="M100 80V14"/><path d="M84 80L56 26"/><path d="M116 80L144 26"/><path d="M70 84L20 50"/><path d="M130 84L180 50"/>
+      </svg>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/b98776_03ffce9e792442fd8570453a6c420eec_tilde_mv2.jpg" alt="An older woman in a red jacket, smiling, beside her husband in the church kitchen." style="object-position:58% 40%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </figure>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_cb74be6da795403791604886a27141a3_tilde_mv2.jpg" alt="Two smiling girls, one with red hair, in front of the church's stained glass windows." style="object-position:66% 40%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </figure>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_851d0b0b47db43b4a79dce2c3a219f2d_tilde_mv2.jpg" alt="A smiling little girl among purple coneflowers." style="object-position:68% 40%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUR WATCHWORD ============ -->
+<section class="watch" id="watchword" aria-labelledby="t-watch">
+  <div class="wrap">
+    <h2 class="h2" id="t-watch">Our Watchword</h2>
+    <p class="lockup" data-up aria-label="Praise and Proclaim">
+      <span class="row1"><span class="praise" aria-hidden="true">Praise</span><span class="amp" aria-hidden="true">&amp;</span></span>
+      <span class="proclaim" aria-hidden="true">Proclaim<svg class="rays" viewBox="128 0 74 160"><path d="M150 80 H198"/><path d="M146 58 L190 30"/><path d="M146 102 L190 130"/><path d="M136 40 L160 6"/><path d="M136 120 L160 154"/></svg></span>
+    </p>
+
+    <blockquote class="verse">
+      <p>&ldquo;Give <mark>praise</mark> to the Lord, <mark>proclaim</mark> his name; make known among the nations what he has done, and <mark>proclaim</mark> that his name is exalted.&rdquo;</p>
+      <cite>Isaiah 12:4</cite>
+    </blockquote>
+
+    <div class="watch-body">
+      <div class="col">
+        <p>This statement is our congregational watchword. A watchword is a short reminder and a promise from scripture about who God is and who he has called his people to be.</p>
+        <p>When the people of God were in exile, the prophet Isaiah spoke. He delivered a message from God about what it would be like &ldquo;in that day&rdquo; when they returned. The people would return, praising and proclaiming the name of the Lord, and making him known to all nations.</p>
+        <p>At First Baptist Church Muncie, we believe the day of the Lord&rsquo;s favor has come in Jesus. The short of it is that Jesus really does change everything. And our goal for this season is to praise and proclaim his name.</p>
+      </div>
+      <div class="pair">
+        <p>This watchword reminds us of the importance of each:</p>
+        <div class="def d1"><b>Praise</b><p>That our <em>purpose</em> is worship, lifting up the name of God: Father, Son and Holy Spirit.</p></div>
+        <div class="def d2"><b>Proclaim</b><p>That our <em>joy</em> is to share the Good News of Jesus with our neighbors and the world.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUR GOALS ============ -->
+<section aria-labelledby="t-goals">
+  <div class="wrap goals-top">
+    <div class="goals-intro">
+      <h2 class="h2" id="t-goals">Our Goals</h2>
+      <p>Our Church Coordination Team has set these goals for our church this season, in pursuit of the calling God has given us as a congregation in different areas of our life together.</p>
+    </div>
+    <ul class="wdex">
+      <li class="c-worship"><a href="#worship"><svg class="glyph" aria-hidden="true"><use href="#i-window"/></svg><b>Worship</b><small>Gathering as one body</small></a></li>
+      <li class="c-way"><a href="#way"><svg class="glyph" aria-hidden="true"><use href="#i-door"/></svg><b>The Way</b><small>Discipleship</small></a></li>
+      <li class="c-witness"><a href="#witness"><svg class="glyph" aria-hidden="true"><use href="#i-rose"/></svg><b>Witness</b><small>Evangelism</small></a></li>
+      <li class="c-work"><a href="#work"><svg class="glyph" aria-hidden="true"><use href="#i-basin"/></svg><b>Work</b><small>Acts of mercy</small></a></li>
+    </ul>
+  </div>
+
+  <!-- WORSHIP: the whole body in the sanctuary, full bleed -->
+  <article class="goal g-worship" id="worship" aria-labelledby="t-worship">
+    <div class="bleed">
+      <img src="../../../../../fbcm-archive/images/08181c_37d562a315d04a83afc879ec7ee9a460_tilde_mv2.jpg" alt="The congregation standing to sing in the sanctuary under the timber roof and the great window, seen from the balcony.">
+      <div class="wrap">
+        <div class="g-head"><svg class="glyph" aria-hidden="true"><use href="#i-window"/></svg><h3 class="g-name" id="t-worship">Worship</h3></div>
+        <p class="g-title">Worshiping as the Body of Christ</p>
+      </div>
+    </div>
+    <div class="wrap w-body">
+      <div class="w-main"><p class="g-lead" data-up>FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.</p>
+      <div class="w-pts">
+        <div class="pt" data-up><h4>Following God&rsquo;s Word</h4><p>Our times of worship are rooted in scripture and prayer-filled so that our body can collectively hear from God, discern the next right step, and follow the Holy Spirit.</p></div>
+        <div class="pt" data-up style="--i:1"><h4>Enjoying Fellowship</h4><p>We set aside time to personally greet and encourage one another. Passing of the peace, sharing the good news through personal testimonies, and prayer are ways we participate in the shared life God has given us.</p></div>
+        <div class="pt" data-up style="--i:2"><h4>Participating in Practices Christ Gave Us</h4><p>FBCM prepares new believers for baptism, the time when they publicly proclaim God has become their salvation and join the body of Christ. FBCM celebrates the Lord&rsquo;s Supper monthly during intergenerational worship so that all may take part.</p></div>
+      </div></div>
+      <div class="w-pics">
+        <figure class="fr">
+          <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_360b7e1579244dbc95697ca78172c167_tilde_mv2.jpg" alt="A young woman singing into a microphone beside two guitarists, leading worship." style="object-position:56% 40%"></div>
+          <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+        </figure>
+        <figure class="fr">
+          <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_8a3de1c55df544a49b041c05bdade510_tilde_mv2.jpg" alt="Members preparing the silver communion trays for the Lord's Supper." style="object-position:30% 50%"></div>
+          <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+        </figure>
+        <p class="w-cap">Leading the songs, and setting the Lord&rsquo;s table.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- THE WAY: come and see, a path of three steps -->
+  <article class="goal g-way" id="way" aria-labelledby="t-way">
+    <div class="wrap">
+      <div class="way-top">
+        <div>
+          <div class="g-head"><svg class="glyph" aria-hidden="true"><use href="#i-door"/></svg><h3 class="g-name" id="t-way">The Way</h3></div>
+          <p class="g-also">Discipleship</p>
+          <p class="g-title">Seeking Understanding</p>
+        </div>
+        <div>
+          <p class="come" aria-hidden="true">&ldquo;Come and see.&rdquo;<span class="ref">John 1:39</span></p>
+          <p class="g-lead">FBCM proclaims God&rsquo;s faithfulness with people who are curious about faith, as well as new believers. We offer a growth track to help us all &ldquo;come and see&rdquo; who Jesus is and grow spiritually <span class="ref">John 1:39&ndash;41</span></p>
+        </div>
+      </div>
+      <div class="path-wrap">
+      <svg class="trail" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true"><path d="M150 150C260 150 300 300 500 300S760 470 860 460"/></svg>
+      <ol class="path">
+        <li class="step">
+          <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/08181c_5d24ca0140994eb3957782aec035415f_tilde_mv2.jpg" alt="An older woman reaching out to greet a man at a doorway in the church." style="object-position:40% 45%"></div>
+            <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+          <div class="pt"><h4>Welcoming Worship</h4><p>FBCM invites everyone to join our worship services, no matter their background or beliefs. We show the hospitality Christ has first shown us.</p></div>
+        </li>
+        <li class="step">
+          <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/b98776_be609b7a431f4ad9a4f82e225deeb234_tilde_mv2.jpg" alt="Deacons standing together behind the communion table." style="object-position:46% 40%"></div>
+            <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+          <div class="pt"><h4>Caring Mentorship</h4><p>Each regular attendee is connected with a deacon who offers prayer and support.</p></div>
+        </li>
+        <li class="step">
+          <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/b98776_bb65481087f84990a296a4889c810921_tilde_mv2.jpg" alt="Three girls sitting together with open Bibles on their laps." style="object-position:50% 45%"></div>
+            <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+          <div class="pt"><h4>Spiritual Friendship</h4><p>We provide small group meetings where we can learn together about the Bible, theology, and living in Christian community.</p></div>
+        </li>
+      </ol>
+      </div>
+    </div>
+  </article>
+
+  <!-- WITNESS: faces of the church, out in Muncie and beyond -->
+  <article class="goal g-witness" id="witness" aria-labelledby="t-witness">
+    <div class="wrap">
+      <div class="wit-top">
+        <div>
+          <div class="g-head"><svg class="glyph" aria-hidden="true"><use href="#i-rose"/></svg><h3 class="g-name" id="t-witness">Witness</h3></div>
+          <p class="g-also">Evangelism</p>
+          <p class="g-title">Inviting to Church and to Know Christ</p>
+        </div>
+        <p class="g-lead">To make known what God has done, FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.</p>
+      </div>
+      <div class="crowd">
+        <figure class="fr"><div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_b178e014f570469ba249e1dd6f8c4122_tilde_mv2.jpg" alt="A little boy in a striped shirt holding hands with friends outside the church's Adams Street entrance." style="object-position:57% 50%"></div></figure>
+        <figure class="fr"><div class="arch l" data-rv style="transition-delay:.08s"><img src="../../../../../fbcm-archive/images/08181c_bd84e59bfef54197913ce668c2d84726_tilde_mv2.jpg" alt="Women from the church in orange shirts with the Ball State Cardinals mascot at a community event." style="object-position:30% 50%"></div></figure>
+        <figure class="fr"><div class="arch l" data-rv style="transition-delay:.16s"><img src="../../../../../fbcm-archive/images/08181c_bd26ffeb7cc14d029caf2663a0452bf3_tilde_mv2.jpg" alt="A girl singing into a microphone at a youth performance." style="object-position:24% 40%"></div></figure>
+        <figure class="fr"><div class="arch l" data-rv style="transition-delay:.24s"><img src="../../../../../fbcm-archive/images/81f7ac_0d2d5720c7d046c88380d6912d259765_tilde_mv2.jpg" alt="Children and teens sitting on the chancel steps listening at the blessing of the backpacks." style="object-position:62% 50%"></div></figure>
+        <figure class="fr"><div class="arch l" data-rv style="transition-delay:.32s"><img src="../../../../../fbcm-archive/images/81f7ac_4dfaba15047d43a696c7e8f53df065b8_tilde_mv2.jpg" alt="A group of church members of all ages, one holding up a Serve Your City t-shirt." style="object-position:50% 40%"></div></figure>
+        <figure class="fr"><div class="arch l" data-rv style="transition-delay:.4s"><img src="../../../../../fbcm-archive/images/08181c_712bd91d3c274528ab89f065886b5eeb_tilde_mv2.jpg" alt="Children at a ministry event in front of a blue and yellow backdrop." style="object-position:55% 50%"></div></figure>
+      </div>
+      <p class="street">309 East Adams Street, downtown Muncie</p>
+      <ul class="rings">
+        <li data-up><svg viewBox="0 0 84 84" aria-hidden="true"><circle class="core" cx="42" cy="42" r="7"/><circle cx="42" cy="42" r="15"/></svg><p class="scope">In the church</p><div class="pt"><h4>Engaged Membership</h4><p>Church members actively talk about their faith and aim to live in a way that reflects Jesus.</p></div></li>
+        <li data-up style="--i:1"><svg viewBox="0 0 84 84" aria-hidden="true"><circle class="core" cx="42" cy="42" r="5"/><circle cx="42" cy="42" r="15"/><circle cx="42" cy="42" r="27"/></svg><p class="scope">In Muncie</p><div class="pt"><h4>Local Partnership</h4><p>We believe God has placed us in downtown Muncie for a reason. We work with local groups to bring light and hope to our community.</p></div></li>
+        <li data-up style="--i:2"><svg viewBox="0 0 84 84" aria-hidden="true"><circle class="core" cx="42" cy="42" r="4"/><circle cx="42" cy="42" r="15"/><circle cx="42" cy="42" r="27"/><circle cx="42" cy="42" r="40"/></svg><p class="scope">Everywhere</p><div class="pt"><h4>Kingdom Citizenship</h4><p>Jesus told us to share the good news everywhere. We support Global Servants (missionaries) and pray for people from all over the world to follow Jesus. We also celebrate the wonderful diversity of God&rsquo;s Kingdom, the Global Church.</p></div></li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- WORK: three doors, hands at work -->
+  <article class="goal g-work" id="work" aria-labelledby="t-work">
+    <div class="wrap">
+      <div class="work-top">
+        <div>
+          <div class="g-head"><svg class="glyph" aria-hidden="true"><use href="#i-basin"/></svg><h3 class="g-name" id="t-work">Work</h3></div>
+          <p class="g-also">Acts of mercy</p>
+          <p class="g-title">Gifts for Service</p>
+        </div>
+        <p class="g-lead">FBCM exalts God by following Jesus&rsquo; example of serving others, rather than seeking to be served ourselves <span class="ref">Mark 10:45</span></p>
+      </div>
+      <ul class="triptych">
+        <li>
+          <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/81f7ac_42e3d9d713cd4ce2ba5736e886d9d805_tilde_mv2.jpg" alt="Volunteers gathered around a saw on an outdoor building project during a mission trip." style="object-position:62% 50%"></div>
+            <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+          <p class="word">Serve</p><p>We actively and practically help and work alongside our neighbors.</p>
+        </li>
+        <li>
+          <figure class="fr"><div class="arch d" data-rv style="transition-delay:.12s"><img src="../../../../../fbcm-archive/images/81f7ac_a996eefcdd5d42e3a4bf854a588f9c41_tilde_mv2.jpg" alt="A mission team of teens and adults under the timber frame they are building." style="object-position:42% 60%"></div>
+            <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+          <p class="word">Support</p><p>We give sacrificially to help those in need through regular offerings and donations.</p>
+        </li>
+        <li>
+          <figure class="fr"><div class="arch d" data-rv style="transition-delay:.24s"><img src="../../../../../fbcm-archive/images/08181c_ea565de6ebd54eb492cc0160af1b3853_tilde_mv2.jpg" alt="Women of the church sharing a meal around a table in the fellowship hall." style="object-position:38% 55%"></div>
+            <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+          <p class="word">Share</p><p>We care for church members who are sick, home bound, or struggling, making sure they remain part of our life together.</p>
+        </li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============ OUR PLEDGE: said together when a member joins ============ -->
+<section class="pledge" aria-labelledby="t-pledge">
+  <div class="wrap">
+    <div class="p-side">
+      <h2 class="h2" id="t-pledge">Our Pledge</h2>
+      <p class="intro">Our commitment to one another is drawn from scripture. And it&rsquo;s this:</p>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/81f7ac_ee96a9da57554d48b92008a87a38e1e3_tilde_mv2.jpg" alt="Two young women smiling together in the baptismal pool, one of them just baptized." style="object-position:58% 40%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+        <figcaption>A baptism at First Baptist.</figcaption>
+      </figure>
+    </div>
+    <div>
+      <p class="rubric"><svg viewBox="-20 -20 40 40" aria-hidden="true"><use href="#qf" fill="currentColor"/></svg>When a member joins, we say this pledge together as a church.</p>
+      <ol class="reading">
+        <li class="rd open" data-up><span class="who">All</span><p class="says">We pledge ourselves to be the family of God for you in this place:</p><span></span></li>
+        <li class="rd" data-up><span class="who">All</span><p class="says">Bearing your burdens, <span class="turn">as you bear ours.</span></p><span class="ref">Galatians 6:2</span></li>
+        <li class="rd" data-up><span class="who">All</span><p class="says">Encouraging you in the faith, <span class="turn">as we are encouraged by you.</span></p><span class="ref">1 Thessalonians 5:11</span></li>
+        <li class="rd" data-up><span class="who">All</span><p class="says">Delighting in the Lord&rsquo;s ways.</p><span class="ref">Psalm 86:11&ndash;13<br>Psalm 37:3&ndash;6</span></li>
+        <li class="rd" data-up><span class="who">All</span><p class="says">Offering our lives as a living sacrifice: <span class="turn">holy and pleasing to God.</span></p><span class="ref">Romans 12:1</span></li>
+      </ol>
+      <div class="after">
+        <svg class="sep" viewBox="0 0 440 22" preserveAspectRatio="xMinYMid meet" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M0 11H178" opacity=".5"/><path d="M190 20V12A8 8 0 0 1 196 3A8 8 0 0 1 202 12V20"/><use href="#qf" transform="translate(220 11) scale(.5)"/><path d="M238 20V12A8 8 0 0 1 244 3A8 8 0 0 1 250 12V20"/><path d="M262 11H440" opacity=".5"/></g></svg>
+        <div class="rd"><span class="who"></span><p class="says">The life of faith isn&rsquo;t meant to be lived alone. Before he was crucified, Christ&rsquo;s prayer to the Father was that his disciples, and all believers after them, would be one, as he and the Father are one.</p><span class="ref">John 17:20&ndash;22</span></div>
+        <div class="rd"><span class="who"></span><p class="says">At the same time, that unity comes with wonderful God-given differences. We&rsquo;re not clones who all think, look, or act exactly alike! That is what the Apostle Paul means when he talks about the church as the body of Christ, with many different parts and many different gifts.</p><span class="ref">1 Corinthians 12:12&ndash;30</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A NOTE FROM OUR PASTORS: a letter ============ -->
+<section class="letter" id="letter" aria-labelledby="t-letter">
+  <div class="wrap">
+    <figure class="fr portrait">
+      <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_ff83101f12a94fe48c8618e84825faaa_tilde_mv2.jpg" alt="Pastors Kendall and Jonathan smiling together in the sanctuary balcony."></div>
+      <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      <figcaption>Kendall and Jonathan in the balcony of the sanctuary.</figcaption>
+    </figure>
+    <article class="sheet">
+      <div class="lhead"><b>First Baptist Church Muncie</b><span>309 East Adams Street, Muncie, Indiana</span></div>
+      <h2 class="h2" id="t-letter">A Note From Our Pastors</h2>
+      <div class="letter-body">
+        <p>If you&rsquo;re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you&rsquo;re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we&rsquo;d love for you to join us for worship too!</p>
+        <p>After all, Jesus did not say to his first followers: &ldquo;Figure it all out, and then get back to me.&rdquo; He said to them,</p>
+        <blockquote>&ldquo;Come and see.&rdquo; <span class="ref">John 1:39</span></blockquote>
+        <p>Even so, we know people curious about a church wonder what a particular church, including its pastors, &ldquo;are all about.&rdquo;</p>
+        <p>We love the Good News, the Gospel, that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He ascended to heaven, and he will come again in glory to make all that is wrong right. That&rsquo;s life-changing, and truly good, news. It&rsquo;s news good enough to set all of us free.</p>
+        <p>We&rsquo;re all about the church. This church is made up of people who are all imperfect, all of us with our own struggles, all of us failing, falling into our old selfish ways, and getting up again only by God&rsquo;s grace. And those same people are also filled by God&rsquo;s own Spirit, have a sincere desire to be &ldquo;good news&rdquo; people, and to serve one another as we grow in our love of Christ together.</p>
+        <p>We&rsquo;re honored to serve as Co-Pastors here. And it&rsquo;s not only because First Baptist decided to do something a little unusual in calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God&rsquo;s people in this community.</p>
+        <p>We love to serve here because we love being part of this Spirit-led people gathered to join Christ&rsquo;s presence in our community.</p>
+        <p>Finally, we would love for you to join us this Sunday, or anytime we&rsquo;re gathered to encounter the same Christ who was, and is, and will come again, as we meet him in worship, the word, and the Lord&rsquo;s table. &ldquo;Come and see!&rdquo;</p>
+      </div>
+      <div class="sign" data-sig>
+        <p class="names" style="margin:0">Kendall &amp; Jonathan</p>
+        <svg viewBox="0 0 340 30" aria-hidden="true"><path d="M4 20C60 8 120 26 180 16S290 4 336 14"/></svg>
+        <p class="role">Co-Pastors, First Baptist Church Muncie</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ WHERE TO GO NEXT: four doors ============ -->
+<section class="next" aria-labelledby="t-next">
+  <div class="wrap">
+    <h2 class="h2" id="t-next">Where To Go Next</h2>
+    <ul class="doors">
+      <li class="door">
+        <div class="arch dw" data-rv><img src="../../../../../fbcm-archive/images/81f7ac_bd44352f9ed34f33bedd96f24b8d912c_tilde_mv2.jpg" alt="Musicians on piano, guitar and vocals leading worship at the front of the sanctuary." style="object-position:50% 50%"><span class="board">SUNDAYS<b>10:45 a.m.</b></span></div>
+        <div class="body"><h3>Sunday Worship</h3><p>Find out what you can expect this Sunday.</p><a class="btn" href="https://www.fbcmuncie.org/what-to-expect">Read more<span class="sr"> about Sunday worship</span><svg aria-hidden="true"><use href="#ray3"/></svg></a></div>
+      </li>
+      <li class="door">
+        <div class="arch dw" data-rv style="transition-delay:.1s"><img src="../../../../../fbcm-archive/images/b98776_46a45e062a994a32bb3a6fd407690ba9_tilde_mv2.jpg" alt="A group of friendly adults in the church kitchen." style="object-position:40% 35%"></div>
+        <div class="body"><h3>Contact Us</h3><p>Get in touch with us with our virtual contact card.</p><a class="btn" href="https://fbcmuncie.churchcenter.com/people/forms/159198">Contact<svg aria-hidden="true"><use href="#ray3"/></svg></a></div>
+      </li>
+      <li class="door">
+        <div class="arch dw" data-rv style="transition-delay:.2s"><div class="pics2">
+          <img src="../../../../../fbcm-archive/images/08181c_496101713a394635b5bb1c3f0cd91db4_tilde_mv2.jpg" alt="Pastor Kendall Ellis in front of stained glass.">
+          <img src="../../../../../fbcm-archive/images/08181c_85e57ed38e8542679c46cebf54d15e36_tilde_mv2.jpg" alt="Pastor Jonathan Balmer in front of stained glass."></div></div>
+        <div class="body"><h3>Meet Our Staff</h3><p>Read our staff bios and meet the people of FBCM.</p><a class="btn" href="https://www.fbcmuncie.org/ministers">Read more<span class="sr"> about our staff</span><svg aria-hidden="true"><use href="#ray3"/></svg></a></div>
+      </li>
+      <li class="door booklet">
+        <div class="arch dw" data-rv style="transition-delay:.3s" aria-hidden="true">
+          <svg viewBox="0 0 200 150" width="58%"><rect x="46" y="22" width="108" height="118" fill="#f6f0e2"/><rect x="46" y="22" width="10" height="118" fill="#c9972c"/><text x="105" y="64" text-anchor="middle" font-family="Castoro, Georgia, serif" font-style="italic" font-size="20" fill="#1d5a3a">Welcome</text><text x="105" y="86" text-anchor="middle" font-family="Castoro Titling, Georgia, serif" font-size="9.5" fill="#2c1a0f">FIRST BAPTIST</text><text x="105" y="99" text-anchor="middle" font-family="Castoro Titling, Georgia, serif" font-size="9.5" fill="#2c1a0f">MUNCIE</text><g stroke="#1d5a3a" stroke-width="2.4" stroke-linecap="round"><path d="M122 120h14M121 112l10-6M121 128l10 6"/></g></svg>
+        </div>
+        <div class="body"><h3>Find Out More</h3><p>Download our Welcome Booklet.</p><a class="btn brown" href="https://www.fbcmuncie.org/_files/ugd/08181c_75a0565927c14a929d1ebee1565e638c.pdf">Download<span class="sr"> the Welcome Booklet (PDF)</span><svg aria-hidden="true"><use href="#ray3"/></svg></a></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="brandcol">
+      <div class="mark">Praise <i>&amp;</i><span>Proclaim</span></div>
+      <p style="margin-top:22px;max-width:22em">First Baptist Church Muncie<br>309 East Adams Street, Muncie, Indiana 47305<br>(765) 284-7749</p>
+    </div>
+    <div><h4>Worship</h4><ul><li><a href="#">Sundays at 10:45 a.m.</a></li><li><a href="#">Classes at 9:30 a.m.</a></li><li><a href="#">What to expect</a></li></ul></div>
+    <div><h4>The Way</h4><ul><li><a href="#">Who We Are</a></li><li><a href="#">Beliefs</a></li><li><a href="#">History</a></li></ul></div>
+    <div><h4>Witness &amp; Work</h4><ul><li><a href="#">Ministries</a></li><li><a href="#">Staff</a></li><li><a href="#">Give</a></li></ul></div>
+    <p class="base">An American Baptist congregation in downtown Muncie since 1859.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var d=document.documentElement;
+  if(!('IntersectionObserver' in window)) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return; /* final state, no motion */
+  d.classList.add('js');
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{rootMargin:'0px 0px -10% 0px',threshold:0.12});
+  /* an arch that starts clipped to nothing has no intersection area, so watch its frame instead */
+  document.querySelectorAll('[data-rv]').forEach(function(el){ el.parentElement.setAttribute('data-rvp',''); });
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.querySelectorAll(':scope > [data-rv]').forEach(function(a){a.classList.add('in');}); io2.unobserve(e.target); } });
+  },{rootMargin:'0px 0px -8% 0px',threshold:0.1});
+  document.querySelectorAll('[data-rvp]').forEach(function(el){ io2.observe(el); });
+  document.querySelectorAll('[data-up],.rays,[data-sig]').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>

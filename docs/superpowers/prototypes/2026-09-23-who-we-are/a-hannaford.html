@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who We Are, Hannaford</title>
+<meta name="description" content="Prototype, Direction A (Hannaford): the Who We Are page for First Baptist Church Muncie.">
+<style>
+@font-face{font-family:"Castoro Titling";src:url("../../../../node_modules/@fontsource/castoro-titling/files/castoro-titling-latin-400-normal.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Castoro";src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-normal.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Castoro";src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Sofia Sans SC";src:url("../../../../node_modules/@fontsource-variable/sofia-sans-semi-condensed/files/sofia-sans-semi-condensed-latin-wght-normal.woff2") format("woff2");font-weight:100 900;font-display:swap}
+
+:root{
+  /* Indiana limestone, pencil, and two colours sampled from the sanctuary glass */
+  --stone:#ece6dc;
+  --stone-deep:#e2dacd;
+  --paper:#f8f5ef;
+  --ink:#2a2622;
+  --ink-2:#5a5248;
+  --line:#3a342d;
+  --glass:#26437f;      /* cobalt of the lancet glass */
+  --glass-wash:#dfe4ec;
+  --ruby:#8d2a21;       /* ruby of the medallions, also the red doors */
+  --gold:#b88a2e;       /* decorative only, never text on stone */
+  --night:#26221e;
+
+  --display:"Castoro Titling", "Castoro", Georgia, serif;
+  --serif:"Castoro", Georgia, "Times New Roman", serif;
+  --sans:"Sofia Sans SC", "Arial Narrow", system-ui, sans-serif;
+
+  --gutter:clamp(16px, 4vw, 56px);
+  --max:1240px;
+
+  --arch:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150' preserveAspectRatio='none'%3E%3Cpath d='M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z'/%3E%3C/svg%3E");
+  --tudor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V30C0 14 40 8 80 0C120 8 160 14 160 30V100Z'/%3E%3C/svg%3E");
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--stone);color:var(--ink);
+  font-family:var(--serif);font-size:clamp(17px,1.05rem + .15vw,19.5px);line-height:1.62;
+  font-feature-settings:"kern","liga","onum";
+  -webkit-font-smoothing:antialiased;
+}
+/* a whisper of stone grain */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .25 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+body>*{position:relative;z-index:1}
+img{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0 0 1em}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--glass);outline-offset:3px}
+svg.line{fill:none;stroke:var(--line);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+
+h2{
+  font-family:var(--display);font-weight:400;font-size:clamp(30px,2.1rem + 1.2vw,50px);
+  line-height:1.05;letter-spacing:.01em;margin:0 0 .6em;
+}
+
+/* ---------------- header ---------------- */
+.site-head{padding:22px 0 18px}
+.site-head .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo svg{width:26px;height:38px;flex:none}
+.logo span{font-family:var(--display);font-size:21px;line-height:1.02;letter-spacing:.02em}
+.logo small{display:block;font-size:13.5px;letter-spacing:.2em;color:var(--ink-2)}
+.nav{display:flex;gap:26px;font-family:var(--sans);font-size:16.5px;font-weight:500}
+.nav a{text-decoration:none;padding:6px 0}
+.nav a[aria-current]{border-bottom:1.5px solid var(--ruby)}
+.nav a:hover{color:var(--ruby)}
+.visit-btn{font-family:var(--sans);font-weight:600;font-size:16px;text-decoration:none;background:var(--ruby);color:#fff;padding:10px 18px;border-radius:2px}
+.visit-btn:hover{background:#6f2019}
+.menu{display:none;font-family:var(--sans);font-weight:600}
+.menu summary{list-style:none;cursor:pointer;padding:8px 2px;border-bottom:1.5px solid var(--ink)}
+.menu summary::-webkit-details-marker{display:none}
+.menu[open] nav{position:absolute;right:var(--gutter);left:var(--gutter);top:64px;background:var(--paper);padding:18px 20px;display:grid;gap:8px;font-size:18px;box-shadow:0 12px 30px rgba(40,30,20,.15);z-index:5}
+@media (max-width:980px){.nav,.site-head .visit-btn{display:none}.menu{display:block}}
+
+/* ---------------- opener ---------------- */
+.opener{padding:18px 0 0}
+.opener-grid{display:grid;grid-template-columns:minmax(0,1000px) minmax(0,1fr);gap:0;align-items:end}
+.drawing{position:relative;margin:0;background:var(--stone);isolation:isolate}
+.drawing img{
+  width:100%;height:auto;mix-blend-mode:multiply;
+  filter:grayscale(1) contrast(1.12) brightness(1.1) sepia(.12);
+}
+.drawing-title{position:absolute;left:45%;top:9%;right:3%}
+.drawing-title h1{
+  font-family:var(--display);font-weight:400;margin:0 0 .28em;
+  font-size:clamp(44px,5.2vw,76px);line-height:.95;letter-spacing:.005em;white-space:nowrap;
+}
+.statement{font-family:var(--serif);font-style:italic;font-size:clamp(20px,1.1rem + .6vw,26px);line-height:1.34;max-width:19em;margin:0}
+.drawing figcaption{
+  font-family:var(--sans);font-size:15px;line-height:1.4;color:var(--ink-2);
+  margin:10px 0 0 1.6%;max-width:38em
+}
+.drawing figcaption b{font-weight:600;color:var(--ink)}
+.frame.inset{position:relative;margin:0 0 0 -96px;align-self:end;transform:translateY(40px);max-width:236px;justify-self:start;width:calc(100% + 96px)}
+
+@media (max-width:980px){
+  .opener-grid{grid-template-columns:1fr}
+  .drawing-title{position:static;padding:8px 0 26px}
+  .drawing-title h1{white-space:normal}
+  .drawing img{margin:0 calc(var(--gutter) * -1);width:calc(100% + 2 * var(--gutter));max-width:none}
+  .drawing figcaption{margin-left:0;max-width:62%}
+  .frame.inset{margin:-150px 0 0 auto;transform:none;width:38%;max-width:220px;justify-self:end}
+}
+@media (max-width:520px){
+  .frame.inset{margin-top:-170px;width:40%}
+  .drawing figcaption{max-width:55%;font-size:14px}
+}
+
+/* arch frames: the lancet for one or two people, the Tudor door arch for groups */
+.frame{position:relative;margin:0}
+.frame .ph{position:relative;overflow:visible}
+.frame img{width:100%;height:100%;object-fit:cover;
+  -webkit-mask-image:var(--arch);mask-image:var(--arch);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.frame.lancet .ph{aspect-ratio:100/150}
+.frame.tudor .ph{aspect-ratio:160/100}
+.frame.tudor img{-webkit-mask-image:var(--tudor);mask-image:var(--tudor)}
+.frame .mould{position:absolute;inset:-9px;width:calc(100% + 18px);height:calc(100% + 9px);pointer-events:none}
+.frame .mould path{fill:none;stroke:var(--line);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.frame figcaption{font-family:var(--sans);font-size:14.5px;color:var(--ink-2);margin-top:10px;line-height:1.35}
+
+/* ---------------- watchword ---------------- */
+.watchword{padding:clamp(96px,11vw,170px) 0 clamp(72px,8vw,120px)}
+.ww-grid{display:grid;grid-template-columns:minmax(0,4.4fr) minmax(0,7.6fr);gap:clamp(32px,5vw,88px);align-items:start}
+.ww-text{max-width:31em;padding-top:10px}
+.ww-text .lead{font-size:1.14em;line-height:1.5}
+.ww-mark{container-type:inline-size}
+.window{position:relative;aspect-ratio:800/640}
+.window svg{position:absolute;inset:0;width:100%;height:100%}
+.light{position:absolute;top:47%;bottom:11%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 3.2cqw}
+.light.l{left:10%;width:37.5%}
+.light.r{left:52.5%;width:37.5%}
+.light .word{font-family:var(--display);font-size:5.5cqw;line-height:1;letter-spacing:.01em;color:var(--ink);margin-bottom:.55em}
+.light.r .word{color:var(--ink)}
+.light .def{font-size:max(2.15cqw,13px);line-height:1.45;margin:0;color:var(--ink)}
+.light .def em{font-style:italic;color:var(--glass)}
+.light.r .def em{color:var(--ruby)}
+.amp{position:absolute;left:50%;top:21.6%;transform:translate(-50%,-50%);font-family:var(--serif);font-style:italic;font-size:7.4cqw;line-height:1;color:var(--ruby)}
+.defs-narrow{display:none}
+@container (max-width:560px){
+  .light .def{display:none}
+  .light{top:62%}
+  .light .word{font-size:5.6cqw}
+  .defs-narrow{display:grid;gap:18px;margin-top:22px}
+}
+.defs-narrow p{margin:0}
+.defs-narrow b{font-family:var(--display);font-weight:400;letter-spacing:.02em;margin-right:.35em}
+.inscription{text-align:center;margin:26px auto 0;max-width:34em}
+.inscription p{font-style:italic;font-size:clamp(19px,1rem + .6vw,24px);line-height:1.45;margin:0 0 .5em}
+@media (max-width:620px){.inscription br{display:none}.inscription p{font-size:19px}}
+.inscription cite{font-style:normal;font-family:var(--display);font-size:15px;letter-spacing:.14em;color:var(--ink-2)}
+
+/* ---------------- goals ---------------- */
+.goals{padding:clamp(72px,8vw,120px) 0;background:var(--stone-deep)}
+.goals-intro{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(32px,5vw,88px);margin-bottom:clamp(40px,5vw,72px)}
+.goals-intro p{max-width:34em;font-size:1.08em;margin:0;padding-top:8px}
+.goal{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,4.6fr) minmax(0,4.8fr);gap:clamp(24px,3.4vw,56px);align-items:start;padding:clamp(40px,4.5vw,64px) 0}
+.goal+.goal{border-top:0}
+.goal-name .glyph{width:64px;height:85px;display:block;margin-bottom:14px}
+.goal-name .glyph path,.goal-name .glyph circle,.goal-name .glyph line{vector-effect:non-scaling-stroke}
+.goal-name h3{font-family:var(--display);font-weight:400;font-size:clamp(34px,1.8rem + 1.4vw,56px);line-height:1;margin:0 0 .3em}
+.goal-name h3 .w{color:var(--ruby)}
+.goal-name .also{font-family:var(--sans);font-size:15.5px;font-weight:600;color:var(--ink-2);margin:0 0 .9em}
+.goal-name .title{font-style:italic;font-size:1.12em;line-height:1.35;margin:0;max-width:14em}
+.goal-body .lead{font-size:1.1em;line-height:1.5;margin-bottom:1.15em}
+.goal-body dl{margin:0;display:grid;gap:1em}
+.goal-body dt{font-family:var(--sans);font-weight:650;font-size:16.5px;letter-spacing:.005em;margin-bottom:.15em}
+.goal-body dd{margin:0;color:var(--ink);font-size:.97em;line-height:1.55}
+.goal .frame{margin-top:10px}
+
+/* ---------------- pledge ---------------- */
+.pledge{padding:clamp(84px,9vw,140px) 0}
+.pledge-grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(32px,5vw,88px);align-items:stretch}
+.pledge-side{display:flex;flex-direction:column;height:100%}
+.pledge-side .frame{margin-top:auto;padding-top:48px}
+.pledge-side .intro{font-size:1.14em;line-height:1.5;margin:0;max-width:20em}
+.reading{margin:0;padding:0}
+.rubric{font-style:italic;color:var(--ruby);margin:0 0 1.4em;font-size:1em}
+.rubric::before{content:"";display:inline-block;width:.62em;height:.62em;margin-right:.5em;background:var(--ruby);
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-20 -20 40 40'%3E%3Cpath d='M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-20 -20 40 40'%3E%3Cpath d='M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z'/%3E%3C/svg%3E")}
+.verse{display:grid;grid-template-columns:3.4em minmax(0,1fr) 9.5em;column-gap:22px;align-items:baseline;margin:0 0 .75em}
+.verse .who{font-family:var(--sans);font-size:14.5px;font-weight:600;color:var(--ink-2)}
+.verse .says{font-size:clamp(20px,1.05rem + .7vw,27px);line-height:1.34}
+.verse .says .turn{display:block;padding-left:1.4em}
+.verse.all .says{font-weight:400}
+.verse.all .says strong{font-weight:400;color:var(--ink)}
+.verse .ref{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--ink-2);line-height:1.3}
+.verse.open .says{font-style:italic;color:var(--ink)}
+.after{margin-top:clamp(40px,4vw,64px);padding-top:clamp(28px,3vw,40px);position:relative}
+.after .sep{display:block;width:100%;max-width:520px;height:22px;margin:0 0 28px 5.4em}
+.prose-verse{display:grid;grid-template-columns:3.4em minmax(0,1fr) 9.5em;column-gap:22px;align-items:baseline}
+.prose-verse p{grid-column:2;max-width:33em;margin:0 0 1em}
+.prose-verse .ref{grid-column:3;font-style:italic;font-size:15.5px;color:var(--ink-2)}
+
+/* ---------------- letter ---------------- */
+.letter{background:var(--paper);padding:clamp(84px,9vw,140px) 0}
+.letter-grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(32px,5vw,88px);align-items:start}
+.letter-side{}
+.letter-side h2{margin-bottom:.9em}
+.letter-body{max-width:35em;font-size:clamp(18px,1.05rem + .3vw,21px);line-height:1.66}
+.letter-body .salute{font-family:var(--display);font-size:.86em;letter-spacing:.06em;margin-bottom:1.5em;color:var(--ink-2)}
+.letter-body>p:first-of-type::first-letter{font-family:var(--display);float:left;font-size:3.6em;line-height:.82;padding:.06em .1em 0 0;color:var(--ruby)}
+.letter-body blockquote{margin:0;font-style:italic}
+.sign{margin-top:2em}
+.sign .names{font-style:italic;font-size:2.1em;line-height:1.1;margin:0}
+.sign .role{font-family:var(--sans);font-size:15.5px;color:var(--ink-2);margin:.4em 0 0}
+
+/* ---------------- where next ---------------- */
+.next{padding:clamp(84px,9vw,140px) 0 clamp(96px,10vw,150px)}
+.doors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(18px,2.4vw,36px);margin-top:clamp(28px,3vw,44px);list-style:none;padding:0}
+.door{position:relative;aspect-ratio:100/150;display:flex;flex-direction:column;justify-content:flex-end;padding:0 11% 12%;text-decoration:none}
+.door svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.door svg .o{fill:rgba(248,245,239,.55);stroke:var(--line);stroke-width:1.2;vector-effect:non-scaling-stroke;transition:fill .25s}
+.door svg .i{fill:none;stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke;opacity:.55}
+.door svg .q{fill:none;stroke:var(--ruby);stroke-width:1.3;vector-effect:non-scaling-stroke}
+.door:hover svg .o,.door:focus-visible svg .o{fill:var(--paper)}
+.door>*{position:relative}
+.door svg.dq{position:absolute;inset:auto;left:50%;top:21%;width:38px;height:38px;transform:translateX(-50%)}
+.door h3{font-family:var(--display);font-weight:400;font-size:clamp(22px,1.1rem + .7vw,29px);line-height:1.08;margin:0 0 .5em}
+.door p{font-size:.95em;line-height:1.45;margin:0 0 1.1em;color:var(--ink)}
+.door .go{font-family:var(--sans);font-weight:650;font-size:16px;color:var(--ruby);display:inline-flex;align-items:center;gap:8px}
+.door .go svg{position:static;width:18px;height:10px}
+.door:hover .go{text-decoration:underline;text-underline-offset:4px}
+@media (max-width:1100px){.doors{grid-template-columns:repeat(2,minmax(0,1fr))} .door{aspect-ratio:100/118}}
+@media (max-width:560px){.doors{grid-template-columns:1fr;gap:22px}.door{aspect-ratio:auto;min-height:0;padding:110px 9% 30px}}
+
+/* ---------------- footer ---------------- */
+.foot{background:var(--night);color:#ece6dc;padding:64px 0 40px;font-family:var(--sans)}
+.foot-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,3fr) minmax(0,3fr);gap:40px}
+.foot .mark{font-family:var(--display);font-size:clamp(30px,3.4vw,46px);line-height:1;color:#f6f1e8;margin:0 0 12px}
+.foot .mark i{font-family:var(--serif);color:#e0b55a;font-size:1.05em}
+.foot .ref{font-family:var(--serif);font-style:italic;color:#cfc6b8;font-size:17px;margin:0}
+.foot h4{font-family:var(--sans);font-weight:600;font-size:15px;color:#cfc6b8;margin:0 0 10px}
+.foot p,.foot li{font-size:17px;line-height:1.5}
+.foot ul{list-style:none;padding:0;margin:0;display:grid;gap:4px}
+.foot a{text-decoration:none;border-bottom:1px solid rgba(236,230,220,.35)}
+.foot a:hover{border-color:#ece6dc}
+.foot small{display:block;margin-top:48px;color:#b9b0a2;font-size:14.5px}
+
+/* ---------------- narrow layouts ---------------- */
+@media (max-width:900px){
+  .ww-grid,.goals-intro,.pledge-grid,.letter-grid{grid-template-columns:1fr}
+  .goal{grid-template-columns:1fr}
+  .goal .frame{order:-1;margin:0 0 6px;max-width:560px}
+  .pledge-side,.letter-side{position:static}
+  .pledge-side .frame{max-width:520px}
+  .letter-side .frame{max-width:250px}
+  .foot-grid{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .verse,.prose-verse{grid-template-columns:minmax(0,1fr);row-gap:2px}
+  .verse .who{display:none}
+  .verse .ref,.prose-verse .ref{grid-column:1;grid-row:auto;order:2;margin-bottom:.2em}
+  .prose-verse .ref{margin:-.4em 0 1.6em}
+  .prose-verse p{grid-column:1}
+  .after .sep{margin-left:0}
+  .verse .says .turn{padding-left:1em}
+}
+@media (min-width:621px) and (max-width:900px){
+  .letter-side{display:grid;grid-template-columns:200px 1fr;gap:32px;align-items:end;margin-bottom:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- one drawn line family: tracery quatrefoil and arches, reused everywhere -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="qf" d="M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z"/>
+    <pattern id="quarry" width="22" height="34" patternUnits="userSpaceOnUse">
+      <path d="M0 0L22 34M22 0L0 34" stroke="#26437f" stroke-opacity=".16" stroke-width="1" fill="none"/>
+    </pattern>
+    <pattern id="quarry-r" width="22" height="34" patternUnits="userSpaceOnUse">
+      <path d="M0 0L22 34M22 0L0 34" stroke="#8d2a21" stroke-opacity=".14" stroke-width="1" fill="none"/>
+    </pattern>
+  </defs>
+</svg>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="logo" href="#">
+      <svg class="line" viewBox="0 0 26 38" aria-hidden="true"><path d="M2 37V15A13 13 0 0 1 13 1A13 13 0 0 1 24 15V37"/><path d="M7 37V20A7 7 0 0 1 13 12A7 7 0 0 1 19 20V37"/><path d="M1 37H25"/></svg>
+      <span>First Baptist<small>MUNCIE</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#">Visit</a>
+      <a href="#" aria-current="page">Who We Are</a>
+      <a href="#">Beliefs</a>
+      <a href="#">Ministries</a>
+      <a href="#">Staff</a>
+      <a href="#">History</a>
+      <a href="#">Journal</a>
+      <a href="#">Give</a>
+    </nav>
+    <a class="visit-btn" href="#">Plan a visit</a>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav aria-label="Main">
+        <a href="#">Visit</a><a href="#" aria-current="page">Who We Are</a><a href="#">Beliefs</a><a href="#">Ministries</a><a href="#">Staff</a><a href="#">History</a><a href="#">Journal</a><a href="#">Give</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ OPENER: the page title written into the sky of Hannaford's 1927 drawing ============ -->
+<section class="opener" aria-labelledby="h1">
+  <div class="wrap opener-grid">
+    <figure class="drawing">
+      <div class="drawing-title">
+        <h1 id="h1">Who We Are</h1>
+        <p class="statement">We&rsquo;re a Spirit-led people gathered to join Christ&rsquo;s presence in our community.</p>
+      </div>
+      <img src="../../../../../fbcm-archive/images/08181c_9a2e10a5752e4aea861c7b31482850a2_tilde_mv2.jpg" width="1000" height="605"
+           alt="Pencil rendering of First Baptist Church Muncie from 1927: the square Gothic tower, the great traceried window and the long limestone parish wing, with people walking along the street.">
+      <figcaption><b>Samuel Hannaford and Sons, rendering, 1927.</b> Completed in Indiana limestone in 1929; on the National Register of Historic Places since 1988.</figcaption>
+    </figure>
+    <figure class="frame lancet inset">
+      <div class="ph">
+        <img src="../../../../../fbcm-archive/images/08181c_ca2a2650d5b54e349593ab188f4b6057_tilde_mv2.jpg" alt="Children carrying tall palm branches down a church hallway beneath Gothic windows." style="object-position:50% 78%">
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ OUR WATCHWORD: a two-light window made of the two words ============ -->
+<section class="watchword" aria-labelledby="ww">
+  <div class="wrap ww-grid">
+    <div class="ww-text">
+      <h2 id="ww">Our Watchword</h2>
+      <p class="lead">This statement is our congregational &ldquo;watchword.&rdquo; A watchword is a short reminder and a promise from scripture about who God is and who he has called his people to be.</p>
+      <p>When the people of God were in exile, the Prophet Isaiah spoke. He delivered a message from God about what it would be like &ldquo;In that day&rdquo; when they returned. The people would return, praising and proclaiming the name of the Lord, and making him known to all nations.</p>
+      <p>At First Baptist Church Muncie, we believe the day of the Lord&rsquo;s favor has come in Jesus. The short of it is: that Jesus really does change everything.</p>
+      <p>And our goal for this season is to praise and proclaim his name. This watchword, &ldquo;Praise &amp; Proclaim,&rdquo; reminds us of the importance of each.</p>
+    </div>
+
+    <div class="ww-mark">
+      <div class="window" role="img" aria-label="Praise and Proclaim, drawn as a two-light Gothic window">
+        <svg viewBox="0 0 800 640" aria-hidden="true">
+          <!-- lights with quarry glazing -->
+          <path d="M80 600V360A220 220 0 0 1 230 151.4A220 220 0 0 1 380 360V600Z" fill="#e3e7ee"/>
+          <path d="M80 600V360A220 220 0 0 1 230 151.4A220 220 0 0 1 380 360V600Z" fill="url(#quarry)"/>
+          <path d="M420 600V360A220 220 0 0 1 570 151.4A220 220 0 0 1 720 360V600Z" fill="#efe3de"/>
+          <path d="M420 600V360A220 220 0 0 1 570 151.4A220 220 0 0 1 720 360V600Z" fill="url(#quarry-r)"/>
+          <g fill="none" stroke="#3a342d" stroke-linecap="round" stroke-linejoin="round">
+            <!-- four-centred head, like the great window in the drawing -->
+            <path stroke-width="1.6" d="M36 620V252C36 138 246 78 400 34C554 78 764 138 764 252V620"/>
+            <path stroke-width="1" d="M54 620V256C54 152 258 96 400 54C542 96 746 152 746 256V620"/>
+            <path stroke-width="1.5" d="M80 600V360A220 220 0 0 1 230 151.4A220 220 0 0 1 380 360V600Z"/>
+            <path stroke-width="1.5" d="M420 600V360A220 220 0 0 1 570 151.4A220 220 0 0 1 720 360V600Z"/>
+            <!-- inner cusping of each light -->
+            <path stroke-width="1" d="M100 330A200 200 0 0 1 230 176A200 200 0 0 1 360 330" opacity=".6"/>
+            <path stroke-width="1" d="M440 330A200 200 0 0 1 570 176A200 200 0 0 1 700 330" opacity=".6"/>
+            <!-- mullion and sill -->
+            <path stroke-width="1.5" d="M400 208V600"/>
+            <path stroke-width="1.6" d="M20 620H780M28 632H772"/>
+            <!-- quatrefoil in the spandrel -->
+            <circle cx="400" cy="140" r="68" stroke-width="1.2" fill="#f5efe6"/>
+            <circle cx="400" cy="140" r="61" stroke-width=".8" opacity=".5"/>
+            <use href="#qf" transform="translate(400 140) scale(2.95)" stroke-width=".5" fill="#f1e5c8"/>
+          </g>
+                  </svg>
+        <span class="amp" aria-hidden="true">&amp;</span>
+        <div class="light l">
+          <span class="word">Praise</span>
+          <p class="def">That our <em>Purpose</em> is worship, lifting up the name of God: Father, Son, &amp; Holy Spirit.</p>
+        </div>
+        <div class="light r">
+          <span class="word">Proclaim</span>
+          <p class="def">That our <em>Joy</em> is to share the Good News of Jesus, with our neighbors &amp; the world.</p>
+        </div>
+      </div>
+      <div class="defs-narrow">
+        <p><b>Praise</b> That our Purpose is worship, lifting up the name of God: Father, Son, &amp; Holy Spirit.</p>
+        <p><b>Proclaim</b> That our Joy is to share the Good News of Jesus, with our neighbors &amp; the world.</p>
+      </div>
+      <blockquote class="inscription">
+        <p>&ldquo;Give praise to the Lord, proclaim his name;<br> make known among the nations what he has done,<br> and proclaim that his name is exalted.&rdquo;</p>
+        <cite>ISAIAH 12:4</cite>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUR GOALS: the four W's, each with a glyph from the building ============ -->
+<section class="goals" aria-labelledby="goals">
+  <div class="wrap">
+    <div class="goals-intro">
+      <h2 id="goals">Our Goals</h2>
+      <p>Our Church Coordination Team (CCT) has set certain goals for our church this season, in pursuit of following the calling God has given us as a congregation in different areas of our life together.</p>
+    </div>
+
+    <article class="goal" aria-labelledby="g1">
+      <div class="goal-name">
+        <!-- the two-light window -->
+        <svg class="glyph line" viewBox="0 0 48 64" aria-hidden="true">
+          <path d="M5 62V30C5 16 14 7 24 3C34 7 43 16 43 30V62"/>
+          <path d="M10 62V36A12 12 0 0 1 16 25A12 12 0 0 1 22 36V62"/>
+          <path d="M26 62V36A12 12 0 0 1 32 25A12 12 0 0 1 38 36V62"/>
+          <use href="#qf" transform="translate(24 16) scale(.36)" style="stroke-width:3.8"/>
+          <path d="M2 62H46"/>
+        </svg>
+        <h3 id="g1"><span class="w">W</span>orship</h3>
+        <p class="title">Worshiping as the Body of Christ</p>
+      </div>
+      <div class="goal-body">
+        <p class="lead">FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.</p>
+        <dl>
+          <div><dt>Following God&rsquo;s Word</dt><dd>Our times of worship are rooted in scripture and prayer-filled so that our body can collectively hear from God, discern the next right step, and follow the Holy Spirit.</dd></div>
+          <div><dt>Enjoying Fellowship</dt><dd>We set aside time to personally greet and encourage one another. Passing of the peace, sharing the good news through personal testimonies, and prayer are ways we participate in the shared life God has given us.</dd></div>
+          <div><dt>Participating in Practices Christ Gave Us</dt><dd>FBCM prepares new believers for baptism, the time when they publicly proclaim God has become their salvation and join the body of Christ. FBCM celebrates the Lord&rsquo;s Supper monthly during intergenerational worship so that all may take part.</dd></div>
+        </dl>
+      </div>
+      <figure class="frame tudor">
+        <div class="ph">
+          <img src="../../../../../fbcm-archive/images/08181c_360b7e1579244dbc95697ca78172c167_tilde_mv2.jpg" alt="The worship team leading a song: a young man on guitar, a woman singing into a microphone, and a man on a second guitar." style="object-position:60% 40%">
+          <svg class="mould" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100V30C0 14 40 8 80 0C120 8 160 14 160 30V100"/></svg>
+        </div>
+        <figcaption>The worship team on a Sunday morning.</figcaption>
+      </figure>
+    </article>
+
+    <article class="goal" aria-labelledby="g2">
+      <div class="goal-name">
+        <!-- the Tudor door: come and see -->
+        <svg class="glyph line" viewBox="0 0 48 64" aria-hidden="true">
+          <path d="M7 58V28C7 18 16 13 24 9C32 13 41 18 41 28V58"/>
+          <path d="M12 58V30C12 23 18 19 24 16C30 19 36 23 36 30V58"/>
+          <path d="M24 16V58"/>
+          <circle cx="20.5" cy="40" r="1"/><circle cx="27.5" cy="40" r="1"/>
+          <path d="M3 58H45M1 62H47"/>
+        </svg>
+        <h3 id="g2">The <span class="w">W</span>ay</h3>
+        <p class="also">Discipleship</p>
+        <p class="title">Seeking Understanding</p>
+      </div>
+      <div class="goal-body">
+        <p class="lead">FBCM proclaims God&rsquo;s faithfulness with people who are curious about faith, as well as new believers. We offer a growth track to help us all &ldquo;come and see&rdquo; who Jesus is and grow spiritually (John 1:39&ndash;41).</p>
+        <dl>
+          <div><dt>Welcoming Worship</dt><dd>FBCM invites everyone to join our worship services, no matter their background or beliefs. We show the hospitality Christ has first shown us.</dd></div>
+          <div><dt>Caring Mentorship</dt><dd>Each regular attendee is connected with a deacon who offers prayer and support.</dd></div>
+          <div><dt>Spiritual Friendship</dt><dd>We provide small group meetings where we can learn together about the Bible, theology, and living in Christian community.</dd></div>
+        </dl>
+      </div>
+      <figure class="frame tudor">
+        <div class="ph">
+          <img src="../../../../../fbcm-archive/images/b98776_bb65481087f84990a296a4889c810921_tilde_mv2.jpg" alt="Three girls sitting together on a sofa with open Bibles on their laps." style="object-position:50% 45%">
+          <svg class="mould" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100V30C0 14 40 8 80 0C120 8 160 14 160 30V100"/></svg>
+        </div>
+        <figcaption>Bibles open in the youth room.</figcaption>
+      </figure>
+    </article>
+
+    <article class="goal" aria-labelledby="g3">
+      <div class="goal-name">
+        <!-- the rose: a quatrefoil in a circle, light going out -->
+        <svg class="glyph line" viewBox="0 0 48 64" aria-hidden="true">
+          <circle cx="24" cy="34" r="15"/>
+          <use href="#qf" transform="translate(24 34) scale(.9)" style="stroke-width:1.5"/>
+          <path d="M24 13V9M24 55V59M3 34H7M41 34H45M9.2 19.2L12 22M38.8 19.2L36 22M9.2 48.8L12 46M38.8 48.8L36 46"/>
+        </svg>
+        <h3 id="g3"><span class="w">W</span>itness</h3>
+        <p class="also">Evangelism</p>
+        <p class="title">Inviting to Church &amp; To Know Christ</p>
+      </div>
+      <div class="goal-body">
+        <p class="lead">To make known what God has done, FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.</p>
+        <dl>
+          <div><dt>Engaged Membership</dt><dd>Church members actively talk about their faith and aim to live in a way that reflects Jesus.</dd></div>
+          <div><dt>Local Partnership</dt><dd>We believe God has placed us in downtown Muncie for a reason. We work with local groups to bring light and hope to our community.</dd></div>
+          <div><dt>Kingdom Citizenship</dt><dd>Jesus told us to share the good news everywhere. We support Global Servants (missionaries) and pray for people from all over the world to follow Jesus. We also celebrate the wonderful diversity of God&rsquo;s Kingdom, the Global Church.</dd></div>
+        </dl>
+      </div>
+      <figure class="frame tudor">
+        <div class="ph">
+          <img src="../../../../../fbcm-archive/images/08181c_b178e014f570469ba249e1dd6f8c4122_tilde_mv2.jpg" alt="Four young children holding hands on the sidewalk outside the church's limestone entrance on Adams Street." style="object-position:50% 55%">
+          <svg class="mould" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100V30C0 14 40 8 80 0C120 8 160 14 160 30V100"/></svg>
+        </div>
+        <figcaption>Outside the Adams Street entrance.</figcaption>
+      </figure>
+    </article>
+
+    <article class="goal" aria-labelledby="g4">
+      <div class="goal-name">
+        <!-- the piscina: the basin niche where the vessels are washed -->
+        <svg class="glyph line" viewBox="0 0 48 64" aria-hidden="true">
+          <path d="M9 60V28A15 15 0 0 1 24 12A15 15 0 0 1 39 28V60"/>
+          <path d="M16 26A5 5 0 0 1 24 20A5 5 0 0 1 32 26"/>
+          <path d="M6 42H42"/>
+          <path d="M12 42C14 51 34 51 36 42"/>
+          <path d="M24 49V56"/>
+          <path d="M4 60H44"/>
+        </svg>
+        <h3 id="g4"><span class="w">W</span>ork</h3>
+        <p class="also">Acts of Mercy</p>
+        <p class="title">Gifts For Service</p>
+      </div>
+      <div class="goal-body">
+        <p class="lead">FBCM exalts God by following Jesus&rsquo; example of serving others, rather than seeking to be served ourselves (Mark 10:45).</p>
+        <dl>
+          <div><dt>Serve</dt><dd>We actively and practically help and work alongside our neighbors.</dd></div>
+          <div><dt>Support</dt><dd>We give sacrificially to help those in need through regular offerings and donations.</dd></div>
+          <div><dt>Share</dt><dd>We care for church members who are sick, home bound, or struggling, making sure they remain part of our life together.</dd></div>
+        </dl>
+      </div>
+      <figure class="frame tudor">
+        <div class="ph">
+          <img src="../../../../../fbcm-archive/images/81f7ac_4dfaba15047d43a696c7e8f53df065b8_tilde_mv2.jpg" alt="The mission team gathered for a group photo, children in front, one man holding up a Serve the City shirt." style="object-position:50% 55%">
+          <svg class="mould" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100V30C0 14 40 8 80 0C120 8 160 14 160 30V100"/></svg>
+        </div>
+        <figcaption>The mission team, ready to serve the city.</figcaption>
+      </figure>
+    </article>
+  </div>
+</section>
+
+<!-- ============ OUR PLEDGE: a responsive reading, references in the margin ============ -->
+<section class="pledge" aria-labelledby="pledge">
+  <div class="wrap pledge-grid">
+    <div class="pledge-side">
+      <h2 id="pledge">Our Pledge</h2>
+      <p class="intro">Our commitment to one another is drawn from scripture. And it&rsquo;s this:</p>
+      <figure class="frame tudor">
+        <div class="ph">
+          <img src="../../../../../fbcm-archive/images/b98776_be609b7a431f4ad9a4f82e225deeb234_tilde_mv2.jpg" alt="Five deacons standing behind the communion table, set with the cup, the plates and a wooden Celtic cross." style="object-position:50% 40%">
+          <svg class="mould" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100V30C0 14 40 8 80 0C120 8 160 14 160 30V100"/></svg>
+        </div>
+        <figcaption>Deacons at the Lord&rsquo;s table.</figcaption>
+      </figure>
+    </div>
+
+    <div>
+      <div class="reading">
+        <p class="rubric">When a member joins, we say this pledge together as a church.</p>
+
+        <div class="verse open">
+          <span class="who" aria-hidden="true"></span>
+          <p class="says">We pledge ourselves to be the family of God for you in this place:</p>
+          <span class="ref"></span>
+        </div>
+        <div class="verse all">
+          <span class="who">All</span>
+          <p class="says"><strong>Bearing your burdens,</strong><span class="turn">as you bear ours.</span></p>
+          <span class="ref">Galatians 6:2</span>
+        </div>
+        <div class="verse all">
+          <span class="who">All</span>
+          <p class="says"><strong>Encouraging you in the faith,</strong><span class="turn">as we are encouraged by you.</span></p>
+          <span class="ref">1 Thessalonians 5:11</span>
+        </div>
+        <div class="verse all">
+          <span class="who">All</span>
+          <p class="says"><strong>Delighting in the Lord&rsquo;s ways,</strong></p>
+          <span class="ref">Psalm 86:11&ndash;13<br>Psalm 37:3&ndash;6</span>
+        </div>
+        <div class="verse all">
+          <span class="who">All</span>
+          <p class="says"><strong>Offering our lives as a living sacrifice:</strong><span class="turn">Holy &amp; Pleasing to God.</span></p>
+          <span class="ref">Romans 12:1</span>
+        </div>
+      </div>
+
+      <div class="after">
+        <svg class="sep line" viewBox="0 0 520 22" preserveAspectRatio="xMinYMid meet" aria-hidden="true">
+          <path d="M0 11H214" opacity=".5"/>
+          <path d="M226 20V12A8 8 0 0 1 232 3A8 8 0 0 1 238 12V20" />
+          <use href="#qf" transform="translate(260 11) scale(.5)" style="stroke:#8d2a21;stroke-width:1.4"/>
+          <path d="M282 20V12A8 8 0 0 1 288 3A8 8 0 0 1 294 12V20"/>
+          <path d="M306 11H520" opacity=".5"/>
+        </svg>
+        <div class="prose-verse">
+          <p>The life of faith isn&rsquo;t meant to be lived alone. Before he was crucified, Christ&rsquo;s prayer to the Father was that his disciples, and all believers after them, would be one, as he and the Father are one.</p>
+          <span class="ref">John 17:20&ndash;22</span>
+        </div>
+        <div class="prose-verse">
+          <p>At the same time, that unity comes with wonderful God-given differences. We&rsquo;re not clones who all think, look, or act exactly alike! That is what the Apostle Paul means when he talks about the church as the body of Christ, with many different parts and many different gifts.</p>
+          <span class="ref">1 Corinthians 12:12&ndash;30</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A NOTE FROM OUR PASTORS: a letter, one column, signed ============ -->
+<section class="letter" aria-labelledby="note">
+  <div class="wrap letter-grid">
+    <div class="letter-side">
+      <h2 id="note">A Note From Our Pastors</h2>
+      <figure class="frame lancet" style="max-width:320px">
+        <div class="ph">
+          <img src="../../../../../fbcm-archive/images/08181c_ff83101f12a94fe48c8618e84825faaa_tilde_mv2.jpg" alt="Pastors Kendall and Jonathan standing together in the sanctuary balcony, smiling, with the pews and lanterns behind them." style="object-position:71% 50%">
+          <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+        </div>
+        <figcaption>Pastors Kendall &amp; Jonathan, in the sanctuary balcony.</figcaption>
+      </figure>
+    </div>
+
+    <div class="letter-body">
+      <p>If you&rsquo;re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you&rsquo;re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we&rsquo;d love for you to join us for worship too!</p>
+      <p>After all, Jesus did not say to his first followers: &ldquo;Figure it all out, and then get back to me.&rdquo; He said to them, &ldquo;Come and see&rdquo; (John 1:39).</p>
+      <p>Even so, we know people curious about a church wonder what a particular church, including its pastors, &ldquo;are all about.&rdquo;</p>
+      <p>We love the Good News, the Gospel, that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He ascended to heaven, and he will come again in glory to make all that is wrong right. That&rsquo;s life-changing, and truly good, news. It&rsquo;s news good enough to set all of us free.</p>
+      <p>We&rsquo;re all about the church. This church is made up of people who are all imperfect, all of us with our own struggles, all of us failing, falling into our old selfish ways, and getting up again only by God&rsquo;s grace. And those same people are also filled by God&rsquo;s own Spirit, have a sincere desire to be &ldquo;good news&rdquo; people, and to serve one another as we grow in our love of Christ together.</p>
+      <p>We&rsquo;re honored to serve as Co-Pastors here. And it&rsquo;s not only because First Baptist decided to do something a little unusual in calling a married couple to be Co-Pastors: both of us preaching the word and shepherding God&rsquo;s people in this community.</p>
+      <p>We love to serve here because we love being part of this Spirit-led people gathered to join Christ&rsquo;s presence in our community.</p>
+      <p>Finally, we would love for you to join us this Sunday, or anytime we&rsquo;re gathered to encounter the same Christ who was, and is, and will come again, as we meet him in worship, the word, and the Lord&rsquo;s table. &ldquo;Come and see!&rdquo;</p>
+      <div class="sign">
+        <p class="names">Kendall &amp; Jonathan</p>
+        <p class="role">Co-Pastors, First Baptist Church Muncie</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHERE TO GO NEXT: four doors ============ -->
+<section class="next" aria-labelledby="next">
+  <div class="wrap">
+    <h2 id="next">Where To Go Next</h2>
+    <ul class="doors">
+      <li>
+        <a class="door" href="#">
+          <svg viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true">
+            <path class="o" d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z"/>
+            <path class="i" d="M6 150V69A64 64 0 0 1 50 7.5A64 64 0 0 1 94 69V150"/>
+          </svg>
+          <svg class="dq" viewBox="-21 -21 42 42" aria-hidden="true"><use href="#qf" style="fill:none;stroke:#8d2a21;stroke-width:1.3"/><circle r="20" style="fill:none;stroke:#3a342d;stroke-width:.9;opacity:.6"/></svg>
+          <h3>Sunday Worship</h3>
+          <p>Find out what you can expect this Sunday.</p>
+          <span class="go">Read more <svg viewBox="0 0 18 10" class="line" style="stroke:currentColor" aria-hidden="true"><path d="M0 5H16M12 1L16 5L12 9"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="door" href="#">
+          <svg viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true">
+            <path class="o" d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z"/>
+            <path class="i" d="M6 150V69A64 64 0 0 1 50 7.5A64 64 0 0 1 94 69V150"/>
+          </svg>
+          <svg class="dq" viewBox="-21 -21 42 42" aria-hidden="true"><use href="#qf" style="fill:none;stroke:#8d2a21;stroke-width:1.3"/><circle r="20" style="fill:none;stroke:#3a342d;stroke-width:.9;opacity:.6"/></svg>
+          <h3>Contact Us</h3>
+          <p>Get in touch with us with our virtual contact card.</p>
+          <span class="go">Contact <svg viewBox="0 0 18 10" class="line" style="stroke:currentColor" aria-hidden="true"><path d="M0 5H16M12 1L16 5L12 9"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="door" href="#">
+          <svg viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true">
+            <path class="o" d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z"/>
+            <path class="i" d="M6 150V69A64 64 0 0 1 50 7.5A64 64 0 0 1 94 69V150"/>
+          </svg>
+          <svg class="dq" viewBox="-21 -21 42 42" aria-hidden="true"><use href="#qf" style="fill:none;stroke:#8d2a21;stroke-width:1.3"/><circle r="20" style="fill:none;stroke:#3a342d;stroke-width:.9;opacity:.6"/></svg>
+          <h3>Meet Our Staff</h3>
+          <p>Read our staff bios and meet the people of FBCM.</p>
+          <span class="go">Read more <svg viewBox="0 0 18 10" class="line" style="stroke:currentColor" aria-hidden="true"><path d="M0 5H16M12 1L16 5L12 9"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="door" href="#">
+          <svg viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true">
+            <path class="o" d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z"/>
+            <path class="i" d="M6 150V69A64 64 0 0 1 50 7.5A64 64 0 0 1 94 69V150"/>
+          </svg>
+          <svg class="dq" viewBox="-21 -21 42 42" aria-hidden="true"><use href="#qf" style="fill:none;stroke:#8d2a21;stroke-width:1.3"/><circle r="20" style="fill:none;stroke:#3a342d;stroke-width:.9;opacity:.6"/></svg>
+          <h3>Find Out More</h3>
+          <p>Download our Welcome Booklet.</p>
+          <span class="go">Download <svg viewBox="0 0 18 10" class="line" style="stroke:currentColor" aria-hidden="true"><path d="M0 5H16M12 1L16 5L12 9"/></svg></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p class="mark">Praise <i>&amp;</i> Proclaim</p>
+        <p class="ref">Isaiah 12:4</p>
+      </div>
+      <div>
+        <h4>Find us</h4>
+        <p>First Baptist Church Muncie<br>309 East Adams Street<br>Muncie, Indiana 47305</p>
+      </div>
+      <div>
+        <h4>This church</h4>
+        <ul>
+          <li><a href="#">Visit</a></li>
+          <li><a href="#">Who We Are</a></li>
+          <li><a href="#">History</a></li>
+          <li><a href="#">Give</a></li>
+        </ul>
+      </div>
+    </div>
+    <small>Founded 1859. Building by Samuel Hannaford and Sons, 1929.</small>
+  </div>
+</footer>
+
+</body>
+</html>
