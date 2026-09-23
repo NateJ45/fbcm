@@ -2421,57 +2421,6 @@ body::before {
   vector-effect: non-scaling-stroke;
 }
 
-/* The rule button (CtaLink variant="rule"): square, a 3px rule 3px beneath,
-   and three rays at the right edge that spread on hover and focus. */
-.btn-rule {
-  position: relative;
-  min-height: 48px;
-  padding: 0.55em 1.2em 0.45em 1.3em;
-  font-size: 1.0625rem;
-  line-height: 1.1;
-}
-.btn-rule::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 -6px;
-  height: 3px;
-  background: var(--btn-rule, var(--color-gold));
-  pointer-events: none;
-}
-.btn-rule:focus-visible {
-  outline: 2px solid var(--btn-ring, var(--ring));
-  outline-offset: 8px;
-}
-.btn-rule-dark {
-  --btn-rule: var(--color-bg);
-  --btn-ring: #fff;
-}
-.btn-rule svg {
-  flex: none;
-  width: 13px;
-  height: 22px;
-  overflow: visible;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-}
-.btn-rule path {
-  transition: translate 0.3s;
-}
-.btn-rule:is(:hover, :focus-visible) path:first-child,
-.group:is(:hover, :focus-visible) .btn-rule path:first-child {
-  translate: 2px -2px;
-}
-.btn-rule:is(:hover, :focus-visible) path:nth-child(2),
-.group:is(:hover, :focus-visible) .btn-rule path:nth-child(2) {
-  translate: 3px 0;
-}
-.btn-rule:is(:hover, :focus-visible) path:last-child,
-.group:is(:hover, :focus-visible) .btn-rule path:last-child {
-  translate: 2px 2px;
-}
-
 /* The watchword mark's two sizes. --mark-a sets "Praise &", --mark-b sets
    PROCLAIM; the rays and ampersand are em-sized from those. */
 .mark-band {
