@@ -9,7 +9,7 @@
 //   identity" block of globals.css), stretched to the frame, so any aspect
 //   ratio keeps the same arch. The ratio defaults to the prototype's (2:3 for
 //   the lancet, 10:13 for the door); a caller changes it with the
-//   `--arch-ratio` custom property (an arbitrary-property class on the figure).
+//   `--arch-ratio` custom property, set through the `style` prop.
 // - The thin outline is an SVG drawn a few pixels outside the mask, in
 //   `--arch-mould` (brand gold unless a band sets it).
 // - `reveal` puts the figure on the site's [data-reveal] observer with the
@@ -35,6 +35,8 @@ interface Props {
   reveal?: boolean;
   grade?: 'warm' | 'none';
   loading?: 'lazy' | 'eager';
+  /** Inline style on the figure, e.g. `--arch-ratio: 100/190`. */
+  style?: string;
 }
 
 const {
@@ -47,7 +49,11 @@ const {
   reveal = true,
   grade = 'none',
   loading = 'lazy',
+  style,
 } = Astro.props;
+
+// No photograph, no frame: an empty grey arch is not a designed state.
+if (!image?.asset) return null;
 
 const hotspot = image?.hotspot;
 const objectPosition =
@@ -66,6 +72,7 @@ const mould =
   class:list={['relative m-0', extraClass]}
   data-reveal={reveal ? 'arch' : undefined}
   data-arch={shape}
+  style={style}
 >
   <div class:list={['arch', shape === 'lancet' ? 'arch-lancet' : 'arch-door']}>
     <SanityImage

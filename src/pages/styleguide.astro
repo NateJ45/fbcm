@@ -127,6 +127,8 @@ const IDENTITY_TOKENS = [
   '--color-goal-ink-on-gold',
   '--color-mint',
   '--color-gold-light',
+  '--color-season-deep',
+  '--color-gold-hover',
 ];
 
 // One FIXED date per season, so the season line is part of the baseline and
@@ -756,7 +758,7 @@ const LINK_CARDS_FIXTURE = {
           sizes="(min-width: 768px) 25vw, 50vw"
           alt={ARCH_FIXTURES.coneflowers.alt}
           grade="warm"
-          class="[--arch-ratio:100/190]"
+          style="--arch-ratio: 100/190"
         />
         <ArchFrame
           image={ARCH_FIXTURES.bibles}
@@ -773,20 +775,33 @@ const LINK_CARDS_FIXTURE = {
           alt={ARCH_FIXTURES.balcony.alt}
           grade="warm"
           reveal={false}
-          class="[--arch-ratio:100/118]"
+          style="--arch-ratio: 100/118"
         />
       </div>
 
       <h3 class="mt-10 font-display text-h5">Building glyphs</h3>
-      <ul class="mt-5 flex flex-wrap items-end gap-8">
-        <li class="text-season-green dark:text-mint">
+      {
+        /* Each glyph on its own goal band, in that band's accent. Inline styles,
+           not utilities: this is a styleguide-only arrangement and must not add
+           bytes to every page's inlined sheet (CLAUDE.md rule 20). */
+      }
+      <ul class="mt-5 flex flex-wrap items-end gap-6">
+        <li class="p-3" style="background: var(--color-goal-green); color: var(--color-mint)">
           <BuildingGlyph name="window" class="w-12" />
         </li>
-        <li class="text-gold-ink"><BuildingGlyph name="door" class="w-12" /></li>
-        <li class="text-goal-purple dark:text-gold-light">
+        <li
+          class="p-3"
+          style="background: var(--color-goal-gold); color: var(--color-goal-ink-on-gold)"
+        >
+          <BuildingGlyph name="door" class="w-12" />
+        </li>
+        <li
+          class="p-3"
+          style="background: var(--color-goal-purple); color: var(--color-gold-light)"
+        >
           <BuildingGlyph name="rose" class="w-12" />
         </li>
-        <li class="text-goal-brown dark:text-gold-light">
+        <li class="p-3" style="background: var(--color-goal-brown); color: var(--color-gold-light)">
           <BuildingGlyph name="basin" class="w-12" />
         </li>
         <li class="text-foreground"><BuildingGlyph name="window" class="w-16" /></li>
@@ -796,7 +811,7 @@ const LINK_CARDS_FIXTURE = {
       <p class="mt-2 max-w-[60ch] text-sm text-muted-foreground">
         Square, with the gold rule beneath. Hover or focus it: the rays spread.
       </p>
-      <div class="mt-6 flex flex-wrap items-center gap-8">
+      <div class="mt-6 flex flex-wrap items-center gap-6">
         <CtaLink cta={RULE_CTA} variant="rule" />
         <CtaLink cta={SECONDARY_CTA} variant="rule" />
       </div>
@@ -812,7 +827,7 @@ const LINK_CARDS_FIXTURE = {
       <div class="mt-14">
         <WatchwordMark size="hero" />
       </div>
-      <div class="mt-12 flex flex-wrap items-center gap-8">
+      <div class="mt-12 flex flex-wrap items-center gap-6">
         <CtaLink cta={RULE_CTA_DARK} variant="rule" onDark />
         <div class="flex items-end gap-6 text-mint">
           <BuildingGlyph name="window" class="w-10" />

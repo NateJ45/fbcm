@@ -336,6 +336,9 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
   ['color-gold-light', 'color-goal-purple', 'gold-light accent on the Witness band', 'body'],
   ['color-white-pure', 'color-goal-brown', 'white on the Work band', 'body'],
   ['color-gold-light', 'color-goal-brown', 'gold-light accent on the Work band', 'body'],
+  // The rule button's hover fills (CtaLink variant="rule").
+  ['color-white-pure', 'color-season-deep', 'the rule button label, hovered', 'body'],
+  ['color-goal-ink-on-gold', 'color-gold-hover', 'the onDark rule button label, hovered', 'body'],
   // The watchword mark's ampersand and rays: brand gold, only ever 24px+.
   ['color-gold', 'color-season-green', 'the mark ampersand on a green band', 'large'],
 ];
@@ -354,6 +357,8 @@ const IDENTITY_TOKENS = [
   'color-goal-ink-on-gold',
   'color-mint',
   'color-gold-light',
+  'color-season-deep',
+  'color-gold-hover',
 ];
 
 test('every church identity token is declared in @theme AND redeclared in .dark', () => {

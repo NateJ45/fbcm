@@ -49,7 +49,9 @@
 //     head, so the plate stays square (plan spec change 1). Season green
 //     with a white label on paper; under onDark, the goal gold with its dark
 //     ink and a paper rule. Both label pairs are measured in both themes in
-//     theme-tokens.test.ts (IDENTITY_PAIRS).
+//     theme-tokens.test.ts (IDENTITY_PAIRS). Its sizing (`.btn-rule` in
+//     globals.css) is unlayered CSS, so utility classes passed in `class`
+//     cannot override its padding, height or type size.
 //
 // All variants are set in the UI face at the shared label size, and the two
 // button variants share the inset double rule, em-based padding and a 44x44
@@ -129,8 +131,8 @@ const resolved = variant === 'primary' ? 'gold' : variant === 'secondary' ? 'out
 const ruleClasses = [
   'btn-rule inline-flex items-center gap-3 font-ui font-bold no-underline transition-colors',
   onDark
-    ? 'btn-rule-dark bg-goal-gold text-goal-ink-on-gold hover:bg-[#dcae4a]'
-    : 'bg-season-green text-white-pure hover:bg-[#113a26]',
+    ? 'btn-rule-dark bg-goal-gold text-goal-ink-on-gold hover:bg-gold-hover'
+    : 'bg-season-green text-white-pure hover:bg-season-deep',
 ];
 
 // THE PLATE SIGNATURE (2026-09-20, plan 3 task 2). Every button carries an

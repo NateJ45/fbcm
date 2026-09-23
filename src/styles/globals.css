@@ -139,6 +139,8 @@
   --color-goal-ink-on-gold: #2c1a0f; /* ink on the gold and white grounds */
   --color-mint: #a9dcbf; /* accent text on green, never on paper */
   --color-gold-light: #f0c86a; /* accent text on violet, purple, red, brown */
+  --color-season-deep: #113a26; /* the rule button's hover fill, under white */
+  --color-gold-hover: #dcae4a; /* the onDark rule button's hover fill, under ink */
 
   /* Fonts. Three faces, and the family names are exactly what the installed
      @fontsource packages declare. No " Variable" suffix on either Castoro:
@@ -598,6 +600,8 @@
   --color-goal-ink-on-gold: #1f1208;
   --color-mint: #9fd3b5;
   --color-gold-light: #e8c068;
+  --color-season-deep: #0f3522;
+  --color-gold-hover: #c4973a;
 
   /* The alternating "muted" surface's real dark value. Unlike --color-bg-soft
      (which this gate forbids .dark from touching), --surface-soft is a plain
