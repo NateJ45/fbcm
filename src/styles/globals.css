@@ -40,8 +40,9 @@
 
 /* Component-library files that ship with the starter but nothing on this site
    imports (found 2026-09-23, same trim): eleven shadcn / Magic UI primitives,
-   all four Starwind families, and the PrimeReact wrapper. Their class strings
-   were generating about 7 KB of utilities no page renders. IMPORTING ONE OF
+   all four Starwind families, the PrimeReact wrapper, and the orphaned
+   CopyEmailButton. Their class strings were generating about 21 KB of
+   utilities, keyframes and theme variables that no page renders. IMPORTING ONE OF
    THESE FILES MEANS DELETING ITS LINE HERE, or its classes silently never
    generate. src/lib/css-sources.test.ts fails if anything in src/ imports a
    file excluded below, so the trap is loud rather than silent. The three
@@ -59,6 +60,7 @@
 @source not '../components/ui/textarea.tsx';
 @source not '../components/starwind';
 @source not '../components/primereact';
+@source not '../components/CopyEmailButton.tsx';
 
 /* Unit tests never render, but they name classes and tokens in fixtures and
    assertions (theme-tokens.test.ts names every palette token, which kept
@@ -66,7 +68,6 @@
 @source not '../**/*.test.ts';
 
 @import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
 @import '@fontsource/castoro-titling';
 @import '@fontsource/castoro';
 @import '@fontsource/castoro/400-italic.css';
@@ -79,6 +80,76 @@
    it would be silently deleted by the next `npm run apply-brand`. The blank
    line ends the run and keeps this import out of the rewrite. */
 @import '@fontsource-variable/sofia-sans-semi-condensed';
+
+/* shadcn's custom data-state variants, vendored from shadcn/tailwind.css
+   (shadcn 4.19.0, lines 28-87), in place of `@import 'shadcn/tailwind.css'`
+   (2026-09-23, dead-CSS trim). That import also registers @property rules for
+   its scroll-fade and shimmer utilities and a reduced-motion .shimmer rule,
+   which Tailwind emits whether or not anything uses them: 887 bytes in every
+   page's inline stylesheet, and nothing here uses scroll-fade, shimmer,
+   no-scrollbar or the accordion keyframes. The variants below are what
+   src/components/ui/sheet.tsx (the mobile menu) needs. If a shadcn component
+   added later uses any of those utilities, restore the import (and remove this
+   block, or Tailwind will see each variant registered twice). */
+@custom-variant data-open {
+  &:where([data-state='open']),
+  &:where([data-open]:not([data-open='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-closed {
+  &:where([data-state='closed']),
+  &:where([data-closed]:not([data-closed='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-checked {
+  &:where([data-state='checked']),
+  &:where([data-checked]:not([data-checked='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-unchecked {
+  &:where([data-state='unchecked']),
+  &:where([data-unchecked]:not([data-unchecked='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-selected {
+  &:where([data-selected='true']) {
+    @slot;
+  }
+}
+
+@custom-variant data-disabled {
+  &:where([data-disabled='true']),
+  &:where([data-disabled]:not([data-disabled='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-active {
+  &:where([data-state='active']),
+  &:where([data-active]:not([data-active='false'])) {
+    @slot;
+  }
+}
+
+@custom-variant data-horizontal {
+  &:where([data-orientation='horizontal']) {
+    @slot;
+  }
+}
+
+@custom-variant data-vertical {
+  &:where([data-orientation='vertical']) {
+    @slot;
+  }
+}
 
 @custom-variant dark (&:is(.dark *));
 
