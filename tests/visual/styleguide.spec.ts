@@ -42,6 +42,17 @@ const THEME_KEY = site.themeStorageKey;
 async function settle(page: Page) {
   await page.goto('/styleguide/', { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
+  // Every image loads before the shot. The page's images are loading="lazy",
+  // and the hero fixture sits about 3,500px down, so a full-page shot raced
+  // them: on 2026-09-23 the same build failed light and dark on one run and
+  // only dark on the next, with the hero drawn as a bare indigo field instead
+  // of its photograph. Promoting to eager and waiting on decode() makes the
+  // shot deterministic without loosening the assertion.
+  await page.evaluate(async () => {
+    const imgs = Array.from(document.images);
+    for (const img of imgs) img.loading = 'eager';
+    await Promise.all(imgs.map((img) => img.decode().catch(() => undefined)));
+  });
   // Fonts swapping after first paint move every line of type. Waiting on
   // document.fonts.ready covers the load; the pause covers the reflow.
   await page.waitForTimeout(400);
