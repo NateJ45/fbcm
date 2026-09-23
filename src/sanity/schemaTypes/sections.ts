@@ -127,6 +127,7 @@ export const heroSection = defineType({
         list: [
           { title: 'Photo behind the words', value: 'full' },
           { title: 'Words left, photo right', value: 'split' },
+          { title: 'Three arched photos (window)', value: 'window' },
         ],
         layout: 'radio',
       },
@@ -152,7 +153,7 @@ export const heroSection = defineType({
         },
       ],
       description:
-        'One photo, or up to six. With more than one, the home page fades slowly between them; the first loads first, so put the best one first.',
+        'One photo, or up to six. With more than one, the home page fades slowly between them; the first loads first, so put the best one first. Window layout: the first three photos, the middle one largest.',
     }),
     defineField({
       name: 'facts',
@@ -721,6 +722,10 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
         'documentListSection',
         'linkCardsSection',
         'ministrySection',
+        'watchwordSection',
+        'goalsSection',
+        'pledgeSection',
+        'letterSection',
       ],
     },
     // scaffold:end

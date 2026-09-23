@@ -66,9 +66,12 @@ interface Props {
   /**
    * "full" (default when unset) = photo behind the words, full-bleed, as the
    * hero always rendered. "split" = cream two-column band, words left, first
-   * photo right. Only meaningful when an image is present.
+   * photo right. "window" = three arched photos, the middle one largest
+   * (schema option added Task 3, 2026-09-23; this component does not draw it
+   * yet, so it renders as "full" until a later task implements it). Only
+   * "full"/"split" are meaningful when an image is present.
    */
-  layout?: 'full' | 'split';
+  layout?: 'full' | 'split' | 'window';
   /** Up to three short facts (when, where, online) shown under the subhead. */
   facts?: HeroFact[] | null;
   primaryCta?: CtaBlock | null;

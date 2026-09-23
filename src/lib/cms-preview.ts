@@ -151,6 +151,10 @@ const NON_STEGA_FIELDS = new Set([
   // 'coordination' | 'support') that picks which Staff members render, not
   // text an editor types. Same reasoning as every other enum on this list.
   'group',
+  // goalsSection's goal.glyph (Task 3, 2026-09-23) is a radio picking which
+  // building drawing (window/door/rose/basin) a goal renders as: a component
+  // switch, never display text.
+  'glyph',
   // scaffold:end
   // slug.current: an id or a URL segment, never display text. Added 2026-09-19
   // with anchorField(): the section anchor is written straight into `id=` and

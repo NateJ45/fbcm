@@ -194,6 +194,23 @@ export function sectionsProjection(field = 'pageBuilder'): string {
         image${IMAGE_PROJECTION},
         "contacts": contacts[]->{ _id, name, role, email, showOnSite }
       }
+    },
+    // Task 3, 2026-09-23 (Who We Are alive). watchwordSection carries no
+    // image, so the leading spread already covers it and it gets no arm here.
+    _type == "goalsSection" => {
+      ...,
+      goals[]{
+        ...,
+        photos[]${IMAGE_PROJECTION}
+      }
+    },
+    _type == "pledgeSection" => {
+      ...,
+      image${IMAGE_PROJECTION}
+    },
+    _type == "letterSection" => {
+      ...,
+      portrait${IMAGE_PROJECTION}
     }
     // scaffold:end
   }`;

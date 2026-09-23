@@ -563,6 +563,280 @@ export const ministrySection = defineType({
   },
 });
 
+// The Watchword band (Task 3, 2026-09-23, "Who We Are alive"). "Our Watchword",
+// Isaiah 12:4, praise and proclaim, with a short intro and a "Read more" that
+// opens the full explanation. No image: the mark it sits beside is drawn from
+// code (src/components/church/), not a Sanity field.
+export const watchwordSection = defineType({
+  name: 'watchwordSection',
+  title: 'Watchword (Praise and Proclaim)',
+  type: 'object',
+  fields: [
+    heading, // "Our Watchword"
+    defineField({
+      name: 'intro',
+      title: 'Short introduction',
+      type: 'text',
+      rows: 3,
+      description: 'Two or three sentences shown beside the mark.',
+    }),
+    defineField({
+      name: 'more',
+      title: 'Read more',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'The full explanation. Shown when a visitor opens "Read more".',
+    }),
+    defineField({
+      name: 'verse',
+      title: 'Verse',
+      type: 'text',
+      rows: 3,
+      description:
+        'The verse, without quotation marks. The words praise and proclaim are highlighted automatically.',
+    }),
+    defineField({
+      name: 'reference',
+      title: 'Reference',
+      type: 'string',
+      description: 'Like "Isaiah 12:4".',
+    }),
+    defineField({ name: 'praise', title: 'What "Praise" means', type: 'text', rows: 2 }),
+    defineField({ name: 'proclaim', title: 'What "Proclaim" means', type: 'text', rows: 2 }),
+    anchorField(),
+  ],
+  preview: { select: { title: 'heading', subtitle: 'reference' } },
+});
+
+// One of the four goal bands (worship, discipleship, fellowship, service, in
+// whatever order the editor arranges them). `glyph` picks which of the four
+// building drawings the band renders beside its words; it is a component
+// switch, not display text, so it is on NON_STEGA_FIELDS (CLAUDE.md rule 8b).
+//
+// `photos` deliberately carries NO caption field: the site owner ruled out
+// visible photo captions everywhere (2026-09-23). The required `alt` stays,
+// since it serves screen readers and search engines rather than a visible
+// caption.
+const goal = defineArrayMember({
+  type: 'object',
+  name: 'goal',
+  fields: [
+    defineField({
+      name: 'name',
+      title: 'Name',
+      type: 'string',
+      description: 'Like "Worship".',
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'subtitle',
+      title: 'Subtitle',
+      type: 'string',
+      description: 'Like "Worshiping as the Body of Christ".',
+    }),
+    defineField({
+      name: 'aside',
+      title: 'In brackets',
+      type: 'string',
+      description: 'Like "Discipleship". Leave blank for none.',
+    }),
+    defineField({
+      name: 'glyph',
+      title: 'Building drawing',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Window', value: 'window' },
+          { title: 'Door', value: 'door' },
+          { title: 'Rose window', value: 'rose' },
+          { title: 'Basin niche', value: 'basin' },
+        ],
+        layout: 'radio',
+      },
+      validation: (r) => r.required(),
+    }),
+    defineField({ name: 'summary', title: 'Opening sentence', type: 'text', rows: 3 }),
+    defineField({
+      name: 'quote',
+      title: 'Pull quote',
+      type: 'string',
+      description: 'Optional, like "Come and see." Shown large on the second goal.',
+    }),
+    defineField({
+      name: 'points',
+      title: 'Points',
+      type: 'array',
+      validation: (r) => r.max(4),
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'goalPoint',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'short',
+              title: 'Short label',
+              type: 'string',
+              description:
+                'One or two words used on the drawing, like "Serve" or "In Muncie". Leave blank to use the title.',
+            }),
+            defineField({ name: 'body', title: 'Text', type: 'text', rows: 3 }),
+          ],
+          preview: { select: { title: 'title', subtitle: 'short' } },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'photos',
+      title: 'Photos',
+      type: 'array',
+      validation: (r) => r.max(6),
+      description: 'People doing this. The first is the largest.',
+      of: [
+        defineArrayMember({
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Describe the photo',
+              type: 'string',
+              validation: (r) => r.required(),
+            }),
+          ],
+        }),
+      ],
+    }),
+  ],
+  preview: { select: { title: 'name', subtitle: 'subtitle' } },
+});
+
+export const goalsSection = defineType({
+  name: 'goalsSection',
+  title: 'Our goals (four bands)',
+  type: 'object',
+  description: 'Each goal gets its own colour and layout, in order: green, gold, purple, brown.',
+  fields: [
+    heading,
+    defineField({ name: 'intro', title: 'Introduction', type: 'text', rows: 3 }),
+    defineField({
+      name: 'goals',
+      title: 'Goals',
+      type: 'array',
+      of: [goal],
+      validation: (r) => r.min(1).max(4),
+    }),
+    anchorField(),
+  ],
+  preview: { select: { title: 'heading' } },
+});
+
+export const pledgeSection = defineType({
+  name: 'pledgeSection',
+  title: 'Pledge (said together)',
+  type: 'object',
+  fields: [
+    heading, // "Our Pledge"
+    defineField({ name: 'intro', title: 'Introduction', type: 'text', rows: 2 }),
+    defineField({
+      name: 'instruction',
+      title: 'Instruction line',
+      type: 'string',
+      description: 'Like "When a member joins, we say this pledge together as a church."',
+    }),
+    defineField({
+      name: 'opening',
+      title: 'Opening line',
+      type: 'string',
+      description: 'Like "We pledge ourselves to be the family of God for you in this place:"',
+    }),
+    defineField({
+      name: 'lines',
+      title: 'Lines said together',
+      type: 'array',
+      validation: (r) => r.min(1).max(8),
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'pledgeLine',
+          fields: [
+            defineField({
+              name: 'text',
+              title: 'Line',
+              type: 'string',
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'reference',
+              title: 'Scripture',
+              type: 'string',
+              description: 'Like "Galatians 6:2".',
+            }),
+          ],
+          preview: { select: { title: 'text', subtitle: 'reference' } },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'after',
+      title: 'Text after the pledge',
+      type: 'array',
+      of: [{ type: 'block' }],
+    }),
+    defineField({
+      name: 'image',
+      title: 'Photo',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [defineField({ name: 'alt', title: 'Describe the photo', type: 'string' })],
+    }),
+    anchorField(),
+  ],
+  preview: { select: { title: 'heading' } },
+});
+
+export const letterSection = defineType({
+  name: 'letterSection',
+  title: 'Letter',
+  type: 'object',
+  fields: [
+    heading, // "A Note From Our Pastors"
+    defineField({
+      name: 'body',
+      title: 'Letter',
+      type: 'array',
+      of: [{ type: 'block' }],
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'signature',
+      title: 'Signed',
+      type: 'string',
+      description: 'Like "Kendall & Jonathan".',
+    }),
+    defineField({
+      name: 'signatureNote',
+      title: 'Under the signature',
+      type: 'string',
+      description: 'Like "Co-Pastors, First Baptist Church Muncie".',
+    }),
+    defineField({
+      name: 'portrait',
+      title: 'Portrait',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [defineField({ name: 'alt', title: 'Describe the photo', type: 'string' })],
+    }),
+    anchorField(),
+  ],
+  preview: { select: { title: 'heading', subtitle: 'signature' } },
+});
+
 export const CHURCH_SECTION_TYPES = [
   sundayTimesSection,
   timelineSection,
@@ -575,5 +849,9 @@ export const CHURCH_SECTION_TYPES = [
   documentListSection,
   linkCardsSection,
   ministrySection,
+  watchwordSection,
+  goalsSection,
+  pledgeSection,
+  letterSection,
 ];
 // scaffold:end
