@@ -1,0 +1,50 @@
+---
+// Safe to edit by hand
+// The watchword as a mark: "Praise" in Castoro italic, the great gold
+// ampersand, and PROCLAIM in Castoro Titling with the megaphone rays, set
+// under it and flush to the mark's right edge. Ported from the prototype's
+// `.lockup` (docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html).
+//
+// Two sizes: `band` is the poster the Watchword band is built around, `hero`
+// is the same mark at roughly half the scale. Both sizes are set in the
+// "Church identity" block of globals.css (`.mark-band` / `.mark-hero`).
+//
+// Colours are fixed, because the mark is only ever set on a dark green band:
+// white, brand gold (3.32:1 on the lightest green, large text only, asserted
+// in theme-tokens.test.ts) and mint. It is one image to a screen reader
+// ("Praise and Proclaim"), with the visible letters hidden, so nobody hears
+// "Praise ampersand Proclaim" spelled out in pieces.
+//
+// Motion: on the site's [data-reveal] observer with the `mark` variant, the
+// ampersand turns and grows into place and the rays draw outwards, once.
+// Under prefers-reduced-motion the mark is simply there.
+
+interface Props {
+  size: 'band' | 'hero';
+  class?: string;
+}
+
+const { size, class: extraClass = '' } = Astro.props;
+---
+
+<div
+  role="img"
+  aria-label="Praise and Proclaim"
+  data-reveal="mark"
+  class:list={['watchword-mark', size === 'band' ? 'mark-band' : 'mark-hero', extraClass]}
+>
+  <span class="mark-row" aria-hidden="true">
+    <span class="mark-praise font-body text-white-pure italic">Praise</span>
+    <span class="mark-amp font-body text-gold italic">&amp;</span>
+  </span>
+  <span class="mark-proclaim font-display text-mint" aria-hidden="true">
+    Proclaim
+    <svg class="mark-rays text-gold" viewBox="128 0 74 160">
+      <path d="M150 80 H198"></path>
+      <path d="M146 58 L190 30"></path>
+      <path d="M146 102 L190 130"></path>
+      <path d="M136 40 L160 6"></path>
+      <path d="M136 120 L160 154"></path>
+    </svg>
+  </span>
+</div>

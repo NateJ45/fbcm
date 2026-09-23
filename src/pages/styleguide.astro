@@ -40,6 +40,11 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import { site } from '@/data/site';
 import { surfaceClass } from '@/lib/surfaces';
+// Church identity primitives (2026-09-23, the Who We Are "alive" pass).
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import WatchwordMark from '@/components/church/WatchwordMark.astro';
+import SeasonLine from '@/components/church/SeasonLine.astro';
 // scaffold: church
 // The church blocks (Task 6, plus link cards from task 5b), fixtured with real
 // church content so a pixel diff here means the design moved, not the content.
@@ -103,6 +108,71 @@ const HEADINGS = [
 /** Fixed CTA stand-ins. Never read from Sanity: that is the whole point. */
 const PRIMARY_CTA = { label: 'Plan your visit', linkType: 'external' as const, externalUrl: '#' };
 const SECONDARY_CTA = { label: 'Watch a service', linkType: 'external' as const, externalUrl: '#' };
+
+// =============================================================================
+// Church identity fixtures (2026-09-23)
+// =============================================================================
+/** The identity palette, swatched in both themes (every one flips in .dark). */
+const IDENTITY_TOKENS = [
+  '--color-season-green',
+  '--color-season-violet',
+  '--color-season-purple',
+  '--color-season-red',
+  '--color-season-gold',
+  '--color-season-white',
+  '--color-goal-green',
+  '--color-goal-gold',
+  '--color-goal-purple',
+  '--color-goal-brown',
+  '--color-goal-ink-on-gold',
+  '--color-mint',
+  '--color-gold-light',
+];
+
+// One FIXED date per season, so the season line is part of the baseline and
+// never moves with the build date. Each sits on its own band colour, written
+// out as a literal class (Tailwind reads source text).
+const SEASON_FIXTURES = [
+  { date: new Date('2026-12-06T12:00:00Z'), band: 'bg-season-violet' },
+  { date: new Date('2026-12-28T12:00:00Z'), band: 'bg-season-white' },
+  { date: new Date('2027-01-20T12:00:00Z'), band: 'bg-season-green' },
+  { date: new Date('2027-03-01T12:00:00Z'), band: 'bg-season-purple' },
+  { date: new Date('2027-04-10T12:00:00Z'), band: 'bg-season-gold' },
+  { date: new Date('2027-05-16T12:00:00Z'), band: 'bg-season-red' },
+  { date: new Date('2026-09-23T12:00:00Z'), band: 'bg-season-green' },
+];
+
+// Real photographs from this project's own library (the church's own blog),
+// the ones the prototype framed or their nearest library twin, each with a
+// hotspot so the frame's crop follows it. Alt text is the library's own; no
+// names are attached.
+const ARCH_FIXTURES = {
+  girls: {
+    asset: { _ref: 'image-bad93d7a2b560248a8b1b249154c4bbc1ed83af5-1600x1064-jpg' },
+    hotspot: { x: 0.66, y: 0.4 },
+    alt: 'Two smiling girls, one with red hair, pose together in front of colorful stained glass windows.',
+  },
+  coneflowers: {
+    asset: { _ref: 'image-4f64da601a5d01fae1fa8ac50a3898207b6e7f24-2400x1600-jpg' },
+    hotspot: { x: 0.68, y: 0.4 },
+    alt: 'A young girl smiles outdoors, standing among tall purple coneflowers in a garden.',
+  },
+  bibles: {
+    asset: { _ref: 'image-50fe129b92b4673a51bf94b9408c5c8a22346ce4-2400x1136-jpg' },
+    hotspot: { x: 0.5, y: 0.45 },
+    alt: 'Three girls sitting together in a pew, smiling, with open Bibles on their laps.',
+  },
+  balcony: {
+    asset: { _ref: 'image-d7aa65ea099b67f8adb73eb7f5bed6855f907133-2400x1714-jpg' },
+    alt: 'A man and a woman smiling together in the sanctuary balcony, arched windows and pews visible behind them.',
+  },
+};
+const RULE_CTA = { label: 'Plan your visit', linkType: 'external' as const, externalUrl: '#' };
+const RULE_CTA_DARK = {
+  label: 'Praise & Proclaim, our watchword',
+  linkType: 'external' as const,
+  externalUrl: '#',
+};
 
 // scaffold: church
 // =============================================================================
@@ -627,6 +697,129 @@ const LINK_CARDS_FIXTURE = {
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <CtaLink cta={PRIMARY_CTA} variant="gold" onDark />
         <CtaLink cta={SECONDARY_CTA} variant="outline" onDark />
+      </div>
+    </div>
+  </section>
+
+  {
+    /* Church identity (2026-09-23): the primitives the Who We Are "alive"
+       page is built from, each against the band it is made for. */
+  }
+  <section class="bg-background py-section-lg" aria-labelledby="styleguide-identity">
+    <div class="mx-auto w-full max-w-content px-6">
+      <h2 id="styleguide-identity" class="font-display text-h3">Church identity</h2>
+      <p class="mt-2 max-w-[60ch] text-sm text-muted-foreground">
+        The season and goal bands, the two arches drawn from the building, the four building glyphs,
+        the watchword mark and the rule button. Every text pair here is measured in both themes in
+        theme-tokens.test.ts.
+      </p>
+
+      <h3 class="mt-10 font-display text-h5">Identity palette</h3>
+      <ul class="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {
+          IDENTITY_TOKENS.map((t) => (
+            <li class="rounded-lg border border-border p-3">
+              <span
+                class="block h-12 w-full rounded border border-foreground/20"
+                style={`background: var(${t})`}
+              />
+              <code class="mt-2 block font-mono text-[0.6875rem] break-all">{t}</code>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3 class="mt-10 font-display text-h5">The season line, one fixed date per season</h3>
+      <ul class="mt-5 grid gap-2">
+        {
+          SEASON_FIXTURES.map(({ date, band }) => (
+            <li class={`${band} px-6 py-4`}>
+              <SeasonLine date={date} />
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3 class="mt-10 font-display text-h5">Arch frames</h3>
+      <div class="mt-8 grid grid-cols-2 items-end gap-x-6 gap-y-8 md:grid-cols-4">
+        <ArchFrame
+          image={ARCH_FIXTURES.girls}
+          shape="lancet"
+          width={600}
+          sizes="(min-width: 768px) 25vw, 50vw"
+          alt={ARCH_FIXTURES.girls.alt}
+        />
+        <ArchFrame
+          image={ARCH_FIXTURES.coneflowers}
+          shape="lancet"
+          width={600}
+          sizes="(min-width: 768px) 25vw, 50vw"
+          alt={ARCH_FIXTURES.coneflowers.alt}
+          grade="warm"
+          class="[--arch-ratio:100/190]"
+        />
+        <ArchFrame
+          image={ARCH_FIXTURES.bibles}
+          shape="door"
+          width={600}
+          sizes="(min-width: 768px) 25vw, 50vw"
+          alt={ARCH_FIXTURES.bibles.alt}
+        />
+        <ArchFrame
+          image={ARCH_FIXTURES.balcony}
+          shape="door"
+          width={600}
+          sizes="(min-width: 768px) 25vw, 50vw"
+          alt={ARCH_FIXTURES.balcony.alt}
+          grade="warm"
+          reveal={false}
+          class="[--arch-ratio:100/118]"
+        />
+      </div>
+
+      <h3 class="mt-10 font-display text-h5">Building glyphs</h3>
+      <ul class="mt-5 flex flex-wrap items-end gap-8">
+        <li class="text-season-green dark:text-mint">
+          <BuildingGlyph name="window" class="w-12" />
+        </li>
+        <li class="text-gold-ink"><BuildingGlyph name="door" class="w-12" /></li>
+        <li class="text-goal-purple dark:text-gold-light">
+          <BuildingGlyph name="rose" class="w-12" />
+        </li>
+        <li class="text-goal-brown dark:text-gold-light">
+          <BuildingGlyph name="basin" class="w-12" />
+        </li>
+        <li class="text-foreground"><BuildingGlyph name="window" class="w-16" /></li>
+      </ul>
+
+      <h3 class="mt-10 font-display text-h5">The rule button</h3>
+      <p class="mt-2 max-w-[60ch] text-sm text-muted-foreground">
+        Square, with the gold rule beneath. Hover or focus it: the rays spread.
+      </p>
+      <div class="mt-6 flex flex-wrap items-center gap-8">
+        <CtaLink cta={RULE_CTA} variant="rule" />
+        <CtaLink cta={SECONDARY_CTA} variant="rule" />
+      </div>
+    </div>
+  </section>
+
+  <section class="overflow-x-clip bg-season-green py-section-lg" aria-label="The watchword mark">
+    <div class="mx-auto w-full max-w-content px-6">
+      <SeasonLine date={new Date('2026-09-23T12:00:00Z')} />
+      <div class="mt-10">
+        <WatchwordMark size="band" />
+      </div>
+      <div class="mt-14">
+        <WatchwordMark size="hero" />
+      </div>
+      <div class="mt-12 flex flex-wrap items-center gap-8">
+        <CtaLink cta={RULE_CTA_DARK} variant="rule" onDark />
+        <div class="flex items-end gap-6 text-mint">
+          <BuildingGlyph name="window" class="w-10" />
+          <BuildingGlyph name="door" class="w-10" />
+          <BuildingGlyph name="rose" class="w-10" />
+          <BuildingGlyph name="basin" class="w-10" />
+        </div>
       </div>
     </div>
   </section>

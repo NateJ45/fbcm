@@ -118,6 +118,28 @@
      taupe 7.42:1. Both asserted in theme-tokens.test.ts. */
   --color-indigo-deep: #1b1a3a;
 
+  /* Church identity (2026-09-23, the Who We Are "alive" pass). Band FILLS and
+     the two accent inks that sit on them, from the approved prototype
+     (docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html). Every
+     text pair on these grounds is measured in BOTH themes in
+     theme-tokens.test.ts (IDENTITY_PAIRS), and every token is redeclared
+     under .dark. The season six are keyed by src/lib/church-year.ts: green,
+     violet, purple and red carry white with a mint / gold-light accent; gold
+     and white are light grounds and carry --color-goal-ink-on-gold. */
+  --color-season-green: #1d5a3a; /* Ordinary Time and Epiphany */
+  --color-season-violet: #3b2a6b; /* Advent */
+  --color-season-purple: #46275e; /* Lent and Holy Week */
+  --color-season-red: #8e1f24; /* Pentecost */
+  --color-season-gold: #c9972c; /* Easter */
+  --color-season-white: #ede4cf; /* Christmas */
+  --color-goal-green: #1d5a3a; /* Worship */
+  --color-goal-gold: #c9972c; /* The Way */
+  --color-goal-purple: #46275e; /* Witness */
+  --color-goal-brown: #6a3d20; /* Work */
+  --color-goal-ink-on-gold: #2c1a0f; /* ink on the gold and white grounds */
+  --color-mint: #a9dcbf; /* accent text on green, never on paper */
+  --color-gold-light: #f0c86a; /* accent text on violet, purple, red, brown */
+
   /* Fonts. Three faces, and the family names are exactly what the installed
      @fontsource packages declare. No " Variable" suffix on either Castoro:
      @fontsource/castoro-titling and @fontsource/castoro both ship STATIC 400
@@ -559,6 +581,23 @@
      flip, not a `dark:text-gold` at each call site: the call sites are the
      thing that would drift. */
   --color-gold-ink: #d59b29;
+
+  /* Church identity, dark: every band drops in luminance so it stays rich
+     against the #14121b page without glaring; the gold ground keeps its dark
+     ink (still AA, measured in theme-tokens.test.ts) rather than flipping. */
+  --color-season-green: #174a30;
+  --color-season-violet: #30245a;
+  --color-season-purple: #3b2150;
+  --color-season-red: #74191e;
+  --color-season-gold: #ad8127;
+  --color-season-white: #cfc5ae;
+  --color-goal-green: #174a30;
+  --color-goal-gold: #ad8127;
+  --color-goal-purple: #3b2150;
+  --color-goal-brown: #56321b;
+  --color-goal-ink-on-gold: #1f1208;
+  --color-mint: #9fd3b5;
+  --color-gold-light: #e8c068;
 
   /* The alternating "muted" surface's real dark value. Unlike --color-bg-soft
      (which this gate forbids .dark from touching), --surface-soft is a plain
@@ -2394,6 +2433,258 @@ body::before {
 .dark body::before {
   opacity: 0.06;
   mix-blend-mode: screen;
+}
+
+/* Church identity (2026-09-23) ----------------------------------------------
+   The Who We Are "alive" primitives: the two arches (ArchFrame.astro), the
+   shared photo grade, the watchword mark's two sizes (WatchwordMark.astro),
+   and the two reveal variants they ride on. Ported from the approved
+   prototype, docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html.
+   What lives here is what utilities cannot say (masks, clip-path reveals,
+   the grade filter, the ray draw) plus the one-off measurements of the mark
+   and the rule button: each arbitrary-value utility costs more bytes in the
+   inlined sheet than its share of one combined rule (CLAUDE.md rule 20).
+   Colours stay utilities on the tokens. Every initial "hidden" state sits inside
+   prefers-reduced-motion: no-preference, so a visitor who asked for less
+   motion gets the final state with nothing to wait for. */
+
+/* The two arches, drawn from the building: the lancet window and the
+   four-centred door head. Masks stretch to the frame (preserveAspectRatio
+   none), so a caller's --arch-ratio changes the proportion, never the arch. */
+.arch {
+  position: relative;
+  overflow: hidden;
+  background: rgb(0 0 0 / 0.12);
+  mask-image: var(--arch-mask);
+  mask-size: 100% 100%;
+}
+.arch-lancet {
+  --arch-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150' preserveAspectRatio='none'%3E%3Cpath d='M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z'/%3E%3C/svg%3E");
+  aspect-ratio: var(--arch-ratio, 100 / 150);
+}
+.arch-door {
+  --arch-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 130' preserveAspectRatio='none'%3E%3Cpath d='M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130Z'/%3E%3C/svg%3E");
+  aspect-ratio: var(--arch-ratio, 100 / 130);
+}
+/* The thin outline, 9px proud of the arch on three sides (6px on a phone). */
+.arch-mould {
+  position: absolute;
+  inset: -9px -9px 0;
+  width: calc(100% + 18px);
+  height: calc(100% + 9px);
+  overflow: visible;
+  pointer-events: none;
+}
+.arch-mould path {
+  fill: none;
+  stroke: var(--arch-mould, var(--color-gold));
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+}
+@media (max-width: 620px) {
+  .arch-mould {
+    inset: -6px -6px 0;
+    width: calc(100% + 12px);
+    height: calc(100% + 6px);
+  }
+}
+/* One grade for every amateur photograph: a touch warmer, a touch firmer. */
+.graded {
+  filter: saturate(0.9) contrast(1.05) sepia(0.07) brightness(1.02);
+}
+
+/* The season line's rule. */
+.season-line::before {
+  content: '';
+  flex: none;
+  width: 34px;
+  height: 2px;
+  background: currentColor;
+}
+
+/* The building glyphs: line art at a constant 2px whatever the size. */
+.building-glyph {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.building-glyph * {
+  vector-effect: non-scaling-stroke;
+}
+
+/* The rule button (CtaLink variant="rule"): square, a 3px rule 3px beneath,
+   and three rays at the right edge that spread on hover and focus. */
+.btn-rule {
+  position: relative;
+  min-height: 48px;
+  padding: 0.55em 1.2em 0.45em 1.3em;
+  font-size: 1.0625rem;
+  line-height: 1.1;
+}
+.btn-rule::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -6px;
+  height: 3px;
+  background: var(--btn-rule, var(--color-gold));
+  pointer-events: none;
+}
+.btn-rule:focus-visible {
+  outline: 2px solid var(--btn-ring, var(--ring));
+  outline-offset: 8px;
+}
+.btn-rule-dark {
+  --btn-rule: var(--color-bg);
+  --btn-ring: #fff;
+}
+.btn-rule svg {
+  flex: none;
+  width: 13px;
+  height: 22px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+.btn-rule path {
+  transition: translate 0.3s;
+}
+.btn-rule:is(:hover, :focus-visible) path:first-child {
+  translate: 2px -2px;
+}
+.btn-rule:is(:hover, :focus-visible) path:nth-child(2) {
+  translate: 3px 0;
+}
+.btn-rule:is(:hover, :focus-visible) path:last-child {
+  translate: 2px 2px;
+}
+
+/* The watchword mark's two sizes. --mark-a sets "Praise &", --mark-b sets
+   PROCLAIM; the rays and ampersand are em-sized from those. */
+.mark-band {
+  --mark-a: clamp(96px, 17.5vw, 272px);
+  --mark-b: clamp(52px, 11.4vw, 176px);
+}
+.mark-hero {
+  --mark-a: clamp(56px, 8.4vw, 136px);
+  --mark-b: clamp(32px, 5.5vw, 88px);
+}
+@media (max-width: 620px) {
+  .mark-band {
+    --mark-a: 21vw;
+    --mark-b: 12.6vw;
+  }
+  .mark-hero {
+    --mark-a: 15vw;
+    --mark-b: 9vw;
+  }
+}
+.watchword-mark {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 0.8;
+}
+.mark-row {
+  display: flex;
+  align-items: baseline;
+  font-size: var(--mark-a);
+}
+.mark-praise {
+  position: relative;
+  z-index: 2;
+  padding-right: 0.04em;
+  letter-spacing: -0.025em;
+}
+.mark-amp {
+  position: relative;
+  z-index: 1;
+  margin-left: 0.02em;
+  font-size: 1.62em;
+  line-height: 0.7;
+  transform-origin: 30% 80%;
+}
+.mark-proclaim {
+  position: relative;
+  z-index: 2;
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.08em;
+  margin-top: 0.1em;
+  font-size: var(--mark-b);
+  letter-spacing: 0.015em;
+}
+.mark-rays {
+  width: 0.44em;
+  height: 0.96em;
+}
+.mark-rays path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+/* Reveal variants, on the BaseLayout [data-reveal] observer. The figure and
+   the mark stay at full opacity and in place (the observer needs a box to
+   see); what moves is inside them. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal='arch'],
+  [data-reveal='mark'] {
+    opacity: 1;
+    translate: none;
+  }
+  [data-reveal='arch'] .arch {
+    transition: clip-path 1.25s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  [data-reveal='arch'] .arch img {
+    transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  [data-reveal='arch'] .arch-mould {
+    transition: opacity 1s 0.5s;
+  }
+  /* Lancets rise from the sill; doors open from the centre. */
+  [data-reveal='arch']:not(.is-visible) .arch-lancet {
+    clip-path: inset(100% 0 0 0);
+  }
+  [data-reveal='arch']:not(.is-visible) .arch-door {
+    clip-path: inset(0 50% 0 50%);
+  }
+  [data-reveal='arch']:not(.is-visible) .arch img {
+    transform: scale(1.08);
+  }
+  [data-reveal='arch']:not(.is-visible) .arch-mould {
+    opacity: 0;
+  }
+  [data-reveal='arch'].is-visible .arch {
+    clip-path: inset(0);
+  }
+  /* The ampersand turns into place; the rays draw outwards from PROCLAIM. */
+  [data-reveal='mark'] .mark-amp {
+    transition:
+      transform 1.4s cubic-bezier(0.2, 0.7, 0.1, 1),
+      opacity 1.2s;
+  }
+  [data-reveal='mark']:not(.is-visible) .mark-amp {
+    opacity: 0;
+    transform: scale(0.8) rotate(-8deg);
+  }
+  [data-reveal='mark'] .mark-rays path {
+    stroke-dasharray: 80;
+    transition: stroke-dashoffset 0.9s 0.3s cubic-bezier(0.2, 0.7, 0.1, 1);
+  }
+  [data-reveal='mark'] .mark-rays path:nth-child(n + 2) {
+    transition-delay: 0.42s;
+  }
+  [data-reveal='mark'] .mark-rays path:nth-child(n + 4) {
+    transition-delay: 0.54s;
+  }
+  [data-reveal='mark']:not(.is-visible) .mark-rays path {
+    stroke-dashoffset: 80;
+  }
 }
 
 /* ---------- Reduced motion -------------------------------------------- */

@@ -1,0 +1,84 @@
+---
+// Safe to edit by hand
+// A photograph framed by one of the two arches drawn from the building: the
+// LANCET (the tall pointed window) or the DOOR (the low four-centred head of
+// the Adams Street door). Ported from the Who We Are prototype's `.arch` /
+// `.mould` (docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html).
+//
+// - The arch is a CSS mask (`.arch-lancet` / `.arch-door` in the "Church
+//   identity" block of globals.css), stretched to the frame, so any aspect
+//   ratio keeps the same arch. The ratio defaults to the prototype's (2:3 for
+//   the lancet, 10:13 for the door); a caller changes it with the
+//   `--arch-ratio` custom property (an arbitrary-property class on the figure).
+// - The thin outline is an SVG drawn a few pixels outside the mask, in
+//   `--arch-mould` (brand gold unless a band sets it).
+// - `reveal` puts the figure on the site's [data-reveal] observer with the
+//   `arch` variant: lancets rise from the bottom, doors open from the centre,
+//   the photo settles from a slight zoom, and the outline fades in after. The
+//   figure itself is never clipped, so the observer always has a box to see.
+//   Under prefers-reduced-motion the frame is simply there.
+// - `grade="warm"` applies the prototype's one shared photo grade.
+// - The crop follows the editor's hotspot, exactly as Hero.astro's split frame
+//   does; with no hotspot it keeps the top of the photograph, where faces are.
+
+import SanityImage from '@/components/SanityImage.astro';
+import type { SanityImageObject } from '@/lib/pageBuilder.types';
+
+interface Props {
+  image: SanityImageObject | null | undefined;
+  shape: 'lancet' | 'door';
+  /** Largest width the frame renders at (the srcset ceiling). */
+  width: number;
+  sizes: string;
+  alt: string;
+  class?: string;
+  reveal?: boolean;
+  grade?: 'warm' | 'none';
+  loading?: 'lazy' | 'eager';
+}
+
+const {
+  image,
+  shape,
+  width,
+  sizes,
+  alt,
+  class: extraClass = '',
+  reveal = true,
+  grade = 'none',
+  loading = 'lazy',
+} = Astro.props;
+
+const hotspot = image?.hotspot;
+const objectPosition =
+  typeof hotspot?.x === 'number' && typeof hotspot?.y === 'number'
+    ? `${(hotspot.x * 100).toFixed(2)}% ${(hotspot.y * 100).toFixed(2)}%`
+    : '50% 0%';
+
+// The outline path, in the same box as the mask, so the two always agree.
+const mould =
+  shape === 'lancet'
+    ? { viewBox: '0 0 100 150', d: 'M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150' }
+    : { viewBox: '0 0 100 130', d: 'M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130' };
+---
+
+<figure
+  class:list={['relative m-0', extraClass]}
+  data-reveal={reveal ? 'arch' : undefined}
+  data-arch={shape}
+>
+  <div class:list={['arch', shape === 'lancet' ? 'arch-lancet' : 'arch-door']}>
+    <SanityImage
+      source={image}
+      width={width}
+      sizes={sizes}
+      alt={alt}
+      loading={loading}
+      class:list={['h-full w-full object-cover', grade === 'warm' && 'graded']}
+      style={`object-position: ${objectPosition};`}
+    />
+  </div>
+  <svg class="arch-mould" viewBox={mould.viewBox} preserveAspectRatio="none" aria-hidden="true">
+    <path d={mould.d}></path>
+  </svg>
+</figure>

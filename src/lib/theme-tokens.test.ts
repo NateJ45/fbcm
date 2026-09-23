@@ -44,6 +44,7 @@ import {
   flatten,
   rgbToHex,
   AA_BODY_TEXT,
+  AA_LARGE_TEXT,
 } from './contrast.ts';
 import { BRAND_SCOPE, DARK_SCOPE, LIGHT_SCOPE, scopeReader, tokensIn } from './css-tokens.ts';
 
@@ -292,3 +293,88 @@ test('the taupe tint surface keeps indigo ink readable', () => {
   const r = contrastRatio(token('color-indigo'), rgbToHex(tint));
   assert.ok(r >= AA_BODY_TEXT, `indigo on taupe tint is ${r.toFixed(2)}:1`);
 });
+
+// ---------------------------------------------------------------------------
+// Church identity (2026-09-23, the Who We Are "alive" pass). The season bands,
+// the four goal bands, and the two accent inks that sit on them. Every pair is
+// measured TWICE, once in the light palette and once as the dark theme
+// resolves it, because every one of these tokens is redeclared under .dark
+// (rich but not glaring). Floor is AA body text unless the pair is only ever
+// set at 24px and up, where WCAG's large-text 3:1 applies.
+//
+// The six season tokens are band FILLS keyed by src/lib/church-year.ts. Four
+// are dark grounds (green, violet, purple, red) and carry white with a mint or
+// gold-light accent; two are light grounds (gold, white) and carry the dark
+// --color-goal-ink-on-gold instead. A band that reads the season must flip its
+// ink for those two, and these pairs are the contract it flips between.
+// ---------------------------------------------------------------------------
+
+type Floor = 'body' | 'large';
+const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
+  // Season bands: the dark four.
+  ['color-white-pure', 'color-season-green', 'white on the green season band', 'body'],
+  ['color-mint', 'color-season-green', 'mint accent on the green season band', 'body'],
+  ['color-white-pure', 'color-season-violet', 'white on the Advent band', 'body'],
+  ['color-gold-light', 'color-season-violet', 'gold-light accent on the Advent band', 'body'],
+  ['color-white-pure', 'color-season-purple', 'white on the Lent band', 'body'],
+  ['color-gold-light', 'color-season-purple', 'gold-light accent on the Lent band', 'body'],
+  ['color-white-pure', 'color-season-red', 'white on the Pentecost band', 'body'],
+  ['color-gold-light', 'color-season-red', 'gold-light accent on the Pentecost band', 'body'],
+  // Season bands: the light two.
+  ['color-goal-ink-on-gold', 'color-season-gold', 'ink on the Easter band', 'body'],
+  ['color-goal-ink-on-gold', 'color-season-white', 'ink on the Christmas band', 'body'],
+  // The four goal bands.
+  ['color-white-pure', 'color-goal-green', 'white on the Worship band', 'body'],
+  ['color-mint', 'color-goal-green', 'mint accent on the Worship band', 'body'],
+  [
+    'color-goal-ink-on-gold',
+    'color-goal-gold',
+    'ink on The Way band, and the rule button on a dark band',
+    'body',
+  ],
+  ['color-white-pure', 'color-goal-purple', 'white on the Witness band', 'body'],
+  ['color-gold-light', 'color-goal-purple', 'gold-light accent on the Witness band', 'body'],
+  ['color-white-pure', 'color-goal-brown', 'white on the Work band', 'body'],
+  ['color-gold-light', 'color-goal-brown', 'gold-light accent on the Work band', 'body'],
+  // The watchword mark's ampersand and rays: brand gold, only ever 24px+.
+  ['color-gold', 'color-season-green', 'the mark ampersand on a green band', 'large'],
+];
+
+const IDENTITY_TOKENS = [
+  'color-season-green',
+  'color-season-violet',
+  'color-season-purple',
+  'color-season-red',
+  'color-season-gold',
+  'color-season-white',
+  'color-goal-green',
+  'color-goal-gold',
+  'color-goal-purple',
+  'color-goal-brown',
+  'color-goal-ink-on-gold',
+  'color-mint',
+  'color-gold-light',
+];
+
+test('every church identity token is declared in @theme AND redeclared in .dark', () => {
+  const dark = tokensIn(css, DARK_SCOPE);
+  const missingLight = IDENTITY_TOKENS.filter((n) => !brand[`--${n}`]);
+  const missingDark = IDENTITY_TOKENS.filter((n) => !dark[`--${n}`]);
+  assert.deepEqual(missingLight, [], `@theme is missing ${missingLight.join(', ')}`);
+  assert.deepEqual(missingDark, [], `.dark does not redeclare ${missingDark.join(', ')}`);
+});
+
+for (const scope of ['light', 'dark'] as const) {
+  test(`every church identity pair clears its floor (${scope})`, (t) => {
+    const read = scope === 'dark' ? darkToken : token;
+    for (const [fg, bg, why, floor] of IDENTITY_PAIRS) {
+      const min = floor === 'large' ? AA_LARGE_TEXT : AA_BODY_TEXT;
+      const r = contrastRatio(read(fg), read(bg));
+      t.diagnostic(`${scope}, ${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1 (floor ${min})`);
+      assert.ok(
+        r >= min,
+        `${scope}, ${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1, needs ${min}:1`,
+      );
+    }
+  });
+}
