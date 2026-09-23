@@ -308,7 +308,11 @@ const windowDrops = dropInto && windowOrder.length > 0;
               image={frame}
               shape="lancet"
               width={i === middleIndex ? 900 : 600}
-              sizes={i === middleIndex ? '(min-width: 901px) 24vw, 52vw' : '(min-width: 901px) 17vw, 22vw'}
+              sizes={
+                i === middleIndex
+                  ? '(min-width: 1440px) 420px, (min-width: 1200px) 29vw, (min-width: 901px) 26vw, 57vw'
+                  : '(min-width: 1440px) 180px, (min-width: 901px) 13vw, 22vw'
+              }
               alt={frame?.alt ?? ''}
               loading="eager"
               class={i === middleIndex ? 'hw-mid' : 'hw-side'}
