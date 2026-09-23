@@ -27,39 +27,6 @@ export function groupStaff<T extends Groupable>(members: T[]): Record<StaffGroup
   return out;
 }
 
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-/**
- * "Sermon preview, week of January 17, 2024". Falls back to the bare eyebrow.
- *
- * The one sermon eyebrow on the site: blog-derive.ts's weekOfEyebrow() cleans a
- * stega payload off the date and hands it straight here, so the blog index, the
- * category pages and the post page all read the same sentence.
- *
- * US date order (month first), because every other date on this site is written
- * that way: JournalCard, the post header and the church bands all format with
- * `toLocaleDateString('en-US')`. It read "15 January 2024" while nothing
- * imported it, which is the moment to fix it rather than ship two orders.
- */
-export function weekOfLabel(publishedAt: string): string {
-  const d = new Date(publishedAt);
-  if (Number.isNaN(d.getTime())) return 'Sermon preview';
-  return `Sermon preview, week of ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
-}
-
 /**
  * Newest year first; undated documents last; ties keep the order they arrived
  * in. Never mutates.
