@@ -2,13 +2,13 @@
   "generatedAt": "2026-09-18T18:28:23.388Z",
   "source": "https://www.fbcmuncie.org/ (Wix), captured before the Astro/Sanity rebuild",
   "totals": {
-    "files": 495,
-    "bytes": 1759348541
+    "files": 501,
+    "bytes": 1792155548
   },
   "byDirectory": {
     "images": {
-      "files": 447,
-      "bytes": 1016382032
+      "files": 453,
+      "bytes": 1049189039
     },
     "files": {
       "files": 47,
@@ -4260,6 +4260,66 @@
       "label": null,
       "foundOn": [
         "https://www.fbcmuncie.org/blog/categories/sermon-preview"
+      ]
+    },
+    {
+      "path": "images/08181c_6d94b4099ee94e3e8cab4b6c7883eab2_tilde_mv2.jpg",
+      "bytes": 12924301,
+      "sha256": "ee0bfc64f134a99e8273a2b341b30c8e8ee4c8cdf7c50ad3653301eae4b21153",
+      "sourceUrl": "https://static.wixstatic.com/media/08181c_6d94b4099ee94e3e8cab4b6c7883eab2~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/81f7ac_0d4e67a450a54ca5b89c2564e4f0461d_tilde_mv2.jpg",
+      "bytes": 2409136,
+      "sha256": "64dfb6358b58ba9e25a678c55ff2b5b2ed06481a02764a455e27e3fab92d2639",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_0d4e67a450a54ca5b89c2564e4f0461d~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/81f7ac_4eae792ee0d34050a9e6f431e80bbfca_tilde_mv2.jpg",
+      "bytes": 439302,
+      "sha256": "1a783b568428af4ff97062ad1e51866f2cc52a7d131eed15bc7aaacb4e886a2b",
+      "sourceUrl": "https://static.wixstatic.com/media/81f7ac_4eae792ee0d34050a9e6f431e80bbfca~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/b98776_0cfbc148ba1e46bd81ae9003172231e7_tilde_mv2.jpg",
+      "bytes": 6932654,
+      "sha256": "7f27b8369a8020075edd083dad51669fa3ceaf6c4765074612a04163f60fc2cf",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_0cfbc148ba1e46bd81ae9003172231e7~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/b98776_7e3f96b5e0d042418c4d56bc0b914eea_tilde_mv2.jpg",
+      "bytes": 5092125,
+      "sha256": "d1e5d4c9765d97bb456ab38908051f4b0e859c79864ae4a1b07c97eec9b26eaf",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_7e3f96b5e0d042418c4d56bc0b914eea~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
+      ]
+    },
+    {
+      "path": "images/b98776_0f921d0be3034bd680c45eb9eb1b8809_tilde_mv2.jpg",
+      "bytes": 5009489,
+      "sha256": "d192ba60e17f7e2f0290ffc149417dee94d97e98810d966d4ecacbf4612eff75",
+      "sourceUrl": "https://static.wixstatic.com/media/b98776_0f921d0be3034bd680c45eb9eb1b8809~mv2.jpg",
+      "label": null,
+      "foundOn": [
+        "https://www.fbcmuncie.org/what-to-expect"
       ]
     }
   ]
