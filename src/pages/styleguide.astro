@@ -63,8 +63,12 @@ import Hours from '@/components/sections/Hours.astro';
 import WatchwordBand from '@/components/sections/WatchwordBand.astro';
 import PledgeReading from '@/components/sections/PledgeReading.astro';
 import PastorsLetter from '@/components/sections/PastorsLetter.astro';
+// The goals (Task 5, 2026-09-23).
+import GoalsBand from '@/components/sections/GoalsBand.astro';
 import type {
   ProjectedWatchwordSection,
+  ProjectedGoalsSection,
+  ProjectedImage,
   ProjectedPledgeSection,
   ProjectedLetterSection,
   SanityImageObject,
@@ -715,6 +719,331 @@ const LETTER_SETTINGS = {
   city: 'Muncie',
   state: 'Indiana',
 };
+
+// =============================================================================
+// The goals and the arched link cards (Task 5, 2026-09-23)
+// =============================================================================
+// The church's own words from the approved prototype, and the prototype's own
+// photographs, found in this project's library by their library alt text.
+const photo = (ref: string, alt: string, x = 0.5, y = 0.45): ProjectedImage => ({
+  _type: 'image',
+  asset: { _ref: ref },
+  hotspot: { x, y },
+  alt,
+});
+const point = (key: string, title: string, body: string, short?: string) => ({
+  _key: key,
+  _type: 'goalPoint' as const,
+  title,
+  body,
+  ...(short ? { short } : {}),
+});
+const P = {
+  nave: photo(
+    'image-03d6da95af3fbc02c3ba9eaa95ab533dbdfa8b4b-2400x1309-jpg',
+    'The sanctuary is seen from the balcony, with the congregation standing in the pews below and a worship team at the front under tall arched windows.',
+    0.5,
+    0.82,
+  ),
+  singer: photo(
+    'image-806ba4dc0d6828ac89e8a5c01ab05b3445f5aaf7-1600x1067-jpg',
+    'A guitarist, a singer holding a microphone, and a second guitarist perform together indoors.',
+    0.56,
+    0.4,
+  ),
+  table: photo(
+    'image-651ea65b35de1790bec98a228f47452e964cd46c-2400x1600-jpg',
+    'Two women and a man handle silver communion trays and a cloth at a table, preparing the elements.',
+    0.3,
+  ),
+  door: photo(
+    'image-760632d0beb693093f78334d0a515564aa2b8529-2400x1138-jpg',
+    'At the sanctuary door, a man hands a woman a set of assisted-listening headphones.',
+    0.4,
+  ),
+  deacons: photo(
+    'image-86ea34a0c404d24e71e4253242061def78b627c7-1600x800-jpg',
+    'Five adults posed together at the communion table, a wooden cross and communion trays in front of them.',
+    0.46,
+    0.4,
+  ),
+  bibles: photo(
+    'image-50fe129b92b4673a51bf94b9408c5c8a22346ce4-2400x1136-jpg',
+    'Three girls sitting together in a pew, smiling, with open Bibles on their laps.',
+  ),
+  children: photo(
+    'image-e7b7e945ad95143ef6a2513b12d3f48d90244b64-2400x1600-jpg',
+    'Four young children hold hands and smile, posed together outside the church’s arched entrance.',
+    0.57,
+  ),
+  mascot: photo(
+    'image-2ebbbdca19b840e40a2dd398573a30aa8f570bab-697x697-jpg',
+    'A group of women in orange shirts pose with the Ball State Cardinals mascot under a Ball State tent at an outdoor event.',
+    0.3,
+  ),
+  singing: photo(
+    'image-9445495cb95b7c03a8788b38a1d4a1ce0138d6f5-1600x1067-jpg',
+    'Two teenage girls sing together into microphones at an indoor event, with greenery behind them.',
+    0.24,
+    0.4,
+  ),
+  backpacks: photo(
+    'image-21db96f59d2c41eec5e07709a3f0569ad2863bee-2400x1441-jpg',
+    'Children sit on the chancel steps around Kendall as she reads to them, at the blessing of the backpacks.',
+    0.62,
+  ),
+  serveCity: photo(
+    'image-efd8bf5a21f666ffe139b50d94378bc596622c5c-2400x1285-jpg',
+    'A large group of adults and children posed together indoors, some holding a team t-shirt reading Serve Your City.',
+    0.5,
+    0.4,
+  ),
+  boxes: photo(
+    'image-9f75b53b36c2ca2a5530e1bba56ed91d74a7823d-2400x1921-jpg',
+    'Children and adults gather around a display of blue and yellow decorated boxes and a fabric backdrop at an indoor event.',
+    0.55,
+  ),
+  building: photo(
+    'image-b7e993e6ee329c47f478e7289fc3af64ad0557c6-2400x1136-jpg',
+    'A group of volunteers working together on an outdoor building project during a mission trip.',
+    0.62,
+  ),
+  frame: photo(
+    'image-25c93a161fc4fbb25f3b87f80522315e3596ea70-1159x643-jpg',
+    'A mission trip group posed together under a wooden building frame they are constructing outdoors.',
+    0.42,
+    0.6,
+  ),
+  breakfast: photo(
+    'image-2f1ce4c6714c166672b1b80501b21e545ad14bc2-2400x1596-jpg',
+    'Women of the church sit together at a round table set for a fellowship breakfast.',
+    0.38,
+    0.55,
+  ),
+};
+
+const GOALS_FIXTURE: ProjectedGoalsSection = {
+  _key: 'sg-goals',
+  _type: 'goalsSection',
+  heading: 'Our Goals',
+  intro:
+    'Our Church Coordination Team has set these goals for our church this season, in pursuit of the calling God has given us as a congregation in different areas of our life together.',
+  goals: [
+    {
+      _key: 'g-worship',
+      _type: 'goal',
+      name: 'Worship',
+      subtitle: 'Worshiping as the Body of Christ',
+      glyph: 'window',
+      summary:
+        'FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.',
+      points: [
+        point(
+          'w1',
+          'Following God’s Word',
+          'Our times of worship are rooted in scripture and prayer-filled so that our body can collectively hear from God, discern the next right step, and follow the Holy Spirit.',
+        ),
+        point(
+          'w2',
+          'Enjoying Fellowship',
+          'We set aside time to personally greet and encourage one another. Passing of the peace, sharing the good news through personal testimonies, and prayer are ways we participate in the shared life God has given us.',
+        ),
+        point(
+          'w3',
+          'Participating in Practices Christ Gave Us',
+          'FBCM prepares new believers for baptism, the time when they publicly proclaim God has become their salvation and join the body of Christ. FBCM celebrates the Lord’s Supper monthly during intergenerational worship so that all may take part.',
+        ),
+      ],
+      photos: [P.nave, P.singer, P.table],
+    },
+    {
+      _key: 'g-way',
+      _type: 'goal',
+      name: 'The Way',
+      aside: 'Discipleship',
+      subtitle: 'Seeking Understanding',
+      glyph: 'door',
+      quote: '“Come and see.”',
+      summary:
+        'FBCM proclaims God’s faithfulness with people who are curious about faith, as well as new believers. We offer a growth track to help us all “come and see” who Jesus is and grow spiritually (John 1:39–41).',
+      points: [
+        point(
+          'y1',
+          'Welcoming Worship',
+          'FBCM invites everyone to join our worship services, no matter their background or beliefs. We show the hospitality Christ has first shown us.',
+        ),
+        point(
+          'y2',
+          'Caring Mentorship',
+          'Each regular attendee is connected with a deacon who offers prayer and support.',
+        ),
+        point(
+          'y3',
+          'Spiritual Friendship',
+          'We provide small group meetings where we can learn together about the Bible, theology, and living in Christian community.',
+        ),
+      ],
+      photos: [P.door, P.deacons, P.bibles],
+    },
+    {
+      _key: 'g-witness',
+      _type: 'goal',
+      name: 'Witness',
+      aside: 'Evangelism',
+      subtitle: 'Inviting to Church and to Know Christ',
+      glyph: 'rose',
+      summary:
+        'To make known what God has done, FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.',
+      points: [
+        point(
+          'x1',
+          'Engaged Membership',
+          'Church members actively talk about their faith and aim to live in a way that reflects Jesus.',
+          'In the church',
+        ),
+        point(
+          'x2',
+          'Local Partnership',
+          'We believe God has placed us in downtown Muncie for a reason. We work with local groups to bring light and hope to our community.',
+          'In Muncie',
+        ),
+        point(
+          'x3',
+          'Kingdom Citizenship',
+          'Jesus told us to share the good news everywhere. We support Global Servants (missionaries) and pray for people from all over the world to follow Jesus. We also celebrate the wonderful diversity of God’s Kingdom, the Global Church.',
+          'Everywhere',
+        ),
+      ],
+      photos: [P.children, P.mascot, P.singing, P.backpacks, P.serveCity, P.boxes],
+    },
+    {
+      _key: 'g-work',
+      _type: 'goal',
+      name: 'Work',
+      aside: 'Acts of mercy',
+      subtitle: 'Gifts for Service',
+      glyph: 'basin',
+      summary:
+        'FBCM exalts God by following Jesus’ example of serving others, rather than seeking to be served ourselves (Mark 10:45).',
+      points: [
+        point('k1', 'Serve', 'We actively and practically help and work alongside our neighbors.'),
+        point(
+          'k2',
+          'Support',
+          'We give sacrificially to help those in need through regular offerings and donations.',
+        ),
+        point(
+          'k3',
+          'Share',
+          'We care for church members who are sick, home bound, or struggling, making sure they remain part of our life together.',
+        ),
+      ],
+      photos: [P.building, P.frame, P.breakfast],
+    },
+  ],
+};
+
+// Every fallback at once: The Way with one point, Witness with two photos and
+// Work with nothing at all each fall back to the nave in their own colour.
+// The Way's photo is the brightest landscape in the fixture set, the stress
+// case for the title over a photograph; Work's nave has no photo, so its words
+// stand on the band alone.
+const GOALS_FALLBACK_FIXTURE: ProjectedGoalsSection = {
+  _key: 'sg-goals-fallback',
+  _type: 'goalsSection',
+  heading: 'Our Goals, every fallback',
+  goals: [
+    { ...GOALS_FIXTURE.goals![0]!, _key: 'f-worship', photos: [P.nave] },
+    {
+      ...GOALS_FIXTURE.goals![1]!,
+      _key: 'f-way',
+      points: GOALS_FIXTURE.goals![1]!.points!.slice(0, 1),
+      photos: [P.breakfast, P.deacons],
+    },
+    {
+      ...GOALS_FIXTURE.goals![2]!,
+      _key: 'f-witness',
+      photos: [P.children, P.mascot],
+    },
+    { ...GOALS_FIXTURE.goals![3]!, _key: 'f-work', points: [], photos: [] },
+  ],
+};
+
+// Four cards, each with its own photograph: the arched-door form.
+const DOOR_CARDS_FIXTURE = {
+  heading: 'Where To Go Next',
+  cards: [
+    {
+      _key: 'dc-1',
+      _type: 'linkCard' as const,
+      title: 'Sunday Worship',
+      body: 'Find out what you can expect this Sunday.',
+      cta: {
+        label: 'Read more',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/visit',
+        openInNewTab: false,
+      },
+      image: photo(
+        'image-5e43886b3b78c982482701d221a582112b692682-2400x1358-jpg',
+        'Musicians performing on piano, guitar and vocals at the front of the sanctuary, song lyrics on a screen behind them.',
+      ),
+    },
+    {
+      _key: 'dc-2',
+      _type: 'linkCard' as const,
+      title: 'Contact Us',
+      body: 'Get in touch with us with our virtual contact card.',
+      cta: {
+        label: 'Contact',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/contact',
+        openInNewTab: false,
+      },
+      image: photo(
+        'image-5a8447ef907f07745850dee413b168cdeaa0ea0e-2400x1600-jpg',
+        'A group of adults standing together in a church kitchen, food laid out on the counter in front of them.',
+        0.4,
+        0.35,
+      ),
+    },
+    {
+      _key: 'dc-3',
+      _type: 'linkCard' as const,
+      title: 'Meet Our Staff',
+      body: 'Read our staff bios and meet the people of FBCM.',
+      cta: {
+        label: 'Read more',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/staff',
+        openInNewTab: false,
+      },
+      image: photo(
+        'image-7c2f716730179bcbecc59a170ff97f8c39b39f25-2806x4209-jpg',
+        'Kendall Ellis smiles for a staff portrait, with colorful stained glass filling the background.',
+        0.5,
+        0.3,
+      ),
+    },
+    {
+      _key: 'dc-4',
+      _type: 'linkCard' as const,
+      title: 'Find Out More',
+      body: 'Download our Welcome Booklet.',
+      cta: {
+        label: 'Download',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/visit',
+        openInNewTab: false,
+      },
+      image: P.singer,
+    },
+  ],
+};
 // scaffold:end
 ---
 
@@ -1038,7 +1367,7 @@ const LETTER_SETTINGS = {
   <div id="styleguide-hero-window-nodrop">
     <Hero
       eyebrow={WINDOW_HERO.eyebrow}
-      headline={WINDOW_HERO.headline}
+      headline="The window hero, kept inside its own band."
       scriptAccent={WINDOW_HERO.scriptAccent}
       backgroundImages={WINDOW_FRAMES}
       layout="window"
@@ -1051,7 +1380,7 @@ const LETTER_SETTINGS = {
   <div id="styleguide-hero-window-bare">
     <Hero
       eyebrow={WINDOW_HERO.eyebrow}
-      headline={WINDOW_HERO.headline}
+      headline="The window hero with no photographs."
       scriptAccent={WINDOW_HERO.scriptAccent}
       primaryCta={WINDOW_HERO.primaryCta}
       layout="window"
@@ -1065,6 +1394,24 @@ const LETTER_SETTINGS = {
       block={LETTER_FIXTURE}
       settings={LETTER_SETTINGS}
       headingId="styleguide-letter-h"
+    />
+  </div>
+
+  {/* The goals (Task 5): the four compositions, then every fallback. */}
+  <GoalsBand block={GOALS_FIXTURE} headingId="styleguide-goals" />
+  <div id="styleguide-goals-fallback">
+    <GoalsBand
+      block={GOALS_FALLBACK_FIXTURE}
+      headingId="styleguide-goals-fallback-h"
+      anchorPrefix="fallback-"
+    />
+  </div>
+  {/* Link cards with a photo on every card: the arched doors. */}
+  <div id="styleguide-linkcards-doors">
+    <LinkCards
+      heading={DOOR_CARDS_FIXTURE.heading}
+      cards={DOOR_CARDS_FIXTURE.cards}
+      headingId="styleguide-linkcards-doors-h"
     />
   </div>
 

@@ -366,6 +366,9 @@ const THEMED_IDENTITY_PAIRS: Array<[string, string, string, string]> = [
     'the letter heading, first paragraph and signature',
   ],
   ['color-gold-ink', 'color-bg', 'background', "the letter's drop cap"],
+  // The goals index (Task 5): each goal's name in its own ink on the page.
+  ['color-purple-ink', 'color-bg', 'background', 'Witness in the goals index'],
+  ['color-brown-ink', 'color-bg', 'background', 'Work in the goals index'],
 ];
 
 const IDENTITY_TOKENS = [
@@ -387,6 +390,7 @@ const IDENTITY_TOKENS = [
   'color-night',
   'color-purple-ink',
   'color-green-ink',
+  'color-brown-ink',
 ];
 
 test('every church identity token is declared in @theme AND redeclared in .dark', () => {

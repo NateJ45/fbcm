@@ -388,8 +388,13 @@ export type ProjectedListedDocument = Omit<
 };
 
 /** One link card after its ctaBlock is resolved by CTA_PROJECTION. */
-export type ProjectedLinkCard = Omit<NonNullable<_LinkCardsSection['cards']>[number], 'cta'> & {
+export type ProjectedLinkCard = Omit<
+  NonNullable<_LinkCardsSection['cards']>[number],
+  'cta' | 'image'
+> & {
   cta?: ProjectedCtaBlock | null;
+  /** Optional; every card having one turns the band into arched doors. */
+  image?: ProjectedImage | null;
 };
 
 /** linkCardsSection — two to four doors into the rest of the site. */

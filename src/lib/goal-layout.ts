@@ -1,0 +1,27 @@
+// src/lib/goal-layout.ts
+// Safe to edit by hand
+// Each of the four goals is drawn in its own composition and colour, decided by
+// its POSITION (the church's order is Worship, The Way, Witness, Work), never by
+// a field (CLAUDE.md rule 9). A composition the goal cannot fill falls back to
+// the nave, so an editor can never produce an empty drawing.
+export type GoalLayout = 'nave' | 'path' | 'rings' | 'doors';
+export type GoalColour = 'green' | 'gold' | 'purple' | 'brown';
+
+const COLOURS: GoalColour[] = ['green', 'gold', 'purple', 'brown'];
+const LAYOUTS: GoalLayout[] = ['nave', 'path', 'rings', 'doors'];
+
+export function goalLayout(
+  index: number,
+  goal: { points?: unknown[] | null; photos?: unknown[] | null },
+): { layout: GoalLayout; colour: GoalColour } {
+  const colour = COLOURS[index % 4];
+  const wanted = LAYOUTS[index % 4];
+  const points = goal.points?.length ?? 0;
+  const photos = goal.photos?.length ?? 0;
+  const fits =
+    wanted === 'nave' ||
+    (wanted === 'path' && points >= 2) ||
+    (wanted === 'rings' && photos >= 3) ||
+    (wanted === 'doors' && points >= 2);
+  return { layout: fits ? wanted : 'nave', colour };
+}

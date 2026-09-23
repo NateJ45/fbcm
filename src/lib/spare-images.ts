@@ -107,6 +107,19 @@ const assetKey = (image: SanityImageObject | null | undefined): string | null =>
   return asset?._ref ?? asset?._id ?? null;
 };
 
+/**
+ * ARCH-DOOR LINK CARDS (2026-09-23, the Who We Are "alive" pass). A link-card
+ * band whose every card carries its own photograph draws its cards as arched
+ * doors (LinkCards.astro), so it is never the statement: this is the one test
+ * both that component and the hand-out below ask. Only titled cards count,
+ * because an untitled card never renders.
+ */
+export function cardsPictured(cards: unknown): boolean {
+  if (!Array.isArray(cards)) return false;
+  const shown = cards.filter((c) => !!(c as { title?: unknown } | null)?.title);
+  return shown.length > 0 && shown.every((c) => hasAsset((c as { image?: unknown }).image));
+}
+
 /** In the pool: points at an asset, and is not taller than it is wide. */
 const borrowable = (value: unknown): value is SanityImageObject =>
   hasAsset(value) && !isPortrait(value);
@@ -167,7 +180,8 @@ export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
         // A band with no heading has no big line to sit a photograph behind,
         // so it is not a consumer and the picture stays in the pool.
         const heading = typeof row.heading === 'string' ? row.heading.trim() : '';
-        if (heading && statementIndex === null) statementIndex = index;
+        // Nor is a band that draws its cards as arched doors (cardsPictured).
+        if (heading && statementIndex === null && !cardsPictured(row.cards)) statementIndex = index;
         break;
       }
       case 'sundayTimesSection': {

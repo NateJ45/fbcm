@@ -267,6 +267,7 @@
   --color-night: #0c241a; /* the Watchword band */
   --color-purple-ink: #46275e; /* the pledge on soft paper */
   --color-green-ink: #113a26; /* the letter on paper */
+  --color-brown-ink: #6a3d20; /* Work in the goals index, on paper */
 
   /* Fonts. Three faces, and the family names are exactly what the installed
      @fontsource packages declare. No " Variable" suffix on either Castoro:
@@ -658,6 +659,7 @@
   --color-night: #0a1e15;
   --color-purple-ink: #d9c8ea;
   --color-green-ink: #a9dcbf;
+  --color-brown-ink: #e3c1a0;
 
   /* The alternating "muted" surface's real dark value. Unlike --color-bg-soft
      (which this gate forbids .dark from touching), --surface-soft is a plain
@@ -2485,13 +2487,16 @@ body::before {
 .btn-rule path {
   transition: translate 0.3s;
 }
-.btn-rule:is(:hover, :focus-visible) path:first-child {
+.btn-rule:is(:hover, :focus-visible) path:first-child,
+.group:is(:hover, :focus-visible) .btn-rule path:first-child {
   translate: 2px -2px;
 }
-.btn-rule:is(:hover, :focus-visible) path:nth-child(2) {
+.btn-rule:is(:hover, :focus-visible) path:nth-child(2),
+.group:is(:hover, :focus-visible) .btn-rule path:nth-child(2) {
   translate: 3px 0;
 }
-.btn-rule:is(:hover, :focus-visible) path:last-child {
+.btn-rule:is(:hover, :focus-visible) path:last-child,
+.group:is(:hover, :focus-visible) .btn-rule path:last-child {
   translate: 2px 2px;
 }
 
@@ -3000,6 +3005,521 @@ body::before {
   }
   .lt-body > p:first-child {
     font-size: 21px;
+  }
+}
+
+/* The goals (Task 5): GoalsBand.astro. Each goal band sets its ground, ink,
+   accent (--gl-hi), secondary text (--gl-soft), hairline and arch outline by
+   the colour class of its position; the index on the page ground reads
+   --gl-mark, an ink that flips with the theme. Every pair is measured in
+   theme-tokens.test.ts. */
+.gl-green {
+  --gl-bg: var(--color-goal-green);
+  --gl-mark: var(--color-green-ink);
+  --gl-hi: var(--color-mint);
+}
+.gl-gold {
+  --gl-bg: var(--color-goal-gold);
+  --gl-mark: var(--color-gold-ink);
+  --gl-ink: var(--color-goal-ink-on-gold);
+  --gl-hi: var(--gl-ink);
+  --gl-soft: var(--gl-ink);
+  --gl-rule: rgb(44 26 15 / 0.4);
+  --arch-mould: var(--gl-ink);
+}
+.gl-purple {
+  --gl-bg: var(--color-goal-purple);
+  --gl-mark: var(--color-purple-ink);
+}
+.gl-brown {
+  --gl-bg: var(--color-goal-brown);
+  --gl-mark: var(--color-brown-ink);
+}
+.gl-purple,
+.gl-brown {
+  --gl-hi: var(--color-gold-light);
+  --arch-mould: var(--gl-hi);
+}
+.gl {
+  background: var(--gl-bg);
+  color: var(--gl-ink, #fff);
+}
+.gx-top {
+  padding-block: clamp(72px, 9vw, 140px) clamp(48px, 5vw, 80px);
+}
+.gx-intro,
+.gl-top {
+  display: grid;
+  gap: clamp(24px, 5vw, 88px);
+  align-items: end;
+}
+.gx-index {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px clamp(12px, 2vw, 28px);
+  margin-top: clamp(40px, 4vw, 64px);
+}
+.gx-index a {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 16px;
+  align-items: center;
+  min-height: 44px;
+  padding: 18px 0 6px;
+  border-top: 6px solid var(--gl-bg);
+  color: var(--gl-mark);
+  text-decoration: none;
+}
+.gx-glyph {
+  grid-row: 1 / 3;
+  width: 40px;
+}
+.gx-name {
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: 1;
+}
+.gx-index a:hover .gx-name {
+  text-decoration: underline 2px;
+  text-underline-offset: 5px;
+}
+.gl-wrap {
+  padding-block: clamp(80px, 9vw, 140px);
+}
+.gl-head {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(14px, 1.6vw, 22px);
+}
+.gl-glyph {
+  flex: none;
+  width: clamp(46px, 5vw, 72px);
+  margin-bottom: 0.1em;
+  color: var(--gl-hi);
+}
+.gl-name {
+  font-size: clamp(64px, 8.4vw, 132px);
+  line-height: 0.84;
+  letter-spacing: 0.005em;
+}
+.gl-also {
+  margin-top: 14px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.gl-also,
+.gl-pt-body,
+.gd-text {
+  color: var(--gl-soft, rgb(255 255 255 / 0.86));
+}
+.gl-title {
+  margin-top: clamp(16px, 2vw, 26px);
+  font-size: clamp(28px, 2.7vw, 40px);
+  line-height: 1.12;
+  color: var(--gl-hi);
+}
+.gl-lead {
+  max-width: 30em;
+  font-size: clamp(20px, 1.6vw, 23px);
+  line-height: 1.5;
+}
+.gl-quote {
+  margin-bottom: 18px;
+  font-size: clamp(26px, 2.4vw, 34px);
+  line-height: 1.2;
+  color: var(--gl-hi);
+}
+.gl-pt-title {
+  margin-bottom: 6px;
+  font-size: 21px;
+  line-height: 1.2;
+}
+.gl-pt-body {
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+/* NAVE. The caption carries its own scrim: it fades in above the words,
+   holds at 66% night behind every line (white 5.4:1, mint and gold-light
+   3.4:1 or better even over a pure white photo; both lines are large text),
+   and only below the words turns into the band colour. */
+.gn-bleed {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(520px, 64vw, 860px);
+  overflow: hidden;
+}
+.gn-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gn-cap {
+  --gl-hi: var(--color-gold-light);
+  --gl-soft: #fff;
+  --gn-scrim: color-mix(in srgb, var(--color-night) 66%, transparent);
+  --gn-tail: clamp(28px, 3vw, 48px);
+  position: relative;
+  width: 100%;
+  padding-block: clamp(120px, 14vw, 220px) var(--gn-tail);
+  color: #fff;
+  background: linear-gradient(
+    transparent,
+    var(--gn-scrim) clamp(96px, 11vw, 180px),
+    var(--gn-scrim) calc(100% - var(--gn-tail)),
+    var(--gl-bg)
+  );
+}
+.gl-green .gn-cap {
+  --gl-hi: var(--color-mint);
+}
+.gn-cap .gl-name {
+  font-size: clamp(76px, 10.4vw, 168px);
+}
+.gn-body {
+  display: grid;
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+  padding-block: clamp(24px, 3vw, 40px) clamp(72px, 8vw, 128px);
+}
+.gl-pad-top {
+  padding-top: clamp(80px, 9vw, 140px);
+}
+.gn-main {
+  display: grid;
+  gap: clamp(28px, 3vw, 44px);
+  align-content: start;
+}
+.gn-lead {
+  max-width: 24em;
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: 1.3;
+}
+.gn-points {
+  columns: 2;
+  column-gap: clamp(24px, 3vw, 48px);
+}
+.gn-pt {
+  break-inside: avoid;
+  margin-bottom: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--gl-rule, rgb(255 255 255 / 0.4));
+}
+.gn-pics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: end;
+  max-width: 560px;
+}
+.gn-pics > :first-child {
+  margin-bottom: 48px;
+}
+
+/* PATH. Steps descend along a dotted trail; at 900px and below the trail
+   turns downhill, a dotted line on the left with a dot at each step. */
+.gp-come {
+  margin-bottom: 0.35em;
+  font-size: clamp(34px, 3.6vw, 54px);
+  line-height: 1.08;
+}
+.gp-wrap {
+  position: relative;
+  margin-top: clamp(56px, 6vw, 96px);
+}
+.gp-trail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-dasharray: 2 12;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+.gp-trail path {
+  vector-effect: non-scaling-stroke;
+}
+.gp-steps,
+.gr-crowd,
+.gr-rings,
+.gd-doors {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 64px);
+}
+.gp-step {
+  position: relative;
+  margin-top: calc(var(--i) * clamp(60px, 7vw, 120px));
+}
+.gp-pt {
+  max-width: 22em;
+  margin-top: 22px;
+}
+.gp-pt .gl-pt-title {
+  font-size: 24px;
+}
+
+/* RINGS. The crowd of lancets in an arc, then the widening rings. */
+.gr-crowd {
+  gap: clamp(8px, 1.2vw, 18px);
+  align-items: end;
+  margin-top: clamp(56px, 6vw, 96px);
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgb(240 200 106 / 0.55);
+}
+.gr-crowd .arch-mould {
+  display: none;
+}
+.gr-rings {
+  margin-top: clamp(48px, 5vw, 80px);
+}
+.gr-rings li {
+  display: grid;
+  grid-template-rows: 84px auto;
+}
+.gr-rings svg {
+  align-self: end;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 18px;
+  overflow: visible;
+  fill: none;
+  stroke: var(--gl-hi);
+  stroke-width: 1.6;
+}
+.gr-rings circle {
+  vector-effect: non-scaling-stroke;
+}
+.gr-rings .gr-core {
+  fill: var(--gl-hi);
+  stroke: none;
+}
+.gr-scope {
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gl-hi);
+}
+
+/* DOORS. One door per point; the word shrinks as the doors multiply. */
+.gd-doors {
+  gap: clamp(16px, 3vw, 48px);
+  margin-top: clamp(56px, 6vw, 96px);
+}
+.gd-word {
+  margin: 26px 0 12px;
+  font-size: clamp(40px, calc(13.8vw / var(--n)), 72px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--gl-hi);
+}
+.gd-text {
+  max-width: 20em;
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+/* Link cards as arched doors (LinkCards.astro, every card pictured). */
+.lc-doors {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 28px);
+}
+.lc-door {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+}
+.lc-door figure {
+  --arch-ratio: 100 / 92;
+}
+.lc-door .arch {
+  background: var(--color-season-deep);
+}
+.lc-door:focus-visible {
+  outline: 3px solid var(--color-gold-light);
+  outline-offset: 6px;
+}
+.lc-door .arch-mould {
+  display: none;
+}
+.lc-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 22px 22px 30px;
+}
+
+@media (min-width: 901px) {
+  .gx-intro {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  }
+  .gl-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  }
+  .gx-index {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1121px) {
+  .gn-has-pics {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 3.4fr);
+  }
+  .gn-has-pics .gn-pics {
+    position: relative;
+    z-index: 2;
+    margin-top: calc(-1 * clamp(160px, 17vw, 280px));
+  }
+  .gn-cap .gl-title {
+    max-width: 66%;
+  }
+}
+@media (max-width: 1120px) {
+  .lc-doors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  .gp-trail {
+    display: none;
+  }
+  .gp-steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding-left: 34px;
+  }
+  .gp-steps::before {
+    content: '';
+    position: absolute;
+    inset: 10px auto 10px 8px;
+    border-left: 3px dotted;
+    opacity: 0.6;
+  }
+  .gp-step {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 20px;
+    align-items: center;
+    margin-top: 0;
+  }
+  .gp-step::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -33px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 5px var(--gl-bg);
+  }
+  .gp-pt {
+    margin-top: 0;
+  }
+  .gr-rings {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+  .gr-rings li {
+    grid-template-columns: 90px minmax(0, 1fr);
+    grid-template-rows: none;
+    column-gap: 18px;
+    align-items: start;
+  }
+  .gr-rings svg {
+    align-self: start;
+    justify-self: center;
+    margin: 0;
+  }
+}
+@media (max-width: 620px) {
+  .gx-index a {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .gx-glyph {
+    grid-row: auto;
+    width: 32px;
+  }
+  .gl-name {
+    font-size: 13.2vw;
+  }
+  .gn-bleed {
+    min-height: 118vw;
+  }
+  .gn-cap .gl-name {
+    font-size: 14.5vw;
+  }
+  .gn-points {
+    columns: 1;
+  }
+  .gn-pics {
+    gap: 10px;
+  }
+  .gn-pics > :first-child {
+    margin-bottom: 32px;
+  }
+  .gp-step {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gp-step figure {
+    max-width: 260px;
+  }
+  .gp-step::before {
+    top: 30px;
+  }
+  .gr-crowd {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 22px;
+  }
+  .gd-doors {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .gd-door {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 0 18px;
+    align-items: end;
+  }
+  .gd-door figure {
+    grid-row: 1 / 3;
+  }
+  .gd-word {
+    margin: 0 0 8px;
+    font-size: 9vw;
+  }
+  .gd-text {
+    grid-column: 2;
+    font-size: 17.5px;
+  }
+  .gd-door:nth-child(even) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    text-align: right;
+  }
+  .gd-door:nth-child(even) figure {
+    grid-column: 2;
+  }
+  .gd-door:nth-child(even) > :not(figure) {
+    grid-column: 1;
+  }
+  .gd-bare {
+    display: block;
+  }
+  .lc-doors {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lc-door figure {
+    --arch-ratio: 100 / 70;
   }
 }
 

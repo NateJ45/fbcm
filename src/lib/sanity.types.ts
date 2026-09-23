@@ -35,6 +35,15 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
 };
 
+export type LinkCardImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "linkCard.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  _type: 'image';
+};
+
 export type Photo = {
   asset?: SanityImageAssetReference;
   media?: unknown; // Unable to locate the referenced type "photo.media" in schema
@@ -807,6 +816,7 @@ export type LinkCardsSection = {
     title?: string;
     body?: string;
     cta?: CtaBlock;
+    image?: LinkCardImage;
     _type: 'linkCard';
     _key: string;
   }>;
@@ -1860,6 +1870,7 @@ export type AllSanitySchemaTypes =
   | SanityFileAssetReference
   | ListedDocumentFile
   | SanityImageAssetReference
+  | LinkCardImage
   | Photo
   | Redirect
   | SectionPreset

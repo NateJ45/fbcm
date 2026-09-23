@@ -37,11 +37,12 @@ import LinkCards from '@/components/sections/LinkCards.astro';
 import WatchwordBand from '@/components/sections/WatchwordBand.astro';
 import PledgeReading from '@/components/sections/PledgeReading.astro';
 import PastorsLetter from '@/components/sections/PastorsLetter.astro';
+import GoalsBand from '@/components/sections/GoalsBand.astro';
 import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
 import { splitStega } from '@/lib/preview-stega';
-import { assignSpareImages } from '@/lib/spare-images';
+import { assignSpareImages, cardsPictured } from '@/lib/spare-images';
 import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
 import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
@@ -287,7 +288,8 @@ const isDarkBand = (block: unknown, index: number): boolean => {
     case 'heritageBandSection':
       return true;
     case 'linkCardsSection':
-      return index === spares.statementIndex;
+      // The statement, or the arched doors on green (cardsPictured).
+      return index === spares.statementIndex || cardsPictured((b as { cards?: unknown }).cards);
     default:
       return false;
   }
@@ -530,9 +532,7 @@ const wrapAttrs = (key: string | undefined) =>
         ) : s._type === 'letterSection' ? (
           <PastorsLetter block={s} headingId={headingId} settings={settings} />
         ) : s._type === 'goalsSection' ? (
-          // The four goal bands arrive in Task 5; until then the block renders
-          // nothing, rather than falling through to the unknown-type warning.
-          <Fragment />
+          <GoalsBand block={s} headingId={headingId} />
         ) : /* scaffold:end */ s._type === 'dynamicListSection' ? (
           <DynamicList
             eyebrow={s.eyebrow}

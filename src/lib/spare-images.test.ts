@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { assignSpareImages } from './spare-images.ts';
+import { assignSpareImages, cardsPictured } from './spare-images.ts';
 
 // A minimal image object: the helper only ever looks at `asset`.
 const img = (id: string) => ({ _type: 'image', asset: { _id: id }, alt: id });
@@ -328,4 +328,36 @@ test("the strip never shows the hero's first photograph, even from another band"
   ]);
   assert.equal(out.door, door);
   assert.deepEqual(out.strip, [congregation]);
+});
+
+// Arch-door link cards (2026-09-23, Who We Are Task 5). A link-card band whose
+// every card carries its own photograph draws the cards as arched doors, so it
+// has no big line to put a borrowed backdrop behind: it is not the statement.
+test('cardsPictured is true only when every titled card has a photo', () => {
+  const card = (title: string, image?: unknown) => ({ title, image });
+  assert.equal(cardsPictured([card('A', img('a')), card('B', img('b'))]), true);
+  assert.equal(cardsPictured([card('A', img('a')), card('B')]), false);
+  assert.equal(cardsPictured([card('A', { _type: 'image' })]), false);
+  // An untitled card never renders, so it neither needs nor spoils a photo.
+  assert.equal(cardsPictured([card('A', img('a')), { image: undefined }]), true);
+  assert.equal(cardsPictured([]), false);
+  assert.equal(cardsPictured(undefined), false);
+});
+
+test('a link-card band with a photo on every card is not the statement consumer', () => {
+  const photo = img('sanctuary');
+  const out = assignSpareImages([
+    { _type: 'imageTextSection', image: photo },
+    {
+      _type: 'linkCardsSection',
+      heading: 'Where To Go Next',
+      cards: [
+        { title: 'Sunday', image: img('s') },
+        { title: 'Staff', image: img('t') },
+      ],
+    },
+  ]);
+  assert.equal(out.statement, null);
+  assert.equal(out.statementIndex, null);
+  assert.deepEqual(out.strip, [photo]);
 });

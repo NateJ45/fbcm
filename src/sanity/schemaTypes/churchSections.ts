@@ -501,8 +501,26 @@ export const linkCardsSection = defineType({
               type: 'ctaBlock',
               description: 'Where the card goes. It draws as a text link, never a button.',
             }),
+            // 2026-09-23 (Who We Are "alive", Task 5): optional. When EVERY card
+            // has one, the band draws the cards as arched doors on green.
+            defineField({
+              name: 'image',
+              title: 'Photo',
+              type: 'image',
+              options: { hotspot: true },
+              description:
+                'Optional. Give every card a photo and the band draws the cards as arched doors on green, each photo in its door. Leave all of them blank for the plain row.',
+              fields: [
+                defineField({
+                  name: 'alt',
+                  title: 'Describe the photo',
+                  type: 'string',
+                  validation: (r) => r.required(),
+                }),
+              ],
+            }),
           ],
-          preview: { select: { title: 'title', subtitle: 'body' } },
+          preview: { select: { title: 'title', subtitle: 'body', media: 'image' } },
         }),
       ],
     }),

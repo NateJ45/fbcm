@@ -43,12 +43,25 @@
 //    spec asks for on both pages that carry this block, and two or four cards
 //    share it rather than redrawing the band.
 //
+// THE DOORS (2026-09-23, the Who We Are "alive" pass; the prototype's
+// `.next`). When EVERY card carries its own photograph (the optional `image`
+// on a card, added then), the band is drawn as arched doors on the green
+// ground instead: each photo in a door arch, the title, the sentence and a
+// rule button on a paper panel beneath it, the whole card still the one link.
+// cardsPictured() in src/lib/spare-images.ts is the test, and the same test
+// keeps such a band out of the spare-image hand-out, so it is never also the
+// statement. One card without a photo and the band is the ruled row again:
+// half a row of doors is not a designed state.
+//
 // A CONTENT block: the alternating surface arrives as a prop from
-// SectionRenderer, and is ignored in the statement form, which paints its own.
+// SectionRenderer, and is ignored in the statement and door forms, which
+// paint their own.
 import SectionHeading from '@/components/SectionHeading.astro';
 import SanityImage from '@/components/SanityImage.astro';
+import ArchFrame from '@/components/church/ArchFrame.astro';
 import { surfaceClass } from '@/lib/surfaces';
 import { resolveCtaHref } from '@/lib/cta-href';
+import { cardsPictured } from '@/lib/spare-images';
 import type { ProjectedLinkCard, SanityImageObject } from '@/lib/pageBuilder.types';
 
 interface Props {
@@ -84,11 +97,11 @@ const {
 } = Astro.props as Props;
 
 const bg = surfaceClass(surface);
-const hasFrame = !!frame?.asset;
-const dark = onDark ?? hasFrame;
-
 // A card with no title is a card nobody can read, so it never renders.
 const shown = cards.filter((c) => c?.title);
+const doors = cardsPictured(shown);
+const hasFrame = !doors && !!frame?.asset;
+const dark = onDark ?? hasFrame;
 
 // The row's ink, named once so the two forms cannot drift apart.
 const ruleInk = dark ? 'border-bg/18' : 'border-hair';
@@ -103,7 +116,61 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
 ---
 
 {
-  shown.length > 0 && (
+  doors && (
+    <section
+      class="lc-band bg-season-green text-white-pure"
+      aria-labelledby={heading ? headingId : undefined}
+    >
+      <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
+        {heading && (
+          <h2 id={headingId} class="mb-[clamp(36px,4vw,64px)] font-display text-title leading-none">
+            {heading}
+          </h2>
+        )}
+        {intro && <p class="-mt-4 mb-10 max-w-[42ch] text-lede">{intro}</p>}
+        <ul class="lc-doors" style={`--n:${shown.length}`}>
+          {shown.map((card, i) => (
+            <li>
+              <a href={hrefFor(card)} class="lc-door group">
+                <ArchFrame
+                  image={card.image}
+                  shape="door"
+                  width={720}
+                  sizes="(min-width: 1121px) 300px, (min-width: 621px) 45vw, 100vw"
+                  alt={card.image?.alt ?? ''}
+                  grade="warm"
+                  style={`transition-delay: ${i * 100}ms`}
+                />
+                <span class="lc-body bg-background text-foreground">
+                  <span class="font-display text-h3 leading-[1.05] text-green-ink">
+                    {card.title}
+                  </span>
+                  {card.body && (
+                    <span class="mt-2.5 mb-6 text-lg leading-[1.45] text-muted-foreground">
+                      {card.body}
+                    </span>
+                  )}
+                  {card.cta?.label && (
+                    <span class="btn-rule mt-auto inline-flex items-center gap-3 self-start bg-season-green font-ui font-bold text-white-pure transition-colors group-hover:bg-season-deep">
+                      {card.cta.label}
+                      <svg aria-hidden="true" viewBox="0 0 13 22">
+                        <path d="M2 5L10 1" />
+                        <path d="M3 11H12" />
+                        <path d="M2 17L10 21" />
+                      </svg>
+                    </span>
+                  )}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+{
+  !doors && shown.length > 0 && (
     <section
       class:list={
         hasFrame ? ['relative isolate flex min-h-[88svh] flex-col justify-end text-bg'] : [bg]
