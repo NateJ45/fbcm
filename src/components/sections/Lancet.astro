@@ -1,0 +1,44 @@
+---
+// Safe to edit by hand
+// The window: a portrait seen through the 1929 tower's pointed lancet.
+// Width 1 : height 2.1; the arch head is two arcs of radius 1.5 x span, a
+// true lancet (HP Pres's arch is rounder; do not soften it). The photo starts
+// 16% down and fades over its top 7% into the band's own surface, read from
+// the inherited --band custom property, so the point reads as open glass in
+// either theme with no colour known at build time. The gold moulding follows
+// the arch 9px outside it. Used at most ONCE per page (src/lib/photo-shape.ts).
+// The clipPath id is per-instance so two components on one page never collide.
+import SanityImage from '@/components/SanityImage.astro';
+
+interface Props {
+  image: any;
+  alt: string;
+  /** The band's headingId: stable and unique, so parity never flaps. */ uid: string;
+}
+const { image, alt, uid } = Astro.props as Props;
+const clipId = `lancet-${uid}`;
+const d = 'M0,1 L0,0.5324 A1.5,0.7143 0 0 1 0.5,0 A1.5,0.7143 0 0 1 1,0.5324 L1,1 Z';
+---
+
+<div class="ph-window">
+  <svg width="0" height="0" aria-hidden="true" focusable="false" class="absolute">
+    <clipPath id={clipId} clipPathUnits="objectBoundingBox"><path d={d}></path></clipPath>
+  </svg>
+  <div class="ph-pane" style={`clip-path:url(#${clipId})`}>
+    <SanityImage
+      source={image}
+      width={800}
+      sizes="(min-width: 1024px) 340px, 66vw"
+      quality={78}
+      alt={alt}
+      class="ph-pane-img"
+    />
+  </div>
+  <svg
+    class="ph-moulding"
+    viewBox="0 0 1 1"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+    focusable="false"><path d={d}></path></svg
+  >
+</div>

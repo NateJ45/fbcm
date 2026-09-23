@@ -17,6 +17,13 @@ interface Props {
   value: PortableTextBlock[] | undefined | null;
   /** Optional className applied to the wrapping div for spacing/typography overrides per slot. */
   className?: string;
+  /**
+   * 'prose' (default) is the long-read setting with its own margins and list
+   * bullets. 'bare' renders blocks with NO spacing or list styling so a layout
+   * component (RichBody.astro) can place each one itself; marks, links and the
+   * preview's stega payloads render exactly as in 'prose'.
+   */
+  variant?: 'prose' | 'bare';
 }
 
 // RETONED IN THE ART-DIRECTION PASS (2026-09-20, task 8). Three changes worth
@@ -192,11 +199,36 @@ function makeComponents(): PortableTextComponents {
   };
 }
 
-export default function PortableText({ value, className }: Props) {
+export default function PortableText({ value, className, variant = 'prose' }: Props) {
   if (!value || value.length === 0) return null;
+  const components = makeComponents();
+  if (variant === 'bare') {
+    // No wrapper element at all: the caller's own element is the container, so
+    // a bare block can sit inside an <h3>, <li> or <span> without nesting a
+    // <div> where HTML does not allow one. Headings and list items render only
+    // their spans (the caller supplies the heading element); a normal paragraph
+    // is a bare <p> and a quote is a <blockquote>. Every style proseBody offers
+    // is mapped here, or it falls to the library's unstyled default.
+    components.block = {
+      normal: ({ children }) => <p>{children}</p>,
+      h2: ({ children }) => <>{children}</>,
+      h3: ({ children }) => <>{children}</>,
+      h4: ({ children }) => <>{children}</>,
+      blockquote: ({ children }) => <blockquote className="rt-quote">{children}</blockquote>,
+    };
+    components.list = {
+      bullet: ({ children }) => <>{children}</>,
+      number: ({ children }) => <>{children}</>,
+    };
+    components.listItem = {
+      bullet: ({ children }) => <>{children}</>,
+      number: ({ children }) => <>{children}</>,
+    };
+    return <PT value={value} components={components} />;
+  }
   return (
     <div className={className}>
-      <PT value={value} components={makeComponents()} />
+      <PT value={value} components={components} />
     </div>
   );
 }

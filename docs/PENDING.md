@@ -521,6 +521,125 @@ now ties the schema max and the slice with a drift test.
 
 ---
 
+## RichText Ledger and photo shapes landed (2026-09-22)
+
+Branch `feat/richtext-ledger-photo-shapes`, ten tasks run as subagent-driven
+development, merged to `main` 2026-09-22. Full account in
+`docs/agent/changelog.md`'s 2026-09-22 entry; this is what it closes and what
+it leaves open.
+
+**Closed, from the per-section critique of the art-direction pass:**
+
+- **Critique item 1, the RichText monoculture** (about 45 of 92 bands were the
+  same heading-left, prose-right shape). `RichTextSection` now lays its body
+  out from the body's own shape via `src/lib/rich-shape.ts`; all 29 rich-text
+  bands on the site were checked branch by branch against the approved
+  prototype and match.
+- **Critique item 2, portrait crops.** Every ImageText photograph now takes
+  its shape from its own aspect ratio and the page's photo budget
+  (`src/lib/photo-shape.ts`), so a portrait-shaped original is never forced
+  into a landscape frame.
+- **Critique item 4a, the lede guard.** A one-paragraph intro ahead of an h3
+  group now qualifies as a lede even when it is flowed on its own (the
+  Ministries Adults band); `flow()` gained an `after` count so the guard sees
+  the h3 groups that follow it.
+
+**Open, found while landing the above (not fixed, no further work planned
+this branch):**
+
+- **The pastors' letter reads as newspaper columns.** Its body has no signal
+  in the Portable Text that marks it as a letter (no distinct style, no
+  salutation block), so the classifier has nothing to key a "letter" layout
+  on without a schema change.
+- **The pledge gets plain rows, not the Ledger's hung-prefix treatment.** Its
+  list items share no opening word the way the covenant's "To" items do, so
+  `sharedPrefix` returns empty and it falls through to plain rows.
+- **Short History sections (under about 100 words) sit in one column across
+  the left half of the page**, rather than using the width available to
+  them. The classifier's column rules are tuned for longer running text.
+- **`/beliefs` and `/ministries` carry heavy hairline density.** Both pages
+  stack several ruled/columned bands in a row; nothing in this branch reduced
+  the rule count, only reshaped what sits inside each rule.
+- **The ground test cannot detect a crowded photo.** `assignPhotoShapes`
+  budgets grounds by count and spacing, not by how busy the photograph itself
+  is; catching a crowded ground would need a field an editor sets, which
+  was not taken (rule 15: anything computable stays computed, and crowding
+  is not computable from the data on hand).
+
+**Other open items from this branch:**
+
+- **For Nathan, in the Studio: fix the `/history` "Saunders to the
+  co-pastors" photo's alt text.** It says "the congregation in the 1990s",
+  but the picture is a head-and-shoulders portrait of George Saunders, and
+  since this pass the alt prints as the visible caption, so the wrong
+  description now sits in plain view under his portrait. A content edit, no
+  code. (Also in the vault as a `#nathan` item.)
+- **Content, found while placing photographs (for the photo pass, not this
+  branch):**
+  - The "Postwar to Mattox" ground is a phone photograph of a framed print;
+    the frame's dark edges show at both sides of the full-bleed band.
+  - `/contact`'s window sits on the left because the seeded data says
+    `imageSide: 'left'` (`scripts/pages/contact.mjs:264`); the prototype's
+    own table said "right", but that came from a hard-coded map, not the
+    data. A one-field content edit if Nathan wants the window on the right.
+- **Mobile LCP on `/` is 3239 ms, +0.2 s over `main`'s 3017 ms**, likely the
+  larger inline stylesheet (122.5 KB to 133.9 KB). Both are inside the
+  4500 ms gate and past the 2000 ms spec target. Owed together with the
+  hero-photo delivery decision already open below (art-direction pass,
+  "A production Lighthouse re-measure is owed").
+- **`npx lhci autorun` cannot run locally on this Windows machine** (EPERM on
+  the chrome-launcher temp profile, the same issue the 2026-09-20 note
+  records). CI's Linux run is the one that exercises `lighthouserc.json`'s
+  asserts; Lighthouse numbers here were measured by hand against
+  `wrangler dev` instead (see the changelog entry).
+- **Parked minors, deferred during the branch, none touching live content:**
+  `splitBlockText` assumes a single trailing stega run, with no guard for one
+  sitting mid-span; `sharedPrefix` joins cleaned words with single spaces
+  while `splitBlockText` indexes the raw span, so a double or leading space
+  in a shared prefix would mis-split; of the Task 6 ground-budget edge cases,
+  "never two consecutive grounds" IS tested (`photo-shape.test.ts`, "ground
+  budget: a second ground only four rows later..."), and what stays untested
+  is the page-length floor (a 5-row page, where a second ground 4 rows later
+  must still be refused) and a hero that is not first in `rows`; `wideRun`
+  treats two consecutive label-shaped paragraphs as a labelled row rather
+  than a description, faithful to the prototype but untested.
+- **Resolved in the final whole-branch review (2026-09-22):** Heading (h2),
+  Quote (blockquote) and Numbered lists, all offered by `proseBody`, used to
+  fall to unstyled defaults or lose their order in the Ledger; they now
+  render as a section head, a `quote` piece on a gold rule, and an ordered
+  list. A body with h4 and no h3 now promotes its h4s to h3, so it no longer
+  skips a level under the band's h2. A `legend` band whose names are gone
+  after the lede now falls back to `row`. The ground band's literal colours
+  now carry a comment naming them a deliberate dark pin.
+- **`richTextSection`'s `align` field is now inert.** The Ledger ignores it
+  (the heading always sits at the page's one left edge, CLAUDE.md rule 17),
+  and `RichTextSection.astro` says so in a comment, but the Studio still
+  offers it with no hint. Saying so in the field's schema `description` is a
+  schema change and needs Nathan's OK; hiding or removing the field needs
+  the same, plus the rule 1 "Remove field" care.
+- **The ground's text could clip a long lede at 320px.** `.ph-ground-fig` has
+  a fixed `clamp()` height and `.ph-ground-text` is absolutely positioned at
+  its foot, so text taller than the band is cut off by `overflow: hidden`.
+  The longest live ground text is 21 words and fits. Fix later with a
+  `min-height` in place of the height and the text in normal flow.
+- **Captions (optional, predates this pass).** The ground's caption is a
+  `<p>`, not a `<figcaption>`, and every photo shape repeats the alt text as
+  its visible caption, so a screen reader hears the description twice.
+- **Photo library, a separate branch.** `feat/photo-library` (worktree
+  `../fbcm-photos`, cut from `main` at `e6d1e90`) is gap-filling photographs
+  the Wix capture missed and will upload the whole church photo library to
+  Sanity with media tags. Placement of the new photographs into pages,
+  including the wedding page's building shots Nathan asked to reuse, is
+  queued now that the Ledger branch has merged (2026-09-22).
+- **Children's photos: resolved, not open.** Nathan, 2026-09-22: every child
+  photograph in use on the new site (the home hero, the ministries band, and
+  any others the photo library adds) was already live and public on the
+  church's old Wix site, so the church has already approved their use.
+  `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md` is updated
+  to record this rather than carry it as an open question.
+
+---
+
 ## Art-direction pass landed (2026-09-21)
 
 Branch `feat/art-direction`, thirteen tasks run as subagent-driven development,

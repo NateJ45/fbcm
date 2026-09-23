@@ -82,6 +82,17 @@ const cmsRedirects = buildRedirectMap(
   await cmsQuery('*[_type == "redirect" && defined(from) && defined(to)]{from,to,permanent}', []),
 );
 
+// Non-font asset inline ceiling (128 KiB), unchanged since 2026-09-20: margin
+// between the then-measured site sheet (124,750 B, since grown, see below)
+// and the Studio's lib.<hash>.css (165,056 B).
+const SITE_ASSET_INLINE_LIMIT = 131072;
+// CSS-only inline ceiling (144 KiB), raised 2026-09-22 for the Ledger and
+// photo-shape CSS: the site sheet measured 133,535 B that day, which is over
+// SITE_ASSET_INLINE_LIMIT but comfortably under this with margin on both
+// sides of it and the Studio's still-unchanged 165,056 B sheet. See the long
+// comments on `build.inlineStylesheets` and on `assetsInlineLimit` below.
+const CSS_INLINE_LIMIT = 147456;
+
 // Pages the editor keeps out of search. "Keep this page out of Google"
 // (page.hideFromSearch) has to do two things: put a robots tag on the page
 // (src/pages/[slug].astro does that) and drop the page from the sitemap, which
@@ -140,6 +151,17 @@ export default defineConfig({
     // both sides, so 'auto' now inlines the site sheet and leaves the Studio's
     // linked. Re-measure both files after any Tailwind or Sanity UI upgrade
     // that could move either size past 131072.
+    //
+    // 2026-09-22 (feat/richtext-ledger-photo-shapes, Ledger + photo-shape CSS):
+    // the Ledger `.rt-*` and photo `.ph-*` styles pushed the site sheet to
+    // 133,535 bytes, past the 131072 limit above, so every page started
+    // linking a render-blocking stylesheet again instead of inlining it.
+    // Raised the CSS-only ceiling to CSS_INLINE_LIMIT (see below) with margin
+    // on both sides of the 133,535-byte site sheet and the still-unchanged
+    // 165,056-byte Studio sheet (lib.<hash>.css). Every other non-font asset
+    // stays under the original 131072 (SITE_ASSET_INLINE_LIMIT below);
+    // widening the CSS ceiling must not also widen it for other assets, or
+    // the font-bundling regression from the 2026-09-20 note above returns.
     inlineStylesheets: 'auto',
   },
   // `imageService: 'compile'` tells @astrojs/cloudflare to process images
@@ -216,16 +238,30 @@ export default defineConfig({
       // Fixed by making this a function instead of a number: Astro and Vite
       // both accept `(filePath, content) => boolean`. Font files are always
       // kept external regardless of size (so @font-face URLs stay real,
-      // cacheable requests), and everything else -- including the compiled
-      // stylesheets this option was added for -- inlines under 131072 bytes
-      // (128 KiB), a limit chosen with margin between the measured site sheet
-      // (124,750 bytes) and the Studio's largest sheet, lib.<hash>.css
-      // (165,056 bytes, the @sanity/ui bundle). Re-verify both stylesheet
-      // sizes after any Tailwind or Sanity UI upgrade that could move either
-      // one past 131072, and re-run the woff2 check after any change here.
+      // cacheable requests). Everything else non-CSS stays under
+      // SITE_ASSET_INLINE_LIMIT (131072 bytes / 128 KiB), the original limit
+      // chosen with margin between the then-measured site sheet (124,750
+      // bytes) and the Studio's largest sheet, lib.<hash>.css (165,056
+      // bytes, the @sanity/ui bundle).
+      //
+      // 2026-09-22: `.css` files get their own, higher ceiling,
+      // CSS_INLINE_LIMIT (147456 bytes / 144 KiB), because this branch's
+      // Ledger and photo-shape CSS grew the site sheet to 133,535 bytes,
+      // past SITE_ASSET_INLINE_LIMIT. 147456 sits with margin above the
+      // 133,535-byte site sheet and below the Studio's still-165,056-byte
+      // sheet. Every OTHER non-font asset type deliberately stays on the
+      // narrower SITE_ASSET_INLINE_LIMIT -- widening it for everything
+      // would reopen the font-bundling regression described above, where a
+      // wide-enough ceiling let Vite base64-inline @font-face url()
+      // references into the "inlined" stylesheet. Re-verify both stylesheet
+      // sizes after any Tailwind or Sanity UI upgrade, or any further
+      // section CSS growth, that could move either one past its ceiling,
+      // and re-run the woff2 check (`find dist/client/_astro -name
+      // "*.woff2"`) after any change here.
       assetsInlineLimit: (filePath, content) => {
         if (/\.(woff2?|ttf|otf|eot)$/i.test(filePath)) return false;
-        return content.length < 131072;
+        if (/\.css$/i.test(filePath)) return content.length < CSS_INLINE_LIMIT;
+        return content.length < SITE_ASSET_INLINE_LIMIT;
       },
     },
     // @sanity/ui ships an ESM build that Vite's dependency pre-bundler

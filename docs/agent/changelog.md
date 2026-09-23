@@ -10,6 +10,88 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-22 — The RichText Ledger and photo shapes: a photograph belongs to its text, not to a column below it._
+
+A per-section critique of the deployed art-direction site (92 section screenshots at
+1440 with real scrollbars, 12 phone pages) found the vocabulary had landed but the
+composition had not: about half the site's bands were the same heading-left,
+prose-right shape, and every ImageText photograph sat as a large 16:9 rectangle
+below the text in the opposite column. Nathan: "the whole huge rectangle in a
+different column just looks bad and I don't see other websites doing it." An audit
+of thirteen church sites (Two Ten Creatives' "best of 2026" list plus Highland Park
+Presbyterian and Peachtree Church) confirmed it: nobody does that. Two variant
+loops, each judged against a prototype approved as the visual spec, replaced it.
+
+`RichTextSection` now lays its body out from the body's own shape (the "Ledger"),
+classified in `src/lib/rich-shape.ts`, first match wins: `row` (a band with a
+heading whose body has no h3, h4, list or quote, 3 or fewer paragraphs, 80 words
+or fewer),
+`columns` (2 or more h3 groups whose bodies are only paragraphs, 150 words or fewer
+per group), `sections` (any other body with an h3), `register` (8 or more
+paragraphs, at least 80% of them 35 words or fewer), `ledger` (lists of 3 or more
+items carrying at least 40% of the words) or `prose`. A body h2 counts as an h3, a
+blockquote is its own piece, a numbered list stays an ordered list, and a body with
+h4 but no h3 has its h4s promoted to h3 (final-review fixes, 2026-09-22). Nothing
+is decided from a field. `ImageText` now places its photograph by the photograph's
+own shape, classified in `src/lib/photo-shape.ts`, first match wins: `window` (the
+page's first portrait, aspect 0.85 or less, set in a lancet arch taken from the
+church's own window tracery), `frame` (any later portrait of aspect 0.85 or less), `legend` (aspect 1.8 or
+more with a "left to right" paragraph over 3 to 8 listed names), `plate` (aspect
+under 1.25 with a year from 1500 to 1949 in the alt or eyebrow), `ground` (aspect
+1.3 or more and 2000px wide or more, not the band straight after a photo hero, and
+a second one only 4 or more rows after the first on a page of 6 or more rows) or
+`row` (beside the text, the default). A page-level pass assigns shapes across all
+of a page's photo bands together, so there is at most one window and at most two
+grounds per page, and an editor swapping one band's picture can change another
+band's shape.
+One shared renderer, `RichBody.astro`, draws both, so a photo band's prose and a
+text band's prose read as one grammar. See `docs/agent/components.md`.
+
+Two new type sizes were added to the theme: `--text-item` and `--text-dense`, no
+more. Zero Sanity schema changes for Parts A and B; one deliberate exception
+afterward (see below). Ten tasks, subagent-driven, Sonnet for the mechanical span
+splitting and classifiers, Opus for the two renderer rewrites and both gate
+passes.
+
+**The stylesheet crossed the inline limit mid-branch.** The new `.rt-*` and
+`.ph-*` CSS grew the site sheet from 122,466 B to 133,535 B, past the
+131,072 B threshold that had kept it inlined since plan 2c, and every page
+silently fell back to a render-blocking linked sheet with no gate noticing
+(parity is the only gate that would have caught it, and it was mid-branch by
+design). Fixed by splitting the inline-asset limit in `astro.config.mjs`: CSS
+files alone get a 147,456 B ceiling, kept under the embedded Studio's
+165,056 B sheet so the Studio never inlines; every other asset keeps the
+131,072 B limit. CLAUDE.md rule 20.
+
+**One schema change, made deliberately mid-branch with Nathan's sign-off.**
+Opening the Studio's Text field on the Ministries Adults band, which the
+seeded content already carried as `h4`, crashed with "Could not find Sanity
+schema type for style: h4". The section body schemas had never declared it.
+Added `h4` ("Small heading") to the `proseBody` style list in `sections.ts`
+and `richSections.ts`, the one place both files need it; typegen and a
+render-identity diff (`dist/client/ministries/index.html` byte-identical
+before and after) confirmed the schema widening changed nothing already
+built.
+
+**The ground's eyebrow moved from gold to cream.** The plan specified
+`text-gold` for the ground's eyebrow, matching the prototype, but measured at
+2.86:1 on the home page's ground photograph, below the 4.5:1 AA floor for
+16px UI text, and the failure was real rather than a test artefact (confirmed
+under the words themselves, not just the whole eyebrow box). Switched to the
+same `text-bg` cream the full-bleed hero's own eyebrow already uses over a
+photograph, per the plan's brand rule that gold is never set as text over a
+light or uncertain ground; measured 7.18:1 or better on every ground
+afterward.
+
+Gates: 632 unit tests (up from 588), `astro check` and lint clean, Playwright
+305 passed / 0 failed / 1 skipped by design (chromium 171, chromium-scrollbars
+68, webkit-iphone 66). Parity recaptured twice, reaching a fixpoint both times
+at a 133,857 B inline stylesheet, 162/162. Studio click-to-edit was verified
+in Nathan's signed-in Chrome against local `wrangler dev` on the Ledger's said
+lists, piped table, run-in labels, the lancet heading/body/caption, and the
+legend names. Open items, content findings and parked minors are in
+`docs/PENDING.md`.
+
 _2026-09-21 — The art-direction pass: a full identity and layout rebuild off the generic starter look._
 
 Nathan's read on the deployed plan-2 site was blunt: "very generic and plain... not

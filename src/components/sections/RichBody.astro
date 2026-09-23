@@ -1,0 +1,171 @@
+---
+// Safe to edit by hand
+// Draws the Ledger's pieces (src/lib/rich-shape.ts) as children of an .rt-g
+// grid. Every block goes through PortableText variant="bare" so marks, links
+// and the preview's click-to-edit survive; the only plain strings are the
+// split-off heads (a said prefix, a table name, a run-in label), which are
+// cleaned text by construction (src/lib/span-split.ts).
+import PortableText from '@/components/PortableText';
+import type { RichPiece } from '@/lib/rich-shape';
+import { toPt } from '@/lib/span-split';
+
+interface Props {
+  pieces: RichPiece[];
+}
+const { pieces } = Astro.props as Props;
+---
+
+{
+  pieces.map((x) =>
+    x.kind === 'lede' ? (
+      <div class="rt-lede rt-v">
+        <PortableText value={toPt(x.block)} variant="bare" />
+      </div>
+    ) : x.kind === 'standfirst' ? (
+      <div class="rt-standfirst">
+        <PortableText value={toPt(x.block)} variant="bare" />
+      </div>
+    ) : x.kind === 'leadin' ? (
+      <div class="rt-leadin">
+        <PortableText value={toPt(x.block)} variant="bare" />
+      </div>
+    ) : x.kind === 'quote' ? (
+      <blockquote class="rt-sub rt-quote rt-v">
+        {/* the element is here, so the block renders as its paragraph */}
+        <PortableText value={toPt({ ...x.block, style: 'normal' })} variant="bare" />
+      </blockquote>
+    ) : x.kind === 'measure' || x.kind === 'run2' || x.kind === 'run3' ? (
+      <div class={`rt-${x.kind} rt-v`}>
+        {x.paras.map((q) =>
+          q.label ? (
+            <div class="rt-runin">
+              <span class="rt-rl font-ui text-ui">{q.label}</span>
+              <PortableText value={toPt(q.block)} variant="bare" />
+            </div>
+          ) : (
+            <PortableText value={toPt(q.block)} variant="bare" />
+          ),
+        )}
+      </div>
+    ) : x.kind === 'table' ? (
+      <div class="rt-sub rt-ledger rt-v">
+        {x.rows.map((r) => (
+          <div class="rt-row">
+            {r.name ? <p class="rt-nm">{r.name}</p> : null}
+            <div class="rt-ds" style={r.name ? undefined : 'grid-column:1/12'}>
+              <PortableText value={toPt(r.tail)} variant="bare" />
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : x.kind === 'labelled' ? (
+      <div class="rt-sub rt-ledger rt-labelled rt-v">
+        {x.rows.map((r) => (
+          <div class="rt-row">
+            <div class="rt-nm">
+              <PortableText value={toPt(r.label)} variant="bare" />
+            </div>
+            <div class="rt-ds">
+              {r.body.map((b) => (
+                <PortableText value={toPt(b)} variant="bare" />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : x.kind === 'said' ? (
+      <ul class:list={['rt-said rt-v', x.hang && 'is-hang']}>
+        {x.items.map((it) => (
+          <li>
+            <span class="rt-pre">
+              <span>{x.prefix}</span>
+            </span>
+            <span class="rt-tx">
+              <PortableText value={toPt(it)} variant="bare" />
+            </span>
+          </li>
+        ))}
+      </ul>
+    ) : x.kind === 'triad' ? (
+      <div class="rt-triad rt-v">
+        {x.items.map((it) => (
+          <span>
+            {x.prefix && <span class="rt-pre">{x.prefix} </span>}
+            <PortableText value={toPt(it)} variant="bare" />
+          </span>
+        ))}
+      </div>
+    ) : x.kind === 'index' ? (
+      <ul class="rt-index rt-v">
+        {x.items.map((it) => (
+          <li>
+            <PortableText value={toPt(it)} variant="bare" />
+          </li>
+        ))}
+      </ul>
+    ) : x.kind === 'plain' && x.ordered ? (
+      <ol class="rt-sub rt-ledger rt-v is-ol">
+        {x.items.map((it) => (
+          <li class="rt-row">
+            <span class="rt-it">
+              <PortableText value={toPt(it)} variant="bare" />
+            </span>
+          </li>
+        ))}
+      </ol>
+    ) : x.kind === 'plain' ? (
+      <ul class="rt-sub rt-ledger rt-v">
+        {x.items.map((it) => (
+          <li class="rt-row">
+            <span class="rt-it">
+              <PortableText value={toPt(it)} variant="bare" />
+            </span>
+          </li>
+        ))}
+      </ul>
+    ) : x.kind === 'section' ? (
+      <>
+        <div class="rt-sect">
+          <h3 class="rt-h3">
+            <PortableText value={toPt(x.head)} variant="bare" />
+          </h3>
+        </div>
+        <Astro.self pieces={x.pieces} />
+      </>
+    ) : x.kind === 'columns' ? (
+      <div class:list={['rt-sub rt-cols rt-v', `n${x.across}`, x.flush && 'is-flush']}>
+        {x.groups.map((g) => (
+          <div class:list={['rt-col', g.big && 'is-big']}>
+            {x.level === 'h3' ? (
+              <h3 class="rt-h3">
+                <PortableText value={toPt(g.head)} variant="bare" />
+              </h3>
+            ) : (
+              <h4 class="rt-h4">
+                <PortableText value={toPt(g.head)} variant="bare" />
+              </h4>
+            )}
+            <Astro.self pieces={g.pieces} />
+          </div>
+        ))}
+      </div>
+    ) : x.kind === 'register' ? (
+      <div class="rt-sub rt-register">
+        {x.left.map((cell, k) => (
+          <div class:list={['rt-cell is-l', k === 0 && 'is-first']} style={`grid-row:${k + 1}`}>
+            <Astro.self pieces={cell} />
+          </div>
+        ))}
+        {x.right.map((cell, k) => (
+          <div class:list={['rt-cell is-r', k === 0 && 'is-first']} style={`grid-row:${k + 1}`}>
+            <Astro.self pieces={cell} />
+          </div>
+        ))}
+      </div>
+    ) : x.kind === 'foot' ? (
+      <div class="rt-foot">
+        <PortableText value={toPt(x.block)} variant="bare" />
+      </div>
+    ) : null,
+  )
+}

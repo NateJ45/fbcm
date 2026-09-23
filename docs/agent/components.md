@@ -87,6 +87,93 @@ The Portable Text renderer (`JournalPortableText.tsx`) detects image orientation
 
 **Module-specific detail layouts** (portfolio/case study, before/after, shop, etc.) live under `modules/` and are documented in `docs/modules/`. The long-read grid pattern above is shared between the journal and any module that adds a long-form detail page.
 
+**Rich text and photo layout (the Ledger and photo shapes):**
+
+`RichTextSection.astro` and `ImageText.astro` (added 2026-09-22, the RichText
+Ledger and photo-shapes branch) never take a layout field. Each classifies its
+own content at build time and hands the result to one shared renderer,
+`RichBody.astro`, so a photo band's prose and a text band's prose read as the
+same grammar. The two prototypes that were approved as the visual source of
+truth are still the reference for what each branch should look like:
+`docs/superpowers/prototypes/2026-09-22-richtext-and-photos/richtext/index.html`
+(the Ledger, all 29 rich-text bands on the site) and
+`docs/superpowers/prototypes/2026-09-22-richtext-and-photos/photos/index.html`
+("Ground and window").
+
+- **`RichTextSection`** passes its body through `classifyRichText()` in
+  `src/lib/rich-shape.ts`. The body is first read as segments: paragraphs,
+  list runs, h3 heads (a body h2, "Heading", counts as an h3, because the
+  band's own heading is the h2), h4 heads, and quotes (a blockquote is its
+  own piece, never word-counted into a paragraph run). When the body has no
+  h3 at all, its h4s are promoted to h3, so a band using only "Small
+  heading" never puts h4 straight under its h2. The first branch that
+  matches wins:
+  - `row`: the band has a heading, and its body has no h3, h4, list or
+    quote, 3 or fewer paragraphs and 80 words or fewer in total. Set as a
+    single ruled line.
+  - `columns`: 2 or more h3 groups, each group's body only paragraphs, 150
+    words or fewer per group. The groups go side by side.
+  - `sections`: at least one h3, when the body did not qualify as columns
+    (for example a group with a list or a quote in it, or over 150 words).
+    The groups stack; h4 groups inside a section go side by side as h4
+    columns (the ministries Adults band).
+  - `register`: not a photo ground, 8 or more paragraphs, and at least 80%
+    of those paragraphs 35 words or fewer. Split into two columns, read down
+    then across (the creed).
+  - `ledger`: some list has 3 or more items, and the lists carry at least
+    40% of the body's words.
+  - `prose`: everything else.
+
+  Inside any shape, a list becomes one piece: an ordered numbered list when
+  every item is numbered (`listItem` compared after `splitStega`), a table
+  when half or more items carry " | ", a hung "said" list or a triad when
+  items share an opening (the covenant's "To"), a triad for up to four short
+  items, an index for more, otherwise a plain ruled list. The classifier
+  reads only what is already in the Portable Text body; no schema field
+  drives the choice.
+
+- **`ImageText`** passes its picture through `assignPhotoShapes()` in
+  `src/lib/photo-shape.ts`, called ONCE per page from `SectionRenderer.astro`
+  before any band renders. For each ImageText band with a picture, in page
+  order, the first branch that matches wins (aspect is width / height):
+  - `window`: aspect 0.85 or less, and the page's first such portrait. Set
+    in the lancet arch.
+  - `frame`: aspect 0.85 or less, any portrait after the page's first. Native
+    shape, hung on a gold line.
+  - `legend`: aspect 1.8 or more, and the body has a paragraph containing
+    "left to right" followed by 3 to 8 list items (the names), optionally a
+    footnote starting with `*`. ImageText lifts the label, names and
+    footnote out of the body; if that lookup finds nothing in what is left
+    after the lede, the band falls back to `row` (`resolveLegend`).
+  - `plate`: aspect under 1.25, and the alt text or eyebrow names a year from
+    1500 to 1949. Matted, never cropped.
+  - `ground`: aspect 1.3 or more and the image 2000px wide or more, not the
+    band straight after a photo hero, and a second ground only 4 or more
+    rows after the first on a page of 6 or more rows (never a third).
+    Full-bleed, the heading set into a darkened edge.
+  - `row`: everything else, beside its text at its native shape.
+
+  The shapes are read from the image's own dimensions, its alt text and
+  eyebrow, its body, and its position among the page's other photo bands,
+  never from a field.
+
+- **The page pass is a budget, not a per-band choice, and that is the
+  editor's surprise to know about.** Because `assignPhotoShapes` looks at
+  every ImageText band on the page together, swapping ONE band's picture in
+  the Studio can change ANOTHER band's shape. A new portrait added earlier on
+  the page can take the one lancet window a later band was using, which then
+  falls back to a frame or a row. There is never more than one window and
+  never more than two grounds per page, and a ground never sits directly
+  after a photo hero. If a page's photo layout looks different after an
+  unrelated image edit, this budget is why. Grounds also take an opt-in
+  "wide" flow inside `rich-shape.ts` (labelled rows whose label keeps its own
+  editable block, or two columns for a short run of paragraphs): only
+  ImageText passes that option, so `RichTextSection`'s 29 bands cannot be
+  affected by it.
+- Both classifiers run on `splitStega(...).cleaned` text, never on the raw
+  stega-encoded string, so the preview takes the same branch as the live
+  site. See "Live draft preview" in `docs/agent/preview.md`.
+
 **Contact page pieces:**
 
 - `CopyEmailButton.tsx` -- mailto link + clipboard fallback.
