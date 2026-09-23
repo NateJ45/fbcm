@@ -1,0 +1,886 @@
+{
+  "_createdAt": "2026-09-20T00:13:01Z",
+  "_id": "page-who-we-are",
+  "_rev": "zQicUBX7lBDfMtKkf0q1Pr",
+  "_type": "page",
+  "_updatedAt": "2026-09-23T20:04:56Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "wwa-hero",
+      "_type": "heroSection",
+      "eyebrow": "Who We Are",
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "Two smiling girls, one with red hair, pose together in front of colorful stained glass windows.",
+          "asset": {
+            "_ref": "image-bad93d7a2b560248a8b1b249154c4bbc1ed83af5-1600x1064-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.66,
+            "y": 0.4
+          }
+        },
+        {
+          "_key": "frame-2",
+          "_type": "image",
+          "alt": "An older man and woman posing together in a kitchen.",
+          "asset": {
+            "_ref": "image-a851f71a5d2f049740bbc1a4fbe3b71222be5ef3-3000x1203-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.58,
+            "y": 0.4
+          }
+        },
+        {
+          "_key": "frame-3",
+          "_type": "image",
+          "alt": "A young girl smiles outdoors, standing among tall purple coneflowers in a garden.",
+          "asset": {
+            "_ref": "image-4f64da601a5d01fae1fa8ac50a3898207b6e7f24-2400x1600-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.68,
+            "y": 0.4
+          }
+        }
+      ],
+      "headline": "We're a Spirit-led people gathered to join Christ's presence in our community.",
+      "layout": "window",
+      "primaryCta": {
+        "_key": "cta-5",
+        "_type": "ctaBlock",
+        "externalUrl": "/who-we-are#watchword",
+        "label": "Praise & Proclaim, our watchword",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "secondaryCta": {
+        "_key": "cta-6",
+        "_type": "ctaBlock",
+        "externalUrl": "/who-we-are#letter",
+        "label": "A note from our pastors",
+        "linkType": "external",
+        "openInNewTab": false
+      }
+    },
+    {
+      "_key": "wwa-watchword",
+      "_type": "watchwordSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "watchword"
+      },
+      "heading": "Our Watchword",
+      "intro": "This statement is our congregational “watchword.” A watchword is a short reminder and a promise from scripture about who God is and who he has called his people to be.",
+      "more": [
+        {
+          "_key": "ww-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ww-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "When the people of God were in exile, the Prophet Isaiah spoke. He delivered a message from God about what it would be like \"In that day\" when they returned. The people would return, praising and proclaiming the name of the Lord, and making him known to all nations."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ww-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ww-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "At First Baptist Church Muncie, we believe the day of the Lord's favor has come in Jesus. The short of it is: that Jesus really does change everything."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ww-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ww-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "And our goal for this season is to praise and proclaim his name."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "praise": "That our Purpose is worship, lifting up the name of God: Father, Son, & Holy Spirit.",
+      "proclaim": "That our Joy is to share the Good News of Jesus, with our neighbors & the world.",
+      "reference": "Isaiah 12:4",
+      "verse": "Give praise to the Lord, proclaim his name; make known among the nations what he has done, and proclaim that his name is exalted."
+    },
+    {
+      "_key": "wwa-goals",
+      "_type": "goalsSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "goals"
+      },
+      "goals": [
+        {
+          "_key": "goal-worship",
+          "_type": "goal",
+          "glyph": "window",
+          "name": "Worship",
+          "photos": [
+            {
+              "_key": "worship-nave",
+              "_type": "image",
+              "alt": "The sanctuary is seen from the balcony, with the congregation standing in the pews below and a worship team at the front under tall arched windows.",
+              "asset": {
+                "_ref": "image-03d6da95af3fbc02c3ba9eaa95ab533dbdfa8b4b-2400x1309-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.5,
+                "y": 0.82
+              }
+            },
+            {
+              "_key": "worship-singer",
+              "_type": "image",
+              "alt": "A guitarist, a singer holding a microphone, and a second guitarist perform together indoors.",
+              "asset": {
+                "_ref": "image-806ba4dc0d6828ac89e8a5c01ab05b3445f5aaf7-1600x1067-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.56,
+                "y": 0.4
+              }
+            },
+            {
+              "_key": "worship-table",
+              "_type": "image",
+              "alt": "Two women and a man handle silver communion trays and a cloth at a table, preparing the elements.",
+              "asset": {
+                "_ref": "image-651ea65b35de1790bec98a228f47452e964cd46c-2400x1600-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.3,
+                "y": 0.5
+              }
+            }
+          ],
+          "points": [
+            {
+              "_key": "worship-1",
+              "_type": "goalPoint",
+              "body": "Our times of worship are rooted in scripture and prayer-filled so that our body can collectively hear from God, discern the next right step, and follow the Holy Spirit.",
+              "title": "Following God's Word"
+            },
+            {
+              "_key": "worship-2",
+              "_type": "goalPoint",
+              "body": "We set aside time to personally greet and encourage one another. Passing of the peace, sharing the good news through personal testimonies, and prayer are ways we participate in the shared life God has given us.",
+              "title": "Enjoying Fellowship"
+            },
+            {
+              "_key": "worship-3",
+              "_type": "goalPoint",
+              "body": "FBCM prepares new believers for baptism, the time when they publicly proclaim God has become their salvation and join the body of Christ. FBCM celebrates the Lord’s Supper monthly during intergenerational worship so that all may take part.",
+              "title": "Participating in Practices Christ Gave Us"
+            }
+          ],
+          "subtitle": "Worshiping as the Body of Christ",
+          "summary": "FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ."
+        },
+        {
+          "_key": "goal-way",
+          "_type": "goal",
+          "aside": "Discipleship",
+          "glyph": "door",
+          "name": "The Way",
+          "photos": [
+            {
+              "_key": "way-door",
+              "_type": "image",
+              "alt": "At the sanctuary door, a man hands a woman a set of assisted-listening headphones.",
+              "asset": {
+                "_ref": "image-760632d0beb693093f78334d0a515564aa2b8529-2400x1138-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.4,
+                "y": 0.45
+              }
+            },
+            {
+              "_key": "way-deacons",
+              "_type": "image",
+              "alt": "Five adults posed together at the communion table, a wooden cross and communion trays in front of them.",
+              "asset": {
+                "_ref": "image-86ea34a0c404d24e71e4253242061def78b627c7-1600x800-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.46,
+                "y": 0.4
+              }
+            },
+            {
+              "_key": "way-bibles",
+              "_type": "image",
+              "alt": "Three girls sitting together in a pew, smiling, with open Bibles on their laps.",
+              "asset": {
+                "_ref": "image-50fe129b92b4673a51bf94b9408c5c8a22346ce4-2400x1136-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.5,
+                "y": 0.45
+              }
+            }
+          ],
+          "points": [
+            {
+              "_key": "way-1",
+              "_type": "goalPoint",
+              "body": "FBCM invites everyone to join our worship services, no matter their background or beliefs. We show the hospitality Christ has first shown us.",
+              "title": "Welcoming Worship"
+            },
+            {
+              "_key": "way-2",
+              "_type": "goalPoint",
+              "body": "Each regular attendee is connected with a deacon, a church member chosen to care for others, who offers prayer and support.",
+              "title": "Caring Mentorship"
+            },
+            {
+              "_key": "way-3",
+              "_type": "goalPoint",
+              "body": "We provide small group meetings where we can learn together about the Bible, theology, and living in Christian community.",
+              "title": "Spiritual Friendship"
+            }
+          ],
+          "quote": "“Come and see.”",
+          "subtitle": "Seeking Understanding",
+          "summary": "FBCM proclaims God's faithfulness with people who are curious about faith, as well as new believers. We offer a growth track, a step by step path into the life of this church, to help us all “come and see” who Jesus is and grow spiritually (John 1:39-41)."
+        },
+        {
+          "_key": "goal-witness",
+          "_type": "goal",
+          "aside": "Evangelism",
+          "glyph": "rose",
+          "name": "Witness",
+          "photos": [
+            {
+              "_key": "witness-children",
+              "_type": "image",
+              "alt": "Four young children hold hands and smile, posed together outside the church's arched entrance.",
+              "asset": {
+                "_ref": "image-e7b7e945ad95143ef6a2513b12d3f48d90244b64-2400x1600-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.57,
+                "y": 0.5
+              }
+            },
+            {
+              "_key": "witness-mascot",
+              "_type": "image",
+              "alt": "A group of women in orange shirts pose with the Ball State Cardinals mascot under a Ball State tent at an outdoor event.",
+              "asset": {
+                "_ref": "image-2ebbbdca19b840e40a2dd398573a30aa8f570bab-697x697-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.3,
+                "y": 0.5
+              }
+            },
+            {
+              "_key": "witness-singing",
+              "_type": "image",
+              "alt": "Two teenage girls sing together into microphones at an indoor event, with greenery behind them.",
+              "asset": {
+                "_ref": "image-9445495cb95b7c03a8788b38a1d4a1ce0138d6f5-1600x1067-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.24,
+                "y": 0.4
+              }
+            },
+            {
+              "_key": "witness-steps",
+              "_type": "image",
+              "alt": "Children sit on the chancel steps around Kendall as she reads to them, at the blessing of the backpacks.",
+              "asset": {
+                "_ref": "image-21db96f59d2c41eec5e07709a3f0569ad2863bee-2400x1441-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.62,
+                "y": 0.5
+              }
+            },
+            {
+              "_key": "witness-serve",
+              "_type": "image",
+              "alt": "A large group of adults and children posed together indoors, some holding a team t-shirt reading Serve Your City.",
+              "asset": {
+                "_ref": "image-efd8bf5a21f666ffe139b50d94378bc596622c5c-2400x1285-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.5,
+                "y": 0.4
+              }
+            },
+            {
+              "_key": "witness-boxes",
+              "_type": "image",
+              "alt": "Children and adults gather around a display of blue and yellow decorated boxes and a fabric backdrop at an indoor event.",
+              "asset": {
+                "_ref": "image-9f75b53b36c2ca2a5530e1bba56ed91d74a7823d-2400x1921-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.55,
+                "y": 0.5
+              }
+            }
+          ],
+          "points": [
+            {
+              "_key": "witness-1",
+              "_type": "goalPoint",
+              "body": "Church members actively talk about their faith and aim to live in a way that reflects Jesus.",
+              "short": "In the church",
+              "title": "Engaged Membership"
+            },
+            {
+              "_key": "witness-2",
+              "_type": "goalPoint",
+              "body": "We believe God has placed us in downtown Muncie for a reason. We work with local groups to bring light and hope to our community.",
+              "short": "In Muncie",
+              "title": "Local Partnership"
+            },
+            {
+              "_key": "witness-3",
+              "_type": "goalPoint",
+              "body": "Jesus told us to share the good news everywhere. We support Global Servants (missionaries) and pray for people from all over the world to follow Jesus. We also celebrate the wonderful diversity of God's Kingdom, the Global Church.",
+              "short": "Everywhere",
+              "title": "Kingdom Citizenship"
+            }
+          ],
+          "subtitle": "Inviting to Church & To Know Christ",
+          "summary": "To make known what God has done, FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news."
+        },
+        {
+          "_key": "goal-work",
+          "_type": "goal",
+          "aside": "Acts of Mercy",
+          "glyph": "basin",
+          "name": "Work",
+          "photos": [
+            {
+              "_key": "work-building",
+              "_type": "image",
+              "alt": "A group of volunteers working together on an outdoor building project during a mission trip.",
+              "asset": {
+                "_ref": "image-b7e993e6ee329c47f478e7289fc3af64ad0557c6-2400x1136-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.62,
+                "y": 0.5
+              }
+            },
+            {
+              "_key": "work-frame",
+              "_type": "image",
+              "alt": "A mission trip group posed together under a wooden building frame they are constructing outdoors.",
+              "asset": {
+                "_ref": "image-25c93a161fc4fbb25f3b87f80522315e3596ea70-1159x643-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.42,
+                "y": 0.6
+              }
+            },
+            {
+              "_key": "work-breakfast",
+              "_type": "image",
+              "alt": "Women of the church sit together at a round table set for a fellowship breakfast.",
+              "asset": {
+                "_ref": "image-2f1ce4c6714c166672b1b80501b21e545ad14bc2-2400x1596-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.38,
+                "y": 0.55
+              }
+            }
+          ],
+          "points": [
+            {
+              "_key": "work-1",
+              "_type": "goalPoint",
+              "body": "We actively and practically help and work alongside our neighbors.",
+              "short": "Serve",
+              "title": "Serve"
+            },
+            {
+              "_key": "work-2",
+              "_type": "goalPoint",
+              "body": "We give sacrificially to help those in need through regular offerings and donations.",
+              "short": "Support",
+              "title": "Support"
+            },
+            {
+              "_key": "work-3",
+              "_type": "goalPoint",
+              "body": "We care for church members who are sick, home bound, or struggling, making sure they remain part of our life together.",
+              "short": "Share",
+              "title": "Share"
+            }
+          ],
+          "subtitle": "Gifts For Service",
+          "summary": "FBCM exalts God by following Jesus’ example of serving others, rather than seeking to be served ourselves (Mark 10:45)."
+        }
+      ],
+      "heading": "Our Goals",
+      "intro": "Our Church Coordination Team (CCT) has set certain goals for our church this season, in pursuit of following the calling God has given us as a congregation in different areas of our life together."
+    },
+    {
+      "_key": "wwa-pledge",
+      "_type": "pledgeSection",
+      "after": [
+        {
+          "_key": "pa-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "pa-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The life of faith isn't meant to be lived alone. Before he was crucified, Christ's prayer to the Father was that his disciples, and all believers after them, would be one, as he and the Father are one. (John 17:20-22)"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "pa-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "pa-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "At the same time, that unity comes with wonderful God-given differences. We’re not clones who all think, look, or act exactly alike! That is what the Apostle Paul means when he talks about the church as the body of Christ, with many different parts and many different gifts. (1 Corinthians 12:12-30)"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "anchor": {
+        "_type": "slug",
+        "current": "pledge"
+      },
+      "heading": "Our Pledge",
+      "image": {
+        "_type": "image",
+        "alt": "Two young women smiling together in the baptismal pool, one of them just baptized.",
+        "asset": {
+          "_ref": "image-e7d5db277cd8080b0eb570aa873ab6ac198dd999-2257x2257-jpg",
+          "_type": "reference"
+        },
+        "hotspot": {
+          "_type": "sanity.imageHotspot",
+          "height": 0.3,
+          "width": 0.3,
+          "x": 0.7,
+          "y": 0.3
+        }
+      },
+      "instruction": "When a member joins, we say this pledge together as a church.",
+      "intro": "Our commitment to one another is drawn from scripture. And it’s this:",
+      "lines": [
+        {
+          "_key": "pledge-1",
+          "_type": "pledgeLine",
+          "reference": "Galatians 6:2",
+          "text": "Bearing your burdens, as you bear ours."
+        },
+        {
+          "_key": "pledge-2",
+          "_type": "pledgeLine",
+          "reference": "1 Thess. 5:11",
+          "text": "Encouraging you in the faith, as we are encouraged by you."
+        },
+        {
+          "_key": "pledge-3",
+          "_type": "pledgeLine",
+          "reference": "Ps. 86:11-13; Ps. 37:3-6",
+          "text": "Delighting in the Lord’s ways"
+        },
+        {
+          "_key": "pledge-4",
+          "_type": "pledgeLine",
+          "reference": "Romans 12:1",
+          "text": "Offering our lives as a living sacrifice: Holy & Pleasing to God."
+        }
+      ],
+      "opening": "We pledge ourselves to be the family of God for you in this place:"
+    },
+    {
+      "_key": "wwa-letter",
+      "_type": "letterSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "letter"
+      },
+      "body": [
+        {
+          "_key": "lt-1-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-1-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "If you’re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you’re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we’d love for you to join us for worship too!"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-2-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-2-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "After all, Jesus did not say to his first followers: “Figure it all out, and then get back to me.” He said to them, “Come and see” (John 1:39)."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-3-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-3-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Even so, we know people curious about a church wonder what a particular church, including its pastors, “are all about.”"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-4-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-4-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We love the Good News – the Gospel – that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He Ascended to heaven, and he will come again in glory to make all that is wrong right. That’s life-changing, and truly good, news. It’s news good enough to set all of us free."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-5-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-5-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We’re all about the church. This church is made up of people who are all imperfect, all of us with our own struggles, all of us failing, falling into our old selfish ways, and getting up again only by God’s grace. And those same people are also filled by God’s own Spirit, have a sincere desire to be “good news” people, and to serve one another as we grow in our love of Christ together."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-6-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-6-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We’re honored to serve as Co-Pastors here. And it’s not only because First Baptist decided to do something a little unusual in calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-7-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-7-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We love to serve here because we love being part of this Spirit-led people gathered to join Christ's presence in our community."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lt-8-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lt-8-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Finally, we would love for you to join us this Sunday, or anytime we’re gathered to encounter the same Christ who was, and is, and will come again – as we meet him in worship, the word, and the Lord’s table. “Come and see!”"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "heading": "A Note From Our Pastors",
+      "portrait": {
+        "_type": "image",
+        "alt": "A man and a woman smiling together in the sanctuary balcony, arched windows and pews visible behind them.",
+        "asset": {
+          "_ref": "image-d7aa65ea099b67f8adb73eb7f5bed6855f907133-2400x1714-jpg",
+          "_type": "reference"
+        },
+        "hotspot": {
+          "_type": "sanity.imageHotspot",
+          "height": 0.3,
+          "width": 0.3,
+          "x": 0.71,
+          "y": 0.5
+        }
+      },
+      "signature": "Kendall & Jonathan",
+      "signatureNote": "Co-Pastors, First Baptist Church Muncie"
+    },
+    {
+      "_key": "wwa-next",
+      "_type": "linkCardsSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "next"
+      },
+      "cards": [
+        {
+          "_key": "next-1",
+          "_type": "linkCard",
+          "body": "Find out what you can expect this Sunday.",
+          "cta": {
+            "_key": "cta-1",
+            "_type": "ctaBlock",
+            "internalLink": {
+              "_ref": "page-visit",
+              "_type": "reference",
+              "_weak": true
+            },
+            "label": "Read more",
+            "linkType": "internal"
+          },
+          "image": {
+            "_type": "image",
+            "alt": "Musicians performing on piano, guitar and vocals at the front of the sanctuary, song lyrics on a screen behind them.",
+            "asset": {
+              "_ref": "image-5e43886b3b78c982482701d221a582112b692682-2400x1358-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.5
+            }
+          },
+          "title": "Sunday Worship"
+        },
+        {
+          "_key": "next-2",
+          "_type": "linkCard",
+          "body": "Get in touch with us with our virtual contact card.",
+          "cta": {
+            "_key": "cta-2",
+            "_type": "ctaBlock",
+            "externalUrl": "https://fbcmuncie.churchcenter.com/people/forms/159198",
+            "label": "Contact",
+            "linkType": "external",
+            "openInNewTab": true
+          },
+          "image": {
+            "_type": "image",
+            "alt": "A group of adults standing together in a church kitchen, food laid out on the counter in front of them.",
+            "asset": {
+              "_ref": "image-5a8447ef907f07745850dee413b168cdeaa0ea0e-2400x1600-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.4,
+              "y": 0.35
+            }
+          },
+          "title": "Contact Us"
+        },
+        {
+          "_key": "next-3",
+          "_type": "linkCard",
+          "body": "Read our staff bios and meet the people of FBCM.",
+          "cta": {
+            "_key": "cta-3",
+            "_type": "ctaBlock",
+            "internalLink": {
+              "_ref": "page-staff",
+              "_type": "reference",
+              "_weak": true
+            },
+            "label": "Read more",
+            "linkType": "internal"
+          },
+          "image": {
+            "_type": "image",
+            "alt": "Kendall Ellis smiles for a staff portrait, with colorful stained glass filling the background.",
+            "asset": {
+              "_ref": "image-7c2f716730179bcbecc59a170ff97f8c39b39f25-2806x4209-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.3
+            }
+          },
+          "title": "Meet Our Staff"
+        },
+        {
+          "_key": "next-4",
+          "_type": "linkCard",
+          "body": "Download our Welcome Booklet.",
+          "cta": {
+            "_key": "cta-4",
+            "_type": "ctaBlock",
+            "externalUrl": "https://cdn.sanity.io/files/7jw947g5/production/3a0aedfcc69aaee01054ce3ec21fc2ac048292ec.pdf",
+            "label": "Download",
+            "linkType": "external",
+            "openInNewTab": true
+          },
+          "image": {
+            "_type": "image",
+            "alt": "A view straight up the church tower and stained glass window with the red entry doors at the base, against a partly cloudy sky.",
+            "asset": {
+              "_ref": "image-b198ae149324670a15b203c923b4f909b028cc2e-1138x2400-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.78
+            }
+          },
+          "title": "Find Out More"
+        }
+      ],
+      "heading": "Where To Go Next"
+    }
+  ],
+  "seoDescription": "We're a Spirit-led people gathered to join Christ's presence in our community. An American Baptist church in downtown Muncie since 1859.",
+  "seoTitle": "Who we are | First Baptist Church Muncie",
+  "slug": {
+    "_type": "slug",
+    "current": "who-we-are"
+  },
+  "title": "Who we are"
+}
