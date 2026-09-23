@@ -539,14 +539,6 @@ writes. What it leaves open:
   `the-road-not-taken`); `convert-body.ts` normalised bodies only. They now render
   on /blog/page/2 and /blog/category/sermon-preview. Needs a dry-run-first
   script (rule 16), not a render hack (rule 2 is absolute for Sanity content).
-- **The lede can still repeat the second paragraph** on previews that open "This
-  is a sermon preview...": `ledeEchoes` checks the first text block only (33
-  posts caught). Widening it to the first block after that opener is a one-line
-  change in `src/lib/post-body.ts`, left for Nathan to judge.
-- **`CaseStudyTOC.tsx` and `JournalCategoryChip.astro` are now unused.** Left in
-  place so this branch's parity baseline stays a fixpoint (Tailwind scans every
-  tracked file, so deleting them can drop classes); delete them in a pass that
-  recaptures parity.
 - The two event tables are now real tables at RENDER time (`src/lib/post-body.ts`
   reads the middot lists), which closes the reader-facing half of the "Post
   bodies" note below. A `table` block on `journalEntry.body` is still the proper

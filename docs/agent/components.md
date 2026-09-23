@@ -62,28 +62,25 @@ The core component set, by role. All in `src/components/` unless noted.
 
 ### Long-read layout (journal detail)
 
-`/post/[slug]` uses a long-read structure suitable for editorial content:
+`/post/[slug]` is the "P2 Bulletin" layout (journal polish, 2026-09-22; spec and prototype in
+`docs/superpowers/prototypes/2026-09-22-journal/`):
 
-1. **Article header** -- eyebrow line, h1, excerpt/subtitle, meta (date, reading time, categories). Lives in a `max-w-3xl mx-auto` block.
-2. **Cover image** -- `max-w-4xl mx-auto px-m` (~896 px), `<SanityImage width={1800} loading="eager" sizes="(min-width: 920px) 896px, 100vw">`. Reads as an editorial feature, not a billboard.
-3. **Body grid with optional TOC** -- extract h2/h3/h4 headings via `extractHeadings(body)`, set `hasToc = headings.length > 0`, then use this grid template:
-   ```astro
-   <div
-     class:list={[
-       'mx-auto grid max-w-content grid-cols-1 gap-section-md px-m py-section-lg lg:justify-center',
-       hasToc ? 'lg:grid-cols-[260px_minmax(0,48rem)]' : 'lg:grid-cols-[minmax(0,48rem)]',
-     ]}
-   >
-     {hasToc && <CaseStudyTOC client:idle headings={headings} />}
-     <article>...</article>
-   </div>
-   ```
-   `lg:justify-center` is critical -- without it the grid left-aligns within the section and leaves all empty space on the right (was a real visual bug).
-4. **Related** -- related-posts grid, related project link if the entry has a `relatedProject` reference.
-5. **Prev/next nav** -- wraps the rest in a `border-t` strip.
-6. **Sticky CTA chip** -- per-surface label from `journalPage.stickyCtaLabel` in Sanity.
+1. **Masthead** -- category line, h1, excerpt lede (dropped when `ledeEchoes` finds it in the
+   body) in columns 1 to 7; in columns 9 to 12 the ORDER, a ruled `dl`. A sermon preview gets
+   Sunday / Reading / Series / Preaching / Listen from `src/lib/sermon-derive.ts` and
+   `post-body.ts`; any other post gets Posted / Written by / Takes / Filed under. Empty rows are
+   omitted, never guessed.
+2. **Cover** -- a real photograph (width >= 2000 and ratio >= 1.3) bleeds full width under the
+   masthead (`100cqw`); anything else (the sermon slides) hangs as a plate in the right column.
+3. **Body** -- `prepareBody()` in `src/lib/post-body.ts` rewrites the Portable Text first
+   (tables from middot lists, points, Q and A, the reading, dead Wix anchors, the cover's
+   duplicate), then `JournalPortableText.tsx` renders it in columns 1 to 7 at 62ch. The right
+   column is sticky: the plate, then "In this post" from `extractHeadings` when there are 3+.
+4. **Foot** -- Tagged (text links), More from this series, then two doors: previews step
+   Sunday to Sunday ("The Sunday before" / "The Sunday after", `post-neighbours.ts`), other
+   posts Older / Newer. There is no closing CTA band on posts.
 
-The Portable Text renderer (`JournalPortableText.tsx`) detects image orientation from the Sanity asset `_ref` and applies different figure widths -- portrait shots cap at `max-w-[600px] mx-auto`, landscape shots fill or extend the column per the editor's chosen size variant. See [Portrait orientation caps](images.md#portrait-orientation-caps).
+The Portable Text renderer (`JournalPortableText.tsx`) detects image orientation from the Sanity asset `_ref`; portrait inline images cap at 360px.
 
 **Module-specific detail layouts** (portfolio/case study, before/after, shop, etc.) live under `modules/` and are documented in `docs/modules/`. The long-read grid pattern above is shared between the journal and any module that adds a long-form detail page.
 
