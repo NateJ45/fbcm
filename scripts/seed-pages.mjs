@@ -72,6 +72,7 @@ import { loadEnv } from './lib/loadEnv.mjs';
 import * as copy from './lib/page-copy.mjs';
 import { renderApprovalNote } from './lib/approval-note.mjs';
 import { placeholdersForTypedCopies } from '../src/lib/settings-placeholders.ts';
+import { tokenizeChurchLinks, tokensWithAddress } from '../src/lib/church-links.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
@@ -444,7 +445,17 @@ async function main() {
     // ({time}, {address}...), so the value lives once, in Site settings, and a
     // re-seed can never type the copies back in (src/lib/settings-placeholders.ts).
     const raw = { _id: mod.id, _type: mod.type, ...built };
-    const doc = ctx.settings ? placeholdersForTypedCopies(raw, ctx.settings) : raw;
+    const typed = ctx.settings ? placeholdersForTypedCopies(raw, ctx.settings) : raw;
+    // The same for the church's outside links: a Church Center address a
+    // module types (the wedding forms, the Wednesday page, a CTA reading
+    // settings.visitorFormUrl) becomes its link token ({wedding-enquiry},
+    // {connect}...), filled from Site settings > Church systems, so a re-seed
+    // never types an address back in (src/lib/church-links.ts). Only tokens
+    // whose own box is filled, so a re-seed before scripts/church-links.mjs
+    // has run keeps the address rather than a token with nowhere to go.
+    const doc = ctx.settings
+      ? tokenizeChurchLinks(typed, { only: tokensWithAddress(ctx.settings) }).doc
+      : typed;
 
     console.log(`${mod.id}  (${mod.type})  /${mod.slug}`);
 
