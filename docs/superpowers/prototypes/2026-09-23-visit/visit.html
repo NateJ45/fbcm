@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FBCM Visit Prototype</title>
+<meta name="description" content="Prototype of the First Baptist Church Muncie Visit page in the settled identity: brand bands, arch frames, building glyphs, the gold plate button, and a door-step path for Sunday morning.">
+<!--
+  Visit page prototype, 2026-09-23 (identity rollout, step 2). Design exploration only, not production code.
+  Speaks the language settled on Who We Are and Home: brand colours only (indigo, indigo-dark, gold,
+  brown, brown-mid, taupe, cream), arch frames for people, building glyphs as the only icons,
+  one button family (the header's GIVE plate), no boxed cards on cream, no captions.
+  Content is scripts/pages/visit.mjs, restyled. Sentences that did not exist on the Wix site carry data-new-copy.
+  Proposes three shared looks: the Timeline door-step path, the FaqBand, and ImageText arches.
+  Motion: IntersectionObserver reveals, run once, skipped under prefers-reduced-motion and without JS.
+-->
+<style>
+@font-face{font-family:"Castoro Titling";src:url("../../../../node_modules/@fontsource/castoro-titling/files/castoro-titling-latin-400-normal.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Castoro";src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-normal.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Castoro";font-style:italic;src:url("../../../../node_modules/@fontsource/castoro/files/castoro-latin-400-italic.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Sofia Sans SC";font-weight:100 900;src:url("../../../../node_modules/@fontsource-variable/sofia-sans-semi-condensed/files/sofia-sans-semi-condensed-latin-wght-normal.woff2") format("woff2");font-display:swap}
+
+:root{
+  /* the brand, and nothing else */
+  --indigo:#292854; --indigo-dark:#1C1B3A; --gold:#D59B29; --brown:#39251E; --brown-mid:#724F43; --taupe:#B5ABA3; --cream:#F4EFE6;
+  --display:"Castoro Titling",Georgia,serif;
+  --read:"Castoro",Georgia,serif;
+  --ui:"Sofia Sans SC","Arial Narrow",system-ui,sans-serif;
+  --gut:clamp(16px,4vw,64px);
+  --max:1320px;
+  --ease:cubic-bezier(.2,.7,.1,1);
+  --lancet:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150' preserveAspectRatio='none'%3E%3Cpath d='M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150Z'/%3E%3C/svg%3E");
+  --door:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 130' preserveAspectRatio='none'%3E%3Cpath d='M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130Z'/%3E%3C/svg%3E");
+  --door-wide:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V34C0 12 44 6 80 0C116 6 160 12 160 34V100Z'/%3E%3C/svg%3E");
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--cream);color:var(--brown);font-family:var(--read);font-size:19px;line-height:1.6;overflow-x:hidden;
+  font-feature-settings:"kern","liga","onum";-webkit-font-smoothing:antialiased}
+main{overflow-x:clip}
+img{display:block;max-width:100%}
+a{color:inherit}
+p{margin:0 0 1em;text-wrap:pretty}
+h1,h2,h3,h4{margin:0;font-weight:400;text-wrap:balance;overflow-wrap:normal;word-break:normal;hyphens:manual}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.glyph{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.glyph *{vector-effect:non-scaling-stroke}
+.qf{fill:none;stroke:currentColor;stroke-width:1.6}
+.qf *{vector-effect:non-scaling-stroke}
+.h2{font-family:var(--display);font-size:clamp(34px,4.4vw,64px);line-height:1.02;letter-spacing:.02em}
+/* headlines sized by length: a long heading steps down a size so no word ever has to break */
+.h2.long{font-size:clamp(30px,3.4vw,50px);line-height:1.06}
+
+/* ---------- the one button family: the header's GIVE plate ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:1.05em 1.6em;
+  font-family:var(--ui);font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;line-height:1.1;text-decoration:none;text-align:center;
+  background:var(--gold);color:var(--indigo-dark);border-radius:2px;
+  box-shadow:inset 0 0 0 3px var(--gold),inset 0 0 0 4px var(--indigo-dark);transition:transform .2s var(--ease)}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+/* outline, only where gold would vanish: on the gold band */
+.btn.outline{background:transparent;color:var(--brown);border:1px solid var(--brown);box-shadow:inset 0 0 0 2px var(--gold),inset 0 0 0 3px var(--brown)}
+.btn.outline:focus-visible{outline-color:var(--brown)}
+.textlink{font-family:var(--ui);font-weight:700;font-size:17px;text-decoration:none;border-bottom:2px solid currentColor;padding:12px 0 2px;display:inline-block}
+.textlink:hover{border-bottom-color:var(--gold)}
+
+/* ---------- header ---------- */
+.site-head{background:var(--cream);position:relative;z-index:5}
+.site-head .wrap{display:flex;align-items:center;gap:24px;min-height:84px}
+.brand{display:flex;flex-direction:column;text-decoration:none;line-height:1}
+.brand b{font-family:var(--display);font-weight:400;font-size:25px;letter-spacing:.02em;color:var(--indigo)}
+.brand span{font-family:var(--ui);font-size:14px;color:var(--brown-mid);margin-top:6px}
+.nav{margin-left:auto;display:flex;gap:26px;font-family:var(--ui);font-size:17px;font-weight:500;color:var(--brown)}
+.nav a{text-decoration:none;padding:12px 0 8px;border-bottom:2px solid transparent}
+.nav a:hover,.nav a[aria-current]{border-color:var(--gold)}
+.site-head .btn{min-height:44px;padding:.95em 1.5em}
+.menu-btn{display:none;margin-left:auto;font-family:var(--ui);font-weight:700;font-size:17px;background:none;border:0;border-bottom:2px solid var(--indigo);color:var(--indigo);min-height:44px;padding:8px 2px 4px;cursor:pointer}
+
+/* ---------- arch frames ---------- */
+.fr{position:relative;margin:0}
+.arch{position:relative;overflow:hidden;background:rgba(28,27,58,.2);
+  -webkit-mask:var(--m,var(--lancet)) center/100% 100% no-repeat;mask:var(--m,var(--lancet)) center/100% 100% no-repeat}
+.arch.l{--m:var(--lancet)} .arch.d{--m:var(--door)} .arch.dw{--m:var(--door-wide)}
+.arch img{width:100%;height:100%;object-fit:cover;filter:saturate(.9) contrast(1.05) sepia(.07) brightness(1.02)}
+.arch::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(255,236,190,.12),rgba(0,0,0,0) 40%,rgba(0,0,0,.1))}
+.mould{position:absolute;inset:-9px -9px 0 -9px;width:calc(100% + 18px);height:calc(100% + 9px);pointer-events:none;overflow:visible}
+.mould path{fill:none;stroke:var(--mould,var(--gold));stroke-width:1.4;vector-effect:non-scaling-stroke}
+/* building photographs stay rectangular */
+.rect{margin:0;position:relative}
+.rect img{width:100%;height:100%;object-fit:cover;filter:saturate(.9) contrast(1.05) sepia(.07)}
+
+@media (prefers-reduced-motion:no-preference){
+  .js .arch[data-rv]{transition:clip-path 1.25s var(--ease)}
+  .js .arch[data-rv] img{transition:transform 1.6s var(--ease)}
+  .js .arch.l[data-rv]:not(.in){clip-path:inset(100% 0 0 0)}
+  .js .arch.d[data-rv]:not(.in),.js .arch.dw[data-rv]:not(.in){clip-path:inset(0 50% 0 50%)}
+  .js .arch[data-rv]:not(.in) img{transform:scale(1.08)}
+  .js .arch[data-rv].in{clip-path:inset(0)}
+  .js .mould{transition:opacity 1s .5s}
+  .js .fr:has(.arch[data-rv]:not(.in)) .mould{opacity:0}
+  .js [data-up]{transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--i,0) * 110ms)}
+  .js [data-up]:not(.in){opacity:0;transform:translateY(22px)}
+  .rays path{stroke-dasharray:80;stroke-dashoffset:0;transition:stroke-dashoffset .9s var(--ease)}
+  .js .rays:not(.in) path{stroke-dashoffset:80}
+  .js .path .step::after{transition:clip-path 1.2s .35s var(--ease)}
+  .js .path .step:not(.in)::after{clip-path:inset(0 100% 100% 0)}
+}
+.rays path{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round}
+
+/* ---------- 1. opener: the indigo window hero, people first ---------- */
+.opener{background:var(--indigo);color:var(--cream);position:relative;z-index:2}
+.opener .wrap{display:grid;grid-template-columns:minmax(0,5.4fr) minmax(0,6.6fr);gap:clamp(28px,4vw,72px);align-items:end;padding-top:clamp(36px,5vw,80px)}
+.op-text{padding-bottom:clamp(56px,7vw,112px)}
+.opener h1{font-style:italic;font-size:clamp(44px,5vw,78px);line-height:1.02;letter-spacing:-.015em;margin:0 0 clamp(20px,2.4vw,32px)}
+.opener h1 b{display:block;font-weight:400;font-style:normal;font-family:var(--display);letter-spacing:.01em;color:var(--gold);white-space:nowrap}
+.op-lead{font-size:clamp(20px,1.6vw,23px);line-height:1.5;color:#e9e2d6;max-width:28em;margin:0 0 clamp(26px,3vw,38px)}
+.facts{display:grid;grid-template-columns:auto auto auto;justify-content:start;gap:0;margin:0 0 clamp(30px,3.4vw,44px);padding:0}
+.facts div{padding:2px clamp(16px,1.8vw,26px) 2px 0;margin-right:clamp(16px,1.8vw,26px);border-right:1px solid rgba(213,155,41,.5)}
+.facts div:last-child{border:0;margin:0;padding-right:0}
+.facts dt{font-family:var(--ui);font-weight:600;font-size:15px;letter-spacing:.06em;color:var(--taupe);margin:0 0 4px}
+.facts dd{margin:0;font-family:var(--ui);font-weight:600;font-size:clamp(18px,1.4vw,21px);line-height:1.25;color:var(--cream)}
+.facts dd.time small{font-family:var(--read);font-style:italic;font-size:.62em;margin-left:.25em;color:var(--taupe)}
+.facts dd.time{font-family:var(--display);font-weight:400;font-size:clamp(24px,2vw,30px);line-height:1;color:var(--gold);font-feature-settings:"lnum";white-space:nowrap}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:18px 30px}
+.opener .textlink{color:var(--cream)}
+.window{position:relative;display:grid;grid-template-columns:1fr 1.75fr 1fr;gap:clamp(8px,1.4vw,20px);align-items:end;margin-bottom:calc(-1 * clamp(64px,7.5vw,110px))}
+.window .fr:nth-child(2) .arch,.window .fr:nth-child(4) .arch{aspect-ratio:100/228}
+.window .fr:nth-child(3) .arch{aspect-ratio:100/180}
+.window .glow{position:absolute;left:50%;bottom:100%;width:46%;transform:translate(-50%,6%);overflow:visible;color:var(--gold);pointer-events:none}
+
+/* ---------- 2. the morning: a door-step path (after The Way on Who We Are) ---------- */
+.morning{background:var(--cream);color:var(--brown);--mould:var(--brown-mid);
+  padding-top:calc(clamp(64px,7.5vw,110px) + clamp(56px,6vw,96px));padding-bottom:clamp(80px,9vw,140px)}
+.morning .h2{color:var(--indigo);margin-bottom:clamp(44px,5vw,80px)}
+.path{list-style:none;margin:0;padding:0;counter-reset:step;--arch:clamp(170px,15vw,220px);--stair:clamp(0px,9vw,150px);--gap:clamp(48px,5vw,76px)}
+.step{position:relative;display:grid;grid-template-columns:var(--arch) minmax(0,40em);gap:clamp(26px,3vw,48px);align-items:start;
+  margin-left:calc(var(--n,0) * var(--stair));padding-bottom:var(--gap)}
+.step .arch{aspect-ratio:100/124}
+/* the trail: from under one door, down and across to the peak of the next */
+.step:not(:last-child)::after{content:"";position:absolute;pointer-events:none;
+  left:calc(var(--arch) / 2);top:calc(var(--arch) * 1.24 + 18px);bottom:0;width:var(--stair);
+  border-left:3px dotted var(--brown-mid);border-bottom:3px dotted var(--brown-mid);border-bottom-left-radius:48px;opacity:.7}
+.step .no{position:absolute;left:calc(var(--arch) / 2 - 17px);top:calc(var(--arch) * 1.24 - 17px);z-index:2;width:34px;height:34px;display:grid;place-items:center;
+  background:var(--indigo);color:var(--gold);border-radius:50%;font-family:var(--display);font-size:17px;line-height:1;box-shadow:0 0 0 4px var(--cream);font-feature-settings:"lnum"}
+.st-text>p.when{display:flex;align-items:baseline;gap:.3em;margin:0 0 6px;font-family:var(--display);color:var(--indigo);font-size:clamp(46px,4.6vw,70px);line-height:.95;font-feature-settings:"lnum"}
+.when small{font-family:var(--read);font-style:italic;font-size:.4em;color:var(--brown-mid)}
+.step.main .st-text>p.when{font-size:clamp(58px,6vw,92px)}
+.step h3{font-size:clamp(28px,2.4vw,36px);line-height:1.1;color:var(--brown);margin:0 0 4px}
+.place{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin:0 0 16px;font-family:var(--ui);font-weight:600;font-size:17px;color:var(--brown-mid)}
+.room{display:inline-block;font-family:var(--ui);font-weight:700;font-size:15px;letter-spacing:.06em;color:var(--indigo);border-bottom:2px solid var(--gold);padding:0 1px 1px;white-space:nowrap;font-feature-settings:"lnum"}
+.st-text>p{font-size:19px;max-width:34em}
+.st-text a{text-decoration-color:var(--gold);text-underline-offset:3px}
+.classes{list-style:none;margin:6px 0 0;padding:0;border-top:1px solid rgba(114,79,67,.35)}
+.classes li{padding:14px 0 12px;border-bottom:1px solid rgba(114,79,67,.35)}
+.classes b{font-weight:400;font-size:21px;line-height:1.25;color:var(--brown);margin-right:10px}
+.classes p{margin:4px 0 0;font-size:17.5px;line-height:1.5;color:#4a3329}
+/* communion: not a step in the morning but a change to it, so it lands after the path */
+.landing{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(24px,4vw,72px);align-items:start;border-top:3px solid var(--gold);padding-top:clamp(26px,3vw,40px);margin-top:clamp(20px,3vw,40px)}
+.landing .lh{display:flex;align-items:flex-start;gap:18px}
+.landing .lh svg{width:48px;height:64px;flex:none;color:var(--indigo)}
+.landing .kick{font-family:var(--ui);font-weight:700;font-size:17px;color:var(--brown-mid);margin:4px 0 2px}
+.landing h3{font-family:var(--display);font-size:clamp(34px,3.2vw,48px);line-height:1;color:var(--indigo)}
+.landing .say{font-style:italic;font-size:clamp(22px,1.9vw,27px);line-height:1.35;color:var(--indigo);margin:0 0 .6em}
+.landing p{max-width:36em}
+
+/* ---------- 3. doors, parking and access (the hymn board's brown band) ---------- */
+.access{background:var(--brown);color:var(--cream);padding:clamp(80px,9vw,140px) 0;scroll-margin-top:0}
+.access .wrap{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(40px,6vw,104px);align-items:start}
+.access .h2{color:var(--gold);margin-bottom:clamp(30px,3.4vw,48px)}
+.findus{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 22px;align-items:start;padding-bottom:clamp(28px,3vw,40px);margin-bottom:clamp(8px,1vw,14px);border-bottom:1px solid rgba(213,155,41,.45)}
+.findus svg{grid-row:1/4;width:44px;height:58px;color:var(--gold);margin-top:6px}
+.findus .lbl{font-family:var(--ui);font-weight:600;font-size:16px;letter-spacing:.06em;color:var(--taupe);margin:0}
+.findus .addr{font-family:var(--display);font-size:clamp(34px,3.4vw,50px);line-height:1.02;color:var(--cream);margin:2px 0 10px;font-feature-settings:"lnum"}
+.findus p.say{margin:0;font-size:19px;color:#e9e2d6}
+.findus .textlink{color:var(--cream);margin-top:6px}
+.doors{list-style:none;margin:0;padding:0}
+.doors li{display:grid;grid-template-columns:36px minmax(0,1fr);gap:0 20px;padding:clamp(20px,2.2vw,28px) 0;border-bottom:1px solid rgba(213,155,41,.45)}
+.doors svg{width:32px;height:43px;color:var(--gold);margin-top:2px}
+.doors h3{font-size:clamp(23px,1.9vw,27px);line-height:1.2;color:var(--cream)}
+.doors .tag{display:inline-block;font-family:var(--ui);font-weight:700;font-size:15px;letter-spacing:.06em;color:var(--indigo-dark);background:var(--gold);padding:3px 8px 2px;margin:8px 0 4px;border-radius:2px}
+.doors p{margin:6px 0 0;font-size:18px;line-height:1.55;color:#e3dbd2;max-width:36em}
+.access-side .rect{aspect-ratio:4/5}
+.access-side .rect img{object-position:30% 50%}
+.notes{list-style:none;margin:clamp(30px,3vw,44px) 0 0;padding:0;display:grid;gap:26px}
+.notes li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:16px;align-items:start}
+.notes svg{width:18px;height:18px;color:var(--gold);margin-top:7px}
+.notes h3{font-family:var(--ui);font-weight:700;font-size:18px;letter-spacing:.02em;color:var(--gold);margin:0 0 4px}
+.notes p{margin:0;font-size:18px;line-height:1.55;color:#e3dbd2}
+
+/* ---------- 4. where the children go: ImageText with arches ---------- */
+.children{background:var(--cream);color:var(--brown);padding:clamp(80px,9vw,140px) 0;--mould:var(--brown-mid)}
+.children .wrap{display:grid;grid-template-columns:minmax(0,5.5fr) minmax(0,6.5fr);gap:clamp(40px,6vw,104px);align-items:start}
+.children .h2{color:var(--indigo)}
+.kid-pics{position:relative;padding-bottom:clamp(60px,7vw,110px);position:sticky;top:40px}
+.kid-pics .main .arch{aspect-ratio:160/124}
+.kid-pics .main img{object-position:50% 55%}
+.kid-pics .small{position:absolute;right:-3%;bottom:0;width:38%}
+.kid-pics .small .arch{aspect-ratio:100/150}
+.kid-pics .small::before{content:"";position:absolute;inset:-10px;background:var(--cream);
+  -webkit-mask:var(--lancet) center/100% 100% no-repeat;mask:var(--lancet) center/100% 100% no-repeat}
+.rooms{list-style:none;margin:clamp(28px,3vw,44px) 0 clamp(32px,3.4vw,48px);padding:0;border-top:1px solid rgba(114,79,67,.35)}
+.rooms>li{display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr);gap:6px clamp(18px,2.4vw,32px);padding:clamp(20px,2.2vw,28px) 0;border-bottom:1px solid rgba(114,79,67,.35)}
+.rooms .no{font-family:var(--display);font-size:clamp(30px,2.8vw,42px);line-height:1;color:var(--indigo);font-feature-settings:"lnum";white-space:nowrap}
+.rooms .no i{font-family:var(--read);font-size:.55em;color:var(--brown-mid);padding:0 .12em}
+.rooms h3{font-size:clamp(23px,2vw,28px);line-height:1.15;color:var(--brown);margin:0 0 6px}
+.rooms p{margin:0 0 .5em;font-size:18.5px;line-height:1.55}
+.rooms p:last-child{margin-bottom:0}
+.classes2{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.classes2 li{display:grid;grid-template-columns:16px minmax(0,1fr);gap:12px;font-size:18px;line-height:1.45}
+.classes2 svg{width:14px;height:14px;color:var(--gold);margin-top:6px}
+
+/* ---------- 5. frequently asked questions: the FaqBand ---------- */
+.faq{background:var(--indigo-dark);color:var(--cream);padding:clamp(80px,9vw,140px) 0}
+.faq .wrap{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(36px,5vw,96px);align-items:start}
+.faq .h2{color:var(--gold)}
+.faq-head{position:sticky;top:40px}
+.faq-head svg{display:block;width:56px;height:75px;color:var(--gold);margin-bottom:22px}
+.qs{margin:0;padding:0;border-top:1px solid rgba(213,155,41,.45)}
+.qs details{border-bottom:1px solid rgba(213,155,41,.45)}
+.qs summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:20px;align-items:center;padding:clamp(20px,2.2vw,28px) 0;
+  font-size:clamp(21px,1.8vw,25px);line-height:1.3;color:var(--cream)}
+.qs summary::-webkit-details-marker{display:none}
+.qs summary:hover span{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:5px;text-decoration-thickness:2px}
+.qs summary svg{width:24px;height:24px;color:var(--gold)}
+.qs details[open] summary svg{fill:currentColor}
+.qs summary svg{transition:fill .25s}
+.qs .a{padding:0 48px clamp(22px,2.4vw,32px) 0;font-size:19px;line-height:1.6;color:#e3ddd2;max-width:40em}
+.qs .a p{margin:0}
+.qs .a a{color:var(--gold);text-underline-offset:3px}
+
+/* ---------- 6. our building ---------- */
+.building{background:var(--cream);color:var(--brown);padding:clamp(80px,9vw,140px) 0}
+.building .wrap{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:clamp(40px,6vw,104px);align-items:center}
+.years{font-family:var(--display);line-height:.86;color:var(--indigo);font-size:clamp(84px,10vw,150px);margin:0 0 clamp(10px,1.4vw,20px);letter-spacing:.01em;font-feature-settings:"lnum"}
+.building .h2{color:var(--indigo);margin-bottom:clamp(20px,2.2vw,30px)}
+.building p.body{font-size:clamp(20px,1.6vw,23px);line-height:1.55;max-width:30em;margin-bottom:clamp(28px,3vw,40px)}
+.building .rect{aspect-ratio:4/5}
+.building .rect img{object-position:50% 30%}
+
+/* ---------- 7. come as you are (gold) ---------- */
+.cta{background:var(--gold);color:var(--brown);padding:clamp(64px,7vw,110px) 0}
+.cta .wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(24px,4vw,64px);align-items:center}
+.cta svg.big{width:clamp(64px,7vw,104px);height:auto;aspect-ratio:48/64;color:var(--brown)}
+.cta .h2{color:var(--brown);font-size:clamp(40px,5vw,72px)}
+.cta p{font-size:clamp(20px,1.7vw,24px);line-height:1.45;margin:10px 0 0}
+.cta .act{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
+
+/* ---------- footer ---------- */
+.foot{background:var(--indigo-dark);color:#e6e0d6;padding:clamp(56px,6vw,88px) 0 40px;font-family:var(--ui);font-size:17px;border-top:1px solid rgba(213,155,41,.35)}
+.foot .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+.foot .mark{font-family:var(--read);font-style:italic;font-size:48px;line-height:.9;color:var(--cream)}
+.foot .mark i{color:var(--gold)}
+.foot .mark span{display:block;font-style:normal;font-family:var(--display);font-size:33px;color:var(--gold);margin-top:6px;letter-spacing:.02em}
+.foot .mark small{font-family:var(--ui);font-style:normal;font-size:15px;color:var(--taupe);display:block;margin-top:10px}
+.foot h4{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:20px;color:var(--gold);margin-bottom:12px}
+.foot h4 svg{width:20px;height:27px}
+.foot ul{list-style:none;margin:0;padding:0;line-height:1.9}
+.foot a{text-decoration:none;display:inline-block;padding:2px 0}
+.foot a:hover{text-decoration:underline}
+.foot .base{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.14);padding-top:22px;margin-top:10px;color:var(--taupe);font-size:15px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1120px){
+  .nav{gap:18px;font-size:16px}
+  .site-head .btn{display:none}
+  .path{--stair:clamp(0px,6vw,70px)}
+  .facts{grid-template-columns:auto auto}
+  .facts div:nth-child(2){border:0;margin-right:0}
+  .facts div:nth-child(3){grid-column:1/-1;margin-top:14px}
+}
+@media (max-width:900px){
+  .nav{display:none}
+  .menu-btn{display:inline-block}
+  .opener .wrap,.access .wrap,.children .wrap,.faq .wrap,.building .wrap,.landing{grid-template-columns:minmax(0,1fr)}
+  .op-text{padding-bottom:10px}
+  .kid-pics,.faq-head{position:relative;top:0}
+  .kid-pics{max-width:620px}
+  .access-side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+  .access-side .notes{margin-top:0}
+  .building .rect{max-width:520px;aspect-ratio:5/4}
+  .foot .wrap{grid-template-columns:1fr 1fr}
+  .foot .brandcol{grid-column:1/-1}
+  .cta .wrap{grid-template-columns:auto minmax(0,1fr)}
+  .cta .act{grid-column:1/-1}
+}
+@media (max-width:720px){
+  .path{--stair:0px;--arch:96px;--gap:44px}
+  .step{grid-template-columns:var(--arch) minmax(0,1fr);gap:0 18px}
+  .step:not(:last-child)::after{width:0;border-bottom:0;border-radius:0;top:calc(var(--arch) * 1.24 + 18px)}
+  .step .no{width:28px;height:28px;font-size:14px;left:calc(var(--arch) / 2 - 14px);top:calc(var(--arch) * 1.24 - 14px)}
+  .st-text>p.when{font-size:44px}
+  .step.main .st-text>p.when{font-size:54px}
+}
+@media (max-width:620px){
+  body{font-size:18px}
+  .brand b{font-size:20px}
+  .brand span{font-size:13px}
+  .site-head .wrap{min-height:66px}
+  .opener .wrap{padding-top:28px;gap:18px}
+  .opener h1{font-size:44px}
+  .op-lead{font-size:19px}
+  .facts{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .facts div{padding-right:12px;margin-right:12px}
+  .facts dd{font-size:17px}
+  .acts{gap:14px 22px}
+  .window{margin-left:calc(-1 * var(--gut) + 8px);margin-right:calc(-1 * var(--gut) + 8px);grid-template-columns:.8fr 1.7fr .8fr;gap:8px;margin-top:34px}
+  .window .fr:nth-child(3) .arch{aspect-ratio:100/128}
+  .window .fr:nth-child(2) .arch,.window .fr:nth-child(4) .arch{aspect-ratio:100/220}
+  .window .glow{width:40%}
+  .mould{inset:-6px -6px 0 -6px;width:calc(100% + 12px);height:calc(100% + 6px)}
+  .step h3{font-size:26px}
+  .classes b{font-size:19px}
+  .classes p{font-size:16.5px}
+  .st-text>p{font-size:18px}
+  .findus{grid-template-columns:minmax(0,1fr)}
+  .findus svg{grid-row:auto;width:34px;height:45px;margin:0 0 6px}
+  .access-side{grid-template-columns:minmax(0,1fr)}
+  .access-side .rect{aspect-ratio:4/3}
+  .kid-pics .small{width:40%;right:0}
+  .rooms>li{grid-template-columns:minmax(0,1fr)}
+  .qs .a{padding-right:0}
+  .years{font-size:26vw}
+  .cta .wrap{grid-template-columns:minmax(0,1fr)}
+  .cta svg.big{width:56px}
+  .foot .wrap{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:380px){
+  .opener h1{font-size:38px}
+  .landing h3{font-size:30px}
+  .landing .lh svg{width:36px;height:48px}
+  .step{grid-template-columns:minmax(0,1fr)}
+  .step .fr{width:var(--arch);margin-bottom:22px}
+  .step:not(:last-child)::after{display:none}
+  .step .no{top:calc(var(--arch) * 1.24 - 14px)}
+  .facts{grid-template-columns:minmax(0,1fr)}
+  .facts div{border:0;margin:0 0 12px;padding:0}
+  .facts div:nth-child(3){margin-top:0}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="qf" d="M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z"/>
+    <symbol id="i-window" viewBox="0 0 48 64"><path d="M5 62V30C5 16 14 7 24 3C34 7 43 16 43 30V62"/><path d="M10 62V36A12 12 0 0 1 16 25A12 12 0 0 1 22 36V62"/><path d="M26 62V36A12 12 0 0 1 32 25A12 12 0 0 1 38 36V62"/><use href="#qf" transform="translate(24 16) scale(.36)"/><path d="M2 62H46"/></symbol>
+    <symbol id="i-door" viewBox="0 0 48 64"><path d="M7 58V28C7 18 16 13 24 9C32 13 41 18 41 28V58"/><path d="M12 58V30C12 23 18 19 24 16C30 19 36 23 36 30V58"/><path d="M24 16V58"/><circle cx="20.5" cy="40" r="1"/><circle cx="27.5" cy="40" r="1"/><path d="M3 58H45M1 62H47"/></symbol>
+    <symbol id="i-rose" viewBox="0 0 48 64"><circle cx="24" cy="34" r="15"/><use href="#qf" transform="translate(24 34) scale(.9)"/><path d="M24 13V9M24 55V59M3 34H7M41 34H45M9.2 19.2L12 22M38.8 19.2L36 22M9.2 48.8L12 46M38.8 48.8L36 46"/></symbol>
+    <symbol id="i-basin" viewBox="0 0 48 64"><path d="M9 60V28A15 15 0 0 1 24 12A15 15 0 0 1 39 28V60"/><path d="M16 26A5 5 0 0 1 24 20A5 5 0 0 1 32 26"/><path d="M6 42H42"/><path d="M12 42C14 51 34 51 36 42"/><path d="M24 49V56"/><path d="M4 60H44"/></symbol>
+    <!-- the neutral quatrefoil, for notes and the FAQ marker -->
+    <symbol id="i-qf" viewBox="-16 -16 32 32"><path d="M-5-5A6.2 6.2 0 1 1 5-5A6.2 6.2 0 1 1 5 5A6.2 6.2 0 1 1-5 5A6.2 6.2 0 1 1-5-5Z"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#"><b>First Baptist Muncie</b><span>309 East Adams Street, since 1859</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#" aria-current="page">Visit</a><a href="#">Who We Are</a><a href="#">Ministries</a><a href="#">Staff</a><a href="#">History</a><a href="#">Blog</a>
+    </nav>
+    <a class="btn" href="#">Give</a>
+    <button class="menu-btn" type="button">Menu</button>
+  </div>
+</header>
+
+<main>
+
+<!-- 1. HERO: the indigo window hero. Words left, three faces of a Sunday in the window. -->
+<section class="opener" aria-labelledby="t-visit">
+  <div class="wrap">
+    <div class="op-text">
+      <h1 id="t-visit">What to Expect <b>on Sunday</b></h1>
+      <p class="op-lead" data-new-copy>Here is what a Sunday morning looks like, from the parking lot to the last hymn.</p>
+      <dl class="facts">
+        <div><dt>Sundays</dt><dd class="time">10:45<small>am</small></dd></div>
+        <div><dt>Where</dt><dd>309 East Adams Street</dd></div>
+        <div><dt>How long</dt><dd>About an hour</dd></div>
+      </dl>
+      <div class="acts">
+        <a class="btn" href="https://fbcmuncie.churchcenter.com/people/forms/159198">Fill in a visitor card</a>
+        <a class="textlink" href="https://www.youtube.com/@FbcmuncieOrg/streams">Watch a service</a>
+      </div>
+    </div>
+    <div class="window">
+      <svg class="glow rays" viewBox="0 0 200 90" aria-hidden="true">
+        <path d="M100 80V14"/><path d="M84 80L56 26"/><path d="M116 80L144 26"/><path d="M70 84L20 50"/><path d="M130 84L180 50"/>
+      </svg>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_1760306b3d9843a4a2eeb2c1e3f508ba_tilde_mv2.jpg" alt="A smiling girl at a table in the fellowship hall, friends around her at a church dinner." style="object-position:61% 50%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </figure>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/81f7ac_2ca8ac4b6967488a97b1dd9902580f66_tilde_mv2.jpg" alt="The congregation in the pews on a Sunday morning, the chancel window at the far end of the sanctuary." style="object-position:50% 60%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </figure>
+      <figure class="fr">
+        <div class="arch l" data-rv><img src="../../../../../fbcm-archive/images/08181c_42c2e16bcb3147238759e922c478a5ed_tilde_mv2.jpg" alt="A teenage boy laughing at a table with friends, a Bible beside the cards." style="object-position:74% 45%"></div>
+        <svg class="mould" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V150"/></svg>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 2. THE MORNING: the Timeline as a door-step path. A real sequence, so the steps are numbered. -->
+<section class="morning" aria-labelledby="t-morning">
+  <div class="wrap">
+    <h2 class="h2" id="t-morning">How the morning runs</h2>
+    <ol class="path">
+      <li class="step" style="--n:0" data-step>
+        <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/08181c_60b24878ae9740c8b37634e80b3c70ef~mv2.jpg" alt="Three teenage girls smiling together on a couch in the church lobby, Bibles open in their laps." style="object-position:50% 35%"></div>
+          <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+        <span class="no" aria-hidden="true">1</span>
+        <div class="st-text">
+          <h3>Welcome and Check-In</h3>
+          <p>At each entrance, all ages are invited to check in with a greeter, who can help you find where you need to go and answer any questions you have. Children receive a name tag for nursery or children&rsquo;s church.</p>
+        </div>
+      </li>
+      <li class="step" style="--n:1" data-step>
+        <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/b98776_d35c1da859304aa79a6389960d9178bd_tilde_mv2.jpg" alt="Children playing a game with hoops in a Sunday school classroom." style="object-position:42% 50%"></div>
+          <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+        <span class="no" aria-hidden="true">2</span>
+        <div class="st-text">
+          <p class="when"><time datetime="09:30">9:30</time><small>am</small></p>
+          <h3>Sunday School</h3>
+          <ul class="classes">
+            <li><b>Intergenerational Bible Study</b><span class="room">B-04</span><p>Led by Jim Butler, this intergenerational Bible Study includes adults of all ages.</p></li>
+            <li><b>Friendship Class</b><span class="room">B-05</span><p>Led by Pastor Jonathan, this class primarily consists of a mix of couples with children at home, but is open to adults of all ages.</p></li>
+            <li><b>Youth Large Group</b><span class="room">201</span><p>Sixth through twelfth (6th-12th) grade students join in discussions about life and faith.</p></li>
+            <li><b>Children&rsquo;s Sunday School</b><span class="room">B-03 &amp; 104</span><p>Children&rsquo;s Worship Arts: play and practice in music, choir, scripture reading, and more (B-03).</p><p>6 weeks - 3 years: Nursery (104)</p></li>
+          </ul>
+        </div>
+      </li>
+      <li class="step" style="--n:2" data-step>
+        <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/08181c_efdc41f361ba4c548a0e521d0bdf2aa6_tilde_mv2.jpg" alt="Church members sitting together at a long table set for a fall fellowship meal." style="object-position:62% 50%"></div>
+          <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+        <span class="no" aria-hidden="true">3</span>
+        <div class="st-text">
+          <p class="when"><time datetime="10:15">10:15</time><small>am</small></p>
+          <h3>Fellowship</h3>
+          <p class="place">Donut [Semi-] Hour <span class="room">Fellowship Hall</span></p>
+          <p>Between Bible study and Worship, join in a time of fellowship (and, of course, donuts)!</p>
+        </div>
+      </li>
+      <li class="step main" style="--n:3" data-step>
+        <figure class="fr"><div class="arch d" data-rv><img src="../../../../../fbcm-archive/images/08181c_30a02cce2e404f6b871a92ff7113ad45_tilde_mv2.jpg" alt="The congregation standing in the sanctuary, facing the worship band at the front." style="object-position:58% 50%"></div>
+          <svg class="mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true"><path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"/></svg></figure>
+        <span class="no" aria-hidden="true">4</span>
+        <div class="st-text">
+          <p class="when"><time datetime="10:45">10:45</time><small>am</small></p>
+          <h3>Worship</h3>
+          <p class="place"><span class="room">Sanctuary</span></p>
+          <p data-new-copy>Nursery care is in room 104 and the family room is 105.</p>
+          <p>For live streams, please visit our <a href="https://www.youtube.com/@FbcmuncieOrg/streams">YouTube channel</a>.</p>
+        </div>
+      </li>
+    </ol>
+    <div class="landing" data-up>
+      <div class="lh">
+        <svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-basin"/></svg>
+        <div><p class="kick">First Sundays</p><h3>Communion</h3></div>
+      </div>
+      <div>
+        <p class="say">A service with the whole church family.</p>
+        <p>The first Sunday of each month is communion Sunday.</p>
+        <p>To allow the whole church family to participate, there is no Children&rsquo;s Church (nursery care and our &ldquo;family room&rdquo; are always available).</p>
+        <p>We will all worship together in a service intentionally planned for all ages.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. DOORS, PARKING AND ACCESS: the hymn board's brown band. /visit#accessibility lands here. -->
+<section class="access" id="accessibility" aria-labelledby="t-access">
+  <div class="wrap">
+    <div>
+      <h2 class="h2" id="t-access">Doors, parking and access</h2>
+      <div class="findus">
+        <svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-door"/></svg>
+        <p class="lbl">Find us</p>
+        <p class="addr">309 East Adams</p>
+        <div>
+          <p class="say">Our parking lot is located on the Adams Street side.</p>
+          <a class="textlink" href="https://maps.google.com/?q=309+East+Adams+Street,+Muncie,+IN+47305" data-new-copy>Get directions</a>
+        </div>
+      </div>
+      <ul class="doors">
+        <li data-up>
+          <svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-door"/></svg>
+          <div>
+            <h3>Adams Street circular drive</h3>
+            <span class="tag">Wheelchair accessible</span>
+            <p>Our wheelchair accessible entrance is off our circular drive, on the Adams street side of the building. Those wishing to use our automatic door should use the circular drive entrance. The door opener is on the side of our mailbox, close to the door on its right.</p>
+            <p>Once inside, there is an elevator which will go to any floor: our lower level (B) which houses our fellowship hall, the first floor (where the sanctuary and offices are) or the second floor (which hosts classrooms and our youth center).</p>
+          </div>
+        </li>
+        <li data-up style="--i:1">
+          <svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-door"/></svg>
+          <div><h3>The wooden front doors</h3><p>The large wooden front doors which go into the sanctuary.</p></div>
+        </li>
+        <li data-up style="--i:2">
+          <svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-door"/></svg>
+          <div><h3>Jefferson Street side doors</h3><p>The Jefferson Street side doors which enter our main hallway near the church offices.</p></div>
+        </li>
+      </ul>
+    </div>
+    <div class="access-side">
+      <figure class="rect" data-up><img src="../../../../../fbcm-archive/images/08181c_6714073c050b4ac28ea695fd3288b4aa_tilde_mv2.jpg" alt="The glass doors at the Adams Street circular drive, the church's wheelchair accessible entrance, set into a carved limestone archway."></figure>
+      <ul class="notes">
+        <li><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg><div><h3>Assisted Listening</h3><p>On Sundays, if you would like an assisted listening device, please ask one of our greeters or the Welcome Center and they will be happy to give you one.</p></div></li>
+        <li><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg><div><h3>Restrooms</h3><p>Wheelchair accessible restrooms, which also have baby changing tables, are on the first floor and the lower level (B).</p></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4. WHERE THE CHILDREN GO: ImageText with a door arch and a lancet, the rooms as a board. -->
+<section class="children" aria-labelledby="t-children">
+  <div class="wrap">
+    <div class="kid-pics">
+      <figure class="fr main">
+        <div class="arch dw" data-rv><img src="../../../../../fbcm-archive/images/08181c_48ba80a7454a4d42a300e61c2603a301_tilde_mv2.jpg" alt="Children sitting in a circle on a classroom floor, playing a game with strips of yellow tape."></div>
+        <svg class="mould" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100V34C0 12 44 6 80 0C116 6 160 12 160 34V100"/></svg>
+      </figure>
+      <figure class="fr small">
+        <div class="arch l" data-rv style="position:relative;z-index:1"><img src="../../../../../fbcm-archive/images/08181c_9663d13b5b4c47588862cfc8068ec5e4_tilde_mv2.jpg" alt="A newborn baby smiling in her sleep, wrapped in a crocheted blanket." style="object-position:50% 40%"></div>
+      </figure>
+    </div>
+    <div>
+      <h2 class="h2" id="t-children">Where the children go</h2>
+      <ol class="rooms">
+        <li data-up>
+          <p class="no">104</p>
+          <div><h3>Nursery Care</h3><p>For children ages 3 and younger, nursery care is available throughout the service.</p></div>
+        </li>
+        <li data-up style="--i:1">
+          <p class="no">105</p>
+          <div><h3>Family Room</h3><p>For little ones and parents who need to step out during service, this room provides toys, a live stream, rocking chairs, nursing privacy, and a changing table for all who desire it.</p></div>
+        </li>
+        <li data-up style="--i:2">
+          <p class="no">B-03<i>&amp;</i>102</p>
+          <div>
+            <h3>Children&rsquo;s Church</h3>
+            <p>Students preschool - fifth grade will be dismissed to Children&rsquo;s Church during the service.</p>
+            <p>There are two classes.</p>
+            <ul class="classes2">
+              <li><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg><span>Preschool - 2nd grade: Kickstart Children&rsquo;s Church (102)</span></li>
+              <li><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg><span>3rd - 5th grade: The Underground Children&rsquo;s Church (B-03)</span></li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+      <a class="btn" href="#">Children&rsquo;s ministry</a>
+    </div>
+  </div>
+</section>
+
+<!-- 5. FREQUENTLY ASKED QUESTIONS: the FaqBand. The church's seven, verbatim, native details. -->
+<section class="faq" aria-labelledby="t-faq">
+  <div class="wrap">
+    <div class="faq-head">
+      <svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-rose"/></svg>
+      <h2 class="h2 long" id="t-faq">Frequently asked questions</h2>
+    </div>
+    <div class="qs">
+      <details open>
+        <summary><span>How do I find the church?</span><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg></summary>
+        <div class="a"><p>The church is located in downtown Muncie at 309 East Adams Street. Google maps will take you to the correct place. Our parking lot is located on the Adams Street side. The most common doors people use are the Adams Street entrance at our circular drive (wheelchair accessible), the large wooden front doors which go into the sanctuary, or the Jefferson Street side doors which enter our main hallway near the church offices.</p></div>
+      </details>
+      <details>
+        <summary><span>What should I wear?</span><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg></summary>
+        <div class="a"><p>Casual dress is welcome. People wear a variety of styles of clothes from short sleeves (especially in the summer), to suit jackets and &ldquo;Sunday dresses.&rdquo; Please dress comfortably and in a way which allows you to devote attention to worship.</p></div>
+      </details>
+      <details>
+        <summary><span>Are there nursery care or children&rsquo;s worship during service?</span><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg></summary>
+        <div class="a"><p>There are. Nursery is available in room 104 for children under three. Greeters will help you check in and direct you. Each child will be given a name tag. Children up to fifth grade will be dismissed to Children&rsquo;s Church every week except communion Sunday (first week of the month, nursery care is still available). We also have a &ldquo;Family Room&rdquo; with rocking chairs, toys, a changing table, and a live stream of the service, for families and little ones who want to step out of worship at any time.</p></div>
+      </details>
+      <details>
+        <summary><span>Is your building accessible / ADA compliant?</span><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg></summary>
+        <div class="a"><p>We have a wheel-chair accessible door, an elevator, two wheelchair-accessible bathrooms, and assisted listening devices available upon request. Our building was built in 1929, and is therefore not officially ADA compliant&ndash; though we have made efforts to retrofit our building to make it as accessible as possible. For more information <a href="#accessibility">see our accessibility page</a>.</p></div>
+      </details>
+      <details>
+        <summary><span>Am I allowed to take the Lord&rsquo;s Supper (communion?)</span><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg></summary>
+        <div class="a"><p>We believe it is the Lord&rsquo;s table, and all who believe in him and have been baptized may partake. This includes believing Christians, no matter their particular denomination.</p></div>
+      </details>
+      <details>
+        <summary><span>I don&rsquo;t have a background in the Christian religion / I&rsquo;m not sure what I believe. Will that be a problem if I want to visit?</span><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg></summary>
+        <div class="a"><p>It won&rsquo;t be a problem at all! Anyone is welcome to attend our time of Worship. You may participate (in singing, the prayers, in Sunday Bible study) as you wish. And, if you want to see a service before you attend in-person, <a href="https://fbcmuncie.churchcenter.com/channels/4999">check out our live streams</a>. Please know the pastoral staff is always happy to discuss any questions you might have about our faith in God: Father, Son, &amp; Holy Spirit.</p></div>
+      </details>
+      <details>
+        <summary><span>What if I have other questions?</span><svg class="qf" aria-hidden="true"><use href="#i-qf"/></svg></summary>
+        <div class="a"><p>Please contact the office. <a href="https://fbcmuncie.churchcenter.com/people/forms/159198">You can find our contact form here</a>.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 6. OUR BUILDING: /visit#building lands here. A building photograph, so it stays rectangular. -->
+<section class="building" id="building" aria-labelledby="t-building">
+  <div class="wrap">
+    <div>
+      <p class="years" aria-hidden="true">1929</p>
+      <h2 class="h2" id="t-building">Our building</h2>
+      <p class="body">First Baptist&rsquo;s third, and most recent, building was completed in 1929. It has been on the National Register of Historic Places since 1988. For students and lovers of architecture it&rsquo;s a striking work.</p>
+      <a class="btn" href="#">Its history</a>
+    </div>
+    <figure class="rect" data-up><img src="../../../../../fbcm-archive/images/08181c_1c05a295546247c2acfe971dd8b9bc4d_tilde_mv2.jpg" alt="The limestone church and its square bell tower from the street corner on a sunny day, red doors at the base of the tower."></figure>
+  </div>
+</section>
+
+<!-- 7. COME AS YOU ARE: the gold band, outline buttons because gold would vanish. -->
+<section class="cta" aria-labelledby="t-cta">
+  <div class="wrap">
+    <svg class="glyph big" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-door"/></svg>
+    <div>
+      <h2 class="h2" id="t-cta">Come as you are.</h2>
+      <p>Sundays at 10:45 am. 309 East Adams Street.</p>
+    </div>
+    <div class="act">
+      <a class="btn outline" href="https://fbcmuncie.churchcenter.com/people/forms/159198">Fill in a visitor card</a>
+      <a class="textlink" href="https://www.youtube.com/@FbcmuncieOrg/streams">Watch live</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="brandcol">
+      <p class="mark" aria-label="Praise and Proclaim">Praise <i>&amp;</i><span>Proclaim</span><small>Isaiah 12:4</small></p>
+      <p style="margin-top:22px;max-width:22em">First Baptist Church Muncie<br>309 East Adams Street, Muncie, Indiana 47305<br>(765) 284-7749</p>
+    </div>
+    <div><h4><svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-window"/></svg>Worship</h4><ul><li><a href="#">Sundays at 10:45 am</a></li><li><a href="#">What to expect</a></li><li><a href="#">Watch on YouTube</a></li></ul></div>
+    <div><h4><svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-door"/></svg>The Way</h4><ul><li><a href="#">Who We Are</a></li><li><a href="#">Beliefs</a></li><li><a href="#">History</a></li></ul></div>
+    <div><h4><svg class="glyph" viewBox="0 0 48 64" aria-hidden="true"><use href="#i-rose"/></svg>Witness &amp; Work</h4><ul><li><a href="#">Ministries</a></li><li><a href="#">Staff</a></li><li><a href="#">Give</a></li></ul></div>
+    <p class="base">An American Baptist congregation in downtown Muncie since 1859.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var d=document.documentElement;
+  if(!('IntersectionObserver' in window)) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  d.classList.add('js');
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{rootMargin:'0px 0px -10% 0px',threshold:0.12});
+  document.querySelectorAll('[data-rv]').forEach(function(el){ el.parentElement.setAttribute('data-rvp',''); });
+  var io2=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.querySelectorAll(':scope > [data-rv]').forEach(function(a){a.classList.add('in');}); io2.unobserve(e.target); } });
+  },{rootMargin:'0px 0px -8% 0px',threshold:0.1});
+  document.querySelectorAll('[data-rvp]').forEach(function(el){ io2.observe(el); });
+  document.querySelectorAll('[data-up],[data-step],.rays').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
