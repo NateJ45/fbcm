@@ -235,6 +235,7 @@ export interface ChurchSettings {
   serviceLength?: string | null;
   youtubeUrl?: string | null;
   churchCenterUrl?: string | null;
+  churchTracUrl?: string | null;
   livestreamUrl?: string | null;
   directionsUrl?: string | null;
   socialInstagram?: string | null;
@@ -254,6 +255,10 @@ export interface SiteFacts {
   image?: string;
   /** Other records of the same building (Wikidata). */
   sameAsPlace?: string[];
+  /** The church's Google Business Profile (its Google Maps place link), once
+   *  claimed. When set it is listed in `sameAs` and becomes `hasMap`, since a
+   *  link to the place itself beats Site settings' address search. */
+  googleBusinessProfile?: string;
 }
 
 /** The page that describes the Sunday service, and so carries its Event and
@@ -267,11 +272,25 @@ export const httpUrl = (u: unknown): string => {
   return /^https?:\/\//.test(s) ? s : '';
 };
 
-/** Every record of the church elsewhere, deduplicated, in a stable order. */
+/** A URL's identity for de-duplication: no scheme, no `www.`, no trailing
+ *  slash, host in lower case. The first spelling seen is the one kept. */
+const urlKey = (u: string): string =>
+  u
+    .replace(/^https?:\/\/(www\.)?/i, '')
+    .replace(/\/+$/, '')
+    .replace(/^[^/]+/, (host) => host.toLowerCase());
+
+/**
+ * Every record of the church elsewhere, deduplicated, in a stable order: its
+ * YouTube channel, its Church Center and Church Trac sites (the church's own
+ * pages on those services), its social profiles from Site settings, then the
+ * `extra` records (Wikidata, the Google Business Profile once claimed).
+ */
 export function sameAsOf(s: ChurchSettings | null | undefined, extra: string[] = []): string[] {
   const all = [
     s?.youtubeUrl,
     s?.churchCenterUrl,
+    s?.churchTracUrl,
     s?.socialFacebook,
     s?.socialInstagram,
     ...(s?.socialLinks ?? []).map((l) => l?.url),
@@ -279,7 +298,13 @@ export function sameAsOf(s: ChurchSettings | null | undefined, extra: string[] =
   ]
     .map(httpUrl)
     .filter(Boolean);
-  return Array.from(new Set(all));
+  const seen = new Set<string>();
+  return all.filter((u) => {
+    const k = urlKey(u);
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
 }
 
 export function churchNode(settings: ChurchSettings | null | undefined, site: SiteFacts): Json {
@@ -300,8 +325,13 @@ export function churchNode(settings: ChurchSettings | null | undefined, site: Si
     geo: site.geo
       ? { '@type': 'GeoCoordinates', latitude: site.geo.latitude, longitude: site.geo.longitude }
       : undefined,
-    hasMap: httpUrl(s.directionsUrl),
-    sameAs: sameAsOf(s, site.sameAsPlace ?? []),
+    hasMap: httpUrl(site.googleBusinessProfile) || httpUrl(s.directionsUrl),
+    // Open to anyone, free: the Visit page's own "Anyone is welcome to attend
+    // our time of Worship". Both are Place properties (Church is a Place);
+    // Google has no Church rich result, so it reads them without judging them.
+    isAccessibleForFree: true,
+    publicAccess: true,
+    sameAs: sameAsOf(s, [...(site.sameAsPlace ?? []), httpUrl(site.googleBusinessProfile)]),
   });
 }
 

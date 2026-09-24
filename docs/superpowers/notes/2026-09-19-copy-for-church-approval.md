@@ -7,6 +7,8 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### New sentences
 
 - A downtown church in Muncie, Indiana. (hero kicker, unchanged from the plan 2b page)
+- First Baptist Church Muncie, Indiana | Sundays 10:45 am (search title, 2026-09-24 local search pass)
+- An American Baptist church in downtown Muncie, Indiana, at 309 East Adams Street. Worship is Sundays at 10:45 am, in person and online. All are welcome. (search description, not shown on the page; "in person and online" is the livestream, "All are welcome" is the Visit FAQ’s "Anyone is welcome to attend our time of Worship")
 
 ### Edits to the church’s own text
 
@@ -41,7 +43,8 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - Here is what a Sunday morning looks like, from the parking lot to the last hymn. (hero lead, unchanged from the plan 2b page)
 - Nursery care is in room 104 and the family room is 105. (the Worship step: the spec’s ruling on the two rooms, and on the church’s confirm list)
-- First Baptist Church Muncie gathers for worship at 10:45 am every Sunday at 309 East Adams Street in downtown Muncie. (search description)
+- Plan a visit | First Baptist Church Muncie, Indiana (search title, 2026-09-24 local search pass)
+- Worship is Sundays at 10:45 am at 309 East Adams Street, downtown Muncie. Park in the Adams Street lot. Casual dress, a nursery, and Children’s Church. (search description, not shown on the page; each fact is the page’s own: the parking lot "on the Adams Street side", "Casual dress is welcome", nursery in room 104, Children’s Church)
 
 ### Edits to the church’s own text
 
@@ -66,6 +69,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - In Muncie (Our goals, Witness: label on the second ring, for "Local Partnership")
 - Everywhere (Our goals, Witness: label on the third ring, for "Kingdom Citizenship")
 - Co-Pastors, First Baptist Church Muncie (under the signature of the pastors’ letter)
+- An American Baptist church in downtown Muncie, Indiana, since 1859. (search description, after the tagline, not shown on the page; "Indiana" added by the 2026-09-24 local search pass)
 
 ### Edits to the church’s own text
 
@@ -99,7 +103,8 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - Baptism (heading of the band beside the baptism photograph, 2026-09-23)
 - Read the documents (heading of the document band, 2026-09-24; it was the band’s eyebrow)
-- First Baptist Church Muncie is an American Baptist church in downtown Muncie: we hold to one triune God, to the Bible as our source for faith and practice, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself under the Lordship of Christ. (search description)
+- American Baptist beliefs | First Baptist Church Muncie (search title, 2026-09-24 local search pass)
+- An American Baptist church in downtown Muncie, Indiana. We hold to one triune God, to the Bible as our source for faith and practice, and to believer’s baptism. (search description, not shown on the page; 2026-09-24 local search pass)
 
 ### Edits to the church’s own text
 
@@ -128,7 +133,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### New sentences
 
 - Every age has a place here. (hero headline)
-- Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and the person to talk to about each one. (search description)
+- Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and who to ask about each. (search description, not shown on the page; 2026-09-24 local search pass)
 - Contact the church office. (the end of a ministry’s contact line when the staff document for that role carries no email address, which today is only the children’s ministry; it links to the contact page)
 
 ### Edits to the church’s own text
@@ -166,7 +171,8 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 ### New sentences
 
-- The staff and volunteers of First Baptist Church Muncie: our pastors, the Church Coordination Team, and our deacons. (SEO description, not shown on the page)
+- Pastors and staff | First Baptist Church Muncie (search title, 2026-09-24 local search pass)
+- The pastors, staff and volunteers of First Baptist Church Muncie, an American Baptist church in downtown Muncie: the Church Coordination Team and our deacons. (search description, not shown on the page; 2026-09-24 local search pass)
 
 ### Edits to the church’s own text
 
@@ -185,7 +191,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### New sentences
 
 - The story continues on Sunday. (the closing band’s headline)
-- First Baptist Church Muncie was founded by twelve people in 1859 and has worshipped in downtown Muncie ever since. (search description, not shown on the page)
+- Founded by twelve people in 1859, First Baptist Church Muncie has worshipped in downtown Muncie ever since. Our building on East Adams Street dates from 1929. (search description, not shown on the page; the 2026-09-24 local search pass added the second sentence, from the Visit FAQ: "Our building was built in 1929")
 - The seven era names in the timeline and on the bands, which are labels the spec gives rather than sentences the church wrote: Founding; Struggle and Rairden; The gas boom to the debt paid; The Fighting Parson and the building; Sold and bought back; Postwar to Mattox; Saunders to the co-pastors.
 
 ### Edits to the church’s own text
@@ -226,7 +232,8 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - The documents below carry the fees. (documentListSection lead sentence, both instances: this page states no dollar figure, because neither source capture does)
 - Fill this in online. (document note for the two Church Center forms, both instances)
 - Ella Mae Lemen, the church's wedding coordinator (alt text on her portrait, built from her staff document's name and role, 2026-09-24)
-- Weddings and building use at First Baptist Church Muncie: reserve the sanctuary for a Christian wedding, or the fellowship hall, kitchen or youth center for another event. (search description)
+- Wedding venue and building use | First Baptist Church Muncie (search title, 2026-09-24 local search pass: "wedding venue" is what people search for)
+- Reserve the sanctuary of First Baptist Church Muncie for a Christian wedding in downtown Muncie, or the fellowship hall, kitchen or youth center for an event. (search description, not shown on the page; 2026-09-24 local search pass)
 
 ### Edits to the church’s own text
 
@@ -257,7 +264,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - You can give online through Church Center any time. (Ways to give, paragraph 1)
 - You can also give in person during Sunday worship, when the offering is taken. (Ways to give, paragraph 2)
 - Or mail a check to the church office. (Ways to give, paragraph 3, lead-in to the mailing address)
-- Give to First Baptist Church Muncie: give online through Church Center, in person on Sunday, or by mail. (search description)
+- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online through Church Center, in person on Sunday, or by mail. (search description, not shown on the page; 2026-09-24 local search pass)
 
 ### Edits to the church’s own text
 
@@ -276,7 +283,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### New sentences
 
 - Tell us and a member of the pastoral team will follow up. (Share a life update, the sentence that introduces the form link. The old page listed the life events and linked the form with no word about what happens next, which the content map flagged as the page's main gap.)
-- Phone, email, address and office hours for First Baptist Church Muncie at 309 East Adams Street, plus how to share a life update and how to book time with a pastor. (search description, not shown on the page)
+- Call (765) 284-7749 or email office@fbcmuncie.org. We are at 309 East Adams Street, downtown Muncie. Office hours, pastors’ hours and life updates. (search description, not shown on the page; 2026-09-24 local search pass)
 
 ### Edits to the church’s own text
 
@@ -297,7 +304,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Sermon previews for the coming Sunday, news from around the church, and longer pieces from the pastors. (hero subhead, one sentence)
 - The Visitor and two books (publications heading)
 - Come and see for yourself. (closing band headline)
-- Sermon previews, church news and writing from the pastors of First Baptist Church Muncie. (search description)
+- Sermon previews, church news and writing from the pastors of First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana. (search description, not shown on the page; 2026-09-24 local search pass)
 
 ### Edits to the church’s own text
 
@@ -384,7 +391,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
   lot is on the Adams Street side."
 - "Sermon previews, news and writing from the church" (the /blog share card's line).
 
-### Edits to the church's own text
+### Edits to the church’s own text
 
 - (none: each door's words under the sketch are the list's own)
 
@@ -396,6 +403,16 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - The blog's browse row: "By passage".
 - The search: "Search the site" (the header button's name, the mobile menu row and the dialog's label), the box's placeholder "Sermons, passages, pages", "12 results for “Jeremiah”" / "1 result for ..." / "Nothing found for “...”.", "More results", "Close", "Search is not available right now." and the foot link "Every passage preached, book by book". UI labels.
 - Search result rows say "Page" in the date column for a page (a post shows its Sunday or posted date).
+
+## /llms.txt, the summary for AI assistants (2026-09-24, the local search pass)
+
+### New sentences
+
+- An American Baptist church in downtown Muncie, Indiana. (the opening line, before the tagline)
+- The headings "Sundays", "What to expect", "Contact", "Pages", "Elsewhere" and "About this file", and the labels "Worship", "Where", "Directions", "Watch online", "Plan a visit", "Phone", "Email", "Office hours", "Give", "Church Center (calendar and giving)" and "Church Trac (newsletters and the app)".
+- Generated from the site's own content every time the site is built, so it always matches the pages.
+- Sermon previews and church news are at https://www.fbcmuncie.org/blog, each post at /post/<slug>, with a feed at https://www.fbcmuncie.org/blog/rss.xml.
+- A longer companion with more of the site's text: https://www.fbcmuncie.org/llms-full.txt
 
 ## Facts the church must confirm
 

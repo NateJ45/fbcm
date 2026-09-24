@@ -57,7 +57,7 @@ export default {
     'You can give online through Church Center any time. (Ways to give, paragraph 1)',
     'You can also give in person during Sunday worship, when the offering is taken. (Ways to give, paragraph 2)',
     'Or mail a check to the church office. (Ways to give, paragraph 3, lead-in to the mailing address)',
-    'Give to First Baptist Church Muncie: give online through Church Center, in person on Sunday, or by mail. (search description)',
+    'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online through Church Center, in person on Sunday, or by mail. (search description, not shown on the page; 2026-09-24 local search pass)',
   ],
 
   // Edits to the church's own sentences (ruling P16). The words are still
@@ -218,7 +218,7 @@ export default {
 
       seoTitle: 'Give | First Baptist Church Muncie',
       seoDescription:
-        'Give to First Baptist Church Muncie: give online through Church Center, in person on Sunday, or by mail.',
+        'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online through Church Center, in person on Sunday, or by mail.',
     };
   },
 };

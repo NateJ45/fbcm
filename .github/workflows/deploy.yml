@@ -211,3 +211,15 @@ jobs:
             FAIL=1
           }
           exit $FAIL
+
+      # INDEXNOW (2026-09-24, the local search pass). Tells Bing and the other
+      # IndexNow engines about the sitemap's URLs. It runs after the smoke, so
+      # a deploy that failed its smoke is never advertised. It is a no-op until
+      # the production host (site.url) serves the key file, which it cannot
+      # before the cutover: www.fbcmuncie.org is still Wix and answers 400 for
+      # the key's path, so the step logs why and exits 0. continue-on-error,
+      # because a search engine refusing a submission must never fail a deploy.
+      # Detail in docs/agent/deployment.md, "IndexNow".
+      - name: IndexNow
+        continue-on-error: true
+        run: npm run indexnow

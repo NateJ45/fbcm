@@ -88,6 +88,26 @@ export const site = {
   geo: { latitude: 40.19167, longitude: -85.38405 },
   wikidata: 'https://www.wikidata.org/wiki/Q5452411',
 
+  /** The church's Google Business Profile: the share link of its place on
+   *  Google Maps (https://maps.app.goo.gl/... or https://www.google.com/maps?cid=...).
+   *  EMPTY ON PURPOSE until the church claims the profile (docs/PENDING.md).
+   *  When set, the Church node lists it in `sameAs` and uses it for `hasMap`
+   *  (src/lib/church-schema.ts). Code, not Site settings, because it is a
+   *  one-time fact about the building's listing that no editor needs to
+   *  change; Site settings has no field for it, and adding one is a schema
+   *  change for a value set once. apply-brand never touches this. */
+  googleBusinessProfile: '',
+
+  /** The IndexNow key (2026-09-24, the local search pass). Not a secret: the
+   *  protocol publishes it at <site.url>/<key>.txt (src/pages/[indexNowKey].txt.ts)
+   *  so Bing, Yandex, Seznam and the other IndexNow engines can check that a
+   *  URL submission really comes from the site's owner. scripts/indexnow.mjs
+   *  submits the sitemap after each deploy, and does nothing until the
+   *  production host serves this file (so not before the cutover). Changing it
+   *  is harmless: the next deploy publishes the new file. 32 hex characters,
+   *  generated once with crypto.randomBytes(16). apply-brand never touches it. */
+  indexNowKey: '1aadd9425437cc7a001d23cbec702fef',
+
   // Public repo URL (used in footer credit if shown)
   repo: '',
 };

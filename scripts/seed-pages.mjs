@@ -262,6 +262,18 @@ function printDifferences(live, doc) {
   const fields = changedFields(live, doc);
   if (fields.length === 0) return;
   console.log(`    fields: ${fields.join(', ')}`);
+  // A changed top-level TEXT field (a search title, a description) prints its
+  // before and after, so the plan shows the words the operator is approving,
+  // not just the field's name (2026-09-24, the local search pass). These are
+  // the stored values, placeholders and all: {time} stays {time}.
+  for (const f of fields) {
+    const before = live?.[f];
+    const after = doc?.[f];
+    if (typeof before !== 'string' && typeof after !== 'string') continue;
+    console.log(`    ${f}:`);
+    console.log(`      - ${typeof before === 'string' ? before : '(none)'}`);
+    console.log(`      + ${typeof after === 'string' ? after : '(none)'}`);
+  }
   if (!fields.some((f) => f.startsWith('pageBuilder'))) return;
   const blocks = changedBlocks(live, doc);
   if (blocks.length > 0) console.log(`    pageBuilder: ${blocks.join(', ')}`);

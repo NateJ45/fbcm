@@ -134,6 +134,7 @@ export default {
     'In Muncie (Our goals, Witness: label on the second ring, for "Local Partnership")',
     'Everywhere (Our goals, Witness: label on the third ring, for "Kingdom Citizenship")',
     'Co-Pastors, First Baptist Church Muncie (under the signature of the pastors’ letter)',
+    'An American Baptist church in downtown Muncie, Indiana, since 1859. (search description, after the tagline, not shown on the page; "Indiana" added by the 2026-09-24 local search pass)',
   ],
 
   // Edits to the church's own sentences (ruling P16). The words are still
@@ -601,7 +602,7 @@ export default {
       // The 1859 date is the church's own: scripts/data/pages/history.txt line
       // 3, "Founded in 1859, First Baptist Church of Muncie...". The American
       // Baptist affiliation is scripts/data/pages/baptists.txt line 83.
-      seoDescription: `${settings.tagline} An American Baptist church in downtown Muncie since 1859.`,
+      seoDescription: `${settings.tagline} An American Baptist church in downtown Muncie, Indiana, since 1859.`,
     };
 
     // No em-dash reaches the page (CLAUDE.md rule 2), whatever the capture

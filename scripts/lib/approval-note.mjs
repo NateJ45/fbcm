@@ -51,6 +51,45 @@ export const CHROME_SECTIONS = [
     ],
     edits: ["(none: the goals' names and small lines are Who We Are's own)"],
   },
+  // The next two were typed into the note by hand on 2026-09-24 (the
+  // craft-details and scripture-search branches) and the next seed-pages run
+  // wiped them, the same loss the header of this file describes. Moved here
+  // the same day (the local search pass), word for word: the Visit sketch is a
+  // component, not page-module copy, and the search and scripture index are
+  // routes and UI with no page module behind them.
+  {
+    heading: 'Visit: "Which door?" and the share cards (2026-09-24, craft-details pass)',
+    newCopy: [
+      '"Choose a door to see where it is." (under the street-side sketch before a door is chosen)',
+      '"A sketch of the street side, not to scale. North is up." (the sketch\'s note)',
+      'The sketch\'s labels: "Adams Street", "Jefferson Street", "Offices", "Sanctuary", "Parking".',
+      'The sketch\'s description for screen readers: "The church stands on the corner of Adams Street\n  and Jefferson Street. Door 1, Adams Street circular drive, is on the Adams Street side, at the\n  circular drive. Door 2, The wooden front doors, is on the Adams Street side, at the foot of\n  the tower. Door 3, Jefferson Street side doors, is on the Jefferson Street side. The parking\n  lot is on the Adams Street side."',
+      '"Sermon previews, news and writing from the church" (the /blog share card\'s line).',
+    ],
+    edits: ["(none: each door's words under the sketch are the list's own)"],
+  },
+  {
+    heading: 'Scripture index and site search (2026-09-24, `feat/scripture-search`)',
+    newCopy: [
+      '/blog/scripture: the page title "Scripture index"; the lede "Every passage preached in a sermon preview, from Genesis to Revelation: 106 passages from 24 books, each with the Sunday it was preached." (the counts are derived and change as previews are added); the headings "Old Testament", "New Testament" and, only when a reading cannot be read, "Other readings"; the empty state "The first sermon previews are on their way."; the meta description "Every Bible passage preached at First Baptist Church Muncie, book by book, with the sermon preview for each."',
+      'The blog\'s browse row: "By passage".',
+      'The search: "Search the site" (the header button\'s name, the mobile menu row and the dialog\'s label), the box\'s placeholder "Sermons, passages, pages", "12 results for “Jeremiah”" / "1 result for ..." / "Nothing found for “...”.", "More results", "Close", "Search is not available right now." and the foot link "Every passage preached, book by book". UI labels.',
+      'Search result rows say "Page" in the date column for a page (a post shows its Sunday or posted date).',
+    ],
+  },
+  {
+    // src/lib/llms-text.ts. Everything else in the file is Site settings, each
+    // page's own title and search description, and the Visit page's own
+    // questions and answers.
+    heading: '/llms.txt, the summary for AI assistants (2026-09-24, the local search pass)',
+    newCopy: [
+      'An American Baptist church in downtown Muncie, Indiana. (the opening line, before the tagline)',
+      'The headings "Sundays", "What to expect", "Contact", "Pages", "Elsewhere" and "About this file", and the labels "Worship", "Where", "Directions", "Watch online", "Plan a visit", "Phone", "Email", "Office hours", "Give", "Church Center (calendar and giving)" and "Church Trac (newsletters and the app)".',
+      "Generated from the site's own content every time the site is built, so it always matches the pages.",
+      'Sermon previews and church news are at https://www.fbcmuncie.org/blog, each post at /post/<slug>, with a feed at https://www.fbcmuncie.org/blog/rss.xml.',
+      "A longer companion with more of the site's text: https://www.fbcmuncie.org/llms-full.txt",
+    ],
+  },
 ];
 
 /** `manifest[key].alt`, following `.same` chains, matching seed-pages.mjs's altFor. */

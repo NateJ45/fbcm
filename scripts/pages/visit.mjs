@@ -104,7 +104,8 @@ export default {
   newCopy: [
     'Here is what a Sunday morning looks like, from the parking lot to the last hymn. (hero lead, unchanged from the plan 2b page)',
     'Nursery care is in room 104 and the family room is 105. (the Worship step: the spec’s ruling on the two rooms, and on the church’s confirm list)',
-    'First Baptist Church Muncie gathers for worship at 10:45 am every Sunday at 309 East Adams Street in downtown Muncie. (search description)',
+    'Plan a visit | First Baptist Church Muncie, Indiana (search title, 2026-09-24 local search pass)',
+    'Worship is Sundays at 10:45 am at 309 East Adams Street, downtown Muncie. Park in the Adams Street lot. Casual dress, a nursery, and Children’s Church. (search description, not shown on the page; each fact is the page’s own: the parking lot "on the Adams Street side", "Casual dress is welcome", nursery in room 104, Children’s Church)',
   ],
 
   // Edits to the church's own sentences. The words are still theirs.
@@ -517,8 +518,12 @@ export default {
         },
       ],
 
-      seoTitle: 'Plan a visit | First Baptist Church Muncie',
-      seoDescription: `First Baptist Church Muncie gathers for worship at 10:45 am every Sunday at ${streetLine} in downtown Muncie.`,
+      // 2026-09-24, the local search pass: this is the page a search for
+      // "church in Muncie" should land on, so the description is the Sunday
+      // in one breath (time, street, parking, dress, children), every fact
+      // from this page's own FAQ. The time and street are Site settings'.
+      seoTitle: 'Plan a visit | First Baptist Church Muncie, Indiana',
+      seoDescription: `Worship is ${settings.serviceTime} at ${streetLine}, downtown Muncie. Park in the Adams Street lot. Casual dress, a nursery, and Children’s Church.`,
     };
   },
 };

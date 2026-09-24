@@ -1157,6 +1157,42 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   `tests/print.spec.ts`, `tests/transitions.spec.ts`) and the marked import line in BaseLayout.
   Dry run only; the known pre-existing leftovers noted under `feat/scripture-search` stand.
 
+### Local search and AI visibility (2026-09-24, `feat/local-seo`)
+
+- [ ] #nathan **Apply the new search titles and descriptions** (after the merge; no schema
+      change, so no deploy is needed first). `npm run seed-pages -- --only <pages>`, with `<pages>` being
+      home,visit,who-we-are,beliefs,ministries,staff,history,wedding,give,contact,blog, prints
+      the plan: on 2026-09-24 it changed ONLY `seoTitle`/`seoDescription` on those 11
+      documents, and it now prints each field's before and after. Re-read it for any other
+      field before adding `--apply` (a Studio edit since then would show up as a second
+      field), then let the publish webhook rebuild. Until then the live pages and
+      `/llms.txt`'s page lines carry the old descriptions.
+- [ ] #nathan **Approve the new copy**: the titles and descriptions under each page, and the
+      "/llms.txt" section, in `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`.
+- [ ] #nathan **Add Facebook and Instagram in Site settings, Social links.** The Wix site's
+      navigation linked `https://www.facebook.com/firstbaptistmuncie` and
+      `https://www.instagram.com/fbcmuncie/` (`scripts/data/nav.json`), but Site settings holds
+      no social link, so neither reaches the church's `sameAs` today (YouTube, Church Center,
+      Church Trac and Wikidata do). Confirm both are still the church's, then add them as two
+      Social links entries (a Studio edit, not code). Side effect: the footer draws social
+      buttons for them (its "show social buttons" switch is unset, which means yes).
+- [ ] #nathan **Claim the church's Google Business Profile**, then put its Google Maps share
+      link in `site.googleBusinessProfile` (`src/data/site.ts`, empty today). It joins
+      `sameAs` and becomes `hasMap`.
+- [ ] **At the cutover:** the "Search and AI visibility at cutover" list in
+      `docs/superpowers/notes/2026-09-20-cutover-plan.md`: Cloudflare AI Crawl Control OFF
+      (verify with a GPTBot curl), Search Console and Bing Webmaster Tools (import from GSC)
+      with the sitemap, the 49 redirects spot-checked, the Rich Results Test on `/`, `/visit`
+      and one post, and IndexNow's first real run.
+- **`public/llms-full.txt` is a snapshot, made by hand** with `npm run llms:full`, and it is
+  stale: its post list stops at the posts of its run, its title line carries an em-dash, and
+  it calls the church a "business". `/llms.txt` (now generated every build) links it. Either
+  regenerate it at the cutover, or make it a build-time route like `/llms.txt`.
+- **Known limits, by design:** the FAQPage earns no Google rich result (Google limits FAQ
+  results to government and health sites); IndexNow resubmits every sitemap URL on every
+  deploy (no dates in the sitemap to tell changed pages apart; the engines ignore unchanged
+  ones); post `<title>`s are unchanged, a place name would not read naturally there.
+
 ### Beliefs identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** `scripts/pages/beliefs.mjs` uses no new

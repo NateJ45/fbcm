@@ -81,7 +81,8 @@ export default {
   newCopy: [
     'Baptism (heading of the band beside the baptism photograph, 2026-09-23)',
     'Read the documents (heading of the document band, 2026-09-24; it was the band’s eyebrow)',
-    'First Baptist Church Muncie is an American Baptist church in downtown Muncie: we hold to one triune God, to the Bible as our source for faith and practice, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself under the Lordship of Christ. (search description)',
+    'American Baptist beliefs | First Baptist Church Muncie (search title, 2026-09-24 local search pass)',
+    'An American Baptist church in downtown Muncie, Indiana. We hold to one triune God, to the Bible as our source for faith and practice, and to believer’s baptism. (search description, not shown on the page; 2026-09-24 local search pass)',
   ],
 
   // Edits to the church's own sentences (ruling P16): a connective cut, a
@@ -649,9 +650,11 @@ export default {
         },
       ],
 
-      seoTitle: 'What we believe | First Baptist Church Muncie, an American Baptist church',
+      // 2026-09-24, the local search pass: the old title ran to 73 characters
+      // and the description to 290, so search engines cut both. Now 54 and 160.
+      seoTitle: 'American Baptist beliefs | First Baptist Church Muncie',
       seoDescription:
-        'First Baptist Church Muncie is an American Baptist church in downtown Muncie: we hold to one triune God, to the Bible as our source for faith and practice, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself under the Lordship of Christ.',
+        'An American Baptist church in downtown Muncie, Indiana. We hold to one triune God, to the Bible as our source for faith and practice, and to believer’s baptism.',
     };
   },
 };

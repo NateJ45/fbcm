@@ -84,7 +84,7 @@ export default {
   // in front of the church before launch.
   newCopy: [
     "Tell us and a member of the pastoral team will follow up. (Share a life update, the sentence that introduces the form link. The old page listed the life events and linked the form with no word about what happens next, which the content map flagged as the page's main gap.)",
-    'Phone, email, address and office hours for First Baptist Church Muncie at 309 East Adams Street, plus how to share a life update and how to book time with a pastor. (search description, not shown on the page)',
+    'Call (765) 284-7749 or email office@fbcmuncie.org. We are at 309 East Adams Street, downtown Muncie. Office hours, pastors’ hours and life updates. (search description, not shown on the page; 2026-09-24 local search pass)',
   ],
 
   // Edits to the church's own text (ruling P16). The words are still theirs.
@@ -374,7 +374,11 @@ export default {
       ],
 
       seoTitle: 'Contact | First Baptist Church Muncie',
-      seoDescription: `Phone, email, address and office hours for First Baptist Church Muncie at ${streetLine}, plus how to share a life update and how to book time with a pastor.`,
+      // 2026-09-24, the local search pass: the phone number and email lead,
+      // since that is what a search for the church's contact details wants in
+      // the result itself. All three facts are Site settings' ({phone},
+      // {email}, {address} once seed-pages converts them).
+      seoDescription: `Call ${settings.phone} or email ${settings.email}. We are at ${streetLine}, downtown Muncie. Office hours, pastors’ hours and life updates.`,
     };
   },
 };

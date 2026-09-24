@@ -29,6 +29,7 @@ const SETTINGS = {
   serviceLength: 'About an hour',
   youtubeUrl: 'https://www.youtube.com/c/FbcmuncieOrg',
   churchCenterUrl: 'https://fbcmuncie.churchcenter.com/',
+  churchTracUrl: 'https://fbcmuncie.churchtrac.com/',
   livestreamUrl: 'https://www.youtube.com/@FbcmuncieOrg/streams',
   directionsUrl:
     'https://www.google.com/maps/search/?api=1&query=309+East+Adams+Street+Muncie+IN+47305',
@@ -119,8 +120,44 @@ test('sameAsOf keeps the records, deduplicated, and drops non-URLs', () => {
     sameAsOf({ ...SETTINGS, socialLinks: [{ url: SETTINGS.youtubeUrl }, { url: 'mailto:x' }] }, [
       'https://www.wikidata.org/wiki/Q5452411',
     ]),
-    [SETTINGS.youtubeUrl, SETTINGS.churchCenterUrl, 'https://www.wikidata.org/wiki/Q5452411'],
+    [
+      SETTINGS.youtubeUrl,
+      SETTINGS.churchCenterUrl,
+      SETTINGS.churchTracUrl,
+      'https://www.wikidata.org/wiki/Q5452411',
+    ],
   );
+});
+
+test('sameAsOf treats www, the scheme and a trailing slash as the same profile', () => {
+  assert.deepEqual(
+    sameAsOf(
+      {
+        socialFacebook: 'https://www.facebook.com/firstbaptistmuncie',
+        socialLinks: [
+          { url: 'https://facebook.com/firstbaptistmuncie/' },
+          { url: 'http://www.instagram.com/fbcmuncie/' },
+          { url: 'https://www.instagram.com/fbcmuncie' },
+        ],
+      },
+      ['', 'https://www.wikidata.org/wiki/Q5452411'],
+    ),
+    [
+      'https://www.facebook.com/firstbaptistmuncie',
+      'http://www.instagram.com/fbcmuncie/',
+      'https://www.wikidata.org/wiki/Q5452411',
+    ],
+  );
+});
+
+test('the Google Business Profile, once set, is in sameAs and becomes hasMap', () => {
+  const without = churchNode(SETTINGS, SITE);
+  assert.equal(without.hasMap, SETTINGS.directionsUrl);
+  const gbp = 'https://maps.app.goo.gl/abc123';
+  const node = churchNode(SETTINGS, { ...SITE, googleBusinessProfile: gbp });
+  assert.equal(node.hasMap, gbp);
+  assert.ok((node.sameAs as string[]).includes(gbp));
+  assert.deepEqual(validateNode(node), []);
 });
 
 test('churchNode carries every fact from Site settings and is valid schema.org', () => {
@@ -136,6 +173,9 @@ test('churchNode carries every fact from Site settings and is valid schema.org',
   });
   assert.equal((node.address as { streetAddress: string }).streetAddress, '309 East Adams Street');
   assert.ok((node.sameAs as string[]).includes('https://fbcmuncie.churchcenter.com/'));
+  assert.ok((node.sameAs as string[]).includes('https://fbcmuncie.churchtrac.com/'));
+  assert.equal(node.isAccessibleForFree, true);
+  assert.equal(node.publicAccess, true);
   assert.ok(!('priceRange' in node), 'a church has no price range');
   assert.deepEqual(validateNode(node), []);
 });

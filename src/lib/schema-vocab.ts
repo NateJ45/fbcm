@@ -3,7 +3,7 @@
 // pass). It knows the schema.org types this site emits, the properties each
 // one may carry (inherited ones included), the enumeration values it uses, and
 // the fields Google's structured-data docs call required for the rich results
-// that apply (Event, Article/BlogPosting, BreadcrumbList).
+// that apply (Event, Article/BlogPosting, BreadcrumbList, FAQPage).
 //
 // It is deliberately narrow: a type the site does not use is an ERROR here, so
 // a new node has to be added to this vocabulary on purpose, from schema.org's
@@ -186,7 +186,21 @@ export const TYPES: Record<string, readonly string[]> = {
   ListItem: [...INTANGIBLE, 'item', 'position', 'nextItem', 'previousItem'],
   CreativeWork: CREATIVE_WORK,
   Book: [...CREATIVE_WORK, 'bookEdition', 'bookFormat', 'illustrator', 'isbn', 'numberOfPages'],
-  WebPage: [...CREATIVE_WORK, 'breadcrumb', 'primaryImageOfPage', 'lastReviewed'],
+  WebPage: [...CREATIVE_WORK, 'breadcrumb', 'primaryImageOfPage', 'lastReviewed', 'mainEntity'],
+  // A page's questions and answers (src/lib/faq-schema.ts, 2026-09-24, the
+  // local search pass). FAQPage is a WebPage; Question and Answer are
+  // CreativeWorks (Answer through Comment), from schema.org's own type pages.
+  FAQPage: [...CREATIVE_WORK, 'breadcrumb', 'primaryImageOfPage', 'lastReviewed', 'mainEntity'],
+  Question: [
+    ...CREATIVE_WORK,
+    'acceptedAnswer',
+    'suggestedAnswer',
+    'answerCount',
+    'eduQuestionType',
+    'upvoteCount',
+    'downvoteCount',
+  ],
+  Answer: [...CREATIVE_WORK, 'answerExplanation', 'parentItem', 'upvoteCount', 'downvoteCount'],
   Blog: [...CREATIVE_WORK, 'blogPost'],
   Article: ARTICLE,
   SocialMediaPosting: [...ARTICLE, 'sharedContent'],
@@ -308,6 +322,22 @@ export function validateNode(node: Json, path = '$', root = true): string[] {
     if (typeof node.headline === 'string' && node.headline.length > 110) {
       errors.push(`${path}.headline: longer than 110 characters`);
     }
+  }
+  // Google's FAQPage fields: a list of Questions, each with a name and an
+  // accepted Answer that has text.
+  if (types.includes('FAQPage')) {
+    const qs = Array.isArray(node.mainEntity) ? node.mainEntity : [node.mainEntity];
+    if (!node.mainEntity || qs.length === 0) errors.push(`${path}: an FAQPage needs mainEntity`);
+    qs.forEach((q, i) => {
+      if (!isObj(q)) return;
+      const at = `${path}.mainEntity[${i}]`;
+      if (!typesOf(q).includes('Question')) errors.push(`${at}: should be a Question`);
+      if (typeof q.name !== 'string' || !q.name) errors.push(`${at}: a Question needs a name`);
+      const a = q.acceptedAnswer;
+      if (!isObj(a)) errors.push(`${at}: a Question needs an acceptedAnswer`);
+      else if (typeof a.text !== 'string' || !a.text)
+        errors.push(`${at}.acceptedAnswer: an Answer needs text`);
+    });
   }
   if (types.includes('BreadcrumbList')) {
     const items = Array.isArray(node.itemListElement) ? node.itemListElement : [];
