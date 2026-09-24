@@ -490,6 +490,11 @@ export interface MinistryGoalsIndexBlock {
   goals: MinistryGoalColumn[];
 }
 
+/** Registered as a derived block (see DerivedBlocks below). */
+export interface DerivedBlocks {
+  ministryGoalsIndex: MinistryGoalsIndexBlock;
+}
+
 /** watchwordSection — no image field, so the raw generated type is exact. */
 export type ProjectedWatchwordSection = { _key: string } & _WatchwordSection;
 
@@ -563,8 +568,18 @@ export type PageBuilderBlock =
  * still compiles in a fork whose scaffold removed the church blocks.
  */
 export type RenderedBlock =
-  | Exclude<PageBuilderBlock, { _type: 'ministrySection' }>
-  | MinistryGoalsIndexBlock; // scaffold: church
+  Exclude<PageBuilderBlock, { _type: 'ministrySection' }> | DerivedBlocks[keyof DerivedBlocks];
+
+/**
+ * Blocks no editor places: derived from the page's own blocks before render
+ * (the church's goal index is the one there is). A registry, merged by
+ * declaration, so a capability adds its derived block inside its own scaffold
+ * region and RenderedBlock above never has to name it. `_none` keeps the
+ * interface non-empty for the linter; its type is never, so it adds nothing.
+ */
+export interface DerivedBlocks {
+  _none: never;
+}
 
 // ---------------------------------------------------------------------------
 // Site settings, as a page-builder block sees them
