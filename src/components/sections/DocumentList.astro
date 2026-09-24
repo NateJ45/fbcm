@@ -1,31 +1,41 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: documents to download. Newsletters, annual reports, the
-// constitution. Since the art-direction pass (2026-09-21, task 10) the rows
-// are the same editorial list the blog archive took in task 8: the year on the
-// left in the UI face, the title as the link in Castoro roman, the note under
-// it, and a hairline under each row. The 2px gold rule that used to sit over
-// every row is gone; one hairline per row is the division, and the year group
-// headings are what give the list its landmarks.
+// Page-builder block: documents to download or open. Newsletters, annual
+// reports, the constitution, the wedding contract.
 //
-// Rows are sorted newest first by sortDocsByYearDesc() in church-derive.ts
-// (undated rows last, ties by title), so the order is derived, never typed
-// twice. A row pointing at an uploaded file gets the `download` attribute; a
-// row pointing at somebody else's page must not, because you cannot download a
-// website.
+// ON THE INDIGO BAND (2026-09-24, the Wedding identity pass). The list is a
+// full-width brand band (rule 2) in both of its forms, never a boxed card on
+// cream (rule 10). The heading is the one church band h2 (H2_DISPLAY, rule
+// 17) in gold; the eyebrow, when an editor sets one, is the small gold UI
+// label the link-card doors use. It paints its own ground, so the cadence
+// surface SectionRenderer hands it is accepted and not used.
 //
-// When the sorted list spans two or more distinct years, groupDocsByYear()
-// (same module) partitions it into year subheadings, descending, undated last.
-// A single-year or undated-only list comes back as one ungrouped group
-// (heading: null), so it renders as one straight run of rows. The year
-// headings are set in old-style figures at h2, which is the one place a
-// numeral is allowed to be the largest thing on a band.
+// THE FORM IS DERIVED (documentForm() in src/lib/document-doors.ts, rule 15).
 //
-// A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
-import SectionHeading from '@/components/SectionHeading.astro';
-import { surfaceClass } from '@/lib/surfaces';
+// DOOR CARDS: one to four documents. Each is a cream door standing on the
+// band: the four-centred head of the Adams Street door (the same curve as
+// ArchFrame's door arch) over a cream panel, then the year in Castoro
+// Titling if it has one, the title, the note, and the gold plate (the one
+// button family) saying what the door does: "Download PDF" for an uploaded
+// file, "Open on churchcenter.com" for a link (docAction()). The whole door
+// is the one link. A document with neither a file nor a link (a book on the
+// church library's shelf) is a door with no button and no link. The panel is
+// the FIXED cream (--color-bg never flips), like Our Building, so its inks
+// are band tokens already gated on it in theme-tokens.test.ts: band-indigo
+// for the year and title, band-brown for the note. Doors keep the order
+// sortDocsByYearDesc() gives (newest first, undated last, ties by title).
+//
+// THE REGISTER: five or more (the blog's issues of The Visitor). The same
+// band, the documents in year groups under gold Titling years when they span
+// two or more years (groupDocsByYear()), each group's titles in a run of
+// columns, each title the link, its note under it in taupe. Paper and taupe
+// on the indigo are gated beside the rest of the identity pairs. A file keeps
+// the `download` attribute; a link to somebody else's page opens in a new tab
+// and never carries `download`, because you cannot download a website.
 import { sortDocsByYearDesc, groupDocsByYear } from '@/lib/church-derive';
+import { docAction, documentForm } from '@/lib/document-doors';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 
 interface ListedDocument {
   _key?: string;
@@ -44,90 +54,123 @@ interface Props {
   headingId: string;
 }
 
-const { eyebrow, heading, docs = [], surface = 'background', headingId } = Astro.props as Props;
-const bg = surfaceClass(surface);
+const { eyebrow, heading, docs = [], headingId } = Astro.props as Props;
 
 // sortDocsByYearDesc needs a title on every row, so rows without one are
 // dropped first: a document nobody can name is not a row a visitor can use.
 const sorted = sortDocsByYearDesc(
   docs.filter((d): d is ListedDocument & { title: string } => !!d?.title),
 );
-const groups = groupDocsByYear(sorted);
+const form = documentForm(sorted.length);
+const groups = form === 'register' ? groupDocsByYear(sorted) : [];
+
+// The gold plate: the same class string as the link-card doors' button, so
+// the one button family costs the sheet nothing new (CLAUDE.md rule 20).
+const PLATE =
+  'mt-auto inline-flex min-h-[44px] items-center self-start rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] transition-transform group-hover:-translate-y-px';
 ---
 
-<section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-gutter py-section-lg">
-    <SectionHeading
-      eyebrow={eyebrow}
-      headline={heading}
-      headingId={headingId}
-      level="h2"
-      align="left"
-      tone="church"
-    />
+{
+  sorted.length > 0 && (
+    <section
+      class="bg-band-indigo text-white-pure"
+      aria-labelledby={heading ? headingId : undefined}
+    >
+      <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
+        {eyebrow && <p class="mb-4 font-ui text-ui text-gold">{eyebrow}</p>}
+        {heading && (
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
+            {heading}
+          </h2>
+        )}
 
-    {
-      groups.map((group, i) => (
-        <>
-          {
-            /* Only rendered when the list spans two or more distinct years
-               (groupDocsByYear returns a single ungrouped entry otherwise).
-               Castoro roman in old-style figures, on the same left edge as
-               everything else on the page. */
-            group.heading && (
-              <h3
-                class:list={[
-                  'font-body text-h2 leading-none font-normal text-foreground oldstyle',
-                  i === 0 ? 'mt-section-md' : 'mt-section-lg',
-                ]}
-              >
-                {group.heading}
-              </h3>
-            )
-          }
-          <ul class:list={[group.heading ? 'mt-8' : 'mt-section-md']} role="list">
-            {group.docs.map((doc) => {
-              const href = doc.fileUrl || doc.url;
-              const isFile = !!doc.fileUrl;
+        {form === 'doors' ? (
+          <ul
+            class="dl-doors"
+            style={`--n:${sorted.length};--n-md:${Math.min(sorted.length, 2)}`}
+            role="list"
+          >
+            {sorted.map((doc) => {
+              const action = docAction(doc);
+              const Door = action ? 'a' : 'div';
               return (
-                <li class="grid grid-cols-12 items-baseline gap-x-[clamp(16px,2.5vw,40px)] border-b border-hair py-6">
-                  <span class="col-span-12 font-ui text-[0.8125rem] tracking-[.06em] text-muted-foreground md:col-span-2">
-                    {/* The year is the row's left-hand meta, exactly as the
-                        date is on the blog list. Inside a YEAR GROUP it would
-                        be the group's own heading repeated on every row, so it
-                        is left blank there and the column keeps the indent. */}
-                    {!group.heading && typeof doc.year === 'number' ? doc.year : ''}
-                  </span>
-
-                  <span class="col-span-12 md:col-span-9 md:col-start-3">
-                    {href ? (
-                      <a
-                        href={href}
-                        download={isFile ? true : undefined}
-                        target={isFile ? undefined : '_blank'}
-                        rel={isFile ? undefined : 'noopener noreferrer'}
-                        class="block font-body text-h3 leading-snug font-normal text-foreground transition-colors hover:text-gold-ink"
-                      >
-                        {doc.title}
-                      </a>
-                    ) : (
-                      <span class="block font-body text-h3 leading-snug font-normal text-foreground">
+                <li>
+                  <Door
+                    class="dl-door group"
+                    href={action?.href}
+                    download={action?.kind === 'file' ? true : undefined}
+                    target={action?.kind === 'link' ? '_blank' : undefined}
+                    rel={action?.kind === 'link' ? 'noopener noreferrer' : undefined}
+                  >
+                    <span class="dl-head" aria-hidden="true" />
+                    <span class="dl-body">
+                      {typeof doc.year === 'number' && (
+                        <span class="mb-2 block font-display text-h3 leading-none text-band-indigo">
+                          {doc.year}
+                        </span>
+                      )}
+                      <span class="block font-body text-h3 leading-[1.18] text-band-indigo">
                         {doc.title}
                       </span>
-                    )}
-
-                    {doc.note && (
-                      <span class="mt-2.5 block max-w-[56ch] font-body text-body text-muted-foreground">
-                        {doc.note}
-                      </span>
-                    )}
-                  </span>
+                      {doc.note && (
+                        <span class="mt-3 mb-6 block text-lg leading-[1.45] text-band-brown">
+                          {doc.note}
+                        </span>
+                      )}
+                      {action && <span class={PLATE}>{action.label}</span>}
+                    </span>
+                  </Door>
                 </li>
               );
             })}
           </ul>
-        </>
-      ))
-    }
-  </div>
-</section>
+        ) : (
+          <div class="mt-[clamp(36px,4vw,64px)] border-t border-gold/35">
+            {groups.map((group) => (
+              <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] gap-y-4 border-b border-gold/35 py-7">
+                {group.heading && (
+                  <h3 class="col-span-12 m-0 font-display text-h3 leading-none font-normal text-gold md:col-span-2">
+                    {group.heading}
+                  </h3>
+                )}
+                <ul
+                  class:list={[
+                    'dl-run col-span-12',
+                    group.heading && 'md:col-span-10 md:col-start-3',
+                  ]}
+                  role="list"
+                >
+                  {group.docs.map((doc) => {
+                    const action = docAction(doc);
+                    return (
+                      <li>
+                        {action ? (
+                          <a
+                            href={action.href}
+                            download={action.kind === 'file' ? true : undefined}
+                            target={action.kind === 'link' ? '_blank' : undefined}
+                            rel={action.kind === 'link' ? 'noopener noreferrer' : undefined}
+                            class="font-body text-xl leading-snug text-bg underline decoration-gold/0 underline-offset-4 transition-colors hover:decoration-gold"
+                          >
+                            {doc.title}
+                          </a>
+                        ) : (
+                          <span class="font-body text-xl leading-snug text-bg">{doc.title}</span>
+                        )}
+                        {doc.note && (
+                          <span class="mt-1 block text-base leading-[1.45] text-band-taupe">
+                            {doc.note}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

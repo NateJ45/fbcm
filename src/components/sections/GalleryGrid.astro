@@ -1,10 +1,40 @@
 ---
-// Page-builder block: a responsive photo grid (2, 3, or 4 columns) with
-// optional captions. Surface comes from SectionRenderer. Safe to edit by hand.
-import SanityImage from '@/components/SanityImage.astro';
+// Safe to edit by hand
+// Page-builder block: a photo gallery. Since the Wedding identity pass
+// (2026-09-24) it draws in one of two forms, chosen by the photos themselves
+// (galleryForm() in src/lib/gallery-form.ts; no field, CLAUDE.md rules 9
+// and 15).
+//
+// THE ROOMS. Every photo carries a caption, so every photo is a named place
+// (the wedding page's Sanctuary, The Bridal Suite, Fellowship Hall, Kitchen,
+// Youth Center). The gallery is a row of arched doors on the indigo-dark
+// band, each place in a door arch (rule 3: door arches for places) with its
+// name under it in Castoro Titling, gold. The name is content: a room is
+// called something, and that is not a caption in the rule 7 sense. Up to five
+// doors stand in one row on a desktop, three on a tablet, two on a phone.
+// The heading is the one church band h2 (H2_DISPLAY, rule 17), in gold, the
+// hymn board's ink on a dark band (gold on band-deep is gated in
+// theme-tokens.test.ts).
+//
+// THE ARCADE. Any photo without a caption, and the gallery is photographs of
+// people: pointed lancets (rule 3) on the page's own ground, no text under
+// them (rule 7; a stray caption on one photo stays in the data and is not
+// shown). Every other lancet stands a little lower, so a row reads as an
+// arcade rather than a table. The `columns` field still sets how many stand
+// across (layout-variants.ts); a phone always shows two, because a lone
+// lancet the full width of a phone is a very tall photograph.
+//
+// Alt text always stays, in both forms. The frames are ArchFrame, so the crop
+// follows the editor's hotspot, the one warm grade applies, and the arches
+// open on the shared reveal observer (nothing to wait for under reduced
+// motion). A CONTENT block: the arcade takes the cadence surface
+// SectionRenderer hands it; the rooms paint their own band.
+import ArchFrame from '@/components/church/ArchFrame.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { columnsClass } from '@/lib/layout-variants';
 import { surfaceClass } from '@/lib/surfaces';
+import { galleryForm } from '@/lib/gallery-form';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
@@ -28,40 +58,88 @@ const {
 
 // The surface classes come from src/lib/surfaces.ts, which is where the
 // contrast gate measures this pair; the column classes from
-// src/lib/layout-variants.ts, which holds this section's map verbatim. Both
-// emit exactly the strings that were inline here before (2026-08-28).
+// src/lib/layout-variants.ts, which holds this section's map verbatim.
 const bg = surfaceClass(surface);
 const pics = (images ?? []).filter((i) => i?.asset);
 const colClass = columnsClass('gallerySection', columns);
+const form = galleryForm(pics);
+// The rooms stand five across at most; a sixth starts a second row.
+const doorCols = Math.min(pics.length, 5);
 ---
 
 {
-  pics.length > 0 && (
+  pics.length > 0 && form === 'rooms' && (
+    <section
+      class="bg-band-deep text-white-pure"
+      aria-labelledby={heading ? headingId : undefined}
+      aria-label={!heading ? 'Photo gallery' : undefined}
+    >
+      <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
+        {heading && (
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'mb-[clamp(40px,5vw,72px)] text-gold']}>
+            {heading}
+          </h2>
+        )}
+        <ul
+          class="gg-rooms"
+          style={`--n:${doorCols};--n-md:${Math.min(doorCols, 3)};--n-sm:${Math.min(doorCols, 2)}`}
+          role="list"
+        >
+          {pics.map((img, i) => (
+            <li>
+              <ArchFrame
+                image={img}
+                shape="door"
+                width={640}
+                sizes="(min-width: 1121px) 240px, (min-width: 621px) 30vw, 45vw"
+                alt={img.alt ?? ''}
+                grade="warm"
+                style={`transition-delay: ${(i % doorCols) * 90}ms`}
+              />
+              <p class="gg-name font-display text-gold">{img.caption}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+{
+  pics.length > 0 && form === 'arcade' && (
     <section
       class={bg}
       aria-labelledby={heading ? headingId : undefined}
       aria-label={!heading ? 'Photo gallery' : undefined}
     >
-      <div class="mx-auto max-w-content px-m py-section-lg">
-        {heading && <SectionHeading headline={heading} headingId={headingId} />}
-        <div class:list={['grid grid-cols-1 gap-m', colClass, heading && 'mt-section-md']}>
-          {pics.map((img) => (
-            <figure class="overflow-hidden rounded-md" data-reveal>
-              <SanityImage
-                source={img}
+      <div class="mx-auto max-w-content px-gutter py-section-lg">
+        {heading && (
+          <SectionHeading
+            headline={heading}
+            headingId={headingId}
+            level="h2"
+            align="left"
+            tone="church"
+            face="display"
+          />
+        )}
+        <ul
+          class:list={['gg-arcade grid grid-cols-2', colClass, heading && 'mt-section-md']}
+          role="list"
+        >
+          {pics.map((img, i) => (
+            <li>
+              <ArchFrame
+                image={img}
+                shape="lancet"
                 width={800}
-                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                quality={75}
-                class="h-auto w-full"
+                sizes="(min-width: 1024px) 24vw, (min-width: 640px) 45vw, 46vw"
+                alt={img.alt ?? ''}
+                grade="warm"
+                style={`transition-delay: ${(i % 4) * 90}ms`}
               />
-              {img.caption && (
-                <figcaption class="mt-xs text-sm text-muted-foreground italic">
-                  {img.caption}
-                </figcaption>
-              )}
-            </figure>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )
