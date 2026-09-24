@@ -6,7 +6,9 @@ import { test, expect, type Page } from '@playwright/test';
 // Astro's router swaps pages without a reload, and every inline script that
 // upgrades a page (the This Sunday line, the header's data-scrolled seed) has
 // to run again on the new one, while the scroll reset on a forward navigation
-// and the restore on a back navigation (CLAUDE.md rule 5) still hold.
+// and the restore on a back navigation (CLAUDE.md rule 5, the router's own
+// since Lenis went on 2026-09-24) still hold, instantly: html carries
+// scroll-behavior: smooth, and neither may glide.
 // The walk: Home, Blog, a post (by its row, whose title carries over into the
 // h1), the search dialog, then back to Blog.
 //
@@ -20,7 +22,7 @@ test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: 'no-preference
 /** The dateless server line is "Sundays · ..."; the upgraded one names the day. */
 const LIVE_SUNDAY = /^(Today|This Sunday, )/;
 
-type Walk = Window & { __walk?: number };
+type Walk = Window & { __walk?: number; __swapY?: number[] };
 
 /** The router has finished the swap and the transition. */
 async function settled(page: Page) {
@@ -32,9 +34,15 @@ test('Home, Blog, a post and back keep scroll, header, Sunday line and search', 
   page,
 }) => {
   await page.goto('/', { waitUntil: 'load' });
-  // Lenis starts on idle; the reset under test is its after-swap listener.
-  await page.waitForFunction(() => 'lenis' in window, null, { timeout: 5000 });
-  await page.evaluate(() => ((window as Walk).__walk = 1));
+  await page.evaluate(() => {
+    const w = window as Walk;
+    w.__walk = 1;
+    // Where the router left the page at the moment of each swap. A glide
+    // would still be at the old position here; an instant placement is done.
+    w.__swapY = [];
+    document.addEventListener('astro:after-swap', () => w.__swapY!.push(window.scrollY));
+  });
+  const swapY = () => page.evaluate(() => (window as Walk).__swapY!.at(-1));
 
   // Down the home page with a real gesture, then Blog from the header.
   await page.mouse.move(720, 450);
@@ -45,8 +53,9 @@ test('Home, Blog, a post and back keep scroll, header, Sunday line and search', 
   await expect(page).toHaveURL(/\/blog\/?$/);
   await settled(page);
 
-  // A client-side swap (the window survived), reset to the top.
+  // A client-side swap (the window survived), reset to the top, instantly.
   expect(await page.evaluate(() => (window as Walk).__walk)).toBe(1);
+  expect(await swapY()).toBe(0);
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
   await expect(page.locator('footer [data-live-sunday]')).toHaveText(LIVE_SUNDAY);
 
@@ -65,6 +74,7 @@ test('Home, Blog, a post and back keep scroll, header, Sunday line and search', 
   await settled(page);
 
   expect(await page.evaluate(() => (window as Walk).__walk)).toBe(1);
+  expect(await swapY()).toBe(0);
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
   const h1 = page.locator('h1.p2-title');
   await expect(h1).toBeVisible();
@@ -92,6 +102,8 @@ test('Home, Blog, a post and back keep scroll, header, Sunday line and search', 
   expect(await page.evaluate(() => (window as Walk).__walk)).toBe(1);
   const backY = await page.evaluate(() => window.scrollY);
   expect(Math.abs(backY - rowY), `restored to ${backY}, left at ${rowY}`).toBeLessThanOrEqual(40);
+  // Restored in the swap itself, not glided to afterwards.
+  expect(Math.abs((await swapY())! - rowY)).toBeLessThanOrEqual(40);
   await expect(page.locator('.site-header')).toHaveAttribute('data-scrolled', /.*/);
   await expect(page.locator('footer [data-live-sunday]')).toHaveText(LIVE_SUNDAY);
   // Back is the plain cross-fade: nothing carries a shared name.

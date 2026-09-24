@@ -115,7 +115,6 @@ function build(): Parts {
     id: 'site-search',
     class: 'ss',
     'aria-labelledby': 'ss-title',
-    'data-lenis-prevent': '',
   });
 
   const head = el('div', { class: 'ss-head' });
@@ -275,17 +274,18 @@ async function run(value: string) {
   await showMore();
 }
 
-/** Give the page its scroll back: Lenis running, the html lock off. */
+/** Give the page its scroll back: the html lock (`html.ss-open`) off. */
 function release() {
-  (window as unknown as { lenis?: { start: () => void } }).lenis?.start();
   document.documentElement.classList.remove('ss-open');
 }
 
 // A router navigation while the search is open (Back, Forward, a link the
 // dialog's own click handler did not see) swaps <body> and the dialog with it,
-// so its `close` event never fires and Lenis stayed stopped on the next page:
-// the wheel did nothing until a reload (2026-09-24, found on the live site).
-// Close it before the swap, and release unconditionally, since `close` is
+// so its `close` event never fires. When the scroll lock was Lenis, that left
+// Lenis stopped on the next page and the wheel dead until a reload (2026-09-24,
+// found on the live site; Lenis was removed the same day). The lock is only
+// html.ss-open now, and the swap replaces <html>'s classes anyway, but close
+// and release before the swap regardless, unconditionally, since `close` is
 // dispatched as a task and can land after the new page has loaded.
 document.addEventListener('astro:before-swap', () => {
   if (parts?.dialog.open) parts.dialog.close();
@@ -305,7 +305,6 @@ export async function openSearch(from?: HTMLElement | null): Promise<void> {
   }
   if (parts.dialog.open) return;
   opener = from ?? (document.activeElement as HTMLElement | null);
-  (window as unknown as { lenis?: { stop: () => void } }).lenis?.stop();
   document.documentElement.classList.add('ss-open');
   parts.dialog.showModal();
   parts.input.focus();

@@ -93,9 +93,11 @@ test.describe('desktop', () => {
   });
 });
 
-// Lenis only runs without reduced motion, so this one opts back in. Going Back
-// with the search open swapped the dialog away before its `close` fired, and
-// Lenis stayed stopped on the next page: the wheel did nothing until a reload.
+// Going Back with the search open swapped the dialog away before its `close`
+// fired, and the scroll lock outlived the page: while it was Lenis, the wheel
+// did nothing until a reload. Lenis is gone (2026-09-24) and the lock is only
+// html.ss-open, which the before-swap release takes off; this still runs with
+// reduced motion off, where the page's own smooth scrolling is on.
 test.describe('with smooth scroll', () => {
   test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: 'no-preference' });
 
@@ -107,14 +109,10 @@ test.describe('with smooth scroll', () => {
     await expect(page.getByRole('dialog', { name: 'Search the site' })).toBeVisible();
     await page.goBack();
     await expect(page).toHaveURL(/\/$/);
-    await expect
-      .poll(() =>
-        page.evaluate(
-          () => (window as unknown as { lenis?: { isStopped: boolean } }).lenis?.isStopped,
-        ),
-      )
-      .toBe(false);
     await expect(page.locator('html')).not.toHaveClass(/ss-open/);
+    expect(
+      await page.evaluate(() => getComputedStyle(document.documentElement).overflowY),
+    ).not.toBe('hidden');
     await page.mouse.move(720, 450);
     await page.mouse.wheel(0, 800);
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100);

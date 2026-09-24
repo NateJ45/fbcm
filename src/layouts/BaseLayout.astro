@@ -7,7 +7,8 @@
 //   - Cloudflare Web Analytics beacon (conditional)
 //   - Astro View Transitions <ClientRouter />
 //   - Skip-to-main link, Header, <main id="main">, Footer
-//   - Lenis smooth scroll init (prefers-reduced-motion-aware)
+//   - Native scrolling: smooth only under no-preference, never for the router
+//     (Lenis was removed on 2026-09-24; see the note above the layout script)
 //   - BackToTop React island
 
 import { ClientRouter } from 'astro:transitions';
@@ -522,61 +523,36 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
       '@/components/ui/sonner' here again.
     */}
 
-    {/* Lenis smooth scroll. The reduced-motion guard in globals.css already
-        kills smooth-scroll behavior; we also bail out here so we don't pay
-        for the Lenis runtime when the user prefers reduced motion.
+    {/* No Lenis (removed 2026-09-24, feat/print-motion). It added only a
+        wheel glide, at 5.4 KB gzip on every page, a requestAnimationFrame
+        loop that never stopped, a start 1.5 to 2 s after load, and the day's
+        dead-wheel bug (the search stopped it and a swap lost the restart).
+        Scrolling is the browser's own now:
 
-        Wrapped in requestIdleCallback so the ~10KB Lenis chunk isn't
-        fetched until the browser is genuinely idle — keeps it out of the
-        critical-path race with hero LCP. setTimeout fallback for browsers
-        without rIC support. */}
+        - A forward navigation lands at the top and Back/Forward restores the
+          position: Astro's router does both (scrollTo 0 with behavior
+          'instant', and the saved scrollX/scrollY on a traverse).
+        - In-page anchors and programmatic scrolls glide through
+          `html[data-smooth-scroll] { scroll-behavior: smooth }` (globals.css,
+          no-preference only). The attribute is set on the visitor's first
+          pointer or key press, never before: with smooth scrolling on from
+          the start, Chrome GLIDES its own scroll restoration on a reload
+          (measured 2026-09-24: 0 to 600px over 400 ms), which also left the
+          header unseeded, since that glide is a scroll with no gesture
+          behind it. Every anchor click and scroll control follows a press.
+        - The router's placement on navigation is never animated: its swap
+          copies the incoming document's <html> attributes onto the live
+          one, which takes data-smooth-scroll off before it scrolls, and the
+          next press puts it back. */}
     <script>
       import '@/components/search/trigger'; // scaffold: journal
       import '@/components/transitions/shared-title'; // scaffold: journal
-      function startLenis() {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        import('lenis').then(({ default: Lenis }) => {
-          const lenis = new Lenis({ smoothWheel: true, lerp: 0.1 });
-          // Expose the instance so in-page controls (e.g. the homepage hero
-          // scroll cue) can trigger a smooth programmatic scroll through Lenis
-          // instead of fighting it with a native scrollTo.
-          // Through `unknown`: lenis declares its own `window.lenis` global.
-          (window as unknown as { lenis?: typeof lenis }).lenis = lenis;
-          function raf(time: number) { lenis.raf(time); requestAnimationFrame(raf); }
-          requestAnimationFrame(raf);
-
-          // Astro View Transitions reuse this single Lenis instance across
-          // navigations. If a link is clicked mid-scroll, Lenis is still
-          // smoothing toward the PREVIOUS page's scroll target and, while it is
-          // smoothing, it ignores the router's scroll-to-top reset. The new
-          // (often shorter) page then inherits that stale target, clamped to
-          // its own maximum, so it opens at the bottom.
-          //
-          // Fix: on a forward navigation (a link/button click, navigationType
-          // "push" or "replace") snap Lenis to the top instantly, which kills
-          // the in-flight momentum and cancels any active scrollTo animation.
-          // On history traversal (browser back/forward, navigationType
-          // "traverse") leave the scroll position alone so the browser's scroll
-          // restoration still works. navigationType is only carried on the
-          // before-swap event, so capture it there and read it in after-swap.
-          // resize() re-reads the new page's scroll height either way.
-          let lastNavType = 'push';
-          document.addEventListener('astro:before-swap', (e) => {
-            lastNavType = (e as any).navigationType;
-          });
-          document.addEventListener('astro:after-swap', () => {
-            if (lastNavType !== 'traverse') {
-              lenis.scrollTo(0, { immediate: true, force: true });
-            }
-            lenis.resize();
-          });
-        });
-      }
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(startLenis, { timeout: 2000 });
-      } else {
-        setTimeout(startLenis, 1500);
-      }
+      const smoothScroll = () => {
+        const html = document.documentElement;
+        if (!html.hasAttribute('data-smooth-scroll')) html.setAttribute('data-smooth-scroll', '');
+      };
+      window.addEventListener('pointerdown', smoothScroll, { capture: true, passive: true });
+      window.addEventListener('keydown', smoothScroll, { capture: true, passive: true });
     </script>
 
     {/* Polish layer: scroll-triggered reveal observer + sticky-header
@@ -879,8 +855,8 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           // scrolling themselves is never fought for control of the page.
           // CLAUDE.md rule 5: back/forward restores whatever scroll position
           // the visitor was actually at, forward navigation resets to the
-          // top -- that's the Lenis reset above, a SEPARATE mechanism from
-          // this one. Browsers implement rule 5 themselves for a plain
+          // top -- that's Astro's router (Lenis and its reset were removed
+          // on 2026-09-24), a SEPARATE mechanism from this one. Browsers implement rule 5 themselves for a plain
           // (non-SPA) history traversal: they restore the prior scrollY
           // instead of re-running "scroll to #fragment", precisely because
           // the visitor already chose where they were looking. If the URL
@@ -907,7 +883,9 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
             const land = () => {
               const offset = parseFloat(getComputedStyle(hashTarget).scrollMarginTop) || 0;
               const y = window.scrollY + hashTarget.getBoundingClientRect().top - offset;
-              window.scrollTo(0, Math.max(0, y));
+              // 'instant': html carries scroll-behavior: smooth, and a glide
+              // re-aimed every frame by keepLanding would never land.
+              window.scrollTo({ top: Math.max(0, y), behavior: 'instant' });
               syncScrolled(window.scrollY);
               // Keep the hide/show heuristic's own tracking in sync so a
               // real scroll right after we finish reads its delta from

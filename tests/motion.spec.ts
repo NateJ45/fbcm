@@ -163,7 +163,7 @@ test.describe('glyph draw, no preference', () => {
     expect(new Set(after)).toEqual(new Set(['none']));
 
     // Once per page view: scrolled away and back, nothing replays.
-    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     await page.waitForTimeout(300);
     await glyph.scrollIntoViewIfNeeded();
     await page.waitForTimeout(300);
