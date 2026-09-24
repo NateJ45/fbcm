@@ -373,6 +373,51 @@ Re-run after large Canvas batches.
 
 ---
 
+## Switching to Church Trac (the church's outside links)
+
+Added 2026-09-24 (`feat/church-links`). The church is leaving Planning Center (Church Center) for Church Trac. Every link the site sends people to on an outside system reads its address from **Site settings > Church systems**, through a link token in the content (`{giving}`, `{connect}`...; `src/lib/church-links.ts`, `docs/agent/sanity.md`). Switching a system is one edit in that tab, then a rebuild.
+
+### Before the first switch: the one-time migration
+
+1. Merge `feat/church-links` to `main` and let it deploy (it adds the Church systems fields: CLAUDE.md rule 1).
+2. Open `/studio` on the live site, Site settings, and check the **Church systems** tab is there and no "Remove field" prompt appears anywhere.
+3. `node scripts/church-links.mjs` and read the plan: 113 link targets in 102 documents become tokens (2026-09-24), 6 new boxes get today's Church Center addresses, and section 3 lists what a visitor sees change (sermon series and episode links become the sermon channel; the broken `%0A` Wednesday link starts working). It refuses on anything else.
+4. `node scripts/church-links.mjs --apply --deployed`. It backs up every touched document to `scripts/data/backups/church-links-<date>.json`, then writes one transaction; the publish webhook rebuilds.
+5. Check: `node scripts/church-links.mjs --check` exits 0; the header GIVE, `/give`, `/visit` and `/contact` buttons, and a sermon preview's Listen row still go where they went before.
+
+### The switch, one system at a time
+
+Change each box in **Site settings > Church systems**, publish, wait for the rebuild (about two minutes; the GitHub Actions deploy log also prints `[placeholders] {token} has no address` for any box left empty), then run the check for that row on the live site. Do them in this order: the ones that already work on YouTube or Church Trac first, giving last.
+
+| Order | Box (token)                                | New address                                                                                                                | Check after                                                                                                                                                             |
+| ----- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Sermon recordings (`{sermons}`)            | Clear it (it then uses the Live stream address, `https://www.youtube.com/@FbcmuncieOrg/streams`) or paste that address     | A sermon preview's Listen row and body link go to YouTube; `/visit` FAQ "check out our live streams". A preview whose Sunday is in the channel feed links its own video |
+| 2     | Connection card (`{connect}`)              | `https://fbcmuncie.churchtrac.com/connectcard`                                                                             | `/visit` hero and closing buttons, `/visit` FAQ "contact form", `/contact` hero button, Who We Are "Contact" card                                                       |
+| 3     | Church app (`{app}`)                       | `https://open.churchtrac.com?code=8PG6ZJ`                                                                                  | `/ministries`, "Our Church App."                                                                                                                                        |
+| 4     | Events calendar (`{calendar}`)             | `https://fbcmuncie.churchtrac.com/upcoming_events`                                                                         | Nothing links to it yet; add `{calendar}` to a link where wanted                                                                                                        |
+| 5     | Prayer list (`{prayer}`)                   | `https://fbcmuncie.churchtrac.com/pray`                                                                                    | Nothing links to it yet (the box is blank today)                                                                                                                        |
+| 6     | Wednesday page (`{wednesday}`)             | The church's choice: a Church Trac page if one is made, or `/ministries` on this site                                      | `/ministries` "Wednesday Weekly"; the Advent 2024 post                                                                                                                  |
+| 7     | Contact form, Notify us (`{contact-form}`) | A Church Trac form when one exists (the connection card can stand in)                                                      | `/contact` "Notify Us" link                                                                                                                                             |
+| 8     | Wedding enquiry / Building booking forms   | Church Trac forms when they exist; until then leave them on Church Center, or clear them (the links then go to `/contact`) | `/wedding`, "Wedding documents" and "Building documents"                                                                                                                |
+| 9     | Online giving (`{giving}`)                 | Church Trac giving, **only once it is set up** (it is not, on 2026-09-24)                                                  | Header GIVE and the phone menu's Give, `/give` band, "Ways to give" link and closing button, the home page's give band                                                  |
+
+A box cannot hold `mailto:` (it is a web address box). To send a link to the office instead, clear the box: the link falls back to `/contact`.
+
+### The words, after the links
+
+A box moves the link, not the sentence around it. These still name Church Center and change by hand (the full list with paths is section 5 of the migration's dry run):
+
+- `/give`: "You can give online through Church Center any time.", the link text "Give through Church Center", and the page's SEO description.
+- The footer's **Elsewhere** column (Site settings > Navigation > Footer link columns): "Church Center: calendar and giving" and its link. Deliberately not tokenised: the label and the link change together.
+- The privacy policy: its "Church Center handles online giving and event registration" line (from `scripts/pages/privacy.mjs`, which reads `churchCenterUrl`). Rewrite it for Church Trac, then re-seed or edit it in the Studio.
+- **Site settings > Church details > Church Center address** (`churchCenterUrl`): feeds the JSON-LD `sameAs` and `/llms.txt` ("Church Center (calendar and giving)"). Clear it when the Church Center account closes; update the `/llms.txt` label in `src/lib/llms-text.ts` at the same time.
+- 42 posts (almost all sermon previews) say "on our Church Center Channel" beside the recordings link. After step 1 the link goes to YouTube and the words do not. A wording pass (a small backup-first script) is listed in `docs/PENDING.md`.
+- Past-event posts ("Register on Church Center"): left as written, like their registration links.
+
+`npm run check:links` does not see a tokenised link (it only checks absolute addresses), so after the switch open the pages in the Check column rather than relying on it.
+
+---
+
 ## Run Lighthouse / performance audits
 
 If a regression is suspected:
