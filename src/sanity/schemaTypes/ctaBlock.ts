@@ -2,6 +2,7 @@
 // Embedded by page singletons wherever a primary/secondary CTA appears.
 
 import { defineType, defineField } from 'sanity';
+import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 
 export const ctaBlock = defineType({
   name: 'ctaBlock',
@@ -54,8 +55,10 @@ export const ctaBlock = defineType({
       // default url validation rejects anything without a scheme, so it is
       // widened rather than dropped: http, https, mailto and tel still have to
       // look like themselves.
-      validation: (Rule) =>
-        Rule.uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] }),
+      // Since feat/church-links it may also hold a church link placeholder
+      // ({giving}, {connect}...), filled from Site settings at build time.
+      description: LINK_TOKEN_HINT,
+      validation: linkRule(),
       hidden: ({ parent }) => parent?.linkType !== 'external',
     }),
     defineField({

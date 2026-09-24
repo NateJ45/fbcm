@@ -361,6 +361,83 @@ export const guides: Guide[] = [
     ],
   },
 
+  // Added 2026-09-24 (feat/church-links), for the move from Church Center to
+  // Church Trac. Field titles match src/sanity/schemaTypes/siteSettings.ts;
+  // the placeholder list matches CHURCH_LINKS in src/lib/church-links.ts.
+  {
+    slug: 'church-links',
+    category: 'Sundays and notices',
+    title: 'Links to giving, forms and sermons',
+    icon: 'arrow',
+    lead: 'Every link to online giving, the church forms and the sermon recordings is kept in one place.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'path',
+        items: ['Site settings', 'Site settings', 'Church systems'],
+        link: { doc: 'siteSettings' },
+      },
+      {
+        kind: 'p',
+        text: 'The `Church systems` tab holds the web address of each thing the site sends people to outside this website: online giving, the connection card, the forms, the sermon recordings, the Wednesday page and the rest. The Give buttons, the forms on the Contact and Visit pages and the "listen" links in the sermon previews all read their address from here.',
+      },
+      { kind: 'h', text: 'Changing where a link goes' },
+      {
+        kind: 'steps',
+        items: [
+          'Open `Site settings`, then `Site settings` again, then the `Church systems` tab.',
+          'Paste the new address into the box, for example the new giving page into `Online giving`.',
+          'Publish. When the site rebuilds, every link that uses that box goes to the new address.',
+          'Open the live site and click one of those links to check it lands where you expect.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'positive',
+        title: 'One box, every link.',
+        text: 'When the church moves to a new system, like Church Trac, change each box once here. You do not need to find the links page by page.',
+      },
+      { kind: 'h', text: 'Link placeholders' },
+      {
+        kind: 'p',
+        text: 'Open a link on a page or in a post and its address may read `{giving}` instead of a web address. That is a **link placeholder**: the site swaps it for the address in the matching box. Use one yourself whenever you link to one of these, by selecting the words, pressing `Link`, and typing the placeholder into the address box:',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          '`{giving}` goes to `Online giving`.',
+          '`{connect}` goes to `Connection card`, the form a visitor fills in.',
+          '`{contact-form}` goes to `Contact form (Notify us)`.',
+          '`{sermons}` goes to `Sermon recordings`.',
+          '`{wednesday}` goes to `Wednesday page`.',
+          '`{calendar}` goes to `Events calendar`.',
+          '`{prayer}` goes to `Prayer list`.',
+          '`{app}` goes to `Church app`.',
+          '`{wedding-enquiry}` goes to `Wedding enquiry form`.',
+          '`{wedding-booking}` goes to `Building booking form`.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'caution',
+        title: 'Type the whole address box as the placeholder, curly brackets and all.',
+        text: 'A placeholder only works on its own in a link’s address box, not in the middle of a sentence. A misspelled one shows a red warning under the box. If its box in `Church systems` is empty, the link goes to this website’s Contact page until you fill it in, so nobody lands on a broken page.',
+      },
+      {
+        kind: 'callout',
+        tone: 'default',
+        title: 'Check the words around the link too.',
+        text: 'Some pages and posts say "through Church Center" or "on our Church Center Channel" in the sentence itself. Changing the box moves the link, not the words, so read the sentence after a switch and change the words where they name the old system.',
+      },
+      { kind: 'h', text: 'Sermon recordings' },
+      {
+        kind: 'p',
+        text: 'Leave `Sermon recordings` empty and "listen" links go to the `Live stream address` in the `Church details` tab, which is the YouTube page of past services. While it points at YouTube, a sermon preview links straight to that Sunday’s own recording once YouTube has it, and every older preview keeps the page of past services.',
+      },
+      { kind: 'seealso', items: ['Change the service time or the Sunday details'] },
+    ],
+  },
+
   // ── Blog, staff and ministries ────────────────────────────────────────────
   {
     slug: 'blog-post',

@@ -431,6 +431,14 @@ test('openingText joins the first six text blocks; listenHref finds the channel 
   assert.equal(listenHref(null), '');
 });
 
+test('listenHref also finds the filled {sermons} link, by the address passed in', () => {
+  const streams = 'https://www.youtube.com/@FbcmuncieOrg/streams';
+  const body = [link('livestream page', streams), p('two')];
+  assert.equal(listenHref(body), '', 'a YouTube link is not a Church Center channel');
+  assert.equal(listenHref(body, streams), streams);
+  assert.equal(listenHref(body, 'https://elsewhere.example/'), '');
+});
+
 // ── splitAtSliders ──────────────────────────────────────────────────────────
 test('splitAtSliders: a body with no slider is one run, in order', () => {
   const body: BodyNode[] = [

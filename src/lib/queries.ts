@@ -295,6 +295,10 @@ export const SITE_SETTINGS_PROJECTION = `{
     livestreamUrl,
     visitorFormUrl,
     lifeEventFormUrl,
+    // Church systems (feat/church-links). Only what a page reads directly:
+    // the post page upgrades {sermons} to one recording. The link tokens
+    // themselves are filled at the fetch (src/lib/settings-placeholders.ts).
+    sermonsUrl,
     mapImage${IMAGE_PROJECTION},
     directionsUrl,
     // The street address, used by the sundayTimes block's fallback card when no

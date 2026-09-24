@@ -1076,6 +1076,46 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   to `SectionRenderer`; the preview route's hero reads as it did before. Worth wiring only if an
   editor asks.
 
+### Church links, for the move to Church Trac (2026-09-24, `feat/church-links`)
+
+- [ ] #nathan **Deploy, then run the migration.** The Church systems boxes are new schema
+      fields (rule 1), so the order is: merge, deploy, open the live `/studio`, check Site
+      settings shows the **Church systems** tab and nothing offers "Remove field", then
+      `node scripts/church-links.mjs` (read the plan: 113 links in 102 documents, 6 boxes
+      filled with today's Church Center addresses, and the 29 listed visitor-visible changes)
+      and `node scripts/church-links.mjs --apply --deployed`. It backs up first and writes one
+      transaction. Nobody has seen the Church systems tab rendered yet: the local Studio stops
+      at the CORS screen, because only ports 3333, 4321 and 8787 are on the CORS list.
+- [ ] #nathan **Switch each system in Site settings > Church systems**, in the order in
+      `OPERATIONS.md`, "Switching to Church Trac". Sermon recordings can go to YouTube at
+      once. Giving goes last: Church Trac giving is not set up yet.
+- [ ] #nathan **Decide the Wednesday page, the Notify-us form and the two wedding forms on
+      Church Trac.** The portal has a connection card, events, a prayer list, /children and
+      /youth, but nothing yet for those four.
+- **The words still name Church Center.** A box moves the link, not the sentence. There are 57
+  strings, listed in section 5 of the migration's dry run. The main ones are 42 posts
+  saying "on our Church Center Channel" beside the recordings link, `/give`'s "through
+  Church Center" (the body, the link text and the SEO description), the privacy policy's
+  Church Center line, and the footer's "Church Center: calendar and giving". The channel
+  wording wants a small backup-first script once the sermons box points at YouTube.
+  `churchCenterUrl` still feeds `sameAs` and `/llms.txt`: clear it when the account closes.
+- **Past-event links, left as written** (13 in 8 posts). Checked in a real browser on
+  2026-09-24: all 8 Church Center registration pages say "This signup is currently
+  unavailable". The Good Friday 2023 calendar event still shows. The
+  `registrations.planningcenteronline.com` link in "Love in action: truth" sends visitors
+  to a Planning Center staff login page, so it is broken for the public. All of them die
+  when the Church Center account closes. Unlinking them is a content decision.
+- **`npm run check:links` cannot see a tokenised link** (it checks absolute addresses only),
+  and it does not read the Church systems boxes. So after the migration the church's
+  outside links drop out of the live link check. `check-live-links.mjs` is PORTABLE, so
+  it was not changed here. A site-side addition that sweeps `siteSettings.*Url` is the fix.
+- **The privacy page fails validation on `main` too:** its `mailto:` contact link
+  (`priv-contact-1l1`) does not pass `privacyPage`'s default url rule. It is not from this
+  branch. Give that annotation `linkRule()` (or the sections' `uri` rule) the next time the
+  privacy schema is touched.
+- **Prayer list is blank on purpose.** Church Center has no prayer page, and nothing links
+  to `{prayer}` yet.
+
 ### Craft details: share cards, JSON-LD, "Which door?" (2026-09-24, `feat/details`)
 
 - [ ] #nathan **Confirm the door sketch's geography.** `/visit`'s "Which door?" puts the office

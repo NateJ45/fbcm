@@ -20,6 +20,7 @@
 // exists: the editor is a church secretary, not a developer.
 
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 
 /**
  * The text. A SUPERSET of what the page bands' text boxes accept (sections.ts,
@@ -62,10 +63,8 @@ const ministryBody = defineField({
                 name: 'href',
                 title: 'Web address',
                 type: 'url',
-                description:
-                  'A page on this site like /contact, a full web address, or mailto: and an email address.',
-                validation: (R) =>
-                  R.uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] }),
+                description: `A page on this site like /contact, a full web address, or mailto: and an email address. ${LINK_TOKEN_HINT}`,
+                validation: linkRule(),
               }),
             ],
           },

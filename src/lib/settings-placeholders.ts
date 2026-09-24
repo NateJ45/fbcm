@@ -26,9 +26,18 @@
 // in value never carries a second, foreign edit payload.
 
 import { timeOnly } from './live-sunday.ts';
+import {
+  LINK_FALLBACK,
+  LINK_SETTINGS_FIELDS,
+  fieldOf,
+  linkTokenOf,
+  linkValues,
+  type LinkSettings,
+  type LinkToken,
+} from './church-links.ts';
 
-/** The Site settings fields the placeholders read. */
-export interface PlaceholderSettings {
+/** The Site settings fields the placeholders read (the link tokens' fields included). */
+export interface PlaceholderSettings extends LinkSettings {
   serviceTime?: string | null;
   serviceLength?: string | null;
   address?: string | null;
@@ -37,7 +46,7 @@ export interface PlaceholderSettings {
 }
 
 /** GROQ for exactly those fields. Published perspective at build time. */
-export const PLACEHOLDER_SETTINGS_QUERY = `*[_id == "siteSettings"][0]{serviceTime, serviceLength, address, phone, email}`;
+export const PLACEHOLDER_SETTINGS_QUERY = `*[_id == "siteSettings"][0]{serviceTime, serviceLength, address, phone, email, ${LINK_SETTINGS_FIELDS}}`;
 
 /**
  * Every placeholder an editor can type, with what it becomes. The order is the
@@ -57,12 +66,19 @@ export const PLACEHOLDERS = [
 
 export type PlaceholderToken = (typeof PLACEHOLDERS)[number]['token'];
 
+/**
+ * Every value a fill can use: the text placeholders above, and the link
+ * tokens ({giving}, {sermons}...) from src/lib/church-links.ts. A link token
+ * is filled only when it is a link target's whole value; see walk() below.
+ */
+export type PlaceholderValues = Record<PlaceholderToken, string> & Record<LinkToken, string>;
+
 const clean = (s: string | null | undefined): string => (s ?? '').trim();
 
 /** Work out each placeholder's value from the settings document. */
 export function placeholderValues(
   settings: PlaceholderSettings | null | undefined,
-): Record<PlaceholderToken, string> {
+): PlaceholderValues {
   const serviceTime = clean(settings?.serviceTime);
   const lines = clean(settings?.address)
     .split(/\r?\n/)
@@ -78,6 +94,7 @@ export function placeholderValues(
     '{city}': lines.slice(1).join(', '),
     '{phone}': clean(settings?.phone),
     '{email}': clean(settings?.email),
+    ...linkValues(settings),
   };
 }
 
@@ -101,29 +118,65 @@ export function fillString(text: string, values: Record<PlaceholderToken, string
 /**
  * Fill placeholders everywhere in a fetched result. Returns a new value; the
  * input is not mutated. System keys (`_type`, `_key`, `_ref`, `_id`...) are
- * never touched, and neither are link targets (`href`), which are validated as
- * URLs in the Studio, where "mailto:{email}" would be an error.
+ * never touched. Text placeholders are never filled inside a link target
+ * (`href`), which the Studio validates as a URL, where "mailto:{email}" would
+ * be an error.
+ *
+ * LINK TOKENS ({giving}, {sermons}...) are the other way round: they are
+ * filled only when a string's WHOLE value is the token, which in practice is
+ * a link target (a Portable Text link's `href`, a button's `externalUrl`, a
+ * document's `url`). A token whose Site settings field is blank becomes
+ * LINK_FALLBACK (the church's own /contact page), never a broken link, and
+ * `onUnfilled` hears about it (the build logs a warning, once per token).
  */
-export function fillPlaceholders<T>(value: T, values: Record<PlaceholderToken, string>): T {
-  return walk(value, values) as T;
+export function fillPlaceholders<T>(
+  value: T,
+  values: PlaceholderValues,
+  onUnfilled: (token: LinkToken) => void = warnUnfilled,
+): T {
+  return walk(value, values, false, onUnfilled) as T;
 }
 
-function walk(value: unknown, values: Record<PlaceholderToken, string>): unknown {
-  if (typeof value === 'string') return fillString(value, values);
-  if (Array.isArray(value)) return value.map((v) => walk(v, values));
+const warned = new Set<string>();
+function warnUnfilled(token: LinkToken): void {
+  if (warned.has(token)) return;
+  warned.add(token);
+  console.warn(
+    `[placeholders] ${token} has no address: Site settings > Church systems > ${fieldOf(token)} is empty. Links to it go to ${LINK_FALLBACK} until it is filled.`,
+  );
+}
+
+function walk(
+  value: unknown,
+  values: PlaceholderValues,
+  inHref: boolean,
+  onUnfilled: (token: LinkToken) => void,
+): unknown {
+  if (typeof value === 'string') {
+    const token = linkTokenOf(value);
+    if (token) {
+      if (values[token]) return values[token];
+      onUnfilled(token);
+      return LINK_FALLBACK;
+    }
+    return inHref ? value : fillString(value, values);
+  }
+  if (Array.isArray(value)) return value.map((v) => walk(v, values, inHref, onUnfilled));
   if (value && typeof value === 'object') {
     const out: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(value)) {
-      out[k] = k.startsWith('_') || k === 'href' ? v : walk(v, values);
+      out[k] = k.startsWith('_') ? v : walk(v, values, k === 'href', onUnfilled);
     }
     return out;
   }
   return value;
 }
 
-/** True when a fetched result contains at least one placeholder. */
+/** True when a fetched result contains at least one placeholder or link token. */
 export function hasPlaceholder(value: unknown): boolean {
   if (typeof value === 'string') {
+    if (!value.includes('{')) return false;
+    if (linkTokenOf(value)) return true;
     TOKEN_RE.lastIndex = 0;
     return TOKEN_RE.test(value);
   }

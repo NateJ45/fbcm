@@ -250,3 +250,72 @@ Four things to know before touching that path:
 Re-run with `node scripts/reimport-post-bodies.mjs` (dry) and `--apply`. It
 backs up all 142 live bodies before it patches anything, and it patches only
 `body`.
+
+## Church systems and link tokens (2026-09-24, `feat/church-links`)
+
+The church is leaving Planning Center (Church Center) for Church Trac, so every
+link to an outside church system now reads its address from one place.
+
+**Site settings > Church systems** (`group: 'systems'` in `siteSettings.ts`)
+holds one `url` box per system. Three existed and were moved into the tab and
+retitled, with their names and data unchanged: `givingUrl` (Online giving),
+`visitorFormUrl` (Connection card), `lifeEventFormUrl` (Contact form, Notify
+us). Seven were added: `sermonsUrl`, `wednesdayUrl`, `calendarUrl`,
+`prayerUrl`, `appUrl`, `weddingEnquiryUrl`, `weddingBookingUrl`. None has an
+`initialValue`. The identity fields `churchCenterUrl`, `churchTracUrl`,
+`youtubeUrl` and `livestreamUrl` stay in Church details: they say which
+accounts the church has (JSON-LD `sameAs`, `/llms.txt`, Watch live), not where
+a given link goes.
+
+**Link tokens.** A link target (a Portable Text link's `href`, a button's
+`externalUrl`, a listed document's `url`, the give band's `buttonUrl`) can
+hold a token instead of an address:
+
+| Token               | Box                 |
+| ------------------- | ------------------- |
+| `{giving}`          | `givingUrl`         |
+| `{connect}`         | `visitorFormUrl`    |
+| `{contact-form}`    | `lifeEventFormUrl`  |
+| `{sermons}`         | `sermonsUrl`        |
+| `{wednesday}`       | `wednesdayUrl`      |
+| `{calendar}`        | `calendarUrl`       |
+| `{prayer}`          | `prayerUrl`         |
+| `{app}`             | `appUrl`            |
+| `{wedding-enquiry}` | `weddingEnquiryUrl` |
+| `{wedding-booking}` | `weddingBookingUrl` |
+
+The list lives once, as `CHURCH_LINKS` in `src/lib/church-links.ts`.
+`fillPlaceholders()` (`src/lib/settings-placeholders.ts`) fills a token at the
+same two chokepoints as `{time}`: `sanityFetch()` for the build and
+`previewFetch()` for the Presentation preview. Rules:
+
+- A token is filled only when it is a string's **whole** value (stega-clean,
+  any case). Inside a sentence it is left as typed. Text placeholders still
+  never fill inside an `href`.
+- A token whose box is blank becomes **`/contact`**, never a broken link, and
+  the build logs `[placeholders] {token} has no address` once per token.
+- `{sermons}` falls back to `livestreamUrl`, then `youtubeUrl`, before it is
+  ever blank.
+- The link boxes accept a token through `linkRule()`
+  (`src/sanity/schemaTypes/_linkRule.ts`). Sanity gives every `url` field a
+  hidden default rule, absolute http(s) only, and a `custom()` rule alone
+  cannot lift it: the default is only dropped when the field declares its own
+  `uri()` rule. So `linkRule()` declares a relative `uri()` (which reads
+  `{giving}` as a relative path) and a `custom()` that rejects an unknown
+  `{word}` and, for boxes that took only full addresses before, a relative
+  path.
+
+**One sermon, one recording.** When `{sermons}` resolves to YouTube, the post
+page matches a sermon preview to its own recording in the channel's public
+Atom feed by Sunday and passage (`src/lib/sermon-video.ts`, fetched once per
+build by `src/lib/sermon-feed.ts`, no API key) and retargets the post's
+recording links and its Listen row. Derived at build time (rule 15); an
+unmatched or older preview keeps the settings address.
+
+**Migration.** `scripts/church-links.mjs` replaces the Church Center
+addresses in link targets with tokens and fills the new boxes with today's
+Church Center addresses. It is dry by default, backup-first, and refuses
+`--apply` without `--deployed` (the boxes are new schema; rule 1).
+`scripts/seed-pages.mjs` runs each page through the same tokenizer, only for
+tokens whose own box is filled. The switch itself is the runbook in
+`OPERATIONS.md`, "Switching to Church Trac".

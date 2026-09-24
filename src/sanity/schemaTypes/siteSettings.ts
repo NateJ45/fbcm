@@ -1,6 +1,17 @@
 // Site-wide singleton. Header, footer, contact info, and the church's own
 // facts (service time, hours, Church Center/Church Trac/YouTube addresses).
 // One instance only; singleton enforcement happens in sanity.config.ts.
+//
+// CHURCH SYSTEMS (feat/church-links, 2026-09-24). The "Church systems" tab holds
+// every outside address the site sends people to: giving, the connection card,
+// the forms, sermon recordings and the rest. Pages, posts and buttons hold a
+// link placeholder ({giving}, {connect}...) instead of the address, and the
+// build fills it from here (src/lib/church-links.ts), so moving the church from
+// Church Center to Church Trac is one edit per link, here. The three fields
+// that already existed (givingUrl, visitorFormUrl, lifeEventFormUrl) were
+// moved into the tab and retitled; their names, and so their data, are
+// unchanged. No field has an initialValue: an address typed in by the schema
+// would be a second copy that nobody remembers to change.
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
 import { LinkIcon, ChevronDownIcon, ListIcon } from '@sanity/icons';
@@ -14,6 +25,7 @@ export const siteSettings = defineType({
   groups: [
     { name: 'identity', title: 'Identity & contact' },
     { name: 'church', title: 'Church details' },
+    { name: 'systems', title: 'Church systems' },
     { name: 'navigation', title: 'Navigation (menus)' },
     { name: 'visibility', title: 'Section visibility' },
     { name: 'social', title: 'Social & footer' },
@@ -102,13 +114,6 @@ export const siteSettings = defineType({
       description: 'The web address of the Church Center home page.',
     }),
     defineField({
-      name: 'givingUrl',
-      title: 'Giving address',
-      type: 'url',
-      group: 'church',
-      description: 'Where the Give button sends people. Usually the Church Center giving page.',
-    }),
-    defineField({
       name: 'churchTracUrl',
       title: 'Church Trac address',
       type: 'url',
@@ -130,20 +135,6 @@ export const siteSettings = defineType({
       description: 'Where "Watch online" sends people on a Sunday.',
     }),
     defineField({
-      name: 'visitorFormUrl',
-      title: 'Visitor card form',
-      type: 'url',
-      group: 'church',
-      description: 'The Church Center form a new visitor fills in.',
-    }),
-    defineField({
-      name: 'lifeEventFormUrl',
-      title: 'Life update form',
-      type: 'url',
-      group: 'church',
-      description: 'The Church Center form for births, deaths, anniversaries and the like.',
-    }),
-    defineField({
       name: 'mapImage',
       title: 'Map picture',
       type: 'image',
@@ -157,6 +148,89 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'church',
       description: 'Where the "Open in Google Maps" button goes.',
+    }),
+
+    // ── Church systems ────────────────────────────────────────────────────────
+    // One box per outside address. Each box's placeholder, typed into any link
+    // on a page or post, becomes that address when the site rebuilds. The
+    // Studio guide "Links to giving, forms and sermons" lists them.
+    defineField({
+      name: 'givingUrl',
+      title: 'Online giving',
+      type: 'url',
+      group: 'systems',
+      description:
+        'Where the Give buttons send people, and every link written {giving}. Today the Church Center giving page.',
+    }),
+    defineField({
+      name: 'visitorFormUrl',
+      title: 'Connection card',
+      type: 'url',
+      group: 'systems',
+      description:
+        'The form a visitor fills in to say hello or that they are coming ("I’m new and want to learn more"). Every link written {connect}.',
+    }),
+    defineField({
+      name: 'lifeEventFormUrl',
+      title: 'Contact form (Notify us)',
+      type: 'url',
+      group: 'systems',
+      description:
+        'The form for telling the church about a birth, a death, an anniversary, a hospital stay or a change of address. Every link written {contact-form}.',
+    }),
+    defineField({
+      name: 'sermonsUrl',
+      title: 'Sermon recordings',
+      type: 'url',
+      group: 'systems',
+      description:
+        'Where "listen to the sermon" links go, every link written {sermons}. Leave blank to use the Live stream address (the YouTube streams page). When this is on YouTube, a sermon preview links to its own recording once YouTube has it.',
+    }),
+    defineField({
+      name: 'wednesdayUrl',
+      title: 'Wednesday page',
+      type: 'url',
+      group: 'systems',
+      description:
+        'The page about Wednesday nights (Wednesday Weekly). Every link written {wednesday}.',
+    }),
+    defineField({
+      name: 'calendarUrl',
+      title: 'Events calendar',
+      type: 'url',
+      group: 'systems',
+      description: 'The list of upcoming church events. Every link written {calendar}.',
+    }),
+    defineField({
+      name: 'prayerUrl',
+      title: 'Prayer list',
+      type: 'url',
+      group: 'systems',
+      description: 'Where people read and send prayer requests. Every link written {prayer}.',
+    }),
+    defineField({
+      name: 'appUrl',
+      title: 'Church app',
+      type: 'url',
+      group: 'systems',
+      description:
+        'Where "our church app" links go: the app download or sign-up link. Every link written {app}.',
+    }),
+    defineField({
+      name: 'weddingEnquiryUrl',
+      title: 'Wedding enquiry form',
+      type: 'url',
+      group: 'systems',
+      description:
+        'The wedding information form a couple fills in first. Every link written {wedding-enquiry}.',
+    }),
+    defineField({
+      name: 'weddingBookingUrl',
+      title: 'Building booking form',
+      type: 'url',
+      group: 'systems',
+      description:
+        'The form for asking to use the building, for a wedding or any other event. Every link written {wedding-booking}.',
     }),
 
     // ── Navigation ────────────────────────────────────────────────────────────
@@ -313,7 +387,7 @@ export const siteSettings = defineType({
       type: 'object',
       group: 'navigation',
       description:
-        'The one button at the right of the header. On this site it is the Give button. Leave the boxes blank to keep the built-in "Contact us" button.',
+        'The one button at the right of the header. On this site it is the Give button, whose link is written {giving} so it follows Online giving in the Church systems tab. Leave the boxes blank to keep the built-in "Contact us" button.',
       options: { collapsible: true, collapsed: true },
       fields: [
         defineField({

@@ -15,6 +15,7 @@
 // Staff identity pass), not through the in-canvas overlay registry.
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { anchorField } from './_anchorField';
+import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 import { sideOptions } from '../../lib/layout-variants';
 
 const eyebrow = defineField({
@@ -534,13 +535,16 @@ export const giveBandSection = defineType({
       name: 'buttonLabel',
       title: 'Button text',
       type: 'string',
-      initialValue: 'Give through Church Center',
+      // Names no giving system, so a new band never says the wrong one
+      // (it said "Give through Church Center" before feat/church-links).
+      initialValue: 'Give online',
     }),
     defineField({
       name: 'buttonUrl',
       title: 'Button link',
       type: 'url',
-      description: 'Leave blank to use the giving address from Site settings.',
+      description: `Leave blank to use the giving address from Site settings. ${LINK_TOKEN_HINT}`,
+      validation: linkRule({ absoluteOnly: true, scheme: ['http', 'https'] }),
     }),
     anchorField(),
   ],
@@ -607,8 +611,8 @@ export const documentListSection = defineType({
               name: 'url',
               title: 'Or a link',
               type: 'url',
-              description:
-                'Use this instead of a file for something hosted elsewhere, like a book on Amazon.',
+              description: `Use this instead of a file for something hosted elsewhere, like a book on Amazon or one of the church's online forms. ${LINK_TOKEN_HINT}`,
+              validation: linkRule({ absoluteOnly: true, scheme: ['http', 'https'] }),
             }),
             defineField({
               name: 'note',

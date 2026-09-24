@@ -66,6 +66,10 @@ import {
   type BodyNode,
 } from '@/lib/post-body';
 import { doorsFor, seriesRowOf, type Doors, type SeriesRow } from '@/lib/post-neighbours';
+import { linkValues, isYouTubeUrl } from '@/lib/church-links';
+import { youtubeChannelId } from '@/lib/live-status';
+import { channelVideos } from '@/lib/sermon-feed';
+import { matchSermonVideo, retargetLinks, videoUrl } from '@/lib/sermon-video';
 import { buildScriptureIndex, scriptureRowsOf } from '@/lib/scripture-index';
 import { slugify } from '@/lib/slugify';
 import { extractHeadings } from '@/lib/portable-text-headings';
@@ -175,10 +179,33 @@ const categoryHref = primaryCategory?.slug?.current
   ? `/blog/category/${clean(primaryCategory.slug.current)}/`
   : '';
 
+// THE SERMON RECORDING (feat/church-links, 2026-09-24). A preview's links to
+// the recordings hold {sermons}, filled at the fetch with the Sermon
+// recordings setting (src/lib/church-links.ts). When that address is on
+// YouTube, the preview's own recording is looked up in the channel's public
+// feed by its Sunday and passage (src/lib/sermon-video.ts), and the post's
+// links to the recordings point at that one video instead. Derived at build
+// time (CLAUDE.md rule 15): nothing is stored, and a preview older than the
+// feed, or with no sure match, keeps the address from Site settings.
+const sermonsHref = linkValues(siteSettings)['{sermons}'];
+const sermonSunday = isPreview ? sundayOf(entry.publishedAt) : null;
+let sermonVideoHref = '';
+if (sermonSunday && isYouTubeUrl(sermonsHref) && listenHref(rawBody, sermonsHref) === sermonsHref) {
+  const videos = await channelVideos(
+    youtubeChannelId(siteSettings?.livestreamUrl, siteSettings?.youtubeUrl),
+  );
+  const video = matchSermonVideo(isoDay(sermonSunday), readingOf(openingText(rawBody)), videos);
+  if (video) sermonVideoHref = videoUrl(video);
+}
+const renderBody = sermonVideoHref ? retargetLinks(rawBody, sermonsHref, sermonVideoHref) : rawBody;
+
 // The body as the reader gets it: Wix residue repaired, tables, points, Q and
 // A, and a preview's reading found (src/lib/post-body.ts). Stored text is not
 // touched; this is a render pass.
-const body = prepareBody(rawBody, { coverRef: assetRefOf(entry.coverImage), preview: isPreview });
+const body = prepareBody(renderBody, {
+  coverRef: assetRefOf(entry.coverImage),
+  preview: isPreview,
+});
 
 // The lede is the excerpt, UNLESS the excerpt is the first paragraph again
 // (33 of 142 posts), in which case the reader would meet it twice in a screen.
@@ -195,7 +222,7 @@ const opening = openingText(rawBody);
 const sunday = isPreview ? sundayOf(entry.publishedAt) : null;
 const postedDay = localDay(entry.publishedAt);
 const readMinutes = readingTimeFromPortableText(entry.body);
-const listen = isPreview ? listenHref(rawBody) : '';
+const listen = isPreview ? sermonVideoHref || listenHref(rawBody, sermonsHref) : '';
 // `meta` names the Pagefind metadata a fact carries into a search result row
 // (the site search, 2026-09-24): the date column and the reading.
 type Fact = {

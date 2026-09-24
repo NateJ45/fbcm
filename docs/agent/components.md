@@ -78,6 +78,11 @@ The core component set, by role. All in `src/components/` unless noted.
    omitted, never guessed. The Reading links to its book on `/blog/scripture` when the
    scripture index lists the post (2026-09-24), and the date and reading rows carry
    `data-pagefind-meta` for the site search's result rows.
+   **Listen** (since `feat/church-links`, 2026-09-24) is the opening block's link to the
+   recordings: a Church Center channel link as written, or the filled `{sermons}` token.
+   When that address is on YouTube, the preview's own recording is matched in the channel's
+   public feed by Sunday and passage (`src/lib/sermon-video.ts`), and the Listen row and the
+   body's recording links point at that video; unmatched previews keep the settings address.
 2. **Cover** -- always in a door arch (`ArchFrame shape="door"`, gold mould) and never
    captioned (identity pass, 2026-09-24). A real photograph (width >= 2000 and ratio >= 1.3)
    is a wide door across the measure (ratio 100/42); anything else (the sermon slides) hangs
@@ -355,6 +360,17 @@ Ported from the prototype at `docs/superpowers/prototypes/2026-09-23-who-we-are/
 - `sections/TeamGrid.astro` (`teamSection`, not church-scaffolded) -- redrawn in the identity (2026-09-24): lancets in the staff bands' list layout, names in Castoro, roles in sentence case, the band grammar heading on paper. No page uses it today.
 
 **Seeing them without Sanity:** `/styleguide` carries a fixture of every one (the document list twice: doors and the register), and `/styleguide/who-we-are`, `/styleguide/home`, `/styleguide/visit`, `/styleguide/wedding`, `/styleguide/staff`, `/styleguide/give` and `/styleguide/contact` render the whole composed pages from `scripts/data/fixtures/<slug>.json`, which `node scripts/page-fixture.mjs <slug>` builds read-only from `scripts/pages/<slug>.mjs` (the home fixture borrows the live home page's blog rows, and the staff fixture each band's members from the live /staff page, which a fixture cannot query; a listed document's file is projected to `fileUrl` as `queries.ts` does). Both routes are temporary (see `docs/PENDING.md`).
+
+### Church-system links (2026-09-24, `feat/church-links`)
+
+No component knows about the church's outside systems. A button, a body link or a listed
+document holds a link token (`{giving}`, `{connect}`, `{sermons}`...) and the fetch fills it
+from Site settings > Church systems before any component sees it
+(`src/lib/church-links.ts`, `src/lib/settings-placeholders.ts`), so `CtaLink`,
+`DocumentList`'s `docAction()`, the header's Give (`headerCta`, a `navLink` whose
+`externalUrl` is `{giving}`) and `GiveBand` (`buttonUrl`, else `givingUrl`) receive a plain
+address. An unfilled token arrives as `/contact`. Detail and the token table:
+`docs/agent/sanity.md`, "Church systems and link tokens".
 
 ### CtaLink `onDark` prop
 
