@@ -27,12 +27,12 @@ const hasAside = Astro.slots.has('default');
 const scale = headlineScale(heading, { tall: false });
 ---
 
-<div class="bg-band-indigo text-white">
+<div class="bg-band-indigo text-white-pure">
   <div class="mx-auto max-w-content px-gutter">
     <div class="ix-open">
       <div class="l">
         {eyebrow && <p class="font-ui text-ui font-medium text-gold">{eyebrow}</p>}
-        <h1 id={headingId} class:list={['mt-5 text-white', headlineClass(scale, { tall: false })]}>
+        <h1 id={headingId} class:list={['mt-5 text-white-pure', headlineClass(scale, { tall: false })]}>
           {heading}
         </h1>
         {lede && <p class="mt-6 max-w-[34em] font-body text-lede text-band-taupe italic">{lede}</p>}
