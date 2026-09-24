@@ -10,6 +10,34 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Local search and AI visibility (`feat/local-seo`)._
+
+**Titles and descriptions that name the place.** Every key page's `seoTitle`/`seoDescription`
+(set by `scripts/pages/*.mjs`) now says the church is an American Baptist church in downtown
+Muncie, Indiana, within the limits once placeholders are filled: titles 34 to 60 characters,
+descriptions 145 to 160 (Beliefs' were 73 and 286). Written, not applied: the dry run changes
+only those two fields on 11 documents, and `seed-pages` now prints a changed text field's before
+and after. Every new line is in the approval note, which also got back two hand-typed sections a
+regeneration had wiped (now `CHROME_SECTIONS`). Ball State is not mentioned: about a mile and a
+half away, not a walk, and nothing in the church's content speaks to students.
+
+**JSON-LD.** An `FAQPage` on any page with a question band (`/visit`, `/ministries`), derived
+from the band (`src/lib/faq-schema.ts`, 7 tests; links kept as addresses; stega-clean), with
+FAQPage/Question/Answer and Google's required fields in `schema-vocab.ts`. The Church node gained
+Church Trac in `sameAs` (de-duplicated across spellings), `isAccessibleForFree` and
+`publicAccess`, and an empty `site.googleBusinessProfile` slot that becomes `sameAs` and `hasMap`
+once the church claims its listing. `check:jsonld`: 379 pages, 899 blocks, FAQPage 2, no findings.
+
+**Crawlers.** robots.txt names and allows eleven search and AI crawlers beside `*`. `/llms.txt`
+is a build-time route from Site settings, the pages' own descriptions and Visit's own questions
+(`src/lib/llms-text.ts`, 3 tests), replacing a hand-typed `public/llms.txt`. IndexNow: the key in
+`site.ts`, served at `/<key>.txt`; `scripts/indexnow.mjs` submits the sitemap after each deploy
+(`deploy.yml`, continue-on-error) only once `site.url` serves the key, so it no-ops until the
+cutover (Wix answers 400 today). The cutover plan gained "Search and AI visibility at cutover".
+
+Parity: 161 of 163 pages changed, all inside their JSON-LD only (checked by stripping the blocks),
+recaptured to a fixpoint (163/163, largest inline style 153,458 B on both builds).
+
 _2026-09-24 — The scripture index and site search (`feat/scripture-search`)._
 
 **`/blog/scripture` lists every passage preached**, Genesis to Revelation: 106 passages from 24

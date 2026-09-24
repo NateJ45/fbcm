@@ -176,3 +176,63 @@ Run these in order, the same morning.
    already say `https://www.fbcmuncie.org`. Verify that is still what you want
    after the decision above, and that the sitemap at
    `/sitemap-index.xml` lists that host and not the workers.dev one.
+
+---
+
+## Search and AI visibility at cutover
+
+Added 2026-09-24 (the local search pass, `feat/local-seo`). The site already says the right
+things to search engines and AI assistants (titles and descriptions that name the place,
+the church's JSON-LD, a robots.txt that names and allows the AI crawlers, `/llms.txt`);
+these steps make sure nothing between the site and those crawlers undoes it, and tell the
+search engines the site has moved. Do them the same morning, after "After the move".
+
+- [ ] **Cloudflare AI Crawl Control must be OFF for the zone.** New zones often have
+      "Block AI bots" switched on by default, and it blocks GPTBot, ClaudeBot,
+      PerplexityBot and the rest at Cloudflare's edge, whatever robots.txt says. That would
+      silently drop the church out of ChatGPT, Perplexity and Claude answers, and nothing on
+      the site would show it. Where it lives: the Cloudflare dashboard, the
+      `fbcmuncie.org` zone, **AI Crawl Control** in the sidebar (older dashboards: Security,
+      then Bots, the "Block AI bots" setting). Set it to allow (do not block on any
+      hostname), and leave **"Manage your robots.txt"** (Cloudflare's managed robots.txt)
+      off, since it prepends `Disallow` rules for AI crawlers to ours. Bot Fight Mode can
+      stay as it is: it does not challenge verified bots. **Verify from outside**, and
+      expect 200 for every line, never 403 or a challenge page:
+
+      ```
+      curl -s -o /dev/null -w "%{http_code} GPTBot\n" -A "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot" https://www.fbcmuncie.org/visit
+      curl -s -o /dev/null -w "%{http_code} ClaudeBot\n" -A "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)" https://www.fbcmuncie.org/visit
+      curl -s -o /dev/null -w "%{http_code} PerplexityBot\n" -A "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)" https://www.fbcmuncie.org/visit
+      curl -s https://www.fbcmuncie.org/robots.txt
+      ```
+
+      The last one must print our file exactly (it starts `User-agent: *` / `Allow: /` and
+      names the crawlers), with nothing Cloudflare added above it.
+- [ ] **Google Search Console.** Add `fbcmuncie.org` as a **Domain** property and verify it
+      with the DNS TXT record Google gives you, added in the Cloudflare zone (it survives
+      every redeploy, unlike an HTML file). If the church already had a property for the Wix
+      site, keep it: its history carries over. Then Sitemaps, submit
+      `https://www.fbcmuncie.org/sitemap-index.xml`.
+- [ ] **Bing Webmaster Tools.** Sign in and choose **Import from Google Search Console**, which
+      brings the verified site and its sitemap across in one step; if the import is not
+      offered, add the site and submit the same sitemap by hand. Bing feeds Copilot and
+      ChatGPT search, so this one matters as much as Google.
+- [ ] **Spot-check the 49 retired-URL redirects.** Step 1 of "After the move"
+      (`npm run verify:redirects -- --origin https://www.fbcmuncie.org`) proves them all; then
+      open three by hand in a browser (an old `/post/...` that moved, an old page such as
+      `/accessibility`, and a `/blog?category=` link) and check each lands on a real page with
+      a 301, not a 302.
+- [ ] **Rich Results Test** (https://search.google.com/test/rich-results) on `/`, `/visit` and
+      one sermon preview. Expect: `/` the church (Organization), no errors; `/visit` the
+      church, the breadcrumb, the weekly Event and the FAQ, no errors (the Event and the FAQ
+      will not earn Google rich results: Google shows event results for single events only,
+      and FAQ results only for government and health sites. They are there for Bing and the
+      AI assistants, which read them); the post, an Article (BlogPosting) and the breadcrumb.
+      Warnings about optional fields are fine; errors are not.
+- [ ] **Confirm IndexNow's first run.** `curl -s https://www.fbcmuncie.org/1aadd9425437cc7a001d23cbec702fef.txt`
+      must print the key (it is `site.indexNowKey` in `src/data/site.ts`). Then trigger a
+      deploy (Actions, Deploy, "Run workflow"; a Studio publish does it too) and read its
+      **IndexNow** step: it should say "the production host serves the key", then a 200 or
+      202 for the sitemap's URLs. Until the domain moves the same step says the host "answered
+      400, not 200" and does nothing, which is correct. Detail in `docs/agent/deployment.md`,
+      "IndexNow".

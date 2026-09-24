@@ -45,17 +45,29 @@ test.describe('Structured data', () => {
   }
   const typeOf = (b: Record<string, unknown>) => [b['@type']].flat().join('+');
 
-  test('/visit carries the church, its breadcrumb and the weekly service, once each', async ({
+  test('/visit carries the church, its breadcrumb, the weekly service and its FAQ, once each', async ({
     page,
   }) => {
     await page.goto('/visit/', { waitUntil: 'domcontentloaded' });
     const types = (await blocks(page)).map(typeOf).sort();
-    expect(types).toEqual(['BreadcrumbList', 'Church+Organization', 'Event']);
+    expect(types).toEqual(['BreadcrumbList', 'Church+Organization', 'Event', 'FAQPage']);
     const event = (await blocks(page)).find((b) => b['@type'] === 'Event') as Record<
       string,
       unknown
     >;
     expect((event.eventSchedule as Record<string, unknown>).repeatFrequency).toBe('P1W');
+    // The FAQPage is the page's own question band (src/lib/faq-schema.ts): one
+    // Question per question the band shows, in the same order.
+    const faq = (await blocks(page)).find((b) => b['@type'] === 'FAQPage') as Record<
+      string,
+      unknown
+    >;
+    const names = (faq.mainEntity as Array<{ name: string }>).map((q) => q.name);
+    const shown = (await page.locator('details summary').allTextContents()).map((t) =>
+      t.replace(/\s+/g, ' ').trim(),
+    );
+    expect(names.length).toBeGreaterThan(0);
+    expect(shown).toEqual(expect.arrayContaining(names));
   });
 
   test('a post carries a BlogPosting whose first image is its share card', async ({ page }) => {

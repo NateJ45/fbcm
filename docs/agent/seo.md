@@ -60,12 +60,13 @@ Built by pure functions in `src/lib/church-schema.ts` and `src/lib/post-schema.t
 journal's own file, so the scaffold removes it with the blog), wrapped by
 `src/lib/schemas.ts`. One block per type per page, never a second copy:
 
-| Page            | Blocks                                                      |
-| --------------- | ----------------------------------------------------------- |
-| every page      | the church, typed `["Church", "Organization"]` (BaseLayout) |
-| pages and posts | + a `BreadcrumbList` (the route passes it)                  |
-| `/visit`        | + an `Event`: Sunday worship, with a weekly `eventSchedule` |
-| `/post/<slug>`  | + a `BlogPosting`                                           |
+| Page                                                  | Blocks                                                      |
+| ----------------------------------------------------- | ----------------------------------------------------------- |
+| every page                                            | the church, typed `["Church", "Organization"]` (BaseLayout) |
+| pages and posts                                       | + a `BreadcrumbList` (the route passes it)                  |
+| `/visit`                                              | + an `Event`: Sunday worship, with a weekly `eventSchedule` |
+| a page with a question band (`/visit`, `/ministries`) | + an `FAQPage`, derived from the band                       |
+| `/post/<slug>`                                        | + a `BlogPosting`                                           |
 
 - **Why `["Church", "Organization"]`.** schema.org's `Church` is a Place: it can carry an
   address, a geo point, a phone and a logo, but not an email, and it cannot be a
@@ -76,6 +77,23 @@ journal's own file, so the scaffold removes it with the blog), wrapped by
   (`hasMap`), the service time and length. The one fact that is not an editor's is the
   building's map point, `site.geo` in `src/data/site.ts` (OpenStreetMap way 399259467),
   with its Wikidata record in `sameAs`. The starter's `priceRange: '$$'` is gone.
+- **Entity links (2026-09-24, the local search pass).** `sameAs` is YouTube, Church Center,
+  Church Trac, the Site settings social links (Facebook and Instagram once they are entered
+  there; they are not today, see docs/PENDING.md), Wikidata, and the Google Business
+  Profile once claimed, de-duplicated across `www.`, scheme and trailing-slash spellings.
+  **The Google Business Profile slot is `site.googleBusinessProfile`** in `src/data/site.ts`,
+  empty until the church claims its listing; set it to the place's Google Maps share link and
+  it joins `sameAs` and replaces the address search as `hasMap`. It is code, not a Site
+  settings field, on purpose: a value set once, and a field would be a schema change. The
+  node also says `isAccessibleForFree` and `publicAccess` (Place properties; Church is a
+  Place): the Visit page's own "Anyone is welcome to attend our time of Worship".
+- **FAQPage (2026-09-24).** A page with a "Questions and answers" band (`faqSection`) carries
+  one `FAQPage` built from the band itself (`src/lib/faq-schema.ts`, unit-tested): each
+  question, and its answer as plain text from the Portable Text, a linked phrase keeping its
+  address in brackets, stega-cleaned, a repeated question kept once, two bands merged into
+  one block. No field (rule 15). Google shows FAQ rich results only for government and health
+  sites since 2023, so this earns nothing visible on Google; Bing and the AI assistants read
+  question-and-answer markup readily, which is why it is there.
 - **The weekly service.** Google's event docs support only pages about a single event and
   ask for one `Event` per occurrence; they have no markup for a weekly series. schema.org
   does: an `Event` with `eventSchedule` (a `Schedule`, `repeatFrequency: P1W`, `byDay:
@@ -100,7 +118,8 @@ Sunday`, `startTime`, `endTime`, `duration`, `scheduleTimezone`). So the Visit p
   `ld+json` block in `dist/client`, checks no page repeats a type or an `@id`, and checks
   every image URL on our domain (and every `og:image`) names a file in the build. Measured
   2026-09-24: 378 pages, 895 blocks (Church 377, BreadcrumbList 375, BlogPosting 142, Event
-  1), no findings. Run Google's Rich Results Test on `/visit` and one post after the next
+  1), no findings. After the local search pass the same day: 379 pages, 899 blocks (Church
+  378, BreadcrumbList 376, BlogPosting 142, FAQPage 2, Event 1), no findings. Run Google's Rich Results Test on `/visit` and one post after the next
   deploy as well; it is the one check this cannot do offline.
 
 ### Sitemap and robots
@@ -113,16 +132,47 @@ Sunday`, `startTime`, `endTime`, `duration`, `scheduleTimezone`). So the Visit p
 User-agent: *
 Allow: /
 
+# Search and AI answer crawlers: welcome.
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: GPTBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: Bingbot
+Allow: /
+
 Sitemap: <site.url>/sitemap-index.xml
 ```
 
-There is no static `public/robots.txt`. The generated endpoint ensures the sitemap URL is always the correct production domain as long as `site.ts` `url` is set correctly -- no manual file editing needed.
+There is no static `public/robots.txt`. The generated endpoint ensures the sitemap URL is always the correct production domain as long as `site.ts` `url` is set correctly -- no manual file editing needed. **The named group (2026-09-24)** changes nothing for a crawler that already obeys `*`; it states in the file that the church wants to be found and quoted by the AI answer engines, so nobody later "fixes" an absent entry with a block. robots.txt cannot beat an edge block: Cloudflare's AI Crawl Control ("Block AI bots") must be off for the zone, which is on the cutover checklist (`docs/superpowers/notes/2026-09-20-cutover-plan.md`, "Search and AI visibility at cutover").
 
-`public/llms.txt` also ships -- an AI/LLM crawler index of the site for tools that follow the emerging llms.txt convention. Keep it updated if major pages are added or removed.
+**`/llms.txt` is generated at build time** (since 2026-09-24; `src/pages/llms.txt.ts`, the text decided in `src/lib/llms-text.ts`, unit-tested). It replaced a hand-written `public/llms.txt` that had the service time and address typed into it. Every fact is Site settings'; the page list is each page's own title and search description, in the menus' order; "What to expect" is the Visit page's own question band. It is a proposed convention with no ranking effect anyone has claimed: it is cheap and harmless, and an assistant that fetches it gets the church in one short read. `public/llms-full.txt` is still a snapshot made by hand with `npm run llms:full` (docs/PENDING.md).
+
+**IndexNow** submits the sitemap's URLs to Bing and the other IndexNow engines after each deploy, once the production host serves the key: `docs/agent/deployment.md`, "IndexNow".
 
 After DNS cutover, submit `sitemap-index.xml` to Google Search Console. Verify the property via DNS TXT record (preferred -- survives redeploys) or HTML file upload.
 
 ### Title and description rules
+
+**FBCM (2026-09-24, the local search pass).** Each key page's title and description say
+where the church is (downtown Muncie, Indiana) and what it is (an American Baptist
+church), in plain words, and every one is within the limits AFTER the Site settings
+placeholders are filled and BaseLayout adds " | First Baptist Church Muncie": titles 60
+characters or fewer, descriptions 140 to 160. They are set by the page modules in
+`scripts/pages/*.mjs` and reach Sanity only through `npm run seed-pages -- --apply` (the dry
+run prints each field's before and after). Keep the time, street, phone and email as Site
+settings values in the module (`${settings.serviceTime}`, `${streetLine}`...): seed-pages
+turns them into `{service time}`, `{address}`... so they stay single-sourced. Two more
+constraints: the site search names a page by its `<title>` up to the first " | " (BaseLayout's
+`data-pagefind-meta="title"`), so keep a page's own name first; and Ball State is not
+mentioned, because the middle of campus is about a mile and a half from the church in a straight line (measured from `site.geo`), farther by road, not a short walk, and
+nothing in the church's own content speaks to students. Post titles stay the posts' own
+("<title> · Blog | First Baptist Church Muncie"); a place name would not read naturally there.
 
 - Every Sanity page singleton has `seoTitle` and `seoDescription` fields. They MUST be unique across pages.
 - Title: target 50-60 characters. Front-load the keyword (location or service).
@@ -174,7 +224,7 @@ See the [Image guidelines for editors](images.md#image-guidelines-for-editors) s
 - [ ] `src/data/site.ts` `url` set to the production domain (robots.txt is generated from this automatically)
 - [ ] `llms.txt` updated for the actual page set
 - [ ] LocalBusiness JSON-LD validates in Google Rich Results Test
-- [ ] FAQPage JSON-LD validates (if `/faq` is included)
+- [ ] FAQPage JSON-LD validates on `/visit` and `/ministries` (`npm run check:jsonld` offline; Rich Results Test after deploy)
 - [ ] Service schemas validate (if per-service schemas are wired)
 - [ ] BreadcrumbList present on every internal page
 - [ ] OG previews look right in Slack, iMessage, or a social debugger (verify with opengraph.xyz or similar)
