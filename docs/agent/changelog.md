@@ -10,6 +10,23 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Journal identity: /blog, the archives and the post page in the church identity (`feat/journal-identity`)._
+
+An identity pass over the "I1 Register" and "P2 Bulletin" designs, not a
+redesign: their structure and every derivation stay. The home page's Church
+Blog row became `src/components/blog/PostRow.astro` (DynamicList draws it,
+markup unchanged) and the journal uses it everywhere a list of posts appears:
+the register on /blog and every archive (paper tone, grouped under gold-ruled
+years in the display face; the 4:3 plates became lancets), Worth coming back
+for (the taupe band, `H2_DISPLAY`), and a post's More from this series (the
+taupe foot band with the Sunday before/after doors and the gold All posts
+plate). The opener is the indigo band, with the index's door showing its
+post's featured image in a door arch. On a post, every ink is a brand token
+and the cover hangs in a door arch with no caption (a slide uncropped under an
+indigo door head, a photograph as a wide door). `weekOfLabel()` moved to the
+church's day (`localDay()`), closing the PENDING item; `SeriesRow` gained
+`cover` and `datetime`. No schema change, no page-module change.
+
 _2026-09-23 — Home identity: the home page composed from the church blocks (`feat/home-identity`)._
 
 The home page's six bands, ported from the approved prototype

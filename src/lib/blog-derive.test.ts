@@ -223,10 +223,7 @@ test('the week-of label reads the church day, not the UTC day, late in the eveni
   assert.equal(weekOfEyebrow(late), 'Sermon preview, week of December 8, 2025');
   assert.equal(rowDateTime(late), '2025-12-08');
   // A year boundary crosses too: 03:00 UTC Jan 1 is still Dec 31 in Muncie.
-  assert.equal(
-    weekOfLabel('2025-01-01T03:00:00Z'),
-    'Sermon preview, week of December 31, 2024',
-  );
+  assert.equal(weekOfLabel('2025-01-01T03:00:00Z'), 'Sermon preview, week of December 31, 2024');
 });
 
 test('an unparseable date falls back to the plain eyebrow', () => {
