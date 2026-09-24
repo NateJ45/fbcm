@@ -10,6 +10,26 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Utility identity: /give, /contact, /404 and /privacy (`feat/utility-identity`)._
+
+The four utility pages in the church identity (rollout plan step 8 and 10).
+Hours.astro became the office door: a fixed taupe band with the door glyph and
+the hours from Site settings as ruled days-and-times rows, split by
+`src/lib/office-hours.ts` (unit-tested). GiveBand's /give h1 opener moved to
+the indigo page-opener grammar with the basin drawn large in gold, so /give
+no longer opens and closes on two gold bands; Home's gold h2 band is
+byte-identical. /404 is an indigo apology with four glyphed doors (Visit, Who
+We Are, Blog, Give; `notFoundPage` gained an optional fourth door pair and
+lost its starter residue); /privacy has the same opener over one readable
+column, and its fallback copy is this church's policy, not the starter
+client's. `scripts/pages/contact.mjs` now uses the church's own headings
+(Contact, Church Office Hours, Pastors' Office Hours, Notify Us), lede and
+button labels, a hero photo no other page uses (the church at dusk,
+`contact-exterior`), and prints the Tuesday hours once; `give.mjs` dropped
+its two eyebrows; `not-found.mjs` names the four doors and drops the reused
+tower photo. Dry runs only; `/styleguide/give` and `/styleguide/contact`
+render the compositions from read-only fixtures.
+
 _2026-09-24 — Visit identity: the Visit page and the shared looks it settles (`feat/visit-identity`)._
 
 The Visit page composed from the approved prototype
