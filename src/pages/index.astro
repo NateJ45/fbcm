@@ -18,10 +18,7 @@ import { sermonForUpcomingSunday } from '@/lib/sunday-sermon';
 import type { RegisterEntry } from '@/lib/blog-derive';
 // scaffold:end
 
-const [page, siteSettings] = await Promise.all([
-  getHomePage().catch(() => null),
-  getSiteSettings().catch(() => null),
-]);
+const [page, siteSettings] = await Promise.all([getHomePage(), getSiteSettings()]);
 
 // THIS SUNDAY'S SERMON (2026-09-24). The build's "now", on the church's
 // calendar, picks the preview written for the coming Sunday, if the church has
@@ -29,7 +26,7 @@ const [page, siteSettings] = await Promise.all([
 // BaseLayout drops it again when the page outlives that Sunday.
 let sermon: SundaySermon | null = null;
 // scaffold: journal
-const journal = (await getAllJournalEntries().catch(() => [])) as RegisterEntry[];
+const journal = (await getAllJournalEntries()) as RegisterEntry[];
 sermon = sermonForUpcomingSunday(journal, new Date());
 // scaffold:end
 

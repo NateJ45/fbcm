@@ -18,10 +18,7 @@ import { tagIndex, type RegisterEntry } from '@/lib/blog-derive';
 import { slugify } from '@/lib/slugify';
 
 export async function getStaticPaths() {
-  const [entries, settings] = await Promise.all([
-    getAllJournalEntries().catch(() => []),
-    getSiteSettings().catch(() => null),
-  ]);
+  const [entries, settings] = await Promise.all([getAllJournalEntries(), getSiteSettings()]);
   if (!getSectionVisibility(settings?.sectionVisibility).journal) return [];
 
   // The whole group travels as a prop: the route would otherwise re-derive the
@@ -40,7 +37,7 @@ const { label, entries, all } = Astro.props as {
   entries: RegisterEntry[];
   all: RegisterEntry[];
 };
-const siteSettings = await getSiteSettings().catch(() => null);
+const siteSettings = await getSiteSettings();
 
 const count = entries.length;
 const title = `${label} | Blog | ${site.name}`;

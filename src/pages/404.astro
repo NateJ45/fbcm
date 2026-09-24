@@ -36,10 +36,7 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { headlineScale } from '@/lib/headline-scale';
 
-const [notFoundPage, siteSettings] = await Promise.all([
-  getNotFoundPage().catch(() => null),
-  getSiteSettings().catch(() => null),
-]);
+const [notFoundPage, siteSettings] = await Promise.all([getNotFoundPage(), getSiteSettings()]);
 
 type NotFoundDoc = {
   seoTitle?: string | null;

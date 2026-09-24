@@ -153,7 +153,7 @@ export async function sanityFetch<T>(
     return fallback;
   }
   try {
-    const result = await client.fetch<T>(query, params);
+    const result = await fetchWithRetry<T>(query, params);
     // Site settings placeholders ({time}, {address}...), filled here so every
     // page, band and SEO field gets them without any component knowing. See
     // src/lib/settings-placeholders.ts. Most results carry none, and pay only
@@ -168,6 +168,22 @@ export async function sanityFetch<T>(
     }
     console.warn('[sanity] fetch error (returning empty fallback):', err);
     return fallback;
+  }
+}
+
+// A build makes a few hundred reads, and one of them failing on a network blip
+// used to publish a page as a redirect to /404 (2026-09-24: /ministries, caught
+// by parity). Two retries, 0.5 s then 1.5 s apart, ride out a blip; a real
+// outage still fails after about 2 s and the build stops.
+async function fetchWithRetry<T>(query: string, params: Record<string, unknown>): Promise<T> {
+  const waits = [500, 1500];
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await client.fetch<T>(query, params);
+    } catch (err) {
+      if (attempt >= waits.length) throw err;
+      await new Promise((r) => setTimeout(r, waits[attempt]));
+    }
   }
 }
 

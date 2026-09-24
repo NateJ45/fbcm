@@ -17,9 +17,9 @@ import { paginate, PER_PAGE, clean, type RegisterEntry } from '@/lib/blog-derive
 
 export async function getStaticPaths() {
   const [entries, categories, settings] = await Promise.all([
-    getAllJournalEntries().catch(() => []),
-    getAllJournalCategories().catch(() => []),
-    getSiteSettings().catch(() => null),
+    getAllJournalEntries(),
+    getAllJournalCategories(),
+    getSiteSettings(),
   ]);
   if (!getSectionVisibility(settings?.sectionVisibility).journal) return [];
 
@@ -40,9 +40,9 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const pageNumber = Number(Astro.params.page);
 const [entries, categories, siteSettings] = await Promise.all([
-  getAllJournalEntries().catch(() => []),
-  getAllJournalCategories().catch(() => []),
-  getSiteSettings().catch(() => null),
+  getAllJournalEntries(),
+  getAllJournalCategories(),
+  getSiteSettings(),
 ]);
 
 const category = ((categories ?? []) as any[]).find((c) => c?.slug?.current === slug);

@@ -82,8 +82,8 @@ import StickyCTAChip from '@/components/StickyCTAChip';
 // Returns [] when journal is off: no detail pages build and they 404.
 export async function getStaticPaths() {
   const [entries, settings, heads] = await Promise.all([
-    getAllJournalEntries().catch(() => []),
-    getSiteSettings().catch(() => null),
+    getAllJournalEntries(),
+    getSiteSettings(),
     // The opening blocks of every post, for the reading a preview's door and
     // series row print. The card projection carries no body, and this is a
     // dozen blocks each rather than 142 whole bodies. Read here rather than in
@@ -92,7 +92,7 @@ export async function getStaticPaths() {
       `*[_type == "journalEntry"]{ _id, "head": body[_type == "block"][0...12]{ _type, style, listItem, children[]{ _type, text } } }`,
       {},
       [],
-    ).catch(() => []),
+    ),
   ]);
   const visible = getSectionVisibility(settings?.sectionVisibility);
   if (!visible.journal) return [];
@@ -123,12 +123,19 @@ const { doors, series } = Astro.props as { doors: Doors; series: SeriesRow[] };
 
 const [entry, siteSettings, journalPage] = await Promise.all([
   getJournalEntryBySlug(slug as string),
-  getSiteSettings().catch(() => null),
+  getSiteSettings(),
   // Pulled here purely so the sticky CTA chip label can come from
   // journalPage.stickyCtaLabel. Cached by the GROQ layer across getStaticPaths.
-  getJournalPage().catch(() => null),
+  getJournalPage(),
 ]);
 
+// Listed by getStaticPaths, so empty means a failed read: stop the build rather
+// than publish the post as a redirect to /404 (see [slug].astro).
+if (!entry && import.meta.env.PROD) {
+  throw new Error(
+    `[post] "${slug}" was listed but came back empty; refusing to publish it as a 404`,
+  );
+}
 if (!entry) {
   return Astro.redirect('/404');
 }

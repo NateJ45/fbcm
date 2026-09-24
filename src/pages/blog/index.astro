@@ -55,9 +55,9 @@ import Register from '@/components/blog/Register.astro';
 import Pager from '@/components/blog/Pager.astro';
 
 const [page, entries, siteSettings] = await Promise.all([
-  getJournalPage().catch(() => null),
-  getAllJournalEntries().catch(() => []),
-  getSiteSettings().catch(() => null),
+  getJournalPage(),
+  getAllJournalEntries(),
+  getSiteSettings(),
 ]);
 
 // Section visibility guard.
