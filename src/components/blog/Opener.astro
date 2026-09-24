@@ -5,6 +5,12 @@
 // Register"): eyebrow, h1 and lede in cols 1 to 7, and whatever the page puts
 // in the default slot (the index's door) in cols 9 to 12. The filter row goes
 // in the `filters` slot, under both, on the same left edge (CLAUDE.md rule 17).
+//
+// The church identity pass (2026-09-24) laid the opener on the indigo band,
+// as every page's opener now is (Who We Are, Home, Visit): cream heading, a
+// gold eyebrow, the lede in taupe. The band holds its colour in both themes
+// (--color-band-indigo is redeclared under .dark). The filters sit under it on
+// the page's own paper, where the register they filter begins.
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
 
 interface Props {
@@ -21,22 +27,15 @@ const hasAside = Astro.slots.has('default');
 const scale = headlineScale(heading, { tall: false });
 ---
 
-<div class="bg-background">
+<div class="bg-band-indigo text-white-pure">
   <div class="mx-auto max-w-content px-gutter">
     <div class="ix-open">
       <div class="l">
-        {eyebrow && <p class="font-ui text-ui font-medium text-gold-ink">{eyebrow}</p>}
-        <h1
-          id={headingId}
-          class:list={['mt-5 text-foreground', headlineClass(scale, { tall: false })]}
-        >
+        {eyebrow && <p class="font-ui text-ui font-medium text-gold">{eyebrow}</p>}
+        <h1 id={headingId} class:list={['mt-5 text-white-pure', headlineClass(scale, { tall: false })]}>
           {heading}
         </h1>
-        {
-          lede && (
-            <p class="mt-6 max-w-[34em] font-body text-lede text-foreground/90 italic">{lede}</p>
-          )
-        }
+        {lede && <p class="mt-6 max-w-[34em] font-body text-lede text-band-taupe italic">{lede}</p>}
       </div>
       {
         hasAside && (
@@ -46,9 +45,17 @@ const scale = headlineScale(heading, { tall: false });
         )
       }
     </div>
-    <slot name="filters" />
   </div>
 </div>
+{
+  Astro.slots.has('filters') && (
+    <div class="bg-background">
+      <div class="mx-auto max-w-content px-gutter pt-8">
+        <slot name="filters" />
+      </div>
+    </div>
+  )
+}
 
 <style>
   .ix-open {
@@ -58,7 +65,7 @@ const scale = headlineScale(heading, { tall: false });
     row-gap: 44px;
     align-items: end;
     padding-top: var(--spacing-section-lg);
-    padding-bottom: clamp(40px, 5vw, 64px);
+    padding-bottom: clamp(56px, 6vw, 96px);
   }
   .l {
     grid-column: 1 / 8;

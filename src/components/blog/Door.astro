@@ -15,7 +15,13 @@
 // one `hidden`, and the inline script below re-checks against the visitor's
 // clock, in the church's time zone, and swaps them once the Sunday has gone.
 // Without JavaScript the build's answer stands.
-import SanityImage from '@/components/SanityImage.astro';
+//
+// The church identity pass (2026-09-24): the door stands on the opener's
+// indigo band, so its inks are the band's (gold label, cream title, taupe
+// meta), and each door shows its post's FEATURED image in a door arch (a
+// building glyph when there is none), with the gold mould. Never an author
+// portrait, never a caption.
+import ArchFrame from '@/components/church/ArchFrame.astro';
 import { localDay, sundayOf, formatDay, isoDay, readingOf, CHURCH_TZ } from '@/lib/sermon-derive';
 import type { RegisterEntry } from '@/lib/blog-derive';
 
@@ -39,6 +45,18 @@ const latestDay = latest ? localDay(latest.publishedAt) : null;
   fresh && freshSunday && (
     <div class="door" data-door-fresh={isoDay(freshSunday)}>
       <p class="lbl font-ui text-ui font-medium">This Sunday, {monthDay(freshSunday)}</p>
+      <div class="dw">
+        <ArchFrame
+          image={fresh.coverImage as any}
+          glyph="door"
+          shape="door"
+          width={440}
+          sizes="150px"
+          alt=""
+          loading="eager"
+          reveal={false}
+        />
+      </div>
       <a class="dt" href={hrefOf(fresh)}>
         <b>{fresh.title}</b>
       </a>
@@ -53,18 +71,18 @@ const latestDay = latest ? localDay(latest.publishedAt) : null;
       <p class="lbl font-ui text-ui font-medium">
         Latest{latestDay && <> &middot; {monthDay(latestDay)}</>}
       </p>
-      {(latest.coverImage as any)?.asset && (
-        <div class="thumbw">
-          <SanityImage
-            source={latest.coverImage as any}
-            width={640}
-            height={480}
-            alt=""
-            sizes="(min-width: 400px) 320px, 100vw"
-            loading={fresh ? 'lazy' : 'eager'}
-          />
-        </div>
-      )}
+      <div class="dw">
+        <ArchFrame
+          image={latest.coverImage as any}
+          glyph="door"
+          shape="door"
+          width={440}
+          sizes="150px"
+          alt=""
+          loading={fresh ? 'lazy' : 'eager'}
+          reveal={false}
+        />
+      </div>
       <a class="dt" href={hrefOf(latest)}>
         <b>{latest.title}</b>
       </a>
@@ -98,66 +116,73 @@ const latestDay = latest ? localDay(latest.publishedAt) : null;
 
 <style>
   .door {
-    border-top: 1px solid var(--hair-strong);
-    padding-top: 14px;
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    column-gap: 26px;
+    align-items: start;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 55%, transparent);
+    padding-top: 16px;
   }
   .door[hidden] {
     display: none;
   }
+  .door > :not(.dw) {
+    grid-column: 2;
+  }
   .lbl {
-    color: var(--color-gold-ink);
-    margin-bottom: 12px;
+    grid-column: 1 / -1 !important;
+    color: var(--color-gold);
+    margin-bottom: 20px;
+  }
+  /* The arch, 9px inside its column so the mould has room. */
+  .dw {
+    grid-column: 1;
+    grid-row: 2 / span 4;
+    padding: 9px 9px 0;
   }
   .dt {
     display: block;
     text-decoration: none;
-    color: var(--foreground);
+    color: #fff;
   }
   .dt b {
-    display: block;
     font-weight: 400;
     font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.125rem);
     line-height: 1.12;
     overflow-wrap: break-word;
-    transition: color 0.2s;
+    background: linear-gradient(var(--color-gold), var(--color-gold)) 0 100% / 0 2px no-repeat;
+    display: inline;
+    transition: background-size 0.3s;
   }
   .dt:hover b,
   .dt:focus-visible b {
-    color: var(--color-gold-ink);
+    background-size: 100% 2px;
+  }
+  .dt:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 4px;
   }
   .meta {
     margin-top: 10px;
     font-family: var(--font-ui);
-    font-size: 0.875rem;
-    letter-spacing: 0.04em;
-    color: var(--muted-foreground);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-band-taupe);
   }
   .ex {
     margin-top: 10px;
-    color: var(--muted-foreground);
-    font-size: 1rem;
-    line-height: 1.55;
+    color: var(--color-band-taupe);
+    font-size: 1.0625rem;
+    line-height: 1.5;
     overflow-wrap: break-word;
   }
-  /* The plate, hung in a 1px gold moulding 9px outside the print. */
-  .thumbw {
-    position: relative;
-    display: block;
-    margin: 13px 9px 26px;
-    max-width: 320px;
-  }
-  .thumbw::after {
-    content: '';
-    position: absolute;
-    inset: -9px;
-    border: 1px solid var(--color-gold);
-    pointer-events: none;
-  }
-  .thumbw :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
+  @media (max-width: 480px) {
+    .door {
+      grid-template-columns: 96px minmax(0, 1fr);
+      column-gap: 18px;
+    }
+    .dw {
+      padding: 6px 6px 0;
+    }
   }
 </style>

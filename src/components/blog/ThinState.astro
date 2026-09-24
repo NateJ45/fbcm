@@ -7,6 +7,10 @@
 // on those same posts, most frequent first, at most eight (thinStateTags in
 // blog-derive.ts, whose hrefs are only routes the build makes), then the whole
 // archive.
+//
+// The church identity pass (2026-09-24) closes it with the gold "All posts"
+// plate, the same button the home page's Church Blog band ends on.
+import CtaLink from '@/components/CtaLink.astro';
 import { slugify } from '@/lib/slugify';
 import { thinStateTags, type BlogEntry } from '@/lib/blog-derive';
 
@@ -24,16 +28,22 @@ const links = thin ? thinStateTags(list, exclude, slugify, 8) : [];
 {
   thin && (
     <div class="thin">
-      <p class="lbl font-ui text-ui font-medium">Also filed under</p>
-      <p class="line font-ui">
-        {links.map((l, i) => (
-          <>
-            <a href={l.href}>{l.label}</a>
-            {i < links.length - 1 ? ', ' : '. '}
-          </>
-        ))}
-        <a href="/blog/">Everything else: the whole archive</a>
-      </p>
+      {links.length > 0 && (
+        <>
+          <p class="lbl font-ui text-ui font-medium">Also filed under</p>
+          <p class="line font-ui">
+            {links.map((l, i) => (
+              <>
+                <a href={l.href}>{l.label}</a>
+                {i < links.length - 1 ? ', ' : '.'}
+              </>
+            ))}
+          </p>
+        </>
+      )}
+      <div class="act">
+        <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
+      </div>
     </div>
   )
 }
@@ -44,7 +54,7 @@ const links = thin ? thinStateTags(list, exclude, slugify, 8) : [];
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: clamp(16px, 2.5vw, 40px);
-    border-top: 1px solid var(--hair-strong);
+    border-top: 2px solid var(--color-gold);
     padding-top: 16px;
   }
   .lbl {
@@ -60,9 +70,9 @@ const links = thin ? thinStateTags(list, exclude, slugify, 8) : [];
     overflow-wrap: break-word;
   }
   a {
-    color: var(--foreground);
+    color: var(--color-indigo);
     text-decoration: underline;
-    text-decoration-color: var(--hair-strong);
+    text-decoration-color: color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
     text-decoration-thickness: 1px;
     text-underline-offset: 0.18em;
   }
@@ -71,9 +81,14 @@ const links = thin ? thinStateTags(list, exclude, slugify, 8) : [];
     text-decoration-color: var(--color-gold);
     color: var(--color-gold-ink);
   }
+  .act {
+    grid-column: 3 / 13;
+    margin-top: 24px;
+  }
   @media (max-width: 1023px) {
     .lbl,
-    .line {
+    .line,
+    .act {
       grid-column: 1 / -1;
     }
     .line {

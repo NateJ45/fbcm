@@ -48,15 +48,15 @@ const filters = categoryFilters(entries ?? []);
     flex-wrap: wrap;
     gap: 6px 26px;
     padding: 14px 0 15px;
-    border-top: 1px solid var(--hair-strong);
-    border-bottom: 1px solid var(--hair);
+    border-top: 2px solid var(--color-gold);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
     font-family: var(--font-ui);
     font-size: 0.9375rem;
     letter-spacing: 0.03em;
   }
   a {
     text-decoration: none;
-    color: var(--muted-foreground);
+    color: var(--color-brown-ink);
     padding-bottom: 2px;
     background: linear-gradient(var(--color-gold), var(--color-gold)) 0 100% / 0 1px no-repeat;
     transition:
@@ -66,7 +66,7 @@ const filters = categoryFilters(entries ?? []);
   a:hover,
   a:focus-visible,
   a[aria-current='page'] {
-    color: var(--foreground);
+    color: var(--color-indigo);
     background-size: 100% 1px;
   }
   sup {
