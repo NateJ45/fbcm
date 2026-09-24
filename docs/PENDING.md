@@ -725,13 +725,7 @@ now ties the schema max and the slice with a drift test.
 - **The "Meet Our Staff" door shows one pastor.** Its photo is `wwa-next-kendall`, a
   single person, for a card about the whole staff. A group photograph of the staff
   would say what the card says.
-- **Clean-up once `/who-we-are` itself shows the composition.** Delete
-  `src/pages/styleguide/who-we-are.astro`, the `'/styleguide/who-we-are'` line and its
-  comment in `tests/routes.ts`, and `scripts/data/fixtures/who-we-are.json`. KEEP
-  `scripts/page-fixture.mjs` and the `scripts/data/fixtures/` folder: the script is
-  page-agnostic (`node scripts/page-fixture.mjs <slug>` builds any page module
-  read-only into `scripts/data/fixtures/<slug>.json`) and is how the next page composed
-  ahead of its schema deploy gets looked at.
+- **Done (2026-09-24): the `/who-we-are` preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
 ### Wedding identity: before the page is applied (2026-09-24)
 
@@ -753,9 +747,7 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   couple at the red doors in the hero's side light is a 435x640 original (library tag
   "Needs a better copy"); it is sharp enough at the side light's size. The Ella Mae band
   is ImageText as it stands on main: its look follows the Visit branch's ImageText.
-- **Clean-up once /wedding shows the composition.** Delete
-  `src/pages/styleguide/wedding.astro`, the `'/styleguide/wedding'` line in
-  `tests/routes.ts` and `scripts/data/fixtures/wedding.json`, then recapture parity.
+- **Done (2026-09-24): the /wedding preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
 ### Home identity: before the page is applied (2026-09-23)
 
@@ -841,9 +833,7 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
 - **Owner questions from the final review:** the handbell photo is on Home (Work goal)
   and on Ministries (a separate upload of the same photograph, so the spare-pool dedup
   cannot see it); the two-girls lancet photo in What to Expect is low resolution.
-- **Clean-up once `/` itself shows the composition.** Delete
-  `src/pages/styleguide/home.astro`, the `'/styleguide/home'` line in `tests/routes.ts`
-  and `scripts/data/fixtures/home.json`, then recapture parity.
+- **Done (2026-09-24): the `/` preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
 ### Utility identity: before the pages are applied (2026-09-24)
 
@@ -876,10 +866,7 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   closing band), but a muted text band placed straight under the /give opener would pick
   indigo beside indigo. The fix is one line in `familyOf` (index 0, no hero -> indigo),
   left to the file's owner.
-- **Clean-up once `/give` and `/contact` show the composition.** Delete
-  `src/pages/styleguide/give.astro` and `contact.astro`, their two lines in
-  `tests/routes.ts` and `scripts/data/fixtures/give.json` / `contact.json`, then
-  recapture parity.
+- **Done (2026-09-24): the `/give` and `/contact` preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
 ### Ministries identity: before the page is applied (2026-09-24)
 
@@ -912,9 +899,7 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   150,565 B, posts 131,263 -> 131,521 B. Every page still inlines (rule 20), but /blog's
   inline sheet is over the 147,456 B figure the plan quotes; worth a look when the
   wave's sheets are measured together.
-- **Clean-up once `/ministries` itself shows the composition.** Delete
-  `src/pages/styleguide/ministries.astro`, the `'/styleguide/ministries'` line in
-  `tests/routes.ts` and `scripts/data/fixtures/ministries.json`, then recapture parity.
+- **Done (2026-09-24): the `/ministries` preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
 ### Staff identity: before the page is applied (2026-09-24)
 
@@ -939,9 +924,7 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
 - **Owner question:** the scripture band now picks out "same" three times in
   1 Corinthians 12:4-6 (the Spirit, the Lord, God). Nathan may prefer another word or
   none (`accentWord` in `staff.mjs`).
-- **Clean-up once `/staff` itself shows the composition.** Delete
-  `src/pages/styleguide/staff.astro`, the `'/styleguide/staff'` line in `tests/routes.ts`
-  and `scripts/data/fixtures/staff.json`, then recapture parity.
+- **Done (2026-09-24): the `/staff` preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
 ### History identity: before the page is applied (2026-09-24)
 
@@ -967,9 +950,7 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   tonight.** The page composes with them as they stood at 74abd96; once the Visit and
   Beliefs branches land, re-shoot /styleguide/history (the closing band should turn
   gold, which sits well after the indigo books band).
-- **Clean-up once `/history` itself shows the composition.** Delete
-  `src/pages/styleguide/history.astro`, the `'/styleguide/history'` line in
-  `tests/routes.ts` and `scripts/data/fixtures/history.json`, then recapture parity.
+- **Done (2026-09-24): the `/history` preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
 ---
 
@@ -1000,9 +981,7 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   every section's CSS. It still inlines (Vite checks each CSS chunk, not the page). This
   branch's share is +768 B (the Ledger's brand grounds and beside-heads, net of the
   removed newspaper columns). The fix belongs to whoever owns the blog index's imports.
-- **Clean-up once `/beliefs` itself shows the composition.** Delete
-  `src/pages/styleguide/beliefs.astro`, the `'/styleguide/beliefs'` line in
-  `tests/routes.ts` and `scripts/data/fixtures/beliefs.json`, then recapture parity.
+- **Done (2026-09-24): the `/beliefs` preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
 ---
 

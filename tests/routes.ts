@@ -34,27 +34,6 @@ export const routes: string[] = [
   // suite screenshots. Listed here so it also gets smoke, axe light/dark,
   // contrast and reflow coverage like every other route, not just pixels.
   '/styleguide',
-  // The composed Who We Are page from its seed module, before it is applied
-  // (src/pages/styleguide/who-we-are.astro, 2026-09-23).
-  '/styleguide/who-we-are', // scaffold: church
-  // And the composed home page (src/pages/styleguide/home.astro, 2026-09-23).
-  '/styleguide/home', // scaffold: church
-  // And the composed Visit page (src/pages/styleguide/visit.astro, 2026-09-24).
-  '/styleguide/visit', // scaffold: church
-  // And the composed wedding page (src/pages/styleguide/wedding.astro, 2026-09-24).
-  '/styleguide/wedding', // scaffold: church
-  // And the composed staff page (src/pages/styleguide/staff.astro, 2026-09-24).
-  '/styleguide/staff', // scaffold: church
-  // And the composed Give and Contact pages (src/pages/styleguide/give.astro and
-  // contact.astro, 2026-09-24, the utility identity pass).
-  '/styleguide/give', // scaffold: church
-  '/styleguide/contact', // scaffold: church
-  // And the composed history page (src/pages/styleguide/history.astro, 2026-09-24).
-  '/styleguide/history', // scaffold: church
-  // And the composed ministries page (src/pages/styleguide/ministries.astro, 2026-09-24).
-  '/styleguide/ministries', // scaffold: church
-  // And the composed beliefs page (src/pages/styleguide/beliefs.astro, 2026-09-24).
-  '/styleguide/beliefs', // scaffold: church
   // The plan-2b pages are listed here as they land.
   '/visit',
   '/who-we-are',

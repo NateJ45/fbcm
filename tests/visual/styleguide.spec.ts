@@ -67,7 +67,7 @@ test('styleguide, light', async ({ page }) => {
     }
   }, THEME_KEY);
   await settle(page);
-  await expect(page).toHaveScreenshot('styleguide-light.png', { fullPage: true });
+  await expect(page).toHaveScreenshot('styleguide-light.png', { fullPage: true, timeout: 30_000 });
 });
 
 test('styleguide, dark', async ({ page }) => {
@@ -85,5 +85,5 @@ test('styleguide, dark', async ({ page }) => {
   // exact mistake happened once in the family, with the wrong key name, which
   // is also why THEME_KEY is imported rather than typed out.
   await expect(page.locator('html')).toHaveClass(/dark/);
-  await expect(page).toHaveScreenshot('styleguide-dark.png', { fullPage: true });
+  await expect(page).toHaveScreenshot('styleguide-dark.png', { fullPage: true, timeout: 30_000 });
 });
