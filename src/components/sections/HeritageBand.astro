@@ -45,9 +45,16 @@
 //    paper), the `archive` photograph in a door arch at a third of the row or
 //    more, and the dated list ending in the present with a gold rule. The
 //    present's year is the build year (src/lib/heritage-dates.ts, rule 15).
-//    A band with no dates (/history's opener, /visit's building band) is the
-//    brown band described above, unchanged; the strip, the hero-first drop and
-//    the timeline numerals belong to that band only.
+//    A band with no dates (/visit's building band) is the brown band
+//    described above, unchanged; the strip, the hero-first drop and the
+//    timeline numerals belong to that band only.
+//
+// 6. AS A PAGE'S OPENER IT IS A THIRD BAND (2026-09-24, the History identity
+//    pass): a band with no dates that carries the page's h1 (level 'h1', which
+//    SectionRenderer passes only to a first block on a page with no hero, so
+//    today /history alone) is drawn by HeritageOpener.astro: the church's
+//    brown, the founding year and the build year set large over the h1, and
+//    the block's `image` in a door arch with `archive` in a lancet beside it.
 //
 // 4. SELF_CONTAINED: brown in both themes (globals.css moves --color-brown only
 //    to a darker brown under .dark), so the ink on it is text-bg, which is
@@ -58,6 +65,7 @@ import { headlineScale } from '@/lib/headline-scale';
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import ArchFrame from '@/components/church/ArchFrame.astro';
+import HeritageOpener from '@/components/sections/HeritageOpener.astro';
 import { heritageBookends, heritageDates, type HeritageDateInput } from '@/lib/heritage-dates';
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
@@ -281,6 +289,17 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
         )}
       </div>
     </section>
+  ) : level === 'h1' ? (
+    <HeritageOpener
+      eyebrow={eyebrow}
+      heading={heading}
+      body={body}
+      image={image}
+      archive={archive}
+      cta={cta}
+      firstMarker={years[0]?.year}
+      headingId={headingId}
+    />
   ) : (
     <section class="bg-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
       {/* The detail strip, edge to edge and OUTSIDE the container on purpose: it
