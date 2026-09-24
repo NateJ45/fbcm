@@ -77,21 +77,48 @@ const frameSizes = (img: SanityImageObject) =>
 {first && (
   <>
     {isSlideshow ? (
-      <div class:list={['hero-fade', { 'few-frames': fewFrames }]} data-hero-fade>
-        {slides.map((img, i) => (
+      <>
+        {/* Frame 1 only, in the document. Frames 2-6 wait in the <template>
+            below until the page has loaded (2026-09-24, the speed pass). They
+            are not on screen until 8 seconds in, but as <img loading="lazy">
+            inside the viewport they were fetched at once, alongside frame 1
+            and the fonts: on a phone that was four 2400px frames, about 780 KB,
+            competing with the first paint for a mobile connection. The
+            cross-fade is paused until they arrive (globals.css,
+            .hero-fade:not([data-frames-ready])), so a visitor without
+            JavaScript keeps frame 1 still, with its slow zoom, instead of
+            fading to an empty frame. */}
+        <div class:list={['hero-fade', { 'few-frames': fewFrames }]} data-hero-fade>
           <SanityImage
-            source={img}
+            source={first}
             width={2400}
-            sizes={frameSizes(img)}
-            loading={i === 0 ? 'eager' : 'lazy'}
-            fetchpriority={i === 0 ? 'high' : 'low'}
+            sizes={frameSizes(first)}
+            loading="eager"
+            fetchpriority="high"
             quality={70}
-            alt={i === 0 ? undefined : ''}
             class="hero-frame"
-            style={`--frames:${slides.length}; --frame-s:${SECONDS_PER_FRAME}; animation-delay:${delays[i]}s${frameStyle(img) ? `; ${frameStyle(img)}` : ''}`}
+            style={`--frames:${slides.length}; --frame-s:${SECONDS_PER_FRAME}; animation-delay:${delays[0]}s${frameStyle(first) ? `; ${frameStyle(first)}` : ''}`}
           />
-        ))}
-      </div>
+        </div>
+        {/* Outside .hero-fade on purpose: the frames' transform origins and
+            Ken Burns lengths are keyed on :nth-child, so nothing but frames
+            may sit inside it. */}
+        <template data-hero-later>
+          {slides.slice(1).map((img, j) => (
+            <SanityImage
+              source={img}
+              width={2400}
+              sizes={frameSizes(img)}
+              loading="lazy"
+              fetchpriority="low"
+              quality={70}
+              alt=""
+              class="hero-frame"
+              style={`--frames:${slides.length}; --frame-s:${SECONDS_PER_FRAME}; animation-delay:${delays[j + 1]}s${frameStyle(img) ? `; ${frameStyle(img)}` : ''}`}
+            />
+          ))}
+        </template>
+      </>
     ) : (
       <SanityImage
         source={first}
@@ -154,10 +181,29 @@ const frameSizes = (img: SanityImageObject) =>
           button.textContent = paused ? 'Play' : 'Pause';
         });
       }
+      // Frames 2-6 come out of their <template> once the page has loaded, and
+      // only then does the cross-fade start (the attribute releases the paused
+      // play state in globals.css). Under reduced motion they are never
+      // fetched: that rule shows frame 1 alone and hides every other frame.
+      function initHeroFrames() {
+        var box = document.querySelector('[data-hero-fade]');
+        var tpl = document.querySelector('template[data-hero-later]');
+        if (!box || !tpl || box.hasAttribute('data-frames-ready')) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        function release() {
+          if (box.hasAttribute('data-frames-ready') || !box.isConnected) return;
+          box.appendChild(tpl.content.cloneNode(true));
+          box.setAttribute('data-frames-ready', '');
+        }
+        if (document.readyState === 'complete') release();
+        else window.addEventListener('load', release, { once: true });
+      }
       initHeroPause();
+      initHeroFrames();
       if (!window.__heroPauseBound) {
         window.__heroPauseBound = true;
         document.addEventListener('astro:page-load', initHeroPause);
+        document.addEventListener('astro:page-load', initHeroFrames);
       }
     })();
   </script>

@@ -203,14 +203,19 @@ function makeComponents(): PortableTextComponents {
       // -- inline image (with size variants + caption) ---------------------
       inlineImage: ({ value }) => {
         if (!value?.asset) return null;
-        const size: 'standard' | 'wide' | 'full' = value.size ?? 'wide';
-        const targetWidth = size === 'full' ? 2400 : size === 'wide' ? 1600 : 800;
-        const url = urlFor(value).width(targetWidth).quality(75).format('webp').url();
-        const url2x = urlFor(value)
-          .width(targetWidth * 2)
-          .quality(75)
-          .format('webp')
-          .url();
+        // THE FILE THE FIGURE ACTUALLY NEEDS (2026-09-24, the speed pass).
+        // This used to be a 1x/2x pair keyed on the editor's size choice
+        // (800/1600/2400 wide, doubled for 2x), from before task 11 put every
+        // figure in the reading measure. A phone at DPR 1.75 therefore took
+        // the 2x file: on /post/handel-s-messiah-sing-in-carols a portrait
+        // drawn 360px wide fetched a 3200px webp, 268 KB, while the post's
+        // LCP cover was still loading. Width descriptors plus the figure's
+        // real drawn width let the browser pick. `size` no longer changes
+        // the drawn width (FULL MEASURE, below), so it no longer picks the
+        // file either.
+        const figWidth = (w: number) => urlFor(value).width(w).quality(75).format('webp').url();
+        const url = figWidth(800);
+        const srcSet = [400, 600, 800, 1000, 1400].map((w) => `${figWidth(w)} ${w}w`).join(', ');
         // Intrinsic dimensions from the Sanity asset _ref do two jobs:
         // (1) reserve the aspect-ratio box before the file lands (kills the
         //     CLS Lighthouse used to flag), and (2) let us detect portrait
@@ -236,7 +241,11 @@ function makeComponents(): PortableTextComponents {
           <figure className={isPortrait ? 'pp-fig pp-portrait' : 'pp-fig'}>
             <img
               src={url}
-              srcSet={`${url} 1x, ${url2x} 2x`}
+              srcSet={srcSet}
+              // The portrait cap and the 62ch reading measure in post/[slug].astro.
+              sizes={
+                isPortrait ? '(min-width: 400px) 360px, 100vw' : '(min-width: 760px) 680px, 100vw'
+              }
               width={dims?.width}
               height={dims?.height}
               alt={value.alt ?? ''}

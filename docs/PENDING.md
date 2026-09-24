@@ -1016,6 +1016,29 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
 
 ---
 
+### Mobile speed pass (2026-09-24, `perf/speed-audit`)
+
+Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and causes are in
+`docs/agent/performance.md`, "The 2026-09-24 speed pass". Left open, each needing a call:
+
+- [ ] #nathan **Re-measure production after the deploy.** Every number from this pass is a local
+      build behind `scripts/serve-dist.mjs`. Production measured 2.34 s on the baseline, better
+      than local's 3.80 s, so expect Home at or under the local 1.73 s.
+- [ ] #nathan **Hydrate the islands after `load`?** `/visit` (3.15 s) and post pages (3.38 s)
+      are image-LCP pages, and the photo competes with the island JS: blocking all JS gives
+      2.57 s and 2.38 s. A custom client directive that waits for `load` would get most of that,
+      and the cost is a menu button that does nothing until the page has loaded.
+- [ ] #nathan **Render post bodies statically.** `JournalPortableText` hydrates the whole body
+      (`client:visible`) and drags `@sanity/client` in through `urlFor`. Rendering it as Astro and
+      hydrating only the before/after slider is the bigger post-page lever.
+- [ ] #nathan **Drop `<Toaster />`?** It ships `sonner` (10 KB) on every page for
+      `CopyEmailButton`, which no page renders.
+- [ ] #nathan **Cap the hero's phone frame?** Frame 1 is the 2400 px variant on a phone (169 KB),
+      by design since `heroSizes`; the largest request before first paint.
+- **Superseded by this pass:** "Mobile LCP on `/` is 3239 ms" (Ledger branch, below) and the
+  art-direction pass's "A production Lighthouse re-measure is owed" (the re-measure is the first
+  item above).
+
 ### Beliefs identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** `scripts/pages/beliefs.mjs` uses no new
@@ -1209,7 +1232,7 @@ on the Ledger branch):**
     `imageSide: 'left'` (`scripts/pages/contact.mjs:264`); the prototype's
     own table said "right", but that came from a hard-coded map, not the
     data. A one-field content edit if Nathan wants the window on the right.
-- **Mobile LCP on `/` is 3239 ms, +0.2 s over `main`'s 3017 ms**, likely the
+- **(Superseded 2026-09-24 by the mobile speed pass above.) Mobile LCP on `/` is 3239 ms, +0.2 s over `main`'s 3017 ms**, likely the
   larger inline stylesheet (122.5 KB to 133.9 KB). Both are inside the
   4500 ms gate and past the 2000 ms spec target. Owed together with the
   hero-photo delivery decision already open below (art-direction pass,
