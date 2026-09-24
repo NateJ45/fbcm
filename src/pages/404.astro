@@ -99,7 +99,7 @@ const doors = DOORS.map((fallback, i) => {
     <div class="nf-grid mx-auto max-w-content px-gutter">
       <BuildingGlyph name="door" class="nf-glyph" />
       <div class="nf-words min-w-0">
-        {eyebrow && <p class="hw-label font-display text-gold uppercase">{eyebrow}</p>}
+        {eyebrow && <p class="nf-label font-display text-gold uppercase">{eyebrow}</p>}
         <SectionHeading
           headline={headline}
           headingId="not-found-heading"
@@ -161,6 +161,12 @@ const doors = DOORS.map((fallback, i) => {
       grid-column: 2;
       width: clamp(150px, 15vw, 230px);
     }
+  }
+  .nf-label {
+    margin: 0 0 0.5em;
+    font-size: clamp(26px, 2.4vw, 34px);
+    line-height: 1;
+    letter-spacing: 0.06em;
   }
   .nf-lede {
     margin: clamp(18px, 2.4vw, 28px) 0 0;

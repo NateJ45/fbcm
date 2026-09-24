@@ -9,7 +9,8 @@
 // The same opener as /404 and /give: the brand INDIGO band with the words at
 // the gutter and one building glyph drawn large in gold at the right (the
 // window: the page is the church letting a visitor see in). The eyebrow is the
-// window hero's small gold titling label, the h1 is sized by its own length
+// window hero's small gold titling label (its own .pv-label: .hw-label ships
+// only with Hero.astro), the h1 is sized by its own length
 // (headlineScale), and the last-updated date sits under it in paper. Below,
 // the policy stays READABLE LEGAL TEXT on the page surface: one column at the
 // gutter, in the measured PROSE_MEASURE, sub-heads in Castoro roman. Nothing
@@ -115,7 +116,7 @@ const H2 = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground';
     <div class="pv-grid mx-auto max-w-content px-gutter">
       <BuildingGlyph name="window" class="pv-glyph" />
       <div class="pv-words min-w-0">
-        {heroEyebrow && <p class="hw-label font-display text-gold uppercase">{heroEyebrow}</p>}
+        {heroEyebrow && <p class="pv-label font-display text-gold uppercase">{heroEyebrow}</p>}
         <SectionHeading
           headline={heroHeadline}
           subhead={heroSubhead}
@@ -261,6 +262,12 @@ const H2 = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground';
       grid-column: 2;
       width: clamp(130px, 13vw, 200px);
     }
+  }
+  .pv-label {
+    margin: 0 0 0.5em;
+    font-size: clamp(26px, 2.4vw, 34px);
+    line-height: 1;
+    letter-spacing: 0.06em;
   }
   .pv-date {
     margin: clamp(18px, 2.4vw, 28px) 0 0;
