@@ -1,0 +1,336 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand for copy + structure changes.
+// The scripture index (2026-09-24, feat/scripture-search): every passage
+// preached in a sermon preview, Genesis to Revelation, each linked to the
+// post(s) that preached it with the Sunday it was preached. Nothing on this
+// page is stored: each preview's reading is readingOf() over its opening text
+// (the same derivation the post page's Reading row prints), and the grouping,
+// the canonical order and the counts are src/lib/scripture-index.ts, unit
+// tested. A new preview joins the index on the next build (CLAUDE.md rule 15).
+//
+// The page is the register's grammar (Register.astro), with the book where
+// the register hangs its year:
+//
+//   1. Opener on the indigo band: eyebrow, h1, a lede with the derived counts.
+//   2. On paper: the blog's browse row (Filters, "By passage" current), then
+//      the books as a jump list, one line per testament.
+//   3. Old Testament, New Testament: an h2 each, then every book as a group
+//      under a gold rule, its name in the display face in the left columns
+//      and its passages to the right, each passage one ruled row:
+//        reference | post title (a link) | the Sunday
+//      A passage preached twice is one row with two posts.
+//   4. Other readings, only when a reading did not parse (none today): the
+//      reading as written, with its post. Never dropped, never guessed.
+//
+// Each book heading carries the anchor a post's Reading row links to
+// (bookSlug: "1 Corinthians" -> #1-corinthians), and each passage row its
+// own (#jeremiah-29-10-12).
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getAllJournalEntries, getSiteSettings } from '@/lib/queries';
+import { getSectionVisibility } from '@/lib/sectionVisibility';
+import { breadcrumbSchema } from '@/lib/schemas';
+import { site } from '@/data/site';
+import type { RegisterEntry } from '@/lib/blog-derive';
+import { buildScriptureIndex, scriptureRowsOf } from '@/lib/scripture-index';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
+import Opener from '@/components/blog/Opener.astro';
+import Filters from '@/components/blog/Filters.astro';
+
+const [entries, siteSettings] = await Promise.all([getAllJournalEntries(), getSiteSettings()]);
+
+const visible = getSectionVisibility(siteSettings?.sectionVisibility);
+if (!visible.journal) return Astro.redirect('/');
+
+const all = (entries ?? []) as RegisterEntry[];
+const index = buildScriptureIndex(scriptureRowsOf(all));
+const hasAny = index.testaments.length > 0 || index.other.length > 0;
+
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+const lede = hasAny
+  ? `Every passage preached in a sermon preview, from Genesis to Revelation: ${plural(
+      index.passageCount,
+      'passage',
+      'passages',
+    )} from ${plural(index.bookCount, 'book', 'books')}, each with the Sunday it was preached.`
+  : 'Every passage preached in a sermon preview, from Genesis to Revelation.';
+
+const title = `Scripture index | Blog | ${site.name}`;
+const description =
+  'Every Bible passage preached at First Baptist Church Muncie, book by book, with the sermon preview for each.';
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: site.url },
+    { name: 'Blog', url: `${site.url}/blog` },
+    { name: 'Scripture index', url: `${site.url}/blog/scripture` },
+  ]),
+];
+---
+
+<BaseLayout {title} {description} {schemas} {siteSettings}>
+  <Opener eyebrow="Blog" heading="Scripture index" {lede} headingId="scripture-heading" />
+
+  <section class="bg-background" aria-labelledby="scripture-heading">
+    <div class="mx-auto max-w-content px-gutter pt-8 pb-section-lg">
+      <Filters entries={all} scriptureCurrent />
+
+      {
+        index.testaments.length > 0 && (
+          <nav class="jump" aria-label="Books of the Bible">
+            {index.testaments.map((t) => (
+              <p class="jump-line">
+                <span class="jump-t">{t.name}</span>
+                {t.books.map((b) => (
+                  <a href={`#${b.slug}`}>{b.name}</a>
+                ))}
+              </p>
+            ))}
+          </nav>
+        )
+      }
+
+      {
+        !hasAny && (
+          <p class="mt-12 max-w-[62ch] text-body text-brown-ink">
+            The first sermon previews are on their way.
+          </p>
+        )
+      }
+
+      {
+        index.testaments.map((t) => (
+          <div class="testament">
+            <h2 id={`t-${t.key}`} class:list={[H2_DISPLAY, 'text-indigo']}>
+              {t.name}
+            </h2>
+            {t.books.map((b) => (
+              <div class="book">
+                <h3 id={b.slug} class="book-h font-display">
+                  {b.name}
+                </h3>
+                <ol class="rows">
+                  {b.passages.map((p) => (
+                    <li class="row" id={p.id}>
+                      <p class="ref">{p.label}</p>
+                      <ul class="posts">
+                        {p.posts.map((post) => (
+                          <li class="post">
+                            <a href={post.href}>{post.title}</a>
+                            <time datetime={post.iso}>{post.dateLabel}</time>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+          </div>
+        ))
+      }
+
+      {
+        index.other.length > 0 && (
+          <div class="testament">
+            <h2 id="t-other" class:list={[H2_DISPLAY, 'text-indigo']}>
+              Other readings
+            </h2>
+            <div class="book">
+              <ol class="rows">
+                {index.other.map((o) => (
+                  <li class="row">
+                    <p class="ref">{o.reading}</p>
+                    <ul class="posts">
+                      {o.posts.map((post) => (
+                        <li class="post">
+                          <a href={post.href}>{post.title}</a>
+                          <time datetime={post.iso}>{post.dateLabel}</time>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* The jump list: the Filters row's text links, one line per testament. */
+  .jump {
+    margin-top: 22px;
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    letter-spacing: 0.03em;
+  }
+  .jump-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+  }
+  .jump-t {
+    flex-basis: 100%;
+    font-weight: 600;
+    color: var(--color-gold-ink);
+  }
+  .jump a {
+    text-decoration: none;
+    color: var(--color-brown-ink);
+    padding-bottom: 2px;
+    background: linear-gradient(var(--color-gold), var(--color-gold)) 0 100% / 0 1px no-repeat;
+    transition:
+      background-size 0.26s,
+      color 0.2s;
+  }
+  .jump a:hover,
+  .jump a:focus-visible {
+    color: var(--color-indigo);
+    background-size: 100% 1px;
+  }
+  @media (min-width: 1024px) {
+    .jump-t {
+      flex-basis: 9.5em;
+    }
+  }
+
+  .testament {
+    margin-top: clamp(56px, 7vw, 104px);
+  }
+  .testament > h2 {
+    margin: 0 0 clamp(28px, 3vw, 40px);
+  }
+
+  /* A book: the register's year group, with the book where the year hangs. */
+  .book {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+    border-top: 2px solid var(--color-gold);
+    padding-top: 18px;
+    margin-top: clamp(36px, 4.5vw, 56px);
+    scroll-margin-top: var(--header-offset, 96px);
+  }
+  .testament > h2 + .book {
+    margin-top: 0;
+  }
+  .book-h {
+    grid-column: 1 / 5;
+    margin: 0;
+    font-weight: 400;
+    font-size: var(--text-h3);
+    line-height: 1.05;
+    font-variant-numeric: lining-nums;
+    color: var(--color-indigo);
+    scroll-margin-top: var(--header-offset, 96px);
+  }
+  .rows {
+    grid-column: 5 / 13;
+    min-width: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* A passage: reference | post | Sunday, on the register's brown hairline. */
+  .row {
+    display: grid;
+    grid-template-columns: 11em minmax(0, 1fr);
+    column-gap: clamp(18px, 2.6vw, 40px);
+    padding: 14px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    scroll-margin-top: var(--header-offset, 96px);
+  }
+  .row:first-child {
+    padding-top: 4px;
+  }
+  .row:last-child {
+    border-bottom: 0;
+  }
+  .row:target {
+    background: color-mix(in srgb, var(--color-gold) 14%, transparent);
+  }
+  .ref {
+    margin: 0;
+    padding-top: 0.2em;
+    font-family: var(--font-ui);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.35;
+    font-variant-numeric: lining-nums;
+    color: var(--color-brown-ink);
+  }
+  .posts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .post {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2px 24px;
+  }
+  .post + .post {
+    margin-top: 8px;
+  }
+  .post a {
+    min-width: 0;
+    font-family: var(--font-body);
+    font-size: clamp(1.1875rem, 1rem + 0.5vw, 1.4375rem);
+    line-height: 1.2;
+    color: var(--color-indigo);
+    text-decoration: none;
+    background: linear-gradient(var(--color-gold), var(--color-gold)) 0 100% / 0 2px no-repeat;
+    transition: background-size 0.3s;
+  }
+  .post a:hover,
+  .post a:focus-visible {
+    background-size: 100% 2px;
+  }
+  .post a:focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 4px;
+  }
+  .post time {
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    font-variant-numeric: lining-nums;
+    white-space: nowrap;
+    color: var(--color-brown-ink);
+  }
+
+  @media (max-width: 1279px) {
+    .book {
+      display: block;
+    }
+    .book-h {
+      margin-bottom: 8px;
+    }
+  }
+  @media (max-width: 767px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 4px;
+    }
+    .ref {
+      padding-top: 0;
+    }
+    .post {
+      display: block;
+    }
+    .post time {
+      display: block;
+      margin-top: 2px;
+    }
+  }
+</style>

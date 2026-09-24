@@ -54,6 +54,7 @@ import {
   seriesByTag,
   clean,
   type BlogEntry,
+  type RegisterEntry,
 } from '@/lib/blog-derive';
 import { sundayOf, localDay, formatDay, isoDay, readingOf, seriesOf } from '@/lib/sermon-derive';
 import {
@@ -65,6 +66,7 @@ import {
   type BodyNode,
 } from '@/lib/post-body';
 import { doorsFor, seriesRowOf, type Doors, type SeriesRow } from '@/lib/post-neighbours';
+import { buildScriptureIndex, scriptureRowsOf } from '@/lib/scripture-index';
 import { slugify } from '@/lib/slugify';
 import { extractHeadings } from '@/lib/portable-text-headings';
 import { site } from '@/data/site';
@@ -103,6 +105,10 @@ export async function getStaticPaths() {
   for (const h of heads ?? []) if (h?._id) headById.set(h._id, openingText(h.head ?? []));
   const opening = (e: BlogEntry) => headById.get(e._id ?? '') ?? '';
   const all = entries as BlogEntry[];
+  // Where each preview's reading lands on /blog/scripture: the index is built
+  // once here, from the same register entries the index page builds from, so
+  // the Reading row can only link to a book heading that page really has.
+  const scripture = buildScriptureIndex(scriptureRowsOf(entries as RegisterEntry[]));
 
   return all
     .map((e) => ({
@@ -113,13 +119,18 @@ export async function getStaticPaths() {
         // vocabulary (seriesByTag, unchanged), so the rows travel with the path
         // rather than being re-derived 142 times.
         series: seriesByTag(e, all, 3).map((s) => seriesRowOf(s, opening)),
+        readingAnchor: scripture.anchorByPost.get(e._id ?? '') ?? '',
       },
     }))
     .filter((entry) => entry.params.slug);
 }
 
 const { slug } = Astro.params;
-const { doors, series } = Astro.props as { doors: Doors; series: SeriesRow[] };
+const { doors, series, readingAnchor } = Astro.props as {
+  doors: Doors;
+  series: SeriesRow[];
+  readingAnchor: string;
+};
 
 const [entry, siteSettings, journalPage] = await Promise.all([
   getJournalEntryBySlug(slug as string),
@@ -188,7 +199,13 @@ const facts: Fact[] = (
           datetime: sunday ? isoDay(sunday) : undefined,
           big: true,
         },
-        { label: 'Reading', value: readingOf(opening) },
+        {
+          label: 'Reading',
+          value: readingOf(opening),
+          // To this book on the scripture index (/blog/scripture), when the
+          // index lists this post.
+          href: readingAnchor ? `/blog/scripture/#${readingAnchor}` : undefined,
+        },
         { label: 'Series', value: seriesOf(opening) },
         { label: 'Preaching', value: clean(entry.author) },
         { label: 'Listen', value: listen ? 'Livestream and recordings' : '', href: listen },
