@@ -24,6 +24,25 @@
 //    photograph as a figcaption. The alt text still lives on the <img>, for
 //    screen readers, but nothing prints it as reading copy any more.
 //
+// 4. PEOPLE IN ARCHES, BUILDINGS IN RECTANGLES (2026-09-24, the Visit
+//    identity pass; rollout rule 3). The shape pass above is unchanged; what
+//    changes is the frame a ROW, FRAME or WINDOW picture is drawn in. A photo of
+//    people (photo-subject.ts, read from its alt text) is drawn in a door arch
+//    (a wide door for a landscape photo) or, as a portrait, a lancet (the
+//    tower-lancet Lancet.astro stays for a portrait of a place);
+//    a photo of the building keeps its rectangle. The window, the ground, the
+//    plate and the legend are untouched. A people photo may carry a small
+//    second photo (`detail`), drawn in a lancet over its lower corner, cut
+//    out of it by a halo of the band's own ground (the prototype's
+//    "Where the children go"). The heading is in the one band grammar
+//    (H2_DISPLAY, CLAUDE.md rule 17) and the button is the gold plate.
+//
+// 5. A BODY WRITTEN AS ROOMS IS A ROOM BOARD. When every small heading in the
+//    body names its room in brackets ("Nursery Care (104)"), the body is drawn
+//    as the prototype's board: the room number large in the gold-ruled
+//    titling figures, the name beside it, the text under the name, and a
+//    bullet list as quatrefoil lines (roomBoard() in morning-path.ts).
+//
 // 3. THE PICTURE IS ALSO THE PAGE'S SPARE, AND MAY NOT BE THIS ONE.
 //    src/lib/spare-images.ts reads `imageTextSection.image` into the pool the
 //    statement band and the Sunday band borrow from, and a band whose picture
@@ -33,6 +52,8 @@
 //    (`data-photo-shape="none"`): the heading, then the body across the full
 //    grid, and no figure. That is a real layout, not a broken one, which is
 //    why there is no placeholder box.
+import '@/styles/ledger.css';
+import '@/styles/photo-shapes.css';
 import { surfaceClass } from '@/lib/surfaces';
 import SanityImage from '@/components/SanityImage.astro';
 import PortableText from '@/components/PortableText';
@@ -43,9 +64,15 @@ import { classifyRichText, isLedeParagraph } from '@/lib/rich-shape';
 import { photoAspect, resolveLegend, type PhotoShape } from '@/lib/photo-shape';
 import { toPt, type PtBlock } from '@/lib/span-split';
 import { splitStega } from '@/lib/preview-stega';
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import { photoSubject } from '@/lib/photo-subject';
+import { roomBoard } from '@/lib/room-board';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 
 interface Props {
   image?: any;
+  /** A small second photo, drawn over a people photo's corner (note 4). */
+  detail?: any;
   imageSide?: 'left' | 'right';
   eyebrow?: string;
   heading?: string;
@@ -58,6 +85,7 @@ interface Props {
 
 const {
   image,
+  detail,
   imageSide = 'left',
   eyebrow,
   heading,
@@ -105,7 +133,20 @@ const layout = classifyRichText(rest, { hasHead: false, narrow: beside, wide: sh
 const side = imageSide; // the schema default is 'left', which is where the window wants to be
 // ROW width follows the picture (P1's mapping): portrait 4, square 5, landscape 6, wide 7.
 const rowWidth = !dims ? 6 : dims.a < 0.9 ? 4 : dims.a <= 1.15 ? 5 : dims.a < 1.6 ? 6 : 7;
-const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
+// Note 4: people in arches. Only a row or a frame changes frame.
+const people = hasPicture && photoSubject(alt) === 'people';
+const arched = people && (shape === 'row' || shape === 'frame' || shape === 'window');
+// A portrait is a lancet, unless it carries the small lancet over its corner:
+// then the main photo takes the door, so the two arches are not the same shape.
+const lancet = (shape === 'frame' || shape === 'window') && !detail?.asset;
+const archRatio = lancet ? '100 / 150' : dims && dims.a >= 1.25 ? '160 / 124' : '100 / 130';
+const detailAlt = splitStega(detail?.alt ?? '').cleaned;
+const hasDetail = arched && !!detail?.asset;
+const rowBleed = shape === 'row' && !arched && !!dims && dims.a >= 1.15;
+// Note 5: a body written as rooms.
+const board = roomBoard(rest);
+const QF =
+  'M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z';
 ---
 
 <section
@@ -129,8 +170,8 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                 </>
               )}
               {heading && (
-                <h2 id={headingId} class="font-body text-h2 font-normal">
-                  {heading}
+                <h2 id={headingId} class:list={[H2_DISPLAY, 'h-fit']} style={headingFit(heading)}>
+                  <span class="h-fit-in">{heading}</span>
                 </h2>
               )}
               {ledeBlock && (
@@ -148,7 +189,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
             </div>
             {cta?.label && (
               <div class="col-span-12 mt-8">
-                <CtaLink cta={cta} variant="link" />
+                <CtaLink cta={cta} variant="gold" />
               </div>
             )}
           </div>
@@ -168,8 +209,12 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
           <header class="rt-head">
             {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
             {heading && (
-              <h2 id={headingId} class="max-w-[22ch] font-body text-h2 font-normal text-foreground">
-                {heading}
+              <h2
+                id={headingId}
+                class:list={[H2_DISPLAY, 'h-fit max-w-[22ch] text-foreground']}
+                style={headingFit(heading)}
+              >
+                <span class="h-fit-in">{heading}</span>
               </h2>
             )}
           </header>
@@ -213,7 +258,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                 <RichBody pieces={layout.pieces} />
                 {cta?.label && (
                   <div class="col-span-12 mt-8">
-                    <CtaLink cta={cta} variant="link" />
+                    <CtaLink cta={cta} variant="gold" />
                   </div>
                 )}
               </div>
@@ -222,7 +267,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
             <>
               {hasPicture && (
                 <div class="ph-fig" data-reveal>
-                  {shape === 'window' ? (
+                  {shape === 'window' && !arched ? (
                     <figure class="ph-window-wrap">
                       <Lancet image={image} alt={alt} uid={headingId} />
                     </figure>
@@ -239,6 +284,32 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                         />
                       </div>
                     </figure>
+                  ) : arched ? (
+                    <div class:list={['it-arches relative', hasDetail && 'has-detail']}>
+                      <ArchFrame
+                        image={image}
+                        shape={lancet ? 'lancet' : 'door'}
+                        width={1400}
+                        sizes="(min-width: 1024px) 45vw, 100vw"
+                        alt={alt}
+                        grade="warm"
+                        style={`--arch-ratio: ${archRatio}; --arch-mould: var(--color-brown-ink);`}
+                      />
+                      {hasDetail && (
+                        <div class="it-detail">
+                          <span class="it-halo arch-lancet" aria-hidden="true" />
+                          <ArchFrame
+                            image={detail}
+                            shape="lancet"
+                            width={600}
+                            sizes="(min-width: 1024px) 17vw, 38vw"
+                            alt={detailAlt}
+                            grade="warm"
+                            class="relative"
+                          />
+                        </div>
+                      )}
+                    </div>
                   ) : shape === 'frame' ? (
                     <figure class="ph-frame">
                       <div class="ph-hung">
@@ -275,10 +346,72 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                       <PortableText value={toPt(ledeBlock)} variant="bare" />
                     </div>
                   )}
-                  <RichBody pieces={layout.pieces} />
+                  {board ? (
+                    <>
+                      {board.intro.length > 0 && (
+                        <PortableText
+                          value={board.intro.flatMap((b) => toPt(b))}
+                          className="font-body text-body"
+                        />
+                      )}
+                      <ol class="it-rooms">
+                        {board.rooms.map((r) => (
+                          <li data-reveal>
+                            <p class="it-room-no font-display lining-nums">
+                              {r.room.split(/\s*&\s*/).map((part, k) => (
+                                <>
+                                  {k > 0 && <i>&amp;</i>}
+                                  {part}
+                                </>
+                              ))}
+                            </p>
+                            <div class="min-w-0">
+                              <h3
+                                class="it-room-title h-fit font-body"
+                                style={headingFit(r.title, 'body')}
+                              >
+                                <span class="h-fit-in">{r.title}</span>
+                              </h3>
+                              {r.blocks.filter((b) => !b.listItem).length > 0 && (
+                                <PortableText
+                                  value={r.blocks
+                                    .filter((b) => !b.listItem)
+                                    .flatMap((b) => toPt(b))}
+                                  className="it-room-body font-body [&>p+p]:mt-2 [&>p]:my-0"
+                                />
+                              )}
+                              {r.blocks.some((b) => b.listItem) && (
+                                <ul class="it-room-list">
+                                  {r.blocks
+                                    .filter((b) => b.listItem)
+                                    .map((b) => (
+                                      <li>
+                                        <svg
+                                          viewBox="-19 -19 38 38"
+                                          aria-hidden="true"
+                                          focusable="false"
+                                          class="building-glyph mt-[.35em] w-3.5 text-gold"
+                                        >
+                                          <path d={QF} />
+                                        </svg>
+                                        <span>
+                                          {(b.children ?? []).map((c) => c.text).join('')}
+                                        </span>
+                                      </li>
+                                    ))}
+                                </ul>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ol>
+                    </>
+                  ) : (
+                    <RichBody pieces={layout.pieces} />
+                  )}
                   {cta?.label && (
                     <div class="mt-8">
-                      <CtaLink cta={cta} variant="link" />
+                      <CtaLink cta={cta} variant="gold" />
                     </div>
                   )}
                 </div>
@@ -292,7 +425,7 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
                   <RichBody pieces={layout.pieces} />
                   {cta?.label && (
                     <div class="col-span-12 mt-8">
-                      <CtaLink cta={cta} variant="link" />
+                      <CtaLink cta={cta} variant="gold" />
                     </div>
                   )}
                 </div>
@@ -304,3 +437,89 @@ const rowBleed = shape === 'row' && !!dims && dims.a >= 1.15;
     )
   }
 </section>
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+  /* ImageText, people in arches (2026-09-24, the Visit identity pass). The
+   small second photo sits over the main arch's lower corner, cut out of it
+   by a halo of the band's own ground (--band, set by ImageText). */
+  .it-arches.has-detail {
+    padding-bottom: clamp(60px, 7vw, 110px);
+  }
+  .it-detail {
+    position: absolute;
+    right: -3%;
+    bottom: 0;
+    width: 38%;
+  }
+  .it-halo {
+    position: absolute;
+    inset: -10px;
+    background: var(--band);
+    mask-image: var(--arch-mask);
+    mask-size: 100% 100%;
+  }
+  /* A body written as rooms: the room board. */
+  .it-rooms {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--hair);
+  }
+  .it-rooms > li {
+    display: grid;
+    grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+    gap: 6px clamp(18px, 2.4vw, 32px);
+    padding: clamp(20px, 2.2vw, 28px) 0;
+    border-bottom: 1px solid var(--hair);
+  }
+  .it-room-no {
+    margin: 0;
+    font-size: clamp(30px, 2.8vw, 42px);
+    line-height: 1;
+    color: var(--color-indigo);
+    white-space: nowrap;
+  }
+  .it-room-no i {
+    padding: 0 0.12em;
+    font-family: var(--font-body);
+    font-size: 0.55em;
+    color: var(--color-brown-ink);
+  }
+  .it-room-title {
+    margin: 0 0 6px;
+    font-size: clamp(23px, 2vw, 28px);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--color-foreground);
+  }
+  .it-room-body {
+    font-size: 18.5px;
+    line-height: 1.55;
+  }
+  .it-room-list {
+    display: grid;
+    gap: 8px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .it-room-list li {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 12px;
+    font-size: 18px;
+    line-height: 1.45;
+  }
+  @media (max-width: 620px) {
+    .it-rooms > li {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .it-detail {
+      right: 0;
+      width: 40%;
+    }
+  }
+</style>

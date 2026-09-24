@@ -54,7 +54,7 @@ import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
-import { H2_DISPLAY } from '@/lib/heading-grammar';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { getSiteSettings } from '@/lib/queries';
 import type {
   ProjectedCtaBlock,
@@ -63,7 +63,15 @@ import type {
   SanityImageObject,
 } from '@/lib/pageBuilder.types';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
-import { boardRows, type BoardItem, type BoardDoor } from '@/lib/hymn-board';
+import {
+  boardRows,
+  doorTag,
+  readBig,
+  textParagraphs,
+  type BoardItem,
+  type BoardDoor,
+} from '@/lib/hymn-board';
+import { photoSubject } from '@/lib/photo-subject';
 
 /** The notes' neutral mark: a quatrefoil, four circles of radius 9 (BuildingGlyph's QF). */
 const QUATREFOIL =
@@ -165,223 +173,559 @@ const directionsCta = directionsUrl
   : null;
 const hasCta = !!cta?.label;
 const stickyPicture = hasPicture && validNotes.length === 0;
+
+// ── The doors path (2026-09-24, the Visit identity pass) ──────────────────
+// A band WITH doors is "Doors, parking and access" (the Visit prototype's
+// `.access`): the look follows the content, never a colour field (rule 9).
+// Its first item whose big line is words ("309 East Adams") is the Find us
+// block beside the door glyph, with the directions link under it; any timed
+// item is a numeral row above the doors; every other item (a label and text
+// with no big line, like "Assisted Listening") and every plain note is a
+// titled note beside the photo. The photo is a rectangle when it is of the
+// building and a door arch when it is of people (photo-subject.ts); a door
+// whose own directions say it is wheelchair accessible carries the gold tag
+// (doorTag, read from the church's words). The hymn board below (no doors:
+// Home and Contact) is unchanged.
+const hasText = (v: string | null | undefined) => splitStega(v ?? '').cleaned.trim() !== '';
+const validDoors = (doors ?? []).filter(
+  (d): d is BoardDoor => !!d && (hasText(d.name) || hasText(d.body)),
+);
+const doorPath = validDoors.length > 0;
+const itemReads = (items ?? [])
+  .filter(
+    (it): it is BoardItem => !!it && (hasText(it.label) || hasText(it.big) || hasText(it.body)),
+  )
+  .map((it) => ({ item: it, read: readBig(it.big) }));
+const findUsAt = itemReads.findIndex((r) => r.read.kind === 'word');
+const findUs =
+  findUsAt === -1
+    ? null
+    : {
+        label: itemReads[findUsAt].item.label ?? '',
+        big: itemReads[findUsAt].read.big,
+        body: itemReads[findUsAt].item.body ?? '',
+      };
+// With no address item, the street from Site settings stands in the block.
+const findUsFallback = findUs ? '' : (addressLines[0] ?? '');
+const timeRows = boardRows(
+  itemReads.filter((r) => r.read.kind === 'time').map((r) => r.item),
+  [],
+  settings?.serviceTime,
+);
+const sideNotes = [
+  ...itemReads
+    .filter((r, i) => r.read.kind === 'none' || (r.read.kind === 'word' && i !== findUsAt))
+    .map((r) => ({ title: r.item.label ?? '', body: r.item.body ?? '' })),
+  ...validNotes.map((n) => ({ title: '', body: n })),
+];
+const objectPositionOf = (img: SanityImageObject): string => {
+  const h = (img as { hotspot?: { x?: number; y?: number } }).hotspot;
+  return typeof h?.x === 'number' && typeof h?.y === 'number'
+    ? `${(h.x * 100).toFixed(2)}% ${(h.y * 100).toFixed(2)}%`
+    : '50% 50%';
+};
 ---
 
-<section class="bg-band-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
-  <div
-    class:list={[
-      'mx-auto max-w-content px-gutter py-section-lg',
-      hasPicture &&
-        'grid grid-cols-1 gap-y-[clamp(40px,5vw,64px)] lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-[clamp(32px,4vw,64px)]',
-    ]}
-  >
-    {
-      /* ── The pictures (or the map) ─────────────────────────────────────── */
-      hasPicture && (
-        <div
-          class:list={[
-            'relative w-full max-w-[40rem] lg:col-span-6 lg:max-w-none',
-            stickyPicture &&
-              'lg:sticky lg:top-[clamp(104px,12vh,136px)] lg:row-span-2 lg:self-start',
-          ]}
-        >
+{
+  doorPath ? (
+    <section class="bg-band-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
+      <div class="mx-auto grid max-w-content grid-cols-1 items-start gap-y-[clamp(40px,5vw,64px)] px-gutter py-section-lg lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-x-[clamp(40px,6vw,104px)]">
+        <div class="min-w-0">
+          {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
+          {heading && (
+            <h2
+              id={headingId}
+              class:list={[H2_DISPLAY, 'h-fit text-gold']}
+              style={headingFit(heading)}
+            >
+              <span class="h-fit-in">{heading}</span>
+            </h2>
+          )}
+          {intro && (
+            <p class="mt-[clamp(18px,2vw,28px)] max-w-[30em] font-body text-lede leading-normal whitespace-pre-line">
+              {intro}
+            </p>
+          )}
+
+          {(findUs || findUsFallback) && (
+            <div class="sd-findus mt-[clamp(30px,3.4vw,48px)]">
+              <BuildingGlyph name="door" class="sd-findus-glyph text-gold" />
+              {findUs?.label && (
+                <p class="sd-findus-label font-ui text-band-taupe">{findUs.label}</p>
+              )}
+              <p class="sd-findus-big font-display text-bg lining-nums">
+                {findUs ? findUs.big : findUsFallback}
+              </p>
+              <div>
+                {findUs?.body && <p class="font-body text-[1.1875rem] text-bg/90">{findUs.body}</p>}
+                {directionsCta && (
+                  <CtaLink cta={directionsCta} variant="link" onDark class="mt-2.5" />
+                )}
+              </div>
+            </div>
+          )}
+
+          <ul class="sd-doors m-0 list-none p-0">
+            {timeRows.map((row) => (
+              <li>
+                <span class="sd-when font-display text-gold lining-nums">
+                  {row.big}
+                  {row.meridiem && (
+                    <span class="ml-[.14em] font-body text-[.42em] italic">{row.meridiem}</span>
+                  )}
+                </span>
+                <div class="min-w-0">
+                  {row.label && <h3 class="sd-door-name font-body">{row.label}</h3>}
+                  {row.body && <p>{row.body}</p>}
+                </div>
+              </li>
+            ))}
+            {validDoors.map((door) => {
+              const tag = doorTag(door.body);
+              return (
+                <li data-reveal>
+                  <BuildingGlyph name="door" class="mt-0.5 w-8 text-gold" />
+                  <div class="min-w-0">
+                    {door.name && <h3 class="sd-door-name font-body">{door.name}</h3>}
+                    {tag && <span class="sd-tag font-ui">{tag}</span>}
+                    {textParagraphs(door.body).map((p) => (
+                      <p>{p}</p>
+                    ))}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+
+          {hasCta && (
+            <div class="mt-9">
+              <CtaLink cta={cta} variant="gold" onDark />
+            </div>
+          )}
+        </div>
+
+        <div class="sd-side min-w-0">
           {mainPhoto ? (
-            <div class:list={['relative', smallPhoto && 'pb-[clamp(40px,5vw,80px)]']}>
+            photoSubject(altOf(mainPhoto)) === 'people' ? (
               <ArchFrame
                 image={mainPhoto}
                 shape="door"
-                width={1400}
-                sizes="(min-width:1024px) 45vw, 100vw"
+                width={900}
+                sizes="(min-width:1024px) 36vw, 100vw"
                 alt={altOf(mainPhoto)}
                 grade="warm"
-                style="--arch-ratio: 160 / 112;"
               />
-              {smallPhoto && (
-                <div class="absolute right-[-2%] bottom-0 w-[36%]">
-                  <span class="hb-halo arch-lancet" aria-hidden="true" />
-                  <ArchFrame
-                    image={smallPhoto}
-                    shape="lancet"
-                    width={600}
-                    sizes="(min-width:1024px) 16vw, 36vw"
-                    alt={altOf(smallPhoto)}
-                    grade="warm"
-                    class="relative"
-                  />
-                </div>
-              )}
-            </div>
+            ) : (
+              <figure class="sd-rect m-0" data-reveal>
+                <SanityImage
+                  source={mainPhoto}
+                  width={900}
+                  sizes="(min-width:1024px) 36vw, 100vw"
+                  quality={78}
+                  alt={altOf(mainPhoto)}
+                  class="graded h-full w-full object-cover"
+                  style={`object-position: ${objectPositionOf(mainPhoto)};`}
+                />
+              </figure>
+            )
           ) : (
-            <figure class="m-0 border border-gold/40" data-reveal>
-              <SanityImage
-                source={mapImage}
-                width={1400}
-                sizes="(min-width:1024px) 45vw, 100vw"
-                quality={75}
-                alt="Map of the streets around the church"
-                class="block w-full"
-              />
-            </figure>
+            showTheMap && (
+              <figure class="m-0 border border-gold/40" data-reveal>
+                <SanityImage
+                  source={mapImage}
+                  width={1000}
+                  sizes="(min-width:1024px) 36vw, 100vw"
+                  quality={75}
+                  alt="Map of the streets around the church"
+                  class="block w-full"
+                />
+              </figure>
+            )
+          )}
+          {sideNotes.length > 0 && (
+            <ul class="sd-notes m-0 list-none p-0">
+              {sideNotes.map((note) => (
+                <li>
+                  <svg
+                    viewBox="-19 -19 38 38"
+                    aria-hidden="true"
+                    focusable="false"
+                    class="building-glyph mt-[.4em] w-[18px] text-gold"
+                  >
+                    <path d={QUATREFOIL} />
+                  </svg>
+                  <div class="min-w-0">
+                    {note.title && <h3 class="sd-note-title font-ui text-gold">{note.title}</h3>}
+                    {note.body && <p>{note.body}</p>}
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
-      )
-    }
+      </div>
+    </section>
+  ) : (
+    <section class="bg-band-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
+      <div
+        class:list={[
+          'mx-auto max-w-content px-gutter py-section-lg',
+          hasPicture &&
+            'grid grid-cols-1 gap-y-[clamp(40px,5vw,64px)] lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-[clamp(32px,4vw,64px)]',
+        ]}
+      >
+        {
+          /* ── The pictures (or the map) ─────────────────────────────────────── */
+          hasPicture && (
+            <div
+              class:list={[
+                'relative w-full max-w-[40rem] lg:col-span-6 lg:max-w-none',
+                stickyPicture &&
+                  'lg:sticky lg:top-[clamp(104px,12vh,136px)] lg:row-span-2 lg:self-start',
+              ]}
+            >
+              {mainPhoto ? (
+                <div class:list={['relative', smallPhoto && 'pb-[clamp(40px,5vw,80px)]']}>
+                  <ArchFrame
+                    image={mainPhoto}
+                    shape="door"
+                    width={1400}
+                    sizes="(min-width:1024px) 45vw, 100vw"
+                    alt={altOf(mainPhoto)}
+                    grade="warm"
+                    style="--arch-ratio: 160 / 112;"
+                  />
+                  {smallPhoto && (
+                    <div class="absolute right-[-2%] bottom-0 w-[36%]">
+                      <span class="hb-halo arch-lancet" aria-hidden="true" />
+                      <ArchFrame
+                        image={smallPhoto}
+                        shape="lancet"
+                        width={600}
+                        sizes="(min-width:1024px) 16vw, 36vw"
+                        alt={altOf(smallPhoto)}
+                        grade="warm"
+                        class="relative"
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <figure class="m-0 border border-gold/40" data-reveal>
+                  <SanityImage
+                    source={mapImage}
+                    width={1400}
+                    sizes="(min-width:1024px) 45vw, 100vw"
+                    quality={75}
+                    alt="Map of the streets around the church"
+                    class="block w-full"
+                  />
+                </figure>
+              )}
+            </div>
+          )
+        }
 
-    {/* ── The words and the board ─────────────────────────────────────── */}
-    <div
-      class:list={[
-        hasPicture
-          ? 'lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1 xl:col-span-5 xl:col-start-8'
-          : 'mx-auto max-w-[40rem]',
-      ]}
-    >
-      {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
-      {
-        heading && (
-          <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
-            {heading}
-          </h2>
-        )
-      }
-      {
-        intro && (
-          <p class="mt-[clamp(18px,2vw,28px)] max-w-[30em] font-body text-lede leading-normal whitespace-pre-line">
-            {intro}
-          </p>
-        )
-      }
+        {/* ── The words and the board ─────────────────────────────────────── */}
+        <div
+          class:list={[
+            hasPicture
+              ? 'lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1 xl:col-span-5 xl:col-start-8'
+              : 'mx-auto max-w-[40rem]',
+          ]}
+        >
+          {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
+          {heading && (
+            <h2
+              id={headingId}
+              class:list={[H2_DISPLAY, 'h-fit text-gold']}
+              style={headingFit(heading)}
+            >
+              <span class="h-fit-in">{heading}</span>
+            </h2>
+          )}
+          {intro && (
+            <p class="mt-[clamp(18px,2vw,28px)] max-w-[30em] font-body text-lede leading-normal whitespace-pre-line">
+              {intro}
+            </p>
+          )}
 
-      {
-        rows.length > 0 && (
-          <ol
-            class="mt-[clamp(28px,3.5vw,48px)] grid grid-cols-[fit-content(40%)_minmax(0,1fr)] gap-x-[clamp(14px,2vw,24px)] border-t border-gold/35"
-            data-reveal
-          >
-            {rows.map((row) => (
-              <li
-                class:list={[
-                  'col-span-full grid items-baseline border-b border-gold/35 py-[clamp(12px,1.4vw,16px)]',
-                  // A door row on a phone keeps its glyph in a narrow track of
-                  // its own, so the door's long directions get the width the
-                  // time column would otherwise hold empty beside them.
-                  row.kind === 'door'
-                    ? 'grid-cols-[28px_minmax(0,1fr)] gap-x-3.5 sm:grid-cols-subgrid sm:gap-x-[clamp(14px,2vw,24px)]'
-                    : 'grid-cols-subgrid',
-                ]}
-              >
-                {row.kind === 'time' ? (
-                  <span
-                    class:list={[
-                      'min-w-[3.2ch] font-display leading-none whitespace-nowrap text-gold lining-nums',
-                      row.main ? 'text-[clamp(36px,3.8vw,54px)]' : 'text-[clamp(28px,2.8vw,40px)]',
-                    ]}
-                  >
-                    {row.big}
-                    {row.meridiem && (
-                      <span class="ml-[.14em] font-body text-[.42em] italic">{row.meridiem}</span>
-                    )}
-                  </span>
-                ) : row.kind === 'word' ? (
-                  <span class="max-w-full min-w-0 font-display text-[clamp(19px,1.7vw,24px)] leading-[1.1] break-words text-gold">
-                    {row.big}
-                  </span>
-                ) : row.kind === 'door' ? (
-                  <span class="self-start pt-1 text-gold">
-                    <BuildingGlyph name="door" class="w-6" />
-                  </span>
-                ) : (
-                  <span />
-                )}
-                <span class="min-w-0">
-                  {row.label && (
+          {rows.length > 0 && (
+            <ol
+              class="mt-[clamp(28px,3.5vw,48px)] grid grid-cols-[fit-content(40%)_minmax(0,1fr)] gap-x-[clamp(14px,2vw,24px)] border-t border-gold/35"
+              data-reveal
+            >
+              {rows.map((row) => (
+                <li
+                  class:list={[
+                    'col-span-full grid items-baseline border-b border-gold/35 py-[clamp(12px,1.4vw,16px)]',
+                    // A door row on a phone keeps its glyph in a narrow track of
+                    // its own, so the door's long directions get the width the
+                    // time column would otherwise hold empty beside them.
+                    row.kind === 'door'
+                      ? 'grid-cols-[28px_minmax(0,1fr)] gap-x-3.5 sm:grid-cols-subgrid sm:gap-x-[clamp(14px,2vw,24px)]'
+                      : 'grid-cols-subgrid',
+                  ]}
+                >
+                  {row.kind === 'time' ? (
                     <span
                       class:list={[
-                        'block font-body leading-tight',
+                        'min-w-[3.2ch] font-display leading-none whitespace-nowrap text-gold lining-nums',
                         row.main
-                          ? 'text-[clamp(1.375rem,1.1rem+.8vw,1.75rem)] text-white-pure italic'
-                          : 'text-[clamp(1.2rem,1.05rem+.4vw,1.375rem)]',
+                          ? 'text-[clamp(36px,3.8vw,54px)]'
+                          : 'text-[clamp(28px,2.8vw,40px)]',
                       ]}
                     >
-                      {row.label}
+                      {row.big}
+                      {row.meridiem && (
+                        <span class="ml-[.14em] font-body text-[.42em] italic">{row.meridiem}</span>
+                      )}
                     </span>
-                  )}
-                  {row.body && (
-                    <span class="mt-1 block font-ui text-[1rem] leading-snug text-band-taupe">
-                      {row.body}
+                  ) : row.kind === 'word' ? (
+                    <span class="max-w-full min-w-0 font-display text-[clamp(19px,1.7vw,24px)] leading-[1.1] break-words text-gold">
+                      {row.big}
                     </span>
+                  ) : row.kind === 'door' ? (
+                    <span class="self-start pt-1 text-gold">
+                      <BuildingGlyph name="door" class="w-6" />
+                    </span>
+                  ) : (
+                    <span />
                   )}
-                </span>
-              </li>
-            ))}
-          </ol>
-        )
-      }
-
-      {
-        showAddress && (
-          <div class="mt-7">
-            <address class="font-body text-body leading-snug not-italic oldstyle">
-              {addressLines.map((line) => (
-                <span class="block">{line}</span>
+                  <span class="min-w-0">
+                    {row.label && (
+                      <span
+                        class:list={[
+                          'block font-body leading-tight',
+                          row.main
+                            ? 'text-[clamp(1.375rem,1.1rem+.8vw,1.75rem)] text-white-pure italic'
+                            : 'text-[clamp(1.2rem,1.05rem+.4vw,1.375rem)]',
+                        ]}
+                      >
+                        {row.label}
+                      </span>
+                    )}
+                    {row.body && (
+                      <span class="mt-1 block font-ui text-[1rem] leading-snug text-band-taupe">
+                        {row.body}
+                      </span>
+                    )}
+                  </span>
+                </li>
               ))}
-            </address>
-          </div>
-        )
-      }
-      {
-        (hasCta || directionsCta) && (
-          <div
-            class:list={[
-              showAddress ? 'mt-7' : 'mt-9',
-              'flex flex-wrap items-center gap-x-[34px] gap-y-[22px] pb-1.5',
-            ]}
-          >
-            <CtaLink cta={hasCta ? cta : directionsCta} variant="gold" onDark />
-            {hasCta && directionsCta && <CtaLink cta={directionsCta} variant="link" onDark />}
-          </div>
-        )
-      }
+            </ol>
+          )}
 
-      {
-        !hasPicture && validNotes.length > 0 && (
-          <ul class="mt-10 grid max-w-[32em] gap-3.5">
-            {validNotes.map((note) => (
-              <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
-                <svg
-                  viewBox="-19 -19 38 38"
-                  aria-hidden="true"
-                  focusable="false"
-                  class="building-glyph mt-[.3em] w-[18px] text-gold"
-                >
-                  <path d={QUATREFOIL} />
-                </svg>
-                <span>{note}</span>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-    </div>
+          {showAddress && (
+            <div class="mt-7">
+              <address class="font-body text-body leading-snug not-italic oldstyle">
+                {addressLines.map((line) => (
+                  <span class="block">{line}</span>
+                ))}
+              </address>
+            </div>
+          )}
+          {(hasCta || directionsCta) && (
+            <div
+              class:list={[
+                showAddress ? 'mt-7' : 'mt-9',
+                'flex flex-wrap items-center gap-x-[34px] gap-y-[22px] pb-1.5',
+              ]}
+            >
+              <CtaLink cta={hasCta ? cta : directionsCta} variant="gold" onDark />
+              {hasCta && directionsCta && <CtaLink cta={directionsCta} variant="link" onDark />}
+            </div>
+          )}
 
-    {
-      /* ── The notes, under the pictures ─────────────────────────────────── */
-      hasPicture && validNotes.length > 0 && (
-        <ul class="grid max-w-[32em] content-start gap-3.5 self-start lg:col-span-6 lg:row-start-2">
-          {validNotes.map((note) => (
-            <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
-              <svg
-                viewBox="-19 -19 38 38"
-                aria-hidden="true"
-                focusable="false"
-                class="building-glyph mt-[.3em] w-[18px] text-gold"
-              >
-                <path d={QUATREFOIL} />
-              </svg>
-              <span>{note}</span>
-            </li>
-          ))}
-        </ul>
-      )
+          {!hasPicture && validNotes.length > 0 && (
+            <ul class="mt-10 grid max-w-[32em] gap-3.5">
+              {validNotes.map((note) => (
+                <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
+                  <svg
+                    viewBox="-19 -19 38 38"
+                    aria-hidden="true"
+                    focusable="false"
+                    class="building-glyph mt-[.3em] w-[18px] text-gold"
+                  >
+                    <path d={QUATREFOIL} />
+                  </svg>
+                  <span>{note}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {
+          /* ── The notes, under the pictures ─────────────────────────────────── */
+          hasPicture && validNotes.length > 0 && (
+            <ul class="grid max-w-[32em] content-start gap-3.5 self-start lg:col-span-6 lg:row-start-2">
+              {validNotes.map((note) => (
+                <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
+                  <svg
+                    viewBox="-19 -19 38 38"
+                    aria-hidden="true"
+                    focusable="false"
+                    class="building-glyph mt-[.3em] w-[18px] text-gold"
+                  >
+                    <path d={QUATREFOIL} />
+                  </svg>
+                  <span>{note}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </section>
+  )
+}
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+  /* Doors, parking and access (SundayTimes.astro's doors path, 2026-09-24, the
+   Visit identity pass; the prototype's .access). */
+  .sd-findus {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 4px 22px;
+    align-items: start;
+    padding-bottom: clamp(28px, 3vw, 40px);
+    margin-bottom: clamp(8px, 1vw, 14px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  }
+  .sd-findus > :not(.sd-findus-glyph) {
+    grid-column: 2;
+  }
+  .sd-findus-glyph {
+    grid-row: 1 / 4;
+    width: 44px;
+    margin-top: 6px;
+  }
+  .sd-findus-label {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .sd-findus-big {
+    margin: 2px 0 10px;
+    font-size: clamp(34px, 3.4vw, 50px);
+    line-height: 1.02;
+  }
+  /* One first column for every row, as wide as its widest cell: a door
+     glyph (36px) or a time ("10:45 am"), so the titles share one edge. */
+  .sd-doors {
+    display: grid;
+    grid-template-columns: minmax(36px, max-content) minmax(0, 1fr);
+    column-gap: 20px;
+  }
+  .sd-doors > li {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    padding: clamp(20px, 2.2vw, 28px) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  }
+  .sd-doors p,
+  .sd-notes p {
+    margin: 6px 0 0;
+    max-width: 36em;
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  }
+  .sd-door-name {
+    margin: 0;
+    font-size: clamp(23px, 1.9vw, 27px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--color-bg);
+  }
+  .sd-when {
+    font-size: 26px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  .sd-tag {
+    display: inline-block;
+    margin: 8px 0 4px;
+    padding: 3px 8px 2px;
+    border-radius: 2px;
+    background: var(--color-gold);
+    color: var(--color-band-ink);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .sd-rect {
+    aspect-ratio: 4 / 5;
+  }
+  .sd-notes {
+    display: grid;
+    gap: 26px;
+    margin-top: clamp(30px, 3vw, 44px);
+  }
+  .sd-notes > li {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .sd-note-title {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .sd-notes p {
+    margin-top: 0;
+  }
+  @media (max-width: 1023px) {
+    .sd-side {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
     }
-  </div>
-</section>
+    .sd-notes {
+      margin-top: 0;
+    }
+  }
+  @media (max-width: 620px) {
+    .sd-findus {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .sd-findus > :not(.sd-findus-glyph) {
+      grid-column: 1;
+    }
+    .sd-findus-glyph {
+      grid-row: auto;
+      width: 34px;
+      margin: 0 0 6px;
+    }
+    .sd-side {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .sd-rect {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20). */
+  /* The hymn board's small lancet (SundayTimes.astro) is cut out of the door
+   photo behind it by a halo of the band's own brown, 10px proud of the arch
+   (the lancet mask comes from .arch-lancet on the same element). */
+  .hb-halo {
+    position: absolute;
+    inset: -10px;
+    background: var(--color-band-brown);
+    mask-image: var(--arch-mask);
+    mask-size: 100% 100%;
+  }
+</style>

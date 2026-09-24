@@ -79,3 +79,18 @@ export function heritageBookends(dates: ReadonlyArray<HeritageDate>): string[] {
   const last = outerYear(years[years.length - 1], 'last');
   return first === last ? [first] : [first, last];
 }
+
+/**
+ * The year an undated building band sets large above its heading (2026-09-24,
+ * the Visit identity pass: "1929" over "Our building"). Derived from the
+ * band's own text, never typed (CLAUDE.md rule 15): the first four-digit year
+ * from 1500 to 2099 in the heading, else in the body. None gives null, and the
+ * band draws no numeral. Read on the stega-cleaned text.
+ */
+export function bandYear(heading: unknown, body: unknown): string | null {
+  for (const text of [clean(heading), clean(body)]) {
+    const m = text.match(/\b(1[5-9]\d\d|20\d\d)\b/);
+    if (m) return m[1];
+  }
+  return null;
+}

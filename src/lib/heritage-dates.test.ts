@@ -1,7 +1,7 @@
 // scaffold-file: church
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { heritageDates, heritageBookends } from './heritage-dates.ts';
+import { bandYear, heritageDates, heritageBookends } from './heritage-dates.ts';
 
 // A stega run as the preview client appends it (U+FEFF matches \s).
 const STEGA = '​​​​' + '‌‍﻿​'.repeat(40);
@@ -156,4 +156,12 @@ test('bookends take the outer years of a range, not the whole range', () => {
     ]),
     ['Early days', '1929'],
   );
+});
+
+test('bandYear takes the first year from the heading, else the body', () => {
+  assert.equal(bandYear('Our building', 'Completed in 1929. On the Register since 1988.'), '1929');
+  assert.equal(bandYear('Built in 1929', 'Since 1988.'), '1929');
+  assert.equal(bandYear('Our building', 'No year here, and 123 is not one.'), null);
+  assert.equal(bandYear(undefined, null), null);
+  assert.equal(bandYear('Our building' + STEGA, 'completed in 1929' + STEGA), '1929');
 });

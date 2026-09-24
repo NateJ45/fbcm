@@ -116,6 +116,10 @@ export const heroSection = defineType({
       type: 'string',
       validation: (R) => R.required(),
     }),
+    // The colour accent (2026-09-24, the Visit identity pass): on the window
+    // layout the accent words close the headline in the gold capitals ("What
+    // to Expect / ON SUNDAY"). Optional and additive, so no stored hero changes.
+    headingAccentField(),
     defineField({ name: 'subhead', title: 'Subhead', type: 'text', rows: 2 }),
     imageWithAlt('backgroundImage', 'Background photo (optional)'),
     defineField({
@@ -278,6 +282,26 @@ export const imageTextSection = defineType({
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
     proseBody('body', 'Text'),
     defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
+    // A second, smaller photo (2026-09-24, the Visit identity pass): drawn in a
+    // small arched window overlapping the corner of a photo of people. Optional
+    // and additive; a band without one draws exactly as before.
+    defineField({
+      name: 'detail',
+      title: 'Small second photo (optional)',
+      type: 'image',
+      options: { hotspot: true },
+      description:
+        'Shown small, in an arched window over the corner of the main photo, when the main photo shows people.',
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+          description: 'Describe the photo in a few words, for screen readers and search engines.',
+          validation: (R) => R.required(),
+        }),
+      ],
+    }),
     anchorField(),
   ],
   preview: {

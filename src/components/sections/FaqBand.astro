@@ -1,35 +1,33 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: questions and answers on the indigo field. Native
-// <details> elements, so the keyboard works, find-in-page finds a closed
-// answer, and no JavaScript ships. The first question opens by default so the
-// band never reads as a stack of closed doors.
+// Page-builder block: questions and answers, drawn as THE FAQ BAND (2026-09-24,
+// the Visit identity pass; the prototype's `.faq`,
+// docs/superpowers/prototypes/2026-09-23-visit/visit.html).
 //
-// The heading sits in the narrow left column and the questions run down the
-// right, which is the grammar every other band on these pages took in task 8.
+// The deep indigo brand band (--color-band-deep, the same in both themes, so
+// it is dark BY TYPE and carries no colour field, CLAUDE.md rule 9). The
+// heading sits in the narrow left column under the rose glyph and holds its
+// place while the questions scroll; the questions run down the right between
+// gold hairlines. Native <details>, so the keyboard works, find-in-page finds
+// a closed answer, and no JavaScript ships. The first question opens by
+// default so the band never reads as a stack of closed doors.
 //
-// The only ornament is the plus sign, which rotates 45 degrees into a cross
-// when its question opens. It is the one thing on the band that has to say
-// "this opens", so it is in the UI face, in gold, at the size of the question
-// it belongs to.
+// The one mark that says "this opens" is the small quatrefoil at the end of
+// each question: an outline when closed, filled gold when open.
 //
-// SELF_CONTAINED: the band is dark by type. Everything on it uses text-bg
-// rather than text-cream, because --color-cream flips to ink under .dark
-// (globals.css) while --color-bg stays paper-white, and this band stays dark
-// in both themes.
+// The heading is in the one band grammar (H2_DISPLAY, rule 17) and is sized
+// by its longest word: a heading with a word of ten letters or more
+// ("Frequently asked questions") steps down a size, and headingFit caps it so
+// no word breaks in the narrow column (rollout rule 9).
 //
 // THE ANSWER'S COLOUR IS AN OVERRIDE, and it has to be. PortableText.tsx
-// hard-codes text-foreground on every paragraph, list and list item, which is
-// right on paper and invisible on this band: in light mode text-foreground is
-// the dark ink the band is already painted with, so the answers rendered as
-// blank space. Passing a colour on the wrapper does not help, because the
-// class on the <p> beats the class on its parent. The arbitrary descendant
-// variants below ([&_p]:...) generate `.wrapper p { ... }`, which outranks a
-// single class, so they win without anyone having to edit the shared
-// PortableText component and re-render every other page.
-import SectionHeading from '@/components/SectionHeading.astro';
+// hard-codes text-foreground on every paragraph, which is invisible on a
+// fixed dark band in light mode. The arbitrary descendant variants below
+// ([&_p]:...) generate `.wrapper p { ... }`, which outranks a single class.
 import PortableText from '@/components/PortableText';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import { H2_DISPLAY, headingFit, longestWord } from '@/lib/heading-grammar';
 
 interface FaqItem {
   _key?: string;
@@ -46,42 +44,60 @@ interface Props {
 
 const { eyebrow, heading, items = [], headingId } = Astro.props as Props;
 const validItems = items.filter((i) => i?.question);
+// A heading whose longest word is 10 letters or more steps down a size.
+const long = longestWord(heading) >= 10;
+// The long step keeps the grammar's face and weight and changes only the size.
+const headingClass = long
+  ? H2_DISPLAY.replace('text-h2', 'text-[clamp(1.875rem,1.1rem+2vw,2.75rem)]').replace(
+      'leading-[1.02]',
+      'leading-[1.06]',
+    )
+  : H2_DISPLAY;
+/** The quatrefoil, four circles about the origin (BuildingGlyph's QF, smaller). */
+const QF = 'M-5-5A6.2 6.2 0 1 1 5-5A6.2 6.2 0 1 1 5 5A6.2 6.2 0 1 1-5 5A6.2 6.2 0 1 1-5-5Z';
 ---
 
-<section class="bg-indigo-field text-bg" aria-labelledby={heading ? headingId : undefined}>
+<section class="bg-band-deep text-bg" aria-labelledby={heading ? headingId : undefined}>
   <div class="mx-auto max-w-content px-gutter py-section-lg">
     <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)]">
       <div
         class="col-span-12 self-start lg:sticky lg:top-[calc(var(--header-offset)+1rem)] lg:col-span-4"
       >
-        <SectionHeading
-          eyebrow={eyebrow}
-          headline={heading}
-          headingId={headingId}
-          level="h2"
-          align="left"
-          tone="band"
-        />
+        <BuildingGlyph name="rose" class="mb-[22px] w-14 text-gold" />
+        {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
+        {
+          heading && (
+            <h2
+              id={headingId}
+              class:list={[headingClass, 'h-fit text-gold']}
+              style={headingFit(heading)}
+            >
+              <span class="h-fit-in">{heading}</span>
+            </h2>
+          )
+        }
       </div>
 
       {
         validItems.length > 0 && (
-          <div class="col-span-12 mt-9 min-w-0 overflow-x-clip lg:col-span-8 lg:col-start-5 lg:mt-0">
+          <div class="col-span-12 mt-9 min-w-0 border-t border-gold/45 lg:col-span-8 lg:col-start-5 lg:mt-0">
             {validItems.map((item, i) => (
-              <details class="group" open={i === 0}>
-                <summary class="flex cursor-pointer list-none justify-between gap-6 border-b border-bg/15 py-5 font-body text-[1.375rem] leading-snug font-normal text-bg [&::-webkit-details-marker]:hidden">
-                  <span>{item.question}</span>
-                  <span
+              <details class="faq-q group border-b border-gold/45" open={i === 0}>
+                <summary class="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_28px] items-center gap-5 py-[clamp(20px,2.2vw,28px)] font-body text-[clamp(1.3rem,1.1rem+.6vw,1.5625rem)] leading-[1.3] text-bg [&::-webkit-details-marker]:hidden">
+                  <span class="faq-q-text">{item.question}</span>
+                  <svg
+                    viewBox="-16 -16 32 32"
                     aria-hidden="true"
-                    class="shrink-0 font-ui text-2xl leading-none text-gold transition-transform duration-200 group-open:rotate-45"
+                    focusable="false"
+                    class="building-glyph faq-mark w-6 text-gold"
                   >
-                    +
-                  </span>
+                    <path d={QF} />
+                  </svg>
                 </summary>
                 {item.answer && (
                   <PortableText
                     value={item.answer}
-                    className="max-w-[62ch] pb-6 font-body text-body text-bg/80 [&_a]:text-gold [&_li]:text-bg/80 [&_p]:text-bg/80 [&_strong]:text-bg [&_ul]:text-bg/80"
+                    className="max-w-[40em] pb-[clamp(22px,2.4vw,32px)] font-body text-[1.1875rem] leading-[1.6] lg:pr-12 [&_a]:text-gold [&_li]:text-bg/85 [&_p]:my-0 [&_p]:text-bg/85 [&_strong]:text-bg [&_ul]:text-bg/85"
                   />
                 )}
               </details>
@@ -92,3 +108,23 @@ const validItems = items.filter((i) => i?.question);
     </div>
   </div>
 </section>
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+  /* The FAQ band's mark (FaqBand.astro): an outline quatrefoil that fills
+   when its question is open. */
+  .faq-mark path {
+    transition: fill 0.25s;
+  }
+  .faq-q[open] .faq-mark path {
+    fill: currentColor;
+  }
+  .faq-q summary:hover .faq-q-text {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+</style>
