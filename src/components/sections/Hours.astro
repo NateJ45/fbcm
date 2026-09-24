@@ -17,7 +17,8 @@
 // no cadence surface and carries no colour field (rule 9). The Tudor door
 // glyph stands at the left above the heading, the one building glyph on the
 // band: this is the notice on the office door. The heading is the one church
-// band h2 (H2_DISPLAY, rule 17) in brand indigo. On the right, each group of
+// band h2 (H2_DISPLAY, rule 17) in brand indigo, fitted so no word breaks
+// mid-word (headingFit). On the right, each group of
 // hours is a short ruled list: the days in indigo Castoro, the times beside
 // them larger and in old-style figures, because the time is what a visitor
 // came for. The day/time split is DERIVED from the line the office typed
@@ -35,7 +36,7 @@
 // ships only on the pages that draw the band (CLAUDE.md rule 20).
 import PortableTextStatic from '@/components/PortableTextStatic.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
-import { H2_DISPLAY } from '@/lib/heading-grammar';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { getSiteSettings } from '@/lib/queries';
 import { hoursLines, type HoursBlock } from '@/lib/office-hours';
 import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
@@ -90,8 +91,8 @@ const groups = [
       {eyebrow && <p class="hd-eyebrow font-ui text-ui">{eyebrow}</p>}
       {
         heading && (
-          <h2 id={headingId} class:list={[H2_DISPLAY, 'hd-h2']}>
-            {heading}
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'hd-h2 h-fit']} style={headingFit(heading)}>
+            <span class="h-fit-in">{heading}</span>
           </h2>
         )
       }
