@@ -19,7 +19,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { isLiveNow, LIVE_WINDOW_MINUTES, SERVICE_TIME_ZONE } from './live-service.ts';
+import {
+  inCheckWindow,
+  isLiveNow,
+  resolveLive,
+  CHECK_AFTER_MINUTES,
+  CHECK_BEFORE_MINUTES,
+  LIVE_WINDOW_MINUTES,
+  SERVICE_TIME_ZONE,
+  STATUS_FRESH_MS,
+  type ClientLiveStatus,
+} from './live-service.ts';
 
 const layout = readFileSync(
   fileURLToPath(new URL('../layouts/BaseLayout.astro', import.meta.url)),
@@ -82,6 +92,77 @@ test('the inline window logic agrees with the module over a spread of instants',
   for (const s of settings) {
     for (const now of instants) {
       assert.equal(inlineIsLive(now, s), isLiveNow(now, s), `${s} at ${now.toISOString()}`);
+    }
+  }
+});
+
+// A real "Live now" (2026-09-24): the check window, the freshness limit and
+// the decision between the endpoint's answer and the clock are inlined too.
+test('the inline copy uses the same check window, freshness and endpoint', () => {
+  assert.ok(
+    inlineScript.includes(`CHECK_BEFORE = ${CHECK_BEFORE_MINUTES};`),
+    'check start differs',
+  );
+  assert.ok(inlineScript.includes(`CHECK_AFTER = ${CHECK_AFTER_MINUTES};`), 'check end differs');
+  assert.ok(inlineScript.includes(`FRESH = ${STATUS_FRESH_MS};`), 'freshness differs');
+  assert.ok(inlineScript.includes("fetch('/api/live-status'"), 'endpoint path differs');
+  // At most once a minute: the throttle, and the one-minute tick.
+  assert.ok(inlineScript.includes('< 55000) return;'), 'throttle differs');
+  assert.ok(inlineScript.includes('setInterval(tick, 60000)'), 'tick differs');
+});
+
+test('the inline safe-URL pattern is the module one', () => {
+  const moduleSrc = readFileSync(
+    fileURLToPath(new URL('./live-service.ts', import.meta.url)),
+    'utf8',
+  );
+  const pattern = /^https:\/\/(www\.)?youtube\.com\/[\w?=&/.-]+$/;
+  assert.ok(inlineScript.includes(pattern.source), 'inline safe-URL pattern differs');
+  assert.ok(moduleSrc.includes(pattern.source), 'module safe-URL pattern differs');
+});
+
+test('the inline check window and decision agree with the module', () => {
+  const start = inlineScript.indexOf('var TZ');
+  const end = inlineScript.indexOf('function upgradeLive');
+  const factory = new Function(
+    `${inlineScript.slice(start, end)}; return { inCheckWindow: inCheckWindow, resolve: resolve };`,
+  ) as () => {
+    inCheckWindow: (now: Date, t: string) => boolean;
+    resolve: (
+      now: Date,
+      t: string,
+      st: ClientLiveStatus | null,
+    ) => { live: boolean; href?: string };
+  };
+  const inline = factory();
+  const instants: Date[] = [];
+  for (const day of ['2026-09-27T00:00:00Z', '2026-12-06T00:00:00Z']) {
+    const t0 = new Date(day).getTime();
+    for (let m = 0; m < 2 * 1440; m += 15) instants.push(new Date(t0 + m * 60_000));
+  }
+  const url = 'https://www.youtube.com/watch?v=abcdefghijk';
+  for (const s of ['Sundays at 10:45 am', '6:30 P.M.', '']) {
+    for (const now of instants) {
+      assert.equal(
+        inline.inCheckWindow(now, s),
+        inCheckWindow(now, s),
+        `${s} ${now.toISOString()}`,
+      );
+      const statuses: Array<ClientLiveStatus | null> = [
+        null,
+        { status: 'live', url, at: now.getTime() - 5_000 },
+        { status: 'live', url: 'https://evil.example/', at: now.getTime() - 5_000 },
+        { status: 'not-live', at: now.getTime() - 5_000 },
+        { status: 'unknown', at: now.getTime() - 5_000 },
+        { status: 'live', url, at: now.getTime() - STATUS_FRESH_MS },
+      ];
+      for (const st of statuses) {
+        assert.deepEqual(
+          inline.resolve(now, s, st),
+          resolveLive(now, s, st),
+          `${s} ${now.toISOString()} ${JSON.stringify(st)}`,
+        );
+      }
     }
   }
 });

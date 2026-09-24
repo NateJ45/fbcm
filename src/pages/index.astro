@@ -11,11 +11,27 @@ import { getHomePage, getSiteSettings } from '@/lib/queries';
 import { site } from '@/data/site';
 import { DEFAULT_HOME_SECTIONS } from '@/data/defaultSections';
 import { shouldOverlayHeader } from '@/lib/heroOverlay';
+import type { SundaySermon } from '@/lib/live-sunday';
+// scaffold: journal
+import { getAllJournalEntries } from '@/lib/queries';
+import { sermonForUpcomingSunday } from '@/lib/sunday-sermon';
+import type { RegisterEntry } from '@/lib/blog-derive';
+// scaffold:end
 
 const [page, siteSettings] = await Promise.all([
   getHomePage().catch(() => null),
   getSiteSettings().catch(() => null),
 ]);
+
+// THIS SUNDAY'S SERMON (2026-09-24). The build's "now", on the church's
+// calendar, picks the preview written for the coming Sunday, if the church has
+// posted one; the hero's dated line then names it. The upgrade script in
+// BaseLayout drops it again when the page outlives that Sunday.
+let sermon: SundaySermon | null = null;
+// scaffold: journal
+const journal = (await getAllJournalEntries().catch(() => [])) as RegisterEntry[];
+sermon = sermonForUpcomingSunday(journal, new Date());
+// scaffold:end
 
 const title = page?.seoTitle ?? site.name;
 const description =
@@ -30,5 +46,5 @@ const overlayHeader = shouldOverlayHeader(sections as any);
 ---
 
 <BaseLayout {title} {description} {siteSettings} {overlayHeader} seoImage={page?.seoImage}>
-  <SectionRenderer {sections} idPrefix="home" settings={siteSettings} />
+  <SectionRenderer {sections} idPrefix="home" settings={siteSettings} {sermon} />
 </BaseLayout>

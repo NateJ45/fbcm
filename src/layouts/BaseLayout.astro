@@ -326,7 +326,15 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         text differs: assigning textContent replaces the node even when the
         string is identical, and a replaced node is exactly what re-arms LCP.
 
-        The two functions are hand-inlined copies of src/lib/live-sunday.ts,
+        THIS SUNDAY'S SERMON (2026-09-24). When the build found a sermon
+        preview for the coming Sunday, the hero's span carries
+        data-sermon-sunday (that Sunday, YYYY-MM-DD) and a sibling
+        [data-sunday-sermon] holds the link. The line then leaves the service
+        time off, and the sermon is hidden again, and the time put back, as
+        soon as the Sunday the line names is no longer the preview's (a site
+        not rebuilt after Sunday). Same moment as the date: before first paint.
+
+        The functions are hand-inlined copies of src/lib/live-sunday.ts,
         which is where the unit tests are (live-sunday-inline.test.ts is the
         drift gate). An is:inline script cannot import. Keep the two in step.
         It runs under prefers-reduced-motion too, because this is text, not
@@ -336,21 +344,41 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         function timeOnly(t) {
           return t.replace(/^Sundays?\s+at\s+/i, '').trim();
         }
-        function formatLiveSunday(now, t) {
+        function formatLiveSunday(now, t, withSermon) {
           var add = (7 - now.getDay()) % 7;
-          if (add === 0) return 'Today · Worship at ' + timeOnly(t);
+          var worship = withSermon ? '' : ' · Worship at ' + timeOnly(t);
+          if (add === 0) return 'Today' + worship;
           var s = new Date(now);
           s.setDate(now.getDate() + add);
           var label = s.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-          return 'This Sunday, ' + label + ' · Worship at ' + timeOnly(t);
+          return 'This Sunday, ' + label + worship;
+        }
+        function lineSundayIso(now) {
+          var s = new Date(now);
+          s.setDate(now.getDate() + ((7 - now.getDay()) % 7));
+          var p = function (n) {
+            return (n < 10 ? '0' : '') + n;
+          };
+          return s.getFullYear() + '-' + p(s.getMonth() + 1) + '-' + p(s.getDate());
+        }
+        function liveSundayLine(now, t, sermonSunday) {
+          var sermon = !!sermonSunday && lineSundayIso(now) === sermonSunday;
+          return { text: formatLiveSunday(now, t, sermon), sermon: sermon };
         }
         function upgradeSunday() {
           var nodes = document.querySelectorAll('[data-live-sunday]');
           for (var i = 0; i < nodes.length; i++) {
             var t = nodes[i].getAttribute('data-live-sunday');
             if (!t) continue;
-            var next = formatLiveSunday(new Date(), t);
-            if (nodes[i].textContent !== next) nodes[i].textContent = next;
+            var sermonSunday = nodes[i].getAttribute('data-sermon-sunday') || '';
+            var line = liveSundayLine(new Date(), t, sermonSunday);
+            if (nodes[i].textContent !== line.text) nodes[i].textContent = line.text;
+            // This Sunday's sermon (2026-09-24) stays only while the Sunday
+            // the line names is the one its preview was written for.
+            if (sermonSunday && nodes[i].parentNode) {
+              var sermon = nodes[i].parentNode.querySelector('[data-sunday-sermon]');
+              if (sermon && sermon.hidden === line.sermon) sermon.hidden = !line.sermon;
+            }
           }
         }
         window.__liveSunday = upgradeSunday;
@@ -866,15 +894,32 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         left open at 10:44 turns over at 10:45, and after every View
         Transitions navigation.
 
-        serviceStart and isLive are hand-inlined copies of
-        serviceStartMinutes / weekMinutesIn / isLiveNow in
-        src/lib/live-service.ts, where the unit tests are; the drift gate is
-        src/lib/live-service-inline.test.ts. The mobile menu imports the
-        module directly, because its rows only render in the browser. */}
+        A REAL "LIVE NOW" (2026-09-24). Inside the wider check window (from
+        75 minutes before the service to 135 after, church time) it also asks
+        /api/live-status whether the YouTube channel is actually on air, on
+        load and then at most once a minute, never outside the window, and
+        never in a way that blocks anything: the clock's answer is on screen
+        first and the endpoint's replaces it when it arrives. A fresh "live"
+        says "Live now" (and points the link at the live video when YouTube
+        named one); a fresh "not-live" says "Watch live" even at 10:50; an
+        "unknown" (no API key configured, YouTube failing), a failed request
+        or an answer older than 150 s leaves the clock in charge, exactly as
+        before. The last answer sits on window.__liveStatus for the mobile
+        menu, which reads it through resolveLive() when it opens.
+
+        serviceStart, isLive, inCheckWindow and resolve are hand-inlined
+        copies of serviceStartMinutes / weekMinutesIn / isLiveNow /
+        inCheckWindow / resolveLive in src/lib/live-service.ts, where the unit
+        tests are; the drift gate is src/lib/live-service-inline.test.ts. The
+        mobile menu imports the module directly, because its rows only render
+        in the browser. */}
     <script is:inline>
       (function () {
         var TZ = 'America/Indiana/Indianapolis';
         var WINDOW = 75;
+        var CHECK_BEFORE = 75;
+        var CHECK_AFTER = 135;
+        var FRESH = 150000;
         function serviceStart(t) {
           var m = /^(\d{1,2})(?::(\d{2}))?\s*(?:([ap])\.?\s*m\.?)?$/i.exec(
             t.replace(/^Sundays?\s+at\s+/i, '').trim(),
@@ -888,9 +933,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           if (ap === 'p' && h !== 12) h += 12;
           return h * 60 + min;
         }
-        function isLive(now, t) {
-          var start = serviceStart(t);
-          if (start === null) return false;
+        function weekMinutes(now) {
           var parts = new Intl.DateTimeFormat('en-US', {
             timeZone: TZ,
             weekday: 'short',
@@ -903,27 +946,86 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
             return '';
           };
           var day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
-          var w = day * 1440 + Number(get('hour')) * 60 + Number(get('minute'));
+          return day * 1440 + Number(get('hour')) * 60 + Number(get('minute'));
+        }
+        function isLive(now, t) {
+          var start = serviceStart(t);
+          if (start === null) return false;
+          var w = weekMinutes(now);
           return w >= start && w < start + WINDOW;
+        }
+        function inCheckWindow(now, t) {
+          var start = serviceStart(t);
+          if (start === null) return false;
+          var w = weekMinutes(now);
+          return w >= start - CHECK_BEFORE && w < start + CHECK_AFTER;
+        }
+        function safeUrl(u) {
+          return typeof u === 'string' && /^https:\/\/(www\.)?youtube\.com\/[\w?=&/.-]+$/.test(u)
+            ? u
+            : undefined;
+        }
+        function resolve(now, t, st) {
+          var age = st ? now.getTime() - st.at : -1;
+          if (st && age >= 0 && age < FRESH && inCheckWindow(now, t)) {
+            if (st.status === 'live') return { live: true, href: safeUrl(st.url) };
+            if (st.status === 'not-live') return { live: false };
+          }
+          return { live: isLive(now, t) };
         }
         function upgradeLive() {
           var links = document.querySelectorAll('[data-live-service]');
           for (var i = 0; i < links.length; i++) {
             var a = links[i];
-            var live = false;
+            var state = { live: false };
             try {
-              live = isLive(new Date(), a.getAttribute('data-live-service') || '');
+              state = resolve(new Date(), a.getAttribute('data-live-service') || '', window.__liveStatus);
             } catch (_) { /* no Intl time zone support: stay "Watch live" */ }
-            a.toggleAttribute('data-live', live);
+            a.toggleAttribute('data-live', state.live);
             var label = a.querySelector('[data-live-label]');
-            if (label) label.textContent = live ? 'Live now' : 'Watch live';
+            if (label) label.textContent = state.live ? 'Live now' : 'Watch live';
+            // The link's own address is kept aside the first time, so it can
+            // go back to the streams page when the broadcast ends.
+            if (!a.hasAttribute('data-watch-href')) a.setAttribute('data-watch-href', a.getAttribute('href') || '');
+            var href = state.href || a.getAttribute('data-watch-href');
+            if (href && a.getAttribute('href') !== href) a.setAttribute('href', href);
           }
         }
-        upgradeLive();
+        var asked = 0;
+        function askYouTube() {
+          var link = document.querySelector('[data-live-service]');
+          if (!link || !window.fetch) return;
+          try {
+            if (!inCheckWindow(new Date(), link.getAttribute('data-live-service') || '')) return;
+          } catch (_) {
+            return;
+          }
+          if (Date.now() - asked < 55000) return;
+          asked = Date.now();
+          fetch('/api/live-status', { headers: { Accept: 'application/json' } })
+            .then(function (r) {
+              return r.ok ? r.json() : null;
+            })
+            .then(function (j) {
+              window.__liveStatus =
+                j && typeof j.status === 'string'
+                  ? { status: j.status, url: safeUrl(j.url), at: Date.now() }
+                  : null;
+            })
+            .catch(function () {
+              window.__liveStatus = null;
+            })
+            .then(upgradeLive);
+        }
+        function tick() {
+          upgradeLive();
+          askYouTube();
+        }
+        tick();
         if (!window.__liveServiceBound) {
           window.__liveServiceBound = true;
-          document.addEventListener('astro:page-load', upgradeLive);
-          setInterval(upgradeLive, 60000);
+          document.addEventListener('astro:page-load', tick);
+          setInterval(tick, 60000);
         }
       })();
     </script>

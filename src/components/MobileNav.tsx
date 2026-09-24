@@ -78,7 +78,7 @@ import { useEffect, useState, type CSSProperties, type MouseEvent, type ReactNod
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { telHref } from '@/lib/phone';
 import { timeOnly } from '@/lib/live-sunday';
-import { isLiveNow } from '@/lib/live-service';
+import { resolveLive } from '@/lib/live-service';
 import { site } from '@/data/site';
 
 // ---- Types ------------------------------------------------------------------
@@ -214,8 +214,17 @@ export default function MobileNav({
   const phone = siteSettings?.phone;
   const starts = staggerStarts(links);
   // The sheet's body only renders in the browser, when it opens, so this reads
-  // the visitor's clock at that moment against the church's service window.
-  const live = !!serviceTime && isLiveNow(new Date(), serviceTime);
+  // the visitor's clock at that moment against the church's service window,
+  // and (since 2026-09-24) the last answer from /api/live-status that
+  // BaseLayout's live-service script left on window.__liveStatus: a fresh
+  // answer from YouTube beats the clock, anything else leaves the clock in
+  // charge (src/lib/live-service.ts resolveLive).
+  const liveState =
+    serviceTime && typeof window !== 'undefined'
+      ? resolveLive(new Date(), serviceTime, window.__liveStatus)
+      : { live: false };
+  const live = liveState.live;
+  const liveHref = liveState.href ?? watchUrl;
   const here = currentPath();
   const isCurrent = (href: string) =>
     here !== undefined && normalizePath(here) === normalizePath(href);
@@ -400,7 +409,7 @@ export default function MobileNav({
                 The dot is decorative; the words carry the state. */}
             {watchUrl && (
               <a
-                href={watchUrl}
+                href={liveHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={close}

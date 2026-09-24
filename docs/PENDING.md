@@ -1047,6 +1047,34 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   art-direction pass's "A production Lighthouse re-measure is owed" (the re-measure is the first
   item above).
 
+### This Sunday's sermon and a real "Live now" (2026-09-24, `feat/sunday`)
+
+- [ ] #nathan **Create a YouTube Data API key and set it as the Worker secret `YOUTUBE_API_KEY`.**
+      Until then "Live now" keeps its time window, exactly as today. Google Cloud Console, new
+      project, enable "YouTube Data API v3", Credentials, API key, restrict it to YouTube Data
+      API v3 (application restrictions: none). Then from the repo root run
+      `npx wrangler secret put YOUTUBE_API_KEY -c dist/server/wrangler.json`, or add it in the
+      dashboard (fbcm-site, Settings, Variables and Secrets, type Secret). On a Sunday between
+      9:30 am and 1:00 pm `/api/live-status` must not say `unknown`. Full steps and the quota
+      arithmetic (worst case 280 units per Cloudflare location per Sunday, of 10,000 a day):
+      `docs/agent/deployment.md`, "Live now: the YouTube check". Best done after the cutover:
+      the edge cache works only on a real zone, not on `workers.dev`.
+- **The channel id is resolved once, in code.** `KNOWN_CHANNELS` in `src/lib/live-status.ts` maps
+  `FbcmuncieOrg` to `UCTm6q6Q7OJ6VrURz3YXVP6A` (checked 2026-09-24). If the church changes channel,
+  the endpoint answers `unknown` (`no-channel`) until the new id is added there or Site settings
+  carries a `youtube.com/channel/UC...` URL. It never checks the old channel on the new one's behalf.
+- **The sermon line shows only when the church posts a preview for the coming Sunday.** The newest
+  preview in the dataset is January 6 2026, so today the line reads as before. Nothing to do; it
+  lights up the week a preview is published (and the site rebuilds, which a publish does).
+- **`npm run scaffold -- --remove journal --write` leaves 4 type errors, none from this branch.**
+  Checked while proving this branch's markers (the sermon files go, `index.astro` keeps a null
+  `sermon`): `DynamicList.astro` still names `durableFirst` (from `blog-derive.ts`) and
+  `convert-body.ts` imports `schemaTypes/journalEntry.ts`, both unmarked. Mark them (rule 14)
+  the next time the journal capability is touched.
+- **The Studio preview of the home page does not show the sermon.** Only the live route passes it
+  to `SectionRenderer`; the preview route's hero reads as it did before. Worth wiring only if an
+  editor asks.
+
 ### Beliefs identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** `scripts/pages/beliefs.mjs` uses no new

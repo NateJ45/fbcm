@@ -49,6 +49,7 @@ import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
 import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
+import type { SundaySermon } from '@/lib/live-sunday';
 
 interface Props {
   sections?: unknown[];
@@ -88,9 +89,16 @@ interface Props {
    * `getSiteSettings()` call, so nothing breaks by leaving it off.
    */
   settings?: SectionSiteSettings | null;
+  /**
+   * This Sunday's sermon (2026-09-24), for the tall hero's dated line. Only
+   * the home route passes it (src/pages/index.astro, from
+   * src/lib/sunday-sermon.ts); absent everywhere else, and absent it changes
+   * nothing.
+   */
+  sermon?: SundaySermon | null;
 }
 
-const { sections = [], idPrefix = 'section', editDoc, settings } = Astro.props as Props;
+const { sections = [], idPrefix = 'section', editDoc, settings, sermon } = Astro.props as Props;
 // A MINISTRY BAND IS RESOLVED FIRST (2026-09-22). A ministrySection only points
 // at a ministry document; src/lib/ministry-band.ts swaps it for the exact
 // imageTextSection (the ministry has a photo) or richTextSection (it has none)
@@ -320,6 +328,7 @@ const wrapAttrs = (key: string | undefined) =>
               (rows[blockIndex + 1]?.block as { _type?: string } | undefined)?._type ?? '',
             )}
             headingAccent={s.headingAccent ?? undefined}
+            sermon={sermon}
             headingId={headingId}
           />
         ) : s._type === 'ctaBandSection' ? (

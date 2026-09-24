@@ -10,6 +10,29 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — This Sunday's sermon, and a real "Live now" (`feat/sunday`)._
+
+**The home hero's dated line names this Sunday's sermon** when the church has posted the preview
+for it: `THIS SUNDAY, SEPTEMBER 27 · 'WHEN GOD SHOWS UP' · JEREMIAH 29:10-12`, the sermon half a
+link to the post. Nothing is typed (CLAUDE.md rule 15): `src/lib/sunday-sermon.ts` picks the
+preview whose derived Sunday is the coming Sunday on the church's calendar, at build time, and
+the reading comes from the post's opening. Length rules in `src/lib/live-sunday.ts`, measured at
+320 px: a title over 24 characters loses a trailing parenthesis, then is cut at a word with an
+ellipsis; the reading shows on phones only when it fits beside the title. The server renders
+"Sunday, September 27"; the inline call beside the span says "This Sunday" or "Today" before
+first paint, or drops the sermon and puts the service time back once the page has outlived that
+Sunday. Home mobile LCP with a sermon on the line: 1.73 s median, unchanged. `/visit` does not
+carry it (its bands describe any Sunday).
+
+**"Live now" asks YouTube.** `GET /api/live-status` (SSR) answers live / not-live / unknown from
+two 1-unit YouTube Data API calls (the uploads playlist, then the videos' broadcast state; not the
+100-unit `search.list`), only inside Sunday 9:30 am to 1:00 pm church time, cached 90 s in the
+isolate and at the edge. The header asks it at most once a minute inside that window; a fresh
+answer beats the clock, and anything else leaves the old time window in charge. With no
+`YOUTUBE_API_KEY` (the state today) it answers `unknown` and the site behaves exactly as before.
+Tests: `sunday-sermon`, `live-status`, and new cases in `live-sunday`, `live-service` and both
+inline drift gates, which now run the inlined sermon and endpoint decisions against the modules.
+
 _2026-09-24 — Post bodies as static HTML, and no Toaster (`perf/post-body`)._
 
 **The two speed-pass follow-ups Nathan approved.** A post body was one `client:visible` React
