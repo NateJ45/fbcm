@@ -123,3 +123,35 @@ test('following a goal from the menu closes the sheet', async ({ page, browserNa
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(page).toHaveURL(/#witness$/);
 });
+
+// With motion ON the goal glyphs draw themselves (data-reveal="draw"), but the
+// sheet's body mounts after the page's reveal observer has run, so they used
+// to stay undrawn: four blank spaces above the goal names (2026-09-24). The
+// sheet now draws them as it opens. The file's default is reduced motion,
+// where the draw rules do not exist, so this block opts back in.
+test.describe('with motion', () => {
+  test.use({ reducedMotion: 'no-preference' });
+
+  test('the goal glyphs in the menu finish drawn', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'load' });
+    await page.locator('[data-menu-ready]').waitFor({ state: 'attached' });
+    await page.getByRole('button', { name: /^menu$/i }).click();
+    const glyphs = page.locator('[role="dialog"] svg.building-glyph');
+    await expect(glyphs).toHaveCount(4);
+    for (const g of await glyphs.all()) {
+      await expect(g).toHaveClass(/is-drawn/, { timeout: 5000 });
+    }
+    // Drawn means the strokes show: no dash left on any path.
+    const dashed = await glyphs.evaluateAll((svgs) =>
+      svgs.flatMap((s) =>
+        // A stroke dotted by design (the basin's towel, stroke-dasharray="2 3")
+        // is part of the drawing, not a draw left half-done.
+        Array.from(s.querySelectorAll('path, circle, line, rect'))
+          .filter((p) => !p.hasAttribute('stroke-dasharray'))
+          .map((p) => getComputedStyle(p).strokeDasharray)
+          .filter((d) => d && d !== 'none'),
+      ),
+    );
+    expect(dashed).toEqual([]);
+  });
+});

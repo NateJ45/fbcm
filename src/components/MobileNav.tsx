@@ -249,6 +249,24 @@ export default function MobileNav({
   const closeOnLink = (e: MouseEvent<HTMLDivElement>) => {
     if ((e.target as Element | null)?.closest('a')) close();
   };
+  // The goal glyphs carry data-reveal="draw" (BuildingGlyph.astro), and the
+  // page's reveal observer only sees what is on the page when it runs. The
+  // sheet's body mounts later, on each open, so nothing ever set .is-visible
+  // and the glyphs stayed undrawn: blank above their names (2026-09-24,
+  // Nathan's phone). They draw here instead, as the sheet opens: one frame
+  // later, so the undrawn state paints first and the stroke has somewhere to
+  // come from. Reduced motion has no draw rules, so this only adds classes.
+  const drawGlyphs = (node: HTMLDivElement | null) => {
+    if (!node) return;
+    const glyphs = node.querySelectorAll<SVGElement>('[data-reveal]:not(.is-visible)');
+    if (glyphs.length === 0) return;
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        glyphs.forEach((g) => g.classList.add('is-visible'));
+        setTimeout(() => glyphs.forEach((g) => g.classList.add('is-drawn')), 2000);
+      }),
+    );
+  };
 
   return (
     <div
@@ -489,7 +507,11 @@ export default function MobileNav({
                 listener is delegation only: the links inside are the
                 controls, and Enter on a link fires click too. */}
             {children && (
-              <div onClick={closeOnLink} className="relative mt-8 border-t border-bg/15 pt-4">
+              <div
+                ref={drawGlyphs}
+                onClick={closeOnLink}
+                className="relative mt-8 border-t border-bg/15 pt-4"
+              >
                 {children}
               </div>
             )}
