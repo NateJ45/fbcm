@@ -80,9 +80,18 @@ test('series rows: a preview shows its Sunday and reading, a post its date and c
     excerpt: '',
     date: 'Sunday, May 26, 2024',
     meta: 'Matthew 19:1-14',
+    datetime: '2024-05-26',
+    cover: null,
   });
   assert.equal(seriesRowOf(all[0], opening).meta, 'Sermon preview', 'no reading found');
   const e = seriesRowOf(all[1], opening);
   assert.equal(e.date, 'June 1, 2024');
   assert.equal(e.meta, 'FBCM Events');
+  assert.equal(e.datetime, '2024-06-01', 'the datetime names the same day as the label');
+});
+
+test('series rows carry the featured image only when it has an asset', () => {
+  const cover = { asset: { _ref: 'image-abc-10x10-jpg' }, alt: 'x' };
+  assert.deepEqual(seriesRowOf({ ...all[1], coverImage: cover }, opening).cover, cover);
+  assert.equal(seriesRowOf({ ...all[1], coverImage: { alt: 'no asset' } }, opening).cover, null);
 });
