@@ -890,9 +890,11 @@ export type HeritageBandSection = {
 
 export type ScriptureBandSection = {
   _type: 'scriptureBandSection';
+  heading?: string;
   verse?: string;
   reference?: string;
   accentWord?: string;
+  intro?: string;
   anchor?: Slug;
 };
 
@@ -931,6 +933,24 @@ export type StaffGridSection = {
   eyebrow?: string;
   heading?: string;
   group?: 'all' | 'pastors' | 'coordination' | 'support';
+  intro?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal';
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: 'link';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
   showBios?: boolean;
   anchor?: Slug;
 };

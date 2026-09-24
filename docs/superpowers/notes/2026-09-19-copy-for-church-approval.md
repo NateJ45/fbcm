@@ -160,10 +160,10 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### Edits to the church’s own text
 
 - Deacon chair address: "deaconchair[at]fbcmuncie.org" becomes a real mailto link to deaconchair@fbcmuncie.org, because a visitor cannot click "[at]". (Deacons band; spec 5.6 "Fixes".)
-- Em-dash to comma (site style): "...calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community." (A note from our pastors.)
-- Cut and re-cased: the scripture band is the closing sentence of the "Every Member of this Church" paragraph with its opening clause cut, so it reads "Every Christian is called to minister to others in some way." rather than "And, even if not currently serving in those particular capacities, every...".
-- Punctuation: "we also have a Worship Director. who coordinates and supports our worship leaders" becomes "...a Worship Director, who coordinates and supports our worship leaders". The full stop mid-sentence is a typo in scripts/data/pages/ministers.txt line 12; no word changes. ("How we are led.")
+- Punctuation: "we also have a Worship Director. who coordinates and supports our worship leaders" becomes "...a Worship Director, who coordinates and supports our worship leaders". The full stop mid-sentence is a typo in scripts/data/pages/ministers.txt line 12; no word changes. (Pastors & Staff.)
 - Em-dash to comma (CLAUDE.md rule 2), inside a verbatim scripture quotation: Kendall Ellis’s staff bio quotes Romans 8:17 (NIV) as “...then we are heirs—heirs of God and co-heirs with Christ...” and it now reads “...then we are heirs, heirs of God...”. No other word changes. The bio is a field on her staff document rather than a sentence this module builds, so the change was made by scripts/fix-bio-em-dashes.mjs (backed up first); it is declared here because this is one of the two pages that print it.
+- Em-dash to comma (site style): "...calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community." (A Note From Our Pastors.)
+- Typography only: the curly quotation marks around 1 Corinthians 12:4-6 come off the stored verse because the scripture band draws them itself; the page shows the verse in quotation marks exactly as the Wix page did. (Every Member of this Church.)
 
 ### Photos of children
 

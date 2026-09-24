@@ -1,37 +1,51 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: the staff, as an editorial list rather than a grid of
-// cards. The art-direction pass (2026-09-21, task 10) took the plate off: the
-// gold top rule over every portrait and the bordered box around it are gone,
-// and what is left is the photograph, a hairline over each person, the name in
-// Castoro roman, the role as a gold-ink label and the email as a real mailto
-// link, because the commonest reason anyone opens a staff page is to write to
-// one person.
+// Page-builder block: the staff, as a band of lancet portraits (2026-09-24,
+// the Staff identity pass; rollout rule 3, "arches for people").
 //
-// THE PAGE GRAMMAR (the same one the prose bands took in task 8): the heading
-// sits in the narrow left column and STICKS while the portraits scroll past it
-// on the right. A staff page is one long run of faces, and a heading that
-// scrolls away leaves a tall empty column that reads as a mistake.
+// THE GROUND IS DERIVED, NOT STORED (CLAUDE.md rule 9). src/lib/staff-band.ts
+// reads it off the group the band shows: the pastors on the gold band, the
+// Church Coordination Team on the brown, the support and volunteer roles on
+// the taupe, and "Everyone" on the page's own paper. That is the Who We Are
+// goals sequence (indigo, gold, brown, taupe), so /staff, which opens on the
+// indigo window, reads the same way down the page. Every ink on each ground
+// is a pair measured in both themes in theme-tokens.test.ts. The band is
+// SELF_CONTAINED in sectionCadence.ts: it no longer takes the alternating
+// surface, except that the paper variant is the page's own background.
 //
-// THE BIO STAYS BEHIND A DISCLOSURE (fix round 1, 2026-09-21). Set inline it
-// made /staff 13,101px of unbroken text, which is a wall rather than a list of
-// people. It is a native <details> again, closed by default, opened by a
-// "Read more" in the site's own link style. No JavaScript, and the keyboard
-// works for free.
+// THE PEOPLE. Each person is a lancet (ArchFrame, the 2:3 arch the portraits
+// were shot for), their name in Castoro, the role under it, and the email as
+// a real mailto link, because the commonest reason anyone opens a staff page
+// is to write to one person. Three people or fewer are drawn large in one row
+// ("feature"); more are a list of smaller lancets, four to a row at desktop
+// width. On a phone the feature row becomes a list: the lancet on the left,
+// the words beside it.
 //
-// Every person carries their slug as an id, so /staff#pastor-name lands on
-// them, and an anchored person's bio opens with the jump (the script at the
-// foot of this file). When the block is set to "Everyone" the three groups are drawn in
-// STAFF_GROUPS order with a subhead each, and an empty group is skipped rather
-// than left as a heading over nothing.
+// THE HEADING GRAMMAR (rule 17): the band h2 is H2_DISPLAY, the one grammar
+// every church band uses, full width at the top of the band with the
+// optional introduction beside it (the church's own paragraphs about the
+// people below, a staffGridSection `intro` since 2026-09-24). A heading with
+// an eleven-capital word ("COORDINATION") steps down a size so no word breaks
+// at 320px (staff-band.ts headingIsLong). The eyebrow, when an editor types
+// one, is a plain small line in sentence case, never tracked capitals.
 //
-// A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
-import SectionHeading from '@/components/SectionHeading.astro';
-import SanityImage from '@/components/SanityImage.astro';
+// THE BIO STAYS BEHIND A DISCLOSURE, a native <details> closed by default
+// with "Read more" / "Read less" as on the Watchword band. No JavaScript, and
+// the keyboard works for free. Every person carries their slug as an id, so
+// /staff#kendall-ellis lands on them, and an anchored person's bio opens with
+// the jump (the script at the foot of this file). Five retired Wix URLs
+// redirect to those ids (src/lib/fbcm-redirects.ts).
+//
+// When the block is set to "Everyone" the three groups are drawn in
+// STAFF_GROUPS order with a subhead each, and an empty group is skipped.
+import ArchFrame from '@/components/church/ArchFrame.astro';
 import PortableText from '@/components/PortableText';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import { surfaceClass } from '@/lib/surfaces';
 import { groupStaff, STAFF_GROUPS, type StaffGroup } from '@/lib/church-derive';
+import { headingIsLong, staffBandLook, staffSize } from '@/lib/staff-band';
+import type { PortableTextBlock } from '@portabletext/types';
 
 interface StaffMember {
   _id?: string;
@@ -49,6 +63,7 @@ interface StaffMember {
 interface Props {
   eyebrow?: string;
   heading?: string;
+  intro?: unknown;
   group?: string;
   showBios?: boolean;
   members?: StaffMember[];
@@ -59,14 +74,13 @@ interface Props {
 const {
   eyebrow,
   heading,
+  intro,
   group = 'all',
   showBios,
   members = [],
   surface = 'background',
   headingId,
 } = Astro.props as Props;
-
-const bg = surfaceClass(surface);
 
 // The Studio's own words for each group, so the page and the editor agree.
 const GROUP_LABELS: Record<StaffGroup, string> = {
@@ -81,8 +95,7 @@ const grouped = groupStaff(named);
 // "Everyone" draws all three groups with a subhead each; any other choice draws
 // one unlabelled run of people, because the heading has already said who they
 // are. A block that picked ONE group and typed no heading of its own borrows
-// that group's name for the narrow column, which is the only thing that would
-// have gone there anyway.
+// that group's name, which is the only thing that would have gone there anyway.
 const showGroups = group === 'all';
 const groupHeading = !showGroups ? GROUP_LABELS[group as StaffGroup] : undefined;
 const bandHeading = heading || groupHeading;
@@ -98,120 +111,150 @@ const shown: { key: StaffGroup; label: string; people: StaffMember[] }[] = showG
 // skipped.
 const NameTag = showGroups ? 'h4' : 'h3';
 
-// THE CROP. These portraits are shot against the glass and are portrait
-// already, so the 4:5 frame is close to the picture's own shape and the only
-// question left is where the head sits in it. An editor who MOVED the hotspot
-// has answered that; everyone else gets `object-top`, which is right for a
-// standing figure and wrong for nothing. The hotspot is not applied by the CDN
-// here (SanityImage crops only when a caller passes an explicit height), so it
-// is translated into an object-position instead.
-function cropFor(photo: any): { style?: string; className: string } {
-  const x = photo?.hotspot?.x;
-  const y = photo?.hotspot?.y;
-  if (typeof x === 'number' && typeof y === 'number') {
-    return {
-      style: `object-position: ${(x * 100).toFixed(2)}% ${(y * 100).toFixed(2)}%;`,
-      className: 'h-full w-full object-cover',
-    };
-  }
-  return { className: 'h-full w-full object-cover object-top' };
-}
+const look = staffBandLook(group);
+const introBlocks = (Array.isArray(intro) ? intro : []) as PortableTextBlock[];
+
+// The inks for each ground. Every pair is in theme-tokens.test.ts.
+const INK = {
+  gold: {
+    band: 'bg-band-gold text-band-ink',
+    heading: 'text-band-ink',
+    role: 'text-band-ink',
+    link: 'decoration-band-ink',
+    more: 'text-band-ink',
+  },
+  brown: {
+    band: 'bg-band-brown text-bg',
+    heading: 'text-white-pure',
+    role: 'text-gold',
+    link: 'decoration-gold',
+    more: 'text-gold',
+  },
+  taupe: {
+    band: 'bg-band-taupe text-band-ink',
+    heading: 'text-band-indigo',
+    role: 'text-band-brown',
+    link: 'decoration-band-brown',
+    more: 'text-band-ink',
+  },
+  paper: {
+    band: `${surfaceClass(surface)} text-foreground`,
+    heading: 'text-indigo',
+    role: 'text-gold-ink',
+    link: 'decoration-gold',
+    more: 'text-link',
+  },
+}[look.ground];
 ---
 
-<section class={bg} aria-labelledby={bandHeading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-gutter py-section-lg">
-    <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)]">
-      <div
-        class="col-span-12 self-start lg:sticky lg:top-[calc(var(--header-offset)+1rem)] lg:col-span-4"
-      >
-        <SectionHeading
-          eyebrow={eyebrow}
-          headline={bandHeading}
-          headingId={headingId}
-          level="h2"
-          align="left"
-          tone="church"
-        />
-      </div>
+<section
+  class:list={['sg', `sg-${look.ground}`, INK.band]}
+  aria-labelledby={bandHeading ? headingId : undefined}
+>
+  <div class="sg-wrap mx-auto max-w-content px-gutter">
+    {
+      (bandHeading || introBlocks.length > 0) && (
+        <div class="sg-top">
+          <div>
+            {eyebrow && <p class={`mb-3 font-ui text-base font-semibold ${INK.role}`}>{eyebrow}</p>}
+            {bandHeading && (
+              <h2
+                id={headingId}
+                class:list={[H2_DISPLAY, INK.heading, headingIsLong(bandHeading) && 'sg-long']}
+              >
+                {bandHeading}
+              </h2>
+            )}
+          </div>
+          {introBlocks.length > 0 && (
+            <div class="sg-intro space-y-4">
+              <PortableText value={introBlocks} variant="bare" />
+            </div>
+          )}
+        </div>
+      )
+    }
 
-      <div class="col-span-12 mt-9 lg:col-span-8 lg:col-start-5 lg:mt-0">
-        {
-          shown.map((section, sectionIndex) => (
-            <div class={sectionIndex === 0 ? '' : 'mt-section-md'}>
-              {section.label && (
-                <h3 class="mb-8 font-body text-h3 font-normal text-foreground">{section.label}</h3>
-              )}
-
-              <div class="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3">
-                {section.people.map((person) => {
-                  const crop = cropFor(person.photo);
-                  return (
-                    <article
-                      id={person.slug || undefined}
-                      class="min-w-0 scroll-mt-[var(--header-offset)] border-t border-hair pt-6"
-                    >
-                      {person.photo?.asset ? (
-                        <div class="aspect-[4/5] w-full overflow-hidden" data-reveal>
-                          <SanityImage
-                            source={person.photo}
-                            width={480}
-                            sizes="(min-width: 1024px) 18vw, (min-width: 768px) 22vw, 45vw"
-                            quality={78}
-                            class={crop.className}
-                            style={crop.style}
-                          />
-                        </div>
-                      ) : (
-                        <div class="aspect-[4/5] w-full bg-surface-soft" aria-hidden="true" />
-                      )}
-
-                      <NameTag class="mt-4 font-body text-2xl leading-snug font-normal text-foreground">
-                        {person.name}
-                      </NameTag>
+    {
+      shown.map((section) => {
+        const size = staffSize(section.people.length);
+        return (
+          <div class="sg-group">
+            {section.label && (
+              <h3 class={`mb-8 font-body text-h3 font-normal ${INK.heading}`}>{section.label}</h3>
+            )}
+            <ul class:list={['sg-people', `sg-${size}`]} role="list">
+              {section.people.map((person) => (
+                <li>
+                  <article
+                    id={person.slug || undefined}
+                    class="sg-person scroll-mt-[var(--header-offset)]"
+                  >
+                    <ArchFrame
+                      image={person.photo}
+                      shape="lancet"
+                      width={size === 'feature' ? 720 : 560}
+                      sizes={
+                        size === 'feature'
+                          ? '(min-width: 1024px) 320px, (min-width: 640px) 30vw, 38vw'
+                          : '(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 45vw'
+                      }
+                      alt={person.photo?.alt ?? person.name}
+                      grade="warm"
+                      glyph="window"
+                      class="sg-arch"
+                    />
+                    <div class="sg-words min-w-0">
+                      <NameTag class="sg-name font-body font-normal">{person.name}</NameTag>
 
                       {person.role && (
-                        <p class="mt-1 font-ui text-ui text-gold-ink">{person.role}</p>
+                        <p class={`mt-1 font-ui text-base font-semibold ${INK.role}`}>
+                          {person.role}
+                        </p>
                       )}
 
                       {person.email && (
                         <a
                           href={`mailto:${person.email}`}
-                          class="mt-2 inline-block max-w-full font-body text-sm break-words text-foreground underline decoration-gold underline-offset-4"
+                          class={`sg-mail mt-2 inline-block max-w-full font-body text-base break-words underline underline-offset-4 ${INK.link}`}
                         >
-                          {person.email}
+                          {/* A break is offered after the @ only, so a narrow
+                              column wraps "name@" / "fbcmuncie.org" rather
+                              than mid-word (the mailto keeps the whole address). */}
+                          {person.email.includes('@') ? (
+                            <>
+                              {person.email.slice(0, person.email.indexOf('@') + 1)}
+                              <wbr />
+                              {person.email.slice(person.email.indexOf('@') + 1)}
+                            </>
+                          ) : (
+                            person.email
+                          )}
                         </a>
                       )}
 
-                      {person.phone && (
-                        <p class="mt-2 font-body text-sm text-muted-foreground">{person.phone}</p>
-                      )}
+                      {person.phone && <p class="mt-2 font-body text-base">{person.phone}</p>}
 
                       {showBios !== false && person.bio && (
-                        <details class="group mt-3">
-                          <summary class="inline-flex cursor-pointer list-none gap-2 border-b border-current pb-1 font-ui text-ui font-semibold text-link focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none [&::-webkit-details-marker]:hidden">
-                            Read more
-                            <span
-                              aria-hidden="true"
-                              class="transition-transform group-open:rotate-90"
-                            >
-                              →
-                            </span>
+                        <details class="sg-more">
+                          <summary class={`font-ui font-bold ${INK.more}`}>
+                            <span class="sg-rm">Read more</span>
+                            <span class="sg-rl">Read less</span>
                           </summary>
-                          <PortableText
-                            value={person.bio}
-                            className="mt-3 font-body text-base break-words [&>p+p]:mt-4 [&>p]:my-0 [&_p]:text-muted-foreground"
-                          />
+                          <div class="mt-3 space-y-4 font-body text-base break-words">
+                            <PortableText value={person.bio} variant="bare" />
+                          </div>
                         </details>
                       )}
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </div>
+                    </div>
+                  </article>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })
+    }
   </div>
 </section>
 

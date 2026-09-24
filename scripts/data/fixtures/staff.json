@@ -1,0 +1,541 @@
+{
+  "_generatedBy": "scripts/page-fixture.mjs staff",
+  "title": "Staff",
+  "pageBuilder": [
+    {
+      "_type": "heroSection",
+      "_key": "st-hero",
+      "layout": "window",
+      "eyebrow": "Staff",
+      "headline": "Get to know the ministers of FBCM",
+      "subhead": "Learn about the staff and volunteers working together in ministry here at First Baptist Church Muncie, below.",
+      "frames": [
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-6ac4bea082670692b05b09a79e0e51ad81c5689e-1106x1106-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "Kendall Ellis smiles for a portrait outdoors, standing against a brick wall.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 1,
+                "height": 1106,
+                "width": 1106
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUABQDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAcFBgj/xAAjEAABBAICAgIDAAAAAAAAAAABAAIDBAURBhITIQcxFDJB/8QAGAEAAgMAAAAAAAAAAAAAAAAAAgMBBAX/xAAdEQEAAQUAAwAAAAAAAAAAAAABAAIDERIxIlGR/9oADAMBAAIRAxEAPwCd8re3I5TE0YJhC+WUtL9fqFRLfEI+KsqXKtixdjsDwu8g1p7h6IUSzuSmrctFqHbjWkDmgqt835pNY4ngYmxyRfkETPc4+xr60odjAcjsUor2ajcXLCBHNF1ePsH+ItqoLGXp17rW9/JGNuAJ2US8wMM8yZJ7n8gtB52A4n2t+5m7uSjpwWntdFWZ1jaG60ERWGPthpXOkwHyPyPEYyOnRtRsrx76tMYOkREep6m7btW2g8T5P//Z"
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/6ac4bea082670692b05b09a79e0e51ad81c5689e-1106x1106.jpg"
+          },
+          "alt": "Kendall Ellis smiles for a portrait outdoors, standing against a brick wall.",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.5,
+            "y": 0.4,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "frame-1"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-1e412c50c6a4b967455c2df739318860a59a97b4-1106x1106-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "Jonathan Balmer smiles for a portrait in a green plaid shirt, standing outdoors against a brick wall.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 1,
+                "height": 1106,
+                "width": 1106
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUABQDASIAAhEBAxEB/8QAGAABAQADAAAAAAAAAAAAAAAAAAYEBQf/xAAjEAACAgICAgEFAAAAAAAAAAABAgMEABEFEiExUQYTIiRx/8QAGAEAAgMAAAAAAAAAAAAAAAAAAgUAAQP/xAAdEQACAgIDAQAAAAAAAAAAAAAAAQIRAzESIUEy/9oADAMBAAIRAxEAPwCafiouRs0YLIf7DTHsIzo61l5H9GQ8dJWekzGAq7MXYFthfGRVk2DXgnrodwzFiB8Z1DhORguV6MkwbUcJVjrQOxrA45Oq0HLLhpp7RLTXJJyjMg2FC+/jGbu/Spmx+l+MOvG8YFSXhFOD9IvhJWTqPBV+xIOUFaVhVZF0qgkeP5jGM1pCSf0zAqX7CwKO2/fvGMZdGTbs/9k="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/1e412c50c6a4b967455c2df739318860a59a97b4-1106x1106.jpg"
+          },
+          "alt": "Jonathan Balmer smiles for a portrait in a green plaid shirt, standing outdoors against a brick wall.",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.48,
+            "y": 0.4,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "frame-2"
+        }
+      ],
+      "primaryCta": {
+        "_type": "ctaBlock",
+        "_key": "cta-1",
+        "label": "Pastors & Staff",
+        "linkType": "external",
+        "externalUrl": "/staff#pastors",
+        "openInNewTab": false
+      },
+      "secondaryCta": {
+        "_type": "ctaBlock",
+        "_key": "cta-2",
+        "label": "Church Coordination Team",
+        "linkType": "external",
+        "externalUrl": "/staff#coordination",
+        "openInNewTab": false
+      }
+    },
+    {
+      "_type": "staffGridSection",
+      "_key": "st-pastors",
+      "anchor": {
+        "_type": "slug",
+        "current": "pastors"
+      },
+      "heading": "Pastors & Staff",
+      "intro": [
+        {
+          "_type": "block",
+          "_key": "hw-a-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "hw-a-1s1",
+              "text": "We believe that Christ is the head of the church – our Great Shepherd. Pastors serve as “under-shepherds,” under Christ (1 Peter 5:1-4). Pastors are men and women called by God and the congregation to serve Christ’s church in a variety of ministry areas: from preaching, teaching, visiting the sick, providing spiritual counsel, among many other roles. The pastors serve as a resource for the fulfillment of the Church’s God-given purpose.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "hw-b-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "hw-b-1s1",
+              "text": "We have two Co-Pastors, a married couple, who serve as our Senior Pastors. There is a long history of married couples working together in ministry. In Scripture, married couples hosted churches in their house, taught together, and supported the work of the church as a ministry team (for example, Priscilla and Aquila – see Acts 18:26; 1 Corinthians 16:19; Romans 16:3).",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "hw-c-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "hw-c-1s1",
+              "text": "In addition to our Co-Pastors, we also have a Worship Director, who coordinates and supports our worship leaders, planning alongside the Pastors and other ministers in the church, and inviting us into times of intentional worship.",
+              "marks": []
+            }
+          ]
+        }
+      ],
+      "group": "pastors",
+      "showBios": true
+    },
+    {
+      "_type": "richTextSection",
+      "_key": "st-letter",
+      "anchor": {
+        "_type": "slug",
+        "current": "letter"
+      },
+      "heading": "A Note From Our Pastors",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "lt-a-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-a-1s1",
+              "text": "If you’re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you’re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we’d love for you to join us for worship too!",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-b-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-b-1s1",
+              "text": "After all, Jesus did not say to his first followers: “Figure it all out, and then get back to me.” He said to them, “Come and see” (John 1:39).",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-c-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-c-1s1",
+              "text": "Even so, we know people curious about a church wonder what a particular church, including its pastors, “are all about.”",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-d-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-d-1s1",
+              "text": "We love the Good News – the Gospel – that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He Ascended to heaven, and he will come again in glory to make all that is wrong right. That’s life-changing, and truly good, news. It’s news good enough to set all of us free.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-e-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-e-1s1",
+              "text": "We’re all about the church. This church is made up of people who are all imperfect, all of us with our own struggles, all of us failing, falling into our old selfish ways, and getting up again only by God’s grace. And those same people are also filled by God’s own Spirit, have a sincere desire to be “good news” people, and to serve one another as we grow in our love of Christ together.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-f-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-f-1s1",
+              "text": "We’re honored to serve as Co-Pastors here. And it’s not only because First Baptist decided to do something a little unusual in calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-g-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-g-1s1",
+              "text": "We love to serve here because we love being part of this Spirit-led people gathered to join Christ's presence in our community.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-h-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-h-1s1",
+              "text": "Finally, we would love for you to join us this Sunday, or anytime we’re gathered to encounter the same Christ who was, and is, and will come again – as we meet him in worship, the word, and the Lord’s table. “Come and see!”",
+              "marks": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "staffGridSection",
+      "_key": "st-coordination",
+      "anchor": {
+        "_type": "slug",
+        "current": "coordination"
+      },
+      "heading": "Church Coordination Team",
+      "intro": [
+        {
+          "_type": "block",
+          "_key": "cct-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "cct-1s1",
+              "text": "Members of the Church Coordination Team (CCT) are church members selected as representatives by the whole church body for the purpose of coordinating the ministry of the church. They are tasked with coordinating the work of a particular area of church ministry. CCT members generally serve up to three years before rotating off for at least one year before they may be nominated again.",
+              "marks": []
+            }
+          ]
+        }
+      ],
+      "group": "coordination",
+      "showBios": true
+    },
+    {
+      "_type": "imageTextSection",
+      "_key": "st-deacons",
+      "anchor": {
+        "_type": "slug",
+        "current": "deacons"
+      },
+      "heading": "Deacons",
+      "image": {
+        "_type": "image",
+        "asset": {
+          "_id": "image-86ea34a0c404d24e71e4253242061def78b627c7-1600x800-jpg",
+          "_type": "sanity.imageAsset",
+          "altText": "Five adults posed together at the communion table, a wooden cross and communion trays in front of them.",
+          "metadata": {
+            "dimensions": {
+              "_type": "sanity.imageDimensions",
+              "aspectRatio": 2,
+              "height": 800,
+              "width": 1600
+            },
+            "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAKABQDASIAAhEBAxEB/8QAGgAAAQUBAAAAAAAAAAAAAAAAAAEDBQYHCP/EACIQAAICAgEDBQAAAAAAAAAAAAECAwQAEQUGEhMhIjFBYf/EABYBAQEBAAAAAAAAAAAAAAAAAAMCBP/EAB4RAAIBBAMBAAAAAAAAAAAAAAECAAMRIVESEyJB/9oADAMBAAIRAxEAPwDMZOQnd7cdXjzFE8SxlFjOjrF5G4tKOkiwgPNX8LgLrQJ+/wBzolq0Ans6giHtHwgyqGjUlsOZasDlZTotGDrMb1l7vK2B+R1VjTNzkRih0B0/c4yjNYSXytAvd26GGTXIEpKioSqhBoD0GGDzGpWdz//Z"
+          },
+          "url": "https://cdn.sanity.io/images/7jw947g5/production/86ea34a0c404d24e71e4253242061def78b627c7-1600x800.jpg"
+        },
+        "alt": "The 2026 deacons of First Baptist Church Muncie"
+      },
+      "imageSide": "left",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "dc-lead-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-lead-1s1",
+              "text": "Current Deacons (left to right in photo):",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-name-1",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-name-1s1",
+              "text": "Gayle Songer",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-name-2",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-name-2s1",
+              "text": "Richard \"Dick\" Flaherty",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-name-3",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-name-3s1",
+              "text": "James \"Jim\" Butler*",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-name-4",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-name-4s1",
+              "text": "Aaron Smith",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-name-5",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-name-5s1",
+              "text": "Janis Wright",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-chair-1",
+          "style": "normal",
+          "markDefs": [
+            {
+              "_type": "link",
+              "_key": "dc-chair-1l1",
+              "href": "mailto:deaconchair@fbcmuncie.org"
+            }
+          ],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-chair-1s1",
+              "text": "*Deacon chair: ",
+              "marks": []
+            },
+            {
+              "_type": "span",
+              "_key": "dc-chair-1s2",
+              "text": "deaconchair@fbcmuncie.org",
+              "marks": [
+                "dc-chair-1l1"
+              ]
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-what",
+          "style": "h3",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-whats1",
+              "text": "What are Deacons?",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-a-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-a-1s1",
+              "text": "Each active member or attendee is assigned a Deacon whom they can go to with questions, to get connected, or for pastoral care needs.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-b-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-b-1s1",
+              "text": "In the New Testament, deacons were chosen for acts of mercy and service in the church (1 Timothy 3:8-9; Romans 16:1-2).",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "dc-c-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "dc-c-1s1",
+              "text": "Following that example, Deacons assist at the Lord’s table and in baptism, in orienting and caring for members, and oversee the benevolence fund. A deacon serves a three-year term before rotating off for at least one year before they can be nominated again.",
+              "marks": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "staffGridSection",
+      "_key": "st-support",
+      "heading": "Support and volunteer roles",
+      "group": "support",
+      "showBios": true
+    },
+    {
+      "_type": "scriptureBandSection",
+      "_key": "st-scripture",
+      "heading": "Every Member of this Church",
+      "verse": "There are different kinds of gifts, but the same Spirit distributes them. There are different kinds of service, but the same Lord. There are different kinds of working, but in all of them and in everyone it is the same God at work.",
+      "reference": "1 Corinthians 12:4-6 (NIV)",
+      "accentWord": "same",
+      "intro": "FBCM challenges each member to exercise his or her gifts for the glory of God. CCT Members and Deacons are chosen from the members of the church. And, even if not currently serving in those particular capacities, every Christian is called to minister to others in some way."
+    },
+    {
+      "_type": "ctaBandSection",
+      "_key": "st-cta",
+      "eyebrow": "Can't find who you need?",
+      "headline": "Ask the office.",
+      "subhead": "309 East Adams Street. (765) 284-7749.",
+      "cta": {
+        "_type": "ctaBlock",
+        "_key": "cta-3",
+        "label": "Contact us",
+        "linkType": "internal",
+        "internalLink": {
+          "_type": "page",
+          "slug": "contact"
+        }
+      },
+      "secondaryCta": {
+        "_type": "ctaBlock",
+        "_key": "cta-4",
+        "label": "Call the office",
+        "linkType": "external",
+        "externalUrl": "tel:7652847749",
+        "openInNewTab": false
+      }
+    }
+  ]
+}
