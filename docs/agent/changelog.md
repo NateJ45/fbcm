@@ -10,6 +10,26 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Staff identity: /staff in the church identity (`feat/staff-identity`)._
+
+The overnight rollout's Staff branch (`docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md`),
+owning StaffGrid, ScriptureBand and TeamGrid. **StaffGrid** is now a band of
+lancet portraits, its ground derived from the group it shows
+(`src/lib/staff-band.ts`: pastors gold, coordination brown, support taupe,
+everyone paper), with the band h2 in `H2_DISPLAY` and a new optional `intro`
+(the church's own paragraphs) beside it; it moved to SELF_CONTAINED in
+`sectionCadence.ts`. **ScriptureBand** takes the Watchword band's verse
+treatment on indigo-dark, highlights every occurrence of its accent word, and
+gains an optional `heading` and `intro`. **TeamGrid** (unused) follows the staff
+list layout. `scripts/pages/staff.mjs` recomposes the page under the church's
+own headings: a two-light window hero of the Co-Pastors (library headshots used
+nowhere else), Pastors & Staff, Church Coordination Team, Deacons (with "What
+are Deacons?" restored), Support and volunteer roles, and Every Member of this
+Church as the whole church section (1 Corinthians 12:4-6). The duplicate
+pastors' letter came off (it is whole on /who-we-are#letter). Dry run only;
+`/styleguide/staff` renders it from a read-only fixture until it is applied.
+/ministries and /beliefs change with the two components.
+
 _2026-09-23 — Home identity: the home page composed from the church blocks (`feat/home-identity`)._
 
 The home page's six bands, ported from the approved prototype

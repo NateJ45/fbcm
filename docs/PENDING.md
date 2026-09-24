@@ -790,6 +790,32 @@ now ties the schema max and the slice with a drift test.
   `src/pages/styleguide/home.astro`, the `'/styleguide/home'` line in `tests/routes.ts`
   and `scripts/data/fixtures/home.json`, then recapture parity.
 
+### Staff identity: before the page is applied (2026-09-24)
+
+- **The page is composed but not applied.** `scripts/pages/staff.mjs` uses fields the
+  deployed schema does not have yet (`staffGridSection.intro`, `scriptureBandSection.heading`
+  and `.intro`). Deploy first (CLAUDE.md rule 1), then
+  `npm run seed-pages -- --only staff` (the plan on 2026-09-24: `pageBuilder` length
+  10 -> 7, "would be replaced"; the live page matched the old module exactly, so no
+  editor edits to carry over; re-read the plan in case one has been made since) and
+  `--apply` (backup first). Then shoot /staff, /ministries and /beliefs in production.
+- **Nothing links to `/staff#letter` any more, and the letter is gone from /staff.**
+  It lives whole on `/who-we-are#letter` since the Who We Are pass. If an outside link
+  to /staff#letter turns up, it lands on the top of the page.
+- **The hero's two headshots are older photos** (Kendall and Jonathan outdoors by a
+  brick wall, the Wix blog's author photos). They are the only unused photographs of
+  the two Co-Pastors; the staff-document portraits are drawn in the Pastors band
+  directly below. Swap the `staff-hero-*` entries in `scripts/data/page-images.json`
+  if the church has a newer pair, or a photo of the two together.
+- **The Deacons band heading is still ImageText's reading-face heading**, not the band
+  grammar; ImageText belongs to the Visit branch tonight, which restyles it.
+- **Owner question:** the scripture band now picks out "same" three times in
+  1 Corinthians 12:4-6 (the Spirit, the Lord, God). Nathan may prefer another word or
+  none (`accentWord` in `staff.mjs`).
+- **Clean-up once `/staff` itself shows the composition.** Delete
+  `src/pages/styleguide/staff.astro`, the `'/styleguide/staff'` line in `tests/routes.ts`
+  and `scripts/data/fixtures/staff.json`, then recapture parity.
+
 ---
 
 ## Photo library uploaded (2026-09-23)
