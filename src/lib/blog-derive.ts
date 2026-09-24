@@ -235,8 +235,13 @@ const MONTHS = [
  * Moved here so weekOfEyebrow only ever depends on its own capability.
  */
 export function weekOfLabel(publishedAt: string): string {
-  const d = new Date(publishedAt);
-  if (Number.isNaN(d.getTime())) return 'Sermon preview';
+  // The CHURCH's day (localDay(), America/Indiana/Indianapolis), like every
+  // other date on the journal (2026-09-24, the journal identity pass). It read
+  // the UTC day until then, so a preview posted after 8pm in Muncie was
+  // labelled the next day and its home row disagreed with its own
+  // <time datetime> (rowDateTime), which already read the church day.
+  const d = localDay(publishedAt);
+  if (!d) return 'Sermon preview';
   return `Sermon preview, week of ${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 }
 
