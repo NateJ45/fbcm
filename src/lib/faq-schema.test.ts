@@ -63,6 +63,40 @@ test('portableTextToPlain joins spans, separates paragraphs and keeps list items
   assert.equal(portableTextToPlain([]), '');
 });
 
+test('a linked phrase keeps its words and gains its address, made absolute', () => {
+  const answer = [
+    {
+      _type: 'block',
+      children: [
+        { text: 'You can ' },
+        { text: 'contact the church office', marks: ['l1'] },
+        { text: ', see ' },
+        { text: 'our accessibility page ', marks: ['l2'] },
+        { text: 'or ' },
+        { text: 'email us', marks: ['l3'] },
+        { text: ' or ' },
+        { text: 'call', marks: ['l4'] },
+        { text: '.' },
+      ],
+      markDefs: [
+        { _key: 'l1', _type: 'link', href: '/contact' },
+        { _key: 'l2', _type: 'link', href: 'https://fbcmuncie.org/accessibility' },
+        { _key: 'l3', _type: 'link', href: 'mailto:office@fbcmuncie.org?subject=Hi' },
+        { _key: 'l4', _type: 'link', href: 'tel:7652847749' },
+      ],
+    },
+  ];
+  assert.equal(
+    portableTextToPlain(answer, 'https://www.fbcmuncie.org'),
+    'You can contact the church office (https://www.fbcmuncie.org/contact), see our accessibility page (https://fbcmuncie.org/accessibility) or email us (office@fbcmuncie.org) or call.',
+  );
+  // With no site URL a path has nowhere to point, so the words stand alone.
+  assert.equal(
+    portableTextToPlain([answer[0]!].map((b) => ({ ...b, children: b.children.slice(0, 2) }))),
+    'You can contact the church office',
+  );
+});
+
 test('faqPageNode builds one FAQPage from the page’s own question band, and it validates', () => {
   const node = faqPageNode(VISIT, URL);
   assert.ok(node);
