@@ -1,0 +1,1137 @@
+{
+  "_createdAt": "2026-09-20T01:10:36Z",
+  "_id": "page-ministries",
+  "_rev": "r3OMep2eOIG3C5V373GEXw",
+  "_type": "page",
+  "_updatedAt": "2026-09-24T10:46:36Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "ministries-hero",
+      "_type": "heroSection",
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "Children holding palm branches in a stone hallway, warm light coming through the leaded windows.",
+          "asset": {
+            "_ref": "image-66199736e30b8ec5c160729ea87001f77a00ef08-1920x2400-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.55
+          }
+        },
+        {
+          "_key": "frame-2",
+          "_type": "image",
+          "alt": "Teenagers laughing around a table in the youth room, cards in hand and a Bible on the table.",
+          "asset": {
+            "_ref": "image-f4a02d623edfdb736ef24629dbeb367ac7e24923-2048x969-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.78,
+            "y": 0.3
+          }
+        },
+        {
+          "_key": "frame-3",
+          "_type": "image",
+          "alt": "Two musicians rehearsing by the staircase, one at the drums and one on bass guitar.",
+          "asset": {
+            "_ref": "image-e734157252df111dc84ae943fa09f91631c1e19b-2070x1380-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.42,
+            "y": 0.5
+          }
+        }
+      ],
+      "headline": "Every age has a place here.",
+      "layout": "window",
+      "primaryCta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "externalUrl": "/ministries#children",
+        "label": "Children",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "/ministries#adult",
+        "label": "Adults",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "size": "short"
+    },
+    {
+      "_key": "ministries-sunday",
+      "_type": "timelineSection",
+      "heading": "A Sunday for every age",
+      "rows": [
+        {
+          "_key": "row-1",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "ss-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Intergenerational Bible Study (B-04): Led by Jim Butler, this intergenerational Bible Study includes adults of all ages."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-2",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-2s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Friendship Class (B-05): Led by Pastor Jonathan, this class primarily consists of a mix of couples with children at home, but is open to adults of all ages."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-3",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-3s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Youth Large Group (201): Sixth through twelfth (6th-12th) grade students join in discussions about life and faith."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-4",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-4s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Children's Sunday School (B-03 & 104): Children's Worship Arts Play and practice in music, choir, scripture reading, and more (B-03)."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-5",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-5s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "6 weeks - 3 years: Nursery (104)"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "9:30 am",
+          "title": "Sunday school and Bible study"
+        },
+        {
+          "_key": "row-2",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "dh-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "dh-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Between Bible study and Worship, join in a time of fellowship (and, of course, donuts)!"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "10:15 am",
+          "title": "Donut hour"
+        },
+        {
+          "_key": "row-3",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "wr-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wr-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Students preschool - fifth grade will be dismissed to Children's Church during the service."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "wrb-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wrb-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Nursery Care (104): For children ages 3 and younger, nursery care is available throughout the service."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "wrb-2",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wrb-2s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Family Room (105): For little ones and parents who need to step out during service, this room provides toys, a live stream, rocking chairs, nursing privacy, and a changing table for all who desire it."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "wrb-3",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wrb-3s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Kickstart Children's Church (102): Preschool - 2nd grade"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "wrb-4",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wrb-4s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "The Underground Children's Church (B-03): 3rd - 5th grade"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "{time}",
+          "title": "Worship, children's church and nursery"
+        }
+      ]
+    },
+    {
+      "_key": "ministries-worship",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "worship"
+      },
+      "imageSide": "right",
+      "ministry": {
+        "_ref": "ministry-worship",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-children",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "children"
+      },
+      "imageSide": "left",
+      "ministry": {
+        "_ref": "ministry-children",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-children-rooms",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "ch-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Sunday school"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "ch-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-d-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "“Sunday School” refers to a time of small group Bible study during the hour before our regular worship service. While adults are in their traditional Sunday School classes the following is available:"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Nursery (Rm. 104) is available for infants through 3 years old."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-e-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-e-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Children Pre-K through 5th grade are invited to gather in the Kids Center (Rm. B01) to learn about Christian spiritual habits through creative exercises in art, music, reading."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-f-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-f-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "During this time, we emphasize one of four different spiritual habits: spending time with others, using your gifts, spending time with God, and witnessing to our faith."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-g-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-g-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "FBCM’s children’s ministry volunteers teach these spiritual habits through a variety of worship arts experiences, such as hand bells, choir, and theater."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-h-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-h-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Parents can pick-up their children from the Nursery and Worship Arts Sunday School at 10:15 AM to enjoy breakfast at “Donut Hour” as a family in the Fellowship Hall."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-h2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-h2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Worship and children’s church"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "ch-i-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-i-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "When it’s time for the worship service to begin at {time}, younger kids may be returned to the Nursery (Rm. 104) while older children Pre-K through 5th grade will join their families in the sanctuary for the first part of worship (~15 minutes) before being dismissed to Children’s Church."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-j-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-j-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "FBC Muncie provides childcare throughout all of worship for infants through 3 year olds in the Nursery (Rm. 104)."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-k-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-k-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Families who prefer to keep their young children close during worship are also welcome to use the Family Room (Rm. 105) to nurse, calm crying kids, or take a break while watching the service on a TV."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-l-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-l-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Because FBC Muncie believes that Children’s Ministry should be part of the life of the entire congregation, we welcome preschool through 5th grade children to participate in the first part of Sunday worship with the adults."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-m-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-m-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "During this time, children will be invited to join their families and the congregation in:"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-n-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-n-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "singing, clapping, and dancing to praise songs"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-n-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-n-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "reading and listening to holy Scripture"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-n-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-n-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "praying"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-n-4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-n-4s1",
+              "_type": "span",
+              "marks": [],
+              "text": "participating in occasional “Children’s Time,” activities and lessons at the front of the sanctuary."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-o-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-o-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "When the first part of worship is over, a member of the FBC Muncie Leadership Team will invite all the children to line up and follow our Children’s Ministry volunteers to Children’s Church. You are also welcome to walk with your child to Children’s Church if that makes you or your child feel more comfortable. Currently, FBCM provides two Children’s Church classes:"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-p-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-p-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Kickstart (Rm. 102) for Preschool through 2nd graders."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-p-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-p-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The Underground (Rm. B01) for 3rd through 5th graders."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-q-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-q-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "During this second half of worship, adults will have the opportunity to hear the sermon and participate in the rest of worship."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-r-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-r-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Meanwhile, during Children’s Church, your kids will be engaging with the Bible story through short stories, crafts, games, and other age-appropriate group activities."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-s-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-s-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "When worship is over, parents will take their security tag to pick-up their children from their various classrooms. If you are unsure where a classroom is located, you can stop by the Welcome Center and someone there will be able to guide you."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-h3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-h3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Through the year"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "ch-t-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-t-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Several children’s events are planned throughout the year. Some are just for fun while others are ways for the children to serve in the church or community. Events are age appropriate and fun for the whole family!"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-u-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-u-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Examples of special events you can expect from our Children’s Ministry include:"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-v-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-v-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Vacation Bible School (VBS)"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-v-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-v-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Parent's Night Out"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-v-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-v-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Family Service opportunities"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-v-4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-v-4s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Trunk or Treat"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ch-v-5",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ch-v-5s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Operation Christmas Child"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "heading": "Sunday, room by room"
+    },
+    {
+      "_key": "ministries-children-faq",
+      "_type": "faqSection",
+      "eyebrow": "Children",
+      "heading": "Questions parents ask",
+      "items": [
+        {
+          "_key": "q-1",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a1-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "We have a check-in station for children at our Welcome Center, located on the first floor hallway just outside the sanctuary. At the welcome center, our greeters will be able to assist you with checking-in your children and getting them to the correct classrooms. Each classroom maintains at least two adults at all times. All Children's ministry volunteers are background checked and trained by an FBC Leader."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "What security measures are in place?"
+        },
+        {
+          "_key": "q-2",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a2-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a2-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "When checking-in, parents enter a phone number and a name tag is issued for each child in that family. On the name tag is the child’s name, age, parent’s phone number (that is how you will be notified if your child is sick, hurt, etc), any known allergies, and a random code. Parents will get a security tag with a code that matches their child’s; this tag will need to be presented for pick up."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "What does check-in involve?"
+        },
+        {
+          "_key": "q-3",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a3-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a3-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "We are always looking for those who have a heart to love and teach our children, but also would like to build a relationship and make expectations and resources available to those who volunteer. Background checks and training are required for all volunteers. You can "
+                },
+                {
+                  "_key": "a3-1s2",
+                  "_type": "span",
+                  "marks": [
+                    "a3-1l1"
+                  ],
+                  "text": "contact the church office"
+                },
+                {
+                  "_key": "a3-1s3",
+                  "_type": "span",
+                  "marks": [],
+                  "text": ", "
+                },
+                {
+                  "_key": "a3-1s4",
+                  "_type": "span",
+                  "marks": [
+                    "a3-1l2"
+                  ],
+                  "text": "the Children's Ministry Church Coordination Team leader"
+                },
+                {
+                  "_key": "a3-1s5",
+                  "_type": "span",
+                  "marks": [],
+                  "text": ", or "
+                },
+                {
+                  "_key": "a3-1s6",
+                  "_type": "span",
+                  "marks": [
+                    "a3-1l3"
+                  ],
+                  "text": "our pastors"
+                },
+                {
+                  "_key": "a3-1s7",
+                  "_type": "span",
+                  "marks": [],
+                  "text": " for more information."
+                }
+              ],
+              "markDefs": [
+                {
+                  "_key": "a3-1l1",
+                  "_type": "link",
+                  "href": "/contact"
+                },
+                {
+                  "_key": "a3-1l2",
+                  "_type": "link",
+                  "href": "/staff"
+                },
+                {
+                  "_key": "a3-1l3",
+                  "_type": "link",
+                  "href": "/contact"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "question": "Can I volunteer on the Children’s Ministry team or in a classroom?"
+        },
+        {
+          "_key": "q-4",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a4-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a4-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Absolutely! We encourage it! There are containers in each classroom in which the children can place their offering."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "Can children bring an offering?"
+        },
+        {
+          "_key": "q-5",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a5-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a5-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "No. But they are welcome to if they have their own. In Sunday School and Children’s Church the kids will be looking over passages in the Bible. We will certainly provide a Bible if your child does not have one."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "Does my child need to bring a Bible?"
+        }
+      ]
+    },
+    {
+      "_key": "ministries-youth",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "youth"
+      },
+      "imageSide": "right",
+      "ministry": {
+        "_ref": "ministry-youth",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-adult",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "adult"
+      },
+      "ministry": {
+        "_ref": "ministry-adult",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-outreach",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "outreach"
+      },
+      "ministry": {
+        "_ref": "ministry-outreach",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-team",
+      "_type": "staffGridSection",
+      "eyebrow": "Get involved",
+      "group": "coordination",
+      "heading": "The people to talk to",
+      "showBios": false
+    },
+    {
+      "_key": "ministries-stay-updated",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "su-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Stay updated"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "su-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "There are many ways to get the latest information about what is happening in Adult ministry or any of our ministries."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "su-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-b-1s1",
+              "_type": "span",
+              "marks": [
+                "su-b-1l1"
+              ],
+              "text": "Wednesday Weekly"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "su-b-1l1",
+              "_type": "link",
+              "href": "https://fbcmuncie.churchcenter.com/pages/fbcs-wednesday-weekly"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "su-b-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-b-2s1",
+              "_type": "span",
+              "marks": [
+                "su-b-2l1"
+              ],
+              "text": "The Visitor Quarterly"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "su-b-2l1",
+              "_type": "link",
+              "href": "/blog#publications"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "su-b-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-b-3s1",
+              "_type": "span",
+              "marks": [
+                "su-b-3l1"
+              ],
+              "text": "Our Church App."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "su-b-3l1",
+              "_type": "link",
+              "href": "https://fbcmuncie.churchcenter.com/"
+            }
+          ],
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "_key": "ministries-cta",
+      "_type": "ctaBandSection",
+      "cta": {
+        "_key": "cta-3",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-visit",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Plan a visit",
+        "linkType": "internal"
+      },
+      "eyebrow": "Come and see",
+      "headline": "Find your place.",
+      "secondaryCta": {
+        "_key": "cta-4",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-contact",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Contact us",
+        "linkType": "internal"
+      },
+      "subhead": "{service time}. {address}."
+    }
+  ],
+  "seoDescription": "Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at {time}, and the person to talk to about each one.",
+  "seoTitle": "Ministries | First Baptist Church Muncie",
+  "slug": {
+    "_type": "slug",
+    "current": "ministries"
+  },
+  "title": "Ministries"
+}

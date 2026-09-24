@@ -1,0 +1,271 @@
+{
+  "_createdAt": "2026-09-19T14:00:18Z",
+  "_id": "siteSettings",
+  "_rev": "Ys0n1JF87Egki86mmV1Zgy",
+  "_type": "siteSettings",
+  "_updatedAt": "2026-09-24T11:52:24Z",
+  "address": "309 East Adams Street\nMuncie, IN 47305",
+  "churchCenterUrl": "https://fbcmuncie.churchcenter.com/",
+  "churchTracUrl": "https://fbcmuncie.churchtrac.com/",
+  "directionsUrl": "https://www.google.com/maps/search/?api=1&query=309+East+Adams+Street+Muncie+IN+47305",
+  "email": "office@fbcmuncie.org",
+  "footerColumns": [
+    {
+      "_key": "fcol-pages",
+      "_type": "footerColumn",
+      "links": [
+        {
+          "_key": "fcol-pages-visit",
+          "_type": "navLink",
+          "href": "/visit",
+          "label": "Visit"
+        },
+        {
+          "_key": "fcol-pages-who",
+          "_type": "navLink",
+          "href": "/who-we-are",
+          "label": "Who We Are"
+        },
+        {
+          "_key": "fcol-pages-beliefs",
+          "_type": "navLink",
+          "href": "/beliefs",
+          "label": "Beliefs"
+        },
+        {
+          "_key": "fcol-pages-ministries",
+          "_type": "navLink",
+          "href": "/ministries",
+          "label": "Ministries"
+        },
+        {
+          "_key": "fcol-pages-staff",
+          "_type": "navLink",
+          "href": "/staff",
+          "label": "Staff"
+        },
+        {
+          "_key": "fcol-pages-history",
+          "_type": "navLink",
+          "href": "/history",
+          "label": "History"
+        },
+        {
+          "_key": "fcol-pages-give",
+          "_type": "navLink",
+          "href": "/give",
+          "label": "Give"
+        },
+        {
+          "_key": "fcol-pages-blog",
+          "_type": "navLink",
+          "href": "/blog",
+          "label": "Blog"
+        },
+        {
+          "_key": "fcol-pages-wedding",
+          "_type": "navLink",
+          "href": "/wedding",
+          "label": "Weddings and Building Use"
+        },
+        {
+          "_key": "fcol-pages-contact",
+          "_type": "navLink",
+          "href": "/contact",
+          "label": "Contact"
+        }
+      ],
+      "title": "Pages"
+    },
+    {
+      "_key": "fcol-elsewhere",
+      "_type": "footerColumn",
+      "links": [
+        {
+          "_key": "fcol-elsewhere-cc",
+          "_type": "navLink",
+          "externalUrl": "https://fbcmuncie.churchcenter.com/",
+          "label": "Church Center: calendar and giving",
+          "linkType": "external"
+        },
+        {
+          "_key": "fcol-elsewhere-ct",
+          "_type": "navLink",
+          "externalUrl": "https://fbcmuncie.churchtrac.com/",
+          "label": "Church Trac: newsletters and the app",
+          "linkType": "external"
+        },
+        {
+          "_key": "fcol-elsewhere-yt",
+          "_type": "navLink",
+          "externalUrl": "https://www.youtube.com/c/FbcmuncieOrg",
+          "label": "YouTube: every service",
+          "linkType": "external"
+        }
+      ],
+      "title": "Elsewhere"
+    }
+  ],
+  "givingUrl": "https://fbcmuncie.churchcenter.com/giving",
+  "headerCta": {
+    "label": "Give",
+    "link": {
+      "_type": "navLink",
+      "externalUrl": "https://fbcmuncie.churchcenter.com/giving",
+      "label": "Give",
+      "linkType": "external"
+    },
+    "show": true
+  },
+  "lifeEventFormUrl": "https://fbcmuncie.churchcenter.com/people/forms/159897",
+  "livestreamUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+  "navItems": [
+    {
+      "_key": "nav-visit",
+      "_type": "navLink",
+      "href": "/visit",
+      "label": "Visit"
+    },
+    {
+      "_key": "nav-group-who",
+      "_type": "navGroup",
+      "label": "Our Church",
+      "links": [
+        {
+          "_key": "sub-who",
+          "_type": "navSubLink",
+          "href": "/who-we-are",
+          "label": "Who We Are"
+        },
+        {
+          "_key": "sub-beliefs",
+          "_type": "navSubLink",
+          "href": "/beliefs",
+          "label": "Beliefs"
+        },
+        {
+          "_key": "sub-staff",
+          "_type": "navSubLink",
+          "href": "/staff",
+          "label": "Staff"
+        },
+        {
+          "_key": "sub-history",
+          "_type": "navSubLink",
+          "href": "/history",
+          "label": "History"
+        }
+      ]
+    },
+    {
+      "_key": "nav-ministries",
+      "_type": "navLink",
+      "href": "/ministries",
+      "label": "Ministries"
+    },
+    {
+      "_key": "nav-weddings",
+      "_type": "navLink",
+      "href": "/wedding",
+      "label": "Weddings"
+    },
+    {
+      "_key": "nav-blog",
+      "_type": "navLink",
+      "href": "/blog",
+      "label": "Blog"
+    }
+  ],
+  "newsletter": {
+    "blurb": "Say what a subscriber gets and how often. Replace this line.",
+    "buttonLabel": "Subscribe",
+    "consentNote": "No spam. Unsubscribe anytime.",
+    "enabled": false,
+    "heading": "Your signup heading goes here.",
+    "successMessage": "You're in. Check your inbox."
+  },
+  "officeHours": [
+    {
+      "_key": "seed-1",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "seed-2",
+          "_type": "span",
+          "marks": [],
+          "text": "Monday to Thursday: 9 am to 12 pm and 1 pm to 4 pm"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "seed-3",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "seed-4",
+          "_type": "span",
+          "marks": [],
+          "text": "Friday: 9 am to 12 pm"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "seed-5",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "seed-6",
+          "_type": "span",
+          "marks": [],
+          "text": "Sunday: 9 am to 12 pm"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "seed-7",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "seed-8",
+          "_type": "span",
+          "marks": [],
+          "text": "Hours may change on holidays."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "pastoralHours": [
+    {
+      "_key": "seed-9",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "seed-10",
+          "_type": "span",
+          "marks": [],
+          "text": "Tuesdays: 9 am to 12 pm and 1 pm to 5 pm"
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "phone": "(765) 284-7749",
+  "sectionVisibility": {
+    "showJournal": true
+  },
+  "serviceLength": "About an hour",
+  "serviceTime": "Sundays at 10:45 am",
+  "tagline": "We're a Spirit-led people gathered to join Christ's presence in our community.",
+  "title": "First Baptist Church Muncie",
+  "visitorFormUrl": "https://fbcmuncie.churchcenter.com/people/forms/159198",
+  "youtubeUrl": "https://www.youtube.com/c/FbcmuncieOrg"
+}
