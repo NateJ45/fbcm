@@ -118,6 +118,8 @@ The dated line can now carry the coming Sunday's sermon (a link and up to about 
 | before (`main` at `2a5d612`)                        | 1.73, 1.88, 1.73 s                                    | 1.73 s     | 1.00, 0.99, 1.00 | header logo |
 | after, a current sermon on the line (fixture build) | 1.73, 1.73, 1.88 s (a second set: 1.73, 1.73, 1.73 s) | 1.73 s     | 1.00, 1.00, 0.99 | header logo |
 
+After, with no current preview (the state today, the markup unchanged but for the inline scripts): 8 runs, 1.73 s median (2.26, 1.73, 1.73 and 2.03, 1.73, 1.65, 1.73, 1.73 s). The two slow ones were the first run of each set, with FCP 1.65 s against 1.20 s in every other run, so the page was slow before the line could matter; in the 2.26 s run the dated line was the LCP element, the font-swap case the speed pass already recorded as bimodal.
+
 The line stays out of the LCP race, as the speed pass left it. `GET /api/live-status` is fetched only on Sunday mornings, after the header has painted, and blocks nothing.
 
 ### Lighthouse scorecard

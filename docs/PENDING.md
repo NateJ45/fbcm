@@ -1058,6 +1058,11 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
 - **The sermon line shows only when the church posts a preview for the coming Sunday.** The newest
   preview in the dataset is January 6 2026, so today the line reads as before. Nothing to do; it
   lights up the week a preview is published (and the site rebuilds, which a publish does).
+- **`npm run scaffold -- --remove journal --write` leaves 4 type errors, none from this branch.**
+  Checked while proving this branch's markers (the sermon files go, `index.astro` keeps a null
+  `sermon`): `DynamicList.astro` still names `durableFirst` (from `blog-derive.ts`) and
+  `convert-body.ts` imports `schemaTypes/journalEntry.ts`, both unmarked. Mark them (rule 14)
+  the next time the journal capability is touched.
 - **The Studio preview of the home page does not show the sermon.** Only the live route passes it
   to `SectionRenderer`; the preview route's hero reads as it did before. Worth wiring only if an
   editor asks.
