@@ -20,11 +20,24 @@
 // THE BUTTON IS THE OUTLINE, NOT THE GOLD PLATE. A gold plate on a gold band
 // is invisible; CtaLink's `onGold` draws the outline plate in dark ink.
 //
-// /give OPENS on this band: SectionRenderer passes level 'h1' there (a page
-// with no hero), and the heading then takes the band-opening scale from
-// headlineScale, exactly as before. Everywhere else the h2 sits on the shared
-// `text-h2` scale, the same as the hymn board's and the blog's headings above
-// it on the home page (CLAUDE.md rule 17; ruling 2026-09-23, Home Task 5).
+// Everywhere but /give the h2 sits on the shared `text-h2` scale, the same as
+// the hymn board's and the blog's headings above it on the home page
+// (CLAUDE.md rule 17; ruling 2026-09-23, Home Task 5).
+//
+// THE /give OPENER IS INDIGO (2026-09-24, the utility identity pass). /give
+// OPENS on this band: SectionRenderer passes level 'h1' there (a page with no
+// hero). Since the Visit pass the closing call to action (FinalCta) is ALSO a
+// gold band with one glyph at its left, so a gold opener made /give a page
+// that began and ended on the same band, with the footer's dark field the only
+// dark thing on it. The h1 path is therefore the page opener every other
+// opener on the site already is: the brand indigo band (the window hero, the
+// journal's opener), the headline in the titling capitals sized by length
+// (headlineScale), the paragraph as a lede in paper, the header's gold GIVE
+// plate as the button (gold never vanishes on indigo), and the basin, the
+// "Work" glyph, drawn large in gold at the right as the offering's mark. The
+// gold closing band then stays the page's one gold band. The h2 path (Home's
+// give band) does not change. The opener's CSS is in this file's <style>
+// block, which ships only on the pages that draw the band (CLAUDE.md rule 20).
 //
 // The button goes to the block's own link when the editor typed one, and otherwise
 // to the giving address in Site settings, so the church can move its giving page in
@@ -86,53 +99,104 @@ const giveCta = href
   : null;
 ---
 
-<section
-  class="bg-band-gold py-[clamp(64px,7vw,110px)] text-band-ink"
-  aria-labelledby={heading ? headingId : undefined}
->
-  <div
-    class="mx-auto grid max-w-content grid-cols-1 items-center gap-x-[clamp(24px,4vw,64px)] gap-y-6 px-gutter md:grid-cols-[auto_minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)_auto]"
-  >
-    <BuildingGlyph
-      name="basin"
-      class="w-14 text-band-indigo md:w-[clamp(64px,7vw,104px)] md:self-start lg:self-center"
-    />
-
-    <div class="min-w-0">
-      {
-        level === 'h1' ? (
+{
+  level === 'h1' ? (
+    <section class="give-open" aria-labelledby={heading ? headingId : undefined}>
+      <div class="go-grid mx-auto max-w-content px-gutter">
+        <BuildingGlyph name="basin" class="go-glyph" />
+        <div class="go-words min-w-0">
           <SectionHeading
             headline={heading}
             headingId={headingId}
             level="h1"
             scale={headlineScale(heading, { tall: false })}
             align="left"
-            tone="paper"
+            tone="band"
             wide
           />
-        ) : (
-          heading && (
+          {body && <p class="go-lede font-body">{body}</p>}
+          {giveCta && (
+            <div class="go-act">
+              <CtaLink cta={giveCta} variant="gold" onDark />
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section
+      class="bg-band-gold py-[clamp(64px,7vw,110px)] text-band-ink"
+      aria-labelledby={heading ? headingId : undefined}
+    >
+      <div class="mx-auto grid max-w-content grid-cols-1 items-center gap-x-[clamp(24px,4vw,64px)] gap-y-6 px-gutter md:grid-cols-[auto_minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)_auto]">
+        <BuildingGlyph
+          name="basin"
+          class="w-14 text-band-indigo md:w-[clamp(64px,7vw,104px)] md:self-start lg:self-center"
+        />
+
+        <div class="min-w-0">
+          {heading && (
             <h2 id={headingId} class:list={[H2_DISPLAY, 'text-band-indigo']}>
               {heading}
             </h2>
-          )
-        )
-      }
-      {
-        body && (
-          <p class="mt-2.5 mb-0 max-w-[30em] font-body text-[clamp(1.25rem,1.1rem+0.5vw,1.5rem)] leading-[1.45] text-band-ink">
-            {body}
-          </p>
-        )
-      }
-    </div>
-
-    {
-      giveCta && (
-        <div class="md:col-span-2 lg:col-span-1">
-          <CtaLink cta={giveCta} variant="outline" onGold />
+          )}
+          {body && (
+            <p class="mt-2.5 mb-0 max-w-[30em] font-body text-[clamp(1.25rem,1.1rem+0.5vw,1.5rem)] leading-[1.45] text-band-ink">
+              {body}
+            </p>
+          )}
         </div>
-      )
+
+        {giveCta && (
+          <div class="md:col-span-2 lg:col-span-1">
+            <CtaLink cta={giveCta} variant="outline" onGold />
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+<style is:global>
+  /* The /give opener only (level 'h1'). Home's gold h2 band uses none of it.
+     is:global, with every class prefixed go-, so Astro adds no scoping
+     attribute to the h2 path's markup: Home's band renders byte-identical. */
+  .give-open {
+    background: var(--color-band-indigo);
+    color: var(--color-white-pure);
+    padding-block: clamp(56px, 8vw, 128px);
+  }
+  .go-grid {
+    display: grid;
+    gap: 24px clamp(32px, 5vw, 96px);
+    align-items: end;
+  }
+  .give-open .go-glyph {
+    width: 64px;
+    color: var(--color-gold);
+  }
+  @media (min-width: 1024px) {
+    .go-grid {
+      grid-template-columns: minmax(0, 1fr) auto;
     }
-  </div>
-</section>
+    .go-words {
+      grid-row: 1;
+      grid-column: 1;
+    }
+    .give-open .go-glyph {
+      grid-row: 1;
+      grid-column: 2;
+      width: clamp(150px, 15vw, 230px);
+    }
+  }
+  .go-lede {
+    margin: clamp(18px, 2.4vw, 28px) 0 0;
+    max-width: 30em;
+    font-size: var(--text-lede);
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  }
+  .go-act {
+    margin-top: clamp(26px, 3.4vw, 40px);
+  }
+</style>
