@@ -10,7 +10,7 @@
 // visitor meets belongs to the church's own Church Center. So this page is the
 // same shape as /visit and /give, and task 14 retired the rest.
 //
-// Four things about this file are deliberate.
+// Five things about this file are deliberate.
 //
 // 1. NOTHING A VISITOR HAS TO ACT ON IS RETYPED. The phone number, the email,
 //    the address, the visitor card and the life-update form are all read off
@@ -35,6 +35,37 @@
 //    phone), and this is the page a visitor came to in order to act. A second
 //    "get in touch" band at the bottom of the Contact page would be the site
 //    asking twice.
+//
+// 5. THE IDENTITY PASS (2026-09-24, feat/utility-identity). What changed from
+//    the plan 2b page, and why:
+//    - THE CHURCH'S OWN HEADINGS (rollout rule 6). "Contact" (contact.txt
+//      line 1) for the hero, "Church Office Hours" (line 35) for the hours
+//      band, "Pastors’ Office Hours" (line 54) for the pastor band and
+//      "Notify Us" (line 7) for the life-update band. "Get in touch.",
+//      "Office and pastors' hours", "Tuesdays with Kendall or Jonathan" and
+//      "Tell the church" were plan 2b headings standing in for them.
+//    - THE CHURCH'S OWN BUTTONS AND LEAD. The hero's lede is the church's
+//      visitor-card sentence (line 5) and its button the church's own label
+//      "I’m new and want to learn more" (line 68); the life-update link is
+//      the church's "Notify the church" (line 70). Both hrefs still come from
+//      Site settings.
+//    - NO EYEBROWS. "Contact", "Hours", "Share a life update", "Meet with a
+//      pastor" and "Sunday" each named the band under them a second time
+//      (rollout rule 11).
+//    - A PHOTO OF ITS OWN. The hero used the home hero's corner photograph
+//      (contact-building is hero-building); it now shows the whole church at
+//      dusk from the street (contact-exterior), which no other page uses. A
+//      building, so the brand-band split hero draws it as a rectangle.
+//    - THE TUESDAY HOURS PRINT ONCE. The pastor band used to repeat the
+//      church's "Tuesday Office Hours | ..." line under the hours band that
+//      already reads the same hours out of Site settings. The pastor band
+//      keeps the pastors' two sentences and the two scheduling links.
+//    - THE ORDER. Hours, then the pastors (whose hours the band above just
+//      gave), then Notify Us, then Sunday: the taupe hours band and the
+//      pastor's portrait break the run of text, and the page still ends on
+//      the brown hymn board. The Worship row no longer repeats "Worship is at
+//      10:45 AM each Sunday." under a 10:45 numeral (the Visit pass made the
+//      same cut).
 
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -61,6 +92,7 @@ export default {
     'Dropped: the trailing comma on "Engagement/Marriage Announcement," (contact.txt line 19). It reads as a typo in a bulleted list, and every other item in the list ends with no punctuation at all.',
     'Re-laid out, not rewritten: the "For Business, Billing, or Related Needs" block. The capture puts the heading, the phone number and the email address on four separate lines (contact.txt lines 44 to 48). Here the heading is an h3 and the two values print under it, read from Site settings rather than retyped, so they cannot drift from the header, the footer and the hero facts.',
     'Not carried over: the "Other questions?" paragraph and the second copy of the phone number and email under "Mailing Address". The old page printed its contact details twice, which the content map lists as a problem; this page prints them once, in the hero facts, and once more under the business heading where the church deliberately distinguishes billing enquiries.',
+    'Not repeated: the pastors\' "Tuesday Office Hours | 9:00 a.m. - 12:00 p.m. and 1:00 p.m - 5:00 p.m." line (contact.txt line 60). The hours band above the pastors now prints the same hours from Site settings, so the page gives them once.',
   ],
 
   // No identifiable children on this page: the hero frame is the building and
@@ -97,9 +129,11 @@ export default {
     const telDigits = String(settings.phone).replace(/[^\d]/g, '');
 
     // -- The photographs -----------------------------------------------------
-    const building = await images.image('contact-building');
+    // The whole church at dusk, from the street. No other page uses it
+    // (contact-building, the photo this replaced, is the home hero's).
+    const building = await images.image('contact-exterior');
     if (!building) {
-      throw new Error('contact.mjs: no photo in the manifest for "contact-building"');
+      throw new Error('contact.mjs: no photo in the manifest for "contact-exterior"');
     }
 
     // The pastor band shows ONE portrait, because imageTextSection carries one
@@ -186,7 +220,29 @@ export default {
     // carries.
     const pastorsInAndOut = line('contact', 'in and out of the office');
     const pastorsTuesdays = line('contact', 'have set aside Tuesdays');
-    const pastorsTuesdayHours = line('contact', 'Tuesday Office Hours |');
+    // The church's own headings and button labels, read the same way so a
+    // rewritten capture fails the run instead of seeding a stale word.
+    const exact = (slug, text) => {
+      const got = line(slug, text);
+      if (got !== text) {
+        throw new Error(`contact.mjs: expected the line "${text}" in ${slug}.txt, found "${got}"`);
+      }
+      return got;
+    };
+    const pageHeading = exact('contact', 'Contact');
+    const officeHeading = exact('contact', 'Church Office Hours');
+    const pastorsHeading = exact('contact', 'Pastors’ Office Hours');
+    const notifyHeading = exact('contact', 'Notify Us');
+    const visitorLead = line('contact', 'virtual visitor’s card');
+    /** A [Button] label from the capture, by the form URL it points at. */
+    const buttonLabel = (url) => {
+      const raw = line('contact', url);
+      const m = raw.match(/^\[Button\]\s*(.+?)\s*->/);
+      if (!m) throw new Error(`contact.mjs: no [Button] label on the line for ${url}`);
+      return m[1];
+    };
+    const newVisitorLabel = buttonLabel('forms/159198');
+    const notifyLabel = buttonLabel('forms/159897');
 
     return {
       title: 'Contact',
@@ -195,24 +251,24 @@ export default {
       addToMainNav: false,
 
       pageBuilder: [
-        // 1. Hero. Words left, the corner of the building on the right, and the
-        //    three facts a visitor came for. Both buttons are above the fold,
-        //    which is what spec 5.11 point 2 asks for: the visitor card for
-        //    someone new, the phone for someone who needs the office now.
+        // 1. Hero on the brand band: the church's own heading and its own
+        //    visitor-card sentence, the three facts a visitor came for, and
+        //    both calls above the fold (spec 5.11 point 2). The whole church
+        //    at dusk in a rectangle at the right (a building, not people).
         {
           _type: 'heroSection',
           _key: 'contact-hero',
           layout: 'split',
           size: 'short',
-          eyebrow: 'Contact',
-          headline: 'Get in touch.',
+          headline: pageHeading,
+          subhead: visitorLead,
           frames: [{ ...building, _key: 'frame-1' }],
           facts: [
             { _type: 'heroFact', _key: 'fact-1', label: 'Phone', value: settings.phone },
             { _type: 'heroFact', _key: 'fact-2', label: 'Email', value: settings.email },
             { _type: 'heroFact', _key: 'fact-3', label: 'Address', value: streetLine },
           ],
-          primaryCta: ctaExternal('Fill in a visitor card', settings.visitorFormUrl),
+          primaryCta: ctaExternal(newVisitorLabel, settings.visitorFormUrl),
           // A tel: link should not open a second tab, so the flag ctaExternal
           // sets for an off-site URL is turned back off here (same as staff.mjs).
           secondaryCta: {
@@ -221,53 +277,30 @@ export default {
           },
         },
 
-        // 2. Hours. The band holds NO hours: Hours.astro reads
-        //    siteSettings.officeHours and .pastoralHours live, so the office's
-        //    holiday note and the footer can never disagree with this page.
-        //    See note 1 at the top of this file.
+        // 2. Church Office Hours, the office door. The band holds NO hours:
+        //    Hours.astro reads siteSettings.officeHours and .pastoralHours
+        //    live, so the holiday note and the footer can never disagree with
+        //    this page. See note 1 at the top of this file.
         {
           _type: 'hoursSection',
           _key: 'contact-hours',
-          eyebrow: 'Hours',
-          heading: "Office and pastors' hours",
+          heading: officeHeading,
         },
 
-        // 3. Share a life update. The church's own question, the church's own
-        //    list, and one new sentence saying what happens after the form goes
-        //    in (declared in newCopy above). /contact#life-update lands here.
-        {
-          _type: 'richTextSection',
-          _key: 'contact-life-update',
-          anchor: { _type: 'slug', current: 'life-update' },
-          eyebrow: 'Share a life update',
-          heading: 'Tell the church',
-          body: [
-            // contact.txt line 9, verbatim.
-            ...paragraphs(line('contact', 'share something with the church'), 'lu-intro'),
-            ...bullets(lifeEvents, 'lu'),
-            ...paragraphs(
-              `Tell us and a member of the pastoral team will follow up. [Share a life update](${settings.lifeEventFormUrl})`,
-              'lu-follow',
-            ),
-          ],
-        },
-
-        // 4. Meet with a pastor. Kendall's portrait (see the note above on why
-        //    one and not two), both co-pastors named, and each one's own Google
-        //    Calendar link inline on their name. The business/billing heading
-        //    goes under the same band because it is the same question asked a
-        //    different way: who do I actually contact?
+        // 3. Pastors’ Office Hours. Kendall's portrait (see the note above on
+        //    why one and not two), both co-pastors named, and each one's own
+        //    Google Calendar link. The business/billing heading goes under the
+        //    same band because it is the same question asked a different way:
+        //    who do I actually contact?
         {
           _type: 'imageTextSection',
           _key: 'contact-pastors',
           image: pastorPhoto,
           imageSide: 'left',
-          eyebrow: 'Meet with a pastor',
-          heading: 'Tuesdays with Kendall or Jonathan',
+          heading: pastorsHeading,
           body: [
             ...paragraphs(pastorsInAndOut, 'mp-a'),
             ...paragraphs(pastorsTuesdays, 'mp-b'),
-            ...paragraphs(pastorsTuesdayHours, 'mp-c'),
             ...paragraphs(
               `[Schedule with Jonathan Balmer](${jonathanCalendar}) · [Schedule with Kendall Ellis](${kendallCalendar})`,
               'mp-d',
@@ -279,13 +312,32 @@ export default {
           ],
         },
 
-        // 5. Sunday, with the map. No doors: /visit#accessibility is the page
-        //    that walks a visitor through the three entrances, and repeating it
-        //    here would be the second copy rule 15 is about.
+        // 4. Notify Us. The church's own question, the church's own list, one
+        //    new sentence saying what happens after the form goes in (declared
+        //    in newCopy above) and the church's own button label on the link.
+        //    /contact#life-update lands here.
+        {
+          _type: 'richTextSection',
+          _key: 'contact-life-update',
+          anchor: { _type: 'slug', current: 'life-update' },
+          heading: notifyHeading,
+          body: [
+            // contact.txt line 9, verbatim.
+            ...paragraphs(line('contact', 'share something with the church'), 'lu-intro'),
+            ...bullets(lifeEvents, 'lu'),
+            ...paragraphs(
+              `Tell us and a member of the pastoral team will follow up. [${notifyLabel}](${settings.lifeEventFormUrl})`,
+              'lu-follow',
+            ),
+          ],
+        },
+
+        // 5. Sunday, on the hymn board. No doors: /visit#accessibility is the
+        //    page that walks a visitor through the three entrances, and
+        //    repeating it here would be the second copy rule 15 is about.
         {
           _type: 'sundayTimesSection',
           _key: 'contact-sunday',
-          eyebrow: 'Sunday',
           heading: 'Find us on Sunday',
           items: [
             {
@@ -293,8 +345,6 @@ export default {
               _key: 'time-1',
               label: 'Worship',
               big: serviceTime,
-              // home.txt line 32.
-              body: line('home', 'Worship is at'),
             },
             {
               _type: 'timeItem',
@@ -304,16 +354,10 @@ export default {
               // siteSettings.address's first line, "309 East Adams Street";
               // the band's big line drops the word "Street" because the label
               // above it already says "Find us" and the short form is what the
-              // church says out loud. A typed copy here would be a second
-              // source of truth for something Site settings already holds, and
-              // the typed one is the one that goes stale.
+              // church says out loud.
               big: streetLine.replace(/\s+Street$/i, ''),
-              // accessibility.txt line 3. The brief asked for "the parking
-              // line" from that capture and there is none: accessibility.txt
-              // is about the entrances, and the parking sentence lives in
-              // what-to-expect.txt where /visit already uses it. This is that
-              // file's own first sentence, and it is the one that tells a
-              // driver which side of the building to aim for.
+              // accessibility.txt line 3: the sentence that tells a driver
+              // which side of the building to aim for.
               body: line('accessibility', 'wheelchair accessible entrance is off'),
             },
             {

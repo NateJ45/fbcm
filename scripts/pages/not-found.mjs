@@ -8,18 +8,20 @@
 //
 // Two things about this file are deliberate.
 //
-// 1. THE PHOTO IS THE CHURCH'S OWN TOWER, NOT A GENERIC PLACEHOLDER. The
-//    page-images manifest already carries `notfound-tower` as an alias of
-//    `hero-tower` (scripts/data/page-images.json), specifically so this page
-//    would not need its own photograph uploaded a second time.
+// 1. NO PHOTOGRAPH (2026-09-24, the utility identity pass). The page used to
+//    show the church's tower (`notfound-tower`, an alias of `hero-tower`),
+//    which is also the home hero's first frame and the history opener's. A
+//    photo is not reused across pages (rollout rules), so the 404 draws the
+//    church's door glyph instead and this module no longer sets heroImage;
+//    createOrReplace clears the one the live document still carries.
 //
-// 2. THREE LINKS, ONE BUTTON FAMILY (CLAUDE.md rule 17). The schema's three
-//    CTA slots (primary/secondary/tertiary) used to render three different
-//    looks in src/pages/404.astro (gold, indigo outline, and a third muted
-//    outline for tertiary). That third look is gone: src/pages/404.astro now
-//    renders all three through CtaLink, gold for the primary and outline for
-//    the other two, so a lost visitor sees the same two button looks used
-//    everywhere else on the site.
+// 2. FOUR DOORS, NAMED AS THE MENU NAMES THEM. The rollout sends a lost
+//    visitor to the four main doors: Visit, Who We Are, Blog and Give. Each
+//    label is the page's name in the header menu, so the
+//    doors read as the same places the header offers, and none of them is a
+//    new sentence. src/pages/404.astro draws each with a building glyph by
+//    position (door, window, rose, basin). "Contact us" came off: the phone
+//    and the email are in the footer directly below the doors.
 
 export default {
   id: 'notFoundPage',
@@ -35,14 +37,7 @@ export default {
   confirm: [],
   photoConsent: [],
 
-  async build(ctx) {
-    const { images } = ctx;
-
-    const heroImage = await images.image('notfound-tower');
-    if (!heroImage) {
-      throw new Error('not-found.mjs: images.image("notfound-tower") returned nothing.');
-    }
-
+  async build() {
     return {
       seoTitle: 'Page not found',
       seoDescription: 'That page has moved or never was. Head back to the site or get in touch.',
@@ -51,14 +46,14 @@ export default {
       headline: 'That page has moved or never was.',
       body: "It happens. If you followed an old link, it may have moved when we rebuilt this site. Here's where to go instead.",
 
-      heroImage: { ...heroImage, caption: 'First Baptist Church Muncie' },
-
-      primaryCtaLabel: 'Plan a visit',
+      primaryCtaLabel: 'Visit',
       primaryCtaHref: '/visit',
-      secondaryCtaLabel: 'Read the blog',
-      secondaryCtaHref: '/blog',
-      tertiaryCtaLabel: 'Contact us',
-      tertiaryCtaHref: '/contact',
+      secondaryCtaLabel: 'Who We Are',
+      secondaryCtaHref: '/who-we-are',
+      tertiaryCtaLabel: 'Blog',
+      tertiaryCtaHref: '/blog',
+      fourthCtaLabel: 'Give',
+      fourthCtaHref: '/give',
     };
   },
 };

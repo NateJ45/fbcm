@@ -36,6 +36,7 @@
   "wedding-exterior": { "file": "08181c_f0bbfdccafa34e00b7f42470a9353cff_tilde_mv2.jpg", "alt": "A wedding party celebrating in front of the church's red doors", "maxWidth": 1600 },
 
   "contact-building": { "same": "hero-building", "alt": "The corner of the church at Adams and Jefferson" },
+  "contact-exterior": { "library": "08181c_4d5376a99e1e4e63b8f8c2a7f471891f_tilde_mv2.jpg", "alt": "The whole church at dusk under a cloudy sky: the limestone bell tower with its red door, the flag, the lit sign on the lawn and the long wing beside it" },
 
   "logo-abcusa": { "file": "08181c_1f9b399e288b420b8408f9b61759250f_tilde_mv2.png", "alt": "American Baptist Churches USA logo", "maxWidth": 800, "format": "png" },
   "logo-abc-indiana-kentucky": { "file": "08181c_d295dfa7f3f042959b35e60e01abaf11_tilde_mv2.png", "alt": "American Baptist Churches of Indiana and Kentucky logo", "maxWidth": 800, "format": "png" },
