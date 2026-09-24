@@ -4,10 +4,10 @@
 // pass; the prototype's `.facts`): a small taupe label over each value, a gold
 // hairline between them. A value that is a clock time ("10:45 am") is set as
 // the gold titling numeral with its am/pm small, italic and lower case, read
-// by hymn-board's readBig on the stega-cleaned text, exactly as the hymn board
+// by readBig (clock-read.ts) on the stega-cleaned text, exactly as the hymn board
 // sets its times; any other value is set in the UI face. Used by the window
 // and split branches of Hero.astro, both of which sit on a fixed dark band.
-import { readBig } from '@/lib/hymn-board';
+import { readBig } from '@/lib/clock-read';
 
 interface Fact {
   _key?: string;
