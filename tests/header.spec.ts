@@ -25,7 +25,7 @@ import { test, expect } from '@playwright/test';
 // carries no overlay state to seed. That is also why this file stays
 // chromium-only in playwright.config.ts, alongside reflow.spec.ts.
 //
-// NOT PORTABLE: `.header-give` and the /beliefs link are this site's.
+// NOT PORTABLE: `.header-give` and the /ministries link (a top-level link; Beliefs moved into the Our Church dropdown on 2026-09-24) are this site's.
 // =============================================================================
 
 test.use({ viewport: { width: 1440, height: 900 } });
@@ -76,8 +76,8 @@ test('data-scrolled follows a scroll up, and is seeded on a restore', async ({ p
   // A real in-page link click, so the View Transitions router handles it, and
   // a settle before going back: Astro stores the outgoing scroll position
   // during the swap, and leaving immediately gives it nothing to restore.
-  await page.click('header a[href="/beliefs"]');
-  await expect(page).toHaveURL(/\/beliefs\/?$/);
+  await page.click('header a[href="/ministries"]');
+  await expect(page).toHaveURL(/\/ministries\/?$/);
   await page.waitForTimeout(900);
   await page.goBack();
 
