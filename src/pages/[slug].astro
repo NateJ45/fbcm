@@ -13,6 +13,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionRenderer from '@/components/SectionRenderer.astro';
 import { getPage, getAllPageSlugs, getSiteSettings } from '@/lib/queries';
 import { breadcrumbSchema, sundayWorshipSchema, SERVICE_PAGE_SLUG } from '@/lib/schemas';
+import { faqSchema } from '@/lib/schemas'; // scaffold: church
 import { sundayOnOrAfter } from '@/lib/church-schema';
 import { sanityFetch } from '@/lib/sanity';
 import { site } from '@/data/site';
@@ -83,12 +84,18 @@ if (slug === SERVICE_PAGE_SLUG) {
   worship = sundayWorshipSchema(siteSettings, sundayOnOrAfter(newest));
 }
 
+// A page with a "Questions and answers" band also carries them as an
+// FAQPage, derived from the band itself (src/lib/faq-schema.ts).
+let faq: string | null = null;
+faq = faqSchema((pageDoc as any).pageBuilder, `/${slug}`); // scaffold: church
+
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
     { name: (pageDoc as any).title ?? 'Page', url: `${site.url}/${slug}` },
   ]),
   ...(worship ? [worship] : []),
+  ...(faq ? [faq] : []),
 ];
 ---
 

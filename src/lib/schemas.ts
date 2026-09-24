@@ -19,6 +19,7 @@ import {
   type SiteFacts,
 } from './church-schema.ts';
 import { blogPostingNode, type PostForSchema } from './post-schema.ts'; // scaffold: journal
+import { faqPageNode, type SectionIn } from './faq-schema.ts'; // scaffold: church
 
 // ---------- Types (loose — Sanity provides the actual document shapes) ----
 
@@ -65,6 +66,7 @@ export const SITE_FACTS: SiteFacts = {
   logo: `${site.url}/icon-512.png`,
   image: `${site.url}/og/home.png`,
   sameAsPlace: site.wikidata ? [site.wikidata] : [],
+  googleBusinessProfile: site.googleBusinessProfile || undefined,
 };
 
 export function localBusinessSchema(settings: SiteSettings | null | undefined): string {
@@ -87,6 +89,21 @@ export function sundayWorshipSchema(
   });
   return node ? ldJson(node) : null;
 }
+
+// scaffold: church
+// ---------- FAQPage (any page with a "Questions and answers" band) ----------
+// Derived from the page's own faqSection bands by faqPageNode() in
+// ./faq-schema.ts, which says why and what Google does with it. `path` is the
+// page's path ('/visit'); null when the page has no answered question.
+
+export function faqSchema(sections: unknown, path: string): string | null {
+  const node = faqPageNode(
+    Array.isArray(sections) ? (sections as SectionIn[]) : null,
+    `${site.url}${path === '/' ? '' : path}`,
+  );
+  return node ? ldJson(node) : null;
+}
+// scaffold:end
 
 // ---------- Service list (for /services) -----------------------------------
 

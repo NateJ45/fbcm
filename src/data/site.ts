@@ -88,6 +88,16 @@ export const site = {
   geo: { latitude: 40.19167, longitude: -85.38405 },
   wikidata: 'https://www.wikidata.org/wiki/Q5452411',
 
+  /** The church's Google Business Profile: the share link of its place on
+   *  Google Maps (https://maps.app.goo.gl/... or https://www.google.com/maps?cid=...).
+   *  EMPTY ON PURPOSE until the church claims the profile (docs/PENDING.md).
+   *  When set, the Church node lists it in `sameAs` and uses it for `hasMap`
+   *  (src/lib/church-schema.ts). Code, not Site settings, because it is a
+   *  one-time fact about the building's listing that no editor needs to
+   *  change; Site settings has no field for it, and adding one is a schema
+   *  change for a value set once. apply-brand never touches this. */
+  googleBusinessProfile: '',
+
   // Public repo URL (used in footer credit if shown)
   repo: '',
 };
