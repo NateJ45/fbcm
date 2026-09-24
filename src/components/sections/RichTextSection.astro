@@ -18,13 +18,17 @@
 // share their opening words is set as a said text), many short statements
 // become a two-column register, long prose is one reading measure. The
 // approved prototype is docs/superpowers/prototypes/2026-09-22-richtext-and-photos/richtext/.
+// The band heading is in the one heading grammar (H2_DISPLAY through
+// SectionHeading face="display", CLAUDE.md rule 17, 2026-09-24, the Visit
+// identity pass); the body's look is the Beliefs pass's to settle.
 // `width` and `align` stay in the schema for old documents and have no effect.
 //
 // THE GROUND (2026-09-24, the Beliefs identity pass). SectionRenderer hands
 // the band a `ground` derived by src/lib/rich-ground.ts: 'paper' is the
 // cadence surface as before; 'indigo', 'brown' or 'taupe' is a full-width
 // brand band (rollout rules 1 and 2), re-inked by the .rt-band rules in
-// RichBody.astro. No colour field anywhere (CLAUDE.md rule 9).
+// src/styles/ledger.css. No colour field anywhere (CLAUDE.md rule 9).
+import '@/styles/ledger.css';
 import SectionHeading from '@/components/SectionHeading.astro';
 import RichBody from '@/components/sections/RichBody.astro';
 import { surfaceClass } from '@/lib/surfaces';
@@ -87,6 +91,7 @@ const measure = layout.pieces[0];
                 headingId={headingId}
                 scriptAccent={scriptAccent}
                 headingAccent={headingAccent}
+                face="display"
               />
             </div>
             <div class:list={['rt-rt', layout.rowLong && 'is-long']}>
@@ -106,6 +111,7 @@ const measure = layout.pieces[0];
                 headingId={headingId}
                 scriptAccent={scriptAccent}
                 headingAccent={headingAccent}
+                face="display"
               />
             </div>
           )}

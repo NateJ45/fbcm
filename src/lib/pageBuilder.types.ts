@@ -153,9 +153,11 @@ export type ProjectedRichTextSection = { _key: string } & _RichTextSection & {
 
 export type ProjectedImageTextSection = { _key: string } & Omit<
   _ImageTextSection,
-  'image' | 'cta'
+  'image' | 'detail' | 'cta'
 > & {
     image?: ProjectedImage | null;
+    /** The small second photo, drawn in a lancet over a people photo's corner. */
+    detail?: ProjectedImage | null;
     cta?: ProjectedCtaBlock | null;
     /** Non-schema alias for imageSide present in some defaultSections entries. */
     imagePosition?: 'left' | 'right';
@@ -334,7 +336,12 @@ export type ProjectedSundayTimesSection = { _key: string } & Omit<
   };
 
 /** One timeline row after `"anchor": anchor.current` flattens the slug. */
-export type ProjectedTimelineRow = Omit<NonNullable<_TimelineSection['rows']>[number], 'anchor'> & {
+export type ProjectedTimelineRow = Omit<
+  NonNullable<_TimelineSection['rows']>[number],
+  'anchor' | 'image'
+> & {
+  /** The step's photo, drawn in a door arch (Timeline.astro). */
+  image?: ProjectedImage | null;
   /** The slug's string, ready to drop straight into `id=`. */
   anchor?: string;
 };

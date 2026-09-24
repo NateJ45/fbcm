@@ -49,6 +49,19 @@
 //    brown band described above, unchanged; the strip, the hero-first drop and
 //    the timeline numerals belong to that band only.
 //
+// 6. AN UNDATED h2 BAND IS "OUR BUILDING" ON CREAM (2026-09-24, the Visit
+//    identity pass; the prototype's `.building`,
+//    docs/superpowers/prototypes/2026-09-23-visit/visit.html). Visit's building
+//    band sits between the deep indigo questions and the gold closing band, so
+//    it takes the same FIXED cream ground as the dated band: the year the
+//    band's own text names ("completed in 1929") set large above the heading
+//    (bandYear(), derived, never typed, and skipped when the heading already
+//    says it), the heading in the one band grammar, the paragraph as a lede,
+//    the gold button, and the photograph beside it as a plain rectangle when
+//    it is of the building (photo-subject.ts) or in a door arch when it is of
+//    people. Only the h1 opener (/history) keeps the brown band with the
+//    strip; that path is the History pass's to redraw.
+//
 // 4. SELF_CONTAINED: brown in both themes (globals.css moves --color-brown only
 //    to a darker brown under .dark), so the ink on it is text-bg, which is
 //    paper-white in both themes, rather than text-cream, which flips to ink
@@ -58,7 +71,14 @@ import { headlineScale } from '@/lib/headline-scale';
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import ArchFrame from '@/components/church/ArchFrame.astro';
-import { heritageBookends, heritageDates, type HeritageDateInput } from '@/lib/heritage-dates';
+import {
+  bandYear,
+  heritageBookends,
+  heritageDates,
+  type HeritageDateInput,
+} from '@/lib/heritage-dates';
+import { photoSubject } from '@/lib/photo-subject';
+import { splitStega } from '@/lib/preview-stega';
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
 /** One dated numeral: the timeline row's marker over its title. */
@@ -117,6 +137,14 @@ const {
 // NOTE 5: the dated list, with the present's year filled in from the build.
 const shownDates = heritageDates(dates, new Date());
 const ledger = shownDates.length > 0;
+const building = !ledger && level === 'h2';
+const headingClean = splitStega(heading ?? '').cleaned;
+const bigYear = (() => {
+  const y = bandYear(null, body);
+  return y && !headingClean.includes(y) ? y : null;
+})();
+const imageAlt = splitStega(((image as { alt?: string } | null)?.alt ?? '') as string).cleaned;
+const imageIsPeople = photoSubject(imageAlt) === 'people';
 const bookends = heritageBookends(shownDates);
 const hasArchive = !!archive?.asset;
 const archiveAlt = (() => {
@@ -177,7 +205,66 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
 ---
 
 {
-  ledger ? (
+  building ? (
+    <section class="bg-bg text-band-brown" aria-labelledby={heading ? headingId : undefined}>
+      <div class="mx-auto grid max-w-content grid-cols-1 items-center gap-y-12 px-gutter py-section-lg lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:gap-x-[clamp(40px,6vw,104px)]">
+        <div>
+          {bigYear && (
+            <p
+              class="mb-[clamp(10px,1.4vw,20px)] font-display text-[clamp(5.25rem,10vw,9.375rem)] leading-[0.86] tracking-[0.01em] text-band-indigo lining-nums"
+              aria-hidden="true"
+            >
+              {bigYear}
+            </p>
+          )}
+          <SectionHeading
+            eyebrow={eyebrow}
+            headline={heading}
+            headingId={headingId}
+            level="h2"
+            align="left"
+            tone="paper"
+            face="display"
+          />
+          {body && (
+            <p class="mt-[clamp(20px,2.2vw,30px)] max-w-[30em] font-body text-[clamp(1.25rem,1rem+.6vw,1.4375rem)] leading-[1.55] text-band-brown">
+              {body}
+            </p>
+          )}
+          {cta?.label && (
+            <div class="mt-[clamp(28px,3vw,40px)]">
+              <CtaLink cta={cta} variant="gold" />
+            </div>
+          )}
+        </div>
+        {image?.asset &&
+          (imageIsPeople ? (
+            <ArchFrame
+              image={image}
+              shape="door"
+              width={1000}
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              alt={imageAlt}
+              grade="warm"
+              class="w-full max-w-[32rem]"
+              style="--arch-mould: var(--color-brown-mid);"
+            />
+          ) : (
+            <figure class="hb-rect m-0 w-full max-w-[32rem] lg:max-w-none" data-reveal>
+              <SanityImage
+                source={image}
+                width={1000}
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                quality={78}
+                alt={imageAlt}
+                class="graded h-full w-full object-cover"
+                style="object-position: 50% 30%;"
+              />
+            </figure>
+          ))}
+      </div>
+    </section>
+  ) : ledger ? (
     <section class="bg-bg text-band-brown" aria-labelledby={heading ? headingId : undefined}>
       <div class="mx-auto max-w-content px-gutter py-section-lg">
         <div class="grid grid-cols-12 items-start gap-x-[clamp(16px,2.5vw,40px)] gap-y-10">
@@ -359,3 +446,43 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
     </section>
   )
 }
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+  /* Our building, undated (HeritageBand.astro note 6): a building photo is a
+   plain rectangle, 4:5 beside the words, 5:4 when stacked. */
+  .hb-rect {
+    aspect-ratio: 5 / 4;
+  }
+  @media (min-width: 1024px) {
+    .hb-rect {
+      aspect-ratio: 4 / 5;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20). */
+  /* Our Building (HeritageBand.astro note 5): the main picture sits straight on
+   the fixed cream band, no frame and no shadow. The grade lifts a drawing's
+   paper to white and the multiply turns that white into the band's cream; the
+   mask fades every edge into the page, so a scanned plate's own border and
+   any tone left in its paper never draw a rectangle. The figure carries the
+   same cream and isolates, so the blend still lands on cream while a reveal
+   composites the figure on its own layer. */
+  .ob-drawing {
+    background: var(--color-bg);
+    isolation: isolate;
+  }
+  .ob-drawing img {
+    mix-blend-mode: multiply;
+    filter: grayscale(1) contrast(1.12) brightness(1.1) sepia(0.14);
+    --ob-fade: linear-gradient(to right, transparent 2.5%, #000 11%, #000 89%, transparent 97.5%);
+    mask-image:
+      var(--ob-fade),
+      linear-gradient(to bottom, transparent 3.5%, #000 14%, #000 86%, transparent 96.5%);
+    mask-composite: intersect;
+  }
+</style>

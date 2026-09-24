@@ -15,6 +15,18 @@
 // page, and this band was the only thing on an interior page running down the
 // middle.
 //
+// THE GOLD CLOSING BAND (2026-09-24, the Visit identity pass; the prototype's
+// `.cta`, docs/superpowers/prototypes/2026-09-23-visit/visit.html; rollout
+// plan "CtaBand: brand band, rule buttons, one glyph"). The band is the brand
+// gold in both themes (like the Give band), so it carries no colour field and
+// its ink is --color-band-ink, which never flips. One building glyph, the
+// door, stands at its left: an open door for the page's last invitation. The
+// headline is in the one band grammar (H2_DISPLAY, CLAUDE.md rule 17), and
+// the buttons are the one family's outline plate and a text link, both drawn
+// in band ink because a gold button on the gold band would vanish. A band
+// with a background photo keeps the old indigo panel with its scrim: the gold
+// cannot sit under a photograph.
+//
 // scriptAccent: optional single word/phrase from the headline to render in handwritten
 // the script accent font via the `.font-script` utility. Inherits the heading color (text-bg) so
 // it reads correctly on the Charcoal Dark surface in both light and dark theme.
@@ -26,6 +38,8 @@ import { splitHeadingAccent } from '@/lib/heading-accent';
 import { hasInlineRich } from '@/lib/inline-rich';
 import InlineRich from '@/components/InlineRich.astro';
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 
 interface CtaBlock {
   label?: string;
@@ -127,19 +141,9 @@ const colour = scriptFound
 const richSubhead = hasInlineRich(subheadRich);
 ---
 
-<section
-  class:list={['bg-indigo-field text-bg', hasBackground && 'relative overflow-hidden']}
-  aria-labelledby={headingId}
->
-  {
-    /* Optional background photo + fixed charcoal scrim. Rendered only when an
-      image is set; otherwise the section stays the solid Charcoal Dark panel.
-      The scrim is tuned dark enough that the cream headline and bronze button
-      stay readable over any photo. The image is decorative, so it is
-      aria-hidden with empty alt and sits at z-0 behind the stripe + content. */
-  }
-  {
-    hasBackground && (
+{
+  hasBackground ? (
+    <section class="relative overflow-hidden bg-indigo-field text-bg" aria-labelledby={headingId}>
       <div class="absolute inset-0 z-0" aria-hidden="true">
         <SanityImage
           source={backgroundImage}
@@ -151,51 +155,123 @@ const richSubhead = hasInlineRich(subheadRich);
         />
         <div class="absolute inset-0 bg-indigo-field/70" />
       </div>
-    )
-  }
+      <div class="relative z-10 mx-auto max-w-content px-gutter py-section-lg">
+        {eyebrow && <p class="mb-5 font-ui text-ui text-gold">{eyebrow}</p>}
+        <h2
+          id={headingId}
+          class:list={[H2_DISPLAY, 'h-fit max-w-[18ch] text-bg']}
+          style={headingFit(headline)}
+        >
+          <span class="h-fit-in">
+            {scriptFound ? (
+              <>
+                {scriptBefore}
+                <span class="font-script">{scriptWord}</span>
+                {scriptAfter}
+              </>
+            ) : colour.found ? (
+              <>
+                {colour.before}
+                <span class="heading-accent">{colour.word}</span>
+                {colour.after}
+              </>
+            ) : (
+              headline
+            )}
+          </span>
+        </h2>
+        {(subhead || richSubhead) && (
+          <p class="mt-6 max-w-[46ch] font-body text-lede font-normal text-bg/85">
+            {richSubhead ? <InlineRich value={subheadRich} /> : subhead}
+          </p>
+        )}
+        <div class="mt-10 flex flex-wrap items-center gap-x-9 gap-y-5">
+          <CtaLink
+            cta={cta}
+            variant="gold"
+            onDark
+            fallbackHref={fallbackCtaHref}
+            fallbackLabel={fallbackCtaLabel}
+          />
+          {secondaryCta && <CtaLink cta={secondaryCta} variant="link" onDark />}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section class="bg-band-gold text-band-ink" aria-labelledby={headingId}>
+      <div class="cta-grid mx-auto grid max-w-content items-center px-gutter py-[clamp(64px,7vw,110px)]">
+        <BuildingGlyph name="door" class="cta-glyph text-band-ink" />
+        <div class="min-w-0">
+          {eyebrow && <p class="mb-3 font-ui text-ui font-semibold text-band-ink">{eyebrow}</p>}
+          <h2
+            id={headingId}
+            class:list={[H2_DISPLAY, 'h-fit text-band-ink']}
+            style={headingFit(headline)}
+          >
+            <span class="h-fit-in">
+              {scriptFound ? (
+                <>
+                  {scriptBefore}
+                  <span class="font-script">{scriptWord}</span>
+                  {scriptAfter}
+                </>
+              ) : colour.found ? (
+                <>
+                  {colour.before}
+                  <span class="underline decoration-2 underline-offset-[0.12em]">
+                    {colour.word}
+                  </span>
+                  {colour.after}
+                </>
+              ) : (
+                headline
+              )}
+            </span>
+          </h2>
+          {(subhead || richSubhead) && (
+            <p class="mt-2.5 max-w-[46ch] font-body text-[clamp(1.25rem,1.1rem+.5vw,1.5rem)] leading-[1.45] text-band-ink">
+              {richSubhead ? <InlineRich value={subheadRich} /> : subhead}
+            </p>
+          )}
+        </div>
+        <div class="cta-act flex flex-wrap items-center gap-x-7 gap-y-3.5">
+          <CtaLink
+            cta={cta}
+            variant="outline"
+            onGold
+            fallbackHref={fallbackCtaHref}
+            fallbackLabel={fallbackCtaLabel}
+          />
+          {secondaryCta && <CtaLink cta={secondaryCta} variant="link" onGold />}
+        </div>
+      </div>
+    </section>
+  )
+}
 
-  <div
-    class:list={['mx-auto max-w-content px-gutter py-section-lg', hasBackground && 'relative z-10']}
-  >
-    {eyebrow && <p class="mb-5 font-ui text-ui text-gold">{eyebrow}</p>}
-    <h2
-      id={headingId}
-      class="max-w-[16ch] font-display text-h1 leading-none font-normal tracking-[0.01em] text-bg uppercase"
-    >
-      {
-        scriptFound ? (
-          <>
-            {scriptBefore}
-            <span class="font-script">{scriptWord}</span>
-            {scriptAfter}
-          </>
-        ) : colour.found ? (
-          <>
-            {colour.before}
-            <span class="heading-accent">{colour.word}</span>
-            {colour.after}
-          </>
-        ) : (
-          headline
-        )
-      }
-    </h2>
-    {
-      (subhead || richSubhead) && (
-        <p class="mt-6 max-w-[46ch] font-body text-lede font-normal text-bg/85">
-          {richSubhead ? <InlineRich value={subheadRich} /> : subhead}
-        </p>
-      )
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+  /* The gold closing band (FinalCta.astro, 2026-09-24): glyph, words, buttons. */
+  .cta-grid {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 24px clamp(24px, 4vw, 64px);
+  }
+  .cta-glyph {
+    width: clamp(56px, 7vw, 104px);
+  }
+  @media (max-width: 900px) {
+    .cta-grid {
+      grid-template-columns: auto minmax(0, 1fr);
     }
-    <div class="mt-10 flex flex-wrap items-center gap-x-9 gap-y-5">
-      <CtaLink
-        cta={cta}
-        variant="gold"
-        onDark
-        fallbackHref={fallbackCtaHref}
-        fallbackLabel={fallbackCtaLabel}
-      />
-      {secondaryCta && <CtaLink cta={secondaryCta} variant="link" onDark />}
-    </div>
-  </div>
-</section>
+    .cta-act {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 620px) {
+    .cta-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -312,10 +312,10 @@ const wrapAttrs = (key: string | undefined) =>
             secondaryCta={s.secondaryCta}
             size={s.size ?? 'short'}
             serviceTime={settings?.serviceTime}
-            dropInto={
-              (rows[blockIndex + 1]?.block as { _type?: string } | undefined)?._type ===
-              'watchwordSection'
-            }
+            dropInto={['watchwordSection', 'timelineSection'].includes(
+              (rows[blockIndex + 1]?.block as { _type?: string } | undefined)?._type ?? '',
+            )}
+            headingAccent={s.headingAccent ?? undefined}
             headingId={headingId}
           />
         ) : s._type === 'ctaBandSection' ? (
@@ -363,6 +363,7 @@ const wrapAttrs = (key: string | undefined) =>
         ) : s._type === 'imageTextSection' ? (
           <ImageText
             image={renderedImage(s, blockIndex)}
+            detail={s.detail}
             imageSide={s.imageSide}
             eyebrow={s.eyebrow}
             heading={s.heading}
@@ -443,6 +444,7 @@ const wrapAttrs = (key: string | undefined) =>
             heading={s.heading}
             rows={s.rows ?? []}
             surface={surface ?? 'background'}
+            serviceTime={settings?.serviceTime}
             headingId={headingId}
           />
         ) : /* scaffold-branch: church */ s._type === 'staffGridSection' ? (
