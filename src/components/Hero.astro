@@ -44,7 +44,12 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import { splitHeadingAccent } from '@/lib/heading-accent';
 import { splitStega } from '@/lib/preview-stega';
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
-import { staticSunday, timeOnly } from '@/lib/live-sunday';
+import {
+  datedSunday,
+  staticSunday,
+  timeOnly,
+  type SundaySermon,
+} from '@/lib/live-sunday';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import HeroFacts from '@/components/HeroFacts.astro';
 import { headingFit, longestWord, EM_BODY, EM_DISPLAY } from '@/lib/heading-grammar';
@@ -133,6 +138,14 @@ interface Props {
    * script accent, when a caller passes one, wins (one accent per heading).
    */
   headingAccent?: string;
+  /**
+   * This Sunday's sermon (2026-09-24), picked at build time from the sermon
+   * previews by src/lib/sunday-sermon.ts and passed down by SectionRenderer.
+   * Drawn only on the tall hero's dated line, after the date and in place of
+   * the service time; null (no preview for the coming Sunday) leaves the line
+   * exactly as it was.
+   */
+  sermon?: SundaySermon | null;
 }
 
 const {
@@ -151,6 +164,7 @@ const {
   scriptAccent,
   dropInto = false,
   headingAccent,
+  sermon,
 } = Astro.props as Props;
 
 const heroFacts = (facts ?? []).filter((f) => f?.label || f?.value).slice(0, 3);
@@ -193,6 +207,14 @@ const serviceTimeClean = serviceTime ? splitStega(serviceTime).cleaned.trim() : 
 const showLiveSunday = size === 'tall' && serviceTimeClean.length > 0;
 const sundayStatic = showLiveSunday ? staticSunday(serviceTimeClean) : '';
 const sundayTime = showLiveSunday ? timeOnly(serviceTimeClean) : '';
+// THIS SUNDAY'S SERMON. With one, the server renders the date the preview was
+// written for ("Sunday, September 27", true at any moment) and the sermon as a
+// link to the preview; the upgrade script then says "This Sunday" or "Today",
+// or, when the page has outlived that Sunday, drops the sermon and puts the
+// service time back. All before first paint (the script runs right after the
+// line), so the line is never rewritten after it is on screen.
+const sundaySermon = showLiveSunday && sermon ? sermon : null;
+const sundayLead = sundaySermon ? datedSunday(sundaySermon.sunday) : sundayStatic;
 
 // Subhead emphasis: parse markdown-style _word_ markers into <em> spans so
 // editors can italicize a key word in the Sanity subhead without HTML.
@@ -498,7 +520,22 @@ const windowDrops = dropInto && windowOrder.length > 0;
               (post page FCP 1.65 s to 2.25 s), and preloading all four faces
               was worse than none. A body-ok rel, so valid inside the <p>. */}
           <link rel="preload" href={uiFontUrl} as="font" type="font/woff2" crossorigin />
-          <span data-live-sunday={sundayTime}>{sundayStatic}</span>
+          {/* With a sermon, the date and the sermon share one wrapper so the
+              flex row keeps two items (the dash and the words). The sermon
+              half wraps as ONE unit under the date on a phone: nothing
+              separates the two spans in the markup and the dot follows a
+              no-break space, so the dot stays on the date's line, and the
+              link is an inline-block that the length rules in live-sunday.ts
+              keep to one 320px line (max-w-full, so a string that still
+              overflows wraps inside the column, rule 18). Below 640px the
+              reading shows only when it fits beside the title there. */}
+          {sundaySermon ? (
+            <span class="min-w-0">
+              <span data-live-sunday={sundayTime} data-sermon-sunday={sundaySermon.sunday}>{sundayLead}</span><span data-sunday-sermon={sundaySermon.sunday}><span aria-hidden="true">&nbsp;·</span> <a href={sundaySermon.href} class="sunday-sermon inline-block max-w-full break-words">{sundaySermon.title}{sundaySermon.reading && <span class:list={[!sundaySermon.readingOnPhone && 'max-sm:hidden']}> · {sundaySermon.reading}</span>}</a></span>
+            </span>
+          ) : (
+            <span data-live-sunday={sundayTime}>{sundayStatic}</span>
+          )}
           {/* Date the line NOW, before the hero's first paint (2026-09-24, the
               speed pass). The function is defined in BaseLayout's <head>;
               rewriting the span later, after the hero had painted, made the
@@ -585,6 +622,24 @@ const windowDrops = dropInto && windowOrder.length > 0;
   /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
      component's styles only into the pages that render it. is:global because
      the rules reach into ArchFrame, PortableText and SanityImage children. */
+/* This Sunday's sermon on the tall hero's dated line (2026-09-24): a gold
+   hairline under the words, drawn full on hover and focus, like the nav. */
+.sunday-sermon {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-gold) 70%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s;
+}
+.sunday-sermon:hover {
+  text-decoration-color: var(--color-gold);
+  text-decoration-thickness: 2px;
+}
+.sunday-sermon:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
 /* The window headline's closing accent: its own line, in the gold capitals. */
 .hw-close {
   display: block;

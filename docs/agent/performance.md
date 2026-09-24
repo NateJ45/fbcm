@@ -109,6 +109,17 @@ The home LCP element is now the logo because Chrome does not count text whose fi
 
 `CSS_INLINE_LIMIT` is tested per CSS CHUNK, not per page. Astro's `astro:rollup-plugin-inline-stylesheets` calls `assetsInlineLimit(fileName, content)` once for each emitted stylesheet, and a page gets every chunk its components pull in. Measured in this build: `BaseLayout` 124,510 B, `SectionRenderer` 14,609 B, `GoalsBand` 13,453 B, `_slug_` 10,055 B, and smaller ones, each inlined on its own merit. So the home page carries 152,656 B inline and `/blog` 158,026 B, both over 147,456, and that is correct behaviour. A chunk over the limit is linked only on the pages that use it; the one over it today (153,051 B, `_..-<hash>.css`) belongs to the SSR preview route, and the Studio's `lib.<hash>.css` (165,056 B) stays linked as intended. So the rule-20 check is every public page, not `index.html` alone: after this pass, 0 `<link rel="stylesheet">` across all 378 built pages, largest inline total 158,085 B (`/blog`).
 
+### This Sunday's sermon on the dated line (2026-09-24, `feat/sunday`)
+
+The dated line can now carry the coming Sunday's sermon (a link and up to about 45 more characters). The server renders it and the same inline call right after the span settles it, so the line is complete at first paint and is never rewritten afterwards. Measured the same way as the speed pass (local `dist/client` behind `scripts/serve-dist.mjs`, Lighthouse 12.6.1 mobile, 3 runs each):
+
+| Home, mobile                                        | LCP, three runs                                       | Median LCP | Perf             | LCP element |
+| --------------------------------------------------- | ----------------------------------------------------- | ---------- | ---------------- | ----------- |
+| before (`main` at `2a5d612`)                        | 1.73, 1.88, 1.73 s                                    | 1.73 s     | 1.00, 0.99, 1.00 | header logo |
+| after, a current sermon on the line (fixture build) | 1.73, 1.73, 1.88 s (a second set: 1.73, 1.73, 1.73 s) | 1.73 s     | 1.00, 1.00, 0.99 | header logo |
+
+The line stays out of the LCP race, as the speed pass left it. `GET /api/live-status` is fetched only on Sunday mornings, after the header has painted, and blocks nothing.
+
 ### Lighthouse scorecard
 
 Target: 100 on all four categories (Performance, Accessibility, Best Practices, SEO) for all core routes on both mobile and desktop. Measure on the deployed Cloudflare URL via Chrome DevTools' bundled Lighthouse, not the dev server.

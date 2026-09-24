@@ -61,3 +61,36 @@ test('the inline copy uses the same two sentence stems', () => {
     );
   }
 });
+
+// This Sunday's sermon (2026-09-24). The inline copy now decides whether the
+// sermon half stays, so its decision is RUN against the module's, the check
+// that catches an off-by-one-day slip no substring assertion can see.
+test('the inline copy reads and hides the sermon half by the same attributes', () => {
+  for (const attr of ["'data-sermon-sunday'", "'[data-sunday-sermon]'"]) {
+    assert.ok(inlineScript.includes(attr), `inline script does not contain ${attr}`);
+  }
+});
+
+test('the inline liveSundayLine agrees with the module over three weeks of hours', async () => {
+  const { liveSundayLine } = await import('./live-sunday.ts');
+  const body = inlineScript.split('</script>')[0] ?? '';
+  const start = body.indexOf('function timeOnly');
+  const end = body.indexOf('function upgradeSunday');
+  assert.ok(start > 0 && end > start, 'could not find the inline functions');
+  const inlineLine = new Function(`${body.slice(start, end)}; return liveSundayLine;`)() as (
+    now: Date,
+    t: string,
+    sermonSunday: string,
+  ) => { text: string; sermon: boolean };
+  const t0 = new Date(2026, 8, 20, 0, 30).getTime(); // a Sunday, local time
+  for (let h = 0; h < 21 * 24; h += 1) {
+    const now = new Date(t0 + h * 3_600_000);
+    for (const sermon of ['', '2026-09-27', '2026-10-04']) {
+      assert.deepEqual(
+        inlineLine(now, '10:45 am', sermon),
+        liveSundayLine(now, '10:45 am', sermon),
+        `${now.toString()} / ${sermon || 'no sermon'}`,
+      );
+    }
+  }
+});

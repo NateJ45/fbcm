@@ -40,12 +40,142 @@ export function staticSunday(serviceTime: string): string {
   return `Sundays · Worship at ${timeOnly(serviceTime)}`;
 }
 
-/** The client-side upgrade: names today, or the Sunday that is coming. */
-export function formatLiveSunday(now: Date, serviceTime: string): string {
+/**
+ * The client-side upgrade: names today, or the Sunday that is coming. With
+ * `withSermon` the service time is left off, because the sermon half that
+ * follows the line takes its place (see liveSundayLine below).
+ */
+export function formatLiveSunday(now: Date, serviceTime: string, withSermon = false): string {
   const add = (7 - now.getDay()) % 7;
-  if (add === 0) return `Today · Worship at ${timeOnly(serviceTime)}`;
+  const worship = withSermon ? '' : ` · Worship at ${timeOnly(serviceTime)}`;
+  if (add === 0) return `Today${worship}`;
   const s = new Date(now);
   s.setDate(now.getDate() + add);
   const label = s.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-  return `This Sunday, ${label} · Worship at ${timeOnly(serviceTime)}`;
+  return `This Sunday, ${label}${worship}`;
+}
+
+// ── This Sunday's sermon (2026-09-24) ────────────────────────────────────────
+// When the build finds a sermon preview for the coming Sunday
+// (src/lib/sunday-sermon.ts picks it; nothing is typed, CLAUDE.md rule 15),
+// the home hero's dated line names the sermon instead of the service time,
+// which the hero's facts row states directly underneath:
+//
+//   This Sunday, September 27 · ‘When God Shows Up’ · Jeremiah 29:10-12
+//
+// The date half is still the visitor's clock's business. The sermon half was
+// baked at build time, and a static page outlives its Sunday, so the upgrade
+// script keeps it only while the Sunday the LINE names is the Sunday the
+// preview was written for, and otherwise drops it and puts the service time
+// back. Comparing against the line's own Sunday (not the church's) is the
+// invariant that matters: the sermon can never sit beside a date it does not
+// belong to, whatever time zone the visitor is in.
+
+/** The coming Sunday's sermon, as the hero draws it. All strings stega-clean. */
+export interface SundaySermon {
+  /** The Sunday it was written for, YYYY-MM-DD on the church's calendar. */
+  sunday: string;
+  /** The preview post, e.g. /post/when-god-shows-up. */
+  href: string;
+  /** The title as displayed: quoted, and shortened by the rules below. */
+  title: string;
+  /** The reading ("Jeremiah 29:10-12"), or '' when absent or already in the title. */
+  reading: string;
+  /** Whether the reading still fits beside the title on a 320px phone. */
+  readingOnPhone: boolean;
+}
+
+/**
+ * THE LENGTH RULES. The line is set in the uppercase furniture face at 13px
+ * with tracking, beside a 44px gold dash, and it must never wrap badly at a
+ * 320px phone. Measured in the browser at 320px (see SERMON_TITLE_MAX), one
+ * line beside the dash holds about that many capitals, so the sermon half is
+ * built to fit ONE such line on its own and wraps, as a unit, under the date:
+ *
+ *   1. The title loses a trailing parenthesis or bracket ("Proclaim (The Way
+ *      [Discipleship] Goal 2025-2026)" -> "Proclaim") when it is too long.
+ *   2. A title still longer than SERMON_TITLE_MAX is cut at the last word
+ *      that fits and gets an ellipsis.
+ *   3. The reading never repeats a title that already names it. On a wide
+ *      screen it always follows the title; on a phone it shows only when
+ *      title and reading together fit SERMON_LINE_MAX. The reading drops
+ *      before the title is ever shortened for it.
+ */
+// Measured 2026-09-24 in Chromium at 320px: the words beside the dash get
+// 238px, and these capitals average 8.1 to 8.5px ("THIS SUNDAY, SEPTEMBER 27"
+// is 202px, "‘WHEN GOD SHOWS UP’" 162px). 24 characters plus the two quotes
+// is about 220px, which leaves room for a run of wide letters; anything that
+// still overflows wraps inside the column (max-w-full), never off the page.
+export const SERMON_TITLE_MAX = 24;
+export const SERMON_LINE_MAX = 28;
+
+const QUOTES = /^[\s'"‘’“”]+|[\s'"‘’“”]+$/g;
+
+/** The title as the line shows it, without its quotes: rules 1 and 2. */
+export function shortSermonTitle(raw: string, max: number = SERMON_TITLE_MAX): string {
+  let t = raw.replace(/\s+/g, ' ').replace(QUOTES, '').replace(/'/g, '’').trim();
+  if (t.length > max) {
+    const bare = t.replace(/\s*[([][^()[\]]*(?:\[[^\]]*\][^()[\]]*)*[)\]]\s*$/, '').trim();
+    if (bare) t = bare;
+  }
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max); // leaves room for the ellipsis
+  const at = cut.lastIndexOf(' ');
+  const head = (at > 0 ? cut.slice(0, at) : cut.slice(0, max - 1)).replace(/[\s\-–,:;&.]+$/, '');
+  return `${head}…`;
+}
+
+/**
+ * Build the sermon half from a title and a reading (both already cleaned).
+ * Returns the displayed title (in curly quotes) and the reading, or '' for a
+ * reading that does not fit or repeats the title (rule 3).
+ */
+export function sermonParts(
+  rawTitle: string,
+  rawReading: string,
+): Pick<SundaySermon, 'title' | 'reading' | 'readingOnPhone'> | null {
+  const short = shortSermonTitle(rawTitle);
+  if (!short) return null;
+  const title = `‘${short}’`;
+  let reading = rawReading.replace(/\s+/g, ' ').trim();
+  if (reading && rawTitle.toLowerCase().includes(reading.toLowerCase())) reading = '';
+  const readingOnPhone = reading !== '' && title.length + 3 + reading.length <= SERMON_LINE_MAX;
+  return { title, reading, readingOnPhone };
+}
+
+/** The sermon half's text: "‘When God Shows Up’ · Jeremiah 29:10-12". */
+export function sermonText(s: Pick<SundaySermon, 'title' | 'reading'>): string {
+  return s.reading ? `${s.title} · ${s.reading}` : s.title;
+}
+
+/**
+ * The server-rendered date half when there is a sermon: "Sunday, September
+ * 27". A named day is true at any moment, so a visitor without JavaScript
+ * never reads "This Sunday" about a Sunday that has gone.
+ */
+export function datedSunday(isoDate: string): string {
+  const d = new Date(`${isoDate}T12:00:00Z`);
+  const label = d.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric' });
+  return `Sunday, ${label}`;
+}
+
+/** YYYY-MM-DD of the Sunday the line names, on the VISITOR's calendar. */
+export function lineSundayIso(now: Date): string {
+  const s = new Date(now);
+  s.setDate(now.getDate() + ((7 - now.getDay()) % 7));
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${s.getFullYear()}-${p(s.getMonth() + 1)}-${p(s.getDate())}`;
+}
+
+/**
+ * The whole client-side decision for one line: its text, and whether the
+ * sermon half stays. `sermonSunday` is '' when the build found no sermon.
+ */
+export function liveSundayLine(
+  now: Date,
+  serviceTime: string,
+  sermonSunday: string,
+): { text: string; sermon: boolean } {
+  const sermon = sermonSunday !== '' && lineSundayIso(now) === sermonSunday;
+  return { text: formatLiveSunday(now, serviceTime, sermon), sermon };
 }

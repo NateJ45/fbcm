@@ -7,7 +7,19 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 // The `.ts` extension is the repo's convention for these node:test suites (see
 // heading-accent.test.ts): node's ESM resolver does not add one.
-import { clockParts, formatLiveSunday, staticSunday } from './live-sunday.ts';
+import {
+  clockParts,
+  datedSunday,
+  formatLiveSunday,
+  lineSundayIso,
+  liveSundayLine,
+  sermonParts,
+  sermonText,
+  shortSermonTitle,
+  staticSunday,
+  SERMON_LINE_MAX,
+  SERMON_TITLE_MAX,
+} from './live-sunday.ts';
 
 test('a weekday names the coming Sunday', () => {
   assert.equal(
@@ -39,4 +51,110 @@ test('clockParts splits the meridiem off, lower-case and without dots', () => {
 test('clockParts leaves a time with no meridiem whole', () => {
   assert.deepEqual(clockParts('10:45'), { clock: '10:45', meridiem: '' });
   assert.deepEqual(clockParts('Mid-morning'), { clock: 'Mid-morning', meridiem: '' });
+});
+
+// ── This Sunday's sermon (2026-09-24) ────────────────────────────────────────
+// These dates are built with the local Date constructor on purpose: the line
+// names the Sunday on the VISITOR's calendar, whatever machine runs the test.
+
+test('lineSundayIso names the coming Sunday, or today on a Sunday', () => {
+  assert.equal(lineSundayIso(new Date(2026, 8, 23, 9)), '2026-09-27'); // Wednesday
+  assert.equal(lineSundayIso(new Date(2026, 8, 26, 23, 59)), '2026-09-27'); // Saturday, late
+  assert.equal(lineSundayIso(new Date(2026, 8, 27, 0, 1)), '2026-09-27'); // Sunday, early
+  assert.equal(lineSundayIso(new Date(2026, 8, 27, 23, 59)), '2026-09-27'); // Sunday, late
+  assert.equal(lineSundayIso(new Date(2026, 8, 28, 0, 1)), '2026-10-04'); // Monday
+  assert.equal(lineSundayIso(new Date(2026, 11, 29)), '2027-01-03'); // across a year
+});
+
+test('with a current sermon the line drops the service time', () => {
+  assert.deepEqual(liveSundayLine(new Date(2026, 8, 23), 'Sundays at 10:45 am', '2026-09-27'), {
+    text: 'This Sunday, September 27',
+    sermon: true,
+  });
+  assert.deepEqual(liveSundayLine(new Date(2026, 8, 27, 9), '10:45 am', '2026-09-27'), {
+    text: 'Today',
+    sermon: true,
+  });
+});
+
+test('a stale sermon is dropped and the service time comes back', () => {
+  // Monday after the preview's Sunday: the site was not rebuilt.
+  assert.deepEqual(liveSundayLine(new Date(2026, 8, 28), 'Sundays at 10:45 am', '2026-09-27'), {
+    text: 'This Sunday, October 4 · Worship at 10:45 am',
+    sermon: false,
+  });
+});
+
+test('no sermon: exactly the line as it always was', () => {
+  const now = new Date(2026, 8, 23);
+  assert.deepEqual(liveSundayLine(now, 'Sundays at 10:45 am', ''), {
+    text: formatLiveSunday(now, 'Sundays at 10:45 am'),
+    sermon: false,
+  });
+});
+
+test('the server names the day, true at any moment', () => {
+  assert.equal(datedSunday('2026-09-27'), 'Sunday, September 27');
+  assert.equal(datedSunday('2027-01-03'), 'Sunday, January 3');
+});
+
+test('a short title and reading fit one phone line together', () => {
+  const q = sermonParts('Laborers', 'Matthew 20:1-16');
+  assert.deepEqual(q, { title: '‘Laborers’', reading: 'Matthew 20:1-16', readingOnPhone: true });
+  assert.equal(sermonText(q!), '‘Laborers’ · Matthew 20:1-16');
+  assert.ok(sermonText(q!).length <= SERMON_LINE_MAX);
+});
+
+test('the reading drops on a phone before the title is ever shortened for it', () => {
+  // "‘When God Shows Up’ · Jeremiah 29:10-12" is 39 characters: wide screens
+  // keep the reading, a phone drops it, the title stays whole.
+  const p = sermonParts('When God Shows Up', 'Jeremiah 29:10-12');
+  assert.deepEqual(p, {
+    title: '‘When God Shows Up’',
+    reading: 'Jeremiah 29:10-12',
+    readingOnPhone: false,
+  });
+});
+
+test('a title that already names its reading does not repeat it', () => {
+  const p = sermonParts('Unequal Grace - Matthew 20:1-16', 'Matthew 20:1-16');
+  assert.equal(p?.reading, '');
+  assert.equal(p?.readingOnPhone, false);
+});
+
+test('no reading at all', () => {
+  assert.deepEqual(sermonParts('Hope', ''), {
+    title: '‘Hope’',
+    reading: '',
+    readingOnPhone: false,
+  });
+});
+
+test('a long title loses its trailing parenthesis first', () => {
+  assert.equal(shortSermonTitle('Proclaim (The Way [Discipleship] Goal 2025-2026)'), 'Proclaim');
+  assert.equal(shortSermonTitle('Praise (Worship Goal 2025-2026)'), 'Praise');
+  // Short enough already: the parenthesis stays.
+  assert.equal(shortSermonTitle('Ps (short)'), 'Ps (short)');
+});
+
+test('a title still too long is cut at a word, with an ellipsis', () => {
+  const t = shortSermonTitle('Ecclesiastes - faith when everything is not enough');
+  assert.equal(t, 'Ecclesiastes - faith…');
+  assert.ok(t.length <= SERMON_TITLE_MAX);
+  // A trailing connective is not left hanging before the ellipsis.
+  assert.equal(
+    shortSermonTitle('Faith, Hope & Charity: the Greatest Is Love'),
+    'Faith, Hope & Charity…',
+  );
+  // One enormous word is cut mid-word rather than overflowing.
+  assert.equal(shortSermonTitle('A'.repeat(40)).length, SERMON_TITLE_MAX);
+});
+
+test('quotes around a title are replaced, apostrophes are curled', () => {
+  assert.equal(shortSermonTitle(`"God's Power to Rebuild"`), 'God’s Power to Rebuild');
+  assert.equal(sermonParts('“Hope”', '')?.title, '‘Hope’');
+});
+
+test('an empty title yields no sermon', () => {
+  assert.equal(sermonParts('   ', 'John 3:16'), null);
 });

@@ -90,3 +90,79 @@ export function watchLiveHref(
   const pick = (u: string | null | undefined) => (typeof u === 'string' ? u.trim() : '');
   return pick(livestreamUrl) || pick(youtubeUrl) || undefined;
 }
+
+// ── A real "Live now" (2026-09-24) ──────────────────────────────────────────
+// The window above is a guess about the clock. /api/live-status
+// (src/pages/api/live-status.ts, logic in src/lib/live-status.ts) asks
+// YouTube whether the church's channel is actually live. The browser asks it
+// only inside the CHECK window, which is wider than the service window on
+// both sides (a stream that starts early, or a service that runs long), at
+// most once a minute. Its answer, while fresh, overrides the clock:
+//
+//   live       "Live now", linking to the live video when YouTube names one
+//   not-live   "Watch live", even inside the service window
+//   unknown    (no API key, YouTube failed, quota spent) the clock decides,
+//              exactly as before this existed; a failed request is the same
+//
+// With no key configured the endpoint always says unknown, so the site
+// behaves exactly as it did before.
+
+/** Ask YouTube from this long before the service starts... */
+export const CHECK_BEFORE_MINUTES = 75;
+/** ...until this long after it starts (10:45 am -> 9:30 am to 1:00 pm). */
+export const CHECK_AFTER_MINUTES = 135;
+/** An answer older than this is ignored, and the clock decides again. */
+export const STATUS_FRESH_MS = 150_000;
+
+/** What the browser keeps of the endpoint's last answer. */
+export interface ClientLiveStatus {
+  status: 'live' | 'not-live' | 'unknown';
+  /** The live video, when YouTube named one. Only ever a youtube.com URL. */
+  url?: string;
+  /** Date.now() when the answer arrived. */
+  at: number;
+}
+
+declare global {
+  interface Window {
+    /** Set by BaseLayout's live-service script; read by the mobile menu. */
+    __liveStatus?: ClientLiveStatus | null;
+  }
+}
+
+/** Is it worth asking YouTube now? Sunday, around the service, church time. */
+export function inCheckWindow(
+  now: Date,
+  serviceTime: string,
+  timeZone: string = SERVICE_TIME_ZONE,
+): boolean {
+  const start = serviceStartMinutes(serviceTime);
+  if (start === null) return false;
+  const t = weekMinutesIn(now, timeZone);
+  return t >= start - CHECK_BEFORE_MINUTES && t < start + CHECK_AFTER_MINUTES;
+}
+
+/** Only a youtube.com address may replace the link's own. */
+export function safeLiveUrl(url: unknown): string | undefined {
+  return typeof url === 'string' && /^https:\/\/(www\.)?youtube\.com\/[\w?=&/.-]+$/.test(url)
+    ? url
+    : undefined;
+}
+
+/**
+ * The link's state: the endpoint's answer while it is fresh and we are inside
+ * the check window, else the service-time window. `href` is set only when the
+ * endpoint named the live video.
+ */
+export function resolveLive(
+  now: Date,
+  serviceTime: string,
+  status: ClientLiveStatus | null | undefined,
+): { live: boolean; href?: string } {
+  const age = status ? now.getTime() - status.at : -1;
+  if (status && age >= 0 && age < STATUS_FRESH_MS && inCheckWindow(now, serviceTime)) {
+    if (status.status === 'live') return { live: true, href: safeLiveUrl(status.url) };
+    if (status.status === 'not-live') return { live: false };
+  }
+  return { live: isLiveNow(now, serviceTime) };
+}

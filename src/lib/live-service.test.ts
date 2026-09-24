@@ -13,6 +13,11 @@ import {
   weekMinutesIn,
   LIVE_WINDOW_MINUTES,
   SERVICE_TIME_ZONE,
+  inCheckWindow,
+  resolveLive,
+  safeLiveUrl,
+  STATUS_FRESH_MS,
+  type ClientLiveStatus,
 } from './live-service.ts';
 
 const SETTING = 'Sundays at 10:45 am';
@@ -118,4 +123,72 @@ test('watchLiveHref prefers the live stream, falls back to the channel, else not
   assert.equal(watchLiveHref(null, 'https://yt.example/'), 'https://yt.example/');
   assert.equal(watchLiveHref('  ', undefined), undefined);
   assert.equal(watchLiveHref(undefined, null), undefined);
+});
+
+// ── A real "Live now" (2026-09-24): the browser's side ─────────────────────
+
+const T = 'Sundays at 10:45 am';
+const answer = (status: ClientLiveStatus['status'], now: Date, url?: string): ClientLiveStatus => ({
+  status,
+  url,
+  at: now.getTime() - 10_000,
+});
+
+test('the check window runs from 75 minutes before to 135 after, church time', () => {
+  assert.equal(inCheckWindow(at('2026-09-27T13:29:00Z'), T), false); // 9:29 EDT
+  assert.equal(inCheckWindow(at('2026-09-27T13:30:00Z'), T), true); // 9:30
+  assert.equal(inCheckWindow(at('2026-09-27T16:59:00Z'), T), true); // 12:59
+  assert.equal(inCheckWindow(at('2026-09-27T17:00:00Z'), T), false); // 1:00 pm
+  assert.equal(inCheckWindow(at('2026-12-06T14:30:00Z'), T), true); // 9:30 EST
+  assert.equal(inCheckWindow(at('2026-09-26T14:50:00Z'), T), false); // Saturday
+  assert.equal(inCheckWindow(at('2026-09-27T14:50:00Z'), 'Mid-morning'), false);
+});
+
+test('a fresh "live" answer wins, even before the service window opens', () => {
+  const now = at('2026-09-27T14:00:00Z'); // 10:00 EDT, the stream started early
+  const got = resolveLive(
+    now,
+    T,
+    answer('live', now, 'https://www.youtube.com/watch?v=abcdefghijk'),
+  );
+  assert.deepEqual(got, { live: true, href: 'https://www.youtube.com/watch?v=abcdefghijk' });
+});
+
+test('a fresh "not-live" answer wins, even inside the service window', () => {
+  const now = at('2026-09-27T14:50:00Z'); // 10:50 EDT
+  assert.deepEqual(resolveLive(now, T, answer('not-live', now)), { live: false });
+});
+
+test('unknown, no answer, or a failed request: the clock decides, as before', () => {
+  const inService = at('2026-09-27T14:50:00Z');
+  const before = at('2026-09-27T14:00:00Z');
+  for (const st of [null, undefined, answer('unknown', inService)]) {
+    assert.deepEqual(resolveLive(inService, T, st), { live: true });
+    assert.deepEqual(resolveLive(before, T, st), { live: false });
+  }
+});
+
+test('a stale answer is ignored', () => {
+  const now = at('2026-09-27T14:50:00Z');
+  const old: ClientLiveStatus = { status: 'not-live', at: now.getTime() - STATUS_FRESH_MS };
+  assert.deepEqual(resolveLive(now, T, old), { live: true }, 'falls back to the window');
+});
+
+test('outside the check window an answer is ignored', () => {
+  const monday = at('2026-09-28T14:50:00Z');
+  assert.deepEqual(resolveLive(monday, T, answer('live', monday)), { live: false });
+});
+
+test('a live answer with no URL, or a foreign one, keeps the link where it was', () => {
+  const now = at('2026-09-27T14:50:00Z');
+  assert.deepEqual(resolveLive(now, T, answer('live', now)), { live: true, href: undefined });
+  assert.deepEqual(resolveLive(now, T, answer('live', now, 'https://evil.example/x')), {
+    live: true,
+    href: undefined,
+  });
+  assert.equal(safeLiveUrl('javascript:alert(1)'), undefined);
+  assert.equal(
+    safeLiveUrl('https://www.youtube.com/watch?v=abcdefghijk'),
+    'https://www.youtube.com/watch?v=abcdefghijk',
+  );
 });

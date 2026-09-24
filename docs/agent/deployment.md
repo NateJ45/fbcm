@@ -75,6 +75,28 @@ Set in Cloudflare -> **Workers & Pages -> your-project -> Settings -> Variables*
 - `PUBLIC_CF_ANALYTICS_TOKEN` -- Cloudflare Web Analytics token. Without it the analytics beacon doesn't render.
 - `PUBLIC_NEWSLETTER_FORM_ACTION` -- optional. Build-time override for the ESP form-action endpoint.
 
+### Live now: the YouTube check (`YOUTUBE_API_KEY`, 2026-09-24)
+
+The header's Watch live link reads "Live now" when the church's YouTube channel is actually on air, not only when the clock says the service is on. `GET /api/live-status` (SSR, `src/pages/api/live-status.ts`; logic and tests in `src/lib/live-status.ts`) answers `{ status: "live" | "not-live" | "unknown", url?, checkedAt, reason? }`.
+
+**With no key the site behaves exactly as before**: the endpoint answers `unknown` (reason `no-key`) without reading Sanity or calling Google, and the browser keeps the service-time window. Nothing breaks if the key is never set, is revoked, or runs out of quota (`unknown`, reason `youtube-403-quotaExceeded`, and the clock again).
+
+**The call.** Not `search.list` (100 units a call: 140 refreshes a Sunday at one location would be 14,000 units, over the 10,000 daily quota before noon). Instead two 1-unit calls: `playlistItems.list` on the channel's uploads playlist (`UU` + the channel id after `UC`, newest 10), then `videos.list` on those ids reading `snippet.liveBroadcastContent === 'live'`. The channel id comes from Site settings' Livestream / YouTube URL: a `/channel/UC...` URL is read directly; the church's `/c/FbcmuncieOrg` and `@FbcmuncieOrg` were resolved once (2026-09-24, from the channel page's canonical link) to `UCTm6q6Q7OJ6VrURz3YXVP6A`, kept in `KNOWN_CHANNELS`. Any other name answers `unknown` (`no-channel`), so a new channel never has the old id checked for it: add its id there, or put a `/channel/` URL in Site settings. Known limit: a private or unlisted stream is not in the uploads playlist.
+
+**When.** Google is asked only inside the check window, Sunday from the service time minus 75 minutes to plus 135 (10:45 am gives 9:30 am to 1:00 pm, church time, DST-safe). Outside it the endpoint answers `not-live` (`outside-window`) without a call, and the browser does not ask at all.
+
+**The cache.** In the isolate (`StatusMemo`): a real answer is reused for 90 s, `unknown` for 5 minutes (back-off), and concurrent requests during a refresh share one call. At the edge: the Cache API per Cloudflare location, keyed on the bare path (a query string cannot bust it), `s-maxage` set to the same TTL; browsers get `max-age=60`. **The Cache API does nothing on `*.workers.dev`** (Cloudflare caches only on a zone), so before the cutover only the isolate layer applies. Settings are read from Sanity (published, CDN) at most every 10 minutes per isolate, and only when a key is set.
+
+**Worst-case quota.** 2 units a refresh; one refresh per 90 s per cache across the 210-minute window is 140 refreshes, so **280 units per cache per Sunday**, and 0 on other days. On the custom domain a cache is a Cloudflare location with visitors in it: one to three for a Muncie congregation, 280 to 840 units (3 to 8% of the 10,000 daily quota); the quota would need 35 locations busy all morning. On `workers.dev` a cache is a warm isolate instead: still 280 units each, and a small site has few. The browser adds nothing on top: at most one request per visitor per minute, answered from the caches.
+
+**Setting the key (Nathan, once):**
+
+1. Google Cloud Console (console.cloud.google.com), signed in with the church's or the studio's Google account: create a project (for example "fbcm-site").
+2. APIs & Services -> Library -> "YouTube Data API v3" -> Enable.
+3. APIs & Services -> Credentials -> Create credentials -> API key. Then edit the key: **API restrictions -> Restrict key -> YouTube Data API v3 only**. Leave Application restrictions at "None" (the Worker calls from Cloudflare's servers, so an HTTP-referrer or IP restriction would block it). No billing account is needed; the default quota is 10,000 units a day.
+4. Put it on the Worker as a **secret**, from the repo root after a build: `npx wrangler secret put YOUTUBE_API_KEY -c dist/server/wrangler.json` (paste the key at the prompt), or Cloudflare dashboard -> Workers & Pages -> fbcm-site -> Settings -> Variables and Secrets -> Add -> type Secret, name `YOUTUBE_API_KEY`. A secret takes effect on the live Worker without a rebuild.
+5. Check it on a Sunday between 9:30 am and 1:00 pm: `https://<site>/api/live-status` should say `not-live` or `live` with no `reason`, never `unknown`. On any other day it says `not-live` with `reason: "outside-window"`, which proves only that the key is present. Locally: `npm run preview -- --var YOUTUBE_API_KEY:<key>` (or a line in `.dev.vars`).
+
 ### Contact form: turning it on
 
 Added 2026-09-18. Until then nobody in the family had watched a message actually arrive, and this section said so. One has now (Stone Steps 50K, confirmed by the client the same morning), so these are the six steps that worked, in the order they worked in. `wrangler.jsonc` carries the same list as a comment next to the bindings themselves; PORTS.md card 45 carries the reasoning.
