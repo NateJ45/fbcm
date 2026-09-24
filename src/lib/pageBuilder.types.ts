@@ -439,6 +439,8 @@ export interface ProjectedMinistry {
   title?: string | null;
   eyebrow?: string | null;
   headline?: string | null;
+  /** The goal it serves: 'worship' | 'the-way' | 'witness' | 'work' (ministry-goals.ts). */
+  goal?: string | null;
   body?: unknown[] | null;
   image?: ProjectedImage | null;
   /** Null entries are references that no longer resolve (a deleted person). */
@@ -456,6 +458,36 @@ export interface ProjectedMinistrySection extends AnchoredSection {
   _key: string;
   ministry?: ProjectedMinistry | null;
   imageSide?: 'left' | 'right' | null;
+}
+
+/** One ministry listed under a goal in the goal index. */
+export interface MinistryGoalEntry {
+  /** The band's own small line (or the ministry's name), as it reads on the band. */
+  label: string;
+  /** The band's anchor, when it has one: the link target. */
+  anchor?: string;
+}
+
+/** One of the four goals in the index, with the ministries that serve it. */
+export interface MinistryGoalColumn {
+  value: 'worship' | 'the-way' | 'witness' | 'work';
+  name: string;
+  /** The church's own bracketed word for the goal ("Discipleship"), or null. */
+  aside: string | null;
+  glyph: 'window' | 'door' | 'rose' | 'basin';
+  ministries: MinistryGoalEntry[];
+}
+
+/**
+ * The goal index: DERIVED, never stored. src/lib/ministry-band.ts puts one in
+ * front of a page's first Ministry band when any ministry on the page names
+ * its goal, and MinistryGoals.astro draws it. There is no schema type and no
+ * _key, so the preview gives it no section controls (there is nothing to edit).
+ */
+export interface MinistryGoalsIndexBlock {
+  _type: 'ministryGoalsIndex';
+  _key?: undefined;
+  goals: MinistryGoalColumn[];
 }
 
 /** watchwordSection — no image field, so the raw generated type is exact. */
@@ -530,7 +562,9 @@ export type PageBuilderBlock =
  * the array. Written against the literal rather than the named type so it
  * still compiles in a fork whose scaffold removed the church blocks.
  */
-export type RenderedBlock = Exclude<PageBuilderBlock, { _type: 'ministrySection' }>;
+export type RenderedBlock =
+  | Exclude<PageBuilderBlock, { _type: 'ministrySection' }>
+  | MinistryGoalsIndexBlock; // scaffold: church
 
 // ---------------------------------------------------------------------------
 // Site settings, as a page-builder block sees them

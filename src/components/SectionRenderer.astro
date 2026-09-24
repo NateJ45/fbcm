@@ -38,6 +38,7 @@ import WatchwordBand from '@/components/sections/WatchwordBand.astro';
 import PledgeReading from '@/components/sections/PledgeReading.astro';
 import PastorsLetter from '@/components/sections/PastorsLetter.astro';
 import GoalsBand from '@/components/sections/GoalsBand.astro';
+import MinistryGoals from '@/components/sections/MinistryGoals.astro';
 import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
@@ -513,6 +514,8 @@ const wrapAttrs = (key: string | undefined) =>
           />
         ) : /* scaffold-branch: church */ s._type === 'watchwordSection' ? (
           <WatchwordBand block={s} headingId={headingId} />
+        ) : /* scaffold-branch: church */ s._type === 'ministryGoalsIndex' ? (
+          <MinistryGoals goals={s.goals} headingId={headingId} />
         ) : /* scaffold-branch: church */ s._type === 'pledgeSection' ? (
           <PledgeReading block={s} headingId={headingId} />
         ) : /* scaffold-branch: church */ s._type === 'letterSection' ? (

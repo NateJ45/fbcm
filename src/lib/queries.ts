@@ -200,6 +200,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
         title,
         eyebrow,
         headline,
+        goal, // scaffold: church
         body,
         image${IMAGE_PROJECTION},
         "contacts": contacts[]->{ _id, name, role, email, showOnSite }

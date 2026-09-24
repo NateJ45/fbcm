@@ -1,0 +1,132 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+//
+// The goal index on /ministries (2026-09-24, the Ministries identity pass):
+// the church's four goals, each with its building glyph, its own bracketed
+// word and the ministries that serve it, each linked down to its band.
+//
+// DERIVED, NEVER PLACED. There is no block an editor adds for this: it is the
+// `ministryGoalsIndex` that src/lib/ministry-band.ts puts in front of a page's
+// first Ministry band when any ministry names its goal (the optional "Goal it
+// serves" on the ministry document; src/lib/ministry-goals.ts). So it always
+// agrees with the documents, and with no goal answered it is not drawn.
+//
+// The look is the home page's goal doors without the photographs: the deep
+// indigo band, gold glyphs, the goal names in the display capitals, one
+// heading in the band grammar (H2_DISPLAY). A goal with no ministry under it
+// yet still stands in the row, because the four goals are the church's and
+// the row is theirs; nothing is printed in its place.
+//
+// Its CSS lives here, not in globals.css (CLAUDE.md rule 20: the site sheet is
+// near its inline limit).
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
+import { goalHref } from '@/lib/ministry-goals';
+import type { MinistryGoalColumn } from '@/lib/pageBuilder.types';
+
+interface Props {
+  goals: MinistryGoalColumn[];
+  headingId: string;
+}
+
+const { goals, headingId } = Astro.props;
+---
+
+<section class="mg-band bg-band-deep text-white-pure" aria-labelledby={headingId}>
+  <div class="mx-auto w-full max-w-content px-gutter py-[clamp(72px,8vw,128px)]">
+    <h2 id={headingId} class:list={[H2_DISPLAY, 'mb-[clamp(36px,4vw,64px)]']}>Our Goals</h2>
+    <ul class="mg-goals">
+      {
+        goals.map((g, i) => (
+          <li class="mg-goal" data-reveal style={`--i:${i}`}>
+            <a href={goalHref(g.value)} class="mg-name group">
+              <BuildingGlyph name={g.glyph} class="w-9 shrink-0 text-gold" />
+              <span class="font-display text-h3 leading-[1.05] text-gold group-hover:underline group-hover:decoration-1 group-hover:underline-offset-[6px]">
+                {g.name}
+              </span>
+            </a>
+            {g.aside && <p class="mg-aside font-ui text-ui text-bg/75">{g.aside}</p>}
+            {g.ministries.length > 0 && (
+              <ul class="mg-list">
+                {g.ministries.map((m) => (
+                  <li>
+                    {m.anchor ? (
+                      <a href={`#${m.anchor}`} class="mg-ministry">
+                        {m.label}
+                      </a>
+                    ) : (
+                      <span class="mg-ministry">{m.label}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .mg-goals {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(24px, 3vw, 48px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .mg-goal {
+    min-width: 0;
+    padding-top: 22px;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 55%, transparent);
+  }
+  .mg-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    text-decoration: none;
+  }
+  .mg-aside {
+    margin: 4px 0 0;
+  }
+  .mg-list {
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .mg-ministry {
+    display: inline-block;
+    max-width: 100%;
+    padding: 6px 0 4px;
+    font-family: var(--font-body);
+    font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+    line-height: 1.3;
+    color: var(--color-white-pure);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 60%, transparent);
+    overflow-wrap: break-word;
+  }
+  a.mg-ministry:hover {
+    border-bottom-color: var(--color-gold);
+    color: var(--color-gold);
+  }
+  .mg-list li + li {
+    margin-top: 10px;
+  }
+  @media (max-width: 1020px) {
+    .mg-goals {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 40px;
+    }
+  }
+  @media (max-width: 540px) {
+    .mg-goals {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 32px;
+    }
+  }
+</style>

@@ -1,0 +1,39 @@
+{
+  "_about": "Which of the church's four goals (who-we-are.txt, Our Goals) each ministry serves. Set ONLY where the church's own words say so; every answer quotes the capture line that says it. The two left null are questions for the church, not gaps to fill: their own pages point at more than one goal. Read by scripts/set-ministry-goals.mjs (dry by default) and by /styleguide/ministries, so the fixture shows the page as it will be once the answers are written. Values are the goal ids on /who-we-are: worship, the-way, witness, work.",
+  "ministries": [
+    {
+      "id": "ministry-worship",
+      "goal": "worship",
+      "evidence": [
+        "scripts/data/pages/worship.txt:19 \"The Worship Ministry at FBCM understands that Christian worship is a lifestyle centered around responding to the revealed God of the Bible.\"",
+        "scripts/data/pages/who-we-are.txt:41 the goal \"Worship\""
+      ]
+    },
+    {
+      "id": "ministry-youth",
+      "goal": "the-way",
+      "evidence": [
+        "scripts/data/pages/youth.txt:24 \"Discipleship, maturity, studying scripture. All of those are important goals we have as a youth ministry.\"",
+        "scripts/data/pages/who-we-are.txt:55-56 \"The Way\" \"(Discipleship)\""
+      ]
+    },
+    {
+      "id": "ministry-adult",
+      "goal": "the-way",
+      "evidence": [
+        "scripts/data/pages/adult.txt:7 \"FBCM's Adult Ministry aims to engage adults of all ages in intentional discipleship\"",
+        "scripts/data/pages/who-we-are.txt:55-56 \"The Way\" \"(Discipleship)\"; :66 \"Spiritual Friendship – We provide small group meetings\" (the adult ministry's Life Groups)"
+      ]
+    },
+    {
+      "id": "ministry-children",
+      "goal": null,
+      "question": "Which goal does the children's ministry serve? children.txt:15 speaks of an intergenerational church where children are \"involved in worship and community service\" (Worship: who-we-are.txt:45 \"the full, intergenerational body of Christ\"), and children.txt:27 names four spiritual habits that run across all four goals. The page does not say one."
+    },
+    {
+      "id": "ministry-outreach",
+      "goal": null,
+      "question": "Witness or Work? outreach.txt:3 works \"with community partners\" (Witness, who-we-are.txt:77 \"Local Partnership – ... We work with local groups\") and shares \"the mercy and love that God has shown us\" through \"Special offerings\" (outreach.txt:9; Work, the Acts of Mercy, who-we-are.txt:88-90 \"Serve\", \"Support – ... regular offerings and donations\"). The page does not say which."
+    }
+  ]
+}
