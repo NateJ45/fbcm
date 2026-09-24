@@ -926,6 +926,22 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   none (`accentWord` in `staff.mjs`).
 - **Done (2026-09-24): the `/staff` preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
+### Light-only, Watch live and the designer credit (2026-09-24, `feat/light-only`)
+
+- **Regenerate the styleguide visual baseline after this merges.** The header (no
+  theme toggle, no Watch live on the styleguide's fixture settings) and the footer rail
+  (the designer credit) changed on `/styleguide`, so `styleguide-light.png` is stale and
+  the first push-triggered Visual regression run will fail. The baselines are Linux
+  pixels and can only be made in CI: run the `visual.yml` workflow by hand
+  (workflow_dispatch, update mode), the same way `bda0dcb` regenerated them on
+  2026-09-22. `styleguide-dark.png` is deleted, not stale.
+- **The "Live now" window is a fixed 75 minutes** from the Site settings service time,
+  on Sundays, in America/Indiana/Indianapolis (`src/lib/live-service.ts`). If the church
+  streams a second service, or the stream runs long, the window is one constant.
+- **`surfaces.test.ts` still measures the dormant dark palette.** Left on purpose (it is
+  a pure token test and keeps the palette honest for the day dark mode returns); drop its
+  dark half if it ever blocks a light-only change.
+
 ### History identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** No schema field is new (the `archive`

@@ -60,7 +60,8 @@ export const allRoutes: string[] = [...routes, ...hiddenRoutes];
 
 /**
  * Prerendered routes that carry a form, for the focus-indicator check in
- * a11y-dark.spec.ts. It lives here rather than in that spec so the spec stays
+ * a11y-dark.spec.ts (removed from FBCM 2026-09-24: the site is light-only, and
+ * this list is empty because there is no form). It lives here rather than in that spec so the spec stays
  * byte-identical across the family; only this file knows which pages a given
  * site puts a form on. /contact is the starter's only one. A project that
  * enables the lead-magnet module gets a form on /guides/[slug]; add it here

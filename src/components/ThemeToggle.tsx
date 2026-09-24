@@ -1,4 +1,10 @@
 // Foundation, edit with care
+// DORMANT since 2026-09-24: FBCM is light-only (CLAUDE.md rule 3, site.theme
+// in src/data/site.ts) and nothing renders this component. It is kept, with the
+// `.dark` block in globals.css, so dark mode can come back with a small change:
+// set site.theme to 'system' and render <ThemeToggle client:idle /> again in
+// Header.astro, Footer.astro and MobileNav.tsx.
+//
 // Three-state theme toggle: light → dark → system. Persists to
 // localStorage (key from site.themeStorageKey). Anti-FOUC script in BaseLayout
 // applies the resolved class on initial paint; this component only

@@ -1,9 +1,11 @@
-// PORTABLE: canonical copy - ncs-astro-sanity-starter is the library of record for this file
+// NOT PORTABLE on FBCM since 2026-09-24. The marker came off deliberately
+// (PORTS.md card 43): the site is light-only, so the dark run below was
+// removed, and that is a site-specific change the family's canonical copy must
+// not carry. Read this as a divergent fork of the starter's copy.
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { routes } from './routes';
 import { settle } from './helpers';
-import { site } from '../src/data/site';
 
 // =============================================================================
 // Contrast, for the elements axe DECLINES TO JUDGE
@@ -12,7 +14,7 @@ import { site } from '../src/data/site';
 // is big enough to drive a site-wide bug through.
 //
 // axe reports three outcomes per rule, not two: violations, passes, and
-// INCOMPLETE. a11y.spec.ts and a11y-dark.spec.ts both assert
+// INCOMPLETE. a11y.spec.ts (and a11y-dark.spec.ts, where a site has one) assert
 // `results.violations` is empty, which is the right assertion and also means an
 // incomplete slides through in silence. axe returns incomplete for
 // colour-contrast whenever it cannot work the background out for itself, and
@@ -486,22 +488,13 @@ function report(route: string, theme: string, failures: Checked[]): string {
   ].join('\n');
 }
 
-for (const theme of ['light', 'dark'] as const) {
+// Light only (2026-09-24): FBCM never renders its dark palette, so the dark
+// run this loop used to include audited a theme no visitor can reach.
+for (const theme of ['light'] as const) {
   test.describe(`Contrast beyond axe (${theme} mode)`, () => {
     for (const route of routes) {
       test(`${route} has no unevaluated contrast failures in ${theme} mode`, async ({ page }) => {
-        if (theme === 'dark') {
-          await page.addInitScript((key) => {
-            window.localStorage.setItem(key, 'dark');
-          }, site.themeStorageKey);
-        }
         await page.goto(route, { waitUntil: 'domcontentloaded' });
-
-        // Same guard as a11y-dark.spec.ts: without it a broken storage key
-        // means this suite audits light mode twice and reports success.
-        if (theme === 'dark') {
-          await expect(page.locator('html')).toHaveClass(/dark/);
-        }
 
         const { failures, undetermined, checked } = await sweep(page, route);
 

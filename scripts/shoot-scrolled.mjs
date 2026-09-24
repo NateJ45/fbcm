@@ -57,7 +57,8 @@ for (const [label, width, height, route] of [
   ['home', 375, 812, '/'],
   ['beliefs', 1440, 900, '/beliefs/'],
 ]) {
-  for (const scheme of ['light', 'dark']) {
+  // Light only since 2026-09-24 (the site never renders dark).
+  for (const scheme of ['light']) {
     const page = await browser.newPage({ viewport: { width, height }, colorScheme: scheme });
     await page.goto(`http://127.0.0.1:4399${route}`, { waitUntil: 'load' });
     await page.waitForTimeout(600);

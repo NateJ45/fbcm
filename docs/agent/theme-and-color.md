@@ -2,6 +2,45 @@
 
 > Default palette tokens, shadcn token mapping, the three-state light/dark theme system, and the re-skin design seam.
 
+## FBCM is light-only (2026-09-24)
+
+**Read this before the rest of the file, which describes the starter's three-state
+system as it still exists, dormant, in the code.**
+
+The site always renders light. Measured across the identity passes: dark mode left Home
+practically unchanged (the identity is fixed brand bands, the same in both themes) and
+only flipped the cream reading pages, at the cost of a second design pass per branch,
+clashes that existed in dark only, and about a third of each branch's checks. Nathan
+approved light-only on 2026-09-24.
+
+How it is done, so it can be undone with a small change:
+
+- `site.theme` in `src/data/site.ts` is `'light'`. The anti-FOUC script in
+  `BaseLayout.astro` receives it as `lightOnly`; while it is true the script never reads
+  localStorage or `prefers-color-scheme`, never adds `.dark` (and removes it if a View
+  Transitions swap ever carried it), and pins `style.colorScheme = 'light'`. The logo
+  swap still runs, because overlay mode (the header on an image hero) wants the
+  paper-lettered logo whatever the theme.
+- The head carries `<meta name="color-scheme" content="light">`, so browser UI (form
+  controls, scrollbars) is light before any script runs, and the dark `theme-color` meta
+  is not emitted (its literal stays in the source, inside a `site.theme !== 'light'`
+  condition, because `apply-brand` rewrites it by regex).
+- There is no theme toggle in the header, footer or mobile menu.
+  `src/components/ThemeToggle.tsx` is DORMANT (rendered nowhere, so it ships no JS), and
+  so is the `.dark` block in `globals.css`. Both say so at their top.
+- Tests: `tests/a11y-dark.spec.ts` is deleted (FBCM has no form, so its focus-indicator
+  check had nothing to measure), the dark runs in `tests/contrast.spec.ts` and
+  `tests/menu.spec.ts` are gone, the dark styleguide shot and its baseline are gone, and
+  `src/lib/theme-tokens.test.ts` measures the light palette only. `contrast.spec.ts` and
+  `tests/visual/styleguide.spec.ts` lost their PORTABLE markers for it (PORTS.md cards 43
+  and 37). `src/lib/surfaces.test.ts` still measures its pairs in both themes: it is a
+  pure test over the token blocks, cheap, and it keeps the dormant palette honest.
+
+To bring dark mode back: set `site.theme` to `'system'`, render `<ThemeToggle client:idle />`
+again in `Header.astro`, `Footer.astro` and `MobileNav.tsx`, and restore the dark tests
+from the light-only commit on `feat/light-only`. Expect a design pass: the identity bands
+added since 2026-09-24 were only ever checked in light.
+
 ## Default palette
 
 The starter ships a neutral Slate/Ink/Paper palette. These are the defaults to build on and test against; a consuming project re-skins by editing the design seam described at the end of this document.

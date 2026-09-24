@@ -20,7 +20,8 @@
 //   |                                            |
 //   |  Sundays            (219) ...              |   <- two-column foot
 //   |  10:45 am           Contact                |
-//   |  309 East Adams     [theme]                |
+//   |  309 East Adams                            |
+//   |  (*) Watch live                            |
 //   |  [ GIVE ]                                  |
 //   |  [win] [door] [rose] [basin]               |   <- the four goals
 //   +-------------------------------------------+
@@ -41,13 +42,20 @@
 //      reads paper over an image hero and ink once the bar has scrolled.
 //   3. IT MIRRORS THE DESKTOP HEADER (CLAUDE.md rule 17, and plan 2a task 9):
 //      the same links from the same Sanity menu, the same one gold button. A
-//      phone visitor is not offered a different site. The phone number, the
-//      Contact link and the theme toggle are here because task 3 took the
-//      header's utility row off; this is where they went.
-//   4. DROPDOWN GROUPS FLATTEN. The church's menu is seven flat links today,
-//      but an editor can add a group in Sanity without a code change, so the
-//      shape still renders: the group label becomes a quiet non-link row
-//      with its children under it.
+//      phone visitor is not offered a different site. The phone number and
+//      the Contact link are here because task 3 took the header's utility
+//      row off; this is where they went. "Watch live" sits above Give, as it
+//      sits beside Give on the desktop bar (2026-09-24). The theme toggle
+//      that used to sit in the foot came off when the site went light-only
+//      the same day.
+//   4. A DROPDOWN GROUP READS AS ONE BLOCK (2026-09-24, Nathan's review; it
+//      used to flatten into a small grey caps label over ordinary rows). The
+//      label ("Our Church") is set in the same display face and size as the
+//      top-level rows, is not a link, and carries a small gold caret. Its
+//      children are indented under it, one step smaller, with a thin gold
+//      rule down their left edge, always open (no accordion). It is a nested
+//      list named by the label (aria-labelledby), so a screen reader hears
+//      "Our Church, list, 4 items" and the focus order is the reading order.
 //   5. THE CURRENT PAGE ROW is marked aria-current="page", which locks
 //      .nav-underline drawn (globals.css). It is read from
 //      window.location.pathname at render, which is safe because the sheet's
@@ -66,11 +74,11 @@
 // followed, so a goal on the page the visitor is already on (Who We Are)
 // does not leave the sheet open over it.
 
-import { useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import ThemeToggle from './ThemeToggle';
 import { telHref } from '@/lib/phone';
 import { timeOnly } from '@/lib/live-sunday';
+import { isLiveNow } from '@/lib/live-service';
 import { site } from '@/data/site';
 
 // ---- Types ------------------------------------------------------------------
@@ -122,6 +130,9 @@ interface Props {
   serviceTime?: string;
   /** First line of siteSettings.address, split by the Header. */
   street?: string;
+  /** Where "Watch live" goes (live stream, else channel), stega-cleaned by
+   *  the Header. Absent means the row does not render. */
+  watchUrl?: string;
   /** getImage() URL for src/assets/menu-window.jpg, 1200w, quality 70. */
   windowUrl?: string;
   /** The four goals row (GoalsRow.astro), slotted in by Header.astro. */
@@ -137,25 +148,23 @@ interface Props {
 const DEFAULT_CTA = { show: true, label: 'Contact us', href: '/contact' };
 
 /**
- * One rendered line in the sheet. A `label` row is a dropdown group's heading:
- * it is not a link, and the group's child links follow it.
+ * The stagger index for each top-level item, in reading order: a group's label
+ * and each of its children count as a line, so the rows still rise one after
+ * another straight down the sheet.
  */
-type MenuRow = { kind: 'label'; label: string } | { kind: 'link'; label: string; href: string };
-
-/** Flatten the nav tree into the rows the sheet draws. */
-function toRows(links: NavItem[]): MenuRow[] {
-  const rows: MenuRow[] = [];
+function staggerStarts(links: NavItem[]): number[] {
+  const starts: number[] = [];
+  let i = 0;
   for (const item of links) {
-    if (item.kind === 'flat') {
-      rows.push({ kind: 'link', label: item.label, href: item.href });
-      continue;
-    }
-    rows.push({ kind: 'label', label: item.label });
-    for (const sub of item.items) {
-      rows.push({ kind: 'link', label: sub.label, href: sub.href });
-    }
+    starts.push(i);
+    i += item.kind === 'flat' ? 1 : 1 + item.items.length;
   }
-  return rows;
+  return starts;
+}
+
+/** A stable id for a group's label, so its list can be named by it. */
+function groupId(label: string): string {
+  return `menu-group-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 }
 
 /**
@@ -186,13 +195,23 @@ export default function MobileNav({
   cta = DEFAULT_CTA,
   serviceTime,
   street,
+  watchUrl,
   windowUrl,
   children,
 }: Props) {
   const [open, setOpen] = useState(false);
+  // Set once React has mounted, so a test (or anything else) can wait for the
+  // trigger to be LIVE rather than merely visible: the server-rendered button
+  // is on screen before hydration and ignores a click until then. It is not
+  // in the server HTML, so no page's markup changes because of it.
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
 
   const phone = siteSettings?.phone;
-  const rows = toRows(links);
+  const starts = staggerStarts(links);
+  // The sheet's body only renders in the browser, when it opens, so this reads
+  // the visitor's clock at that moment against the church's service window.
+  const live = !!serviceTime && isLiveNow(new Date(), serviceTime);
   const here = currentPath();
   const isCurrent = (href: string) =>
     here !== undefined && normalizePath(here) === normalizePath(href);
@@ -209,7 +228,10 @@ export default function MobileNav({
   };
 
   return (
-    <div className="absolute top-1/2 right-gutter -translate-y-1/2 lg:hidden">
+    <div
+      className="absolute top-1/2 right-gutter -translate-y-1/2 lg:hidden"
+      data-menu-ready={ready ? '' : undefined}
+    >
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           {/* Inherits `color` from the header, so it is paper over an image
@@ -275,33 +297,61 @@ export default function MobileNav({
                 carries no numbers (rollout plan rule 11). */}
             <nav aria-label="Primary mobile" className="relative mt-10 flex-1">
               <ul className="m-0 list-none p-0">
-                {rows.map((row, i) =>
-                  row.kind === 'label' ? (
+                {links.map((item, n) =>
+                  item.kind === 'flat' ? (
                     <li
-                      key={`group-${row.label}`}
+                      key={item.href}
                       className="menu-row border-b border-bg/15"
-                      style={{ '--i': i } as CSSProperties}
-                    >
-                      <p className="py-4 font-ui text-ui tracking-[0.14em] text-bg/60 uppercase">
-                        {row.label}
-                      </p>
-                    </li>
-                  ) : (
-                    <li
-                      key={row.href}
-                      className="menu-row border-b border-bg/15"
-                      style={{ '--i': i } as CSSProperties}
+                      style={{ '--i': starts[n] } as CSSProperties}
                     >
                       <a
-                        href={row.href}
+                        href={item.href}
                         onClick={close}
-                        aria-current={isCurrent(row.href) ? 'page' : undefined}
+                        aria-current={isCurrent(item.href) ? 'page' : undefined}
                         className="group flex items-baseline py-4"
                       >
                         <span className="nav-underline font-display text-[clamp(1.75rem,6.4vw,2.75rem)] leading-none font-normal tracking-[0.02em] uppercase">
-                          {row.label}
+                          {item.label}
                         </span>
                       </a>
+                    </li>
+                  ) : (
+                    <li key={`group-${item.label}`} className="border-b border-bg/15 pb-4">
+                      {/* The label: the rows' own face and size, not a link,
+                          with a small gold caret. It names the list below. */}
+                      <p
+                        id={groupId(item.label)}
+                        className="menu-row m-0 flex items-baseline gap-3 py-4 font-display text-[clamp(1.75rem,6.4vw,2.75rem)] leading-none font-normal tracking-[0.02em] uppercase"
+                        style={{ '--i': starts[n] } as CSSProperties}
+                      >
+                        {item.label}
+                        <span aria-hidden className="text-[0.55em] text-gold">
+                          &#9662;
+                        </span>
+                      </p>
+                      <ul
+                        aria-labelledby={groupId(item.label)}
+                        className="m-0 ml-1 list-none border-l border-gold/70 p-0 pl-5"
+                      >
+                        {item.items.map((sub, k) => (
+                          <li
+                            key={sub.href}
+                            className="menu-row"
+                            style={{ '--i': (starts[n] ?? 0) + 1 + k } as CSSProperties}
+                          >
+                            <a
+                              href={sub.href}
+                              onClick={close}
+                              aria-current={isCurrent(sub.href) ? 'page' : undefined}
+                              className="group flex items-baseline py-2.5"
+                            >
+                              <span className="nav-underline font-display text-[clamp(1.375rem,5vw,2.125rem)] leading-none font-normal tracking-[0.02em] uppercase">
+                                {sub.label}
+                              </span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
                     </li>
                   ),
                 )}
@@ -309,8 +359,7 @@ export default function MobileNav({
             </nav>
 
             {/* The foot: when the church meets and where, then the ways to
-                reach it. The theme control sits here because task 3 took it
-                off the header below lg. */}
+                reach it. */}
             <div className="relative mt-10 grid grid-cols-2 gap-6 border-t border-bg/15 pt-6 font-ui text-sm">
               <div>
                 <p className="mb-2 text-ui tracking-[0.14em] text-gold uppercase">Sundays</p>
@@ -326,9 +375,27 @@ export default function MobileNav({
                 <a href="/contact" onClick={close}>
                   Contact
                 </a>
-                <ThemeToggle />
               </div>
             </div>
+
+            {/* Watch live, the desktop bar's quiet link in the sheet's
+                furniture face, above the one gold button. A 44px tap target.
+                Inside the service window it reads "Live now" with the pulsing
+                gold dot (data-live; the pulse stops under reduced motion).
+                The dot is decorative; the words carry the state. */}
+            {watchUrl && (
+              <a
+                href={watchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={close}
+                data-live={live ? '' : undefined}
+                className="relative mt-6 inline-flex min-h-[44px] items-center gap-2 self-start font-ui text-ui font-semibold tracking-[0.02em] text-bg underline-offset-4 hover:underline"
+              >
+                <span className="live-dot" aria-hidden />
+                <span>{live ? 'Live now' : 'Watch live'}</span>
+              </a>
+            )}
 
             {/* The one button, drawn exactly as the header's Give button and
                 the give band draw it: gold fill, indigo-FIELD label (not

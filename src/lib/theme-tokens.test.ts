@@ -27,6 +27,17 @@
 // palette gate. Dark-mode pairs beyond that stay covered by the visual pass
 // and a dark axe sweep.
 //
+// LIGHT ONLY SINCE 2026-09-24. FBCM never renders its dark theme (CLAUDE.md
+// rule 3, site.theme), so the dark-scope pairs this file used to measure (the
+// two gold-ink pairs, the dark half of the identity and themed pairs, the dark
+// nave scrim, and ".dark redeclares every identity token") tested a palette no
+// visitor can reach, and came off with it. The `.dark` block in globals.css is
+// DORMANT, not deleted; bringing dark mode back means restoring those pairs
+// from git history (the commit that made the site light-only) along with it.
+// The one dark-scope check kept below is the reader premise (".dark does not
+// redeclare a palette token this gate asserts as light"), which guards this
+// gate's own correctness rather than the dark palette.
+//
 // NOT asserted: --color-secondary and --color-border-soft against the paper
 // surfaces. Those are hairline dividers and faint rules, not UI component
 // boundaries, and they sit near 2:1 by design. Any token used for a FOCUS RING
@@ -59,17 +70,6 @@ const readBrand = scopeReader(brand);
 function token(name: string): string {
   assert.ok(brand[`--${name}`], `globals.css @theme is missing --${name}`);
   return readBrand(`--${name}`);
-}
-
-/** The whole dark theme as it resolves on the page: the palette and the
-    shadcn semantics together, with .dark's overrides winning. A pair marked
-    'dark' below is read through this, so a token that flips is measured at the
-    value a reader on the dark theme actually sees. */
-const darkTokens = { ...tokensIn(css, LIGHT_SCOPE), ...tokensIn(css, DARK_SCOPE) };
-const readDark = scopeReader(darkTokens);
-function darkToken(name: string): string {
-  assert.ok(darkTokens[`--${name}`], `globals.css declares --${name} in neither light nor .dark`);
-  return readDark(`--${name}`);
 }
 
 // The pairs the design system actually renders: text tokens on surface tokens.
@@ -215,13 +215,9 @@ for (const [fg, bg] of GOLD_PAIRS) {
 // forbidden pairs are asserted FAILING so nobody can ship them by accident.
 // ---------------------------------------------------------------------------
 
-// A church pair is measured in the LIGHT palette unless it says otherwise. The
-// optional fourth element switches BOTH tokens to their dark-theme resolution
-// (the .dark declaration when there is one, the @theme value when there is
-// not), which is the only honest way to assert a token that flips: measuring
-// the light value and calling it a dark pair is exactly the silent pass
-// css-tokens.ts exists to prevent.
-const CHURCH_PAIRS_AA: Array<[string, string, string] | [string, string, string, 'dark']> = [
+// Every church pair is measured in the LIGHT palette, the only one the site
+// renders (2026-09-24).
+const CHURCH_PAIRS_AA: Array<[string, string, string]> = [
   ['color-indigo', 'color-cream', 'ink on paper'],
   ['color-brown', 'color-cream', 'brown ink on paper'],
   ['color-brown-mid', 'color-cream', 'eyebrows on paper'],
@@ -249,11 +245,6 @@ const CHURCH_PAIRS_AA: Array<[string, string, string] | [string, string, string,
   ['color-accent', 'color-bg', 'ink on paper'],
   ['color-gold', 'color-indigo-deep', 'gold labels on the footer field'],
   ['color-taupe', 'color-indigo-deep', 'muted text on the footer field'],
-  // The two dark-theme pairs, added 2026-09-20 with the gold-ink flip: the
-  // paper-only gold-ink measured 2.90:1 and 2.70:1 on these two surfaces and
-  // produced 34 axe-dark failures, so .dark now points it at the brand gold.
-  ['color-gold-ink', 'background', 'gold label on the dark page', 'dark'],
-  ['color-gold-ink', 'muted', 'gold label on the dark card and muted band', 'dark'],
 ];
 const CHURCH_PAIRS_FORBIDDEN: Array<[string, string, string]> = [
   ['color-gold', 'color-cream', 'gold text on paper'],
@@ -263,9 +254,8 @@ const CHURCH_PAIRS_FORBIDDEN: Array<[string, string, string]> = [
 ];
 
 test('every church pair that ships clears AA body text', (t) => {
-  for (const [fg, bg, why, scope] of CHURCH_PAIRS_AA) {
-    const read = scope === 'dark' ? darkToken : token;
-    const r = contrastRatio(read(fg), read(bg));
+  for (const [fg, bg, why] of CHURCH_PAIRS_AA) {
+    const r = contrastRatio(token(fg), token(bg));
     // Printed as well as asserted: a gate that only says "pass" cannot tell you
     // a pair has drifted from 5.6 to 4.6 and is one nudge from failing.
     t.diagnostic(`${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
@@ -297,9 +287,8 @@ test('the taupe tint surface keeps indigo ink readable', () => {
 // ---------------------------------------------------------------------------
 // Church identity (2026-09-23, the Who We Are pass; brand palette only since
 // the owner's review the same day). The band grounds and the inks set on them.
-// Every pair is measured TWICE, once in the light palette and once as the dark
-// theme resolves it, because every one of these tokens is redeclared under
-// .dark. Floor is AA body text unless the pair is only ever set at 24px and
+// Every pair is measured in the light palette (the dark resolution came off on
+// 2026-09-24 with dark mode). Floor is AA body text unless the pair is only ever set at 24px and
 // up, where WCAG's large-text 3:1 applies.
 //
 // Three dark grounds (indigo, deep, brown) carry white with a brand gold
@@ -367,24 +356,17 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
   ['color-band-taupe', 'color-band-indigo', 'the document list: each note', 'body'],
 ];
 
-// Inks that FLIP with the theme, measured on the ground each theme actually
-// paints under them. The light ground is a brand @theme token; the dark one is
-// the shadcn semantic the band resolves to under .dark (read through the whole
-// dark scope), because --color-bg and --color-bg-soft deliberately never flip.
-// [ink, light ground, dark ground, why]
-const THEMED_IDENTITY_PAIRS: Array<[string, string, string, string]> = [
-  ['color-indigo', 'color-bg-soft', 'muted', 'the pledge heading, rubric and turns'],
-  ['color-gold-ink', 'color-bg-soft', 'muted', 'the pledge references'],
-  [
-    'color-brown-ink',
-    'color-bg',
-    'background',
-    'the letter heading, first paragraph and signature',
-  ],
-  ['color-gold-ink', 'color-bg', 'background', "the letter's drop cap"],
+// Inks that would FLIP with the theme, measured on the light ground they are
+// painted on. (Their dark grounds came off with dark mode, 2026-09-24.)
+// [ink, light ground, why]
+const THEMED_IDENTITY_PAIRS: Array<[string, string, string]> = [
+  ['color-indigo', 'color-bg-soft', 'the pledge heading, rubric and turns'],
+  ['color-gold-ink', 'color-bg-soft', 'the pledge references'],
+  ['color-brown-ink', 'color-bg', 'the letter heading, first paragraph and signature'],
+  ['color-gold-ink', 'color-bg', "the letter's drop cap"],
   // The goals heading and index (Task 5): each goal's name in its own ink.
-  ['color-indigo', 'color-bg', 'background', 'the goals heading, Worship in the index'],
-  ['color-brown-ink', 'color-bg', 'background', 'Witness and Work in the goals index'],
+  ['color-indigo', 'color-bg', 'the goals heading, Worship in the index'],
+  ['color-brown-ink', 'color-bg', 'Witness and Work in the goals index'],
 ];
 
 const IDENTITY_TOKENS = [
@@ -405,59 +387,38 @@ const IDENTITY_TOKENS = [
 // (the gold lines are 28px and up). The percentage is the one in globals.css.
 const NAVE_SCRIM_ALPHA = 0.8;
 
-test('the nave scrim reads over a pure white photograph (both themes)', (t) => {
+test('the nave scrim reads over a pure white photograph', (t) => {
   const pct = css.match(/--gn-scrim: color-mix\(in srgb, var\(--color-band-deep\) (\d+)%/);
   assert.ok(pct, 'globals.css .gn-cap no longer mixes --color-band-deep into --gn-scrim');
   assert.equal(Number(pct[1]) / 100, NAVE_SCRIM_ALPHA, 'the scrim percentage moved; re-measure');
-  for (const [scope, read] of [
-    ['light', token],
-    ['dark', darkToken],
-  ] as const) {
-    const ground = rgbToHex(
-      flatten(hexToRgb(read('color-band-deep')), NAVE_SCRIM_ALPHA, hexToRgb('#ffffff')),
-    );
-    const white = contrastRatio('#ffffff', ground);
-    const gold = contrastRatio(read('color-gold'), ground);
-    t.diagnostic(
-      `${scope}: scrim ${ground}, white ${white.toFixed(2)}:1, gold ${gold.toFixed(2)}:1`,
-    );
-    assert.ok(white >= AA_BODY_TEXT, `${scope}: white on the nave scrim is ${white.toFixed(2)}:1`);
-    assert.ok(gold >= AA_LARGE_TEXT, `${scope}: gold on the nave scrim is ${gold.toFixed(2)}:1`);
-  }
+  const ground = rgbToHex(
+    flatten(hexToRgb(token('color-band-deep')), NAVE_SCRIM_ALPHA, hexToRgb('#ffffff')),
+  );
+  const white = contrastRatio('#ffffff', ground);
+  const gold = contrastRatio(token('color-gold'), ground);
+  t.diagnostic(`scrim ${ground}, white ${white.toFixed(2)}:1, gold ${gold.toFixed(2)}:1`);
+  assert.ok(white >= AA_BODY_TEXT, `white on the nave scrim is ${white.toFixed(2)}:1`);
+  assert.ok(gold >= AA_LARGE_TEXT, `gold on the nave scrim is ${gold.toFixed(2)}:1`);
 });
 
-test('every church identity token is declared in @theme AND redeclared in .dark', () => {
-  const dark = tokensIn(css, DARK_SCOPE);
+test('every church identity token is declared in @theme', () => {
   const missingLight = IDENTITY_TOKENS.filter((n) => !brand[`--${n}`]);
-  const missingDark = IDENTITY_TOKENS.filter((n) => !dark[`--${n}`]);
   assert.deepEqual(missingLight, [], `@theme is missing ${missingLight.join(', ')}`);
-  assert.deepEqual(missingDark, [], `.dark does not redeclare ${missingDark.join(', ')}`);
 });
 
-test('every themed church ink clears AA on the ground each theme paints', (t) => {
-  for (const [fg, lightBg, darkBg, why] of THEMED_IDENTITY_PAIRS) {
-    for (const [scope, r] of [
-      ['light', contrastRatio(token(fg), token(lightBg))],
-      ['dark', contrastRatio(darkToken(fg), darkToken(darkBg))],
-    ] as const) {
-      const bg = scope === 'light' ? lightBg : darkBg;
-      t.diagnostic(`${scope}, ${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
-      assert.ok(r >= AA_BODY_TEXT, `${scope}, ${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
-    }
+test('every themed church ink clears AA on the ground it is painted on', (t) => {
+  for (const [fg, bg, why] of THEMED_IDENTITY_PAIRS) {
+    const r = contrastRatio(token(fg), token(bg));
+    t.diagnostic(`${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
+    assert.ok(r >= AA_BODY_TEXT, `${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1`);
   }
 });
 
-for (const scope of ['light', 'dark'] as const) {
-  test(`every church identity pair clears its floor (${scope})`, (t) => {
-    const read = scope === 'dark' ? darkToken : token;
-    for (const [fg, bg, why, floor] of IDENTITY_PAIRS) {
-      const min = floor === 'large' ? AA_LARGE_TEXT : AA_BODY_TEXT;
-      const r = contrastRatio(read(fg), read(bg));
-      t.diagnostic(`${scope}, ${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1 (floor ${min})`);
-      assert.ok(
-        r >= min,
-        `${scope}, ${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1, needs ${min}:1`,
-      );
-    }
-  });
-}
+test('every church identity pair clears its floor', (t) => {
+  for (const [fg, bg, why, floor] of IDENTITY_PAIRS) {
+    const min = floor === 'large' ? AA_LARGE_TEXT : AA_BODY_TEXT;
+    const r = contrastRatio(token(fg), token(bg));
+    t.diagnostic(`${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1 (floor ${min})`);
+    assert.ok(r >= min, `${why}: --${fg} on --${bg} is ${r.toFixed(2)}:1, needs ${min}:1`);
+  }
+});
