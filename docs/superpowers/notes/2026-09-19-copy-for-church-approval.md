@@ -28,6 +28,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### Photos of children
 
 - hero-children: Children gathered under the sanctuary arch
+- home-expect-table: Teenagers laughing around a table over a card game, a Bible beside the cards.
 - home-expect-children: Two little girls smiling, cheek to cheek.
 - home-goal-way: Four teenagers reading open Bibles together around a table.
 - home-goal-witness: Teens and adults lying together on snow tubes on a snowy hill, smiling for the camera.

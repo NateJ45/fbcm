@@ -53,9 +53,11 @@
 // 5. PHOTOS COME FROM THE MEDIA LIBRARY, BY ARCHIVE FILENAME, and the crop each
 //    frame needs is set here (the library carries no hotspot). The goal photos
 //    are chosen so that none is on Who We Are (Nathan, 2026-09-23) or is a
-//    current blog cover on this page. The greeter at the sanctuary door IS on
-//    Who We Are (The Way's first step): it is the archive's only greeter
-//    photo, the one Nathan placed on this page on 2026-09-23. The hero
+//    current blog cover on this page, and the same rule now holds for What to
+//    Expect: the greeter at the sanctuary door is The Way's first step on Who
+//    We Are, so (Nathan, 2026-09-23) the wide arch carries the teenagers at a
+//    table with a Bible and a card game instead, a photo on no other page and
+//    not one of the Visit prototype's picks. The hero
 //    frames are the old page's own `file` entries, resolved from this
 //    checkout's asset cache, so the hero is byte-for-byte the live one. The
 //    archive photograph carries a Sanity `crop` that cuts the road in its
@@ -104,6 +106,7 @@ export default {
   // identifiable child. hero-children is the hero's third frame.
   photoConsent: [
     'hero-children',
+    'home-expect-table',
     'home-expect-children',
     'home-goal-way',
     'home-goal-witness',
@@ -437,8 +440,8 @@ export default {
       pageBuilder: [
         hero,
 
-        // 2. What to Expect: the hymn board on brown. The greeter at the
-        //    sanctuary door in the wide arch, two children in the lancet.
+        // 2. What to Expect: the hymn board on brown. Teenagers round a table
+        //    (a Bible, a card game) in the wide arch, two children in the lancet.
         {
           _type: 'sundayTimesSection',
           _key: 'home-sundays',
@@ -463,7 +466,7 @@ export default {
           ],
           notes: [nursery, communion],
           photos: [
-            await photo('home-expect-greeter', 0.48, 0.35, { _key: 'expect-greeter' }),
+            await photo('home-expect-table', 0.58, 0.4, { _key: 'expect-table' }),
             await photo('home-expect-children', 0.44, 0.5, { _key: 'expect-children' }),
           ],
           cta: expectCta,

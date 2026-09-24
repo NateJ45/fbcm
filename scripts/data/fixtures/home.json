@@ -186,29 +186,29 @@
         {
           "_type": "image",
           "asset": {
-            "_id": "image-760632d0beb693093f78334d0a515564aa2b8529-2400x1138-jpg",
+            "_id": "image-1b7806427fe8c419a24455260bd7f274a4516335-2400x1136-jpg",
             "_type": "sanity.imageAsset",
-            "altText": "At the sanctuary door, a man hands a woman a set of assisted-listening headphones.",
+            "altText": "A group of teens sitting around a table laughing while playing a card game.",
             "metadata": {
               "dimensions": {
                 "_type": "sanity.imageDimensions",
-                "aspectRatio": 2.10896309314587,
-                "height": 1138,
+                "aspectRatio": 2.112676056338028,
+                "height": 1136,
                 "width": 2400
               },
-              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAJABQDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAQCAwYH/8QAKBAAAQMBAw0AAAAAAAAAAAAAAQACAwQFBxIGESE0N0FDUWFyc3Sx/8QAFgEBAQEAAAAAAAAAAAAAAAAAAwAE/8QAGhEAAwADAQAAAAAAAAAAAAAAAAECAxEhYf/aAAwDAQACEQMRAD8Ayl27amSkqrTme2QRNMTTyBGlTySmz2ZMGymSV82ENjPVVXe7P67yn4lLtNXZ7BWaISTfg+e9cOluqayUNMbnsAAbhO4oTtPxO8oVHZTBUI//2Q=="
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAJABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAYHBf/EACkQAAEDAwICCwAAAAAAAAAAAAIBAwQABQYHERJzCBQhIjE1NkFRgbH/xAAVAQEBAAAAAAAAAAAAAAAAAAAEA//EABsRAAEFAQEAAAAAAAAAAAAAAAEAAgMREiFB/9oADAMBAAIRAxEAPwDEwDK7xkdzuMSDMCGKuo5xu9737RSmLUaU5anokycTPUicQCJU34yT5SpPpX4SuYNUfpDeh7RzE/KJI47rxMiADdV1LFwCFeZjs5qYrYOruIgSim1FK+O+VNfdFVAFIzpCDS//2Q=="
             },
-            "url": "https://cdn.sanity.io/images/7jw947g5/production/760632d0beb693093f78334d0a515564aa2b8529-2400x1138.jpg"
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/1b7806427fe8c419a24455260bd7f274a4516335-2400x1136.jpg"
           },
-          "alt": "At the sanctuary door, a greeter hands a woman a set of assisted-listening headphones.",
+          "alt": "Teenagers laughing around a table over a card game, a Bible beside the cards.",
           "hotspot": {
             "_type": "sanity.imageHotspot",
-            "x": 0.48,
-            "y": 0.35,
+            "x": 0.58,
+            "y": 0.4,
             "width": 0.3,
             "height": 0.3
           },
-          "_key": "expect-greeter"
+          "_key": "expect-table"
         },
         {
           "_type": "image",
