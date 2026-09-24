@@ -806,11 +806,19 @@ from the old site is approved by the church.
   the strip rule changed; after deploy they were recaptured and the tree proved at its
   fixpoint, 162/162. Production checked after the deploy: no page repeats a photo.
 - **Seeding from a nested worktree** needs `<worktrees>/fbcm-archive` to resolve
-  (a directory junction to `Projects/fbcm-archive` was made on 2026-09-23) AND the
-  worktree's `scripts/.asset-map.json` filled from the dataset first: `seed-pages`
-  uploads photos even in a dry run, so an empty cache means duplicate uploads. The
-  2026-09-23 run filled it by matching `<key>.jpg` asset names and checked the asset
-  count was unchanged after the dry run.
+  (a directory junction to `Projects/fbcm-archive` was made on 2026-09-23) AND, for
+  any `file` entry in `scripts/data/page-images.json`, the worktree's
+  `scripts/.asset-map.json` filled from the dataset. **A dry run no longer uploads**
+  (fixed 2026-09-23, the Home identity pass, `scripts/lib/page-images.mjs`): it
+  resolves `library` entries (the media library) and `file` entries already in the
+  asset map, and REFUSES any other `file` entry with an error that names the exact
+  map key (`scripts/.page-images/<key>.jpg`) and the asset filename (`<key>.jpg`).
+  To fill it, copy the id from the main checkout's `scripts/.asset-map.json`, or
+  look it up with `npx sanity documents query
+  '*[_type=="sanity.imageAsset" && originalFilename=="<key>.jpg"]._id'`; only a
+  genuinely new photo should reach `--apply`, which uploads it once and caches it.
+  `alreadyUploaded()` is unit-tested in `scripts/lib/page-images.test.mjs`
+  (`npm run test:scripts`).
 - **Correction:** the photo of children on the chancel steps around a woman
   reading WAS in the archive, filed under Youth as "Blessing of the backpacks
   gathering" (Wix alt "Kendall and kids blessing of backpacks 2025"). It is now on

@@ -30,16 +30,26 @@ export function loadManifest() {
   return JSON.parse(readFileSync(MANIFEST, 'utf8'));
 }
 
+/** The asset-map path a `file` entry is cached under (after following aliases). */
+export function cachePath(manifest, key) {
+  const { key: targetKey, entry } = resolveEntry(manifest, key);
+  const format = entry.format === 'png' ? 'png' : 'jpg';
+  return `scripts/.page-images/${targetKey}.${format}`;
+}
+
 /** True when a `file` entry's resize has already been uploaded from this checkout
  *  (makeUploader's cache, scripts/.asset-map.json, holds its path), so resolving it
- *  writes nothing to Sanity. Library entries never upload, so they count as done. */
-export function alreadyUploaded(manifest, key) {
-  const { key: targetKey, entry } = resolveEntry(manifest, key);
+ *  writes nothing to Sanity. Library entries never upload, so they count as done.
+ *  `map` defaults to this checkout's asset map; the tests pass their own. */
+export function alreadyUploaded(manifest, key, map = readAssetMap()) {
+  const { entry } = resolveEntry(manifest, key);
   if (entry.library) return true;
   if (!entry.file) return true;
-  const format = entry.format === 'png' ? 'png' : 'jpg';
-  const map = existsSync(ASSET_MAP) ? JSON.parse(readFileSync(ASSET_MAP, 'utf8')) : {};
-  return Boolean(map[`scripts/.page-images/${targetKey}.${format}`]);
+  return Boolean(map[cachePath(manifest, key)]);
+}
+
+function readAssetMap() {
+  return existsSync(ASSET_MAP) ? JSON.parse(readFileSync(ASSET_MAP, 'utf8')) : {};
 }
 
 /** Follow "same" aliases to the real manifest entry, returning { key, entry }.
@@ -53,6 +63,20 @@ export function resolveEntry(manifest, key, seen = new Set()) {
   if (seen.has(key)) throw new Error(`page-images: alias cycle at "${key}"`);
   seen.add(key);
   return resolveEntry(manifest, entry.same, seen);
+}
+
+/** The dry-run refusal, naming the exact asset-map key to fill and how. */
+export function unuploadedMessage(key, path) {
+  const name = path.split('/').pop();
+  return (
+    `page-images: "${key}" has not been uploaded from this checkout, and a dry run ` +
+    `never uploads. scripts/.asset-map.json needs "${path}": "<asset id>". If the ` +
+    `dataset already holds it (an asset whose originalFilename is "${name}"), copy ` +
+    "the id from the main checkout's scripts/.asset-map.json or look it up with " +
+    `npx sanity documents query '*[_type=="sanity.imageAsset" && originalFilename=="${name}"]._id'. ` +
+    'If it is genuinely new, run with --apply to upload it. See docs/PENDING.md, ' +
+    '"Seeding from a nested worktree".'
+  );
 }
 
 export function makePageImages(uploadClient) {
@@ -125,11 +149,7 @@ export function makePageImages(uploadClient) {
     // dry run from a fresh worktree wrote duplicate assets (docs/PENDING.md, "Seeding
     // from a nested worktree"). Now it refuses and says how to fill the cache.
     if (!alreadyUploaded(manifest, key) && !process.argv.includes('--apply')) {
-      throw new Error(
-        `page-images: "${key}" has not been uploaded from this checkout ` +
-          '(scripts/.asset-map.json has no entry for it), and a dry run never uploads. ' +
-          'Fill the cache from the dataset first, or run with --apply.',
-      );
+      throw new Error(unuploadedMessage(key, cachePath(manifest, key)));
     }
     const r = await resized(key);
     if (!r) return null;
