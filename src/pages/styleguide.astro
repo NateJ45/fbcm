@@ -196,9 +196,10 @@ const RULE_CTA_DARK = {
 // imported from the church's own blog) and every one is a photograph of
 // identifiable people at a real event, which is wrong to attach to a fake
 // name and a fake "Pastor" title even captioned as a fixture. StaffGrid.astro
-// already has a real, theme-aware, designed answer for "no photo yet" -- the
-// aspect-[4/5] bg-surface-soft box under the gold rule -- so leaving `photo`
-// undefined uses the component's own fallback rather than inventing a new one.
+// already has a designed answer for "no photo yet" -- since the Staff identity
+// pass (2026-09-24), the lancet filled with the indigo band and the building's
+// window glyph in gold -- so leaving `photo` undefined uses the component's own
+// fallback rather than inventing a new one.
 
 /** One-paragraph portable text block, for the two fields typed as rich text. */
 function paragraph(key: string, text: string) {

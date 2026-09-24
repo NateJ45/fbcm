@@ -41,6 +41,10 @@ export const SELF_CONTAINED_TYPES = new Set([
   'scriptureBandSection',
   'heritageBandSection',
   'giveBandSection',
+  // The staff bands (2026-09-24, the Staff identity pass): gold, brown or
+  // taupe by the GROUP they show, or the page's paper for "Everyone"
+  // (src/lib/staff-band.ts). Derived, never stored (rule 9).
+  'staffGridSection',
   // scaffold:end
 ]);
 
@@ -53,7 +57,6 @@ export const CONTENT_TYPES = new Set([
   'videoSection',
   // scaffold: church
   'timelineSection',
-  'staffGridSection',
   'documentListSection',
   'linkCardsSection',
   'hoursSection',

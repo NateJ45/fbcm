@@ -218,10 +218,13 @@ test('church blocks are classified: dark bands self-contained, the rest alternat
     'scriptureBandSection',
     'heritageBandSection',
     'giveBandSection',
+    // 2026-09-24, the Staff identity pass: a staff band's ground is derived
+    // from its group (src/lib/staff-band.ts), so it no longer takes the cadence.
+    'staffGridSection',
   ]) {
     assert.ok(SELF_CONTAINED_TYPES.has(t), `${t} should be self-contained`);
   }
-  for (const t of ['timelineSection', 'staffGridSection', 'documentListSection', 'hoursSection']) {
+  for (const t of ['timelineSection', 'documentListSection', 'hoursSection']) {
     assert.ok(CONTENT_TYPES.has(t), `${t} should alternate with the cadence`);
   }
 });

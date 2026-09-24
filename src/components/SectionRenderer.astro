@@ -437,6 +437,7 @@ const wrapAttrs = (key: string | undefined) =>
           <StaffGrid
             eyebrow={s.eyebrow}
             heading={s.heading}
+            intro={s.intro}
             group={s.group}
             showBios={s.showBios}
             members={s.members ?? []}
@@ -452,9 +453,11 @@ const wrapAttrs = (key: string | undefined) =>
           />
         ) : /* scaffold-branch: church */ s._type === 'scriptureBandSection' ? (
           <ScriptureBand
+            heading={s.heading}
             verse={s.verse}
             reference={s.reference}
             accentWord={s.accentWord}
+            intro={s.intro}
             headingId={headingId}
           />
         ) : /* scaffold-branch: church */ s._type === 'heritageBandSection' ? (

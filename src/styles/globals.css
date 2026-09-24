@@ -2716,20 +2716,41 @@ body::before {
 .ww-wrap {
   padding-block: calc(clamp(80px, 9vw, 150px) + var(--after-window, 0px)) clamp(72px, 9vw, 140px);
 }
-.ww-verse {
+.ww-verse,
+.sb-verse {
   display: grid;
   gap: 18px 40px;
   align-items: end;
   margin: clamp(48px, 6vw, 96px) 0 0;
 }
-.ww-verse p {
+.ww-verse p,
+.sb-verse p {
   max-width: 21em;
   font-size: clamp(27px, 3.3vw, 48px);
   line-height: 1.2;
   text-indent: -0.42em;
 }
-.ww-verse cite {
+.ww-verse cite,
+.sb-verse cite {
   font-size: 20px;
+}
+/* The scripture band (ScriptureBand.astro, 2026-09-24) shares the Watchword's
+   verse rule above; these are its own differences. A verse with no reference
+   is not a quotation, so it carries no quote marks and nothing to hang. */
+.sb-wrap {
+  padding-block: clamp(72px, 9vw, 140px);
+}
+.sb-verse:first-child {
+  margin-top: 0;
+}
+.sb-verse p:not(.sb-q) {
+  text-indent: 0;
+}
+.sb-intro {
+  max-width: 36em;
+  margin-top: clamp(40px, 5vw, 72px);
+  font-size: 19px;
+  line-height: 1.55;
 }
 .ww-body {
   display: grid;
@@ -2775,11 +2796,124 @@ body::before {
 }
 
 @media (min-width: 621px) {
-  .ww-verse {
+  .ww-verse,
+  .sb-verse {
     grid-template-columns: minmax(0, 1fr) auto;
   }
   .ww-pair > div {
     grid-template-columns: 190px minmax(0, 1fr);
+  }
+}
+
+/* The staff bands (StaffGrid.astro, 2026-09-24, the Staff identity pass): the
+   heading and the church's introduction across the top, then the people as
+   lancets. Grounds and inks are token utilities in the component; the moulding
+   takes the band's own ink on the two light grounds, where gold would vanish. */
+.sg-wrap {
+  padding-block: clamp(72px, 9vw, 140px);
+}
+.sg-gold,
+.sg-taupe {
+  --arch-mould: var(--color-band-ink);
+}
+.sg-top {
+  display: grid;
+  gap: clamp(20px, 4vw, 80px);
+  align-items: start;
+  margin-bottom: clamp(48px, 6vw, 88px);
+}
+.sg-long {
+  font-size: clamp(1.625rem, 0.9rem + 2.6vw, 2.75rem);
+}
+.sg-intro {
+  max-width: 36em;
+  font-size: 19px;
+  line-height: 1.55;
+}
+.sg-group + .sg-group {
+  margin-top: clamp(56px, 7vw, 104px);
+}
+.sg-people {
+  display: grid;
+  gap: 48px clamp(16px, 2.6vw, 40px);
+  align-items: start;
+}
+.sg-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.sg-feature .sg-person {
+  display: grid;
+  grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+  gap: 20px;
+  align-items: end;
+}
+.sg-arch {
+  margin-top: 9px;
+}
+.sg-name {
+  font-size: clamp(22px, 1.2rem + 0.5vw, 28px);
+  line-height: 1.15;
+}
+.sg-list .sg-words {
+  margin-top: 18px;
+}
+.sg-list .sg-name {
+  font-size: clamp(20px, 1.1rem + 0.3vw, 24px);
+}
+.sg-mail:hover {
+  text-decoration-thickness: 2px;
+}
+.sg-intro a,
+.sg-more a {
+  color: inherit;
+}
+.sg-more summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 0.4em;
+  border-bottom: 2px solid;
+  cursor: pointer;
+  list-style: none;
+}
+.sg-more summary::-webkit-details-marker,
+.sg-more[open] .sg-rm,
+.sg-more:not([open]) .sg-rl {
+  display: none;
+}
+.sg a:focus-visible,
+.sg summary:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+@media (min-width: 640px) {
+  .sg-feature {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .sg-feature .sg-person {
+    display: block;
+  }
+  .sg-feature .sg-arch {
+    max-width: 320px;
+  }
+  .sg-feature .sg-words {
+    margin-top: 22px;
+  }
+}
+@media (min-width: 768px) {
+  .sg-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 900px) {
+  .sg-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    align-items: end;
+  }
+}
+@media (min-width: 1024px) {
+  .sg-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
