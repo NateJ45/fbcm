@@ -414,6 +414,13 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Sermon previews and church news are at https://www.fbcmuncie.org/blog, each post at /post/<slug>, with a feed at https://www.fbcmuncie.org/blog/rss.xml.
 - A longer companion with more of the site's text: https://www.fbcmuncie.org/llms-full.txt
 
+## Social links: footer, mobile menu and Contact (2026-09-24, `feat/social-links`)
+
+### New sentences
+
+- "Follow along" (the heading of the Facebook, Instagram and YouTube links on the Contact page’s office hours band, and the name a screen reader hears for the same row of icons at the foot of the mobile menu).
+- "First Baptist Church Muncie on Facebook", "... on Instagram" and "... on YouTube" (what a screen reader says for each round icon button in the footer and the mobile menu; nothing on screen).
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

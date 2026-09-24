@@ -104,11 +104,12 @@ test('the header section carries its edits fallback line', () => {
 });
 
 test('CHROME_SECTIONS is the single source of the chrome copy (no duplicate definition to drift)', () => {
-  assert.equal(CHROME_SECTIONS.length, 5);
+  assert.equal(CHROME_SECTIONS.length, 6);
   assert.equal(CHROME_SECTIONS[0].heading, 'Site footer (every page)');
   assert.equal(CHROME_SECTIONS[1].heading, 'Header and mobile menu (every page)');
   // The two sections a seed-pages run wiped on 2026-09-24, now generated.
   assert.match(CHROME_SECTIONS[2].heading, /^Visit: "Which door\?"/);
   assert.match(CHROME_SECTIONS[3].heading, /^Scripture index and site search/);
   assert.match(CHROME_SECTIONS[4].heading, /^\/llms\.txt/);
+  assert.match(CHROME_SECTIONS[5].heading, /^Social links/);
 });

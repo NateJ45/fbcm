@@ -90,6 +90,16 @@ export const CHROME_SECTIONS = [
       "A longer companion with more of the site's text: https://www.fbcmuncie.org/llms-full.txt",
     ],
   },
+  {
+    // src/lib/social-links.ts and the three places that draw it: the footer,
+    // the mobile menu, and the Contact page's office door (Hours.astro). UI
+    // labels in code, not a page module's copy, so they live here.
+    heading: 'Social links: footer, mobile menu and Contact (2026-09-24, `feat/social-links`)',
+    newCopy: [
+      '"Follow along" (the heading of the Facebook, Instagram and YouTube links on the Contact page’s office hours band, and the name a screen reader hears for the same row of icons at the foot of the mobile menu).',
+      '"First Baptist Church Muncie on Facebook", "... on Instagram" and "... on YouTube" (what a screen reader says for each round icon button in the footer and the mobile menu; nothing on screen).',
+    ],
+  },
 ];
 
 /** `manifest[key].alt`, following `.same` chains, matching seed-pages.mjs's altFor. */

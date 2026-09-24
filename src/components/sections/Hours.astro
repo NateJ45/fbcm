@@ -26,6 +26,18 @@
 // "days: times" shape ("Hours may change on holidays.") prints whole, in
 // italic, under its group.
 //
+// FOLLOW ALONG (2026-09-24, feat/social-links). The door's last group is the
+// church's accounts elsewhere: Facebook, Instagram and YouTube, each an icon
+// and its name, derived from Site settings by socialLinksOf()
+// (src/lib/social-links.ts), the same list the footer and the mobile menu
+// draw. It lives HERE, in code, rather than in a page band because this block
+// is the Contact page's own: contact.mjs is the only page module that places
+// an hoursSection, the block already reads Site settings for the hours, and
+// the office door is where the page answers "how do I reach the church?". A
+// band of its own would need a schema field or a page write; the hero's facts
+// are typed page content on a component every page shares. No accounts, no
+// group.
+//
 // THE ADDRESS IS NO LONGER A ROW HERE. It used to be the third row, which put
 // the street on the Contact page three times over (the hero's facts, this
 // band and the Sunday band) and a fourth in the footer. This band is hours.
@@ -40,6 +52,8 @@ import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { getSiteSettings } from '@/lib/queries';
 import { hoursLines, type HoursBlock } from '@/lib/office-hours';
 import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
+import SocialIcon from '@/components/SocialIcon';
+import { socialLinksOf } from '@/lib/social-links';
 
 interface Props {
   eyebrow?: string;
@@ -82,6 +96,9 @@ const groups = [
     lines: hoursLines((settings?.pastoralHours ?? null) as PtBlock[] | null),
   },
 ].filter((g) => g.lines.length > 0);
+
+// The church's accounts elsewhere, in the footer's order.
+const social = socialLinksOf(settings);
 ---
 
 <section class="hours-door" aria-labelledby={heading ? headingId : undefined}>
@@ -99,7 +116,7 @@ const groups = [
     </div>
 
     {
-      groups.length > 0 && (
+      (groups.length > 0 || social.length > 0) && (
         <div class="hd-board">
           {groups.map((group) => (
             <div class="hd-group">
@@ -123,6 +140,26 @@ const groups = [
               )}
             </div>
           ))}
+          {social.length > 0 && (
+            <div class="hd-group">
+              <h3 class="hd-label font-ui">Follow along</h3>
+              <ul class="hd-social">
+                {social.map((link) => (
+                  <li>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="hd-social-link font-body"
+                    >
+                      <SocialIcon platform={link.platform} size={22} />
+                      <span>{link.name}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )
     }
@@ -203,6 +240,39 @@ const groups = [
     font-style: italic;
     font-size: 1.0625rem;
     color: var(--color-band-ink);
+  }
+  /* Follow along: the accounts as one ruled row of icon-and-name links, in
+     the days' indigo, each a 44px target. */
+  .hd-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 clamp(20px, 3vw, 36px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid color-mix(in srgb, var(--color-band-ink) 30%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-band-ink) 30%, transparent);
+  }
+  .hd-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding-block: clamp(6px, 0.8vw, 10px);
+    font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.3rem);
+    line-height: 1.25;
+    color: var(--color-band-indigo);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 150ms ease;
+  }
+  .hd-social-link:hover {
+    text-decoration-color: currentColor;
+  }
+  .hd-social-link:focus-visible {
+    outline: 3px solid var(--color-band-indigo);
+    outline-offset: 3px;
   }
   .hours-door :global(.hd-note p) {
     margin: 0;

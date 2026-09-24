@@ -635,4 +635,15 @@ export interface SectionSiteSettings {
    */
   officeHours?: unknown;
   pastoralHours?: unknown;
+  /**
+   * The church's accounts elsewhere, read by the office door's "Follow along"
+   * group (Hours.astro) through socialLinksOf() (src/lib/social-links.ts), the
+   * same derivation the footer and the mobile menu use. All four are already
+   * in the siteSettings projection; TypeScript additions only, no schema
+   * change.
+   */
+  socialLinks?: Array<{ platform?: string; url?: string; label?: string } | null> | null;
+  socialFacebook?: string;
+  socialInstagram?: string;
+  youtubeUrl?: string;
 }
