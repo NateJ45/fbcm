@@ -285,6 +285,8 @@ ${mark}
 
 async function renderCard(card, art, outPath) {
   const { svg, fit } = cardSvg(card);
+  // OG_DEBUG_SVG=1 keeps each card's SVG beside it for inspection; the next
+  // ordinary run deletes them (see the clean-up below).
   if (process.env.OG_DEBUG_SVG) writeFileSync(`${outPath}.svg`, svg);
   const hex = INDIGO.replace('#', '');
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
@@ -432,10 +434,13 @@ async function worker() {
 }
 await Promise.all(Array.from({ length: 4 }, worker));
 
-// Cards for routes that are gone.
+// Cards for routes that are gone, and anything else in the folder (an
+// OG_DEBUG_SVG run's .svg files, a stray download): public/og/ is copied into
+// the build whole, so only the current cards and the manifest may stay.
 let removed = 0;
 for (const f of readdirSync(outDir)) {
-  if (f.endsWith('.png') && !next[f.replace(/\.png$/, '')]) {
+  if (f === '.manifest.json') continue;
+  if (!(f.endsWith('.png') && next[f.replace(/\.png$/, '')])) {
     rmSync(resolve(outDir, f));
     removed += 1;
   }
