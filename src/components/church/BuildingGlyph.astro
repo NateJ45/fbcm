@@ -1,9 +1,13 @@
 ---
 // Safe to edit by hand
-// The four goal glyphs, each drawn from the building: the two-light WINDOW
-// (Worship), the Tudor DOOR (The Way), the ROSE window (Witness) and the
-// piscina BASIN (Work). Ported from the prototype's `#i-window`, `#i-door`,
-// `#i-rose` and `#i-basin` symbols; the shared `#qf` quatrefoil is inlined
+// The four goal glyphs: the two-light WINDOW (Worship), the Tudor DOOR (The
+// Way) and the ROSE window (Witness), drawn from the building, and the BASIN
+// (Work): a jug pouring into a basin with a towel over its rim, the
+// foot-washing of John 13, since the church's Work is "following Jesus'
+// example of serving others". The basin was first drawn as a piscina niche,
+// which read as a face or a sink; it was redrawn 2026-09-24 at Nathan's
+// request. The other three are ported from the prototype's `#i-window`,
+// `#i-door` and `#i-rose` symbols; the shared `#qf` quatrefoil is inlined
 // with the transform each symbol gave its `<use>`, so no page needs a global
 // <defs> sprite. Line art in currentColor at a constant 2px stroke whatever
 // the size, and always decorative: the goal's name beside it is the label.
@@ -62,12 +66,15 @@ const QF =
   {
     name === 'basin' && (
       <>
-        <path d="M9 60V28A15 15 0 0 1 24 12A15 15 0 0 1 39 28V60" />
-        <path d="M16 26A5 5 0 0 1 24 20A5 5 0 0 1 32 26" />
-        <path d="M6 42H42" />
-        <path d="M12 42C14 51 34 51 36 42" />
-        <path d="M24 49V56" />
-        <path d="M4 60H44" />
+        <path d="M19 6H29M20 6C17 10 16 16 17 21C18 25 21 27 24 27C27 27 30 25 31 21C32 16 31 10 28 6" />
+        <path d="M31 11C35 11 36 16 32 19" />
+        <path d="M17 12L12 15" />
+        <path d="M12 17V34" stroke-dasharray="2 3" />
+        <path d="M3 40H45" />
+        <path d="M5 40C7 51 13 55 24 55C35 55 41 51 43 40" />
+        <path d="M18 55L16 59H32L30 55" />
+        <path d="M36 40V52L40 50" />
+        <path d="M2 62H46" />
       </>
     )
   }
