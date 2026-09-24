@@ -185,3 +185,32 @@ test('a band pointing at nothing draws nothing, and other blocks pass through in
   assert.equal(out[0], hero);
   assert.deepEqual(resolveMinistryBands(undefined), []);
 });
+
+test('the goal index goes in front of the first Ministry band, once, only when a goal is named', () => {
+  const hero = { _type: 'heroSection', _key: 'h', headline: 'Hi' } as unknown as PageBuilderBlock;
+  const worship = band({ title: 'Worship', eyebrow: 'Worship arts', goal: 'worship', body: [] });
+  const youth = band(
+    { title: 'Youth', goal: 'the-way', body: [] },
+    { _key: 'ministries-youth', anchor: { current: 'youth' } },
+  );
+  const out = resolveMinistryBands([hero, worship, youth] as PageBuilderBlock[]);
+  assert.deepEqual(
+    out.map((b) => b._type),
+    ['heroSection', 'ministryGoalsIndex', 'richTextSection', 'richTextSection'],
+  );
+  // No goal named anywhere: the page draws exactly as before, with no index.
+  const bare = resolveMinistryBands([
+    hero,
+    band({ title: 'Worship', body: [] }),
+  ] as PageBuilderBlock[]);
+  assert.deepEqual(
+    bare.map((b) => b._type),
+    ['heroSection', 'richTextSection'],
+  );
+  // A band that points at nothing does not get the index placed in front of it.
+  const dangling = resolveMinistryBands([band(null), youth] as PageBuilderBlock[]);
+  assert.deepEqual(
+    dangling.map((b) => b._type),
+    ['ministryGoalsIndex', 'richTextSection'],
+  );
+});

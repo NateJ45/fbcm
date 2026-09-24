@@ -142,6 +142,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Em-dash to comma (site style): "join Christ where he is already at work in our world—in Muncie and across the globe" becomes "...in our world, in Muncie and across the globe".
 - Linked: "Our website has links to our building use policy here" had no link behind it on the Wix site. "here" now points at /wedding#building-use.
 - Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band listing the whole Church Coordination Team.
+- Reordered, so each reads as a class with its room: "Preschool - 2nd grade: Kickstart Children’s Church (102)" becomes "Kickstart Children’s Church (102): Preschool - 2nd grade", and "3rd - 5th grade: The Underground Children’s Church (B-03)" becomes "The Underground Children’s Church (B-03): 3rd - 5th grade" (what-to-expect.txt lines 65 and 69; the 10:45 row of the Sunday timeline). No word changes.
 - Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now follows that page’s own redirect to /blog#publications.
 
 ### Facts to confirm from this page
@@ -155,6 +156,8 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - ministry-children-vbs: Children singing on stage at Vacation Bible School
 - ministries-youth: Two teens speaking to the youth group on stage
+- ministries-hero-palms: Children holding palm branches in a stone hallway, warm light coming through the leaded windows.
+- ministries-hero-youth: Teenagers laughing around a table in the youth room, cards in hand and a Bible on the table.
 
 ## /staff
 
@@ -178,7 +181,6 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 ### New sentences
 
-- Since 1859. (the opening band’s heading)
 - The story continues on Sunday. (the closing band’s headline)
 - First Baptist Church Muncie was founded by twelve people in 1859 and has worshipped in downtown Muncie ever since. (search description, not shown on the page)
 - The seven era names in the timeline and on the bands, which are labels the spec gives rather than sentences the church wrote: Founding; Struggle and Rairden; The gas boom to the debt paid; The Fighting Parson and the building; Sold and bought back; Postwar to Mattox; Saunders to the co-pastors.
@@ -193,6 +195,9 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Cut as a repeat: "The Pastoral search team’s efforts to find a pastor resulted in the church calling not just one Pastor, but two: Jonathan Balmer and Kendall Ellis." (history.txt line 171) is the same sentence as the one in the paragraph below it (line 175), which adds "(a married couple) were called by the congregation in May of 2022 to serve as Co-Pastors".
 - Joined: history.txt lines 109 and 111 are one sentence the Wix layout broke in two. "And eventually, one year and one week after the sale of the building," and "Muncie First Baptist bought it back for $70,000." are printed as one sentence.
 - 2 em-dashes converted to commas or colons (CLAUDE.md rule 2): history.txt line 113 "the war effort—a number that was 30 percent higher" and line 147 "many members left First Baptist—some because they were unhappy". No word changes. The spaced en-dashes at lines 175 and 177 are left as the church wrote them.
+- Lifted: the timeline heading "Highlights of our history" is the church’s own line "See highlights of our history below." (history.txt line 5) without its first and last words.
+- Lifted: the timeline’s last row, marked "Today", is titled "A new era", the church’s own words from the closing sentence of the page ("...to serve in a new-era in the life of Muncie...", history.txt line 179), the hyphen taken out. Its text is the church’s sentence "Jonathan and Kendall each preach, alternating responsibilities between pulpit and youth ministries – in addition to being involved with other areas of ministry alongside the Church Coordination Team." (line 177), verbatim, and its link "Ministers" is the Wix menu item of that name, pointing at /staff.
+- Restored: the opening band’s heading is the church’s own "Our History" (history.txt line 1) in place of the new "Since 1859.".
 - Cut, not written: the seven timeline leads are the first sentence of each era’s own first paragraph, quoted verbatim from history.txt lines 13, 21, 45, 89, 103, 117 and 135.
 - Cut and re-cased, twice, for the two book notes: "Our church has a History book written by Dr. William G. Eidson" becomes "Written by Dr. William G. Eidson." and keeps the church’s own "We have several copies in our church library."; the Clay note is "Edited by Julie Downey Davis." and "The book can be purchased online." from the same two sentences of scripts/data/pages/publications.txt lines 27 and 31.
 

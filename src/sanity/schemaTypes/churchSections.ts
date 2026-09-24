@@ -441,7 +441,11 @@ export const heritageBandSection = defineType({
       title: 'Old photograph (optional)',
       type: 'image',
       options: { hotspot: true },
-      description: 'An old photograph shown beside the dates.',
+      // 2026-09-24, the History identity pass: the band that OPENS a page
+      // (HeritageOpener.astro) hangs this photograph in a lancet beside its
+      // door arch. A description change only; the field is unchanged.
+      description:
+        'An old photograph shown beside the dates. On a band that opens its page, a portrait shown in a pointed arch beside the photo.',
       fields: [
         defineField({
           name: 'alt',

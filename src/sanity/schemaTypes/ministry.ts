@@ -136,6 +136,31 @@ export const ministry = defineType({
       of: [defineArrayMember({ type: 'reference', to: [{ type: 'staffMember' }] })],
       validation: (R) => R.unique(),
     }),
+    // scaffold: church
+    // Which of the church's four goals (Who We Are, "Our Goals") this ministry
+    // serves (2026-09-24, the Ministries identity pass). OPTIONAL on purpose:
+    // it is set only where the church's own words say so, and the rest are
+    // left for the church to answer (scripts/data/ministry-goals.json). The
+    // Ministries page lists each ministry under its goal near the top
+    // (src/lib/ministry-goals.ts); a ministry with none is simply not listed
+    // there. A logic-driving dropdown, so `goal` is in NON_STEGA_FIELDS.
+    defineField({
+      name: 'goal',
+      title: 'Goal it serves',
+      type: 'string',
+      description:
+        'Which of the four goals on the Who We Are page this ministry serves. The Ministries page lists it under that goal. Leave blank if it does not fit one.',
+      options: {
+        list: [
+          { title: 'Worship', value: 'worship' },
+          { title: 'The Way (Discipleship)', value: 'the-way' },
+          { title: 'Witness (Evangelism)', value: 'witness' },
+          { title: 'Work (Acts of Mercy)', value: 'work' },
+        ],
+        layout: 'radio',
+      },
+    }),
+    // scaffold:end
     defineField({
       name: 'summary',
       title: 'One-line summary',

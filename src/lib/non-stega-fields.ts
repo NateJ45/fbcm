@@ -88,6 +88,12 @@ const NON_STEGA_FIELDS = new Set([
   // plan, 2026-09-23) reuses this same field name and the same reasoning, so
   // no second entry was needed here, only the unit test that proves it.
   'glyph',
+  // ministry.goal (2026-09-24, the Ministries identity pass) is a radio picking
+  // which of the four goals a ministry is listed under on /ministries: the
+  // goal index matches it against 'worship' | 'the-way' | 'witness' | 'work',
+  // so an encoded value would list the ministry under no goal, in the
+  // preview only.
+  'goal',
   // scaffold:end
   // slug.current: an id or a URL segment, never display text. Added 2026-09-19
   // with anchorField(): the section anchor is written straight into `id=` and

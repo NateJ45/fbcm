@@ -814,6 +814,7 @@ export type Ministry = {
       _key: string;
     } & StaffMemberReference
   >;
+  goal?: 'worship' | 'the-way' | 'witness' | 'work';
   summary?: string;
   order?: number;
 };

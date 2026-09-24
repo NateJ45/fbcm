@@ -30,6 +30,45 @@ its two eyebrows; `not-found.mjs` names the four doors and drops the reused
 tower photo. Dry runs only; `/styleguide/give` and `/styleguide/contact`
 render the compositions from read-only fixtures.
 
+_2026-09-24 — Ministries identity: the four goals as the page's organising motif (`feat/ministries-identity`)._
+
+The overnight rollout's Ministries branch, owning `src/lib/ministry-band.ts` and how
+a Ministry band draws. The ministry document gains an optional **"Goal it serves"**
+(`goal`: worship, the-way, witness, work; the ids of the goals on /who-we-are; in
+NON_STEGA_FIELDS). `resolveMinistryBands()` now puts a derived **goal index** in front
+of a page's first Ministry band when any ministry names its goal
+(`src/lib/ministry-goals.ts`, `sections/MinistryGoals.astro`): "Our Goals" on the deep
+indigo band, the four goals with their building glyphs and the church's bracketed
+words, each listing its ministries linked to their bands. Nothing stores it, so it
+cannot disagree with the documents, and with no goal answered it is not drawn.
+Which goal a ministry serves is written only where the church's own words say so:
+`scripts/set-ministry-goals.mjs` (dry by default, backup-first) writes Worship ->
+Worship and Youth, Adult -> The Way from `scripts/data/ministry-goals.json`, which
+quotes the line for each; Children and Outreach are left for the church. The rendered
+block types gained a `DerivedBlocks` registry in `pageBuilder.types.ts` so a church
+scaffold removal leaves `RenderedBlock` whole. `scripts/pages/ministries.mjs`: a window
+hero (every age in three lights, photos no other page uses), no decorative small lines
+on the hero or the timeline, and the two children's-church lines written as class
+lines ("Kickstart Children's Church (102): Preschool - 2nd grade") so the timeline
+reads each as a class with its room. Dry run only; `/styleguide/ministries` renders it
+from a read-only fixture, with each ministry's goal taken from the answers file.
+
+_2026-09-24 — History identity: /history in the church identity (`feat/history-identity`)._
+
+The overnight rollout's History branch (`docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md`),
+owning HeritageBand's h1 opener path and the history composition. A band with no dates
+that opens its page now draws as **`HeritageOpener.astro`**: the church's brown, the span
+"1859 to <build year>" derived from the first timeline row and the build date
+(`src/lib/heritage-opener.ts`, 7 tests), the h1 sized by length, the block's photo in a
+door arch and `archive` in a lancet. The dated cream band and the undated brown h2 band
+are untouched. `scripts/pages/history.mjs` restores the church's own heading "Our
+History", opens on the Wix history page's own header photograph (the women's group) and
+Pastor Cassius M. Carter, heads the timeline with the church's "highlights of our
+history" and ends it with a **Today** row in the church's present-tense words (no year
+typed), drops three decorative eyebrows, and corrects three era alts (the courthouse
+engraving, a stone house in the snow, George Saunders). The Hannaford rendering stays on
+Home only. Dry run only; `/styleguide/history` renders it from a read-only fixture.
+
 _2026-09-24 — Visit identity: the Visit page and the shared looks it settles (`feat/visit-identity`)._
 
 The Visit page composed from the approved prototype

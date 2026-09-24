@@ -54,8 +54,8 @@
 //    three lines: two headlines and the search description.
 //
 // 5. TWO ANCHORS, AND THEY MUST NOT COLLIDE. `#eras` is the timeline (the
-//    heritage band's button points at it) and `#building` is the 1921-1929
-//    band, which is where /history#building lands from Home, from Visit and
+//    opener's button pointed at it until P26 took the button off) and
+//    `#building` is the 1921-1929 band, which is where /history#building lands from Home, from Visit and
 //    from plan 1's redirects. The timeline's own row for that era carries
 //    `building-1929` rather than `building`, so the row and the band cannot
 //    fight over the same fragment.
@@ -78,6 +78,33 @@
 //    be swapped. They are period photographs of adults and buildings, so
 //    `photoConsent` is empty.
 //
+// P26 (2026-09-24, the History identity pass). THE OPENER, THE TIMELINE AND
+//   THE END ARE RECOMPOSED IN THE CHURCH IDENTITY; THE ERAS ARE NOT TOUCHED.
+//   - The opening band draws as HeritageOpener.astro (HeritageBand's h1
+//     path): the church's brown, the span "1859 to <build year>" derived from
+//     the timeline's first row and the build date (src/lib/heritage-opener.ts,
+//     rule 15), the h1, and two old photographs in arches: the women's group
+//     with its banner (the Wix history page's own header photograph) in a
+//     door, Pastor Cassius M. Carter in a lancet. The heading goes back to the
+//     church's own, "Our History" (history.txt:1), in place of the new
+//     "Since 1859."; the eyebrow and the "Seven eras" button come off (the
+//     timeline is the very next band).
+//   - The timeline's heading is the church's own "See highlights of our
+//     history below." (history.txt:5), lifted, and its decorative eyebrow
+//     comes off. It gains an EIGHTH row, marked "Today" rather than a year
+//     (never type the current year): what the church is doing now, in the
+//     church's own present-tense sentence (history.txt:177), linking to the
+//     ministers. So the story runs 1859 to today.
+//   - The closing band loses its "Today" eyebrow (rule 11: no eyebrow that
+//     only decorates).
+//   - Photographs: the Hannaford rendering is NOT used here, although the
+//     rollout table names it for this page, because Home's Our Building band
+//     already shows it and the overnight plan forbids a photograph on two
+//     pages. The two opener photos are on no other page. The era alts that
+//     named the wrong subject were corrected in page-images.json (era 1 is
+//     the courthouse engraving, era 6 a stone house in the snow, era 7 a
+//     studio portrait of George Saunders, not "the congregation").
+//
 // 7. TWO EM-DASHES, AND NOTHING ELSE, ARE TOUCHED FOR STYLE. history.txt has
 //    exactly two (lines 113 and 147) and both become commas (CLAUDE.md rule
 //    2). The spaced EN-dashes at lines 175 and 177 are left alone, as they are
@@ -89,11 +116,10 @@ export default {
   type: 'page',
   slug: 'history',
 
-  // Three sentences on this page did not exist on the Wix site, plus the seven
+  // Two sentences on this page did not exist on the Wix site, plus the seven
   // era NAMES, which are labels rather than prose. Everything else a visitor
   // reads is the church's own text, cut.
   newCopy: [
-    'Since 1859. (the opening band’s heading)',
     'The story continues on Sunday. (the closing band’s headline)',
     'First Baptist Church Muncie was founded by twelve people in 1859 and has worshipped in downtown Muncie ever since. (search description, not shown on the page)',
     'The seven era names in the timeline and on the bands, which are labels the spec gives rather than sentences the church wrote: Founding; Struggle and Rairden; The gas boom to the debt paid; The Fighting Parson and the building; Sold and bought back; Postwar to Mattox; Saunders to the co-pastors.',
@@ -110,6 +136,9 @@ export default {
     'Cut as a repeat: "The Pastoral search team’s efforts to find a pastor resulted in the church calling not just one Pastor, but two: Jonathan Balmer and Kendall Ellis." (history.txt line 171) is the same sentence as the one in the paragraph below it (line 175), which adds "(a married couple) were called by the congregation in May of 2022 to serve as Co-Pastors".',
     'Joined: history.txt lines 109 and 111 are one sentence the Wix layout broke in two. "And eventually, one year and one week after the sale of the building," and "Muncie First Baptist bought it back for $70,000." are printed as one sentence.',
     '2 em-dashes converted to commas or colons (CLAUDE.md rule 2): history.txt line 113 "the war effort—a number that was 30 percent higher" and line 147 "many members left First Baptist—some because they were unhappy". No word changes. The spaced en-dashes at lines 175 and 177 are left as the church wrote them.',
+    'Lifted: the timeline heading "Highlights of our history" is the church’s own line "See highlights of our history below." (history.txt line 5) without its first and last words.',
+    'Lifted: the timeline’s last row, marked "Today", is titled "A new era", the church’s own words from the closing sentence of the page ("...to serve in a new-era in the life of Muncie...", history.txt line 179), the hyphen taken out. Its text is the church’s sentence "Jonathan and Kendall each preach, alternating responsibilities between pulpit and youth ministries – in addition to being involved with other areas of ministry alongside the Church Coordination Team." (line 177), verbatim, and its link "Ministers" is the Wix menu item of that name, pointing at /staff.',
+    'Restored: the opening band’s heading is the church’s own "Our History" (history.txt line 1) in place of the new "Since 1859.".',
     'Cut, not written: the seven timeline leads are the first sentence of each era’s own first paragraph, quoted verbatim from history.txt lines 13, 21, 45, 89, 103, 117 and 135.',
     'Cut and re-cased, twice, for the two book notes: "Our church has a History book written by Dr. William G. Eidson" becomes "Written by Dr. William G. Eidson." and keeps the church’s own "We have several copies in our church library."; the Clay note is "Edited by Julie Downey Davis." and "The book can be purchased online." from the same two sentences of scripts/data/pages/publications.txt lines 27 and 31.',
   ],
@@ -385,8 +414,20 @@ export default {
     }
 
     // -- The photographs -----------------------------------------------------
-    const tower = await images.image('hero-tower');
-    if (!tower) throw new Error('history.mjs: no photo in the manifest for "hero-tower"');
+    // P26: the opener's two old photographs, each with the crop its arch
+    // needs (the library carries no hotspot): the women's group is wide and
+    // its people stand in the lower two thirds; Carter's face is high.
+    const hotspot = (x, y) => {
+      const size = Math.min(0.3, 2 * Math.min(x, 1 - x), 2 * Math.min(y, 1 - y));
+      return { _type: 'sanity.imageHotspot', x, y, width: size, height: size };
+    };
+    const openerPhoto = async (key, x, y) => {
+      const img = await images.image(key);
+      if (!img) throw new Error(`history.mjs: no photo in the manifest for "${key}"`);
+      return { ...img, hotspot: hotspot(x, y) };
+    };
+    const openerGroup = await openerPhoto('history-open-group', 0.5, 0.62);
+    const openerCarter = await openerPhoto('history-open-carter', 0.5, 0.4);
     const eraPhotos = {};
     for (let n = 1; n <= 7; n += 1) {
       const key = `history-era-${n}`;
@@ -461,14 +502,15 @@ export default {
       addToMainNav: false,
 
       pageBuilder: [
-        // 1. The opening band, brown, with the tower and the founding
-        //    sentence (history.txt line 11).
+        // 1. The opening band (P26): the church's brown, "Our History", the
+        //    founding sentences, the women's group in a door arch and Pastor
+        //    Carter in a lancet (HeritageOpener.astro).
         {
           _type: 'heritageBandSection',
           _key: 'hs-open',
-          image: tower,
-          eyebrow: 'Our history',
-          heading: 'Since 1859.',
+          image: openerGroup,
+          archive: openerCarter,
+          heading: headingLine('Our History'),
           // Two of the church's own sentences, verbatim, joined with a space.
           // history.txt:3 is the church's own opening line for the whole page
           // ("Founded in 1859, First Baptist Church of Muncie has a long
@@ -478,7 +520,6 @@ export default {
           // already carried ("...meeting at the county courthouse, founded
           // the first Baptist Church in Muncie.").
           body: `${para('has a long history of serving God')} ${para('meeting at the county courthouse')}`,
-          cta: ctaAnchor('Seven eras', '/history#eras'),
         },
 
         // 2. The seven eras as a table of contents. Every lead is a quotation;
@@ -493,8 +534,14 @@ export default {
           _type: 'timelineSection',
           _key: 'hs-eras',
           anchor: { _type: 'slug', current: 'eras' },
-          eyebrow: 'The church’s story',
-          heading: 'Seven eras',
+          // P26: the church's own line, lifted (see `edits`).
+          heading: (() => {
+            const line = para('See highlights of our history below.');
+            if (line !== 'See highlights of our history below.') {
+              throw new Error(`history.mjs: history.txt line 5 now reads "${line}".`);
+            }
+            return 'Highlights of our history';
+          })(),
           rows: [
             {
               _type: 'timelineRow',
@@ -545,6 +592,27 @@ export default {
               marker: '1990 to 2022',
               title: 'Saunders to the co-pastors',
               body: [...paragraphs(leads[7], 'tl7'), readThisEra(7, '/history#era-7')],
+            },
+            // P26: the present. "Today", never a typed year, so the row cannot
+            // go stale; the church's own present-tense sentence about its
+            // co-pastors, and the ministers' page.
+            {
+              _type: 'timelineRow',
+              _key: 'era-today',
+              marker: 'Today',
+              title: (() => {
+                const closing = para('continues to discern God’s will');
+                if (!closing.includes('to serve in a new-era in the life of Muncie')) {
+                  throw new Error(
+                    'history.mjs: the closing sentence no longer says "to serve in a new-era in the life of Muncie", so the Today row cannot be titled from it.',
+                  );
+                }
+                return 'A new era';
+              })(),
+              body: [
+                ...paragraphs(para('Jonathan and Kendall each preach'), 'tl8'),
+                link('Ministers', '/staff', 'tl8-more'),
+              ],
             },
           ],
         },
@@ -624,7 +692,7 @@ export default {
         {
           _type: 'documentListSection',
           _key: 'hs-books',
-          eyebrow: 'Read more',
+          // P26: no eyebrow (rule 11: a label that only decorates).
           heading: 'Two books',
           docs: [
             {
@@ -650,7 +718,6 @@ export default {
         {
           _type: 'ctaBandSection',
           _key: 'hs-cta',
-          eyebrow: 'Today',
           headline: 'The story continues on Sunday.',
           subhead: `${settings.serviceTime}. ${streetLine}.`,
           cta: ctaInternal('Who we are', 'who-we-are'),

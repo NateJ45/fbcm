@@ -1,0 +1,172 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// The heritage band when it OPENS a page (2026-09-24, the History identity
+// pass). HeritageBand.astro hands over here when the band carries the page's
+// h1 and no dates, which today means /history and only /history: a page that
+// opens on this band rather than on a hero. The dated cream band (Home's "Our
+// Building") and the undated brown h2 band (Visit's building band) are
+// HeritageBand's own and are untouched by this file.
+//
+// Four things are worth knowing before editing it.
+//
+// 1. THE CHURCH'S BROWN, IN BOTH THEMES. --color-band-brown is a brand band
+//    token and holds its value under .dark, so every ink here is a gated
+//    identity pair from theme-tokens.test.ts: white-pure for the heading,
+//    paper (--color-bg) for the words, gold for the years and the arch
+//    mouldings, taupe for the small "to".
+//
+// 2. THE SPAN IS DERIVED, NEVER TYPED (CLAUDE.md rule 15). The founding year
+//    is the first year in the marker of the page's first timeline row, which
+//    SectionRenderer already hands HeritageBand as `years[0]`; the present is
+//    the build year. src/lib/heritage-opener.ts does both, so the band says
+//    "1859 to <this year>" and moves on by itself on 1 January. With no
+//    timeline on the page there is no span, and the heading stands alone.
+//
+// 3. PEOPLE IN ARCHES (the identity rules 3 and 7). The block's own `image`
+//    is a group, so it goes in a DOOR arch, widened to suit an old group
+//    photograph; `archive`, when it is set, is a single sitter, so it goes in
+//    a LANCET hung over the door's lower-left corner. No captions: the alt
+//    text is on the <img> for screen readers. Both load eagerly, because they
+//    are the first pictures on the page.
+//
+// 4. NO STRIP AND NO NUMERAL ROW. The brown h2 band borrows two spare photos
+//    for a detail strip and sets three timeline numerals under its heading;
+//    as an opener those would repeat the timeline that follows it directly.
+import SectionHeading from '@/components/SectionHeading.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import { headlineScale } from '@/lib/headline-scale';
+import { openerSpan } from '@/lib/heritage-opener';
+import { splitStega } from '@/lib/preview-stega';
+import type { SanityImageObject } from '@/lib/pageBuilder.types';
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  image?: SanityImageObject | null;
+  archive?: SanityImageObject | null;
+  cta?: any;
+  /** The first derived timeline numeral, if any (SectionRenderer's `years[0]`). */
+  firstMarker?: string;
+  headingId: string;
+}
+
+const { eyebrow, heading, body, image, archive, cta, firstMarker, headingId } =
+  Astro.props as Props;
+
+const span = openerSpan(firstMarker, new Date());
+const altOf = (img: unknown): string => {
+  const alt = (img as { alt?: unknown } | null)?.alt;
+  return typeof alt === 'string' ? splitStega(alt).cleaned : '';
+};
+const hasDoor = !!image?.asset;
+const hasLancet = !!archive?.asset;
+---
+
+<section class="bg-band-brown text-white-pure" aria-labelledby={heading ? headingId : undefined}>
+  <div
+    class="mx-auto grid max-w-content grid-cols-12 items-center gap-x-[clamp(16px,2.5vw,40px)] gap-y-10 px-gutter py-section-lg"
+  >
+    <div class:list={['col-span-12', (hasDoor || hasLancet) && 'lg:col-span-6']}>
+      {
+        span.length > 0 && (
+          <p
+            class="mb-[clamp(20px,2.4vw,32px)] flex flex-wrap items-baseline gap-[0.18em] font-display text-[clamp(3.25rem,2.4rem+2.6vw,5rem)] leading-[0.86] tracking-[0.01em] text-gold lining-nums"
+            aria-hidden="true"
+          >
+            <span>{span[0]}</span>
+            {span[1] && (
+              <>
+                <span class="font-body text-[0.42em] tracking-normal text-band-taupe italic">
+                  to
+                </span>
+                <span>{span[1]}</span>
+              </>
+            )}
+          </p>
+        )
+      }
+      <SectionHeading
+        eyebrow={eyebrow}
+        headline={heading}
+        headingId={headingId}
+        level="h1"
+        scale={headlineScale(heading, { tall: false })}
+        align="left"
+        tone="band"
+        face="display"
+      />
+      {
+        body && (
+          <p class="mt-6 max-w-[30em] font-body text-[clamp(1.25rem,1rem+0.8vw,1.6875rem)] leading-[1.4] text-bg">
+            {body}
+          </p>
+        )
+      }
+      {
+        cta?.label && (
+          <div class="mt-8">
+            <CtaLink cta={cta} variant="gold" onDark />
+          </div>
+        )
+      }
+    </div>
+
+    {
+      (hasDoor || hasLancet) && (
+        <div class:list={['ho-pics col-span-12 lg:col-span-6', hasDoor && hasLancet && 'ho-pair']}>
+          {hasDoor && (
+            <ArchFrame
+              image={image}
+              shape="door"
+              width={1200}
+              sizes="(min-width: 1024px) 40vw, 90vw"
+              alt={altOf(image)}
+              loading="eager"
+              class="ho-door"
+              style="--arch-ratio: 100 / 80;"
+            />
+          )}
+          {hasLancet && (
+            <ArchFrame
+              image={archive}
+              shape="lancet"
+              width={600}
+              sizes="(min-width: 1024px) 15vw, 34vw"
+              alt={altOf(archive)}
+              loading="eager"
+              class="ho-lancet"
+            />
+          )}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  /* The pair: the door stands in from the left, the lancet hangs over its
+     lower-left corner and drops below it. Percentages of the column's width
+     throughout, so the composition is the same at 320px and at 1440px. */
+  .ho-pics {
+    position: relative;
+  }
+  .ho-pair {
+    padding-bottom: 12%;
+  }
+  .ho-pair :global(.ho-door) {
+    margin-left: 16%;
+  }
+  .ho-pair :global(.ho-lancet) {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 32%;
+  }
+  /* A lone lancet should not fill the column. */
+  .ho-pics:not(.ho-pair) :global(.ho-lancet) {
+    width: 45%;
+  }
+</style>
