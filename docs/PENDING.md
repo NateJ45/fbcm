@@ -1169,7 +1169,12 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       `/llms.txt`'s page lines carry the old descriptions.
 - [ ] #nathan **Approve the new copy**: the titles and descriptions under each page, and the
       "/llms.txt" section, in `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`.
-- [ ] #nathan **Add Facebook and Instagram in Site settings, Social links.** The Wix site's
+- [x] #nathan **Add Facebook and Instagram in Site settings, Social links.** Done 2026-09-24
+      (`set-social-links.mjs`); since `feat/social-links` the footer, the mobile menu and a
+      "Follow along" group on /contact draw them with YouTube (`src/lib/social-links.ts`).
+      Approve the words "Follow along" in the approval note. The footer now shows YouTube
+      twice, once as the Elsewhere column's "YouTube: every service" link and once as an
+      icon; drop the column link in Site settings if that reads as one too many. The Wix site's
       navigation linked `https://www.facebook.com/firstbaptistmuncie` and
       `https://www.instagram.com/fbcmuncie/` (`scripts/data/nav.json`), but Site settings holds
       no social link, so neither reaches the church's `sameAs` today (YouTube, Church Center,

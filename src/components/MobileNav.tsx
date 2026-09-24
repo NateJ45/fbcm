@@ -24,6 +24,7 @@
 //   |  (*) Watch live                            |
 //   |  [ GIVE ]                                  |
 //   |  [win] [door] [rose] [basin]               |   <- the four goals
+//   |  (f) (ig) (yt)                              |   <- accounts elsewhere
 //   +-------------------------------------------+
 //
 // Five things about it are deliberate.
@@ -80,6 +81,7 @@ import { telHref } from '@/lib/phone';
 import { timeOnly } from '@/lib/live-sunday';
 import { resolveLive } from '@/lib/live-service';
 import { site } from '@/data/site';
+import SocialIcon from '@/components/SocialIcon';
 
 // ---- Types ------------------------------------------------------------------
 
@@ -140,6 +142,13 @@ interface Props {
   renderingUrl?: string;
   /** The four goals row (GoalsRow.astro), slotted in by Header.astro. */
   children?: ReactNode;
+  /**
+   * The church's accounts elsewhere (src/lib/social-links.ts socialLinksOf,
+   * the list the footer draws), cut down by Header.astro to what the row
+   * needs: the platform for the icon, the address, and the accessible name
+   * ("First Baptist Church Muncie on Facebook"). Absent means no row.
+   */
+  social?: { platform: string; url: string; label: string }[];
 }
 
 /**
@@ -202,6 +211,7 @@ export default function MobileNav({
   windowUrl,
   renderingUrl,
   children,
+  social,
 }: Props) {
   const [open, setOpen] = useState(false);
   // Set once React has mounted, so a test (or anything else) can wait for the
@@ -269,7 +279,13 @@ export default function MobileNav({
               title is for assistive tech only. */}
           <SheetTitle className="sr-only">Menu</SheetTitle>
 
-          <div className="relative flex min-h-full flex-col px-gutter pt-4 pb-8">
+          {/* shrink-0 (2026-09-24, feat/social-links): SheetContent is a flex
+              column of fixed height, so without it this box shrank to the
+              viewport and the sheet's content overflowed it: the pb-8 below
+              the last row was lost (the last row sat on the screen's bottom
+              edge at the end of the scroll) and the rendering, which is
+              pinned to this box's bottom, floated mid-sheet on a short phone. */}
+          <div className="relative flex min-h-full shrink-0 flex-col px-gutter pt-4 pb-8">
             {/* The church's own window, masked to the top 40% and drifting a
                 few pixels over 40 seconds. Decorative: it carries no meaning
                 the rows do not already carry, so it is aria-hidden and takes
@@ -476,6 +492,34 @@ export default function MobileNav({
               <div onClick={closeOnLink} className="relative mt-8 border-t border-bg/15 pt-4">
                 {children}
               </div>
+            )}
+
+            {/* The church's accounts elsewhere, the last row of the sheet: the
+                footer's round icon buttons in the sheet's hairline, 44px
+                targets. Icon-only, so each link's aria-label says whose
+                account it is; the list is named for a screen reader, which
+                hears "Follow along, list, 3 items" before them (the words the
+                Contact page's group prints). */}
+            {social && social.length > 0 && (
+              <ul
+                aria-label="Follow along"
+                className="relative m-0 mt-6 flex list-none gap-3 border-t border-bg/15 p-0 pt-6"
+              >
+                {social.map((link) => (
+                  <li key={link.url}>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={link.label}
+                      onClick={close}
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-bg/30 text-bg transition-colors hover:border-gold hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                    >
+                      <SocialIcon platform={link.platform} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
         </SheetContent>

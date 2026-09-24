@@ -60,6 +60,7 @@ import menuRenderingAsset from '@/assets/menu-rendering-gold.webp';
 import { splitStega } from '@/lib/preview-stega';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
 import { watchLiveHref } from '@/lib/live-service';
+import { socialLinksOf, socialLinkLabel } from '@/lib/social-links';
 import { urlFor } from '@/lib/sanity';
 
 // SVG logos are passed through Astro's image pipeline for cache-busted URLs.
@@ -100,6 +101,9 @@ interface Props {
         address?: string;
         youtubeUrl?: string;
         livestreamUrl?: string;
+        socialLinks?: { platform?: string; url?: string; label?: string }[] | null;
+        socialFacebook?: string;
+        socialInstagram?: string;
       })
     | null;
 }
@@ -154,6 +158,19 @@ const watchHref = watchLiveHref(
   cleanUrl(siteSettings?.livestreamUrl),
   cleanUrl(siteSettings?.youtubeUrl),
 );
+
+// The church's accounts elsewhere, for the row at the foot of the mobile
+// menu: the same derived list the footer and the Contact page draw
+// (src/lib/social-links.ts), cut down to the three strings the island needs,
+// with each link's accessible name ("First Baptist Church Muncie on
+// Facebook") worked out here so the island imports nothing to build it.
+// Absent when there are none, so the island's props do not grow for nothing.
+const menuSocial = socialLinksOf(siteSettings).map((link) => ({
+  platform: link.platform,
+  url: link.url,
+  label: socialLinkLabel(link, brandName),
+}));
+const menuSocialProps = menuSocial.length > 0 ? { social: menuSocial } : {};
 
 // Subset of siteSettings the mobile menu needs. Pass as a plain object so the
 // React island doesn't try to serialize the whole Sanity document graph.
@@ -439,6 +456,7 @@ function isGroupActive(items: { href: string }[]) {
       windowUrl={menuWindowImg.src}
       renderingUrl={menuRenderingAsset.src}
       {...mobileCtaProps}
+      {...menuSocialProps}
     >
       <GoalsRow size="menu" />
     </MobileNav>
