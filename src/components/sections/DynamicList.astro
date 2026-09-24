@@ -15,15 +15,17 @@
 //                  category as text. Never an author portrait. "All posts" is
 //                  the gold button. Before this pass it was a text-only list
 //                  on the page ground (the art-direction pass, 2026-09-20).
-//                  Links to the journal entry at /post/<slug>.
+//                  Links to the journal entry at /post/<slug>. Since the
+//                  journal identity pass (2026-09-24) the row itself is
+//                  src/components/blog/PostRow.astro, shared with /blog and
+//                  the post page's foot, so the two cannot drift apart.
 //   anything else - the generic card grid at the foot of this file.
 //
 // SELF_CONTAINED: manages its own surface. Never receives a surface prop.
 // Empty state: renders nothing when items is empty or absent (graceful absence).
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
-import ArchFrame from '@/components/church/ArchFrame.astro'; // scaffold: journal
-import { splitStega } from '@/lib/preview-stega'; // scaffold: journal
+import PostRow from '@/components/blog/PostRow.astro'; // scaffold: journal
 import type { ProjectedDynamicListSection } from '@/lib/pageBuilder.types';
 import { columnsClass } from '@/lib/layout-variants';
 import { H2_DISPLAY } from '@/lib/heading-grammar';
@@ -119,19 +121,6 @@ const KNOWN_SOURCES: string[] = [
   'journal', // scaffold: journal
 ];
 
-// scaffold: journal
-// The row's picture sits beside the post's own title inside one link, and on
-// this site most posts' alt text IS the title, so a screen reader would read
-// the title twice. An alt that only repeats the title is dropped (the picture
-// is then decorative); any other alt is kept. Compared on the stega-CLEANED
-// strings, never the raw ones (the preview rules in CLAUDE.md).
-function rowAlt(alt?: string | null, title?: string | null): string {
-  const a = typeof alt === 'string' ? splitStega(alt).cleaned.trim() : '';
-  const t = typeof title === 'string' ? splitStega(title).cleaned.trim() : '';
-  return a && a.toLowerCase() !== t.toLowerCase() ? (alt as string) : '';
-}
-// scaffold:end
-
 // Source-specific fallback CTA link if no cta prop provided.
 const fallbackHref: Record<string, string> = {
   journal: '/blog', // scaffold: journal
@@ -177,69 +166,25 @@ const fallbackLabel: Record<string, string> = {
             </div>
 
             <ol class="m-0 list-none border-t border-band-brown/40 p-0">
-              {visibleItems.map((item) => {
-                const author =
-                  typeof item.author === 'string' && splitStega(item.author).cleaned.trim()
-                    ? item.author
-                    : null;
-                const category = item.categories?.[0]?.title ?? null;
-                return (
-                  <li class="group relative grid grid-cols-[64px_minmax(0,1fr)] gap-x-[18px] gap-y-1.5 border-b border-band-brown/40 py-[clamp(22px,2.4vw,32px)] md:grid-cols-[8em_76px_minmax(0,1fr)] md:gap-x-[clamp(18px,2.6vw,40px)] lg:grid-cols-[9em_88px_minmax(0,1fr)_12em] lg:items-center">
-                    {/* A sermon preview says which week it is for; everything
-                        else says its date (derived from the category, CLAUDE.md
-                        rule 15). */}
-                    <time
-                      datetime={rowDateTime(item.meta)}
-                      class="col-start-2 row-start-1 font-ui text-[0.96875rem] leading-[1.35] font-semibold text-band-brown lining-nums md:col-start-1 md:row-span-2 md:self-center md:text-[1.0625rem] lg:row-span-1"
-                    >
-                      {item.meta
-                        ? entryIsSermonPreview(item as any)
-                          ? weekOfEyebrow(item.meta)
-                          : rowDate(item.meta)
-                        : ''}
-                    </time>
-
-                    <ArchFrame
-                      image={item.coverImage}
-                      glyph="window"
-                      shape="lancet"
-                      width={176}
-                      sizes="(min-width: 1024px) 88px, (min-width: 768px) 76px, 64px"
-                      alt={rowAlt(item.coverImage?.alt, item.title)}
-                      class="col-start-1 row-span-3 row-start-1 self-start md:col-start-2 md:row-span-2 md:self-center lg:row-span-1"
-                      style="--arch-ratio: 100 / 140; --arch-mould: var(--color-band-brown);"
-                    />
-
-                    <div class="col-start-2 row-start-2 min-w-0 md:col-start-3 md:row-start-1 md:self-end lg:self-center">
-                      <h3 class="m-0 font-body text-[1.4375rem] leading-[1.15] font-normal text-band-ink md:text-[clamp(1.5rem,1.1rem+1.2vw,2.125rem)]">
-                        <a
-                          href={item.href ?? '/blog'}
-                          class="bg-[linear-gradient(var(--color-band-indigo),var(--color-band-indigo))] bg-[length:0_2px] bg-[position:0_100%] bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_2px] after:absolute after:inset-0 after:content-[''] focus-visible:bg-[length:100%_2px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-band-ink"
-                        >
-                          {item.title}
-                        </a>
-                      </h3>
-                      {item.summary && (
-                        <p class="mt-1.5 mb-0 hidden max-w-[36em] font-body text-[1.125rem] leading-[1.5] text-band-brown md:block">
-                          {item.summary}
-                        </p>
-                      )}
-                    </div>
-
-                    {(author || category) && (
-                      <p class="col-start-2 row-start-3 m-0 font-ui text-[0.9375rem] leading-[1.35] text-band-brown md:col-start-3 md:row-start-2 md:self-start md:text-base lg:col-start-4 lg:row-start-1 lg:self-center lg:text-right">
-                        {author && (
-                          <span class="font-semibold text-band-ink md:block md:text-[1.0625rem]">
-                            {author}
-                          </span>
-                        )}
-                        {author && category && <span class="md:hidden">, </span>}
-                        {category}
-                      </p>
-                    )}
-                  </li>
-                );
-              })}
+              {visibleItems.map((item) => (
+                <PostRow
+                  href={item.href ?? '/blog'}
+                  title={item.title ?? ''}
+                  dateLabel={
+                    item.meta
+                      ? entryIsSermonPreview(item as any)
+                        ? weekOfEyebrow(item.meta)
+                        : rowDate(item.meta)
+                      : ''
+                  }
+                  datetime={rowDateTime(item.meta)}
+                  image={item.coverImage}
+                  excerpt={item.summary}
+                  byline={typeof item.author === 'string' ? item.author : null}
+                  meta={item.categories?.[0]?.title ?? null}
+                  tone="taupe"
+                />
+              ))}
             </ol>
           </Fragment>
         )}

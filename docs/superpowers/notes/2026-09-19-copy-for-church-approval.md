@@ -165,10 +165,10 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### Edits to the church’s own text
 
 - Deacon chair address: "deaconchair[at]fbcmuncie.org" becomes a real mailto link to deaconchair@fbcmuncie.org, because a visitor cannot click "[at]". (Deacons band; spec 5.6 "Fixes".)
-- Em-dash to comma (site style): "...calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community." (A note from our pastors.)
-- Cut and re-cased: the scripture band is the closing sentence of the "Every Member of this Church" paragraph with its opening clause cut, so it reads "Every Christian is called to minister to others in some way." rather than "And, even if not currently serving in those particular capacities, every...".
-- Punctuation: "we also have a Worship Director. who coordinates and supports our worship leaders" becomes "...a Worship Director, who coordinates and supports our worship leaders". The full stop mid-sentence is a typo in scripts/data/pages/ministers.txt line 12; no word changes. ("How we are led.")
+- Punctuation: "we also have a Worship Director. who coordinates and supports our worship leaders" becomes "...a Worship Director, who coordinates and supports our worship leaders". The full stop mid-sentence is a typo in scripts/data/pages/ministers.txt line 12; no word changes. (Pastors & Staff.)
 - Em-dash to comma (CLAUDE.md rule 2), inside a verbatim scripture quotation: Kendall Ellis’s staff bio quotes Romans 8:17 (NIV) as “...then we are heirs—heirs of God and co-heirs with Christ...” and it now reads “...then we are heirs, heirs of God...”. No other word changes. The bio is a field on her staff document rather than a sentence this module builds, so the change was made by scripts/fix-bio-em-dashes.mjs (backed up first); it is declared here because this is one of the two pages that print it.
+- Em-dash to comma (site style): "...calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community." (A Note From Our Pastors.)
+- Typography only: the curly quotation marks around 1 Corinthians 12:4-6 come off the stored verse because the scripture band draws them itself; the page shows the verse in quotation marks exactly as the Wix page did. (Every Member of this Church.)
 
 ### Photos of children
 
@@ -210,26 +210,23 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### New sentences
 
 - Married here. (hero headline)
-- Sanctuary. (gallery caption)
-- The bridal suite, ready for a wedding morning. (gallery caption)
-- The fellowship hall. (gallery caption)
-- The kitchen. (gallery caption)
-- The youth center. (gallery caption)
-- A wedding party at the red doors. (gallery caption)
 - Weddings here (gallery heading, 2026-09-23)
-- Hanna and Nathan. (gallery caption; the names are the Wix alt text on that photograph and the testimonial above it)
 - Read the contract and the bridal packet, then reserve your date with the church office. (heading, "Reserving your wedding" band lead-in, built from wedding.txt's "you will need to mail the contract, the information sheet, and a deposit to" and the church's mailing address)
 - Mail the signed contract, the information sheet and a deposit to the church office. (reservation step, built from wedding.txt's own mailing instructions and address)
 - Fill out the wedding information form online. (reservation step, built from the Bridal Packet button's own label, "Fill Out Informational Form")
 - Talk with Ella Mae Lemen, the wedding coordinator, about your date and the building. (reservation step, built from wedding.txt's own description of her role)
 - The documents below carry the fees. (documentListSection lead sentence, both instances: this page states no dollar figure, because neither source capture does)
 - Fill this in online. (document note for the two Church Center forms, both instances)
+- Ella Mae Lemen, the church's wedding coordinator (alt text on her portrait, built from her staff document's name and role, 2026-09-24)
 - Weddings and building use at First Baptist Church Muncie: reserve the sanctuary for a Christian wedding, or the fellowship hall, kitchen or youth center for another event. (search description)
 
 ### Edits to the church’s own text
 
-- Cut, twice: "The Bridal Suite" and "Sanctuary" / "The Sanctuary" are each printed once on the Wix page as a heading with nothing but a photo carousel under it. Both are represented once each in the gallery below instead, each with a caption of its own (declared above).
-- Cut: "Exterior" as a bare heading over a photo carousel, for the same reason.
+- Moved, 2026-09-24: "The Bridal Suite" and "Sanctuary" (wedding.txt headings over photo carousels) and "Fellowship Hall", "Kitchen", "Youth Center" (reservation.txt's list of spaces) are now the names under the five room photos in "Our spaces", spelled as the church spelled them. They replace the six new captions this page used to carry.
+- Cut: "Exterior" as a bare heading over a photo carousel. The wedding party at the red doors is in "Weddings here" instead.
+- Moved, 2026-09-24: "Wedding Coordinator", "Ella Mae Lemen" and the paragraph under them (wedding.txt) now sit beside her portrait in their own band, instead of closing the "A wedding at First Baptist" text. Her name and role are read off her staff document.
+- Cut, 2026-09-24: the eyebrows "Why here", "Reserving your wedding" and "Building use" (each repeated the heading under it, rule 11), and the headings "Three documents" and "Reservation agreement and request form", replaced by the bands' old eyebrows "Wedding documents" and "Building documents".
+- Cut, 2026-09-24: the caption "Hanna and Nathan." on their processional photograph (no captions on photos, rule 7). Their names are on the quote beside it and in the photo credits.
 - Re-cased: "Hanna & Nathan" (a Wix profile heading, not the church's prose) becomes "Hanna and Nathan" for the quote's attribution, since it names two people rather than a company. The quote itself is unchanged.
 - Restored 2026-09-23: "Photos used with permission from the couples and the photographers." and the photo-credit sentence naming the three photographers, printed under the "Weddings here" gallery. They were cut on the reading that no couple's photograph was on the page, which was never quite true (the wedding party at the red doors is one) and stopped being true when the gallery of weddings was added. The sentences are the church's own, with "&" set as "and".
 - Linked, so it still works: "please see our wedding page" (reservation.txt) is cut, since the reader is already on that page (this page IS both pages now).

@@ -26,6 +26,58 @@ grammar. Schema, additive and optional: `heroSection.headingAccent`,
 no longer required. `scripts/pages/visit.mjs` composes the page (dry run
 only; waits on a deploy) and `/styleguide/visit` renders it from a
 read-only fixture.
+_2026-09-24 — Staff identity: /staff in the church identity (`feat/staff-identity`)._
+
+The overnight rollout's Staff branch (`docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md`),
+owning StaffGrid, ScriptureBand and TeamGrid. **StaffGrid** is now a band of
+lancet portraits, its ground derived from the group it shows
+(`src/lib/staff-band.ts`: pastors gold, coordination brown, support taupe,
+everyone paper), with the band h2 in `H2_DISPLAY` and a new optional `intro`
+(the church's own paragraphs) beside it; it moved to SELF_CONTAINED in
+`sectionCadence.ts`. **ScriptureBand** takes the Watchword band's verse
+treatment on indigo-dark, highlights every occurrence of its accent word, and
+gains an optional `heading` and `intro`. **TeamGrid** (unused) follows the staff
+list layout. `scripts/pages/staff.mjs` recomposes the page under the church's
+own headings: a two-light window hero of the Co-Pastors (library headshots used
+nowhere else), Pastors & Staff, the pastors' whole letter (`#letter`, kept on
+both /staff and /who-we-are until the owner decides), Church Coordination Team,
+Deacons (with "What are Deacons?" restored), Support and volunteer roles, and
+Every Member of this Church as the whole church section (1 Corinthians
+12:4-6). Dry run only;
+`/styleguide/staff` renders it from a read-only fixture until it is applied.
+/ministries and /beliefs change with the two components.
+
+_2026-09-24 — Wedding identity: the wedding page, the gallery, the document list and the quote (`feat/wedding-identity`)._
+
+One branch of the overnight rollout (`docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md`),
+owning GalleryGrid, DocumentList and QuoteBlock. **GalleryGrid** now draws in two forms
+chosen by its photos (`src/lib/gallery-form.ts`): every photo named is a row of door
+arches on indigo-dark with each room's name under it; otherwise an arcade of lancets with
+no text. The caption field is retitled "Name (optional)", same field. **DocumentList** is an
+indigo band: one to four documents are cream door cards with a gold plate that says
+"Download PDF" or "Open on <host>" (`src/lib/document-doors.ts`), five or more a year
+register (the blog's publications). **QuoteBlock** is a gold band. `scripts/pages/wedding.mjs`
+is recomposed (dry run only): the window hero with three weddings, Ella Mae Lemen's own band
+off her staff document, the five rooms named in the church's words, Hanna and Nathan on gold,
+"Weddings here" as an arcade, and the documents as doors; its PDF uploader now refuses to
+upload without `--apply`. `/styleguide/wedding` renders the fixture. No schema field added.
+
+_2026-09-24 — Journal identity: /blog, the archives and the post page in the church identity (`feat/journal-identity`)._
+
+An identity pass over the "I1 Register" and "P2 Bulletin" designs, not a
+redesign: their structure and every derivation stay. The home page's Church
+Blog row became `src/components/blog/PostRow.astro` (DynamicList draws it,
+markup unchanged) and the journal uses it everywhere a list of posts appears:
+the register on /blog and every archive (paper tone, grouped under gold-ruled
+years in the display face; the 4:3 plates became lancets), Worth coming back
+for (the taupe band, `H2_DISPLAY`), and a post's More from this series (the
+taupe foot band with the Sunday before/after doors and the gold All posts
+plate). The opener is the indigo band, with the index's door showing its
+post's featured image in a door arch. On a post, every ink is a brand token
+and the cover hangs in a door arch with no caption (a slide uncropped under an
+indigo door head, a photograph as a wide door). `weekOfLabel()` moved to the
+church's day (`localDay()`), closing the PENDING item; `SeriesRow` gained
+`cover` and `datetime`. No schema change, no page-module change.
 
 _2026-09-23 — Home identity: the home page composed from the church blocks (`feat/home-identity`)._
 

@@ -8,7 +8,7 @@
 // every other "building use" link on the site (Home's heritage band,
 // Ministries, History) lands.
 //
-// Five things about this file are deliberate.
+// Six things about this file are deliberate.
 //
 // 1. EVERY PARAGRAPH IS READ OFF A CAPTURE, NEVER TYPED FROM MEMORY. pick() and
 //    linesBetween() THROW when an anchor phrase moves, so a band that would
@@ -37,47 +37,66 @@
 //    wedding information sheet, 520312 for the building use request) are
 //    `url` links: they are online forms, not files this site can host.
 //
-// 5. THE GALLERY IS EVERY MANIFEST KEY THAT HAS A FILE. All six of
-//    wedding-sanctuary, wedding-bridal-suite, wedding-fellowship-hall,
-//    wedding-kitchen, wedding-youth-center and wedding-exterior carry a file in
-//    scripts/data/page-images.json (wedding-sanctuary is an alias of
-//    hero-sanctuary), so the gallery has all six. Each caption is new copy, one
-//    short line, declared in `newCopy` below.
+// 5. THE ROOMS ARE NAMED, IN THE CHURCH'S OWN WORDS (2026-09-24, the Wedding
+//    identity pass). "Our spaces" is five rooms, each photo's caption the
+//    room's name as the two Wix pages print it ("Sanctuary", "The Bridal
+//    Suite", "Fellowship Hall", "Kitchen", "Youth Center"). Every photo named
+//    is what makes GalleryGrid draw the rooms as a row of arched doors
+//    (src/lib/gallery-form.ts). The sanctuary is no longer hero-sanctuary,
+//    which Home, Beliefs and the blog already carry: it is the centre-aisle
+//    view (wedding-room-sanctuary), a photo on no other page. The wedding
+//    party at the red doors is people, not a room, so it moved to "Weddings
+//    here".
+//
+// 6. THE PAGE IN THE CHURCH IDENTITY (2026-09-24). The indigo window hero
+//    with three weddings in its lights (the ceremony in the middle); why
+//    here; Ella Mae Lemen beside her own words, her portrait and name and
+//    role read off her staff document (note 3); the rooms as doors on the
+//    indigo-dark band; Hanna and Nathan's words on the gold band; "Weddings
+//    here" as an arcade of lancets with no captions (rule 7); the church's
+//    photo credits; then reserving, the wedding documents as door cards,
+//    building use, the building documents as door cards, and the closing
+//    band. Eyebrows that only repeated the heading are gone (rule 11); the
+//    document bands take their old eyebrows as headings, since "Three
+//    documents" counted what an editor can change (rule 15).
+
+/** A hotspot centred on (x, y), kept inside the frame so the Studio accepts it. */
+function hotspot(x, y) {
+  const size = Math.min(0.3, 2 * Math.min(x, 1 - x), 2 * Math.min(y, 1 - y));
+  return { _type: 'sanity.imageHotspot', x, y, width: size, height: size };
+}
 
 export default {
   id: 'page-wedding',
   type: 'page',
   slug: 'wedding',
 
-  // Every sentence on this page that did not exist on either Wix source. Six
-  // gallery captions, the reservation steps (a list built from what the two
+  // Every sentence on this page that did not exist on either Wix source. The
+  // hero headline, one gallery heading, the reservation steps (a list built from what the two
   // captures say, not new facts), one connective sentence and the search
   // description. Everything else a visitor reads is the church's own text,
   // cut.
   newCopy: [
     'Married here. (hero headline)',
-    'Sanctuary. (gallery caption)',
-    'The bridal suite, ready for a wedding morning. (gallery caption)',
-    'The fellowship hall. (gallery caption)',
-    'The kitchen. (gallery caption)',
-    'The youth center. (gallery caption)',
-    'A wedding party at the red doors. (gallery caption)',
     'Weddings here (gallery heading, 2026-09-23)',
-    'Hanna and Nathan. (gallery caption; the names are the Wix alt text on that photograph and the testimonial above it)',
     'Read the contract and the bridal packet, then reserve your date with the church office. (heading, "Reserving your wedding" band lead-in, built from wedding.txt\'s "you will need to mail the contract, the information sheet, and a deposit to" and the church\'s mailing address)',
     "Mail the signed contract, the information sheet and a deposit to the church office. (reservation step, built from wedding.txt's own mailing instructions and address)",
     'Fill out the wedding information form online. (reservation step, built from the Bridal Packet button\'s own label, "Fill Out Informational Form")',
     "Talk with Ella Mae Lemen, the wedding coordinator, about your date and the building. (reservation step, built from wedding.txt's own description of her role)",
     'The documents below carry the fees. (documentListSection lead sentence, both instances: this page states no dollar figure, because neither source capture does)',
     'Fill this in online. (document note for the two Church Center forms, both instances)',
+    "Ella Mae Lemen, the church's wedding coordinator (alt text on her portrait, built from her staff document's name and role, 2026-09-24)",
     'Weddings and building use at First Baptist Church Muncie: reserve the sanctuary for a Christian wedding, or the fellowship hall, kitchen or youth center for another event. (search description)',
   ],
 
   // Edits to the church's own sentences (ruling P16). Nothing is reworded: text
   // is cut, joined, or re-pointed at a link that still works.
   edits: [
-    'Cut, twice: "The Bridal Suite" and "Sanctuary" / "The Sanctuary" are each printed once on the Wix page as a heading with nothing but a photo carousel under it. Both are represented once each in the gallery below instead, each with a caption of its own (declared above).',
-    'Cut: "Exterior" as a bare heading over a photo carousel, for the same reason.',
+    'Moved, 2026-09-24: "The Bridal Suite" and "Sanctuary" (wedding.txt headings over photo carousels) and "Fellowship Hall", "Kitchen", "Youth Center" (reservation.txt\'s list of spaces) are now the names under the five room photos in "Our spaces", spelled as the church spelled them. They replace the six new captions this page used to carry.',
+    'Cut: "Exterior" as a bare heading over a photo carousel. The wedding party at the red doors is in "Weddings here" instead.',
+    'Moved, 2026-09-24: "Wedding Coordinator", "Ella Mae Lemen" and the paragraph under them (wedding.txt) now sit beside her portrait in their own band, instead of closing the "A wedding at First Baptist" text. Her name and role are read off her staff document.',
+    'Cut, 2026-09-24: the eyebrows "Why here", "Reserving your wedding" and "Building use" (each repeated the heading under it, rule 11), and the headings "Three documents" and "Reservation agreement and request form", replaced by the bands\' old eyebrows "Wedding documents" and "Building documents".',
+    'Cut, 2026-09-24: the caption "Hanna and Nathan." on their processional photograph (no captions on photos, rule 7). Their names are on the quote beside it and in the photo credits.',
     'Re-cased: "Hanna & Nathan" (a Wix profile heading, not the church\'s prose) becomes "Hanna and Nathan" for the quote\'s attribution, since it names two people rather than a company. The quote itself is unchanged.',
     'Restored 2026-09-23: "Photos used with permission from the couples and the photographers." and the photo-credit sentence naming the three photographers, printed under the "Weddings here" gallery. They were cut on the reading that no couple\'s photograph was on the page, which was never quite true (the wedding party at the red doors is one) and stopped being true when the gallery of weddings was added. The sentences are the church\'s own, with "&" set as "and".',
     'Linked, so it still works: "please see our wedding page" (reservation.txt) is cut, since the reader is already on that page (this page IS both pages now).',
@@ -166,49 +185,63 @@ export default {
     };
 
     // ── The photographs ──────────────────────────────────────────────────
-    const galleryKeys = [
-      ['wedding-sanctuary', 'Sanctuary.'],
-      ['wedding-bridal-suite', 'The bridal suite, ready for a wedding morning.'],
-      ['wedding-fellowship-hall', 'The fellowship hall.'],
-      ['wedding-kitchen', 'The kitchen.'],
-      ['wedding-youth-center', 'The youth center.'],
-      ['wedding-exterior', 'A wedding party at the red doors.'],
-    ];
-    const galleryImages = [];
-    for (const [key, caption] of galleryKeys) {
-      const img = await images.image(key);
-      if (!img) {
-        // Per the brief: a manifest key with no file is omitted and reported,
-        // not a build failure. Every one of the six carries a file today.
-        continue;
-      }
-      galleryImages.push({ ...img, _key: `gi-${key}`, caption });
-    }
-    if (galleryImages.length === 0) {
-      throw new Error(
-        'wedding.mjs: none of the six wedding gallery photos have a file. Check the manifest.',
-      );
-    }
-    // The hero is a wedding at the chancel, from the church's own /wedding page
-    // (placed 2026-09-23). The empty sanctuary stays first in "Our spaces".
-    const sanctuaryHero = await images.image('wedding-ceremony');
-    if (!sanctuaryHero) {
-      throw new Error('wedding.mjs: no photo in the manifest for "wedding-ceremony"');
-    }
-
-    // Weddings here: three more from the same Wix page, landscape so the row sits
-    // level (the tall balcony view left a gap beside them), all media-library photos.
-    const weddingKeys = [
-      ['wedding-processional', 'Hanna and Nathan.'],
-      ['wedding-bubbles', null],
-      ['wedding-pew', null],
-    ];
-    const weddingImages = [];
-    for (const [key, caption] of weddingKeys) {
+    /** A manifest photo, with the crop its arch needs (the library has no hotspot). */
+    const photo = async (key, x, y, extra = {}) => {
       const img = await images.image(key);
       if (!img) throw new Error(`wedding.mjs: no photo in the manifest for "${key}"`);
-      weddingImages.push({ ...img, _key: `gw-${key}`, ...(caption ? { caption } : {}) });
+      return { ...img, hotspot: hotspot(x, y), ...extra };
+    };
+
+    // Our spaces: five rooms, each NAMED in the church's own words (note 5).
+    // A name on every photo is what draws the gallery as doors.
+    const galleryImages = [
+      await photo('wedding-room-sanctuary', 0.5, 0.45, { caption: line('wedding', 'Sanctuary') }),
+      await photo('wedding-bridal-suite', 0.5, 0.55, {
+        caption: line('wedding', 'The Bridal Suite'),
+      }),
+      await photo('wedding-fellowship-hall', 0.45, 0.5, {
+        caption: line('reservation', 'Fellowship Hall'),
+      }),
+      await photo('wedding-kitchen', 0.45, 0.5, { caption: line('reservation', 'Kitchen') }),
+      await photo('wedding-youth-center', 0.5, 0.5, {
+        caption: line('reservation', 'Youth Center'),
+      }),
+    ].map((img, i) => ({ ...img, _key: `gi-${i + 1}` }));
+
+    // The window hero: the ceremony at the chancel in the middle light (the
+    // first frame is the middle one), the couple at the red doors and the
+    // balcony view in the two tall side lights. All three from the church's
+    // own /wedding page, all media-library photos.
+    const heroFrames = [
+      await photo('wedding-ceremony', 0.55, 0.55, { _key: 'frame-1' }),
+      await photo('wedding-red-doors', 0.5, 0.5, { _key: 'frame-2' }),
+      await photo('wedding-balcony', 0.5, 0.6, { _key: 'frame-3' }),
+    ];
+
+    // Weddings here: an arcade of lancets, no captions (rule 7). Hanna and
+    // Nathan's processional first, beside their words on the gold band above.
+    const weddingImages = [
+      await photo('wedding-processional', 0.5, 0.5, { _key: 'gw-processional' }),
+      await photo('wedding-bubbles', 0.55, 0.4, { _key: 'gw-bubbles' }),
+      await photo('wedding-exterior', 0.42, 0.62, { _key: 'gw-red-doors' }),
+      await photo('wedding-pew', 0.4, 0.5, { _key: 'gw-pew' }),
+    ];
+
+    // Ella Mae Lemen's portrait, off her own staff document (note 3): the
+    // photo, the name and the role are hers, never typed here.
+    if (!coordinator.photo?.asset?._ref) {
+      throw new Error(
+        'wedding.mjs: the Wedding Coordinator staff document has no photo. Her band draws ' +
+          'her portrait from it rather than a copy in the manifest.',
+      );
     }
+    const coordinatorPortrait = {
+      _type: 'image',
+      asset: coordinator.photo.asset,
+      ...(coordinator.photo.hotspot ? { hotspot: coordinator.photo.hotspot } : {}),
+      ...(coordinator.photo.crop ? { crop: coordinator.photo.crop } : {}),
+      alt: `${coordinator.name}, the church's ${String(coordinator.role).toLowerCase()}`,
+    };
     // The church's own credit lines, from wedding.txt, printed under that gallery.
     const creditBody = [
       ...paragraphs(line('wedding', 'Photos used with permission'), 'cr-a'),
@@ -221,9 +254,17 @@ export default {
     // and uploads nothing. Dynamic import for the same reason as beliefs.mjs:
     // an offline plan run must still be able to load this module, and it never
     // reaches this line because images.image() above has already thrown.
+    // A DRY RUN NEVER UPLOADS (2026-09-24). The uploader only skips the network
+    // when this checkout's asset map already holds the file; without --apply
+    // it is handed a client whose upload throws, so a nested worktree with an
+    // empty map fails the dry run by name instead of writing to the dataset.
     const uploadPdf = async (file) => {
       const { client, makeUploader } = await import('../lib/sanity-lib.mjs');
-      const assetId = await makeUploader(client).uploadFile(`../fbcm-archive/files/${file}`);
+      const { uploadClient } = await import('../lib/dry-run-upload.mjs');
+      const path = `../fbcm-archive/files/${file}`;
+      const assetId = await makeUploader(uploadClient(client, 'wedding.mjs', path)).uploadFile(
+        path,
+      );
       return { _type: 'file', asset: { _type: 'reference', _ref: assetId } };
     };
 
@@ -236,14 +277,10 @@ export default {
       ...paragraphs(line('wedding', 'a fitting wedding location'), 'wh-a'),
       ...paragraphs(line('wedding', 'Building rentals for this purpose'), 'wh-b'),
       ...paragraphs(line('wedding', 'please read the following information'), 'wh-c'),
-      // The coordinator, derived (note 3 above).
-      copy.link(
-        `${coordinator.name}, ${coordinator.role}`,
-        `mailto:${coordinator.email}`,
-        'wh-coord',
-      ),
-      ...paragraphs(line('wedding', 'is a long-time member'), 'wh-d'),
     ];
+
+    // ── 2b. The coordinator: her own paragraph, beside her portrait ────────
+    const coordinatorBody = paragraphs(line('wedding', 'is a long-time member'), 'wh-d');
 
     // ── 3. Reserving your wedding ────────────────────────────────────────
     // The steps are new copy (declared above), built from what wedding.txt
@@ -294,31 +331,42 @@ export default {
       addToMainNav: false,
 
       pageBuilder: [
-        // 1. Hero: the sanctuary, empty, and the two doors a visitor arrives
-        //    through (a wedding, or another event).
+        // 1. Hero: the indigo window, three weddings in its lights, and the
+        //    two doors a visitor arrives through (a wedding, or another event).
         {
           _type: 'heroSection',
           _key: 'wed-hero',
-          layout: 'split',
+          layout: 'window',
           size: 'short',
           eyebrow: 'Weddings',
           headline: 'Married here.',
-          frames: [{ ...sanctuaryHero, _key: 'frame-1' }],
+          frames: heroFrames,
           primaryCta: ctaAnchor('Reserving your wedding', '/wedding#reserve'),
           secondaryCta: ctaAnchor('Building use', '/wedding#building-use'),
         },
 
-        // 2. Why here: the church's own opening paragraphs, ending on the
-        //    coordinator (derived).
+        // 2. Why here: the church's own opening paragraphs.
         {
           _type: 'richTextSection',
           _key: 'wed-why',
-          eyebrow: 'Why here',
           heading: 'A wedding at First Baptist',
           body: whyHereBody,
         },
 
-        // 3. The spaces, six photographs, each with a new caption (declared).
+        // 2b. The coordinator: her portrait, name and role off her staff
+        //     document (note 3), her own paragraph, and a button to her.
+        {
+          _type: 'imageTextSection',
+          _key: 'wed-coordinator',
+          image: coordinatorPortrait,
+          imageSide: 'right',
+          eyebrow: coordinator.role,
+          heading: coordinator.name,
+          body: coordinatorBody,
+          cta: ctaExternal('Email the wedding coordinator', `mailto:${coordinator.email}`),
+        },
+
+        // 3. The spaces: five rooms, each named, drawn as doors (note 5).
         {
           _type: 'gallerySection',
           _key: 'wed-spaces',
@@ -344,7 +392,7 @@ export default {
           _key: 'wed-weddings',
           heading: 'Weddings here',
           images: weddingImages,
-          columns: 3,
+          columns: 4,
         },
         {
           _type: 'richTextSection',
@@ -359,15 +407,13 @@ export default {
           _type: 'richTextSection',
           _key: 'wed-reserve',
           anchor: { _type: 'slug', current: 'reserve' },
-          eyebrow: 'Reserving your wedding',
           heading: 'How to reserve the church',
           body: reserveBody,
         },
         {
           _type: 'documentListSection',
           _key: 'wed-documents',
-          eyebrow: 'Wedding documents',
-          heading: 'Three documents',
+          heading: 'Wedding documents',
           docs: [
             {
               _type: 'listedDocument',
@@ -400,15 +446,13 @@ export default {
           _type: 'richTextSection',
           _key: 'wed-building-use',
           anchor: { _type: 'slug', current: 'building-use' },
-          eyebrow: 'Building use',
           heading: 'Using the building for other events',
           body: buildingUseBody,
         },
         {
           _type: 'documentListSection',
           _key: 'wed-building-documents',
-          eyebrow: 'Building documents',
-          heading: 'Reservation agreement and request form',
+          heading: 'Building documents',
           docs: [
             {
               _type: 'listedDocument',

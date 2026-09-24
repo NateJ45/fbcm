@@ -1,98 +1,94 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: a scripture band on the indigo field, redrawn for the
-// art-direction pass (2026-09-21, spec section 5).
+// Page-builder block: a scripture band, redrawn in the Watchword band's verse
+// treatment (2026-09-24, the Staff identity pass; the rollout's shared
+// component table: "ScriptureBand: the watchword band's verse treatment").
 //
-// The verse is set at --text-h1 in Castoro ITALIC, not in the display face:
-// Castoro Titling is capitals-only and has no italic, and a verse set in
-// capitals reads as a slogan. One word may be picked out in gold, and the
-// reference sits under it as a font-ui label.
+// The ground is --color-band-deep (the brand's indigo-dark), the Watchword
+// band's own, dark BY TYPE (SELF_CONTAINED in sectionCadence.ts; no colour
+// field, CLAUDE.md rule 9). Every ink on it is measured in both themes in
+// theme-tokens.test.ts: paper for reading, brand gold for everything picked
+// out (the heading, the highlighted word, the reference).
 //
-// Behind the right half of the band, at 18% under mix-blend-mode: luminosity,
-// is the alpha-and-omega window from src/assets/menu-window.jpg, masked so it
-// fades out before it reaches the words. It is the same photograph the mobile
-// menu and the footer carry, which is the point: one texture, three places.
-// Decorative, so it is aria-hidden with an empty alt and loads lazily.
+// What it draws, top to bottom, each part only when it is filled in:
+//   - `heading` (optional, 2026-09-24): the band h2 in H2_DISPLAY, the one
+//     heading grammar every church band shares (rule 17).
+//   - the verse in Castoro, at the Watchword's size (`.ww-verse` and
+//     `.sb-verse` share one rule in globals.css). When the band carries a
+//     reference the verse IS a quotation, so it is set in curly quotes with
+//     the opening one hung in the margin; a band with no reference (Beliefs'
+//     common statement) is set plain.
+//   - `accentWord`, picked out in gold italic EVERYWHERE it appears as a whole
+//     word, as the Watchword band picks out praise and proclaim. It goes
+//     through highlightWords(), which matches on the stega-CLEANED text and
+//     slices the RAW string, so in the preview the verse keeps its
+//     click-to-edit payload; the accent word itself is cleaned before it is
+//     used as a pattern (it is a stega-encoded string too).
+//   - `reference`, in gold, beside the verse at desktop width and under it on
+//     a phone, exactly as the Watchword's Isaiah 12:4.
+//   - `intro` (optional, 2026-09-24): a paragraph under it all.
 //
-// The gold accent goes through splitHeadingAccent(), the same splitter the
-// heading accents use, so it is case-insensitive, first-occurrence-only and
-// stega-safe. `accentWord` is deliberately NOT in the in-canvas accent registry
-// (see the note at the top of churchSections.ts), so it is split here directly.
+// The menu-window texture the art-direction pass set behind the right half
+// is gone: the Watchword band carries none, and the rollout keeps one texture
+// family (the building glyphs) for decoration.
 //
-// SELF_CONTAINED: the band is dark by type, so the ink on it is text-bg
-// (paper-white in both themes) rather than text-cream (which flips to ink
-// under .dark).
-import { getImage } from 'astro:assets';
-import { splitHeadingAccent } from '@/lib/heading-accent';
-import menuWindowAsset from '@/assets/menu-window.jpg';
+// The region is named by the heading when there is one, else by the
+// REFERENCE, never by the blockquote: pointing aria-labelledby at the verse
+// made the landmark's accessible name the whole of scripture.
+import { H2_DISPLAY } from '@/lib/heading-grammar';
+import { highlightWords } from '@/lib/highlight-words';
+import { splitStega } from '@/lib/preview-stega';
 
 interface Props {
+  heading?: string;
   verse?: string;
   reference?: string;
   accentWord?: string;
+  intro?: string;
   headingId: string;
 }
 
-const { verse, reference, accentWord, headingId } = Astro.props as Props;
-const { found, before, word, after } = splitHeadingAccent(verse, accentWord);
-
-// The texture. 1200w at quality 60 is generous for something that renders at
-// 18% opacity under a luminosity blend and a left-fading mask. Real dimensions
-// go on the tag even though CSS sizes it absolutely: the numbers cost nothing
-// and the file keeps the habit.
-const texture = await getImage({
-  src: menuWindowAsset,
-  width: 1200,
-  quality: 60,
-  format: 'jpg',
-});
-const textureWidth = texture.options.width ?? 1200;
-const textureHeight = Math.round(textureWidth * (menuWindowAsset.height / menuWindowAsset.width));
+const { heading, verse, reference, accentWord, intro, headingId } = Astro.props as Props;
+const accent = splitStega(accentWord ?? '').cleaned.trim();
+const parts = verse ? highlightWords(verse, accent ? [accent] : []) : [];
+const quoted = !!reference;
+const labelled = heading || reference;
 ---
 
 {
-  /* The region is named by the REFERENCE, not the blockquote: pointing
-    aria-labelledby at the verse made the landmark's accessible name the whole
-    of scripture. With no reference typed the region stays unnamed, which is
-    quieter and just as findable. */
-}
-{
   verse && (
-    <section
-      class="relative isolate overflow-hidden bg-indigo-field text-bg"
-      aria-labelledby={reference ? headingId : undefined}
-    >
-      <img
-        src={texture.src}
-        alt=""
-        aria-hidden="true"
-        width={textureWidth}
-        height={textureHeight}
-        loading="lazy"
-        decoding="async"
-        class="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 object-cover opacity-[.18] mix-blend-luminosity"
-        style="mask-image: linear-gradient(to left, #000, transparent); -webkit-mask-image: linear-gradient(to left, #000, transparent);"
-      />
+    <section class="sb bg-band-deep text-bg" aria-labelledby={labelled ? headingId : undefined}>
+      <div class="sb-wrap mx-auto max-w-content px-gutter">
+        {heading && (
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
+            {heading}
+          </h2>
+        )}
 
-      <div class="mx-auto max-w-content px-gutter py-section-lg">
-        <blockquote class="max-w-[20ch] font-body text-h1 leading-[1.08] font-normal text-bg italic">
-          {found ? (
-            <>
-              {before}
-              <span class="text-gold">{word}</span>
-              {after}
-            </>
-          ) : (
-            verse
+        <blockquote class="sb-verse">
+          <p class:list={['font-body', quoted && 'sb-q']}>
+            {quoted && <>&ldquo;</>}
+            {parts.map((part) =>
+              part.hit ? (
+                <mark class="bg-transparent text-gold italic">{part.text}</mark>
+              ) : (
+                part.text
+              ),
+            )}
+            {quoted && <>&rdquo;</>}
+          </p>
+          {reference && (
+            <cite
+              id={heading ? undefined : headingId}
+              class="font-ui font-bold text-gold not-italic"
+            >
+              {reference}
+            </cite>
           )}
         </blockquote>
 
-        {reference && (
-          <p id={headingId} class="mt-6 font-ui text-ui text-gold">
-            {reference}
-          </p>
-        )}
+        {intro && <p class="sb-intro whitespace-pre-line">{intro}</p>}
       </div>
     </section>
   )

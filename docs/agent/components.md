@@ -73,15 +73,22 @@ The core component set, by role. All in `src/components/` unless noted.
    Sunday / Reading / Series / Preaching / Listen from `src/lib/sermon-derive.ts` and
    `post-body.ts`; any other post gets Posted / Written by / Takes / Filed under. Empty rows are
    omitted, never guessed.
-2. **Cover** -- a real photograph (width >= 2000 and ratio >= 1.3) bleeds full width under the
-   masthead (`100cqw`); anything else (the sermon slides) hangs as a plate in the right column.
+2. **Cover** -- always in a door arch (`ArchFrame shape="door"`, gold mould) and never
+   captioned (identity pass, 2026-09-24). A real photograph (width >= 2000 and ratio >= 1.3)
+   is a wide door across the measure (ratio 100/42); anything else (the sermon slides) hangs
+   in the right column at its OWN proportion plus the door's head, `object-fit: contain` at
+   the foot, so the slide's lettering is never cropped and the head above it is indigo.
 3. **Body** -- `prepareBody()` in `src/lib/post-body.ts` rewrites the Portable Text first
    (tables from middot lists, points, Q and A, the reading, dead Wix anchors, the cover's
    duplicate), then `JournalPortableText.tsx` renders it in columns 1 to 7 at 62ch. The right
    column is sticky: the plate, then "In this post" from `extractHeadings` when there are 3+.
-4. **Foot** -- Tagged (text links), More from this series, then two doors: previews step
-   Sunday to Sunday ("The Sunday before" / "The Sunday after", `post-neighbours.ts`), other
-   posts Older / Newer. There is no closing CTA band on posts.
+4. **Foot** -- Tagged (text links) under the body; then the taupe band (identity pass): More
+   from this series as `H2_DISPLAY` with the gold "All posts" plate and the shared
+   `blog/PostRow.astro` rows (the series row carries the post's featured image and a datetime,
+   `seriesRowOf`), then two doors: previews step Sunday to Sunday ("The Sunday before" / "The
+   Sunday after", `post-neighbours.ts`), other posts Older / Newer. Every ink on the page is a
+   brand token (`--color-indigo`, `--color-brown-ink`, gold rules). There is no closing CTA
+   band on posts.
 
 The Portable Text renderer (`JournalPortableText.tsx`) detects image orientation from the Sanity asset `_ref`; portrait inline images cap at 360px.
 
@@ -164,13 +171,12 @@ truth are still the reference for what each branch should look like:
   `<img>` for screen readers, it just is not set as reading copy any more.
   The `.ph-tick` gold hairline it used to sit under stays: it is also the
   band's eyebrow rule, unrelated to captions. The P2 Bulletin's plate caption
-  (`src/pages/post/[slug].astro`, `.pp-cap`) is unaffected: it prints the
-  post's own editor-typed `coverImage.caption` field or the post title, never
-  the cover's alt text (the alt-text fallback it used to have when no caption
-  was set is what got removed). Editor-typed caption fields that are their
+  went too, on 2026-09-24 (the journal identity pass): the cover is a door
+  arch with no caption at all (`.pp-cap` survives only for inline body
+  figures an editor captions). Editor-typed caption fields that are their
   own label rather than a restatement of the alt text, `GalleryGrid`'s
-  per-image caption ("The kitchen.") and `VideoEmbed`'s caption, are
-  unaffected.
+  per-image name ("Kitchen", shown only when every photo in the gallery has
+  one: the rooms form, below) and `VideoEmbed`'s caption, are unaffected.
 
 - **The page pass is a budget, not a per-band choice, and that is the
   editor's surprise to know about.** Because `assignPhotoShapes` looks at
@@ -232,7 +238,9 @@ Ported from the prototype at `docs/superpowers/prototypes/2026-09-23-who-we-are/
 - `sections/LinkCards.astro`, the door form -- when EVERY card has the optional `image` (added to `linkCard` in this pass), the band draws as arched doors on brand indigo: each photo in a door arch (decorative, `alt=""`; the title names the link), the title, sentence and a rule button on a paper panel. `cardsPictured()` in `src/lib/spare-images.ts` is the test, and it also keeps such a band out of the spare-image hand-out. One card without a photo and the band is the ruled row again. The heading is the band grammar (`H2_DISPLAY`, 52px at 1440).
 - `sections/LinkCards.astro`, the goals form (2026-09-23, Home) -- when every pictured card ALSO carries a `glyph` (`window`, `door`, `rose`, `basin`; in `NON_STEGA_FIELDS`), the doors are the four goals: the band drops to indigo-dark (`bg-band-deep`), the paper panel goes, and each door's building glyph, title and body sit straight on the dark ground in gold and paper, the link a text link. Home's "Our Goals" uses it, each card linking to its goal's anchor on /who-we-are.
 - `sections/HeritageBand.astro` (`heritageBandSection`) with `dates` -- **Our Building** (2026-09-23, Home). A band whose `dates` survive `heritageDates()` (`src/lib/heritage-dates.ts`, unit-tested) draws on a FIXED cream ground in both themes: the first and last years large above the heading (`heritageBookends`, the outer four-digit years of a range), the band's `image` multiplied straight onto the paper (`.ob-drawing`, suited to the Hannaford rendering), the `archive` photograph in a door arch (an editor's crop is honoured), and the dated list as one subgrid whose year column grows to its widest cell (`fit-content`), ending in a `now` entry whose year is the BUILD year (rule 15), under a gold rule. A dated band lends nothing to the spare-image pool. Without dates the band is the brown strip band, unchanged (/history's opener, /visit's building band). Both forms set the heading in the band grammar.
-- `sections/DynamicList.astro`, journal source -- **the Church Blog rows** (2026-09-23, Home). A fixed taupe band in both themes: the heading and "All posts" (gold plate) on one line, then one `<ol>` row per post: the date (`rowDate()` / `rowDateTime()` in `blog-derive.ts`, both on the church's calendar day through `localDay()`, as the register and the post page; sermon previews keep "week of", whose `weekOfLabel()` still reads the UTC day), the cover in a small lancet (or the indigo `window` glyph arch when there is none, `ArchFrame glyph`), the title with a stretched link so the whole row clicks, the excerpt (hidden on a phone), and author and category as text. `rowAlt()` drops a cover alt that only repeats the title. Other sources keep the generic grid.
+- `sections/DynamicList.astro`, journal source -- **the Church Blog rows** (2026-09-23, Home). A fixed taupe band in both themes: the heading and "All posts" (gold plate) on one line, then one `<ol>` row per post: the date (`rowDate()` / `rowDateTime()` in `blog-derive.ts`, both on the church's calendar day through `localDay()`, as the register and the post page; sermon previews keep "week of", which since 2026-09-24 also reads the church day), the cover in a small lancet (or the indigo `window` glyph arch when there is none, `ArchFrame glyph`), the title with a stretched link so the whole row clicks, the excerpt (hidden on a phone), and author and category as text. `rowAlt()` drops a cover alt that only repeats the title. Other sources keep the generic grid. Since the journal identity pass (2026-09-24) the row is `src/components/blog/PostRow.astro` (tone `taupe`, markup unchanged), shared with the journal.
+- `blog/PostRow.astro` (scaffold `journal`) -- **the one journal row** (2026-09-24). Date, the post's featured image in a small lancet (a `window` glyph arch when there is none; never an author portrait, never a caption), title with a stretched link, excerpt, and a byline plus meta on the right. Tone `taupe` (the fixed band: home's Church Blog, /blog's Worth coming back for, a post's More from this series) or `paper` (the register on /blog and the archives, in the themed brand inks). Each tone's class strings are literal so Tailwind finds them.
+- **The journal lists** (`src/components/blog/`, identity pass 2026-09-24). `Opener` is the indigo band (cream h1 sized by `headlineScale`, gold eyebrow, taupe lede); on /blog the `Door` beside it shows this Sunday's preview or the latest post with its featured image in a door arch. `Worth` is the taupe band with PostRows. `Register` groups PostRows (paper) under gold-ruled years in the display face; `Filters` (moved under the All posts heading on /blog), `Pager` and `ThinState` (now ending on the gold All posts plate) are in brand inks.
 - `sections/GiveBand.astro` (`giveBandSection`) -- **gold on every page, in both themes** (2026-09-23): the basin glyph in band-indigo, the heading (the band grammar as an h2; as the /give h1, `SectionHeading tone="paper" wide` with the band-opening headline scale), the body in band-ink, and the button as `CtaLink variant="outline" onGold`. The window texture, the indigo/paper switch and `SectionRenderer`'s `isDarkBand` walk are gone.
 
 **The Visit identity pass (2026-09-24, `feat/visit-identity`; prototype `docs/superpowers/prototypes/2026-09-23-visit/visit.html`).** Shared looks every page using these components inherits:
@@ -246,7 +254,15 @@ Ported from the prototype at `docs/superpowers/prototypes/2026-09-23-who-we-are/
 - `sections/HeritageBand.astro` -- an undated h2 band is **Our building** on fixed cream: the year its own body names set large (`bandYear()`, skipped when the heading says it), the heading in the band grammar, the body as a lede, the gold plate, the photo a rectangle (an arch for people). The /history h1 opener keeps the brown strip band.
 - `sections/RichTextSection.astro` -- the band heading on `H2_DISPLAY` (rule 17); the body look is the Beliefs pass's.
 
-**Seeing them without Sanity:** `/styleguide` carries a fixture of every one, and `/styleguide/who-we-are`, `/styleguide/home` and `/styleguide/visit` render the whole composed pages from `scripts/data/fixtures/<slug>.json`, which `node scripts/page-fixture.mjs <slug>` builds read-only from `scripts/pages/<slug>.mjs` (the home fixture borrows the live home page's blog rows, which a fixture cannot query). Both routes are temporary (see `docs/PENDING.md`).
+- `sections/GalleryGrid.astro` (`gallerySection`, a core block) -- **two forms, chosen by the photos** (2026-09-24, Wedding; `galleryForm()` in `src/lib/gallery-form.ts`, unit-tested, stega-safe). When EVERY photo has a caption (retitled "Name (optional)" in the Studio; same field), the captions are the names of places and the gallery is **the rooms**: a row of door arches on indigo-dark (`bg-band-deep`), up to five across (three from 1120px, two from 620px), each name under its door in gold Castoro Titling, the heading in the band grammar in gold. Otherwise it is **the arcade**: pointed lancets on the cadence surface, every other one a step lower, no text under them (a stray caption stays in the data, unshown), `columns` still sets how many across and a phone shows two (`layout-variants.ts` gallerySection base is now `grid-cols-2`).
+- `sections/DocumentList.astro` (`documentListSection`) -- **on the indigo band** (2026-09-24, Wedding). One to four documents are **door cards** (`documentForm()` in `src/lib/document-doors.ts`, unit-tested): each a cream door (the Adams Street door's head over a panel of the fixed cream, so the same in both themes) with the year in Titling if it has one, the title, the note and the gold plate saying what it does (`docAction()`: "Download PDF" from the file's own extension, "Open on churchcenter.com" from the link's own host, no button and no link for a document with neither). Five or more are **the register**: year groups (`groupDocsByYear()`) under gold Titling years, each group's titles in a run of columns in paper, notes in taupe (both pairs gated). The heading is the band grammar in gold; an eyebrow, if set, is the small gold label. Used on /wedding, /beliefs, /history and the blog's publications (the register).
+- `sections/QuoteBlock.astro` (`quoteSection`) -- **the gold band** (2026-09-24, Wedding): the words in Castoro italic and the name in the UI face, both band-ink on band-gold, gold in both themes, as a `<figure>` and `<figcaption>`. Over forty words (measured on the cleaned text) the type steps down one size. Used on /wedding and /history.
+
+- `sections/StaffGrid.astro` (`staffGridSection`) -- **the staff as lancet bands** (2026-09-24, Staff). Each person in a 2:3 `ArchFrame` lancet (warm grade; the indigo `window` glyph arch when there is no portrait), the name in Castoro, the role, the email as a mailto that may break only after the `@`, and the bio behind a native `<details>` "Read more" / "Read less" (an anchored person's bio opens with the jump, so the five `/staff#<slug>` redirects still land on an open card). The heading is the band grammar (`H2_DISPLAY`, a step smaller when a word runs to eleven capitals, `headingIsLong()`), with the optional `intro` (added 2026-09-24: the church's own paragraphs about the people) beside it. The GROUND is derived from the group by `staffBandLook()` in `src/lib/staff-band.ts` (unit-tested): pastors gold, coordination brown, support taupe, "Everyone" the page's paper; three people or fewer draw large in one row (a list, lancet beside the words, on a phone), more draw four to a row. SELF_CONTAINED in `sectionCadence.ts` since this pass. Used on /staff (three bands) and /ministries (the coordination band).
+- `sections/ScriptureBand.astro` (`scriptureBandSection`) -- **the Watchword's verse treatment** (2026-09-24, Staff): indigo-dark ground, the verse at the Watchword's size (`.ww-verse` and `.sb-verse` share one rule), in curly quotes with the opening one hung in the margin when the band has a `reference` (a band with none, Beliefs' common statement, is set plain), the `accentWord` in gold italic at EVERY whole-word occurrence (`highlightWords()`), the reference in gold beside it, and the optional `heading` (band grammar) and `intro` paragraph added in this pass. The menu-window texture is gone. Used on /staff and /beliefs.
+- `sections/TeamGrid.astro` (`teamSection`, not church-scaffolded) -- redrawn in the identity (2026-09-24): lancets in the staff bands' list layout, names in Castoro, roles in sentence case, the band grammar heading on paper. No page uses it today.
+
+**Seeing them without Sanity:** `/styleguide` carries a fixture of every one (the document list twice: doors and the register), and `/styleguide/who-we-are`, `/styleguide/home`, `/styleguide/visit`, `/styleguide/wedding` and `/styleguide/staff` render the whole composed pages from `scripts/data/fixtures/<slug>.json`, which `node scripts/page-fixture.mjs <slug>` builds read-only from `scripts/pages/<slug>.mjs` (the home fixture borrows the live home page's blog rows, and the staff fixture each band's members from the live /staff page, which a fixture cannot query; a listed document's file is projected to `fileUrl` as `queries.ts` does). Both routes are temporary (see `docs/PENDING.md`).
 
 ### CtaLink `onDark` prop
 

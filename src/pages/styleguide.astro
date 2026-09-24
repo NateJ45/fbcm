@@ -196,9 +196,10 @@ const RULE_CTA_DARK = {
 // imported from the church's own blog) and every one is a photograph of
 // identifiable people at a real event, which is wrong to attach to a fake
 // name and a fake "Pastor" title even captioned as a fixture. StaffGrid.astro
-// already has a real, theme-aware, designed answer for "no photo yet" -- the
-// aspect-[4/5] bg-surface-soft box under the gold rule -- so leaving `photo`
-// undefined uses the component's own fallback rather than inventing a new one.
+// already has a designed answer for "no photo yet" -- since the Staff identity
+// pass (2026-09-24), the lancet filled with the indigo band and the building's
+// window glyph in gold -- so leaving `photo` undefined uses the component's own
+// fallback rather than inventing a new one.
 
 /** One-paragraph portable text block, for the two fields typed as rich text. */
 function paragraph(key: string, text: string) {
@@ -463,9 +464,38 @@ const DOCUMENT_LIST_FIXTURE = {
   eyebrow: 'Resources',
   heading: 'Documents',
   docs: [
-    { _key: 'doc-1', title: 'The Visitor', year: 2025, note: 'Quarterly newsletter' },
-    { _key: 'doc-2', title: 'We Are the Clay', year: 2019 },
+    {
+      _key: 'doc-1',
+      title: 'The Visitor',
+      year: 2025,
+      note: 'Quarterly newsletter',
+      fileUrl: '/files/visitor-2025.pdf',
+    },
+    { _key: 'doc-2', title: 'We Are the Clay', year: 2019, url: 'https://www.amazon.com/' },
     { _key: 'doc-3', title: 'Constitution and bylaws', note: 'Governing documents' },
+  ],
+};
+
+// Five or more documents draw as the register rather than doors (document-doors.ts).
+const DOCUMENT_REGISTER_FIXTURE = {
+  heading: 'The Visitor',
+  docs: [
+    { _key: 'reg-1', title: 'March', year: 2026, fileUrl: '/files/visitor-2026-03.pdf' },
+    { _key: 'reg-2', title: 'December', year: 2025, fileUrl: '/files/visitor-2025-12.pdf' },
+    { _key: 'reg-3', title: 'September', year: 2025, fileUrl: '/files/visitor-2025-09.pdf' },
+    { _key: 'reg-4', title: 'June', year: 2025, fileUrl: '/files/visitor-2025-06.pdf' },
+    {
+      _key: 'reg-5',
+      title: 'We Are the Clay',
+      year: 2019,
+      note: 'Edited by Julie Downey Davis',
+      url: 'https://www.amazon.com/',
+    },
+    {
+      _key: 'reg-6',
+      title: 'Journey Down Jefferson Street',
+      note: 'Several copies are in the church library',
+    },
   ],
 };
 
@@ -1827,6 +1857,12 @@ const JOURNAL_LIST_FIXTURE = {
     docs={DOCUMENT_LIST_FIXTURE.docs}
     surface="muted"
     headingId="styleguide-documentlist"
+  />
+
+  <DocumentList
+    heading={DOCUMENT_REGISTER_FIXTURE.heading}
+    docs={DOCUMENT_REGISTER_FIXTURE.docs}
+    headingId="styleguide-documentregister"
   />
 
   <LinkCards

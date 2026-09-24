@@ -353,6 +353,12 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
   // Give (GiveBand, the gold band): the heading and glyph in indigo; the
   // paragraph and the onGold outline button in band-ink (The Way pair above).
   ['color-band-indigo', 'color-band-gold', 'Give: the heading on the gold band', 'body'],
+  // The document register (DocumentList, five or more documents, 2026-09-24,
+  // the Wedding pass) on the indigo band: titles in paper, notes in taupe; the
+  // years and the heading are the gold pair above. The door cards' inks are
+  // the Our Building pairs (band-indigo and band-brown on the fixed cream).
+  ['color-bg', 'color-band-indigo', 'the document register: each title', 'body'],
+  ['color-band-taupe', 'color-band-indigo', 'the document register: each note', 'body'],
 ];
 
 // Inks that FLIP with the theme, measured on the ground each theme actually

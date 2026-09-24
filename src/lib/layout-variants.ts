@@ -83,8 +83,11 @@ export const COLUMN_VARIANTS: Readonly<Record<string, ColumnSpec>> = {
       '3': 'sm:grid-cols-2 lg:grid-cols-3',
       '4': 'sm:grid-cols-2 lg:grid-cols-4',
     },
-    baseColumns: 'grid-cols-1',
-    phoneColumns: 'grid-cols-1',
+    // Two since the Wedding identity pass (2026-09-24): the gallery's arcade
+    // form draws lancets, and one lancet the full width of a phone is a very
+    // tall photograph. Still one value at every option, so the invariant holds.
+    baseColumns: 'grid-cols-2',
+    phoneColumns: 'grid-cols-2',
   },
 
   // --- New here. Both grids were hard-wired to their three-across form. -----

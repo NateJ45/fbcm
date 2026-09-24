@@ -1,0 +1,138 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// ONE journal row (2026-09-24, the journal identity pass). Lifted out of the
+// home page's Church Blog band (DynamicList.astro, the Home identity pass) so
+// the home rows, "Worth coming back for" and the register on /blog, and "More
+// from this series" on a post are the same row, and a visitor who follows a
+// post from the home page into the journal meets the same language:
+//
+//   date | the post's FEATURED image in a small lancet | title + excerpt | byline + meta
+//
+// The picture is always the post's own featured image, never an author
+// portrait; a post with none shows a building glyph in the arch, never an
+// empty frame. No caption: the alt is dropped when it only repeats the title
+// (the whole row is one link, so a screen reader would hear the title twice).
+//
+// Two tones, one geometry:
+//   taupe  the fixed taupe band (home, Worth, the post foot): band inks, brown
+//          rules and mould, the indigo underline. Holds in both themes.
+//   paper  the page's own ground (the register): the themed brand inks
+//          (--color-indigo, --color-brown-ink, both measured on the paper in
+//          both themes in theme-tokens.test.ts), brown rules, gold mould and
+//          a gold underline.
+// The taupe markup is byte-for-byte the row DynamicList drew before it was
+// lifted, so the home page did not move.
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import { splitStega } from '@/lib/preview-stega';
+
+interface Props {
+  href: string;
+  title: string;
+  /** What the date column says ("Dec 8, 2025", "Sermon preview, week of ..."). */
+  dateLabel: string;
+  /** YYYY-MM-DD for the <time datetime>. */
+  datetime?: string;
+  image?: any;
+  excerpt?: string | null;
+  /** The bold line in the right column (an author, a Sunday). */
+  byline?: string | null;
+  /** The plain line after it (a category, a reading). */
+  meta?: string | null;
+  tone?: 'taupe' | 'paper';
+  /** h3 under a band's h2; h4 under a register year. */
+  level?: 'h3' | 'h4';
+}
+const {
+  href,
+  title,
+  dateLabel,
+  datetime,
+  image,
+  excerpt,
+  byline,
+  meta,
+  tone = 'taupe',
+  level = 'h3',
+} = Astro.props as Props;
+
+const taupe = tone === 'taupe';
+const Heading = level;
+
+// See the header: an alt that only repeats the title is dropped. Compared on
+// the stega-CLEANED strings, never the raw ones (the preview rules in CLAUDE.md).
+function rowAlt(alt?: string | null, t?: string | null): string {
+  const a = typeof alt === 'string' ? splitStega(alt).cleaned.trim() : '';
+  const b = typeof t === 'string' ? splitStega(t).cleaned.trim() : '';
+  return a && a.toLowerCase() !== b.toLowerCase() ? (alt as string) : '';
+}
+const hasByline = typeof byline === 'string' && splitStega(byline).cleaned.trim() !== '';
+const hasMeta = typeof meta === 'string' && splitStega(meta).cleaned.trim() !== '';
+
+// Each tone's class strings are written out IN FULL (Tailwind only generates a
+// utility it can find literally in the source). The taupe strings are the
+// home rows' own, in their own order, so the home page renders byte-identical.
+const C = taupe
+  ? {
+      li: 'group relative grid grid-cols-[64px_minmax(0,1fr)] gap-x-[18px] gap-y-1.5 border-b border-band-brown/40 py-[clamp(22px,2.4vw,32px)] md:grid-cols-[8em_76px_minmax(0,1fr)] md:gap-x-[clamp(18px,2.6vw,40px)] lg:grid-cols-[9em_88px_minmax(0,1fr)_12em] lg:items-center',
+      time: 'col-start-2 row-start-1 font-ui text-[0.96875rem] leading-[1.35] font-semibold text-band-brown lining-nums md:col-start-1 md:row-span-2 md:self-center md:text-[1.0625rem] lg:row-span-1',
+      h: 'm-0 font-body text-[1.4375rem] leading-[1.15] font-normal text-band-ink md:text-[clamp(1.5rem,1.1rem+1.2vw,2.125rem)]',
+      a: "bg-[linear-gradient(var(--color-band-indigo),var(--color-band-indigo))] bg-[length:0_2px] bg-[position:0_100%] bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_2px] after:absolute after:inset-0 after:content-[''] focus-visible:bg-[length:100%_2px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-band-ink",
+      ex: 'mt-1.5 mb-0 hidden max-w-[36em] font-body text-[1.125rem] leading-[1.5] text-band-brown md:block',
+      by: 'col-start-2 row-start-3 m-0 font-ui text-[0.9375rem] leading-[1.35] text-band-brown md:col-start-3 md:row-start-2 md:self-start md:text-base lg:col-start-4 lg:row-start-1 lg:self-center lg:text-right',
+      b: 'font-semibold text-band-ink md:block md:text-[1.0625rem]',
+      arch: '--arch-ratio: 100 / 140; --arch-mould: var(--color-band-brown);',
+    }
+  : {
+      li: 'group relative grid grid-cols-[64px_minmax(0,1fr)] gap-x-[18px] gap-y-1.5 border-b border-brown-ink/35 py-[clamp(22px,2.4vw,32px)] md:grid-cols-[8em_76px_minmax(0,1fr)] md:gap-x-[clamp(18px,2.6vw,40px)] lg:grid-cols-[9em_88px_minmax(0,1fr)_12em] lg:items-center',
+      time: 'col-start-2 row-start-1 font-ui text-[0.96875rem] leading-[1.35] font-semibold text-brown-ink lining-nums md:col-start-1 md:row-span-2 md:self-center md:text-[1.0625rem] lg:row-span-1',
+      h: 'm-0 font-body text-[1.4375rem] leading-[1.15] font-normal text-indigo md:text-[clamp(1.5rem,1.1rem+1.2vw,2.125rem)]',
+      a: "bg-[linear-gradient(var(--color-gold),var(--color-gold))] bg-[length:0_2px] bg-[position:0_100%] bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_2px] after:absolute after:inset-0 after:content-[''] focus-visible:bg-[length:100%_2px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo",
+      ex: 'mt-1.5 mb-0 hidden max-w-[36em] font-body text-[1.125rem] leading-[1.5] text-brown-ink md:block',
+      by: 'col-start-2 row-start-3 m-0 font-ui text-[0.9375rem] leading-[1.35] text-brown-ink md:col-start-3 md:row-start-2 md:self-start md:text-base lg:col-start-4 lg:row-start-1 lg:self-center lg:text-right',
+      b: 'font-semibold text-indigo md:block md:text-[1.0625rem]',
+      arch: '--arch-ratio: 100 / 140;',
+    };
+---
+
+<li class={C.li}>
+  {
+    /* A sermon preview says which week it is for; everything else says its
+      date (derived from the category, CLAUDE.md rule 15). */
+  }
+  <time datetime={datetime} class={C.time}>
+    {dateLabel}
+  </time>
+
+  <ArchFrame
+    image={image}
+    glyph="window"
+    shape="lancet"
+    width={176}
+    sizes="(min-width: 1024px) 88px, (min-width: 768px) 76px, 64px"
+    alt={rowAlt(image?.alt, title)}
+    class="col-start-1 row-span-3 row-start-1 self-start md:col-start-2 md:row-span-2 md:self-center lg:row-span-1"
+    style={C.arch}
+  />
+
+  <div
+    class="col-start-2 row-start-2 min-w-0 md:col-start-3 md:row-start-1 md:self-end lg:self-center"
+  >
+    <Heading class={C.h}>
+      <a href={href} class={C.a}>
+        {title}
+      </a>
+    </Heading>
+    {excerpt && <p class={C.ex}>{excerpt}</p>}
+  </div>
+
+  {
+    (hasByline || hasMeta) && (
+      <p class={C.by}>
+        {hasByline && <span class={C.b}>{byline}</span>}
+        {hasByline && hasMeta && <span class="md:hidden">, </span>}
+        {hasMeta && meta}
+      </p>
+    )
+  }
+</li>

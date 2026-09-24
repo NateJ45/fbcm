@@ -17,6 +17,7 @@ import {
   paginate,
   seriesByTag,
   weekOfEyebrow,
+  weekOfLabel,
   tagIndex,
   categoryLabel,
   categorySingular,
@@ -211,6 +212,18 @@ test('the sermon-preview eyebrow names the week of a Wednesday post', () => {
     weekOfEyebrow('2024-01-17T10:00:00.000Z'),
     'Sermon preview, week of January 17, 2024',
   );
+});
+
+test('the week-of label reads the church day, not the UTC day, late in the evening', () => {
+  // 02:30 UTC on Dec 9 is 9:30 pm on Monday Dec 8 in Muncie. The label names
+  // the day the pastor wrote it, and it agrees with the row's <time datetime>
+  // (rowDateTime), which already read the church day.
+  const late = '2025-12-09T02:30:00Z';
+  assert.equal(weekOfLabel(late), 'Sermon preview, week of December 8, 2025');
+  assert.equal(weekOfEyebrow(late), 'Sermon preview, week of December 8, 2025');
+  assert.equal(rowDateTime(late), '2025-12-08');
+  // A year boundary crosses too: 03:00 UTC Jan 1 is still Dec 31 in Muncie.
+  assert.equal(weekOfLabel('2025-01-01T03:00:00Z'), 'Sermon preview, week of December 31, 2024');
 });
 
 test('an unparseable date falls back to the plain eyebrow', () => {

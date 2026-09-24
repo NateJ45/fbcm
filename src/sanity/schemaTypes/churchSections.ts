@@ -9,9 +9,10 @@
 // It is deliberately NOT registered in src/lib/section-fields.ts: that registry's
 // HEADING_ACCENT_FIELDS shape assumes the accent lives in a field literally named
 // `headingAccent` beside a `heading`/`headline` field, and this block has neither
-// (its words are `verse`/`reference`). The scripture accent is split at render
-// time by splitHeadingAccent() directly (Task 5), not through the in-canvas
-// overlay registry.
+// (its words are `verse`/`reference`, and its optional `heading`, added
+// 2026-09-24, carries no accent). The scripture accent is highlighted at render
+// time by highlightWords() directly (every whole-word occurrence, since the
+// Staff identity pass), not through the in-canvas overlay registry.
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { anchorField } from './_anchorField';
 import { sideOptions } from '../../lib/layout-variants';
@@ -266,6 +267,23 @@ export const staffGridSection = defineType({
       },
       description: 'Pick one. People are set to a group on their own Staff member page.',
     }),
+    // 2026-09-24, the Staff identity pass: the church's own paragraphs about
+    // the people in the band (what a pastor is; what the Church Coordination
+    // Team is), set beside the heading, so an explanation and its faces are
+    // one band rather than two. Optional; a band without it draws as before.
+    defineField({
+      name: 'intro',
+      title: 'Introduction',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'block',
+          styles: [{ title: 'Normal', value: 'normal' }],
+          lists: [],
+        }),
+      ],
+      description: 'A paragraph or two shown beside the heading. Leave blank for none.',
+    }),
     defineField({
       name: 'showBios',
       title: 'Show the longer text about each person',
@@ -332,13 +350,24 @@ export const scriptureBandSection = defineType({
   title: 'Scripture band',
   type: 'object',
   fields: [
+    // 2026-09-24, the Staff identity pass: an optional heading over the verse
+    // and an optional paragraph under it, for a band that is a whole section
+    // of the church's own page ("Every Member of this Church": a heading, 1
+    // Corinthians 12:4-6 and the church's paragraph). Both optional: a band
+    // that is only a verse (Beliefs) simply has neither.
+    defineField({
+      name: 'heading',
+      title: 'Heading',
+      type: 'string',
+      description: 'One line above the words. Leave blank for none.',
+    }),
     defineField({
       name: 'verse',
       title: 'The words',
       type: 'text',
       rows: 4,
       validation: (r) => r.required(),
-      description: 'The verse or quotation, without the reference.',
+      description: 'The verse or quotation, without quotation marks and without the reference.',
     }),
     defineField({
       name: 'reference',
@@ -351,7 +380,14 @@ export const scriptureBandSection = defineType({
       title: 'Word to pick out in gold',
       type: 'string',
       description:
-        'One word that appears in the text, spelled exactly as it appears. Leave blank for none.',
+        'One word that appears in the text, spelled exactly as it appears. Every place it appears is picked out. Leave blank for none.',
+    }),
+    defineField({
+      name: 'intro',
+      title: 'Paragraph under the words',
+      type: 'text',
+      rows: 4,
+      description: 'A few sentences shown under the verse and its reference. Leave blank for none.',
     }),
     anchorField(),
   ],

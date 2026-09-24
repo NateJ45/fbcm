@@ -1,0 +1,818 @@
+{
+  "_generatedBy": "scripts/page-fixture.mjs wedding",
+  "title": "Weddings and building use",
+  "pageBuilder": [
+    {
+      "_type": "heroSection",
+      "_key": "wed-hero",
+      "layout": "window",
+      "size": "short",
+      "eyebrow": "Weddings",
+      "headline": "Married here.",
+      "frames": [
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-1d879a255d0f7db02e49ce2bb06543b1a241f28a-2400x1600-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "A bride and groom face each other at the altar, surrounded by their wedding party, with guests seated in the pews.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 1.5,
+                "height": 1600,
+                "width": 2400
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAUGAv/EACEQAAICAgEFAQEAAAAAAAAAAAECAwQFEQAGEhMhMVFx/8QAFQEBAQAAAAAAAAAAAAAAAAAAAgT/xAAWEQEBAQAAAAAAAAAAAAAAAAABAgD/2gAMAwEAAhEDEQA/AJPqPqXJNbv16yzeAT9qoi+vv3i3H5/LU57CI1iOVE2+gCQPw8Z9OzochFcsxeZkOyndpWI9gkc1Z8LZS3d8AEll+51B0P5yOYEdfdpQGucfksnaxVCatNGqNApIb7v3vhyNyUq0nhihEgQxK2hIQBvhxqDgQpv/2Q=="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/1d879a255d0f7db02e49ce2bb06543b1a241f28a-2400x1600.jpg"
+          },
+          "alt": "A bride and groom face each other at the chancel, their wedding party beside them and guests in the pews",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.55,
+            "y": 0.55,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "frame-1"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-4a3214c220ab869fbae8961be9fcc13815e591ae-435x640-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "A bride and groom embracing on the front steps by the church's red entry doors, the bride's lace train spread across the stairs.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 0.6796875,
+                "height": 640,
+                "width": 435
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAeABQDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAYEBQf/xAAmEAACAgEDBAEFAQAAAAAAAAABAgMEAAUREgYhMUEUBxNRUnEy/8QAFwEBAQEBAAAAAAAAAAAAAAAAAwQCBf/EABsRAAMBAAMBAAAAAAAAAAAAAAABEQIDEkFx/9oADAMBAAIRAxEAPwBB6npWLGrWVBjKoxSNW8KPz/cbPpjC9c2omk3jKA8V9H84rdU6j8PXrbcOSicBv5v3GaCtaHRNXi+FEftWqqScCfZyDPZ/DrcixlT2DJGoBfz/AK9nDI/z0DPvEwO/gjDNwkoraj0e2u06kNcKZJmQu587b7k5o2u9LR3qlQ1ZOFioixg/uo9ZFpk1XUxbDh2A2y/p6jzQmRO4/X3i4aajD1bUJrRyQuySIeQPfDLS3LHLYdyjDkd+zYYUER//2Q=="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/4a3214c220ab869fbae8961be9fcc13815e591ae-435x640.jpg"
+          },
+          "alt": "A bride and groom embrace on the front steps before the church's red doors, her lace train spread down the stairs",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.5,
+            "y": 0.5,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "frame-2"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-a0700430f600110014e00f8682ae1e693f18f864-1600x2400-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "A wedding ceremony viewed from the balcony, the wedding party at the chancel and the congregation filling the pews below.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 0.6666666666666666,
+                "height": 2400,
+                "width": 1600
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAeABQDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAgEBQYH/8QAKBAAAgICAQMDAwUAAAAAAAAAAQIDBAARBRMhQQYSMRQVURYiI2Fi/8QAFwEAAwEAAAAAAAAAAAAAAAAAAQIEA//EABoRAAIDAQEAAAAAAAAAAAAAAAABAxESIQL/2gAMAwEAAhEDEQA/AF8rwTSy/TJG8llj7QAPg/gZY3PSfM1ohamrhkjGnCEMVH+gMYng/RnF1uRs8rcWKRwhDSxkALvzrx2y0439KS3Jq9bpvIT2AYfu8a/veRXRXV9FarRB49rIYxvXtI3hjBt6L4qpLLH14Ku3LdJlDa2fzhgywaRzmHlUhXlatG5PbhmiEazM5AB8nWQvpfsN3i7ldmm6f8rN3XqDM/FJXgNcV1lUzqpGz2U+Tmtvs8t6rW7GMVyNN8fGLlaSRq5HRBPql7c8800pQtISq+4nQ8YZRcjUq1bbJZErOdMOmQAAfGGOovL7Qrk9Lh//2Q=="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/a0700430f600110014e00f8682ae1e693f18f864-1600x2400.jpg"
+          },
+          "alt": "A wedding seen from the balcony, the wedding party at the chancel and the guests filling the pews below",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.5,
+            "y": 0.6,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "frame-3"
+        }
+      ],
+      "primaryCta": {
+        "_type": "ctaBlock",
+        "_key": "cta-1",
+        "label": "Reserving your wedding",
+        "linkType": "external",
+        "externalUrl": "/wedding#reserve",
+        "openInNewTab": false
+      },
+      "secondaryCta": {
+        "_type": "ctaBlock",
+        "_key": "cta-2",
+        "label": "Building use",
+        "linkType": "external",
+        "externalUrl": "/wedding#building-use",
+        "openInNewTab": false
+      }
+    },
+    {
+      "_type": "richTextSection",
+      "_key": "wed-why",
+      "heading": "A wedding at First Baptist",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "wh-a-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "wh-a-1s1",
+              "text": "First Baptist Church is a fitting wedding location and the facilities can be reserved for Christian weddings.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "wh-b-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "wh-b-1s1",
+              "text": "Building rentals for this purpose is something we do to share our building with sisters and brothers in Christ in the area so they might celebrate at a reasonable cost. Any associated fees are used exclusively for the cost of utilities, maintaining our building, and accounting for the time of our wedding coordinator, and others, who help make wedding ceremonies possible.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "wh-c-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "wh-c-1s1",
+              "text": "If you are interested, please read the following information and requirements for using our building and decide if our church may be right for your wedding ceremony.",
+              "marks": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "imageTextSection",
+      "_key": "wed-coordinator",
+      "image": {
+        "_type": "image",
+        "asset": {
+          "_id": "image-753f6f9f5e9cd4ff8ba89578241df26c4c530e20-3632x5448-jpg",
+          "_type": "sanity.imageAsset",
+          "altText": "Ella Mae Lemen smiles for a staff portrait, with colorful stained glass filling the background.",
+          "metadata": {
+            "dimensions": {
+              "_type": "sanity.imageDimensions",
+              "aspectRatio": 0.6666666666666666,
+              "height": 5448,
+              "width": 3632
+            },
+            "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAeABQDASIAAhEBAxEB/8QAGwAAAQQDAAAAAAAAAAAAAAAAAAEFBgcCBAj/xAAlEAACAgIBBAICAwAAAAAAAAABAgMEAAURBhIhQQcxEyIyUXH/xAAWAQEBAQAAAAAAAAAAAAAAAAAFAwT/xAAfEQACAgIDAAMAAAAAAAAAAAABAgADESEEEzEicYH/2gAMAwEAAhEDEQA/AM7fULa6rVqyd0txwf1JJAH9/wC466rYWoLdbZywu8fhC7H1mvu9JF21ttXsiaHhow/byefXjHWjVfY0krCyyrLGOB2+AwP3hfMsdrWw2ozxql6skRLdSXZXLFkSt2O57f2+hhihU17yVhbEhRjyQOPOGIKDgfAH9hZR86twPqUdquudlY2lakkn4aMkgDR885bvUmzfT9GzyOeJkAMTxngqfWc21CYpYpl/kjg5dHyzekXorVop4SwFdgBx6yV1PawYmWp5JrUrj2RNPkDbHlpGRnY8kkfeGQleWUHnDLnezM4Yjwz/2Q=="
+          },
+          "url": "https://cdn.sanity.io/images/7jw947g5/production/753f6f9f5e9cd4ff8ba89578241df26c4c530e20-3632x5448.jpg"
+        },
+        "alt": "Ella Mae Lemen, the church's wedding coordinator"
+      },
+      "imageSide": "right",
+      "eyebrow": "Wedding Coordinator",
+      "heading": "Ella Mae Lemen",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "wh-d-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "wh-d-1s1",
+              "text": "Ella Mae is a long-time member of First Baptist Church who also serves as our Wedding Coordinator. She is the appropriate person to contact if you are interested in celebrating a Christian wedding ceremony at First Baptist.",
+              "marks": []
+            }
+          ]
+        }
+      ],
+      "cta": {
+        "_type": "ctaBlock",
+        "_key": "cta-3",
+        "label": "Email the wedding coordinator",
+        "linkType": "external",
+        "externalUrl": "mailto:wedding@fbcmuncie.org",
+        "openInNewTab": true
+      }
+    },
+    {
+      "_type": "gallerySection",
+      "_key": "wed-spaces",
+      "anchor": {
+        "_type": "slug",
+        "current": "spaces"
+      },
+      "heading": "Our spaces",
+      "images": [
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-55a3965193cd3a39e469880887bf17b0b7b8f6e0-2400x1600-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "The empty sanctuary is seen down the center aisle toward the front, with a vaulted timber ceiling overhead.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 1.5,
+                "height": 1600,
+                "width": 2400
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANABQDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAYEBQf/xAAkEAACAQQBBAIDAAAAAAAAAAABAgMABAURBhITIVEHFDEy0f/EABUBAQEAAAAAAAAAAAAAAAAAAAIE/8QAGBEBAQEBAQAAAAAAAAAAAAAAAQADERP/2gAMAwEAAhEDEQA/AMaz3xrf2mQkix0kd5B3CodT5A9kVCu+D5H6iz2u5gG7beNaP8pptOWZGeyujF2YOhNkqmyx/Hk1X4TkeSjuekTKYyp2jLsb91K6pVGPSX7rhcls6pLcRGQqGYKf1Pqims8tYMxlxtnI7HZYrrdFL2IOLf/Z"
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/55a3965193cd3a39e469880887bf17b0b7b8f6e0-2400x1600.jpg"
+          },
+          "alt": "The sanctuary down the center aisle, the vaulted timber ceiling overhead",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.5,
+            "y": 0.45,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "caption": "Sanctuary",
+          "_key": "gi-1"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-4c49abdadc1909cc14276e1859b43a4e2ad6bb90-1600x758-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "A small lounge room set up with a sofa, an armchair and a lamp, prepared as a bridal suite.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 2.1108179419525066,
+                "height": 758,
+                "width": 1600
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAJABQDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAABgAEBf/EACcQAAEDAwIEBwAAAAAAAAAAAAIBAwQABREGEiE2dLEUMTRBUXFy/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAECA//EABgRAQEBAQEAAAAAAAAAAAAAAAEAAhES/9oADAMBAAIRAxEAPwA9bLhcIrqxGxYkDhN20854/HstddzUM6K4cLwiG+AqSgKZ4fdDtCc0S/y5T618wx+lXtWW3yDPKvSP2y8HdI5SGm2xwagSEGVRU86qx6R9JO6x3ulVDWN//9k="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/4c49abdadc1909cc14276e1859b43a4e2ad6bb90-1600x758.jpg"
+          },
+          "alt": "The bridal suite lounge",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.5,
+            "y": 0.55,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "caption": "The Bridal Suite",
+          "_key": "gi-2"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-c5a42d891105ad8f64b165b5ddff0f8aeb20afb3-1600x1066-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "An empty fellowship hall is arranged with round tables, folding chairs and small centerpieces.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 1.5009380863039399,
+                "height": 1066,
+                "width": 1600
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAUGB//EACQQAAIBBAAFBQAAAAAAAAAAAAECAwAEBREGBxIxYRUhMkHB/8QAFgEBAQEAAAAAAAAAAAAAAAAABAMF/8QAHBEAAgIDAQEAAAAAAAAAAAAAAQIAAxEhUQQS/9oADAMBAAIRAxEAPwCVwnB/qk6xPGYUB31nWteaZZHlmrJPNEZDbxfQTTMfFUIc2Fm9xHpix10ntV3kb+eXl3DOSoZlUnS6Ot9t1l+eyy1PonYinVVOAJmmM4fmt8fbxWuPZ41X5MwBJ80U7xWdlhtemOMAFifc7/KKZvsjgcn/2Q=="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/c5a42d891105ad8f64b165b5ddff0f8aeb20afb3-1600x1066.jpg"
+          },
+          "alt": "The fellowship hall",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.45,
+            "y": 0.5,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "caption": "Fellowship Hall",
+          "_key": "gi-3"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-cd0adc05ff989be1e46911194a02535e37e5783c-1600x758-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "An empty commercial kitchen has stainless steel counters and a checkered tile floor.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 2.1108179419525066,
+                "height": 758,
+                "width": 1600
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAJABQDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAYBBAUH/8QAJxAAAQMDAQcFAAAAAAAAAAAAAQIDBAAFEQYHEhMiNGGxMjZxcnT/xAAWAQEBAQAAAAAAAAAAAAAAAAADAQT/xAAaEQADAQADAAAAAAAAAAAAAAAAAQIDESEx/9oADAMBAAIRAxEAPwDA09dos6TIetpUJbYyCscqs9qv2zUV1lyHGVrjMrZXg5O8D2xSTsx6l74NTYPdb36D5rPNOrc8+DWk57OjyNQHjLCpDJIOPRiikq4dc/8Ac+aKj0YSzR//2Q=="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/cd0adc05ff989be1e46911194a02535e37e5783c-1600x758.jpg"
+          },
+          "alt": "The church kitchen",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.45,
+            "y": 0.5,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "caption": "Kitchen",
+          "_key": "gi-4"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-ebe114dd802c81d5b793574b1be9ac99c3451a1e-1600x758-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "An empty game room has a pool table, a foosball table, and a seating area with a wall-mounted television.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 2.1108179419525066,
+                "height": 758,
+                "width": 1600
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAJABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAUGAwT/xAAmEAABAwMCBQUAAAAAAAAAAAACAQQFAAMREjEHISI0cTI1UXOR/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAIDBP/EABoRAQACAwEAAAAAAAAAAAAAAAEAAgMREiH/2gAMAwEAAhEDEQA/AM469JyDE77dzZK8i5QEHln4pDdinKOwey2tvfFelETI/qbU84b+0B5qplexPxWW+W1nSyoAeSfYSox7YbMqZG49WpVzkV2orlne8D6xope2HM//2Q=="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/ebe114dd802c81d5b793574b1be9ac99c3451a1e-1600x758.jpg"
+          },
+          "alt": "The youth center",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.5,
+            "y": 0.5,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "caption": "Youth Center",
+          "_key": "gi-5"
+        }
+      ],
+      "columns": 3
+    },
+    {
+      "_type": "quoteSection",
+      "_key": "wed-quote",
+      "quote": "Looking back at our wedding, we are very thankful to have chosen First Baptist Muncie for our ceremony and to have had the pleasure to work with their staff. The care and help we received was genuine and thorough and the beauty of the building is unparalleled. Mrs. Lemen was always very quick to answer any questions and help with any accommodations. When it is all said and done, they celebrate the gift of marriage with you like family.",
+      "attribution": "Hanna and Nathan"
+    },
+    {
+      "_type": "gallerySection",
+      "_key": "wed-weddings",
+      "heading": "Weddings here",
+      "images": [
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-0f7682c4513f5b23f1bc4ca7be569151e1ce2b8b-2400x1600-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "A bride and groom walk hand in hand down the sanctuary aisle past seated guests, with the wedding party waiting at the front.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 1.5,
+                "height": 1600,
+                "width": 2400
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAUGB//EACMQAAEDBAEEAwAAAAAAAAAAAAIBAwQABRESIQYHMUETUVL/xAAVAQEBAAAAAAAAAAAAAAAAAAACBP/EAB0RAAEEAgMAAAAAAAAAAAAAAAEAAgMSIaERQWH/2gAMAwEAAhEDEQA/AJ63yjLpOZb0cMLiZJs2iKoJhfVSLtlms3b4Z0hpknRRxpNcqefVPrfNKXcIx6C06KaETfGyZ+qvO6tqiNpZZbTQg4LJDwnnjzUjKuccK+SzQPUp6SkNWyytxZ6uK+BFnTxjPFFZybT7pqQTX20/KLRSE0Y70iYHnPG1/9k="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/0f7682c4513f5b23f1bc4ca7be569151e1ce2b8b-2400x1600.jpg"
+          },
+          "alt": "Hanna and Nathan walk hand in hand down the sanctuary aisle past their guests",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.5,
+            "y": 0.5,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "gw-processional"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-4afb02e7ac295800ab14f99b3963c0ae984988f7-1000x668-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "A bride and groom kissing on the church steps while the wedding party blows bubbles around them.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 1.4970059880239521,
+                "height": 668,
+                "width": 1000
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAYHBAX/xAAjEAABAwQBBAMAAAAAAAAAAAABAgMEAAUGERITIVFhFUFC/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAZEQEAAwEBAAAAAAAAAAAAAAABAAIRAyH/2gAMAwEAAhEDEQA/AOTmGeQVuJjt7S5y4An323WWwMtWCH860XnUBRSouH9eR6pDyC3szzbp7vJK5clIWlJ7AHxTXistyfJuljkEqgsoUUAnZGjUbzM2W16qZnhKVZ88ZkQG3Ogo7+9jvRUn6RjlTLDriEIOtA0UhSybCbAz/9k="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/4afb02e7ac295800ab14f99b3963c0ae984988f7-1000x668.jpg"
+          },
+          "alt": "A bride and groom kiss on the church steps while their wedding party blows bubbles",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.55,
+            "y": 0.4,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "gw-bubbles"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-655381cf942bc373a180b84516ae3f0a36532608-1600x1067-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "A wedding party jumps and cheers together outside the church's red entry doors, bride and groom in the center.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 1.499531396438613,
+                "height": 1067,
+                "width": 1600
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAQFAQL/xAAhEAACAQQCAgMAAAAAAAAAAAABAgMABAUREhMhIgYxUf/EABYBAQEBAAAAAAAAAAAAAAAAAAIBA//EABkRAQEAAwEAAAAAAAAAAAAAAAEAAgMTEf/aAAwDAQACEQMRAD8ATToS35PMquCeKk/dZ8cuHvDIt/KFKt6HWq4bCRTyRSNNICp2BTGTwkd5lkyDzypIoA60Ok8D8ouq1x2niJU8aIxAw2D7nzRUoQNb7SOZ+O90UebToX//2Q=="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/655381cf942bc373a180b84516ae3f0a36532608-1600x1067.jpg"
+          },
+          "alt": "A wedding party celebrating in front of the church's red doors",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.42,
+            "y": 0.62,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "gw-red-doors"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-62dd5a11e4bee7576cce292547a91b546002873b-1440x963-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "A bride and groom sharing a kiss while seated in a sanctuary pew.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 1.4953271028037383,
+                "height": 963,
+                "width": 1440
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAANABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAQHBf/EACEQAAICAgEFAQEAAAAAAAAAAAECAwQABQYREiExcSJS/8QAFQEBAQAAAAAAAAAAAAAAAAAAAgT/xAAaEQEAAgMBAAAAAAAAAAAAAAABACEREiJR/9oADAMBAAIRAxEAPwDHrbDjsNdSaaM4JI7n6A/ce47yvSTiSwdJ2Rq4V3PlRkWgD7OQCV+wKvpR7xhJLGsryLVsyLE56NGT4PTJjiluVpu5CpfzveM2GaUVT+j/ABhkNp3bLxEiZh5+4YcvsWpP/9k="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/62dd5a11e4bee7576cce292547a91b546002873b-1440x963.jpg"
+          },
+          "alt": "A bride and groom share a kiss, seated in a sanctuary pew",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.4,
+            "y": 0.5,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "gw-pew"
+        }
+      ],
+      "columns": 4
+    },
+    {
+      "_type": "richTextSection",
+      "_key": "wed-credits",
+      "width": "narrow",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "cr-a-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "cr-a-1s1",
+              "text": "Photos used with permission from the couples and the photographers.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "cr-b-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "cr-b-1s1",
+              "text": "Special thanks to Ryann B Photography (Samantha and Jake), Melody Withers Photography (Hanna and Nathan), and Cara Boyer Photography (Olivia and Cameron).",
+              "marks": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "richTextSection",
+      "_key": "wed-reserve",
+      "anchor": {
+        "_type": "slug",
+        "current": "reserve"
+      },
+      "heading": "How to reserve the church",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "rs-1",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "rs-1s1",
+              "text": "Mail the signed contract, the information sheet and a deposit to First Baptist Church, 309 East Adams Street.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "rs-2",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "rs-2s1",
+              "text": "Fill out the wedding information form online.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "rs-3",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "rs-3s1",
+              "text": "Talk with Ella Mae Lemen, the wedding coordinator, about your date and the building.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "rs-fee-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "rs-fee-1s1",
+              "text": "The documents below carry the fees.",
+              "marks": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "documentListSection",
+      "_key": "wed-documents",
+      "heading": "Wedding documents",
+      "docs": [
+        {
+          "_type": "listedDocument",
+          "_key": "wd-1",
+          "title": "Wedding Contract",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-18eeefe48def84d54fbfd1f9b55d3f8846e3a287-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/18eeefe48def84d54fbfd1f9b55d3f8846e3a287.pdf"
+            },
+            "alt": ""
+          },
+          "note": "To reserve your date",
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/18eeefe48def84d54fbfd1f9b55d3f8846e3a287.pdf"
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "wd-2",
+          "title": "Bridal Packet",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-dc34fd458246f098ff395ee7a6211c9e6721fb38-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/dc34fd458246f098ff395ee7a6211c9e6721fb38.pdf"
+            },
+            "alt": ""
+          },
+          "note": "Everything to plan the day",
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/dc34fd458246f098ff395ee7a6211c9e6721fb38.pdf"
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "wd-3",
+          "title": "Wedding information form",
+          "url": "https://fbcmuncie.churchcenter.com/people/forms/243785",
+          "note": "Fill this in online"
+        }
+      ]
+    },
+    {
+      "_type": "richTextSection",
+      "_key": "wed-building-use",
+      "anchor": {
+        "_type": "slug",
+        "current": "building-use"
+      },
+      "heading": "Using the building for other events",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "bu-a-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "bu-a-1s1",
+              "text": "Throughout our history and into the present, First Baptist has opened up its facilities for use by friends and community organizations.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "bu-b-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "bu-b-1s1",
+              "text": "If you would like to use our building on a short term basis in some other way, you will need to complete a building usage form. Please fill out an online Building Use Request Form. If the online building request form is filled out, only the signed Property Use Agreement (Release and Indemnity Agreement / Acceptance of Responsibility) must be signed and turned into the office, and you will not be required to fill out all the information about your event by hand. Those who do not fill out the online form will need to fill out the entire building use form by hand and turn it into the Church Office, before the building use request can be considered.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "bu-c-1",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "bu-c-1s1",
+              "text": "Exterior Building",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "bu-c-2",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "bu-c-2s1",
+              "text": "Fellowship Hall",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "bu-c-3",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "bu-c-3s1",
+              "text": "Kitchen",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "bu-c-4",
+          "style": "normal",
+          "listItem": "bullet",
+          "level": 1,
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "bu-c-4s1",
+              "text": "Youth Center",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "bu-fee-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "bu-fee-1s1",
+              "text": "The documents below carry the fees.",
+              "marks": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "documentListSection",
+      "_key": "wed-building-documents",
+      "heading": "Building documents",
+      "docs": [
+        {
+          "_type": "listedDocument",
+          "_key": "bd-1",
+          "title": "Building Reservation Agreement",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-1420de4d03a3693029ac7ab78f94a784c1b3f2dd-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/1420de4d03a3693029ac7ab78f94a784c1b3f2dd.pdf"
+            },
+            "alt": ""
+          },
+          "note": "Sign and return this to the office",
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/1420de4d03a3693029ac7ab78f94a784c1b3f2dd.pdf"
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "bd-2",
+          "title": "Online request form",
+          "url": "https://fbcmuncie.churchcenter.com/people/forms/520312",
+          "note": "Fill this in online"
+        }
+      ]
+    },
+    {
+      "_type": "ctaBandSection",
+      "_key": "wed-cta",
+      "eyebrow": "Questions?",
+      "headline": "Talk to the office.",
+      "subhead": "Sundays at 10:45 am. 309 East Adams Street.",
+      "cta": {
+        "_type": "ctaBlock",
+        "_key": "cta-4",
+        "label": "Contact us",
+        "linkType": "internal",
+        "internalLink": {
+          "_type": "page",
+          "slug": "contact"
+        }
+      },
+      "secondaryCta": {
+        "_type": "ctaBlock",
+        "_key": "cta-5",
+        "label": "Email the wedding coordinator",
+        "linkType": "external",
+        "externalUrl": "mailto:wedding@fbcmuncie.org",
+        "openInNewTab": true
+      }
+    }
+  ]
+}

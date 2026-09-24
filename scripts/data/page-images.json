@@ -17,6 +17,8 @@
   "ministries-youth": { "file": "08181c_bd26ffeb7cc14d029caf2663a0452bf3_tilde_mv2.jpg", "alt": "Two teens speaking to the youth group on stage", "maxWidth": 1600, "consent": true },
 
   "staff-deacons-2026": { "file": "b98776_be609b7a431f4ad9a4f82e225deeb234_tilde_mv2.jpg", "alt": "The 2026 deacons of First Baptist Church Muncie", "maxWidth": 1600, "consent": false },
+  "staff-hero-kendall": { "library": "08181c_edf48e7402e7487598cdeaafd16d5fa9_tilde_mv2.jpg", "alt": "Kendall Ellis smiles for a portrait outdoors, standing against a brick wall.", "consent": false },
+  "staff-hero-jonathan": { "library": "08181c_b28793cc782d419988d19bc0af9eb4ff_tilde_mv2.jpg", "alt": "Jonathan Balmer smiles for a portrait in a green plaid shirt, standing outdoors against a brick wall.", "consent": false },
 
   "history-era-1": { "file": "08181c_d3895914beb9430abd4699efa520970f_tilde_mv2.jpg", "alt": "Beginnings, 1859", "maxWidth": 2400 },
   "history-era-2": { "file": "08181c_51599a87bcd74bbcb934352c94b6694b_tilde_mv2.jpg", "alt": "The first church building, built in 1862", "maxWidth": 2400 },
@@ -54,6 +56,9 @@
   "wedding-processional": { "library": "08181c_7d804c4f4e164f0eba97d0fb7d23fbd8_tilde_mv2.jpg", "alt": "Hanna and Nathan walk hand in hand down the sanctuary aisle past their guests" },
   "wedding-bubbles": { "library": "08181c_4126db7ca52e4c1293daadf58963a865_tilde_mv2.jpg", "alt": "A bride and groom kiss on the church steps while their wedding party blows bubbles" },
   "wedding-pew": { "library": "08181c_02c12560c3394778bbbb460cc77f2f25_tilde_mv2.jpg", "alt": "A bride and groom share a kiss, seated in a sanctuary pew" },
+  "wedding-red-doors": { "library": "08181c_15cc943f3d0943f38417e6f525b25940_tilde_mv2.jpg", "alt": "A bride and groom embrace on the front steps before the church's red doors, her lace train spread down the stairs" },
+  "wedding-balcony": { "library": "08181c_83b49b5728464621b766a37d2e52d803_tilde_mv2.jpg", "alt": "A wedding seen from the balcony, the wedding party at the chancel and the guests filling the pews below" },
+  "wedding-room-sanctuary": { "library": "08181c_633ffb6bfcba46a68fedafb38cc0f027_tilde_mv2.jpg", "alt": "The sanctuary down the center aisle, the vaulted timber ceiling overhead" },
   "ministry-children-vbs": { "library": "08181c_ae634c5828aa4df499d03f5ae09104d7_tilde_mv2.jpg", "alt": "Children singing on stage at Vacation Bible School" },
   "beliefs-baptism": { "library": "81f7ac_ee96a9da57554d48b92008a87a38e1e3_tilde_mv2.jpg", "alt": "Two young women smile together in the baptismal pool, one of them just baptized" },
 

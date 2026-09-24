@@ -6,14 +6,18 @@
 // B). It scans by date and title, the way the church's own Visitor archive and
 // the home page's blog band already do. In this order:
 //
-//   1. Opener: eyebrow, h1 and lede from the journalPage singleton (fields
-//      unchanged), with the DOOR beside it: this Sunday's preview while its
-//      Sunday has not passed, else the latest post (Door.astro says how the
-//      visitor's clock gets the last word on a static page).
-//   2. Filters: the categories as text links with derived counts.
-//   3. Worth coming back for: four durable posts NOT on page 1 below.
-//   4. All posts: page 1 of the register, grouped by year, and the pager.
-//   5. The singleton's additionalSections (the #publications list).
+//   1. Opener, on the indigo band: eyebrow, h1 and lede from the journalPage
+//      singleton (fields unchanged), with the DOOR beside it: this Sunday's
+//      preview while its Sunday has not passed, else the latest post
+//      (Door.astro says how the visitor's clock gets the last word on a
+//      static page).
+//   2. Worth coming back for, on the taupe band: four durable posts NOT on
+//      page 1 below, as the home page's Church Blog rows.
+//   3. All posts, on paper: the heading, the category filters (text links
+//      with derived counts), page 1 of the register grouped by year, and the
+//      pager. The filters moved down here from under the opener in the
+//      identity pass (2026-09-24), beside the list they filter.
+//   4. The singleton's additionalSections (the #publications list).
 //
 // Which posts are durable is derived from the category every build
 // (splitDurable), never from a stored flag (CLAUDE.md rule 15). No closing CTA:
@@ -40,8 +44,8 @@ import {
 } from '@/lib/blog-derive';
 import { localDay } from '@/lib/sermon-derive';
 import { slugify } from '@/lib/slugify';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 
-import SectionHeading from '@/components/SectionHeading.astro';
 import SectionRenderer from '@/components/SectionRenderer.astro';
 import Opener from '@/components/blog/Opener.astro';
 import Door from '@/components/blog/Door.astro';
@@ -127,7 +131,7 @@ const schemas = [
     })();
   </script>
 
-  {/* ------- 1 + 2. Opener, door and filters --------------------------------- */}
+  {/* ------- 1. Opener and door ---------------------------------------------- */}
   <Opener
     eyebrow={heroEyebrow}
     heading={heroHeadline}
@@ -135,23 +139,17 @@ const schemas = [
     headingId="blog-hero-heading"
   >
     {(fresh || latest) && <Door {fresh} {latest} />}
-    <Filters slot="filters" entries={all} allCurrent />
   </Opener>
 
-  {/* ------- 3. Worth coming back for ---------------------------------------- */}
+  {/* ------- 2. Worth coming back for ---------------------------------------- */}
   <Worth entries={worth} />
 
-  {/* ------- 4. All posts: page 1 of the register --------------------------- */}
+  {/* ------- 3. All posts: the filters and page 1 of the register ------------ */}
   <section class="bg-background" aria-labelledby="blog-all-heading">
     <div class="mx-auto max-w-content px-gutter py-section-lg">
-      <SectionHeading
-        headline="All posts"
-        headingId="blog-all-heading"
-        level="h2"
-        align="left"
-        tone="church"
-      />
-      <div class="mt-7">
+      <h2 id="blog-all-heading" class:list={[H2_DISPLAY, 'mb-8 text-indigo']}>All posts</h2>
+      <Filters entries={all} allCurrent />
+      <div class="mt-[clamp(36px,4vw,56px)]">
         <Register entries={firstPage.items} emptyMessage="The first posts are on their way." />
       </div>
       <Pager list={all} page={1} basePath="/blog" />
@@ -159,7 +157,7 @@ const schemas = [
   </section>
 
   {
-    /* ------- 5. Extra sections from the Studio ------------------------------
+    /* ------- 4. Extra sections from the Studio ------------------------------
      The #publications document list (The Visitor, and the two books) is one of
      these, seeded by scripts/pages/blog.mjs. idPrefix keeps its generated
      heading ids from colliding with the bands drawn above. */

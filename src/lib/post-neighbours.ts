@@ -11,7 +11,7 @@
 // posted in between. Every other post has plain Older / Newer doors by date.
 
 import { entryIsSermonPreview, clean, type BlogEntry } from './blog-derive.ts';
-import { sundayOf, localDay, formatDay, readingOf } from './sermon-derive.ts';
+import { sundayOf, localDay, formatDay, isoDay, readingOf } from './sermon-derive.ts';
 
 export interface Door {
   /** "The Sunday before", "Older post", ... */
@@ -37,6 +37,14 @@ export interface SeriesRow {
   date: string;
   /** The reading for a preview ("Sermon preview" when none is found), else the category. */
   meta: string;
+  /** YYYY-MM-DD of the day `date` names (the Sunday for a preview), for <time datetime>. */
+  datetime: string;
+  /**
+   * The post's own FEATURED image (coverImage), for the row's lancet
+   * (PostRow.astro, the journal identity pass). Never an author portrait;
+   * null when the post has none, and the row draws a glyph arch instead.
+   */
+  cover: unknown;
 }
 
 /** Opening text by entry, for readingOf. Keyed by _id, falling back to slug. */
@@ -95,5 +103,12 @@ export function seriesRowOf(entry: BlogEntry, opening: OpeningText): SeriesRow {
     meta: preview
       ? readingOf(opening(entry)) || 'Sermon preview'
       : clean(entry.categories?.[0]?.title),
+    datetime: (() => {
+      const d = sunday ?? localDay(clean(entry.publishedAt));
+      return d ? isoDay(d) : '';
+    })(),
+    cover: (entry.coverImage as { asset?: unknown } | null | undefined)?.asset
+      ? entry.coverImage
+      : null,
   };
 }

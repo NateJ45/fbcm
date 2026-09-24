@@ -128,7 +128,11 @@ export default {
     // line: images.image() above has already thrown.)
     const uploadPdf = async (file) => {
       const { client, makeUploader } = await import('../lib/sanity-lib.mjs');
-      const assetId = await makeUploader(client).uploadFile(`../fbcm-archive/files/${file}`);
+      const { uploadClient } = await import('../lib/dry-run-upload.mjs');
+      const path = `../fbcm-archive/files/${file}`;
+      const assetId = await makeUploader(uploadClient(client, 'beliefs.mjs', path)).uploadFile(
+        path,
+      );
       return { _type: 'file', asset: { _type: 'reference', _ref: assetId } };
     };
 

@@ -137,6 +137,8 @@ function project(v) {
     out.asset = asset;
     out.alt = v.alt ?? asset.altText ?? '';
   }
+  // A listed document's file, as queries.ts projects it: `"fileUrl": file.asset->url`.
+  if (typeof out.file?.asset?.url === 'string') out.fileUrl = out.file.asset.url;
   if (typeof v.internalLink?._ref === 'string') {
     const doc = docs.get(v.internalLink._ref);
     out.internalLink = doc ? { _type: doc._type, slug: doc.slug } : null;
