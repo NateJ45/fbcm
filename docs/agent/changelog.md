@@ -42,7 +42,7 @@ cut to its move clause. The greeter photo, already on Who We Are, left the
 home page for the teenagers at a table with a Bible (Nathan's decision).
 `goalsEndDark` went with its last caller; GiveBand's h1 width is a `wide`
 prop instead of two fighting `max-w` classes; the blog rows print and stamp
-one (UTC) day; a seed dry run refuses, with instructions, rather than
+one day, the church's (America/Indiana/Indianapolis); a seed dry run refuses, with instructions, rather than
 uploads (`scripts/lib/page-images.mjs`, now tested).
 
 Gates: 792 unit tests across 53 files, `test:scripts` 24, `astro check` 0

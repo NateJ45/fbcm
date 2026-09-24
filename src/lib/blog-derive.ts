@@ -504,29 +504,21 @@ export function registerMeta(entry: RegisterEntry): RegisterMeta {
 }
 
 /**
- * A post row's date as a visitor reads it ("Dec 14, 2025") and as its
- * <time datetime> carries it ("2025-12-14"), for the home page's Church Blog
- * rows (DynamicList.astro). BOTH read the UTC calendar day, like
- * weekOfLabel() above. They used to disagree: the label used the build
- * machine's local zone and the attribute UTC, so a post stamped in the
- * evening in Muncie (after midnight UTC) could print one day and carry the
- * next, and the label moved with whichever machine ran the build.
+ * A post row's date as a visitor reads it ("Dec 8, 2025") and as its
+ * <time datetime> carries it ("2025-12-08"), for the home page's Church Blog
+ * rows (DynamicList.astro). BOTH read the calendar day in the CHURCH's zone
+ * (localDay(), America/Indiana/Indianapolis), as the blog register and the
+ * post page already do, so a post published at 9:30 pm in Muncie (02:30 UTC
+ * the next day) is dated the day it was written. They used to disagree: the
+ * label took the build machine's zone and the attribute UTC.
  */
 export function rowDate(iso: string | null | undefined): string {
-  if (!iso) return '';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('en-US', {
-    timeZone: 'UTC',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const d = localDay(iso);
+  return d ? formatDay(d, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 }
 
-/** The same UTC calendar day as rowDate(), as YYYY-MM-DD; undefined if none. */
+/** The same church-zone day as rowDate(), as YYYY-MM-DD; undefined if none. */
 export function rowDateTime(iso: string | null | undefined): string | undefined {
-  if (!iso) return undefined;
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? undefined : d.toISOString().slice(0, 10);
+  const d = localDay(iso);
+  return d ? isoDay(d) : undefined;
 }
