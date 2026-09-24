@@ -24,7 +24,10 @@ bottom line "An American Baptist congregation in downtown Muncie since 1859"
 photo texture is gone; the 1927 Hannaford rendering runs along the bottom
 edge as faint gold line art (`src/assets/footer-rendering.webp`, the pencil
 lines lifted off the paper into a four-step alpha, 31,556 B, used as a CSS
-mask over the gold token). The Pages column sets its list in two short
+mask over the gold token, inside a `content-visibility: auto` box so it is
+not fetched until the footer nears the viewport: the eager fetch measured
+~75 ms of simulated LCP on /, and with the box the drawing is not requested
+during load at all). The Pages column sets its list in two short
 columns; Office now holds the hours, phone and email, and prints the street
 only when the poster row above it did not, so the address appears once. The
 wordmark moved to the base rail as the footer's home link. The mobile menu
