@@ -74,7 +74,7 @@ import ArchFrame from '@/components/church/ArchFrame.astro';
 import PostRow from '@/components/blog/PostRow.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import { H2_DISPLAY } from '@/lib/heading-grammar';
-import JournalPortableText from '@/components/JournalPortableText';
+import JournalBody from '@/components/JournalBody.astro';
 import ReadingProgress from '@/components/ReadingProgress.astro';
 import StickyCTAChip from '@/components/StickyCTAChip';
 
@@ -337,11 +337,11 @@ const schemas = [
       <div class="p2-grid p2-main">
         <div class="p2-body">
           {
-            /* `client:visible` defers the Sanity client and the journal
-              renderers until the body scrolls into view. The article HTML is
-              server-rendered, so reading starts immediately. */
+            /* Static HTML, built once: no JavaScript ships for the body. Only
+              a before/after slider, if a post ever has one, hydrates
+              (JournalBody.astro, 2026-09-24). */
           }
-          <JournalPortableText client:visible value={body} className="post-prose" />
+          <JournalBody value={body} class="post-prose" />
 
           {
             entry.relatedProject?.slug?.current && (
@@ -772,7 +772,7 @@ const schemas = [
     outline-offset: 4px;
   }
 
-  /* ---- The reading (the body, rendered by JournalPortableText) ------------- */
+  /* ---- The reading (the body, rendered by JournalBody) --------------------- */
   .post-prose {
     max-width: 62ch;
     font-family: var(--font-body);

@@ -493,3 +493,30 @@ export function listenHref(body: readonly unknown[] | null | undefined): string 
   }
   return '';
 }
+
+// ── The one interactive thing in a body ─────────────────────────────────────
+// The post body renders to static HTML at build time (JournalBody.astro,
+// 2026-09-24): no React ships for it. The before/after slider is the only body
+// type that needs JavaScript, so the body is cut at each one and the slider is
+// hydrated on its own. Everything between sliders stays one run, in order; a
+// body with no slider (every post today) is one run.
+
+export type BodySegment =
+  { kind: 'blocks'; nodes: BodyNode[] } | { kind: 'slider'; node: BodyNode };
+
+export function splitAtSliders(body: readonly BodyNode[] | null | undefined): BodySegment[] {
+  const out: BodySegment[] = [];
+  if (!Array.isArray(body)) return out;
+  let run: BodyNode[] = [];
+  for (const node of body) {
+    if (node?._type === 'beforeAfter') {
+      if (run.length) out.push({ kind: 'blocks', nodes: run });
+      run = [];
+      out.push({ kind: 'slider', node });
+    } else {
+      run.push(node);
+    }
+  }
+  if (run.length) out.push({ kind: 'blocks', nodes: run });
+  return out;
+}
