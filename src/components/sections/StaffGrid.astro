@@ -186,7 +186,10 @@ const INK = {
             <ul class:list={['sg-people', `sg-${size}`]} role="list">
               {section.people.map((person) => (
                 <li>
-                  <article id={person.slug || undefined} class="sg-person">
+                  <article
+                    id={person.slug || undefined}
+                    class="sg-person scroll-mt-[var(--header-offset)]"
+                  >
                     <ArchFrame
                       image={person.photo}
                       shape="lancet"
