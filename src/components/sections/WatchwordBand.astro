@@ -25,6 +25,7 @@
 import WatchwordMark from '@/components/church/WatchwordMark.astro';
 import PortableText from '@/components/PortableText';
 import { highlightWords } from '@/lib/highlight-words';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import type { ProjectedWatchwordSection } from '@/lib/pageBuilder.types';
 import type { PortableTextBlock } from '@portabletext/types';
 
@@ -47,7 +48,7 @@ const hasBody = !!(intro || moreBlocks.length || praise || proclaim);
   <div class="ww-wrap mx-auto max-w-content px-gutter">
     {
       heading && (
-        <h2 id={headingId} class="font-display text-h2 leading-none font-normal text-gold">
+        <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
           {heading}
         </h2>
       )

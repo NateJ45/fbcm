@@ -18,6 +18,7 @@
 // every rule about its spacing, the first paragraph and the quote is in one
 // place: `.lt-body` in the Church identity block of globals.css.
 import ArchFrame from '@/components/church/ArchFrame.astro';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import PortableText from '@/components/PortableText';
 import { getSiteSettings } from '@/lib/queries';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
@@ -74,7 +75,7 @@ const letter = (body ?? []) as PortableTextBlock[];
       </div>
       {
         heading && (
-          <h2 id={headingId} class="mb-8 font-display text-title leading-none text-brown-ink">
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'mb-8 text-brown-ink']}>
             {heading}
           </h2>
         )

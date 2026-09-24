@@ -773,10 +773,9 @@ now ties the schema max and the slice with a drift test.
     in dark mode (the drawing's multiply blend needs a light ground; gold and taupe are
     fixed grounds). In dark mode the home page ends on three light bands in a row
     before the indigo footer.
-  - Who We Are's Goals, Pledge and Letter headings are still `text-title` (67.84px
-    at 1440) while every other church band h2 is now the band grammar (Titling at
-    `text-h2`, 52px). The Task 6 ruling moved LinkCards and HeritageBand only; moving
-    these three is one class each.
+- **Deferred to the rollout: the RichText, Timeline and FAQ headings.** Their h2s are
+  still the Castoro reading face beside the Titling band grammar (`H2_DISPLAY`); by
+  ruling (2026-09-23) they move with the Visit and Beliefs pages in the identity rollout.
 - **Clean-up once `/` itself shows the composition.** Delete
   `src/pages/styleguide/home.astro`, the `'/styleguide/home'` line in `tests/routes.ts`
   and `scripts/data/fixtures/home.json`, then recapture parity.

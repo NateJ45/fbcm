@@ -45,6 +45,7 @@ import ArchFrame from '@/components/church/ArchFrame.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import SanityImage from '@/components/SanityImage.astro';
 import { goalLayout } from '@/lib/goal-layout';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import { splitStega } from '@/lib/preview-stega';
 import { slugify } from '@/lib/slugify';
 import type { ProjectedGoal, ProjectedGoalsSection } from '@/lib/pageBuilder.types';
@@ -157,7 +158,7 @@ const RADII = [15, 27, 40, 52];
         {(heading || intro) && (
           <div class="gx-intro">
             {heading && (
-              <h2 id={headingId} class="font-display text-title leading-none text-indigo">
+              <h2 id={headingId} class:list={[H2_DISPLAY, 'text-indigo']}>
                 {heading}
               </h2>
             )}
