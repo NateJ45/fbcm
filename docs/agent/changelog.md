@@ -10,6 +10,21 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Wedding identity: the wedding page, the gallery, the document list and the quote (`feat/wedding-identity`)._
+
+One branch of the overnight rollout (`docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md`),
+owning GalleryGrid, DocumentList and QuoteBlock. **GalleryGrid** now draws in two forms
+chosen by its photos (`src/lib/gallery-form.ts`): every photo named is a row of door
+arches on indigo-dark with each room's name under it; otherwise an arcade of lancets with
+no text. The caption field is retitled "Name (optional)", same field. **DocumentList** is an
+indigo band: one to four documents are cream door cards with a gold plate that says
+"Download PDF" or "Open on <host>" (`src/lib/document-doors.ts`), five or more a year
+register (the blog's publications). **QuoteBlock** is a gold band. `scripts/pages/wedding.mjs`
+is recomposed (dry run only): the window hero with three weddings, Ella Mae Lemen's own band
+off her staff document, the five rooms named in the church's words, Hanna and Nathan on gold,
+"Weddings here" as an arcade, and the documents as doors; its PDF uploader now refuses to
+upload without `--apply`. `/styleguide/wedding` renders the fixture. No schema field added.
+
 _2026-09-23 — Home identity: the home page composed from the church blocks (`feat/home-identity`)._
 
 The home page's six bands, ported from the approved prototype
