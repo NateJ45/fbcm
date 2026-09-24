@@ -32,6 +32,7 @@
 import SectionHeading from '@/components/SectionHeading.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { headlineScale } from '@/lib/headline-scale';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import CtaLink from '@/components/CtaLink.astro';
 import { getSiteSettings } from '@/lib/queries';
 import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
@@ -111,10 +112,7 @@ const giveCta = href
           />
         ) : (
           heading && (
-            <h2
-              id={headingId}
-              class="font-display text-h2 leading-[1.02] font-normal text-band-indigo"
-            >
+            <h2 id={headingId} class:list={[H2_DISPLAY, 'text-band-indigo']}>
               {heading}
             </h2>
           )

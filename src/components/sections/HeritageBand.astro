@@ -208,6 +208,7 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
               scale={level === 'h1' ? headlineScale(heading, { tall: false }) : undefined}
               align="left"
               tone="paper"
+              face="display"
             />
             {body && (
               <p class="mt-6 max-w-[30em] font-body text-[clamp(1.25rem,1rem+0.8vw,1.6875rem)] leading-[1.4] text-band-indigo italic">
@@ -326,6 +327,7 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
             scale={level === 'h1' ? headlineScale(heading, { tall: false }) : undefined}
             align="left"
             tone="band"
+            face="display"
           />
         </div>
 

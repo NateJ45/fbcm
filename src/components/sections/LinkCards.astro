@@ -55,7 +55,10 @@
 // decorative (alt=""): the card's visible title already names the link, and
 // the destination, not the picture, is what the link's name should say
 // (WCAG technique H2). The band's eyebrow sits above the heading in brand
-// gold (5.60:1 on the indigo, theme-tokens.test.ts).
+// gold (5.60:1 on the indigo, theme-tokens.test.ts). The heading is the one
+// church band h2 (H2_DISPLAY, src/lib/heading-grammar.ts, rule 17): it was a
+// size larger (text-title) until 2026-09-23 and read as a second grammar
+// beside What to Expect and Church Blog on the home page.
 //
 // THE GOALS (2026-09-23, Home identity plan, Task 2). When every pictured
 // card ALSO carries a `glyph`, the doors draw as the four goals: the band
@@ -79,6 +82,7 @@ import ArchFrame from '@/components/church/ArchFrame.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { surfaceClass } from '@/lib/surfaces';
 import { resolveCtaHref } from '@/lib/cta-href';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import { cardsPictured } from '@/lib/spare-images';
 import type { ProjectedLinkCard, SanityImageObject } from '@/lib/pageBuilder.types';
 
@@ -147,7 +151,7 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
       <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
         {eyebrow && <p class="mb-4 font-ui text-ui text-gold">{eyebrow}</p>}
         {heading && (
-          <h2 id={headingId} class="mb-[clamp(36px,4vw,64px)] font-display text-title leading-none">
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'mb-[clamp(36px,4vw,64px)]']}>
             {heading}
           </h2>
         )}

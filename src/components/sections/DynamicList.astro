@@ -26,6 +26,7 @@ import ArchFrame from '@/components/church/ArchFrame.astro'; // scaffold: journa
 import { splitStega } from '@/lib/preview-stega'; // scaffold: journal
 import type { ProjectedDynamicListSection } from '@/lib/pageBuilder.types';
 import { columnsClass } from '@/lib/layout-variants';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import { splitDurable, entryIsSermonPreview, weekOfEyebrow } from '@/lib/blog-derive'; // scaffold: journal
 
 type Props = {
@@ -165,10 +166,7 @@ const fallbackLabel: Record<string, string> = {
                 {eyebrow && headline && (
                   <p class="mb-4 font-ui text-ui font-medium text-band-brown">{eyebrow}</p>
                 )}
-                <h2
-                  id={headingId}
-                  class="font-display text-h2 leading-[1.02] font-normal text-band-indigo"
-                >
+                <h2 id={headingId} class:list={[H2_DISPLAY, 'text-band-indigo']}>
                   {headline || eyebrow}
                 </h2>
                 {subhead && (

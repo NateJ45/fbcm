@@ -54,6 +54,7 @@ import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import { getSiteSettings } from '@/lib/queries';
 import type {
   ProjectedCtaBlock,
@@ -237,7 +238,7 @@ const stickyPicture = hasPicture && validNotes.length === 0;
       {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
       {
         heading && (
-          <h2 id={headingId} class="font-display text-h2 leading-[1.02] font-normal text-gold">
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
             {heading}
           </h2>
         )
