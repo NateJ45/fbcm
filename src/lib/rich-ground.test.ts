@@ -79,6 +79,17 @@ test('the Beliefs order draws brown after the hero and indigo for the covenant',
   );
 });
 
+test('a closing band with a photograph is indigo, so the text band above it is not', () => {
+  const g = grounds([
+    b('richTextSection'),
+    b('richTextSection'),
+    b('ctaBandSection', { backgroundImage: { asset: { _ref: 'image-x' } } }),
+  ]);
+  assert.equal(g[1], 'brown');
+  const h = grounds([b('richTextSection'), b('richTextSection'), b('ctaBandSection')]);
+  assert.equal(h[1], 'indigo');
+});
+
 test('isBrandGround', () => {
   assert.equal(isBrandGround('paper'), false);
   assert.equal(isBrandGround(null), false);

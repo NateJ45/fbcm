@@ -56,6 +56,10 @@ function familyOf(row: Row | undefined, grounds: (RichGround | null)[], i: numbe
     const g = staffBandLook(typeof row.block.group === 'string' ? row.block.group : null).ground;
     return g === 'paper' ? 'paper' : g;
   }
+  // The closing band is gold, unless it carries a photograph: then it keeps
+  // the indigo panel over its scrim (FinalCta.astro).
+  if (t === 'ctaBandSection' && (row.block.backgroundImage as { asset?: unknown } | null)?.asset)
+    return 'indigo';
   return BY_TYPE[t] ?? 'paper';
 }
 
