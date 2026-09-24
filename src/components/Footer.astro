@@ -38,7 +38,9 @@
 //           rule 11), so it is a <ul>.
 //        b. Elsewhere, the editor's second column, the same way.
 //        c. Office: the office hours, the phone, the email. The street
-//           address only when the poster row above did not print it.
+//           address only when the poster row above did not print it. Then
+//           the church's accounts elsewhere as round icon buttons
+//           (socialLinksOf: Facebook, Instagram, YouTube).
 //   5. THE SIGN-OFF: the Praise & Proclaim mark (WatchwordMark) and the bottom
 //      line, "An American Baptist congregation in downtown Muncie since
 //      1859", over the Hannaford rendering drawn as faint gold line art along
@@ -62,16 +64,6 @@
 
 import { getImage } from 'astro:assets';
 import { site } from '@/data/site';
-import {
-  IconBrandInstagram,
-  IconBrandFacebook,
-  IconBrandLinkedin,
-  IconBrandPinterest,
-  IconBrandYoutube,
-  IconBrandTiktok,
-  IconBrandX,
-  IconLink,
-} from '@tabler/icons-react';
 import { Mail, Phone } from 'lucide-react';
 import NewsletterSignup from '@/components/NewsletterSignup';
 // THE SVG, NOT A PNG, and the same files the header uses.
@@ -90,6 +82,8 @@ import logoDarkAsset from '@/assets/logo-dark.svg';
 import renderingAsset from '@/assets/footer-rendering.webp';
 import GoalsRow from '@/components/church/GoalsRow.astro';
 import WatchwordMark from '@/components/church/WatchwordMark.astro';
+import SocialIcon from '@/components/SocialIcon';
+import { socialLinksOf, socialLinkLabel } from '@/lib/social-links';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
 import { telHref } from '@/lib/phone';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
@@ -111,12 +105,6 @@ interface NewsletterConfig {
   audienceId?: string | null;
 }
 
-interface SocialLink {
-  platform?: string;
-  url?: string;
-  label?: string;
-}
-
 /** One portable-text paragraph, as much of it as this footer needs. */
 interface PortableTextBlock {
   _key?: string;
@@ -135,7 +123,8 @@ interface Props {
         officeHours?: PortableTextBlock[] | null;
         socialInstagram?: string;
         socialFacebook?: string;
-        socialLinks?: SocialLink[] | null;
+        socialLinks?: { platform?: string; url?: string; label?: string }[] | null;
+        youtubeUrl?: string;
         tagline?: string;
         footerCredit?: string;
         footerCreditUrl?: string;
@@ -213,44 +202,15 @@ const poster = clockParts(posterTime);
 const footerCta = chrome.headerCta;
 const footerCtaIsExternal = /^https?:\/\//i.test(footerCta.href);
 
-// Social links: prefer the socialLinks array; fall back to the legacy
-// socialInstagram / socialFacebook fields so existing datasets keep working.
-// The footer's own "show social buttons" switch (Site Settings -> Navigation).
-// Unset means yes, so an untouched site is unchanged.
-const showFooterSocials = chrome.showFooterSocials;
-const rawSocialLinks = showFooterSocials ? (siteSettings?.socialLinks ?? []) : [];
-const ig = showFooterSocials ? (siteSettings?.socialInstagram ?? '') : '';
-const fb = showFooterSocials ? (siteSettings?.socialFacebook ?? '') : '';
-const socialLinksToRender: SocialLink[] =
-  rawSocialLinks.length > 0
-    ? rawSocialLinks.filter((l) => l?.url)
-    : [
-        ...(ig ? [{ platform: 'Instagram', url: ig }] : []),
-        ...(fb ? [{ platform: 'Facebook', url: fb }] : []),
-      ];
-
-// Map platform name to a Tabler icon component.
-function socialIcon(platform: string | undefined) {
-  switch (platform) {
-    case 'Instagram':
-      return IconBrandInstagram;
-    case 'Facebook':
-      return IconBrandFacebook;
-    case 'LinkedIn':
-      return IconBrandLinkedin;
-    case 'Pinterest':
-      return IconBrandPinterest;
-    case 'YouTube':
-      return IconBrandYoutube;
-    case 'TikTok':
-      return IconBrandTiktok;
-    case 'X':
-      return IconBrandX;
-    // Tabler has no Houzz brand icon; the generic link icon covers it.
-    default:
-      return IconLink;
-  }
-}
+// Social links: ONE derived list (src/lib/social-links.ts), shared with the
+// mobile menu and the Contact page's office door. The stored socialLinks
+// array (or the legacy socialInstagram / socialFacebook fields when it is
+// empty), plus YouTube derived from youtubeUrl, de-duplicated and ordered
+// Facebook, Instagram, YouTube. Gated on the footer's own "show social
+// buttons" switch (Site Settings -> Navigation); unset means yes. Each button
+// is icon-only, so its accessible name says whose account it is: "First
+// Baptist Church Muncie on Facebook", not a bare "Facebook".
+const socialLinksToRender = chrome.showFooterSocials ? socialLinksOf(siteSettings) : [];
 
 // Copyright auto-updates every build via new Date(). The credit line is a
 // SEPARATE concept that sits next to it in the thin bottom bar.
@@ -465,23 +425,19 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
           {
             socialLinksToRender.length > 0 && (
               <ul class="mt-m flex list-none gap-s p-0">
-                {socialLinksToRender.map((link) => {
-                  const Icon = socialIcon(link.platform);
-                  const ariaLabel = link.label ?? link.platform ?? 'Social link';
-                  return (
-                    <li>
-                      <a
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={ariaLabel}
-                        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-bg/30 text-bg transition-colors hover:border-gold hover:text-gold"
-                      >
-                        <Icon size={20} stroke={1.5} />
-                      </a>
-                    </li>
-                  );
-                })}
+                {socialLinksToRender.map((link) => (
+                  <li>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={socialLinkLabel(link, brandName)}
+                      class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-bg/30 text-bg transition-colors hover:border-gold hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                    >
+                      <SocialIcon platform={link.platform} />
+                    </a>
+                  </li>
+                ))}
               </ul>
             )
           }
