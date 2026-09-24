@@ -5,7 +5,7 @@
 // machine whatever its own time zone.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { sermonForUpcomingSunday, upcomingSunday } from './sunday-sermon.ts';
+import { previewForSunday, sermonForUpcomingSunday, upcomingSunday } from './sunday-sermon.ts';
 import type { RegisterEntry } from './blog-derive.ts';
 
 const preview = (over: Partial<RegisterEntry> = {}): RegisterEntry => ({
@@ -133,4 +133,36 @@ test('stega-encoded title, slug, date and category are all read clean', () => {
 test('a preview with no slug cannot be linked, so it is not shown', () => {
   const noSlug = preview({ slug: null });
   assert.equal(sermonForUpcomingSunday([noSlug], new Date('2026-09-24T16:00:00Z')), null);
+});
+
+// ── previewForSunday (the "Last Sunday" band, 2026-09-24) ─────────────────
+
+test('last Sunday’s recording pairs with the preview written for that Sunday', () => {
+  const sep20 = preview({
+    title: 'Unequal Opportunity Grace',
+    slug: { current: 'unequal-opportunity-grace' },
+    publishedAt: '2026-09-16T15:00:00Z', // Wednesday, for Sunday September 20
+    opening: 'This week we read from Matthew 20:1-16 (NIV).',
+  });
+  assert.deepEqual(previewForSunday([sep20, preview()], '2026-09-20'), {
+    href: '/post/unequal-opportunity-grace',
+    title: 'Unequal Opportunity Grace',
+    reading: 'Matthew 20:1-16',
+  });
+});
+
+test('no preview for that Sunday, or one that cannot be linked: null', () => {
+  assert.equal(previewForSunday([preview()], '2026-09-20'), null);
+  assert.equal(previewForSunday([preview({ slug: null })], '2026-09-27'), null);
+  assert.equal(previewForSunday(null, '2026-09-27'), null);
+  const notPreview = preview({ categories: [{ title: 'FBCM Events' }] });
+  assert.equal(previewForSunday([notPreview], '2026-09-27'), null);
+});
+
+test('the paired title is the post’s own, whole and unquoted', () => {
+  const long = preview({ title: 'Proclaim (The Way [Discipleship] Goal 2025-2026)' });
+  assert.equal(
+    previewForSunday([long], '2026-09-27')?.title,
+    'Proclaim (The Way [Discipleship] Goal 2025-2026)',
+  );
 });

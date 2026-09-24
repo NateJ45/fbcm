@@ -1,0 +1,242 @@
+---
+// Safe to edit by hand
+// "Last Sunday" on the home page (2026-09-24, `feat/last-sunday`): the most
+// recent Sunday service recording on the church's YouTube channel, with its
+// date, sermon title, reading, series and preacher, and a way to watch it.
+// When the church posted a sermon preview for that Sunday, the band pairs
+// with it: the post's own title and reading, and a second button to the post.
+//
+// NOT A PAGE-BUILDER BLOCK. The home page is composed in Sanity, and adding a
+// block there is a content write the owner approves, so this band is drawn
+// from code and SectionRenderer places it through its `insert` slot, before
+// the Church Blog rows (src/lib/band-insert.ts; the reasons are in
+// src/pages/index.astro). Like every church band it carries its own FIXED
+// ground: the brand indigo, the colour of the window hero and the journal's
+// opener, which sits between the cream "Our Building" band above and the
+// taupe blog band below and matches neither. Nothing about it enters the
+// cadence, and no block gains a colour field (CLAUDE.md rule 9).
+//
+// EVERYTHING IS DERIVED (rule 15): the recording, its Sunday, title, reading,
+// series and preacher come from the feed (src/lib/youtube-feed.ts), the pairing
+// from the post's publish date (src/lib/sunday-sermon.ts previewForSunday).
+// The band renders only when the build found a recording; a failed feed means
+// no band, never an empty one.
+//
+// A LITE FACADE, NOT AN EMBED. The picture is YouTube's own thumbnail from
+// i.ytimg.com, lazy, sized by srcset; clicking it (or the button) opens the
+// video on YouTube. No iframe, no player script, nothing loaded from YouTube
+// until the band nears the viewport, and then only one small image. The band
+// is several screens below the hero, so it can never be the LCP element.
+//
+// The heading is the one grammar every church band's h2 uses
+// (src/lib/heading-grammar.ts H2_DISPLAY), in paper on the indigo ground.
+import CtaLink from '@/components/CtaLink.astro';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
+import { sundayLabel, thumbnailUrl, type SundayRecording } from '@/lib/youtube-feed';
+
+interface Props {
+  recording: SundayRecording & { hasLarge: boolean };
+  /** The sermon preview written for that Sunday, when the church posted one. */
+  preview?: { href: string; title: string; reading: string } | null;
+  headingId: string;
+}
+
+const { recording, preview, headingId } = Astro.props as Props;
+
+const heading = 'Last Sunday';
+const title = preview?.title || recording.title;
+const reading = preview?.reading || recording.reading;
+const date = sundayLabel(recording.sunday);
+const meta = [reading, recording.series ? `${recording.series} series` : ''].filter(Boolean);
+
+// YouTube's fixed thumbnail sizes: 320x180 (16:9), 480x360 and 640x480 (4:3,
+// the picture letterboxed inside). The frame is exactly 16:9 and object-cover, so the
+// 4:3 sizes lose exactly their black bars. 640 is offered only when the build
+// saw it exists (YouTube makes it only for videos at 480p or more).
+const sizes = [
+  { name: 'mqdefault', w: 320 },
+  { name: 'hqdefault', w: 480 },
+  ...(recording.hasLarge ? [{ name: 'sddefault', w: 640 }] : []),
+] as const;
+const srcset = (format: 'jpg' | 'webp') =>
+  sizes
+    .map((s) => `${thumbnailUrl(recording.videoId, s.name as 'mqdefault', format)} ${s.w}w`)
+    .join(', ');
+// The frame: the whole content column on a phone, seven twelfths of the
+// 1400px container beside the words on a wide screen.
+const sizesAttr = '(min-width: 1440px) 720px, (min-width: 1024px) 52vw, calc(100vw - 40px)';
+
+const watch = {
+  label: 'Watch on YouTube',
+  linkType: 'external' as const,
+  externalUrl: recording.watchUrl,
+  openInNewTab: true,
+};
+---
+
+<section
+  class="ls-band bg-band-indigo text-bg"
+  aria-labelledby={headingId}
+  data-last-sunday={recording.sunday}
+  data-pagefind-ignore
+>
+  <div class="ls-grid mx-auto max-w-content px-gutter py-section-lg">
+    <div class="ls-head min-w-0">
+      <h2 id={headingId} class:list={[H2_DISPLAY, 'h-fit text-bg']} style={headingFit(heading)}>
+        <span class="h-fit-in">{heading}</span>
+      </h2>
+      <p class="mt-5 mb-0 font-ui text-ui font-semibold tracking-eyebrow text-gold uppercase">
+        <time datetime={recording.sunday}>{date}</time>
+      </p>
+    </div>
+    <div class="ls-body min-w-0">
+      <h3 class="mb-0 font-body text-h3 leading-[1.15] font-normal text-bg">
+        {
+          preview ? (
+            <a href={preview.href} class="ls-title">
+              {title}
+            </a>
+          ) : (
+            title
+          )
+        }
+      </h3>
+      {meta.length > 0 && <p class="mt-3 mb-0 font-body text-lg text-bg/80">{meta.join(' · ')}</p>}
+      {
+        recording.preacher && (
+          <p class="mt-1 mb-0 font-body text-lg text-bg/80">{recording.preacher}</p>
+        )
+      }
+      <div class="mt-9 flex flex-wrap gap-4">
+        <CtaLink cta={watch} variant="gold" onDark />
+        {
+          preview && (
+            <CtaLink
+              cta={{ label: 'Read the sermon preview' }}
+              fallbackHref={preview.href}
+              variant="outline"
+              onDark
+            />
+          )
+        }
+      </div>
+    </div>
+
+    {
+      /* The facade. A second link to the same video, for the pointer only:
+        the button above is the one keyboard and screen-reader users meet, so
+        this one is out of the tab order and hidden from the tree. */
+    }
+    <a
+      href={recording.watchUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="ls-thumb group"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <figure class="relative m-0" data-reveal="arch" data-arch="door">
+        <div class="arch arch-door ls-frame">
+          <picture>
+            <source type="image/webp" srcset={srcset('webp')} sizes={sizesAttr} />
+            <img
+              src={thumbnailUrl(recording.videoId, 'mqdefault')}
+              srcset={srcset('jpg')}
+              sizes={sizesAttr}
+              width="640"
+              height="360"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              class="h-full w-full object-cover"
+            />
+          </picture>
+          <span class="ls-play" aria-hidden="true">
+            <svg viewBox="0 0 64 64" width="64" height="64">
+              <circle cx="32" cy="32" r="31" fill="var(--color-gold)"></circle>
+              <path d="M26 20.5v23l18.5-11.5z" fill="var(--color-band-indigo)"></path>
+            </svg>
+          </span>
+        </div>
+        <svg class="arch-mould" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130"></path>
+        </svg>
+      </figure>
+    </a>
+  </div>
+</section>
+
+<style>
+  /* A phone reads heading and date, the picture, then the sermon and the
+     buttons. A wide screen puts the words in five twelfths at the left and
+     the picture in seven at the right, the heading above the sermon. */
+  .ls-grid {
+    display: grid;
+    grid-template-areas: 'head' 'thumb' 'body';
+    row-gap: clamp(28px, 4vw, 40px);
+  }
+  .ls-head {
+    grid-area: head;
+  }
+  .ls-body {
+    grid-area: body;
+  }
+  .ls-thumb {
+    grid-area: thumb;
+  }
+  @media (min-width: 1024px) {
+    .ls-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      grid-template-areas: 'head thumb' 'body thumb';
+      grid-template-rows: auto 1fr;
+      column-gap: clamp(40px, 5vw, 72px);
+      row-gap: 28px;
+    }
+    .ls-thumb {
+      align-self: center;
+    }
+  }
+  .ls-frame {
+    --arch-ratio: 16 / 9;
+  }
+  .ls-thumb {
+    display: block;
+    padding-top: 9px;
+  }
+  .ls-play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+  }
+  .ls-play svg {
+    width: clamp(52px, 6vw, 72px);
+    height: auto;
+    filter: drop-shadow(0 2px 10px rgb(0 0 0 / 0.35));
+    transition: transform 0.25s ease;
+  }
+  .ls-thumb:hover .ls-play svg {
+    transform: scale(1.08);
+  }
+  .ls-title {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+  .ls-title:hover {
+    text-decoration-thickness: 2px;
+  }
+  .ls-title:focus-visible {
+    outline: 2px solid var(--color-bg);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ls-play svg {
+      transition: none;
+    }
+  }
+</style>

@@ -29,17 +29,11 @@ export function upcomingSunday(now: Date): string | null {
 
 const clean = (v: string | null | undefined) => splitStega(String(v ?? '')).cleaned.trim();
 
-/**
- * The newest sermon preview whose Sunday is the coming Sunday, shaped for
- * the hero, or null. Entries arrive in any order; the newest publish wins
- * when two previews name the same Sunday.
- */
-export function sermonForUpcomingSunday(
+/** The newest sermon preview written for the Sunday `target` (YYYY-MM-DD), or null. */
+function newestPreviewFor(
   entries: readonly RegisterEntry[] | null | undefined,
-  now: Date,
-): SundaySermon | null {
-  const target = upcomingSunday(now);
-  if (!target) return null;
+  target: string,
+): RegisterEntry | null {
   let best: RegisterEntry | null = null;
   let bestAt = -Infinity;
   for (const e of entries ?? []) {
@@ -53,9 +47,53 @@ export function sermonForUpcomingSunday(
       bestAt = at;
     }
   }
-  const slug = clean(best?.slug?.current);
-  if (!best || !slug) return null;
+  return clean(best?.slug?.current) ? best : null;
+}
+
+/**
+ * The newest sermon preview whose Sunday is the coming Sunday, shaped for
+ * the hero, or null. Entries arrive in any order; the newest publish wins
+ * when two previews name the same Sunday.
+ */
+export function sermonForUpcomingSunday(
+  entries: readonly RegisterEntry[] | null | undefined,
+  now: Date,
+): SundaySermon | null {
+  const target = upcomingSunday(now);
+  if (!target) return null;
+  const best = newestPreviewFor(entries, target);
+  if (!best) return null;
   const parts = sermonParts(clean(best.title), readingOf(best.opening));
   if (!parts) return null;
-  return { sunday: target, href: `/post/${slug}`, ...parts };
+  return { sunday: target, href: `/post/${clean(best.slug?.current)}`, ...parts };
+}
+
+/** A past Sunday's preview, whole, for the home page's "Last Sunday" band. */
+export interface SundayPreview {
+  href: string;
+  /** The post's own title, stega-clean and unshortened. */
+  title: string;
+  /** The first reading in its opening paragraphs, or ''. */
+  reading: string;
+}
+
+/**
+ * The sermon preview the church posted for the Sunday `sunday` (YYYY-MM-DD),
+ * or null (2026-09-24, `feat/last-sunday`). The band pairs last Sunday's
+ * recording with it when there is one; there is no other link between a
+ * video and a post, so the Sunday is the join.
+ */
+export function previewForSunday(
+  entries: readonly RegisterEntry[] | null | undefined,
+  sunday: string,
+): SundayPreview | null {
+  const best = newestPreviewFor(entries, sunday);
+  if (!best) return null;
+  const title = clean(best.title);
+  if (!title) return null;
+  return {
+    href: `/post/${clean(best.slug?.current)}`,
+    title,
+    reading: readingOf(best.opening),
+  };
 }
