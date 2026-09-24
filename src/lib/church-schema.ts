@@ -273,8 +273,9 @@ export const httpUrl = (u: unknown): string => {
 };
 
 /** A URL's identity for de-duplication: no scheme, no `www.`, no trailing
- *  slash, host in lower case. The first spelling seen is the one kept. */
-const urlKey = (u: string): string =>
+ *  slash, host in lower case. The first spelling seen is the one kept.
+ *  Exported for src/lib/social-links.ts, which lower-cases the path on top. */
+export const urlKey = (u: string): string =>
   u
     .replace(/^https?:\/\/(www\.)?/i, '')
     .replace(/\/+$/, '')
