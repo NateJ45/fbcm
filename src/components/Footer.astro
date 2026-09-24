@@ -75,7 +75,7 @@ import menuWindowAsset from '@/assets/menu-window.jpg';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
 import { telHref } from '@/lib/phone';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
-import { staticSunday, timeOnly } from '@/lib/live-sunday';
+import { clockParts, staticSunday, timeOnly } from '@/lib/live-sunday';
 
 // Passed through Astro's pipeline for a cache-busted URL. No width variants and
 // no webp conversion: this is an SVG, so one file is sharp at every size and
@@ -201,6 +201,9 @@ const posterEyebrow = showPoster ? staticSunday(serviceTimeClean) : '';
 // The big line is the TIME only: the eyebrow above it already says Sundays,
 // and a poster does not say the same word twice.
 const posterTime = showPoster ? timeOnly(serviceTimeClean) : '';
+// Castoro Titling has no lower case, so the meridiem is set apart in the
+// reading face, as the hymn board sets it: "10:45 am", never "10:45 AM".
+const poster = clockParts(posterTime);
 
 // The Give button. The same resolved CTA the header draws, so the two cannot
 // disagree about where giving lives or what it is called.
@@ -313,7 +316,12 @@ const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold up
           {posterEyebrow}
         </p>
         <p class="mt-[clamp(10px,1.4vh,18px)] font-display text-[clamp(2rem,5.2vw,3.25rem)] leading-none font-normal tracking-[0.01em] uppercase">
-          {posterTime}
+          {poster.clock}
+          {poster.meridiem && (
+            <span class="ml-[.14em] font-body text-[.42em] tracking-normal normal-case italic">
+              {poster.meridiem}
+            </span>
+          )}
         </p>
         {streetLine && (
           <p class="mt-[clamp(12px,1.8vh,20px)] font-body text-lede font-normal text-bg/75 italic">

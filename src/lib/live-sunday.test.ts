@@ -7,7 +7,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 // The `.ts` extension is the repo's convention for these node:test suites (see
 // heading-accent.test.ts): node's ESM resolver does not add one.
-import { formatLiveSunday, staticSunday } from './live-sunday.ts';
+import { clockParts, formatLiveSunday, staticSunday } from './live-sunday.ts';
 
 test('a weekday names the coming Sunday', () => {
   assert.equal(
@@ -26,4 +26,17 @@ test('the static form never carries a date', () => {
 });
 test('a bare time is accepted', () => {
   assert.equal(staticSunday('10:45 am'), 'Sundays · Worship at 10:45 am');
+});
+
+// The footer's closing band sets the clock in the titling face (capitals only)
+// and the meridiem in the reading face, so "am" reads lower case there too.
+test('clockParts splits the meridiem off, lower-case and without dots', () => {
+  assert.deepEqual(clockParts('10:45 am'), { clock: '10:45', meridiem: 'am' });
+  assert.deepEqual(clockParts('10:45 AM'), { clock: '10:45', meridiem: 'am' });
+  assert.deepEqual(clockParts('6:30 P.M.'), { clock: '6:30', meridiem: 'pm' });
+  assert.deepEqual(clockParts('10am'), { clock: '10', meridiem: 'am' });
+});
+test('clockParts leaves a time with no meridiem whole', () => {
+  assert.deepEqual(clockParts('10:45'), { clock: '10:45', meridiem: '' });
+  assert.deepEqual(clockParts('Mid-morning'), { clock: 'Mid-morning', meridiem: '' });
 });
