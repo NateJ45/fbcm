@@ -41,6 +41,7 @@ import GoalsBand from '@/components/sections/GoalsBand.astro';
 import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
+import { richGrounds, isBrandGround } from '@/lib/rich-ground';
 import { splitStega } from '@/lib/preview-stega';
 import { assignSpareImages } from '@/lib/spare-images';
 import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
@@ -101,6 +102,14 @@ let blocks = sections as RenderedBlock[];
 blocks = resolveMinistryBands(sections as PageBuilderBlock[]);
 // scaffold:end
 const rows = classifySections<RenderedBlock>(blocks, idPrefix);
+
+// THE TEXT BANDS' GROUNDS, DERIVED (2026-09-24, the Beliefs identity pass;
+// src/lib/rich-ground.ts). A text band on the cadence's muted turn is a brand
+// band, never the colour of the band beside it. A brand band needs no hairline
+// divider on either side of it: the change of ground is the division.
+const grounds = richGrounds(rows as Parameters<typeof richGrounds>[0]);
+const besideBrandBand = (index: number): boolean =>
+  isBrandGround(grounds[index]) || isBrandGround(grounds[index - 1]);
 
 // THE SPARE-IMAGE POOL, computed ONCE for the whole page.
 //
@@ -281,7 +290,9 @@ const wrapAttrs = (key: string | undefined) =>
 {
   rows.map(({ block: s, surface, insertDividerBefore, headingId }, blockIndex) => (
     <>
-      {insertDividerBefore && !afterFullBleed(blockIndex) && <SectionDivider />}
+      {insertDividerBefore && !afterFullBleed(blockIndex) && !besideBrandBand(blockIndex) && (
+        <SectionDivider />
+      )}
 
       <Wrap
         id={uniqueAnchor(s, headingId)}
@@ -346,6 +357,7 @@ const wrapAttrs = (key: string | undefined) =>
             width={s.width}
             align={s.align}
             surface={surface ?? 'background'}
+            ground={grounds[blockIndex] ?? 'paper'}
             headingId={headingId}
           />
         ) : s._type === 'imageTextSection' ? (

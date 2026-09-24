@@ -16,15 +16,22 @@
 // edge, and the body is laid out from its own shape by src/lib/rich-shape.ts:
 // h3 groups become ruled columns, lists become ruled rows (a list whose items
 // share their opening words is set as a said text), many short statements
-// become a two-column register, long prose goes into balanced columns. The
+// become a two-column register, long prose is one reading measure. The
 // approved prototype is docs/superpowers/prototypes/2026-09-22-richtext-and-photos/richtext/.
 // `width` and `align` stay in the schema for old documents and have no effect.
+//
+// THE GROUND (2026-09-24, the Beliefs identity pass). SectionRenderer hands
+// the band a `ground` derived by src/lib/rich-ground.ts: 'paper' is the
+// cadence surface as before; 'indigo', 'brown' or 'taupe' is a full-width
+// brand band (rollout rules 1 and 2), re-inked by the .rt-band rules in
+// RichBody.astro. No colour field anywhere (CLAUDE.md rule 9).
 import SectionHeading from '@/components/SectionHeading.astro';
 import RichBody from '@/components/sections/RichBody.astro';
 import { surfaceClass } from '@/lib/surfaces';
 import { classifyRichText } from '@/lib/rich-shape';
 import PortableText from '@/components/PortableText';
 import { toPt } from '@/lib/span-split';
+import type { RichGround } from '@/lib/rich-ground';
 
 interface Props {
   eyebrow?: string;
@@ -35,6 +42,8 @@ interface Props {
   width?: 'normal' | 'narrow';
   align?: 'left' | 'center';
   surface?: 'background' | 'muted';
+  /** Derived by rich-ground.ts; 'paper' draws the cadence surface. */
+  ground?: RichGround;
   headingId: string;
 }
 
@@ -45,10 +54,11 @@ const {
   headingAccent,
   body,
   surface = 'background',
+  ground = 'paper',
   headingId,
 } = Astro.props as Props;
 
-const bg = surfaceClass(surface);
+const bg = ground === 'paper' ? surfaceClass(surface) : `rt-band rt-on-${ground}`;
 const hasHead = !!(heading || eyebrow);
 const layout = classifyRichText(body, { hasHead });
 const measure = layout.pieces[0];
@@ -58,6 +68,7 @@ const measure = layout.pieces[0];
   class={bg}
   aria-labelledby={heading ? headingId : undefined}
   data-rich-shape={layout.shape}
+  data-ground={ground === 'paper' ? undefined : ground}
 >
   <div
     class:list={[
