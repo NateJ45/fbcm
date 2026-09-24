@@ -57,9 +57,12 @@ name: Sanity dataset backup
 # That is what makes it safe to commit before any of them exist.
 # workflow_dispatch stays on, so a manual run always works.
 
+# FBCM: enabled 2026-09-24. SANITY_PROJECT_ID and BACKUP_R2_BUCKET
+# (ncs-backups, shared with the family) are set as repo variables; the two
+# secrets are Nathan's to set. Until they exist the gate skips with a warning.
 on:
-  # schedule:
-  #   - cron: '0 7 * * *' # daily 07:00 UTC
+  schedule:
+    - cron: '0 7 * * *' # daily 07:00 UTC
   workflow_dispatch:
 
 jobs:
