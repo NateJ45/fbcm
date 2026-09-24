@@ -314,9 +314,11 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
   {
     /* The Hannaford rendering along the bottom edge: gold line art, masked
        from the baked drawing. Decorative, hidden from the tree, and it takes
-       no space: absolutely positioned under everything else. */
+       no space: absolutely positioned under everything else. It inks in,
+       slowly, the first time it scrolls into view (data-reveal="ink",
+       2026-09-24; still under prefers-reduced-motion). */
   }
-  <div class="footer-rendering" aria-hidden="true" style={renderingStyle}>
+  <div class="footer-rendering" aria-hidden="true" data-reveal="ink" style={renderingStyle}>
     <div class="footer-rendering-ink"></div>
   </div>
 

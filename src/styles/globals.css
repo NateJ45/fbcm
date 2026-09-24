@@ -1867,6 +1867,64 @@ body::before {
   [data-reveal='mark']:not(.is-visible) .mark-rays path {
     stroke-dashoffset: 80;
   }
+  /* THE DRAW (2026-09-24): a building glyph's lines draw themselves, one
+     after another, the first time it scrolls into view; the dotted pour in the
+     basin fades in last. Every stroke has pathLength="1", so a dash of 1.01
+     covers the whole stroke whatever its real length. EXCEPT that the glyphs
+     keep a constant 2px line (vector-effect: non-scaling-stroke), and with
+     that set, both Chromium and WebKit lay the dash out on SCREEN, where a
+     glyph drawn at twice its 48-unit viewBox is twice as long: a 1.01 dash
+     then stops halfway (measured 2026-09-24, and it is why the arch mould,
+     stretched by preserveAspectRatio="none", still fades rather than draws).
+     So BaseLayout's reveal script measures each stroke's screen scale once
+     (--k, from getScreenCTM) and the dash is 1.01 of THAT. Once drawn
+     (.is-drawn) the dash comes off, so a later resize can never cut a line
+     short. The svg stays opaque and in place: never a layout shift, and the
+     observer always has a box to see. will-change is dropped because a page
+     can carry dozens of glyphs and none of them needs its own layer. */
+  [data-reveal='draw'],
+  [data-reveal='ink'] {
+    opacity: 1;
+    translate: none;
+    will-change: auto;
+  }
+  [data-reveal='draw']:not(.is-drawn) > :not(.glyph-dots) {
+    stroke-dasharray: calc(1.01 * var(--k, 1)) calc(2 * var(--k, 1));
+    transition: stroke-dashoffset 1.1s cubic-bezier(0.45, 0, 0.2, 1);
+  }
+  [data-reveal='draw']:not(.is-visible) > :not(.glyph-dots) {
+    stroke-dashoffset: calc(1.01 * var(--k, 1));
+  }
+  [data-reveal='draw']:not(.is-drawn) > :nth-child(2) {
+    transition-delay: 0.14s;
+  }
+  [data-reveal='draw']:not(.is-drawn) > :nth-child(3) {
+    transition-delay: 0.28s;
+  }
+  [data-reveal='draw']:not(.is-drawn) > :nth-child(4) {
+    transition-delay: 0.42s;
+  }
+  [data-reveal='draw']:not(.is-drawn) > :nth-child(n + 5) {
+    transition-delay: 0.56s;
+  }
+  [data-reveal='draw'] > .glyph-dots {
+    transition: opacity 0.6s 0.9s;
+  }
+  [data-reveal='draw']:not(.is-visible) > .glyph-dots {
+    opacity: 0;
+  }
+  /* THE INK (2026-09-24): the Hannaford rendering is a raster, so it is not
+     drawn; it inks in. Slowly: the fade is the whole of it, and a pencil
+     drawing (Home's Our Building band) also comes up from pale to its full
+     grade (HeritageBand.astro). */
+  [data-reveal='ink'] > * {
+    transition:
+      opacity 2.4s cubic-bezier(0.4, 0, 0.2, 1),
+      filter 2.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  [data-reveal='ink']:not(.is-visible) > * {
+    opacity: 0 !important;
+  }
   /* The letter's gold underline draws in under the signature. */
   [data-reveal='sign'] path {
     stroke-dasharray: 420;
@@ -3104,6 +3162,18 @@ body::before {
   to {
     opacity: 1;
     translate: 0 0;
+  }
+}
+
+/* The Hannaford rendering inks in once the rows have risen (2026-09-24). */
+@media (prefers-reduced-motion: no-preference) {
+  .menu-rendering {
+    animation: menu-ink 1.8s 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+}
+@keyframes menu-ink {
+  from {
+    opacity: 0;
   }
 }
 

@@ -594,12 +594,35 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
             // No motion / no observer support: just show everything immediately.
             reveals.forEach((el) => el.classList.add('is-visible'));
           } else {
+            // The glyph draw (2026-09-24): each stroke's dash is sized to its
+            // length ON SCREEN (--k, globals.css "THE DRAW" says why), read
+            // once here, all reads before any write. A glyph with no box yet
+            // (display: none) keeps the default, which is only ever wrong for
+            // one drawn more than twice its size.
+            const draws = document.querySelectorAll<SVGSVGElement>(
+              'svg[data-reveal="draw"]:not(.is-visible)',
+            );
+            const scales: [SVGGraphicsElement, number][] = [];
+            draws.forEach((svg) => {
+              for (const child of Array.from(svg.children) as SVGGraphicsElement[]) {
+                const m = child.getScreenCTM?.();
+                const k = m ? Math.hypot(m.a, m.b) : 0;
+                if (k > 0) scales.push([child, k]);
+              }
+            });
+            for (const [child, k] of scales) child.style.setProperty('--k', k.toFixed(3));
             const observer = new IntersectionObserver(
               (entries) => {
                 for (const entry of entries) {
                   if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
+                    const el = entry.target;
+                    el.classList.add('is-visible');
+                    observer.unobserve(el);
+                    // Once the last stroke has landed the dash comes off, so a
+                    // later resize can never leave a line part-drawn.
+                    if (el.getAttribute('data-reveal') === 'draw') {
+                      setTimeout(() => el.classList.add('is-drawn'), 2000);
+                    }
                   }
                 }
               },
