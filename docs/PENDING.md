@@ -870,8 +870,12 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   2026-09-22), and they are data, not this page's composition, so this pass leaves
   them; if the rollout's no-reuse rule is to hold on /ministries too, the fix is new
   photos on the ministry documents or on those two pages.
-- **The Children band is still a full-bleed ground photo** (ImageText's shape pass;
-  the VBS photo reads as a wide view). ImageText belongs to the Visit branch.
+- **The goal index adds ~1.4 KB of scoped CSS to every page that renders sections**
+  (Astro bundles a component's styles wherever SectionRenderer is imported): measured
+  against main at 3334ee3, section pages 143,812 -> 145,475 B inline, /blog 148,902 ->
+  150,565 B, posts 131,263 -> 131,521 B. Every page still inlines (rule 20), but /blog's
+  inline sheet is over the 147,456 B figure the plan quotes; worth a look when the
+  wave's sheets are measured together.
 - **Clean-up once `/ministries` itself shows the composition.** Delete
   `src/pages/styleguide/ministries.astro`, the `'/styleguide/ministries'` line in
   `tests/routes.ts` and `scripts/data/fixtures/ministries.json`, then recapture parity.
