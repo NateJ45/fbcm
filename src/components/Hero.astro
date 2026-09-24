@@ -233,8 +233,9 @@ const hasImage = effectiveImages.length > 0;
 //      takes, and a top crop keeps them whole. It is a better default, not a
 //      substitute for the hotspot.
 //
-// Only the split layout does this. The full-bleed hero is a background behind
-// text and is handled by HeroBackground.astro.
+// The full-bleed hero honours the hotspot too (since 2026-09-24), in
+// HeroBackground.astro through src/lib/hero-frames.ts heroObjectPosition, but
+// keeps the centre, not the top, when there is none.
 const splitFrame = effectiveImages[0];
 const splitHotspot = splitFrame?.hotspot;
 const splitObjectPosition =
@@ -466,7 +467,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
   >
     {/* Background: single static image or a cross-fading slideshow (2+ images),
         plus the one readability gradient. See HeroBackground.astro. */}
-    <HeroBackground images={effectiveImages} />
+    <HeroBackground images={effectiveImages} heightFraction={size === 'tall' ? 1 : 0.72} />
 
     {/* Content sits at the bottom of the section thanks to justify-end on the
         section itself. hero-entry-stagger rides on this wrapper, so its direct

@@ -9,7 +9,7 @@
 // photos are not reused from Who We Are, the history list ends in the
 // present, no captions, brand colours only. The page reads:
 //
-//   heroSection          unchanged: the tower slideshow, "Praise and proclaim."
+//   heroSection          "Praise and proclaim." over five frames of people (2026-09-24)
 //   sundayTimesSection   What to Expect: the hymn board on brown
 //   linkCardsSection     Our Goals: the four goals as arched doors, with glyphs
 //   heritageBandSection  Our Building: the rendering, the dates, and today
@@ -57,9 +57,13 @@
 //    Expect: the greeter at the sanctuary door is The Way's first step on Who
 //    We Are, so (Nathan, 2026-09-23) the wide arch carries the teenagers at a
 //    table with a Bible and a card game instead, a photo on no other page and
-//    not one of the Visit prototype's picks. The hero
-//    frames are the old page's own `file` entries, resolved from this
-//    checkout's asset cache, so the hero is byte-for-byte the live one. The
+//    not one of the Visit prototype's picks. Since 2026-09-24 (the hero people
+//    pass, Nathan's ruling) the hero frames are people rather than the
+//    building, and the teenagers moved INTO the hero, so What to Expect's wide
+//    arch now carries the girls at a fellowship dinner (also Visit's hero
+//    frame: a different page, so allowed) and no photo shows twice on Home.
+//    The hero's hotspots live in scripts/data/page-images.json with each
+//    frame, and the full hero honours them (src/lib/hero-frames.ts). The
 //    archive photograph carries a Sanity `crop` that cuts the road in its
 //    lower quarter.
 //
@@ -103,10 +107,12 @@ export default {
   ],
 
   // Page-images manifest keys of the photos on this page that show an
-  // identifiable child. hero-children is the hero's third frame.
+  // identifiable child. hero-teens and hero-chancel-steps are hero frames 2
+  // and 4.
   photoConsent: [
-    'hero-children',
-    'home-expect-table',
+    'hero-teens',
+    'hero-chancel-steps',
+    'home-expect-dinner',
     'home-expect-children',
     'home-goal-way',
     'home-goal-witness',
@@ -198,25 +204,29 @@ export default {
       return { ...img, hotspot: hotspot(x, y), ...extra };
     };
 
-    // -- 1. Hero, unchanged ---------------------------------------------------
-    // Tower first because it loads first and it is the frame the church is
-    // known by; then the sanctuary, the children at the arch, the congregation
-    // and the building corner. Each manifest entry already carries its alt.
+    // -- 1. Hero: people (2026-09-24) -------------------------------------------
+    // Five frames of the church at work, in Nathan's approved order: the
+    // worship team (frame 1, the LCP image), teenagers over cards, communion
+    // being prepared, children on the chancel steps with Kendall, and the
+    // congregation from the balcony. Each manifest entry carries its alt and
+    // its hotspot, placed so the faces land in the clear upper right while the
+    // words sit bottom left. The old frames' keys stay in the manifest: the
+    // tower feeds the 404, the sanctuary Wedding, the building Contact.
     const frameKey = keyer('frame');
     const frames = [];
     for (const key of [
-      'hero-tower',
-      'hero-sanctuary',
-      'hero-children',
-      'hero-congregation',
-      'hero-building',
+      'hero-worship',
+      'hero-teens',
+      'hero-communion',
+      'hero-chancel-steps',
+      'hero-balcony',
     ]) {
       const img = await images.image(key);
       if (!img) throw new Error(`home.mjs: no photo in the manifest for "${key}"`);
       frames.push({ ...img, _key: frameKey() });
     }
 
-    // Unchanged from the plan 2b page: five frames cross-fade, the Sunday, the
+    // As on the plan 2b page: five frames cross-fade, the Sunday, the
     // street and the livestream as facts. Built first, so its two buttons keep
     // the keys the live page already has (cta-1, cta-2).
     const hero = {
@@ -440,8 +450,8 @@ export default {
       pageBuilder: [
         hero,
 
-        // 2. What to Expect: the hymn board on brown. Teenagers round a table
-        //    (a Bible, a card game) in the wide arch, two children in the lancet.
+        // 2. What to Expect: the hymn board on brown. Girls at a fellowship
+        //    dinner in the wide arch, two children in the lancet.
         {
           _type: 'sundayTimesSection',
           _key: 'home-sundays',
@@ -466,7 +476,7 @@ export default {
           ],
           notes: [nursery, communion],
           photos: [
-            await photo('home-expect-table', 0.58, 0.4, { _key: 'expect-table' }),
+            await photo('home-expect-dinner', 0.55, 0.35, { _key: 'expect-dinner' }),
             await photo('home-expect-children', 0.44, 0.5, { _key: 'expect-children' }),
           ],
           cta: expectCta,

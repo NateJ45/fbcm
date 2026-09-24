@@ -10,6 +10,33 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — The home hero shows people, and two hero fixes (`feat/hero-people`)._
+
+**People in the hero.** Nathan approved replacing the building frames with five
+photographs of the church at work: the worship team (frame 1, the LCP image), teenagers
+over cards, communion being prepared, children on the chancel steps with Kendall, and
+the congregation from the balcony. They are new keys in `scripts/data/page-images.json`
+(`hero-worship`, `hero-teens`, `hero-communion`, `hero-chancel-steps`, `hero-balcony`),
+each with its alt, its consent flag and, new, a `hotspot` that `page-images.mjs` writes
+as a Sanity hotspot. The old keys stay (the tower feeds the 404, the sanctuary Wedding,
+the building Contact). What to Expect's wide arch moved from the teenagers (now in the
+hero) to the girls at a fellowship dinner, so no photo appears twice on Home; the
+spare-image pool lends nothing on Home (checked on the fixture render). A dry run now
+reports a photo it would upload, with a placeholder ref, instead of stopping the plan.
+
+**The full hero honours hotspots.** Every frame was cropped dead centre, which put faces
+under the headline. `heroObjectPosition` turns a frame's hotspot (mapped through any crop)
+into `object-position`, as the split hero already did; no hotspot keeps the centre.
+
+**Phone frames were blurry.** `sizes="100vw"` made a 390x844 DPR 3 phone fetch the 1200
+variant for a picture cover draws 1271 CSS px wide (3813 device px). `heroSizes` states
+the covered width with a media condition, so that phone now fetches 2400; a 1440 desktop
+still gets `100vw` and the same 1600 (DPR 1) or 2400 (DPR 2) variant as before.
+
+**Library labels.** `81f7ac_0d2d` is children on the chancel steps (not teens on outdoor
+steps), `08181c_5d24` is a man handing a woman a listening headset (not a greeting), and
+the Ministries youth photo's alt says the teens are singing.
+
 _2026-09-24 — Light-only, Watch live, the menu's groups, the designer credit, and the menu test flake (`feat/light-only`)._
 
 **Light-only.** Dark mode left Home practically unchanged (its identity is fixed

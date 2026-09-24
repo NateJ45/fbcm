@@ -12,7 +12,7 @@ test('a description that names a person is people', () => {
     'The handbell choir rehearsing',
     'A bride and groom kiss on the church steps',
     'Kendall Ellis smiles for a staff portrait',
-    'Two teens speaking to the youth group on stage',
+    'Two teens singing into microphones in front of the youth group',
   ]) {
     assert.equal(photoSubject(alt), 'people', alt);
   }

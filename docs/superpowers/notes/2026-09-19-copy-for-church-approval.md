@@ -27,8 +27,9 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 ### Photos of children
 
-- hero-children: Children gathered under the sanctuary arch
-- home-expect-table: Teenagers laughing around a table over a card game, a Bible beside the cards.
+- hero-teens: Teenagers laughing together over a card game, a Bible on the table
+- hero-chancel-steps: Children sit on the chancel steps around Kendall as she reads to them
+- home-expect-dinner: A group of girls of different ages seated around a round table set with a blue tablecloth, plates and cups, smiling for the camera.
 - home-expect-children: Two little girls smiling, cheek to cheek.
 - home-goal-way: Four teenagers reading open Bibles together around a table.
 - home-goal-witness: Teens and adults lying together on snow tubes on a snowy hill, smiling for the camera.
@@ -157,7 +158,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### Photos of children
 
 - ministry-children-vbs: Children singing on stage at Vacation Bible School
-- ministries-youth: Two teens speaking to the youth group on stage
+- ministries-youth: Two teens singing into microphones in front of the youth group
 - ministries-hero-palms: Children holding palm branches in a stone hallway, warm light coming through the leaded windows.
 - ministries-hero-youth: Teenagers laughing around a table in the youth room, cards in hand and a Bible on the table.
 
