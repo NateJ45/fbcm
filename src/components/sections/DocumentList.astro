@@ -65,6 +65,7 @@ const sorted = sortDocsByYearDesc(
   docs.filter((d): d is ListedDocument & { title: string } => !!d?.title),
 );
 const form = documentForm(sorted.length);
+const anyYear = sorted.some((d) => typeof d.year === 'number');
 const groups = form === 'register' ? groupDocsByYear(sorted) : [];
 
 // The action link: a gold UI-caps text link with a trailing arrow that nudges
@@ -91,7 +92,13 @@ const ACTION_LINK =
         )}
 
         {form === 'rows' ? (
-          <ol class="mt-[clamp(36px,4vw,64px)] border-t border-gold/35" role="list">
+          <ol
+            class:list={[
+              'mt-[clamp(36px,4vw,64px)] border-t border-gold/35',
+              !anyYear && 'dl-no-years',
+            ]}
+            role="list"
+          >
             {sorted.map((doc) => {
               const action = docAction(doc);
               const hasYear = typeof doc.year === 'number';
@@ -198,6 +205,13 @@ const ACTION_LINK =
     grid-template-columns: 7rem minmax(0, 1fr) auto;
     column-gap: clamp(20px, 2.5vw, 40px);
     align-items: baseline;
+  }
+  /* No document in the list has a year (Wedding): no empty year column. */
+  .dl-no-years .dl-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .dl-no-years .dl-row-year {
+    display: none;
   }
   @media (max-width: 640px) {
     .dl-row {
