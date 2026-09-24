@@ -39,6 +39,8 @@ export const routes: string[] = [
   '/styleguide/who-we-are', // scaffold: church
   // And the composed home page (src/pages/styleguide/home.astro, 2026-09-23).
   '/styleguide/home', // scaffold: church
+  // And the composed Visit page (src/pages/styleguide/visit.astro, 2026-09-24).
+  '/styleguide/visit', // scaffold: church
   // The plan-2b pages are listed here as they land.
   '/visit',
   '/who-we-are',

@@ -38,18 +38,23 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 ### New sentences
 
-- Here is what a Sunday morning looks like, from the parking lot to the last hymn. (hero lead)
-- Nursery care is in room 104 and the family room is 105. (timeline, the 10:45 row: the spec’s ruling on the two rooms, and on the church’s confirm list)
+- Here is what a Sunday morning looks like, from the parking lot to the last hymn. (hero lead, unchanged from the plan 2b page)
+- Nursery care is in room 104 and the family room is 105. (the Worship step: the spec’s ruling on the two rooms, and on the church’s confirm list)
 - First Baptist Church Muncie gathers for worship at 10:45 am every Sunday at 309 East Adams Street in downtown Muncie. (search description)
 
 ### Edits to the church’s own text
 
-- (none: their text is cut, never reworded)
+- Joined: "At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have." The capture breaks the second sentence over two lines; it is one paragraph here. (Welcome and Check-In.)
+- Joined: the circular-drive door's directions are four of the accessibility page's sentences in two paragraphs, as on the plan 2b page; the "Entrance" label and "The sidewalk leads to the wheelchair-accessible entrance." are not used. (Doors, parking and access.)
+- Joined: "Donut [Semi-] Hour (Fellowship Hall)" is the capture's two lines on one. (Fellowship.)
 
 ### Photos of children
 
-- visit-children: Two girls in front of a stained glass window
-- visit-children-steps: Children sit on the chancel steps around Kendall as she reads to them
+- visit-hero-dinner: A group of girls of different ages seated around a round table set with a blue tablecloth, plates and cups, smiling for the camera.
+- visit-step-welcome: Three teenage girls sit together in a pew, each holding an open bible, smiling for the camera.
+- visit-step-school: Children playing a group game with a long ribbon or hoop in a classroom.
+- visit-children-floor: Children are seen from directly above, gathered around strips of yellow tape laid out on the floor for a group game.
+- visit-children-baby: A sleeping newborn baby wrapped in a pink crocheted blanket, close-up portrait.
 
 ## /who-we-are
 
