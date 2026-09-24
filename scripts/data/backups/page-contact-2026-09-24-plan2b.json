@@ -1,0 +1,472 @@
+{
+  "_createdAt": "2026-09-20T04:15:17Z",
+  "_id": "page-contact",
+  "_rev": "Yg84KDHscU4NDc84ofNZaO",
+  "_type": "page",
+  "_updatedAt": "2026-09-23T03:32:35Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "contact-hero",
+      "_type": "heroSection",
+      "eyebrow": "Contact",
+      "facts": [
+        {
+          "_key": "fact-1",
+          "_type": "heroFact",
+          "label": "Phone",
+          "value": "{phone}"
+        },
+        {
+          "_key": "fact-2",
+          "_type": "heroFact",
+          "label": "Email",
+          "value": "{email}"
+        },
+        {
+          "_key": "fact-3",
+          "_type": "heroFact",
+          "label": "Address",
+          "value": "{address}"
+        }
+      ],
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "The corner of the church at Adams and Jefferson",
+          "asset": {
+            "_ref": "image-b25b1dd66a7db3b86f1716653999abff376e4533-2400x2574-jpg",
+            "_type": "reference"
+          }
+        }
+      ],
+      "headline": "Get in touch.",
+      "layout": "split",
+      "primaryCta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "externalUrl": "https://fbcmuncie.churchcenter.com/people/forms/159198",
+        "label": "Fill in a visitor card",
+        "linkType": "external",
+        "openInNewTab": true
+      },
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "tel:7652847749",
+        "label": "Call the office",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "size": "short"
+    },
+    {
+      "_key": "contact-hours",
+      "_type": "hoursSection",
+      "eyebrow": "Hours",
+      "heading": "Office and pastors' hours"
+    },
+    {
+      "_key": "contact-life-update",
+      "_type": "richTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "life-update"
+      },
+      "body": [
+        {
+          "_key": "lu-intro-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-intro-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Do you need to share something with the church such as:"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Birth Announcement"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Notification of Death"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Special Birthday"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-4s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Special Anniversary"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-5",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-5s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Engagement/Marriage Announcement"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-6",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-6s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Retirement"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-7",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-7s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Non-Emergency Hospital Admission / Surgical Procedure"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-8",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-8s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Graduation"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-9",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-9s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Decision of Faith"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-10",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-10s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Phone Number / Address Change?"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "lu-follow-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "lu-follow-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Tell us and a member of the pastoral team will follow up. "
+            },
+            {
+              "_key": "lu-follow-1s2",
+              "_type": "span",
+              "marks": [
+                "lu-follow-1l1"
+              ],
+              "text": "Share a life update"
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "lu-follow-1l1",
+              "_type": "link",
+              "href": "https://fbcmuncie.churchcenter.com/people/forms/159897"
+            }
+          ],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Share a life update",
+      "heading": "Tell the church"
+    },
+    {
+      "_key": "contact-pastors",
+      "_type": "imageTextSection",
+      "body": [
+        {
+          "_key": "mp-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mp-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The pastoral staff are in and out of the office throughout the week with various appointments, visitations, study, and meetings."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mp-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mp-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The Co-Pastors have set aside Tuesdays as office hours for those seeking meetings at the church. You can schedule a time in their office hours below."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mp-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mp-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Tuesday Office Hours | 9:00 a.m. - 12:00 p.m. and 1:00 p.m - 5:00 p.m."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mp-d-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mp-d-1s1",
+              "_type": "span",
+              "marks": [
+                "mp-d-1l1"
+              ],
+              "text": "Schedule with Jonathan Balmer"
+            },
+            {
+              "_key": "mp-d-1s2",
+              "_type": "span",
+              "marks": [],
+              "text": " · "
+            },
+            {
+              "_key": "mp-d-1s3",
+              "_type": "span",
+              "marks": [
+                "mp-d-1l2"
+              ],
+              "text": "Schedule with Kendall Ellis"
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "mp-d-1l1",
+              "_type": "link",
+              "href": "https://calendar.app.google/yfMeekvgCxY7x2mU6"
+            },
+            {
+              "_key": "mp-d-1l2",
+              "_type": "link",
+              "href": "https://calendar.app.google/oAVyoHDFut24sJtTA"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "mp-biz",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mp-bizs1",
+              "_type": "span",
+              "marks": [],
+              "text": "For Business, Billing, or Related Needs"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "mp-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mp-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "{phone}"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "mp-f-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "mp-f-1s1",
+              "_type": "span",
+              "marks": [
+                "mp-f-1l1"
+              ],
+              "text": "{email}"
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "mp-f-1l1",
+              "_type": "link",
+              "href": "mailto:office@fbcmuncie.org"
+            }
+          ],
+          "style": "normal"
+        }
+      ],
+      "eyebrow": "Meet with a pastor",
+      "heading": "Tuesdays with Kendall or Jonathan",
+      "image": {
+        "_type": "image",
+        "alt": "Kendall Ellis, Co-Pastor",
+        "asset": {
+          "_ref": "image-7c2f716730179bcbecc59a170ff97f8c39b39f25-2806x4209-jpg",
+          "_type": "reference"
+        }
+      },
+      "imageSide": "left"
+    },
+    {
+      "_key": "contact-sunday",
+      "_type": "sundayTimesSection",
+      "eyebrow": "Sunday",
+      "heading": "Find us on Sunday",
+      "items": [
+        {
+          "_key": "time-1",
+          "_type": "timeItem",
+          "big": "{time}",
+          "body": "Worship is at {time} each Sunday.",
+          "label": "Worship"
+        },
+        {
+          "_key": "time-2",
+          "_type": "timeItem",
+          "big": "{short address}",
+          "body": "Our wheelchair accessible entrance is off our circular drive, on the Adams street side of the building.",
+          "label": "Find us"
+        },
+        {
+          "_key": "time-3",
+          "_type": "timeItem",
+          "big": "Live",
+          "body": "For live streams, please visit our YouTube channel.",
+          "label": "Online"
+        }
+      ],
+      "showMap": true
+    }
+  ],
+  "seoDescription": "Phone, email, address and office hours for First Baptist Church Muncie at {address}, plus how to share a life update and how to book time with a pastor.",
+  "seoTitle": "Contact | First Baptist Church Muncie",
+  "slug": {
+    "_type": "slug",
+    "current": "contact"
+  },
+  "title": "Contact"
+}

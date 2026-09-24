@@ -1,0 +1,27 @@
+{
+  "_createdAt": "2026-09-19T01:06:10Z",
+  "_id": "notFoundPage",
+  "_rev": "QjI0kncFolotw4PTBjNiJH",
+  "_type": "notFoundPage",
+  "_updatedAt": "2026-09-20T05:22:03Z",
+  "body": "It happens. If you followed an old link, it may have moved when we rebuilt this site. Here's where to go instead.",
+  "eyebrow": "404",
+  "headline": "That page has moved or never was.",
+  "heroImage": {
+    "_type": "image",
+    "alt": "The limestone bell tower of First Baptist Church against a blue sky",
+    "asset": {
+      "_ref": "image-1a41db0a8944c3ca0243432d2e1f6e4930537aab-2400x1596-jpg",
+      "_type": "reference"
+    },
+    "caption": "First Baptist Church Muncie"
+  },
+  "primaryCtaHref": "/visit",
+  "primaryCtaLabel": "Plan a visit",
+  "secondaryCtaHref": "/blog",
+  "secondaryCtaLabel": "Read the blog",
+  "seoDescription": "That page has moved or never was. Head back to the site or get in touch.",
+  "seoTitle": "Page not found",
+  "tertiaryCtaHref": "/contact",
+  "tertiaryCtaLabel": "Contact us"
+}
