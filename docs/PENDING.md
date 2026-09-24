@@ -834,6 +834,34 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   `src/pages/styleguide/staff.astro`, the `'/styleguide/staff'` line in `tests/routes.ts`
   and `scripts/data/fixtures/staff.json`, then recapture parity.
 
+### History identity: before the page is applied (2026-09-24)
+
+- **The page is composed but not applied.** No schema field is new (the `archive`
+  field's description changed only), but the opener is new code: deploy first, then
+  `npm run seed-pages -- --only history` (the plan on 2026-09-24: 19 sections still,
+  "would be replaced" on `pageBuilder` [0] opener, [1] timeline, [2], [13] and [15] era
+  photo alts, [18] closing band; the live page matched the old module exactly, so no
+  editor edits to carry over; re-read the plan in case one has been made since) and
+  `--apply` (backup first). Then shoot /history light and dark at 1440 and 375, and
+  check click-to-edit on the opener once.
+- **Owner question: the Hannaford rendering.** The rollout table names it for /history,
+  but Home's Our Building band already shows it and the overnight plan allows a photo on
+  one page only, so the opener carries the Wix history page's own header photograph (the
+  women's group with a banner) in a door and Pastor Cassius M. Carter in a lancet. To use
+  the rendering here instead, point the opener's `image` at a `library` entry for
+  `08181c_9a2e10a5752e4aea861c7b31482850a2_tilde_mv2.jpg` in `history.mjs`.
+- **Photo facts to confirm with the church:** era 6's photograph (the 1950s band) is a
+  stone house in the snow, most likely the Baptist House the 1950s paragraph mentions;
+  its alt says only what is visible until the church confirms. Era 7's portrait is
+  named as George Saunders (as the Ledger branch identified it).
+- **The Timeline, ImageText, CtaBand and the RichText bands are other branches'
+  tonight.** The page composes with them as they stood at 74abd96; once the Visit and
+  Beliefs branches land, re-shoot /styleguide/history (the closing band should turn
+  gold, which sits well after the indigo books band).
+- **Clean-up once `/history` itself shows the composition.** Delete
+  `src/pages/styleguide/history.astro`, the `'/styleguide/history'` line in
+  `tests/routes.ts` and `scripts/data/fixtures/history.json`, then recapture parity.
+
 ---
 
 ## Photo library uploaded (2026-09-23)
@@ -980,8 +1008,9 @@ on the Ledger branch):**
 
 **Other open items from the Ledger branch:**
 
-- **For Nathan, in the Studio: fix the `/history` "Saunders to the
-  co-pastors" photo's alt text.** It says "the congregation in the 1990s",
+- **(Handled in code, 2026-09-24, the History identity pass: the manifest alt
+  now names George Saunders and lands when history.mjs is applied.) For Nathan,
+  in the Studio: fix the `/history` "Saunders to the co-pastors" photo's alt text.** It says "the congregation in the 1990s",
   but the picture is a head-and-shoulders portrait of George Saunders, and
   since this pass the alt prints as the visible caption, so the wrong
   description now sits in plain view under his portrait. A content edit, no

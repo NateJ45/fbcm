@@ -103,7 +103,7 @@
 //     pages. The two opener photos are on no other page. The era alts that
 //     named the wrong subject were corrected in page-images.json (era 1 is
 //     the courthouse engraving, era 6 a stone house in the snow, era 7 a
-//     single studio portrait, not "the congregation").
+//     studio portrait of George Saunders, not "the congregation").
 //
 // 7. TWO EM-DASHES, AND NOTHING ELSE, ARE TOUCHED FOR STYLE. history.txt has
 //    exactly two (lines 113 and 147) and both become commas (CLAUDE.md rule

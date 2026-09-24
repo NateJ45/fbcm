@@ -10,6 +10,22 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — History identity: /history in the church identity (`feat/history-identity`)._
+
+The overnight rollout's History branch (`docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md`),
+owning HeritageBand's h1 opener path and the history composition. A band with no dates
+that opens its page now draws as **`HeritageOpener.astro`**: the church's brown, the span
+"1859 to <build year>" derived from the first timeline row and the build date
+(`src/lib/heritage-opener.ts`, 7 tests), the h1 sized by length, the block's photo in a
+door arch and `archive` in a lancet. The dated cream band and the undated brown h2 band
+are untouched. `scripts/pages/history.mjs` restores the church's own heading "Our
+History", opens on the Wix history page's own header photograph (the women's group) and
+Pastor Cassius M. Carter, heads the timeline with the church's "highlights of our
+history" and ends it with a **Today** row in the church's present-tense words (no year
+typed), drops three decorative eyebrows, and corrects three era alts (the courthouse
+engraving, a stone house in the snow, George Saunders). The Hannaford rendering stays on
+Home only. Dry run only; `/styleguide/history` renders it from a read-only fixture.
+
 _2026-09-24 — Staff identity: /staff in the church identity (`feat/staff-identity`)._
 
 The overnight rollout's Staff branch (`docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md`),
