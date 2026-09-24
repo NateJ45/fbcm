@@ -122,6 +122,11 @@ const {
   headingId,
 } = Astro.props as Props;
 
+// NOTE 6: the band opens its page. A plain boolean rather than an inline
+// `level === 'h1'` test in the template, so TypeScript does not narrow `level`
+// to 'h2' inside the brown band below, whose own h1 handling stays as it was.
+const opensPage: boolean = level === 'h1';
+
 // NOTE 5: the dated list, with the present's year filled in from the build.
 const shownDates = heritageDates(dates, new Date());
 const ledger = shownDates.length > 0;
@@ -289,7 +294,7 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
         )}
       </div>
     </section>
-  ) : level === 'h1' ? (
+  ) : opensPage ? (
     <HeritageOpener
       eyebrow={eyebrow}
       heading={heading}
