@@ -119,17 +119,45 @@ truth are still the reference for what each branch should look like:
     quote, 3 or fewer paragraphs and 80 words or fewer in total. Set as a
     single ruled line.
   - `columns`: 2 or more h3 groups, each group's body only paragraphs, 150
-    words or fewer per group. The groups go side by side.
+    words or fewer per group when the groups go two across, 70 or fewer when
+    they go three or four across (`columnWords()`, 2026-09-24: a quarter-page
+    column is for a short statement, not small prose). The groups go side by
+    side.
   - `sections`: at least one h3, when the body did not qualify as columns
-    (for example a group with a list or a quote in it, or over 150 words).
+    (for example a group with a list or a quote in it, or too long a group).
     The groups stack; h4 groups inside a section go side by side as h4
-    columns (the ministries Adults band).
+    columns (the ministries Adults band). A section whose body is only
+    reading text (measures, a standfirst, a lead-in, a quote) sets its head
+    BESIDE the text in the left third (`beside`, 2026-09-24; never inside
+    ImageText's narrow column); one with a list or columns keeps its head
+    above.
   - `register`: not a photo ground, 8 or more paragraphs, and at least 80%
     of those paragraphs 35 words or fewer. Split into two columns, read down
     then across (the creed).
   - `ledger`: some list has 3 or more items, and the lists carry at least
     40% of the body's words.
   - `prose`: everything else.
+
+  **Prose is one reading measure** (2026-09-24, the Beliefs identity pass,
+  rollout rule 11). The `run2` / `run3` newspaper columns are gone from both
+  flows: a paragraph run of any length is one `measure` at the reading size,
+  and a photo ground's short run is too. A run-in label ("Label: text") is
+  an italic head in the accent ink, no longer tracked capitals, and body
+  heads (h3, h4) are in the brand indigo.
+
+  **The ground is derived** (`src/lib/rich-ground.ts`, 2026-09-24). No
+  colour field (rule 9): SectionRenderer calls `richGrounds(rows)` once per
+  page. A text band on the cadence's paper turn is `paper`; one on its muted
+  turn is a full-width brand band, `indigo`, then `brown`, then `taupe`,
+  never the colour family of the row above or below it (read from the
+  neighbour's type, a staff band's group, and whether a closing band has a
+  photograph) and never the colour the previous brand text band on the page
+  took. No hairline divider is drawn beside a brand band. On a brand ground
+  the `.rt-band` rules in `src/styles/ledger.css` re-point `--hair`,
+  `--hair-strong` and `--color-gold-ink`, and re-ink the band heading (its
+  markup stays the Visit pass's `SectionHeading face="display"`). The pairs
+  are gated in `theme-tokens.test.ts` ("the text bands"). Editors change a
+  band's ground by moving it, which is the cadence's own contract.
 
   Inside any shape, a list becomes one piece: an ordered numbered list when
   every item is numbered (`listItem` compared after `splitStega`), a table
@@ -188,7 +216,7 @@ truth are still the reference for what each branch should look like:
   after a photo hero. If a page's photo layout looks different after an
   unrelated image edit, this budget is why. Grounds also take an opt-in
   "wide" flow inside `rich-shape.ts` (labelled rows whose label keeps its own
-  editable block, or two columns for a short run of paragraphs): only
+  editable block; the two-column short run went on 2026-09-24): only
   ImageText passes that option, so `RichTextSection`'s 29 bands cannot be
   affected by it.
 - Both classifiers run on `splitStega(...).cleaned` text, never on the raw

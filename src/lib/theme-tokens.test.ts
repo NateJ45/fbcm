@@ -333,6 +333,12 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
   ['color-band-taupe', 'color-band-brown', "each hymn-board row's small line", 'body'],
   // Work.
   ['color-band-ink', 'color-band-taupe', 'ink on the Work band', 'body'],
+  // The text bands (2026-09-24, the Beliefs identity pass, rich-ground.ts):
+  // indigo and brown carry paper for reading, gold for the head and every
+  // accent, taupe for the quiet foot; taupe carries band-ink, band-indigo and
+  // band-brown. The pairs not repeated here are gated above.
+  ['color-bg', 'color-band-indigo', 'text band on indigo: reading text', 'body'],
+  ['color-band-taupe', 'color-band-indigo', 'text band on indigo: the foot line', 'body'],
   // Our Building (HeritageBand with dates, 2026-09-23, the Home pass): a FIXED
   // cream band in both themes (--color-bg never flips), so its inks are the
   // band tokens and brown-mid, none of which may flip to a light value.
