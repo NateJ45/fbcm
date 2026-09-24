@@ -1076,6 +1076,50 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   to `SectionRenderer`; the preview route's hero reads as it did before. Worth wiring only if an
   editor asks.
 
+### Last Sunday, Sunday weather and the Sunday calendar (2026-09-24, `feat/last-sunday`)
+
+- [ ] #nathan **Push, and the schedule starts.** `deploy.yml` now also runs on
+      `schedule` (Sunday 18:00 UTC and Monday 10:00 UTC) so Home's "Last Sunday" band and the
+      hero's "This Sunday" sermon line keep up in a week with no push and no publish. Scheduled
+      workflows run from the default branch only, so nothing happens until this is on `main`.
+      GitHub pauses schedules after 60 days with no repo activity; a push re-arms them. IndexNow
+      is skipped on scheduled runs.
+- **Merge with `feat/scripture-text`'s `src/lib/ics.ts`.** This branch's Sunday calendar file
+  (`src/lib/sunday-ics.ts`, served at `/visit/sunday.ics`) carries its own `icsEscape` and
+  `icsFold`, named as a general generator names them. When both branches are on `main`, re-express
+  `sundayServiceIcs()` through `ics.ts` (keeping the VTIMEZONE block, the RRULE and the stable UID
+  `sunday-worship@fbcmuncie.org`, so a calendar that subscribed does not duplicate the event) and
+  delete the two helpers and their tests.
+- **The "is it a Sunday service" rule reads YouTube's publish time.** A replay counts when it was
+  published on a Sunday or a Monday, church time, with at least one view (next Sunday's scheduled
+  broadcast sits in the feed days early with none). Measured on the real feed on 2026-09-24: all 14
+  replays qualify (13 published 12:06 to 12:54 am Monday, one at 12:14 pm Sunday) and the upcoming
+  broadcast (published Wednesday, 0 views) does not. If the church ever schedules next week's stream
+  on a Sunday or Monday AND it shows a view before it airs, the band would name it; if replays start
+  publishing on Tuesday, the band falls back to the week before (never wrong, only a week old) until
+  the rule widens. `src/lib/youtube-feed.ts` `lastSundayRecording()`.
+- **No rain note on the weather line.** The brief allowed "the circular drive entrance on Adams
+  Street is covered" in rain or snow, but only if Visit's own words say so, and neither the Visit
+  page nor the church's accessibility page mentions a canopy. If the entrance is covered, the
+  church can say so and the note is one line in `weatherSentence()`'s caller.
+- **Owner question: a paired sermon.** The band pairs with a sermon preview posted for the same
+  Sunday; the newest preview in the dataset is January 6 2026, so today the band shows the video
+  alone. It pairs automatically the week previews resume.
+- **The band changes every week, so Home's parity baseline does too.** A recapture on a different
+  week than the build shows a diff inside `section.ls-band` only (the date, the title, the video
+  id). That is content, not a regression.
+- **Found while recapturing parity: unfilled placeholders in the live dataset.** Site settings
+  links now hold `{giving}` (the header's Give plate and the menu, every page), `{sermons}`,
+  `{connect}` and `{contact-form}`, which main's code renders literally as `href="{giving}"`
+  (checked on a main build of the same dataset). They belong to the concurrent Site settings work,
+  whose branch presumably fills them; until it is merged, ANY rebuild of main (a publish, a push,
+  and from this branch on the Sunday and Monday schedule) ships those links broken. This
+  branch's parity baselines were captured on that dataset.
+- **`YOUTUBE_API_KEY` is not used by the band.** The key is a Worker secret for `/api/live-status`,
+  not a build variable, and the public feed has everything the band draws. If the build ever needs
+  durations or the maxres thumbnail, pass the key to the deploy job's build step and read it in
+  `src/lib/last-sunday.ts`; keep the feed as the fallback.
+
 ### Craft details: share cards, JSON-LD, "Which door?" (2026-09-24, `feat/details`)
 
 - [ ] #nathan **Confirm the door sketch's geography.** `/visit`'s "Which door?" puts the office
