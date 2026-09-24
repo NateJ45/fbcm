@@ -6,21 +6,31 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 ### New sentences
 
-- A downtown church in Muncie, Indiana. (hero kicker)
-- Downtown, at the corner of Adams and Jefferson. (Sunday band, "Find us")
-- We hold to the Bible, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself. (link cards, What we believe)
-- Sunday school, music, youth, and work with partners across Muncie and beyond. (link cards, How we serve)
-- The congregation has met in downtown Muncie since 1859, and in this building since 1929. (link cards, Where we’ve been)
-- The tower, the oak pews and the stained glass have been in daily use for more than a century. (heritage band)
-- Gifts pay the staff, keep the building open and fund the work this church does in Muncie. (give band)
+- A downtown church in Muncie, Indiana. (hero kicker, unchanged from the plan 2b page)
 
 ### Edits to the church’s own text
 
-- (none: their text is cut, never reworded)
+- Joined: "At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have." The capture breaks the second sentence over two lines; it is one paragraph here. (What to Expect, introduction.)
+- Cut: "A time of small group Bible study during the hour before our regular worship service." is the children’s page sentence without its opening words, "“Sunday School” refers to". (What to Expect, the 9:30 am row.)
+- Joined: "The first Sunday of each month is communion Sunday, a service with the whole church family." puts two of the church’s lines together: "The first Sunday of each month is communion Sunday." and "A service with the whole church family." (What to Expect, second note.)
+- Re-cased: the button "What to expect" is the Wix home page button "What To Expect" set as a sentence. (What to Expect.)
+- Cut, a whole sentence: The Way’s card carries the goal’s first sentence only, "FBCM proclaims God's faithfulness with people who are curious about faith, as well as new believers."; the second, about the growth track, is on Who We Are. (Our Goals, The Way.)
+- Re-cased: the goal links "Read more" are the Who We Are button "Read More" set as a sentence. (Our Goals.)
+- Cut: "Twelve Indiana residents, meeting at the county courthouse, founded the first Baptist Church in Muncie." drops "On September 10, 1859" from the front, because the year stands beside it. (Our Building, 1859.)
+- Cut: "The tiny congregation moved into their new church building." drops "Finally in June, 1862," from the front, and the sentence after it (the size and the cost) is not used. (Our Building, 1862.)
+- Cut, a whole sentence: the building text is the first two sentences of the architecture page’s paragraph ("First Baptist’s third, and most recent, building was completed in 1929. It has been on the National Register of Historic Places since 1988."); the third, "For students and lovers of architecture it’s a striking work.", is not used. (Our Building.)
+- Cut: "On May 12, 1929, 1200 people marched from the old church to the new one on the corner of Jefferson and Adams streets." drops "and finally" from the front of the history page’s clause. (Our Building, 1929.)
+- Lifted and cut: "First Baptist Muncie continues to discern God’s will to serve in a new era in the life of Muncie." is the closing clause of the history page ("...as First Baptist Muncie continues to discern God’s will to serve in a new-era in the life of Muncie and this community of believers in Christ Jesus."), set as its own sentence, the hyphen in "new-era" taken out and the words after "Muncie" cut. It is the list’s present-day entry, dated the year the site is built. (Our Building, this year.)
+- Dropped: the "Support – " label on the Who We Are line "Support – We give sacrificially to help those in need through regular offerings and donations.", as on the Give page. (Give.)
+- Re-cased: "All posts" is the Wix button "All Posts" set as a sentence. (Church Blog.)
 
 ### Photos of children
 
 - hero-children: Children gathered under the sanctuary arch
+- home-expect-children: Two little girls smiling, cheek to cheek.
+- home-goal-way: Four teenagers reading open Bibles together around a table.
+- home-goal-witness: Teens and adults lying together on snow tubes on a snowy hill, smiling for the camera.
+- home-building-archive: The congregation, adults and children, gathered outside the church entrance in a black and white photograph.
 
 ## /visit
 

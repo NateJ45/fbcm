@@ -37,6 +37,8 @@ export const routes: string[] = [
   // The composed Who We Are page from its seed module, before it is applied
   // (src/pages/styleguide/who-we-are.astro, 2026-09-23).
   '/styleguide/who-we-are',
+  // And the composed home page (src/pages/styleguide/home.astro, 2026-09-23).
+  '/styleguide/home',
   // The plan-2b pages are listed here as they land.
   '/visit',
   '/who-we-are',

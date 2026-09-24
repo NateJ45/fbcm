@@ -24,8 +24,22 @@ const ARCHIVE = resolve(ROOT, '..', 'fbcm-archive', 'images');
 const CACHE = resolve(ROOT, 'scripts', '.page-images');
 const MANIFEST = resolve(ROOT, 'scripts', 'data', 'page-images.json');
 
+const ASSET_MAP = resolve(ROOT, 'scripts', '.asset-map.json');
+
 export function loadManifest() {
   return JSON.parse(readFileSync(MANIFEST, 'utf8'));
+}
+
+/** True when a `file` entry's resize has already been uploaded from this checkout
+ *  (makeUploader's cache, scripts/.asset-map.json, holds its path), so resolving it
+ *  writes nothing to Sanity. Library entries never upload, so they count as done. */
+export function alreadyUploaded(manifest, key) {
+  const { key: targetKey, entry } = resolveEntry(manifest, key);
+  if (entry.library) return true;
+  if (!entry.file) return true;
+  const format = entry.format === 'png' ? 'png' : 'jpg';
+  const map = existsSync(ASSET_MAP) ? JSON.parse(readFileSync(ASSET_MAP, 'utf8')) : {};
+  return Boolean(map[`scripts/.page-images/${targetKey}.${format}`]);
 }
 
 /** Follow "same" aliases to the real manifest entry, returning { key, entry }.
@@ -105,6 +119,17 @@ export function makePageImages(uploadClient) {
       const _ref = await libraryAsset(target.library);
       const alt = manifest[key]?.alt ?? target.alt;
       return { _type: 'image', asset: { _type: 'reference', _ref }, alt };
+    }
+    // A DRY RUN NEVER UPLOADS (2026-09-23). Before this guard, `seed-pages` without
+    // --apply still uploaded any photo missing from this checkout's asset cache, so a
+    // dry run from a fresh worktree wrote duplicate assets (docs/PENDING.md, "Seeding
+    // from a nested worktree"). Now it refuses and says how to fill the cache.
+    if (!alreadyUploaded(manifest, key) && !process.argv.includes('--apply')) {
+      throw new Error(
+        `page-images: "${key}" has not been uploaded from this checkout ` +
+          '(scripts/.asset-map.json has no entry for it), and a dry run never uploads. ' +
+          'Fill the cache from the dataset first, or run with --apply.',
+      );
     }
     const r = await resized(key);
     if (!r) return null;

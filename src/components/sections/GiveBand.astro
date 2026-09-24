@@ -22,7 +22,9 @@
 //
 // /give OPENS on this band: SectionRenderer passes level 'h1' there (a page
 // with no hero), and the heading then takes the band-opening scale from
-// headlineScale, exactly as before.
+// headlineScale, exactly as before. Everywhere else the h2 sits on the shared
+// `text-h2` scale, the same as the hymn board's and the blog's headings above
+// it on the home page (CLAUDE.md rule 17; ruling 2026-09-23, Home Task 5).
 //
 // The button goes to the block's own link when the editor typed one, and otherwise
 // to the giving address in Site settings, so the church can move its giving page in
@@ -111,7 +113,7 @@ const giveCta = href
           heading && (
             <h2
               id={headingId}
-              class="font-display text-[clamp(2.5rem,1.6rem+3.2vw,4.5rem)] leading-[1.02] font-normal text-band-indigo"
+              class="font-display text-h2 leading-[1.02] font-normal text-band-indigo"
             >
               {heading}
             </h2>
