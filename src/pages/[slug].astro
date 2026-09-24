@@ -12,7 +12,9 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionRenderer from '@/components/SectionRenderer.astro';
 import { getPage, getAllPageSlugs, getSiteSettings } from '@/lib/queries';
-import { breadcrumbSchema } from '@/lib/schemas';
+import { breadcrumbSchema, sundayWorshipSchema, SERVICE_PAGE_SLUG } from '@/lib/schemas';
+import { sundayOnOrAfter } from '@/lib/church-schema';
+import { sanityFetch } from '@/lib/sanity';
 import { site } from '@/data/site';
 import { shouldOverlayHeader } from '@/lib/heroOverlay';
 
@@ -61,11 +63,26 @@ const noindex = (pageDoc as any).hideFromSearch === true;
 // One predicate, shared with index.astro, so the two routes cannot disagree.
 const overlayHeader = shouldOverlayHeader((pageDoc as any).pageBuilder);
 
+// The page about the Sunday service also carries the service as an Event
+// (src/lib/church-schema.ts sundayWorshipNode). Its dated occurrence is the
+// Sunday of the newest post, so the same dataset always renders the same
+// bytes; see the note at the top of church-schema.ts.
+let worship: string | null = null;
+if (slug === SERVICE_PAGE_SLUG) {
+  const newest = await sanityFetch<string | null>(
+    `*[_type == "journalEntry" && defined(publishedAt)] | order(publishedAt desc)[0].publishedAt`,
+    {},
+    null,
+  ).catch(() => null);
+  worship = sundayWorshipSchema(siteSettings, sundayOnOrAfter(newest));
+}
+
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
     { name: (pageDoc as any).title ?? 'Page', url: `${site.url}/${slug}` },
   ]),
+  ...(worship ? [worship] : []),
 ];
 ---
 
