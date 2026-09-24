@@ -10,6 +10,24 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — The document list as a ruled list (`feat/document-list-rows`)._
+
+DocumentList's one-to-four form gave up its arched door cards for a ruled list:
+Nathan's call, from an approved mock, that the arch cards felt repetitive and an
+arch doesn't suit a document. Each row is a three-column grid at desktop (the year
+in Castoro Titling gold, an empty cell when there's no year, so titles still align;
+the title in Castoro paper with its note beneath in italic taupe; the action at the
+right, a gold UI-caps text link with a trailing arrow), stacking to year, title,
+note, link on a phone, between a gold rule above the list and a hairline below each
+row. The title is plain text now; the action link is the one control, and its
+accessible name folds in the document's title (several rows in a list say
+"Download PDF"). `documentForm()` in `src/lib/document-doors.ts` returns `'rows'`
+in place of `'doors'` (tests updated); `DOOR_LIMIT` is now `ROW_LIMIT`. The
+five-or-more register form is unchanged, styled to read as the same family (the
+same heading grammar, the same gold rule). The dead door-card CSS (`.dl-doors`,
+`.dl-door`, `.dl-head`, `.dl-body`, and their two breakpoint overrides) came out of
+`globals.css`; the ruled list's own grid lives in `DocumentList.astro`'s `<style>`.
+
 _2026-09-24 — Utility identity: /give, /contact, /404 and /privacy (`feat/utility-identity`)._
 
 The four utility pages in the church identity (rollout plan step 8 and 10).

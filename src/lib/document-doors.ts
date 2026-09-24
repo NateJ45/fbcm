@@ -3,16 +3,19 @@
 // scaffold-file: church
 // The document list's form and each document's button, derived from the
 // documents themselves (CLAUDE.md rule 15). 2026-09-24, the Wedding identity
-// pass.
+// pass; restyled from arched door cards to a ruled list the same day (Nathan:
+// the arch cards felt repetitive and an arch doesn't suit a document).
 //
-// DOORS OR REGISTER. A short list (one to four documents: the wedding page's
+// ROWS OR REGISTER. A short list (one to four documents: the wedding page's
 // contract, packet and form; Beliefs' three confessions; History's two books)
-// is drawn as a row of door cards on the indigo band, each document its own
-// cream door. A longer list (the blog's forty-odd issues of The Visitor) is a
-// register on the same band: year by year, the titles in a run. Four is where
-// a row of doors stops fitting across a desktop band. The count is of the
-// documents that can render (a document with no title is dropped first by
-// the component), so the form follows what a visitor sees.
+// is drawn as a ruled list on the indigo band, each document its own row
+// between hairlines. A longer list (the blog's forty-odd issues of The
+// Visitor) is a register on the same band: year by year, the titles in a
+// run. Four is where a row of documents stops reading as a short list. The
+// count is of the documents that can render (a document with no title is
+// dropped first by the component), so the form follows what a visitor sees.
+// The internal name is `rows`, not `doors`: the exported name changed with
+// the visual form so nothing in this file still calls them doors.
 //
 // THE BUTTON. A file is downloaded; a link is opened. The label says which,
 // and where: "Download PDF" (the extension read off the file's own URL),
@@ -22,13 +25,13 @@
 // the church library, not online).
 import { splitStega } from './preview-stega.ts';
 
-/** The most documents drawn as doors; one more and the list is a register. */
-export const DOOR_LIMIT = 4;
+/** The most documents drawn as rows; one more and the list is a register. */
+export const ROW_LIMIT = 4;
 
-export type DocumentForm = 'doors' | 'register';
+export type DocumentForm = 'rows' | 'register';
 
 export function documentForm(count: number): DocumentForm {
-  return count > 0 && count <= DOOR_LIMIT ? 'doors' : 'register';
+  return count > 0 && count <= ROW_LIMIT ? 'rows' : 'register';
 }
 
 export interface DocLinks {
