@@ -19,7 +19,6 @@ import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import BackToTop from '@/components/BackToTop';
 import Analytics from '@/components/Analytics.astro';
-import SiteSearch from '@/components/search/SiteSearch.astro'; // scaffold: journal
 import '@/styles/globals.css';
 // src/styles/starwind.css is deliberately NOT imported (2026-09-23, dead-CSS
 // trim). Nothing on this site uses a Starwind component, and the file has no
@@ -485,7 +484,6 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
     </main>
 
     <Footer siteSettings={siteSettings} />
-    <SiteSearch /> {/* scaffold: journal */}
 
     {/*
       BackToTop and the Toaster were both previously `client:load` which forced the JS to
@@ -516,6 +514,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         critical-path race with hero LCP. setTimeout fallback for browsers
         without rIC support. */}
     <script>
+      import '@/components/search/trigger'; // scaffold: journal
       function startLenis() {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         import('lenis').then(({ default: Lenis }) => {

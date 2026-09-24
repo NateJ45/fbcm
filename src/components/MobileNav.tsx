@@ -385,7 +385,7 @@ export default function MobileNav({
             {/* scaffold: journal */}
             {/* Search (2026-09-24), under the rows in the sheet's furniture
                 face, a 44px tap target. The sheet closes first and hands its
-                focus back; the search dialog (SiteSearch.astro) waits for that
+                focus back; the search dialog (search-dialog.ts) waits for that
                 before it opens, so the two never hold focus at once. */}
             <button
               type="button"

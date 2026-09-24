@@ -2,7 +2,7 @@
 // Foundation, edit with care
 // The site search dialog (2026-09-24, feat/scripture-search). LAZY: nothing in
 // this file, its stylesheet or Pagefind is fetched until a visitor opens the
-// search. SiteSearch.astro's few lines in the page's own script import this
+// search. trigger.ts, a few lines in the layout's own script, imports this
 // module on the first open (and warm it on hover or focus of a trigger).
 //
 // WHY A DIALOG AND NOT A /search PAGE. The search is reached from the header
