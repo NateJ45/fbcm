@@ -1,3 +1,4 @@
+// scaffold-file: journal
 import { test, expect } from '@playwright/test';
 
 // =============================================================================

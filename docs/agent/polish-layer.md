@@ -2,7 +2,7 @@
 
 > Custom CSS utilities and JS behaviors layered on Tailwind: brand stripe, image zoom, surface-warm, reading-progress, sticky-header, nav-underline, paper-grain, and print stylesheet.
 
-Animation behaviors (Lenis, scroll reveals, stagger grid, hero entry, view transitions, Ken Burns slideshow, script accent opt-in) are documented separately in `animation.md`.
+Animation behaviors (native scrolling since Lenis was removed on 2026-09-24, scroll reveals including the glyph draw and the Hannaford ink-in, stagger grid, hero entry, view transitions, Ken Burns slideshow, script accent opt-in) are documented separately in `animation.md`.
 
 ## Polish layer
 
@@ -94,7 +94,13 @@ Journal posts open with a floated display-font drop cap on the first paragraph a
 
 ### Print stylesheet
 
-A `@media print` block in `globals.css` suppresses nav, footer, CTAs, and decorative elements, and sets `color: black; background: white` on the body so journal post content prints cleanly. This is intentionally minimal -- the goal is a legible print, not a designed one.
+Two layers.
+
+**The generic block** (`@media print` near the end of `globals.css`, every page) suppresses the header, footer, reading progress and every fixed element, sets black on white, prints an external link's address after it (never after a `/`, `#`, `mailto:` or `tel:` link), keeps headings with what follows and figures whole, and, since 2026-09-24, forces every `[data-reveal]` to its final state (opacity, the arch's clip, the glyph draw's dash, the ink's fade), so a figure or glyph the reader never scrolled to never prints blank.
+
+**A post prints as a bulletin** (2026-09-24, `feat/print-motion`), from the `@media print` block at the end of the `<style is:global>` in `src/pages/post/[slug].astro`, so it ships in the post page's own CSS chunk (10,055 B to 12,969 B) and never in the global sheet every page inlines (CLAUDE.md rule 20). US Letter, margins 0.7/0.8/0.75in, "n of N" in the bottom-right margin box (`@page @bottom-right`, Chrome 131+; older engines just omit it). What stays: the masthead (eyebrow, title at 26pt, the lede, the order as a ruled list with Sunday, Reading, Series, Preaching and Listen, the Listen link printing its address), a photograph cover as a plain rectangle at most 5in wide (the door arch is a CSS mask, and a print without background graphics drops the mask while keeping the gold mould, so on paper both go), the body in Castoro at 11pt on a 5.9in measure, tables (header row repeats, rows never split), Q and A, the lection, points and list items kept whole, section heads kept with the next paragraph (`break-after: avoid`), figures whole and at most 3in tall, orphans and widows at 3. What goes: the header, footer and menu, the reading bar, the sticky chip and back-to-top (`main > astro-island`), the side column (a slide cover is lettering, and In this post is a screen control), the tags, the related project, More from this series and the doors, and any open search `dialog`. Ink: every text black (`#444` for labels and captions), and brand gold only as thin rules (the ruled order, the lection, section heads, table rules, the link underlines, and the list bullets and caption ticks, which are backgrounds on screen and become borders on paper). One derived line closes it, `.p2-print-foot` (hidden on screen): `site.name`, the Site settings address on one line, and the canonical post URL, none typed. The body's figures are `loading="lazy"`; a `beforeprint` listener on the post page flips them to eager first.
+
+Verified with Playwright's `page.pdf()` on three posts (a sermon preview with a reading, the Messiah post's table and Q and A, a post with seven figures), pages rasterised and read; `tests/print.spec.ts` gates the chrome hidden, the masthead and body shown, the foot line, the link addresses and black ink under print media. A portrait figure that does not fit under the text still moves whole to the next page and leaves a gap; that is the price of never splitting a picture.
 
 ### View Transitions discipline
 
@@ -108,8 +114,8 @@ initThing();
 document.addEventListener('astro:page-load', initThing);
 ```
 
-Pattern used by: scroll-reveal observer, sticky-header listener, reading-progress, sticky CTA chip. See `animation.md` for details on the Lenis + view-transitions interaction, which is a special case.
+Pattern used by: scroll-reveal observer, sticky-header listener, reading-progress, sticky CTA chip. A script that must act at a precise point in a navigation uses the router's other events instead: `astro:before-preparation` (the post title's shared name, `src/components/transitions/shared-title.ts`), `astro:before-swap` (the search dialog's release) and `astro:after-swap`. See `animation.md`, "View transitions" and "Scrolling".
 
 ---
 
-Cross-reference: `animation.md` covers Lenis smooth scroll, scroll reveals, stagger reveals, hero entry stagger, Ken Burns slideshow, view-transition cross-fade, and the opt-in script accent.
+Cross-reference: `animation.md` covers native scrolling (Lenis was removed 2026-09-24), scroll reveals with the glyph draw and the ink-in, stagger reveals, hero entry stagger, Ken Burns slideshow, the view-transition cross-fade and the post title that carries over, and the opt-in script accent.

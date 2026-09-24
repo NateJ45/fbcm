@@ -634,6 +634,7 @@ changing the guide that mentions it in the same commit.
 
 ### For ncs-astro-sanity-starter (the library of record), found on this fork
 
+- **Lenis is not worth shipping; and naming `<main>` makes view transitions slide (2026-09-24, `feat/print-motion`).** The starter ships Lenis in `BaseLayout`: FBCM measured 5.4 KB gzip per page, a rAF loop that never stops, a 1.5 to 2 s late start, and a dead wheel whenever something stops it across a router swap; it removed the package and uses the router's own scroll reset plus `html[data-smooth-scroll] { scroll-behavior: smooth }` set on the first press (plain `html { scroll-behavior: smooth }` makes Chrome glide its reload restoration and broke the header seed). Separately, the starter's `globals.css` names `main#main` (`main-content`) and `footer` (`site-footer`) as view-transition elements, and a named group animates from its old box to its new one, so a navigation from a scrolled page slides the whole page down the screen through the fade; FBCM names only the header and cross-fades the root. Both want a PORTS.md card and a sweep of every family repo. Also worth porting: the generic print block's reveal reset (an unscrolled `[data-reveal]` prints blank) and the `--k` screen-scale fix for any `pathLength` draw on a `non-scaling-stroke` path (`animation.md`, "The glyph draw").
 - **Post bodies and the Toaster hydrate for nothing (2026-09-24).** The starter's `BaseLayout` mounts `<Toaster client:idle />` for a `CopyEmailButton` a site may never render (10 KB on every page), and `JournalPortableText` hydrates a whole post body to serve a slider most posts lack, pulling `@sanity/client` in through `urlFor`. FBCM's fix is `src/components/JournalBody.astro` (render at build time, hydrate only the slider) and removing the mount; details on PORTS.md card 52.
 - **Build reads must use the Sanity CDN even with a token (2026-09-23).** `src/lib/sanity.ts` had `useCdn: !readToken`, so any build with `SANITY_API_READ_TOKEN` in `.env` read the uncached API. On FBCM a day of local and agent builds spent 325k API requests against the 250k monthly quota while CI (no token) stayed on the CDN. Fixed here (`useCdn: true`; the CDN accepts tokens since API 2021-03-25), and `sanityFetch` now throws in a production build instead of silently returning fallback content, so a quota block or outage fails the deploy rather than shipping an empty site. Port both to the starter and every family repo.
 
@@ -1132,6 +1133,29 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   noted under `feat/sunday` above, plus 5 unit failures from the same unmarked leftovers
   (`convert-body.test.ts`, `import-post.test.ts`, which need `schemaTypes/journalEntry.ts`),
   none from this branch.
+
+### Print and motion (2026-09-24, `feat/print-motion`)
+
+- [ ] #nathan **Look at the post title carrying over** (/blog, click a row's title). The row
+      sets the title in Castoro and the masthead in Castoro Titling capitals on three lines, so
+      it is a hand-over in motion (the small title fades as the box rises, the large one fades
+      in), not a true morph. It is one import in BaseLayout's layout script to take out
+      (`@/components/transitions/shared-title`) if it reads as fussy.
+- **Print is verified in Chromium only** (`page.pdf()` and `tests/print.spec.ts`). The page
+  numbers are an `@page` margin box, which Chrome 131+ prints and Firefox and Safari simply
+  omit; Safari's print of the post has not been looked at.
+- **A figure that does not fit under the text moves whole to the next page** and leaves white
+  space behind it (the Messiah post's poster on page 1). Figures are capped at 3in to make it
+  rarer; splitting a picture is the only other answer, and the brief rules that out.
+- **Frame captures of a view transition are unreliable in headless Chromium.** Slowing the
+  animations over CDP (`Animation.setPlaybackRate`) showed the new page at the old scroll
+  position mid-fade, which a per-frame `scrollY` log of the same navigation never saw; the
+  "page slides" finding was made from real-time captures and fixed, but read any slowed-down
+  frame of a transition with that in mind.
+- **Scaffold (rule 14):** `npm run scaffold -- --remove journal` lists the new journal files
+  (`src/lib/shared-title.ts` and its test, `src/components/transitions/shared-title.ts`,
+  `tests/print.spec.ts`, `tests/transitions.spec.ts`) and the marked import line in BaseLayout.
+  Dry run only; the known pre-existing leftovers noted under `feat/scripture-search` stand.
 
 ### Beliefs identity: before the page is applied (2026-09-24)
 
