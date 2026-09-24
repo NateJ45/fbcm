@@ -137,6 +137,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Em-dash to comma (site style): "join Christ where he is already at work in our world—in Muncie and across the globe" becomes "...in our world, in Muncie and across the globe".
 - Linked: "Our website has links to our building use policy here" had no link behind it on the Wix site. "here" now points at /wedding#building-use.
 - Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band listing the whole Church Coordination Team.
+- Reordered, so each reads as a class with its room: "Preschool - 2nd grade: Kickstart Children’s Church (102)" becomes "Kickstart Children’s Church (102): Preschool - 2nd grade", and "3rd - 5th grade: The Underground Children’s Church (B-03)" becomes "The Underground Children’s Church (B-03): 3rd - 5th grade" (what-to-expect.txt lines 65 and 69; the 10:45 row of the Sunday timeline). No word changes.
 - Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now follows that page’s own redirect to /blog#publications.
 
 ### Facts to confirm from this page
@@ -150,6 +151,8 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - ministry-children-vbs: Children singing on stage at Vacation Bible School
 - ministries-youth: Two teens speaking to the youth group on stage
+- ministries-hero-palms: Children holding palm branches in a stone hallway, warm light coming through the leaded windows.
+- ministries-hero-youth: Teenagers laughing around a table in the youth room, cards in hand and a Bible on the table.
 
 ## /staff
 

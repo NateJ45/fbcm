@@ -10,6 +10,29 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Ministries identity: the four goals as the page's organising motif (`feat/ministries-identity`)._
+
+The overnight rollout's Ministries branch, owning `src/lib/ministry-band.ts` and how
+a Ministry band draws. The ministry document gains an optional **"Goal it serves"**
+(`goal`: worship, the-way, witness, work; the ids of the goals on /who-we-are; in
+NON_STEGA_FIELDS). `resolveMinistryBands()` now puts a derived **goal index** in front
+of a page's first Ministry band when any ministry names its goal
+(`src/lib/ministry-goals.ts`, `sections/MinistryGoals.astro`): "Our Goals" on the deep
+indigo band, the four goals with their building glyphs and the church's bracketed
+words, each listing its ministries linked to their bands. Nothing stores it, so it
+cannot disagree with the documents, and with no goal answered it is not drawn.
+Which goal a ministry serves is written only where the church's own words say so:
+`scripts/set-ministry-goals.mjs` (dry by default, backup-first) writes Worship ->
+Worship and Youth, Adult -> The Way from `scripts/data/ministry-goals.json`, which
+quotes the line for each; Children and Outreach are left for the church. The rendered
+block types gained a `DerivedBlocks` registry in `pageBuilder.types.ts` so a church
+scaffold removal leaves `RenderedBlock` whole. `scripts/pages/ministries.mjs`: a window
+hero (every age in three lights, photos no other page uses), no decorative small lines
+on the hero or the timeline, and the two children's-church lines written as class
+lines ("Kickstart Children's Church (102): Preschool - 2nd grade") so the timeline
+reads each as a class with its room. Dry run only; `/styleguide/ministries` renders it
+from a read-only fixture, with each ministry's goal taken from the answers file.
+
 _2026-09-24 — Staff identity: /staff in the church identity (`feat/staff-identity`)._
 
 The overnight rollout's Staff branch (`docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md`),
