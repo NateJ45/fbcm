@@ -10,6 +10,22 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Visit identity: the Visit page and the shared looks it settles (`feat/visit-identity`)._
+
+The Visit page composed from the approved prototype
+(`docs/superpowers/prototypes/2026-09-23-visit/visit.html`) with Nathan's
+four answers, and the shared components it restyles for every page: the
+Timeline as the numbered door-step path (`src/lib/morning-path.ts`), the FAQ
+band on the deep indigo, ImageText's people in arches with a small second
+photo and a room board (`src/lib/photo-subject.ts`), the gold closing band,
+the split and text-only heroes on the indigo brand band with the window
+hero's facts and closing gold accent, SundayTimes' doors path, HeritageBand's
+undated Our building on cream, and the RichText band heading on the one
+grammar. Schema, additive and optional: `heroSection.headingAccent`,
+`imageTextSection.detail`, `timelineRow.image`, and the timeline marker is
+no longer required. `scripts/pages/visit.mjs` composes the page (dry run
+only; waits on a deploy) and `/styleguide/visit` renders it from a
+read-only fixture.
 _2026-09-24 — Staff identity: /staff in the church identity (`feat/staff-identity`)._
 
 The overnight rollout's Staff branch (`docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md`),

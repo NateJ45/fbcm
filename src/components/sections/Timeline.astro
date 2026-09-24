@@ -1,42 +1,60 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: a timeline. One ruled row per entry: the marker (a time
-// like "9:30" or a year like "1859") set large in old-style figures on the
-// left, the entry beside it, and a hairline across the top of each row.
+// Page-builder block: a timeline, drawn as THE DOOR-STEP PATH (2026-09-24,
+// the Visit identity pass; the prototype's `.morning`,
+// docs/superpowers/prototypes/2026-09-23-visit/visit.html, after The Way on
+// Who We Are).
 //
-// THE CONNECTOR LINE IS GONE (art-direction pass, 2026-09-21, task 10). The
-// rows used to hang off a 2px gold vertical rule, which drew a diagram of a
-// list that the list already was: the marker column and the hairlines say
-// "these are in order" without a second device saying it again. The numerals
-// carry the band now, which is why they are set at h2 in oldstyle figures
-// rather than at body size in the display face.
+// Each row is a numbered step: a doorway (the row's own photo in a door arch,
+// or a rectangle when the photo is of the building, photo-subject.ts), the
+// number on the doorstep, and beside it the marker, the title, the note and
+// the text. A dotted trail runs from under each door to the next. A short
+// path with pictures climbs as a staircase; a long one (History's seven
+// eras) or one without pictures (Ministries) walks straight down, with the
+// numbers as its doors, so it never runs off the page.
 //
-// ALTERNATION. A row that carries a picture puts it on the OUTSIDE edge, and
-// the side alternates by index: even rows on the right, odd rows on the left,
-// where it bleeds to the edge of the screen. Nothing in the schema gives a row
-// an image today, so on the live site every row takes the default columns; the
-// grammar lives here so a row that gains one does not have to invent it.
+// Everything that changes the drawing is DERIVED (src/lib/morning-path.ts,
+// unit-tested; CLAUDE.md rule 15):
+//   - a marker that is a clock time is a titling numeral with its am/pm small
+//     and lower case; the step at Site settings' service time is the main
+//     step, drawn largest; a marker in words (a year) is set smaller; an
+//     empty marker (a welcome) draws no numeral;
+//   - on a timeline that tells the time, a row after the last time whose
+//     marker is words ("First Sundays") is a change to the morning rather
+//     than a step in it, so it lands after the path as a closing note, with
+//     the basin glyph (the prototype's Communion);
+//   - a note "Place (Room)" is split into the place and a gold-ruled room
+//     tag; a run of bullet lines "Class (Room): description" becomes a ruled
+//     class list with room tags.
+// Numbering stays because it is a real sequence (rule 11).
 //
-// Each row carries the id its `anchor` slug generated, so a link like
-// /visit#accessibility lands on the row rather than the top of the band.
-// `scroll-mt` keeps the sticky header from covering the row it just jumped to.
+// The rows' anchors still land on the row (scroll-mt clears the header). When
+// the window hero above drops its lancets into this band (SectionRenderer's
+// dropInto), --after-window pads the top to clear them.
 //
-// A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
+// A CONTENT block: the surface arrives as a prop from SectionRenderer.
 import SectionHeading from '@/components/SectionHeading.astro';
 import PortableText from '@/components/PortableText';
 import SanityImage from '@/components/SanityImage.astro';
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { surfaceClass } from '@/lib/surfaces';
+import { splitStega } from '@/lib/preview-stega';
+import { photoSubject } from '@/lib/photo-subject';
+import { bodySegments, noteParts, pathPlan, pathStairs } from '@/lib/morning-path';
+import { textParagraphs } from '@/lib/hymn-board';
+import { headingFit } from '@/lib/heading-grammar';
+import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
 interface TimelineRow {
   _key?: string;
-  marker?: string;
-  title?: string;
+  marker?: string | null;
+  title?: string | null;
   body?: any;
-  note?: string;
+  note?: string | null;
   anchor?: string;
-  /** Optional, and no schema field feeds it yet. See the ALTERNATION note. */
-  image?: any;
+  image?: SanityImageObject | null;
 }
 
 interface Props {
@@ -44,16 +62,34 @@ interface Props {
   heading?: string;
   rows?: TimelineRow[];
   surface?: 'background' | 'muted';
+  /** Site settings' service time: the main step is the one at this time. */
+  serviceTime?: string | null;
   headingId: string;
 }
 
-const { eyebrow, heading, rows = [], surface = 'background', headingId } = Astro.props as Props;
+const {
+  eyebrow,
+  heading,
+  rows = [],
+  surface = 'background',
+  serviceTime,
+  headingId,
+} = Astro.props as Props;
 const bg = surfaceClass(surface);
-const validRows = rows.filter((r) => r?.marker || r?.title);
+const plan = pathPlan(rows, serviceTime);
+const withPictures = plan.steps.some((s) => !!s.row.image?.asset);
+const stairs = pathStairs(plan.steps.length, withPictures);
+const altOf = (img: SanityImageObject | null | undefined) =>
+  splitStega(((img as { alt?: string } | null)?.alt ?? '') as string).cleaned;
+const blocksOf = (body: unknown) => (Array.isArray(body) ? body : []);
 ---
 
-<section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-gutter py-section-lg">
+<section
+  class:list={[bg, 'tp-band']}
+  style={`--tp-ground: var(--color-${surface === 'muted' ? 'muted' : 'background'});`}
+  aria-labelledby={heading ? headingId : undefined}
+>
+  <div class="tp-wrap mx-auto max-w-content px-gutter">
     <SectionHeading
       eyebrow={eyebrow}
       headline={heading}
@@ -61,79 +97,421 @@ const validRows = rows.filter((r) => r?.marker || r?.title);
       level="h2"
       align="left"
       tone="church"
+      face="display"
     />
 
     {
-      validRows.length > 0 && (
-        <div class="mt-section-md">
-          {validRows.map((row, i) => {
-            // A picture on the left is the odd row's asymmetry. Without one,
-            // the row keeps the default columns whatever its index is, so a
-            // band with no pictures reads as one straight column of numerals.
-            const hasImage = !!row.image?.asset;
-            const imageLeft = hasImage && i % 2 === 1;
-
-            const markerCols = imageLeft ? 'lg:col-start-4 lg:col-span-3' : 'lg:col-span-3';
-            const bodyCols = imageLeft
-              ? 'lg:col-start-7 lg:col-span-6'
-              : 'lg:col-start-4 lg:col-span-6';
-            const imageCols = imageLeft
-              ? 'lg:col-start-1 lg:col-span-3 bleed-left'
-              : 'lg:col-start-10 lg:col-span-3';
-
+      plan.steps.length > 0 && (
+        <ol
+          class="tp-path"
+          data-stairs={stairs ? '' : undefined}
+          data-pictures={withPictures ? '' : undefined}
+        >
+          {plan.steps.map((step, i) => {
+            const row = step.row;
+            const img = row.image?.asset ? row.image : null;
+            const note = noteParts(row.note);
             return (
-              <div
+              <li
                 id={row.anchor || undefined}
-                class="grid scroll-mt-[var(--header-offset)] grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] border-t border-hair py-10"
+                class:list={['tp-step scroll-mt-[var(--header-offset)]', step.main && 'is-main']}
+                style={stairs ? `--n:${i}` : undefined}
               >
-                {/* Every column is pinned to row 1 on a desktop, so the DOM can
-                    stay in reading order (marker, entry, picture) while the
-                    picture sits to the LEFT of both on an odd row. Without it
-                    the grid's auto-placement would push a col-start-1 item that
-                    comes last in the DOM onto a second line. */}
-                <p
-                  class:list={[
-                    'col-span-12 font-body text-h2 leading-none font-normal text-foreground oldstyle lg:row-start-1',
-                    markerCols,
-                  ]}
-                  data-reveal
-                >
-                  {row.marker}
-                </p>
-
-                <div class:list={['col-span-12 mt-4 lg:row-start-1 lg:mt-0', bodyCols]}>
+                <div class="tp-door">
+                  {withPictures &&
+                    (img && photoSubject(altOf(img)) === 'place' ? (
+                      <figure class="tp-rect m-0" data-reveal>
+                        <SanityImage
+                          source={img}
+                          width={440}
+                          sizes="(min-width: 721px) 220px, 96px"
+                          alt={altOf(img)}
+                          class="graded h-full w-full object-cover"
+                        />
+                      </figure>
+                    ) : img ? (
+                      <ArchFrame
+                        image={img}
+                        shape="door"
+                        width={440}
+                        sizes="(min-width: 721px) 220px, 96px"
+                        alt={altOf(img)}
+                        grade="warm"
+                        style="--arch-ratio: 100 / 124; --arch-mould: var(--color-brown-ink);"
+                      />
+                    ) : (
+                      <ArchFrame
+                        image={null}
+                        glyph="door"
+                        shape="door"
+                        width={440}
+                        sizes="220px"
+                        alt=""
+                        style="--arch-ratio: 100 / 124; --arch-mould: var(--color-brown-ink);"
+                      />
+                    ))}
+                  <span class="tp-no" aria-hidden="true">
+                    {step.n}
+                  </span>
+                </div>
+                <div class="tp-text" data-reveal>
+                  {step.kind === 'time' ? (
+                    <p class="tp-when">
+                      <span>{step.big}</span>
+                      {step.meridiem && <small>{step.meridiem}</small>}
+                    </p>
+                  ) : step.kind === 'word' ? (
+                    <p class="tp-when is-word">{step.big}</p>
+                  ) : null}
                   {row.title && (
-                    <h3 class="font-body text-h3 leading-snug font-normal text-foreground">
-                      {row.title}
+                    <h3 class="tp-title h-fit" style={headingFit(row.title, 'body')}>
+                      <span class="h-fit-in">{row.title}</span>
                     </h3>
                   )}
-                  {row.body && (
-                    <PortableText
-                      value={row.body}
-                      className="mt-3 max-w-[58ch] font-body text-body [&>p+p]:mt-4 [&>p]:my-0 [&_p]:text-muted-foreground"
-                    />
+                  {(note.place || note.room) && (
+                    <p class="tp-place">
+                      {note.place && <span>{note.place}</span>}
+                      {note.room && <span class="tp-room">{note.room}</span>}
+                    </p>
                   )}
-                  {row.note && <p class="mt-4 font-ui text-ui text-gold-ink">{row.note}</p>}
+                  {bodySegments(blocksOf(row.body)).map((seg) =>
+                    seg.kind === 'classes' ? (
+                      <ul class="tp-classes">
+                        {seg.items.map((c) => (
+                          <li>
+                            <b>{c.name}</b>
+                            <span class="tp-room">{c.room}</span>
+                            <p>{c.desc}</p>
+                            {c.extra.map((x) => (
+                              <p>{x}</p>
+                            ))}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <PortableText
+                        value={seg.blocks}
+                        className="tp-body font-body text-body [&>p+p]:mt-4 [&>p]:my-0 [&_a]:decoration-gold [&_p]:text-foreground"
+                      />
+                    ),
+                  )}
                 </div>
-
-                {hasImage && (
-                  <div
-                    class:list={['col-span-12 mt-6 lg:row-start-1 lg:mt-0', imageCols]}
-                    data-reveal
-                  >
-                    <SanityImage
-                      source={row.image}
-                      width={520}
-                      sizes="(min-width: 1024px) 24vw, 100vw"
-                      class="aspect-[4/5] w-full object-cover"
-                    />
-                  </div>
-                )}
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ol>
       )
+    }
+
+    {
+      plan.landings.map((row) => {
+        const paras = blocksOf(row.body);
+        const [first, ...rest] = paras;
+        return (
+          <div
+            id={row.anchor || undefined}
+            class="tp-landing scroll-mt-[var(--header-offset)]"
+            data-reveal
+          >
+            <div class="tp-lh">
+              <BuildingGlyph name="basin" class="w-12 shrink-0 text-indigo" />
+              <div>
+                {row.marker && <p class="tp-kick">{row.marker}</p>}
+                {row.title && (
+                  <h3 class="tp-land-title h-fit" style={headingFit(row.title)}>
+                    <span class="h-fit-in">{row.title}</span>
+                  </h3>
+                )}
+              </div>
+            </div>
+            <div>
+              {first && (
+                <PortableText
+                  value={[first]}
+                  className="tp-say font-body [&>p]:my-0 [&_p]:text-indigo"
+                />
+              )}
+              {rest.length > 0 && (
+                <PortableText
+                  value={rest}
+                  className="tp-body mt-4 font-body text-body [&>p+p]:mt-4 [&>p]:my-0 [&_p]:text-foreground"
+                />
+              )}
+              {row.note && textParagraphs(row.note).map((n) => <p class="tp-place mt-4">{n}</p>)}
+            </div>
+          </div>
+        );
+      })
     }
   </div>
 </section>
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+  /* The door-step path (Timeline.astro, 2026-09-24, the Visit identity pass;
+   the prototype's .morning). --door-h is the height of a step's doorway, the
+   number sits on its sill and the dotted trail leaves from under it. */
+  .tp-wrap {
+    padding-block: calc(var(--spacing-section-lg) + var(--after-window, 0px))
+      var(--spacing-section-lg);
+  }
+  .tp-path {
+    list-style: none;
+    margin: clamp(44px, 5vw, 80px) 0 0;
+    padding: 0;
+    --arch: 34px;
+    --door-h: 34px;
+    --no-drop: 34px;
+    --stair: 0px;
+    --gap: clamp(36px, 4vw, 56px);
+  }
+  .tp-path[data-pictures] {
+    --arch: clamp(170px, 15vw, 220px);
+    --door-h: calc(var(--arch) * 1.24);
+    --no-drop: 17px;
+    --gap: clamp(48px, 5vw, 76px);
+  }
+  .tp-path[data-stairs] {
+    --stair: clamp(0px, 9vw, 150px);
+  }
+  .tp-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--arch) minmax(0, 40em);
+    column-gap: clamp(20px, 3vw, 48px);
+    align-items: start;
+    margin-left: calc(var(--n, 0) * var(--stair));
+    padding-bottom: var(--gap);
+  }
+  .tp-door {
+    position: relative;
+    min-height: var(--door-h);
+  }
+  .tp-rect {
+    aspect-ratio: 100 / 124;
+  }
+  .tp-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--arch) / 2 - 1.5px);
+    top: calc(var(--door-h) + 14px);
+    bottom: 8px;
+    width: var(--stair);
+    border-left: 3px dotted var(--color-brown-ink);
+    border-bottom: 3px dotted var(--color-brown-ink);
+    border-bottom-left-radius: 48px;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .tp-path:not([data-stairs]) .tp-step:not(:last-child)::after {
+    border-bottom: 0;
+    border-radius: 0;
+  }
+  .tp-no {
+    position: absolute;
+    z-index: 2;
+    left: calc(50% - 17px);
+    top: calc(var(--door-h) - var(--no-drop));
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--color-band-indigo);
+    color: var(--color-gold);
+    font-family: var(--font-display);
+    font-size: 17px;
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+    box-shadow: 0 0 0 4px var(--tp-ground);
+  }
+  .tp-when {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3em;
+    margin: 0 0 6px;
+    font-family: var(--font-display);
+    font-size: clamp(46px, 4.6vw, 70px);
+    line-height: 0.95;
+    color: var(--color-indigo);
+    font-variant-numeric: lining-nums;
+  }
+  .tp-when small {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 0.4em;
+    color: var(--color-brown-ink);
+  }
+  .is-main .tp-when {
+    font-size: clamp(58px, 6vw, 92px);
+  }
+  .tp-when.is-word {
+    font-size: clamp(28px, 2.6vw, 40px);
+    line-height: 1.05;
+  }
+  .tp-title {
+    margin: 0 0 4px;
+    font-family: var(--font-body);
+    font-size: clamp(28px, 2.4vw, 36px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--color-foreground);
+  }
+  .tp-place {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+    margin: 0 0 16px;
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-brown-ink);
+  }
+  .tp-room {
+    display: inline-block;
+    padding: 0 1px 1px;
+    border-bottom: 2px solid var(--color-gold);
+    font-family: var(--font-ui);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-indigo);
+    white-space: nowrap;
+    font-variant-numeric: lining-nums;
+  }
+  .tp-body {
+    max-width: 34em;
+  }
+  .tp-classes {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    max-width: 40em;
+    border-top: 1px solid var(--hair);
+  }
+  .tp-classes li {
+    padding: 14px 0 12px;
+    border-bottom: 1px solid var(--hair);
+  }
+  .tp-classes b {
+    margin-right: 10px;
+    font-family: var(--font-body);
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--color-foreground);
+  }
+  .tp-classes p {
+    margin: 4px 0 0;
+    font-size: 17.5px;
+    line-height: 1.5;
+    color: var(--color-foreground);
+  }
+  /* A change to the morning rather than a step in it (Communion). */
+  .tp-landing {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 20px clamp(24px, 4vw, 72px);
+    align-items: start;
+    margin-top: clamp(20px, 3vw, 40px);
+    padding-top: clamp(26px, 3vw, 40px);
+    border-top: 3px solid var(--color-gold);
+  }
+  .tp-lh {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .tp-lh > div {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .tp-kick {
+    margin: 4px 0 2px;
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-brown-ink);
+  }
+  .tp-land-title {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 3.2vw, 48px);
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-indigo);
+  }
+  .tp-say {
+    max-width: 36em;
+    font-size: clamp(22px, 1.9vw, 27px);
+    font-style: italic;
+    line-height: 1.35;
+  }
+  @media (max-width: 1120px) {
+    .tp-path[data-stairs] {
+      --stair: clamp(0px, 6vw, 70px);
+    }
+  }
+  @media (max-width: 900px) {
+    .tp-landing {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 720px) {
+    .tp-path[data-pictures] {
+      --arch: 96px;
+      --stair: 0px;
+      --gap: 44px;
+      --no-drop: 14px;
+    }
+    .tp-step {
+      column-gap: 18px;
+    }
+    .tp-path[data-pictures] .tp-no {
+      left: calc(50% - 14px);
+      width: 28px;
+      height: 28px;
+      font-size: 14px;
+    }
+    .tp-step:not(:last-child)::after {
+      width: 0;
+      border-bottom: 0;
+      border-radius: 0;
+    }
+    .tp-when {
+      font-size: 44px;
+    }
+    .is-main .tp-when {
+      font-size: 54px;
+    }
+    .tp-title {
+      font-size: 26px;
+    }
+    .tp-classes b {
+      font-size: 19px;
+    }
+    .tp-classes p {
+      font-size: 16.5px;
+    }
+  }
+  @media (max-width: 380px) {
+    .tp-path[data-pictures] .tp-step {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .tp-path[data-pictures] .tp-door {
+      width: var(--arch);
+      margin-bottom: 22px;
+    }
+    .tp-path[data-pictures] .tp-step::after {
+      display: none;
+    }
+    .tp-lh .building-glyph {
+      width: 36px;
+    }
+    .tp-land-title {
+      font-size: 28px;
+    }
+  }
+</style>

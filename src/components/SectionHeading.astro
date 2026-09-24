@@ -86,7 +86,7 @@ import { splitHeadingAccent } from '@/lib/heading-accent';
 import { hasInlineRich } from '@/lib/inline-rich';
 import InlineRich from '@/components/InlineRich.astro';
 import { headlineClass, type HeadlineScale } from '@/lib/headline-scale';
-import { H2_DISPLAY } from '@/lib/heading-grammar';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 
 interface Props {
   eyebrow?: string;
@@ -191,6 +191,11 @@ const headingClass =
           ? 'font-body text-h2 leading-[1.05] font-normal max-w-[22ch]'
           : 'font-body text-h3 leading-[1.15] font-normal';
 
+// No word breaks in the middle (heading-grammar.ts headingFit): the heading is
+// its own inline-size container and its text is capped so the longest word fits.
+const titlingFace = level === 'h1' || (level === 'h2' && face === 'display');
+const fitStyle = headingFit(headline, titlingFace ? 'display' : 'body');
+
 const wrapperAlign = align === 'center' ? 'text-center mx-auto' : 'text-left';
 // text-bg, never text-cream, on anything that sits on a FIXED dark band:
 // --color-cream flips to ink under .dark (globals.css) while --color-bg stays
@@ -227,58 +232,64 @@ const toneSub =
   {
     headline &&
       (level === 'h1' ? (
-        <h1 id={headingId} class:list={[headingClass, toneHeadline]}>
-          {scriptFound ? (
-            <>
-              {scriptBefore}
-              <span class="font-script">{scriptWord}</span>
-              {scriptAfter}
-            </>
-          ) : colour.found ? (
-            <>
-              {colour.before}
-              <span class="heading-accent">{colour.word}</span>
-              {colour.after}
-            </>
-          ) : (
-            headline
-          )}
+        <h1 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
+          <span class="h-fit-in">
+            {scriptFound ? (
+              <>
+                {scriptBefore}
+                <span class="font-script">{scriptWord}</span>
+                {scriptAfter}
+              </>
+            ) : colour.found ? (
+              <>
+                {colour.before}
+                <span class="heading-accent">{colour.word}</span>
+                {colour.after}
+              </>
+            ) : (
+              headline
+            )}
+          </span>
         </h1>
       ) : level === 'h2' ? (
-        <h2 id={headingId} class:list={[headingClass, toneHeadline]}>
-          {scriptFound ? (
-            <>
-              {scriptBefore}
-              <span class="font-script">{scriptWord}</span>
-              {scriptAfter}
-            </>
-          ) : colour.found ? (
-            <>
-              {colour.before}
-              <span class="heading-accent">{colour.word}</span>
-              {colour.after}
-            </>
-          ) : (
-            headline
-          )}
+        <h2 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
+          <span class="h-fit-in">
+            {scriptFound ? (
+              <>
+                {scriptBefore}
+                <span class="font-script">{scriptWord}</span>
+                {scriptAfter}
+              </>
+            ) : colour.found ? (
+              <>
+                {colour.before}
+                <span class="heading-accent">{colour.word}</span>
+                {colour.after}
+              </>
+            ) : (
+              headline
+            )}
+          </span>
         </h2>
       ) : (
-        <h3 id={headingId} class:list={[headingClass, toneHeadline]}>
-          {scriptFound ? (
-            <>
-              {scriptBefore}
-              <span class="font-script">{scriptWord}</span>
-              {scriptAfter}
-            </>
-          ) : colour.found ? (
-            <>
-              {colour.before}
-              <span class="heading-accent">{colour.word}</span>
-              {colour.after}
-            </>
-          ) : (
-            headline
-          )}
+        <h3 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
+          <span class="h-fit-in">
+            {scriptFound ? (
+              <>
+                {scriptBefore}
+                <span class="font-script">{scriptWord}</span>
+                {scriptAfter}
+              </>
+            ) : colour.found ? (
+              <>
+                {colour.before}
+                <span class="heading-accent">{colour.word}</span>
+                {colour.after}
+              </>
+            ) : (
+              headline
+            )}
+          </span>
         </h3>
       ))
   }

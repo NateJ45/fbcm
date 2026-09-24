@@ -10,6 +10,7 @@
 import { parseSanityAssetDimensions } from './sanity-asset.ts';
 import { splitStega } from './preview-stega.ts';
 import { blockText, type PtBlock } from './span-split.ts';
+import { photoSubject } from './photo-subject.ts';
 
 export type PhotoShape = 'ground' | 'window' | 'frame' | 'plate' | 'legend' | 'row';
 export interface PhotoRow {
@@ -86,7 +87,10 @@ export function assignPhotoShapes(
     if (d.a <= 0.85) shape = portraits++ === 0 ? 'window' : 'frame';
     else if (d.a >= 1.8 && findLegend(row.body)) shape = 'legend';
     else if (d.a < 1.25 && isArchival(row.image?.alt, row.eyebrow)) shape = 'plate';
-    else if (d.a >= 1.3 && d.w >= 2000 && groundOk(i)) {
+    // A ground is a view of the PLACE (2026-09-24, the Visit identity pass):
+    // a photo of people is framed in an arch instead (rollout rule 3), so it
+    // never becomes the band's ground and never spends the ground budget.
+    else if (d.a >= 1.3 && d.w >= 2000 && photoSubject(row.image?.alt) === 'place' && groundOk(i)) {
       shape = 'ground';
       grounds.push(i);
     } else shape = 'row';

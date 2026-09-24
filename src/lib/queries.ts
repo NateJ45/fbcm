@@ -47,6 +47,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     _type == "imageTextSection" => {
       ...,
       image${IMAGE_PROJECTION},
+      detail${IMAGE_PROJECTION},
       cta${CTA_PROJECTION}
     },
     _type == "gallerySection" => {
@@ -122,6 +123,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       ...,
       rows[]{
         ...,
+        image${IMAGE_PROJECTION},
         "anchor": anchor.current
       }
     },
