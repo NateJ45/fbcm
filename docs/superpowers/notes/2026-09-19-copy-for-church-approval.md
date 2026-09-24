@@ -370,6 +370,15 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none: the goals' names and small lines are Who We Are's own)
 
+## Scripture index and site search (2026-09-24, `feat/scripture-search`)
+
+### New sentences
+
+- /blog/scripture: the page title "Scripture index"; the lede "Every passage preached in a sermon preview, from Genesis to Revelation: 106 passages from 24 books, each with the Sunday it was preached." (the counts are derived and change as previews are added); the headings "Old Testament", "New Testament" and, only when a reading cannot be read, "Other readings"; the empty state "The first sermon previews are on their way."; the meta description "Every Bible passage preached at First Baptist Church Muncie, book by book, with the sermon preview for each."
+- The blog's browse row: "By passage".
+- The search: "Search the site" (the header button's name, the mobile menu row and the dialog's label), the box's placeholder "Sermons, passages, pages", "12 results for “Jeremiah”" / "1 result for ..." / "Nothing found for “...”.", "More results", "Close", "Search is not available right now." and the foot link "Every passage preached, book by book". UI labels.
+- Search result rows say "Page" in the date column for a page (a post shows its Sunday or posted date).
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

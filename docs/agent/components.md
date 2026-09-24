@@ -74,7 +74,9 @@ The core component set, by role. All in `src/components/` unless noted.
    body) in columns 1 to 7; in columns 9 to 12 the ORDER, a ruled `dl`. A sermon preview gets
    Sunday / Reading / Series / Preaching / Listen from `src/lib/sermon-derive.ts` and
    `post-body.ts`; any other post gets Posted / Written by / Takes / Filed under. Empty rows are
-   omitted, never guessed.
+   omitted, never guessed. The Reading links to its book on `/blog/scripture` when the
+   scripture index lists the post (2026-09-24), and the date and reading rows carry
+   `data-pagefind-meta` for the site search's result rows.
 2. **Cover** -- always in a door arch (`ArchFrame shape="door"`, gold mould) and never
    captioned (identity pass, 2026-09-24). A real photograph (width >= 2000 and ratio >= 1.3)
    is a wide door across the measure (ratio 100/42); anything else (the sermon slides) hangs
@@ -246,6 +248,47 @@ truth are still the reference for what each branch should look like:
 These panels are wired in `src/sanity/structure.ts` under a "Start Here" parent list item, below the repo-data **Help & Guide** handbook (PORTS.md card 41). The `studioGuide` and `studioNotes` singletons each have two views: a rendered component view and an Edit form view. All use plain text fields throughout (no Portable Text) to avoid a Studio renderer dependency, and all are excluded from Canvas.
 
 The desktop nav dropdowns live directly in `Header.astro` as SSR'd `<details>` (see `docs/agent/page-architecture.md`), not as a React island.
+
+### Scripture index and site search (2026-09-24, `feat/scripture-search`)
+
+Both belong to the `journal` scaffold capability; every new file is `scaffold-file: journal`.
+
+- **`/blog/scripture`** (`src/pages/blog/scripture.astro`) -- every passage preached in a sermon
+  preview, Genesis to Revelation. Nothing is stored: `scriptureRowsOf()` takes each preview's
+  `readingOf(opening)` (the same derivation as the post's Reading row) and its derived Sunday;
+  `buildScriptureIndex()` in `src/lib/scripture-index.ts` (unit-tested) parses and groups them:
+  66 books in canonical order with abbreviations and numbered books ("I Cor.", "1Cor", "Ps",
+  "Song of Solomon"), verse ranges, cross-chapter ranges ("John 3:16-4:2"), whole chapters,
+  several references in one reading (a post is listed under every book it names). A reading
+  that does not parse is never dropped or forced into a book: it goes to "Other readings" as
+  written (none today). The page is the register's grammar: the indigo `Opener` with derived
+  counts, the blog's browse row (`Filters`, "By passage" current), a book jump list, then each
+  testament's h2 and each book as a group under a gold rule (the book where the register hangs
+  its year), one ruled row per passage: reference | post | Sunday. Anchors: each book's h3 is
+  `bookSlug(name)` (`#1-corinthians`), each passage row its own (`#jeremiah-29-10-12`).
+- **`Filters.astro`** ends with a "By passage" link to the index on /blog and every archive.
+- **Site search** (Pagefind 1.5.2). `scripts/pagefind-index.mjs` runs after `astro build` inside
+  `npm run build` and writes `dist/client/pagefind/`. Pages opt in: BaseLayout's `searchBody`
+  puts `data-pagefind-body` on `<main>` (home, builder pages not hidden from search, /privacy)
+  with a hidden `data-pagefind-meta="title"` from the page's `<title>`; a post marks its
+  `<article>`. Archives, the scripture index, 404, Studio and preview are not indexed. Chrome
+  inside a body carries `data-pagefind-ignore` (a post's eyebrow, order label, tags and side
+  column; the home page's blog rows). The script skips itself when `src/components/search/` has
+  been scaffolded out, and stops with an error if no built page opted in.
+- **The dialog** (`src/components/search/search-dialog.ts` + `search-dialog.css`) is built on
+  the first open and never before: module, CSS (`?inline`, injected as a `<style>`), Pagefind's
+  JS and the index all load then. `trigger.ts` (~0.7 KB, imported by BaseLayout's layout script)
+  opens it from any `[data-search-open]` (the header's glass button), the
+  `site-search:open` event (the mobile menu's "Search the site", which closes the sheet first;
+  the dialog waits for the Radix sheet to unmount), "/" or Ctrl/Cmd+K. A native `<dialog>`
+  with `showModal()`: full sheet, the indigo head (gold label, the box in Castoro on a gold
+  rule, the paper Close plate), results on paper as register rows (date or "Page" | title and
+  excerpt with the match in `<mark>` | reading), 10 at a time with "More results", a foot link
+  to the scripture index. Escape always closes (Chromium otherwise spends it clearing a search
+  box), arrows move between results, Enter follows the first, focus returns to the opener, Lenis
+  stops while it is open. Row rules are `src/lib/search-results.ts` (unit-tested); excerpts are
+  rebuilt node by node (text and `<mark>` only). Pagefind's own UI files are written by its API
+  but nothing links them.
 
 ### Church identity (the Who We Are "alive" pass, 2026-09-23)
 
