@@ -66,6 +66,7 @@ export const SECTION_ARRAY_FIELDS: readonly string[] = ['pageBuilder', 'addition
 export const HEADING_ACCENT_FIELDS: Readonly<Record<string, string>> = {
   richTextSection: 'heading',
   ctaBandSection: 'headline',
+  heroSection: 'headline',
 };
 
 // scaffold: church

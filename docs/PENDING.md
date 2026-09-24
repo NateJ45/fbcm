@@ -797,9 +797,47 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
     in dark mode (the drawing's multiply blend needs a light ground; gold and taupe are
     fixed grounds). In dark mode the home page ends on three light bands in a row
     before the indigo footer.
-- **Deferred to the rollout: the RichText, Timeline and FAQ headings.** Their h2s are
-  still the Castoro reading face beside the Titling band grammar (`H2_DISPLAY`); by
-  ruling (2026-09-23) they move with the Visit and Beliefs pages in the identity rollout.
+- **Visit identity (2026-09-24, `feat/visit-identity`): apply after the deploy.**
+  `node scripts/seed-pages.mjs --only visit` plans a full `pageBuilder` replace (7
+  bands); read it, then `--apply` once the schema with `heroSection.headingAccent`,
+  `imageTextSection.detail` and `timelineRow.image` is deployed (rule 1). The live
+  page was checked against main's module output before the recompose: no editor edits,
+  only settings placeholders. Then delete `src/pages/styleguide/visit.astro`, its
+  `tests/routes.ts` line and `scripts/data/fixtures/visit.json`, and recapture parity.
+- **Visit owner questions.** (1) The teens at the card table in the prototype
+  (`08181c_42c2e16b`) is the same photograph as Home's `b98776_a92b8eb7` (a twin the
+  photo library does not mark), so the hero's third light is the young guitarist
+  (`visit-hero-guitar`). (2) **Visit's Worship step and Home's Worship goal share a
+  photo** (`08181c_30a02cce`, the congregation facing the band): the controller's
+  ruling (2026-09-24, fix round 1) accepts that cross-page share, the photo Nathan said
+  to keep, over a same-page twin with the hero's Christmas congregation, until the photo
+  morning. (3) The Sunday School step photo is 491px tall at source and the Fellowship
+  and classroom-floor photos are marked soft: top of the photo-morning list.
+- **Rule 20 after the Visit fix round (2026-09-24).** This branch's component CSS left
+  globals.css (component style blocks, `src/styles/ledger.css`,
+  `src/styles/photo-shapes.css`), which took post, 404 and privacy pages down to
+  131,426 / 121,371 B. The page-builder pages still inline one 143,964 B bundle,
+  because SectionRenderer statically imports every section, so every section's CSS
+  ships on every page-builder page; /blog inlines that bundle plus its own 5.4 KB
+  (149,334 B in one `<style>`, two files each under the per-file limit). Under 140 KB
+  for those pages needs the section CSS split by page (not possible with static
+  imports) or a trim of shared CSS; a dead-class scan of globals.css found 12 unused
+  selectors, too few to matter.
+- **Headings gate known finding (not Visit's):** DocumentList's register year heading
+  "Undated" (h3, `font-display text-h3` in a `md:col-span-2` column) breaks mid-word at
+  768 and 1024 on /blog and /styleguide. `tests/headings.spec.ts` lists it in `KNOWN`;
+  take it off the list when the owner applies `headingFit` (heading-grammar.ts) to it.
+- **`src/components/blog/Opener.astro` fails `npm run format:check` on main** (one
+  `<h1>` line over the print width). Formatting only; the journal branch's file.
+- **Photo library: mark `08181c_42c2e16b` and `b98776_a92b8eb7` as twins** in
+  `scripts/data/photo-library.json`, so the next reuse check sees them.
+- **`weekOfLabel()` still reads the UTC day.** The sermon-preview "week of" label
+  (`blog-derive.ts`, shared by the blog index and the home blog rows) is the one date
+  left on UTC; every other date is on the church's day (`localDay()`,
+  America/Indiana/Indianapolis). A preview published after 8pm Eastern names the next
+  day, and on a home row its label can disagree with the row's `<time datetime>`. Move
+  it to `localDay()` with a late-evening test; it changes blog index renders, so
+  recapture parity.
 - **Owner questions from the final review:** the handbell photo is on Home (Work goal)
   and on Ministries (a separate upload of the same photograph, so the spare-pool dedup
   cannot see it); the two-girls lancet photo in What to Expect is low resolution.

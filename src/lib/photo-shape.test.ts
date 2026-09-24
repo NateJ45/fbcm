@@ -58,7 +58,9 @@ test('findLegend: a "left to right" paragraph followed by 3 to 8 names', () => {
 
 test('the seven test bands land where the prototype put them', () => {
   const rows: PhotoRow[] = [
-    it(2400, 1309, { image: img(2400, 1309, 'The congregation standing to sing') }), // landscape-short
+    it(2400, 1309, {
+      image: img(2400, 1309, 'The sanctuary from the balcony, light through the glass'),
+    }), // landscape-short
     { _type: 'richTextSection' },
     it(1600, 908), // landscape-long
     { _type: 'richTextSection' },
@@ -119,4 +121,12 @@ test('resolveLegend: any other shape passes through without a lookup', () => {
   const rest = [p('Pictured left to right:'), li('A'), li('B'), li('C')];
   assert.deepEqual(resolveLegend('ground', rest), { shape: 'ground', legend: null });
   assert.deepEqual(resolveLegend('row', rest), { shape: 'row', legend: null });
+});
+
+test('a wide sharp photo of PEOPLE is never a ground (people go in arches, 2026-09-24)', () => {
+  const rows: PhotoRow[] = [
+    it(2400, 1309, { image: img(2400, 1309, 'The congregation standing to sing') }),
+    { _type: 'richTextSection' },
+  ];
+  assert.equal(assignPhotoShapes(rows).get(0), 'row');
 });

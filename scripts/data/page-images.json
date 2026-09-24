@@ -86,5 +86,17 @@
   "wwa-next-worship": { "library": "81f7ac_bd44352f9ed34f33bedd96f24b8d912c_tilde_mv2.jpg", "alt": "Musicians performing on piano, guitar and vocals at the front of the sanctuary, song lyrics on a screen behind them." },
   "wwa-next-kitchen": { "library": "b98776_46a45e062a994a32bb3a6fd407690ba9_tilde_mv2.jpg", "alt": "A group of adults standing together in a church kitchen, food laid out on the counter in front of them." },
   "wwa-next-kendall": { "library": "08181c_496101713a394635b5bb1c3f0cd91db4_tilde_mv2.jpg", "alt": "Kendall Ellis smiles for a staff portrait, with colorful stained glass filling the background." },
-  "wwa-next-doors": { "library": "08181c_0f7fd9a1236b44e5b5458a4620b2da54_tilde_mv2.jpg", "alt": "A view straight up the church tower and stained glass window with the red entry doors at the base, against a partly cloudy sky." }
+  "wwa-next-doors": { "library": "08181c_0f7fd9a1236b44e5b5458a4620b2da54_tilde_mv2.jpg", "alt": "A view straight up the church tower and stained glass window with the red entry doors at the base, against a partly cloudy sky." },
+
+  "visit-hero-dinner": { "library": "08181c_1760306b3d9843a4a2eeb2c1e3f508ba_tilde_mv2.jpg", "alt": "A group of girls of different ages seated around a round table set with a blue tablecloth, plates and cups, smiling for the camera." },
+  "visit-hero-congregation": { "library": "81f7ac_2ca8ac4b6967488a97b1dd9902580f66_tilde_mv2.jpg", "alt": "A congregation seated in the sanctuary decorated for Christmas, a screen at the front showing the service." },
+  "visit-hero-guitar": { "library": "08181c_2ec5508a231d47b4a1de6588298338bc_tilde_mv2.jpg", "alt": "A young man with curly hair playing an acoustic guitar, reading from a music stand, an amplifier beside him." },
+  "visit-step-welcome": { "library": "08181c_60b24878ae9740c8b37634e80b3c70ef~mv2.jpg", "alt": "Three teenage girls sit together in a pew, each holding an open bible, smiling for the camera." },
+  "visit-step-school": { "library": "b98776_d35c1da859304aa79a6389960d9178bd_tilde_mv2.jpg", "alt": "Children playing a group game with a long ribbon or hoop in a classroom." },
+  "visit-step-fellowship": { "library": "08181c_efdc41f361ba4c548a0e521d0bdf2aa6_tilde_mv2.jpg", "alt": "A group of adults sit together at a table set with an autumn runner and papers, talking and laughing during a fall dinner." },
+  "visit-step-worship": { "library": "08181c_30a02cce2e404f6b871a92ff7113ad45_tilde_mv2.jpg", "alt": "The congregation standing in the sanctuary, facing the worship band at the front." },
+  "visit-doors": { "library": "08181c_6714073c050b4ac28ea695fd3288b4aa_tilde_mv2.jpg", "alt": "The glass doors at the Adams Street circular drive, the church's wheelchair accessible entrance, set into a carved limestone archway." },
+  "visit-children-floor": { "library": "08181c_48ba80a7454a4d42a300e61c2603a301_tilde_mv2.jpg", "alt": "Children are seen from directly above, gathered around strips of yellow tape laid out on the floor for a group game." },
+  "visit-children-baby": { "library": "08181c_9663d13b5b4c47588862cfc8068ec5e4_tilde_mv2.jpg", "alt": "A sleeping newborn baby wrapped in a pink crocheted blanket, close-up portrait." },
+  "visit-building-corner": { "library": "08181c_1c05a295546247c2acfe971dd8b9bc4d_tilde_mv2.jpg", "alt": "The full limestone church building is seen from a street corner on a sunny day, tower and wings visible." }
 }

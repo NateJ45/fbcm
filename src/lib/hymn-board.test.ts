@@ -1,7 +1,7 @@
 // scaffold-file: church
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { boardRows, clockOf, readBig, sameTime } from './hymn-board.ts';
+import { boardRows, clockOf, doorTag, readBig, sameTime, textParagraphs } from './hymn-board.ts';
 import { splitStega } from './preview-stega.ts';
 
 // A stega run as the preview client appends it: a U+200B prefix and base-4
@@ -159,4 +159,23 @@ test('the meridiem must agree when both sides carry one', () => {
     rows.map((r) => r.main),
     [false, true],
   );
+});
+
+test('doorTag reads the accessible door off its own directions', () => {
+  assert.equal(
+    doorTag('Our wheelchair accessible entrance is off our circular drive.'),
+    'Wheelchair accessible',
+  );
+  assert.equal(doorTag('A wheel-chair accessible door' + STEGA), 'Wheelchair accessible');
+  assert.equal(doorTag('The large wooden front doors which go into the sanctuary.'), null);
+  assert.equal(doorTag(null), null);
+});
+
+test('textParagraphs splits on blank lines and keeps the payload on the last', () => {
+  assert.deepEqual(textParagraphs('One.\n\nTwo.'), ['One.', 'Two.']);
+  assert.deepEqual(textParagraphs('One line\nstill one.'), ['One line\nstill one.']);
+  assert.deepEqual(textParagraphs(''), []);
+  const paras = textParagraphs('One.\n\nTwo.' + STEGA);
+  assert.equal(paras[0], 'One.');
+  assert.equal(splitStega(paras[1]).encoded, STEGA);
 });
