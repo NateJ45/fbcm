@@ -196,8 +196,7 @@ function build(): Parts {
     if ((e.target as Element).closest('a')) dialog.close();
   });
   dialog.addEventListener('close', () => {
-    (window as unknown as { lenis?: { start: () => void } }).lenis?.start();
-    document.documentElement.classList.remove('ss-open');
+    release();
     const back = opener;
     opener = null;
     if (back && back.isConnected) back.focus();
@@ -275,6 +274,23 @@ async function run(value: string) {
   parts.status.textContent = countLabel(results.length, q);
   await showMore();
 }
+
+/** Give the page its scroll back: Lenis running, the html lock off. */
+function release() {
+  (window as unknown as { lenis?: { start: () => void } }).lenis?.start();
+  document.documentElement.classList.remove('ss-open');
+}
+
+// A router navigation while the search is open (Back, Forward, a link the
+// dialog's own click handler did not see) swaps <body> and the dialog with it,
+// so its `close` event never fires and Lenis stayed stopped on the next page:
+// the wheel did nothing until a reload (2026-09-24, found on the live site).
+// Close it before the swap, and release unconditionally, since `close` is
+// dispatched as a task and can land after the new page has loaded.
+document.addEventListener('astro:before-swap', () => {
+  if (parts?.dialog.open) parts.dialog.close();
+  release();
+});
 
 /** Open the search. `from` gets the focus back when it closes. */
 export async function openSearch(from?: HTMLElement | null): Promise<void> {
