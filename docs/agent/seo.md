@@ -56,12 +56,12 @@ Built by pure functions in `src/lib/church-schema.ts` and `src/lib/post-schema.t
 journal's own file, so the scaffold removes it with the blog), wrapped by
 `src/lib/schemas.ts`. One block per type per page, never a second copy:
 
-| Page | Blocks |
-| --- | --- |
-| every page | the church, typed `["Church", "Organization"]` (BaseLayout) |
-| pages and posts | + a `BreadcrumbList` (the route passes it) |
-| `/visit` | + an `Event`: Sunday worship, with a weekly `eventSchedule` |
-| `/post/<slug>` | + a `BlogPosting` |
+| Page            | Blocks                                                      |
+| --------------- | ----------------------------------------------------------- |
+| every page      | the church, typed `["Church", "Organization"]` (BaseLayout) |
+| pages and posts | + a `BreadcrumbList` (the route passes it)                  |
+| `/visit`        | + an `Event`: Sunday worship, with a weekly `eventSchedule` |
+| `/post/<slug>`  | + a `BlogPosting`                                           |
 
 - **Why `["Church", "Organization"]`.** schema.org's `Church` is a Place: it can carry an
   address, a geo point, a phone and a logo, but not an email, and it cannot be a
@@ -75,7 +75,7 @@ journal's own file, so the scaffold removes it with the blog), wrapped by
 - **The weekly service.** Google's event docs support only pages about a single event and
   ask for one `Event` per occurrence; they have no markup for a weekly series. schema.org
   does: an `Event` with `eventSchedule` (a `Schedule`, `repeatFrequency: P1W`, `byDay:
-  Sunday`, `startTime`, `endTime`, `duration`, `scheduleTimezone`). So the Visit page
+Sunday`, `startTime`, `endTime`, `duration`, `scheduleTimezone`). So the Visit page
   carries one Event with that schedule, and its `startDate`/`endDate` name one real
   occurrence: the Sunday of the newest post (deterministic for a given dataset, so parity
   holds; a build clock would change the bytes every Sunday). Online and in person
