@@ -845,6 +845,41 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   `src/pages/styleguide/home.astro`, the `'/styleguide/home'` line in `tests/routes.ts`
   and `scripts/data/fixtures/home.json`, then recapture parity.
 
+### Ministries identity: before the page is applied (2026-09-24)
+
+- **The order is: deploy, then goals, then the page.** The ministry document gains an
+  optional `goal` ("Goal it serves"). Deploy the code first (CLAUDE.md rule 1), then
+  `node scripts/set-ministry-goals.mjs` (dry; the plan on 2026-09-24: three patches,
+  Worship -> worship, Youth and Adult -> the-way, each quoting the church's own line)
+  and `--write` (backup first). Then `npm run seed-pages -- --only ministries` (the
+  plan on 2026-09-24: "would be replaced", `pageBuilder` [0] hero and [1] timeline only;
+  every other band matched the old module, so no editor edits to carry over) and
+  `--apply`. The goal index on /ministries appears with the first goal written and is
+  absent before it, so neither step can leave the page broken.
+- **Owner/church question: which goal do Children and Outreach serve?** Their own pages
+  point at more than one (the quotes are in `scripts/data/ministry-goals.json`):
+  Children at Worship (an intergenerational church) or across all four habits;
+  Outreach at Witness ("Local Partnership") or Work ("Serve", "Support"). Until
+  someone answers, they are listed under no goal, and Witness and Work stand in the
+  index with no ministry under them. An editor answers it in the Studio
+  (Ministries > the ministry > "Goal it serves"); nothing else changes.
+- **Photos shared with other pages, not changed here.** Four of the five ministry
+  documents' photos also appear on Home or Who We Are (the handbells as Home's Work
+  door; the youth, the women's luncheon and the mission team among Who We Are's goal
+  photos). The ministry documents had them first (`scripts/place-ministry-photos.mjs`,
+  2026-09-22), and they are data, not this page's composition, so this pass leaves
+  them; if the rollout's no-reuse rule is to hold on /ministries too, the fix is new
+  photos on the ministry documents or on those two pages.
+- **The goal index adds ~1.4 KB of scoped CSS to every page that renders sections**
+  (Astro bundles a component's styles wherever SectionRenderer is imported): measured
+  against main at 3334ee3, section pages 143,812 -> 145,475 B inline, /blog 148,902 ->
+  150,565 B, posts 131,263 -> 131,521 B. Every page still inlines (rule 20), but /blog's
+  inline sheet is over the 147,456 B figure the plan quotes; worth a look when the
+  wave's sheets are measured together.
+- **Clean-up once `/ministries` itself shows the composition.** Delete
+  `src/pages/styleguide/ministries.astro`, the `'/styleguide/ministries'` line in
+  `tests/routes.ts` and `scripts/data/fixtures/ministries.json`, then recapture parity.
+
 ### Staff identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** `scripts/pages/staff.mjs` uses fields the

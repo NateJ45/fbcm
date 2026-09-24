@@ -40,6 +40,7 @@ import type {
   RenderedBlock,
 } from './pageBuilder.types';
 import { splitStega } from './preview-stega.ts';
+import { goalIndex } from './ministry-goals.ts';
 
 /** The link a contact line ends on when the person has no email address. */
 export const CONTACT_OFFICE_LABEL = 'Contact the church office';
@@ -188,16 +189,37 @@ export function ministryBandAs(
 /**
  * Resolve every ministrySection in a page-builder array into the block it
  * draws as. Everything else passes through untouched, in order.
+ *
+ * THE GOAL INDEX (2026-09-24, the Ministries identity pass). When any Ministry
+ * band on the page names the goal its ministry serves, the derived goal index
+ * (src/lib/ministry-goals.ts) is drawn once, in front of the FIRST Ministry
+ * band: the church's four goals, each with its ministries linked to their
+ * bands. It is derived from the documents, so it cannot disagree with them
+ * (CLAUDE.md rule 15), and with no goal answered it is not drawn at all.
  */
 export function resolveMinistryBands(
   sections: PageBuilderBlock[] | null | undefined,
 ): RenderedBlock[] {
+  const list = Array.isArray(sections) ? sections : [];
+  const index = goalIndex(
+    list.filter(
+      (b): b is ProjectedMinistrySection =>
+        !!b && typeof b === 'object' && b._type === 'ministrySection',
+    ),
+  );
+  let indexPlaced = index === null;
   const out: RenderedBlock[] = [];
-  for (const block of Array.isArray(sections) ? sections : []) {
+  for (const block of list) {
     if (!block || typeof block !== 'object') continue;
     if (block._type === 'ministrySection') {
       const resolved = ministryBandAs(block);
-      if (resolved) out.push(resolved);
+      if (resolved) {
+        if (!indexPlaced && index) {
+          out.push(index);
+          indexPlaced = true;
+        }
+        out.push(resolved);
+      }
       continue;
     }
     out.push(block);

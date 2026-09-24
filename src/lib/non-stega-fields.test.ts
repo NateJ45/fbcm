@@ -11,3 +11,9 @@ test('an ordinary prose field is not on the list', () => {
   assert.equal(isNonStegaField('title'), false);
   assert.equal(isNonStegaField('body'), false);
 });
+
+// scaffold: church
+test('goal is a non-stega field (ministry.goal lists a ministry under one of the four goals)', () => {
+  assert.equal(isNonStegaField('goal'), true);
+});
+// scaffold:end
