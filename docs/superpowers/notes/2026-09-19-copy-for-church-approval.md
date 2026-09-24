@@ -97,12 +97,14 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### New sentences
 
 - Baptism (heading of the band beside the baptism photograph, 2026-09-23)
+- Read the documents (heading of the document band, 2026-09-24; it was the band’s eyebrow)
 - First Baptist Church Muncie is an American Baptist church in downtown Muncie: we hold to one triune God, to the Bible as our source for faith and practice, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself under the Lordship of Christ. (search description)
 
 ### Edits to the church’s own text
 
 - Re-cased: the hero headline is the church’s own epigraph, Ephesians 4:5, set as a sentence. "One Lord, One Faith, One Baptism" becomes "One Lord, one faith, one baptism."
-- Merged heading: "Lordship of Christ" and "Freedom to Serve" become one section, "Lordship of Christ and freedom to serve". Every paragraph under both headings is unchanged and in its original order.
+- Headings restored, 2026-09-24: the bands carry the church’s own headings again, "Our Basic Beliefs", "Four Values Baptists Emphasize" (with its four headings "Lordship of Christ", "Freedom to Serve", "Covenant Community" and "Church of Believers", no longer merged), "Our Confession & Denominational Identity Statement", "Our Church Covenant", "Membership" (with "Full Member" and "Associate Member" under it), and "Have questions?" (membership page) on the closing band. The headings the rebuild had written in their place ("What we hold", "Four things Baptists hold to", "What we have signed our names to", "The covenant we keep", "Full and associate members", "American Baptist Churches USA", "Ask us anything.") and every band eyebrow are gone.
+- Corrected: the heading "Our Baptist Affliation" becomes "Our Baptist Affiliation".
 - Cut connective: "Here are where the themes come together: The church is made up of believers..." begins at "The church is made up of believers...".
 - Corrected: "believers who have decided to follow the Jesus" becomes "believers who have decided to follow Jesus".
 - Cut connective: "At the same time, our own practice of baptism..." begins at "Our own practice of baptism...".

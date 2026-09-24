@@ -49,6 +49,8 @@ export const routes: string[] = [
   '/styleguide/history', // scaffold: church
   // And the composed ministries page (src/pages/styleguide/ministries.astro, 2026-09-24).
   '/styleguide/ministries', // scaffold: church
+  // And the composed beliefs page (src/pages/styleguide/beliefs.astro, 2026-09-24).
+  '/styleguide/beliefs', // scaffold: church
   // The plan-2b pages are listed here as they land.
   '/visit',
   '/who-we-are',

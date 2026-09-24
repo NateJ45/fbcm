@@ -9,7 +9,7 @@
 // believes, which is why it is in the nav and why its title and description are
 // written for that question.
 //
-// Six things about this file are deliberate.
+// Seven things about this file are deliberate.
 //
 // 1. EVERY PARAGRAPH IS READ OFF A CAPTURE, NEVER TYPED FROM MEMORY.
 //    linesBetween() and pick() THROW when an anchor phrase moves, so a band
@@ -56,6 +56,18 @@
 //    band in dark mode. The affiliation band is the church's own paragraph with
 //    the church's own two links in it instead. The full reasoning sits beside
 //    the band below.
+//
+// 7. THE IDENTITY PASS (2026-09-24, feat/beliefs-identity; rollout rules 6
+//    and 11). The bands take the church's OWN headings back ("Our Basic
+//    Beliefs", "Four Values Baptists Emphasize", "Our Confession &
+//    Denominational Identity Statement", "Our Church Covenant", "Membership",
+//    "Our Baptist Affiliation", and "Have questions?" on the closing band),
+//    the four values keep their four headings (the Lordship / Freedom merge is
+//    undone), and every band eyebrow is gone: each one only repeated the
+//    heading under it. Membership now comes before the covenant, so the
+//    covenant falls on the cadence's brand turn and is read, like the Who We
+//    Are pledge, on the indigo (src/lib/rich-ground.ts derives which text band
+//    is a brand band; nothing is stored). Not a word of doctrine changes.
 
 export default {
   id: 'page-beliefs',
@@ -63,10 +75,12 @@ export default {
   slug: 'beliefs',
 
   // Every sentence on this page that did not exist on the Wix site: the search
-  // description, and one band heading, "Baptism" (added 2026-09-23). Everything a visitor reads on the page itself is the
-  // church's own text, cut.
+  // description and two band headings, "Baptism" (2026-09-23) and "Read the
+  // documents" (the document band's old eyebrow, a heading since 2026-09-24).
+  // Everything else a visitor reads on the page is the church's own text, cut.
   newCopy: [
     'Baptism (heading of the band beside the baptism photograph, 2026-09-23)',
+    'Read the documents (heading of the document band, 2026-09-24; it was the band’s eyebrow)',
     'First Baptist Church Muncie is an American Baptist church in downtown Muncie: we hold to one triune God, to the Bible as our source for faith and practice, to baptism on a person’s own profession of faith, and to the freedom of each church to govern itself under the Lordship of Christ. (search description)',
   ],
 
@@ -75,7 +89,8 @@ export default {
   // words are still theirs.
   edits: [
     'Re-cased: the hero headline is the church’s own epigraph, Ephesians 4:5, set as a sentence. "One Lord, One Faith, One Baptism" becomes "One Lord, one faith, one baptism."',
-    'Merged heading: "Lordship of Christ" and "Freedom to Serve" become one section, "Lordship of Christ and freedom to serve". Every paragraph under both headings is unchanged and in its original order.',
+    'Headings restored, 2026-09-24: the bands carry the church’s own headings again, "Our Basic Beliefs", "Four Values Baptists Emphasize" (with its four headings "Lordship of Christ", "Freedom to Serve", "Covenant Community" and "Church of Believers", no longer merged), "Our Confession & Denominational Identity Statement", "Our Church Covenant", "Membership" (with "Full Member" and "Associate Member" under it), and "Have questions?" (membership page) on the closing band. The headings the rebuild had written in their place ("What we hold", "Four things Baptists hold to", "What we have signed our names to", "The covenant we keep", "Full and associate members", "American Baptist Churches USA", "Ask us anything.") and every band eyebrow are gone.',
+    'Corrected: the heading "Our Baptist Affliation" becomes "Our Baptist Affiliation".',
     'Cut connective: "Here are where the themes come together: The church is made up of believers..." begins at "The church is made up of believers...".',
     'Corrected: "believers who have decided to follow the Jesus" becomes "believers who have decided to follow Jesus".',
     'Cut connective: "At the same time, our own practice of baptism..." begins at "Our own practice of baptism...".',
@@ -217,9 +232,9 @@ export default {
     }
 
     // ── 2. Being Baptist ────────────────────────────────────────────────────
-    // baptists.txt. Three headings where the church had four, because the spec
-    // folds "Lordship of Christ" into "Freedom to Serve"; every paragraph under
-    // both is kept, in order. The manifesto epigraph at the top of the section
+    // baptists.txt, under the church's own four headings (the spec's merge of
+    // "Lordship of Christ" into "Freedom to Serve" was undone on 2026-09-24:
+    // the band's heading says FOUR values). The manifesto epigraph at the top of the section
     // is cut: the manifesto itself is in the document list further down.
     const lordship = linesBetween('baptists', 'Lordship of Christ', 'Freedom to Serve');
     const freedom = linesBetween('baptists', 'Freedom to Serve', 'Covenant Community');
@@ -251,8 +266,9 @@ export default {
     );
 
     const baptist = [
-      heading('Lordship of Christ and freedom to serve', 3, 'bp-h1'),
+      heading('Lordship of Christ', 3, 'bp-h1'),
       ...paragraphs(pick(lordship, 'Christ is head of his church', 'baptists'), 'bp-a'),
+      heading('Freedom to Serve', 3, 'bp-h1b'),
       ...paragraphs(pick(freedom, 'Churches are each autonomous', 'baptists'), 'bp-b'),
       ...paragraphs(pick(freedom, 'championed freedom for all people', 'baptists'), 'bp-c'),
       ...paragraphs(comma(pick(freedom, 'Thomas Helwys', 'baptists')), 'bp-d'),
@@ -389,7 +405,7 @@ export default {
     // page reconciles all three sources (note 2).
     const associateLines = linesBetween('membership', 'Associate Member', 'Have questions?');
     const membership = [
-      heading('Full member', 3, 'mb-h1'),
+      heading('Full Member', 3, 'mb-h1'),
       ...paragraphs(
         swap(
           pick(fullMemberLines, 'To join Muncie First Baptist Church', 'membership'),
@@ -401,7 +417,7 @@ export default {
       ...paragraphs(pick(fullMemberLines, 'may be admitted for membership', 'membership'), 'mb-b'),
       ...paragraphs(confirmationClass, 'mb-c'),
 
-      heading('Associate member', 3, 'mb-h2'),
+      heading('Associate Member', 3, 'mb-h2'),
       ...paragraphs(
         swap(
           swap(
@@ -516,8 +532,7 @@ export default {
         {
           _type: 'richTextSection',
           _key: 'beliefs-basic',
-          eyebrow: 'Our basic beliefs',
-          heading: 'What we hold',
+          heading: 'Our Basic Beliefs',
           width: 'narrow',
           body: basic,
         },
@@ -527,8 +542,7 @@ export default {
           _type: 'richTextSection',
           _key: 'beliefs-baptists',
           anchor: { _type: 'slug', current: 'baptists' },
-          eyebrow: 'Being Baptist',
-          heading: 'Four things Baptists hold to',
+          heading: 'Four Values Baptists Emphasize',
           width: 'narrow',
           body: baptist,
         },
@@ -556,8 +570,7 @@ export default {
         {
           _type: 'richTextSection',
           _key: 'beliefs-confessions',
-          eyebrow: 'Historic confessions',
-          heading: 'What we have signed our names to',
+          heading: 'Our Confession & Denominational Identity Statement',
           width: 'narrow',
           body: confessions,
         },
@@ -565,8 +578,7 @@ export default {
           _type: 'documentListSection',
           _key: 'beliefs-documents',
           anchor: { _type: 'slug', current: 'documents' },
-          eyebrow: 'Read the documents',
-          heading: 'Three documents',
+          heading: 'Read the documents',
           docs: [
             {
               _type: 'listedDocument',
@@ -596,25 +608,24 @@ export default {
           ],
         },
 
-        // 6. The covenant, whole, once.
-        {
-          _type: 'richTextSection',
-          _key: 'beliefs-covenant',
-          eyebrow: 'Our church covenant',
-          heading: 'The covenant we keep',
-          width: 'narrow',
-          body: covenant,
-        },
-
-        // 7. Membership. Where /beliefs#membership lands.
+        // 6. Membership. Where /beliefs#membership lands.
         {
           _type: 'richTextSection',
           _key: 'beliefs-membership',
           anchor: { _type: 'slug', current: 'membership' },
-          eyebrow: 'Membership',
-          heading: 'Full and associate members',
+          heading: 'Membership',
           width: 'narrow',
           body: membership,
+        },
+
+        // 7. The covenant, whole, once, after membership (note 7): the
+        //    cadence's brand turn, so it is read on the indigo.
+        {
+          _type: 'richTextSection',
+          _key: 'beliefs-covenant',
+          heading: 'Our Church Covenant',
+          width: 'narrow',
+          body: covenant,
         },
 
         // 8. Affiliation: the church's own paragraph with the church's own two
@@ -622,8 +633,7 @@ export default {
         {
           _type: 'richTextSection',
           _key: 'beliefs-affiliation',
-          eyebrow: 'Affiliation',
-          heading: 'American Baptist Churches USA',
+          heading: 'Our Baptist Affiliation',
           width: 'narrow',
           body: affiliation,
         },
@@ -632,8 +642,7 @@ export default {
         {
           _type: 'ctaBandSection',
           _key: 'beliefs-cta',
-          eyebrow: 'Questions?',
-          headline: 'Ask us anything.',
+          headline: 'Have questions?',
           subhead: `${settings.serviceTime}. ${streetLine}.`,
           cta: ctaInternal('Contact us', 'contact'),
           secondaryCta: ctaInternal('Plan a visit', 'visit'),

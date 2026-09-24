@@ -25,13 +25,13 @@ export type RichPiece =
   | { kind: 'standfirst'; block: PtBlock }
   | { kind: 'leadin'; block: PtBlock }
   | { kind: 'quote'; block: PtBlock }
-  | { kind: 'measure' | 'run2' | 'run3'; paras: RichPara[] }
+  | { kind: 'measure'; paras: RichPara[] }
   | { kind: 'table'; rows: { name: string | null; tail: PtBlock }[] }
   | { kind: 'labelled'; rows: { label: PtBlock; body: PtBlock[] }[] }
   | { kind: 'said'; prefix: string; hang: boolean; items: PtBlock[] }
   | { kind: 'triad'; prefix: string; items: PtBlock[] }
   | { kind: 'index' | 'plain'; items: PtBlock[]; ordered?: boolean }
-  | { kind: 'section'; head: PtBlock; pieces: RichPiece[] }
+  | { kind: 'section'; head: PtBlock; pieces: RichPiece[]; beside: boolean }
   | {
       kind: 'columns';
       level: 'h3' | 'h4';
@@ -154,27 +154,15 @@ function para(b: PtBlock, ctx: Ctx): RichPara {
   return { block: b, label: null };
 }
 
+// ONE MEASURE, ALWAYS (2026-09-24, the Beliefs identity pass; rollout rule 11,
+// "out: two-column small prose"). The Ledger used to pour a long run into two
+// or three newspaper columns at a smaller size. A church page is read, not
+// scanned, and a doctrinal paragraph broken across a column foot has to be
+// re-found at the top of the next; so prose of any length is now one reading
+// measure at the reading size. The Ledger's other shapes are unchanged.
 function proseRun(run: PtBlock[], ctx: Ctx): RichPiece[] {
   if (!run.length) return [];
-  const T = run.reduce((n, b) => n + wordsOf(b), 0);
-  const paras = run.map((b) => para(b, ctx));
-  if (ctx.narrow || T <= 60 || (run.length === 1 && T <= 110)) return [{ kind: 'measure', paras }];
-  const kind = Math.ceil(T / 150) >= 3 ? 'run3' : 'run2';
-  const sets: RichPara[][] = [];
-  let cur: RichPara[] = [];
-  let cw = 0;
-  for (const x of paras) {
-    const w = wordsOf(x.block);
-    if (cw + w > 600 && cur.length) {
-      sets.push(cur);
-      cur = [];
-      cw = 0;
-    }
-    cur.push(x);
-    cw += w;
-  }
-  if (cur.length) sets.push(cur);
-  return sets.map((s) => ({ kind, paras: s }));
+  return [{ kind: 'measure', paras: run.map((b) => para(b, ctx)) }];
 }
 
 // WIDE (opt-in; ImageText passes it only for a photo GROUND). The prototype's
@@ -182,9 +170,9 @@ function proseRun(run: PtBlock[], ctx: Ctx): RichPiece[] {
 // Ledger lacks. A LABEL is a paragraph of five words or fewer with no terminal
 // punctuation; followed by a paragraph that is not a label, it opens a
 // labelled row whose description is every paragraph up to the next label
-// ("Nursery Care (104)" beside its own text, never beside another room's). A
-// run of two or more paragraphs up to 180 words is a two-column set; anything
-// else is one measure. Cleaned text only (wordsOf, text).
+// ("Nursery Care (104)" beside its own text, never beside another room's).
+// Other prose is one measure (it used to be a two-column set up to 180 words;
+// rule 11, see proseRun). Cleaned text only (wordsOf, text).
 const isLabel = (b: PtBlock | undefined) =>
   !!b && wordsOf(b) <= 5 && !/[.!?:,;]["”’]?$/.test(text(b));
 
@@ -205,9 +193,7 @@ function wideRun(run: PtBlock[], ctx: Ctx): RichPiece[] {
     } else {
       const prose: PtBlock[] = [];
       while (i < run.length && !labelAt(i)) prose.push(run[i++]);
-      const T = prose.reduce((n, b) => n + wordsOf(b), 0);
-      const paras = prose.map((b) => para(b, ctx));
-      out.push({ kind: prose.length >= 2 && T <= 180 ? 'run2' : 'measure', paras });
+      out.push({ kind: 'measure', paras: prose.map((b) => para(b, ctx)) });
     }
   }
   return out;
@@ -298,6 +284,24 @@ function pullFoot(segs: Seg[]): { segs: Seg[]; foot: PtBlock | null } {
   return afterGroup || linkLine ? { segs: segs.slice(0, -1), foot: last.b } : { segs, foot: null };
 }
 
+// How much prose one h3 column may hold (2026-09-24, the Beliefs identity
+// pass; rollout rule 11, "out: small prose in columns"). Two across, a column
+// is wide enough to read 150 words in; three or four across it is a quarter
+// of the page, so only a short statement under each head stays a column and
+// anything longer is laid out as sections, one reading measure under each.
+// A section whose body is only reading text (measures, a standfirst, a
+// lead-in, a quote) sets its head BESIDE the text, in the left third, rather
+// than above it (2026-09-24, the Beliefs identity pass): the four Baptist
+// values read as four entries, not four headings over a half-empty page. A
+// section holding a list, a table or h4 columns keeps its head above, where
+// the list has the full width it was laid out for.
+const BESIDE_KINDS = new Set<RichPiece['kind']>(['measure', 'standfirst', 'leadin', 'quote']);
+// Never inside a narrow column (ImageText beside its photo): no room for it.
+const readsBeside = (pieces: RichPiece[], narrow: boolean): boolean =>
+  !narrow && pieces.length > 0 && pieces.every((x) => BESIDE_KINDS.has(x.kind));
+
+export const columnWords = (groups: number): number => (across(groups) >= 3 ? 70 : 150);
+
 export function classifyRichText(
   body: PtBlock[] | null | undefined,
   opts: { hasHead: boolean; narrow?: boolean; wide?: boolean },
@@ -331,7 +335,8 @@ export function classifyRichText(
     H3 >= 2 &&
     groupsAt(segs, 'h3').groups.every(
       (g) =>
-        g.body.every((s) => s.kind === 'p') && g.body.reduce((n, s) => n + segWords(s), 0) <= 150,
+        g.body.every((s) => s.kind === 'p') &&
+        g.body.reduce((n, s) => n + segWords(s), 0) <= columnWords(H3),
     )
   )
     shape = 'columns';
@@ -393,10 +398,12 @@ export function classifyRichText(
     if (shape === 'columns') pieces.push(columnsPiece(groups, 'h3', ctx, false, sf));
     else
       for (const g of groups) {
+        const inner = flow(g.body, ctx, { allowLede: false, standfirst: sf, inSection: true });
         pieces.push({
           kind: 'section',
           head: g.head,
-          pieces: flow(g.body, ctx, { allowLede: false, standfirst: sf, inSection: true }),
+          pieces: inner,
+          beside: readsBeside(inner, ctx.narrow),
         });
       }
   } else {

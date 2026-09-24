@@ -189,12 +189,13 @@ test('INDEX: ten one-line items; TRIAD: up to four short items', () => {
   );
 });
 
-test('long prose goes into two then three columns, split into sets of about 600 words', () => {
+test('long prose is one reading measure, never newspaper columns (rollout rule 11)', () => {
   const two = classifyRichText([p(words(120)), p(words(120))], { hasHead: false });
-  assert.deepEqual(kinds(two.pieces), ['run2']);
+  assert.deepEqual(kinds(two.pieces), ['measure']);
   const essay = Array.from({ length: 9 }, () => p(words(100)));
-  const three = classifyRichText(essay, { hasHead: false });
-  assert.deepEqual(kinds(three.pieces), ['run3', 'run3']);
+  const long = classifyRichText(essay, { hasHead: false });
+  assert.deepEqual(kinds(long.pieces), ['measure']);
+  assert.equal(long.pieces[0].kind === 'measure' && long.pieces[0].paras.length, 9);
 });
 
 test('narrow: beside a picture, prose is always one measure and columns are one across', () => {
@@ -412,10 +413,10 @@ test('wide: a trailing label with no description is not a row', () => {
   );
 });
 
-test('wide: 2+ paragraphs up to 180 words set as two columns; 181 words do not', () => {
+test('wide: prose between labels is one measure, short or long (rule 11)', () => {
   const at = (a: number, b: number) =>
     kinds(classifyRichText([p(words(a)), p(words(b))], { hasHead: false, wide: true }).pieces);
-  assert.deepEqual(at(90, 90), ['run2']);
+  assert.deepEqual(at(90, 90), ['measure']);
   assert.deepEqual(at(90, 91), ['measure']);
   // one paragraph is never a set
   assert.deepEqual(kinds(classifyRichText([p(words(40))], { hasHead: false, wide: true }).pieces), [
@@ -488,13 +489,12 @@ test('an h2 in the body is a section head (the band’s own heading is the h2)',
 test('a blockquote is its own piece and is never word-counted into prose columns', () => {
   const quote = bq(words(120, 'quoted'));
   const out = classifyRichText([p(words(120)), quote, p(words(120))], { hasHead: false });
-  assert.deepEqual(kinds(out.pieces), ['run2', 'quote', 'run2']);
+  assert.deepEqual(kinds(out.pieces), ['measure', 'quote', 'measure']);
   const q = out.pieces[1];
   assert.ok(q.kind === 'quote');
   assert.equal(q.block, quote);
   for (const x of out.pieces)
-    if (x.kind === 'run2' || x.kind === 'run3' || x.kind === 'measure')
-      assert.ok(!x.paras.some((r) => r.block === quote));
+    if (x.kind === 'measure') assert.ok(!x.paras.some((r) => r.block === quote));
 });
 
 test('a blockquote is never dropped by the ROW or REGISTER shapes', () => {
@@ -577,4 +577,40 @@ test('a band with h3 AND h4 (ministries, Adults) keeps its h4 columns', () => {
   const last = out.pieces[3];
   assert.ok(last.kind === 'section');
   assert.equal(txt(last.head), 'Fellowship and other events');
+});
+
+test('columns: three or four across hold a short statement each, not 150 words (rule 11)', () => {
+  const band = (n: number, w: number) =>
+    classifyRichText(Array.from({ length: n }, (_, i) => [h3(`Head ${i}`), p(words(w))]).flat(), {
+      hasHead: true,
+    }).shape;
+  assert.equal(band(2, 150), 'columns');
+  assert.equal(band(4, 70), 'columns');
+  // The four Baptist values, at 70 to 150 words each, are sections.
+  assert.equal(band(4, 120), 'sections');
+  assert.equal(band(3, 71), 'sections');
+});
+
+test('a section of reading text sets its head beside the text; one with a list does not', () => {
+  const out = classifyRichText(
+    [h3('Lordship of Christ'), p(words(90)), h3('Freedom to Serve'), p(words(200))],
+    { hasHead: true },
+  );
+  const sects = out.pieces.filter((x) => x.kind === 'section');
+  assert.equal(sects.length, 2);
+  assert.ok(sects.every((x) => x.kind === 'section' && x.beside));
+  const listed = classifyRichText(
+    [h3('Full Member'), p(words(20)), li('One'), li('Two'), li('Three')],
+    {
+      hasHead: true,
+    },
+  );
+  const s = listed.pieces.find((x) => x.kind === 'section');
+  assert.ok(s && s.kind === 'section' && !s.beside);
+  // Never beside a photo (narrow).
+  const narrow = classifyRichText([h3('A'), p(words(90)), h3('B'), p(words(200))], {
+    hasHead: false,
+    narrow: true,
+  });
+  assert.ok(narrow.pieces.every((x) => x.kind !== 'section' || !x.beside));
 });

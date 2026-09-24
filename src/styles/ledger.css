@@ -2,7 +2,10 @@
    into the pages that render the components importing it. */
 /* ---------- The Ledger: RichTextSection and ImageText bodies (2026-09-22) ----------
    Source of truth: docs/superpowers/prototypes/2026-09-22-richtext-and-photos/richtext/.
-   The classifier is src/lib/rich-shape.ts; the renderer is RichBody.astro. */
+   The classifier is src/lib/rich-shape.ts; the renderer is RichBody.astro. The
+   Beliefs identity pass (2026-09-24) re-inked it for the brand grounds below
+   (src/lib/rich-ground.ts), dropped the newspaper columns (rule 11) and set a
+   reading section's head beside its text. */
 .rt-g {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -46,15 +49,20 @@
   max-width: 36em;
   margin-bottom: 18px;
 }
+/* Body heads in the brand ink (2026-09-24): indigo on the paper, which
+ flips with the theme (THEMED_IDENTITY_PAIRS); a brand ground sets its own
+ through --rt-head below. */
 .rt-h3 {
   font-size: var(--text-h3);
   line-height: 1.15;
   font-weight: 400;
+  color: var(--rt-head, var(--color-indigo));
 }
 .rt-h4 {
   font-size: var(--text-item);
   line-height: 1.25;
   font-weight: 400;
+  color: var(--rt-head, var(--color-indigo));
 }
 .rt-measure {
   grid-column: 1 / 8;
@@ -62,34 +70,6 @@
 }
 .rt-measure p + p {
   margin-top: 1em;
-}
-.rt-run2 {
-  grid-column: 1 / 11;
-  columns: 2;
-  column-gap: clamp(16px, 2.5vw, 40px);
-  column-rule: 1px solid var(--hair);
-}
-.rt-run3 {
-  grid-column: 1 / -1;
-  columns: 3;
-  column-gap: clamp(16px, 2.5vw, 40px);
-  column-rule: 1px solid var(--hair);
-  font-size: var(--text-dense);
-  line-height: 1.62;
-  hyphens: auto;
-}
-.rt-run2 p,
-.rt-run3 p {
-  orphans: 3;
-  widows: 3;
-}
-.rt-run2 p + p,
-.rt-run3 p + p {
-  margin-top: 0.8em;
-}
-.rt-run3 + .rt-run3 {
-  border-top: 1px solid var(--hair);
-  padding-top: clamp(24px, 3vw, 36px);
 }
 .rt-runin {
   border-top: 1px solid var(--hair);
@@ -99,6 +79,9 @@
 .rt-runin .rt-rl {
   display: block;
   color: var(--color-gold-ink);
+  font-style: italic;
+  font-size: var(--text-item);
+  line-height: 1.3;
   margin-bottom: 4px;
 }
 .rt-cols {
@@ -176,7 +159,7 @@
   margin-top: 0.5em;
 }
 /* A numbered list keeps its numbers. The rows are grids (no list marker), so
-   the number is a counter in its own first column. */
+ the number is a counter in its own first column. */
 .rt-ledger.is-ol {
   counter-reset: rt-ol;
 }
@@ -292,6 +275,28 @@
   padding-top: 18px;
   margin-bottom: clamp(20px, 2.5vw, 30px);
 }
+/* A section with its head beside its text (rich-shape.ts, readsBeside). */
+.rt-section {
+  border-top: 1px solid var(--hair-strong);
+  padding-top: 18px;
+  align-items: start;
+}
+.rt-section .rt-sh {
+  grid-column: 1 / 5;
+  padding-right: 1em;
+}
+.rt-section .rt-sb {
+  grid-column: 5 / 12;
+}
+.rt-sb > * {
+  margin-bottom: 0;
+}
+.rt-sb > * + * {
+  margin-top: 1em;
+}
+.rt-sb .rt-measure {
+  max-width: 62ch;
+}
 .rt-foot {
   grid-column: 1 / -1;
   border-top: 1px solid var(--hair-strong);
@@ -301,13 +306,13 @@
 .rt-foot p {
   max-width: 62ch;
 }
+/* The row carries no rules of its own (2026-09-24, rollout rule 11: no
+   decorative hairlines); the heading beside the text is the structure. */
 .rt-rowline {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: subgrid;
-  border-top: 1px solid var(--hair-strong);
-  border-bottom: 1px solid var(--hair);
-  padding: 22px 0 26px;
+  padding: 6px 0 0;
   align-items: start;
 }
 .rt-rowline .rt-rh {
@@ -323,9 +328,7 @@
   line-height: 1.7;
 }
 .rt-rowline .rt-rt p + p {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--hair);
+  margin-top: 1em;
 }
 @media (min-width: 1024px) {
   .rt-said.is-hang {
@@ -351,11 +354,12 @@
   .rt-cols.n4 .rt-col {
     grid-column: span 6;
   }
-  .rt-run3 {
-    columns: 2;
-  }
 }
 @media (max-width: 1023px) {
+  .rt-section .rt-sh {
+    padding-right: 0;
+    margin-bottom: 10px;
+  }
   .rt-g > *,
   .rt-sub > *,
   .rt-ledger > .rt-row > *,
@@ -374,9 +378,6 @@
   }
   .rt-cols .rt-col {
     grid-column: span 6 !important;
-  }
-  .rt-run2 {
-    grid-column: 1 / -1;
   }
   .rt-lede,
   .rt-leadin {
@@ -402,13 +403,6 @@
   .rt-cols .rt-col {
     grid-column: 1 / -1 !important;
   }
-  .rt-run2,
-  .rt-run3 {
-    columns: 1;
-    column-rule: 0;
-    font-size: var(--text-body);
-    line-height: 1.7;
-  }
   .rt-said {
     column-gap: 0.4em;
   }
@@ -417,4 +411,63 @@
   .rt-index {
     columns: 1;
   }
+}
+
+/* ---------- The text band's brand grounds (2026-09-24, the Beliefs identity pass) ----------
+ Which band is which is derived (src/lib/rich-ground.ts): the cadence's muted
+ turn, in a colour that is not the band's neighbours'. The grounds are the
+ brand's own and FIXED in both themes, so every ink here is a band token and
+ every pair is gated in theme-tokens.test.ts ("the text bands"). The Ledger's
+ rules read --hair, --hair-strong and --color-gold-ink, so a ground only has
+ to re-point those. The band heading's markup is RichTextSection's (the Visit
+ pass's); it is only re-inked here, for its ground. */
+.rt-band {
+  color: var(--rt-ink);
+  --hair: var(--rt-hair);
+  --hair-strong: var(--rt-hair-strong);
+  --color-gold-ink: var(--rt-accent);
+  --muted-foreground: var(--rt-soft);
+}
+.rt-on-indigo,
+.rt-on-brown {
+  --rt-ink: var(--color-bg);
+  --rt-head: var(--color-gold);
+  --rt-accent: var(--color-gold);
+  --rt-soft: var(--color-band-taupe);
+  --rt-hair: rgba(213, 155, 41, 0.4);
+  --rt-hair-strong: rgba(213, 155, 41, 0.75);
+}
+.rt-on-indigo {
+  background: var(--color-band-indigo);
+}
+.rt-on-brown {
+  background: var(--color-band-brown);
+}
+.rt-on-taupe {
+  background: var(--color-band-taupe);
+  --rt-ink: var(--color-band-ink);
+  --rt-head: var(--color-band-indigo);
+  --rt-accent: var(--color-band-brown);
+  --rt-soft: var(--color-band-brown);
+  --rt-hair: rgba(57, 37, 30, 0.3);
+  --rt-hair-strong: rgba(57, 37, 30, 0.6);
+}
+.rt-band :is(.rt-head, .rt-rh) :is(h2, p) {
+  color: var(--rt-head);
+}
+.rt-band :is(.rt-head, .rt-rh) h2 + p {
+  color: var(--rt-ink);
+}
+.rt-band .heading-accent {
+  color: var(--rt-ink);
+}
+.rt-band a {
+  color: inherit;
+  text-decoration-color: var(--rt-accent);
+}
+.rt-band a:hover {
+  color: var(--rt-accent);
+}
+.rt-band :focus-visible {
+  outline-color: var(--rt-accent);
 }
