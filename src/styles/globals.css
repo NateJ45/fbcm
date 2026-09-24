@@ -3024,6 +3024,18 @@ body::before {
    bottom of its own box so it never fights the rows for contrast, held at 22%
    so the indigo stays the surface, and drifting 12px over 40 seconds so the
    sheet is not dead still while a visitor reads it. */
+/* The Hannaford rendering along the foot of the mobile menu (2026-09-24): a
+   pre-tinted gold copy of the footer's line art, drawn as a background image
+   rather than a gold fill behind a mask. A masked fill reads to axe as a solid
+   gold wash under the text above it (3.66:1 on "Sundays"); an image does not,
+   and on screen the two are the same. */
+.menu-rendering {
+  aspect-ratio: 952 / 452;
+  background-image: var(--menu-rendering);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: 0.18;
+}
 .menu-window {
   background-size: cover;
   background-position: 50% 45%;

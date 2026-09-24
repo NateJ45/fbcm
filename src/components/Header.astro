@@ -56,6 +56,7 @@ import { ChevronDown } from 'lucide-react';
 import logoLightAsset from '@/assets/logo-light.svg';
 import logoDarkAsset from '@/assets/logo-dark.svg';
 import menuWindowAsset from '@/assets/menu-window.jpg';
+import menuRenderingAsset from '@/assets/menu-rendering-gold.webp';
 import { splitStega } from '@/lib/preview-stega';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
 import { watchLiveHref } from '@/lib/live-service';
@@ -407,6 +408,7 @@ function isGroupActive(items: { href: string }[]) {
       street={street}
       watchUrl={watchHref}
       windowUrl={menuWindowImg.src}
+      renderingUrl={menuRenderingAsset.src}
       {...mobileCtaProps}
     >
       <GoalsRow size="menu" />

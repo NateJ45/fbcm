@@ -135,6 +135,9 @@ interface Props {
   watchUrl?: string;
   /** getImage() URL for src/assets/menu-window.jpg, 1200w, quality 70. */
   windowUrl?: string;
+  /** URL of src/assets/menu-rendering-gold.webp: the footer's Hannaford line
+   *  art pre-tinted gold, painted faintly along the sheet's foot. */
+  renderingUrl?: string;
   /** The four goals row (GoalsRow.astro), slotted in by Header.astro. */
   children?: ReactNode;
 }
@@ -197,6 +200,7 @@ export default function MobileNav({
   street,
   watchUrl,
   windowUrl,
+  renderingUrl,
   children,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -266,6 +270,17 @@ export default function MobileNav({
                 aria-hidden
                 className="menu-window pointer-events-none absolute inset-x-0 top-0 h-[40%]"
                 style={{ backgroundImage: `url(${windowUrl})` }}
+              />
+            )}
+
+            {/* The Hannaford rendering along the sheet's foot, the same faint
+                gold line art as the footer's (Nathan, 2026-09-24: the window
+                at the top, the building at the bottom). Decorative. */}
+            {renderingUrl && (
+              <div
+                aria-hidden
+                className="menu-rendering pointer-events-none absolute bottom-0 left-[-15%] w-[130%]"
+                style={{ ['--menu-rendering' as string]: `url(${renderingUrl})` }}
               />
             )}
 
