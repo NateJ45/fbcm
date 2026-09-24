@@ -10,6 +10,35 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Craft details: share cards, structured data, "Which door?" (`feat/details`)._
+
+**A share card for every page and post.** `npm run build` now starts with `npm run og:pages`
+(`scripts/generate-og-pages.mjs`, rewritten): 154 cards, 1200x630, in the identity (indigo, a
+gold frame, the Hannaford rendering in faint gold, the title in Castoro Titling fitted by
+`src/lib/og-card.ts`, the wordmark under a door glyph; a post's eyebrow and its Sunday and
+reading or its date). Text is set as outlines by opentype.js from the site's own .woff files
+and rasterised by sharp, so it runs in CI with no browser and no new dependency; cards are
+cached by a content hash and not committed. 8.6 MB in all, 64.5 KB at most, 3 to 5 s cold.
+BaseLayout now ranks a route's card above a post's cover photo, and the old `og:pages`
+script (which could not have run: it called an unimported `closeRenderer`) is gone.
+
+**Structured data.** The starter's LocalBusiness became one `["Church", "Organization"]` node
+from Site settings (full address, the building's map point from OpenStreetMap, phone, email,
+YouTube, Church Center and Wikidata in `sameAs`), /visit gained the Sunday service as an
+`Event` with a weekly `eventSchedule`, and each post's `BlogPosting` now leads with its card,
+names the church as publisher, and for a sermon preview is `about` its Sunday and cites its
+reading. `src/lib/schema-vocab.ts` validates all of it offline: unit tests per builder and
+`npm run check:jsonld` over the built site (378 pages, 895 blocks, no findings). A bug found
+on the way: the accented post slug (`/post/händel-...`) reached BaseLayout percent-encoded and
+missed its card.
+
+**"Which door?" on Visit.** `DoorPlan.astro` draws the street side (Adams along the top,
+Jefferson down the left, the drive, the tower, the lot) with a numbered pin per door, placed by
+the doors' own words (`src/lib/door-plan.ts`). The list stays the interface: each door's name
+links to its pin, which works with no JavaScript; with it, choosing a door lights the pin and
+shows the church's words under the sketch. Geography from the church's History and Visit text,
+OpenStreetMap and the library's photographs, drawn as a sketch, not a floor plan.
+
 _2026-09-24 — The mobile speed pass (`perf/speed-audit`)._
 
 **Measured first, one resource class at a time.** Home mobile LCP was 3.80 s locally (2.34 s

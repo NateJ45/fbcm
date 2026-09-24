@@ -1039,6 +1039,33 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   art-direction pass's "A production Lighthouse re-measure is owed" (the re-measure is the first
   item above).
 
+### Craft details: share cards, JSON-LD, "Which door?" (2026-09-24, `feat/details`)
+
+- [ ] #nathan **Confirm the door sketch's geography.** `/visit`'s "Which door?" puts the office
+      wing (with the circular drive and its glass doors) at the Jefferson Street end of the Adams
+      frontage, the tower and its wooden doors east of it, the sanctuary east of that, and the
+      parking lot east again, off Adams. The corner (Adams to the north, Jefferson to the west)
+      is certain: the church's History and OpenStreetMap. The drive, the lot and the side doors'
+      streets are the church's own words. The ORDER along Adams is read from the library's
+      photographs and the OpenStreetMap footprint, and is the one inference: a two-minute look
+      from someone who knows the building settles it. If the lot is somewhere else, move
+      `.dp-lot` in `src/components/church/DoorPlan.astro`.
+- [ ] #nathan **Approve four new lines** (listed in the copy-for-approval note): "Choose a door
+      to see where it is.", "A sketch of the street side, not to scale. North is up.", the
+      sketch's labels (Offices, Sanctuary, Parking), and the /blog share card's line "Sermon
+      previews, news and writing from the church".
+- [ ] **After the next deploy, run Google's Rich Results Test** on `/visit` and one sermon
+      preview. Everything here was validated offline (`npm run check:jsonld`, the vocabulary in
+      `src/lib/schema-vocab.ts`); Google's own parser is the check it cannot do. Expect the
+      weekly `Event` NOT to earn an event rich result (Google supports single events only); it
+      should report no errors.
+- [ ] **Share-card previews after cutover.** Facebook and LinkedIn cache a URL's card on first
+      share; after the cutover to `fbcmuncie.org`, paste `/` and `/visit` into Facebook's Sharing
+      Debugger once to seed them.
+- **Known limits, by design:** the paginated, tag and category archives share `og-default.png`
+  (hundreds of near-identical routes; the generator draws pages and posts only), and a build with
+  no Sanity project draws no cards at all (every route falls back, nothing 404s).
+
 ### Beliefs identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** `scripts/pages/beliefs.mjs` uses no new
