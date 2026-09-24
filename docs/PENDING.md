@@ -733,6 +733,30 @@ now ties the schema max and the slice with a drift test.
   read-only into `scripts/data/fixtures/<slug>.json`) and is how the next page composed
   ahead of its schema deploy gets looked at.
 
+### Wedding identity: before the page is applied (2026-09-24)
+
+- **The page is composed but not applied.** `scripts/pages/wedding.mjs` needs no new
+  schema field (only the gallery caption's title and help text changed), but the new
+  looks only render after the branch is deployed. Then `npm run seed-pages -- --only
+wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched the
+  old module exactly, "unchanged", so no editor edits to carry) and `--apply` (backup
+  first). Shoot /wedding, /beliefs, /history and /blog in production.
+- **A nested worktree's asset map needs the wedding assets.** The dry run refuses (by
+  name) any `file` photo or PDF not in `scripts/.asset-map.json`; the ids are on the live
+  page (`*[_type=="page" && slug.current=="wedding"][0].pageBuilder`).
+- **New copy for the church.** One alt text built from Ella Mae's staff document; the six
+  gallery captions are gone, replaced by the church's own room names. Listed under
+  `/wedding` in the approval note.
+- **Owner questions.** The sanctuary room is a library photo on no other page
+  (08181c_633ffb6, the centre aisle), since hero-sanctuary is on Home, Beliefs and the
+  blog; the Visit branch may have picked it the same night, so check at the merge. The
+  couple at the red doors in the hero's side light is a 435x640 original (library tag
+  "Needs a better copy"); it is sharp enough at the side light's size. The Ella Mae band
+  is ImageText as it stands on main: its look follows the Visit branch's ImageText.
+- **Clean-up once /wedding shows the composition.** Delete
+  `src/pages/styleguide/wedding.astro`, the `'/styleguide/wedding'` line in
+  `tests/routes.ts` and `scripts/data/fixtures/wedding.json`, then recapture parity.
+
 ### Home identity: before the page is applied (2026-09-23)
 
 - **The page is composed but not applied.** `scripts/pages/home.mjs` writes six bands

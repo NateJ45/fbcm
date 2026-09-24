@@ -463,9 +463,38 @@ const DOCUMENT_LIST_FIXTURE = {
   eyebrow: 'Resources',
   heading: 'Documents',
   docs: [
-    { _key: 'doc-1', title: 'The Visitor', year: 2025, note: 'Quarterly newsletter' },
-    { _key: 'doc-2', title: 'We Are the Clay', year: 2019 },
+    {
+      _key: 'doc-1',
+      title: 'The Visitor',
+      year: 2025,
+      note: 'Quarterly newsletter',
+      fileUrl: '/files/visitor-2025.pdf',
+    },
+    { _key: 'doc-2', title: 'We Are the Clay', year: 2019, url: 'https://www.amazon.com/' },
     { _key: 'doc-3', title: 'Constitution and bylaws', note: 'Governing documents' },
+  ],
+};
+
+// Five or more documents draw as the register rather than doors (document-doors.ts).
+const DOCUMENT_REGISTER_FIXTURE = {
+  heading: 'The Visitor',
+  docs: [
+    { _key: 'reg-1', title: 'March', year: 2026, fileUrl: '/files/visitor-2026-03.pdf' },
+    { _key: 'reg-2', title: 'December', year: 2025, fileUrl: '/files/visitor-2025-12.pdf' },
+    { _key: 'reg-3', title: 'September', year: 2025, fileUrl: '/files/visitor-2025-09.pdf' },
+    { _key: 'reg-4', title: 'June', year: 2025, fileUrl: '/files/visitor-2025-06.pdf' },
+    {
+      _key: 'reg-5',
+      title: 'We Are the Clay',
+      year: 2019,
+      note: 'Edited by Julie Downey Davis',
+      url: 'https://www.amazon.com/',
+    },
+    {
+      _key: 'reg-6',
+      title: 'Journey Down Jefferson Street',
+      note: 'Several copies are in the church library',
+    },
   ],
 };
 
@@ -1827,6 +1856,12 @@ const JOURNAL_LIST_FIXTURE = {
     docs={DOCUMENT_LIST_FIXTURE.docs}
     surface="muted"
     headingId="styleguide-documentlist"
+  />
+
+  <DocumentList
+    heading={DOCUMENT_REGISTER_FIXTURE.heading}
+    docs={DOCUMENT_REGISTER_FIXTURE.docs}
+    headingId="styleguide-documentregister"
   />
 
   <LinkCards

@@ -205,26 +205,23 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### New sentences
 
 - Married here. (hero headline)
-- Sanctuary. (gallery caption)
-- The bridal suite, ready for a wedding morning. (gallery caption)
-- The fellowship hall. (gallery caption)
-- The kitchen. (gallery caption)
-- The youth center. (gallery caption)
-- A wedding party at the red doors. (gallery caption)
 - Weddings here (gallery heading, 2026-09-23)
-- Hanna and Nathan. (gallery caption; the names are the Wix alt text on that photograph and the testimonial above it)
 - Read the contract and the bridal packet, then reserve your date with the church office. (heading, "Reserving your wedding" band lead-in, built from wedding.txt's "you will need to mail the contract, the information sheet, and a deposit to" and the church's mailing address)
 - Mail the signed contract, the information sheet and a deposit to the church office. (reservation step, built from wedding.txt's own mailing instructions and address)
 - Fill out the wedding information form online. (reservation step, built from the Bridal Packet button's own label, "Fill Out Informational Form")
 - Talk with Ella Mae Lemen, the wedding coordinator, about your date and the building. (reservation step, built from wedding.txt's own description of her role)
 - The documents below carry the fees. (documentListSection lead sentence, both instances: this page states no dollar figure, because neither source capture does)
 - Fill this in online. (document note for the two Church Center forms, both instances)
+- Ella Mae Lemen, the church's wedding coordinator (alt text on her portrait, built from her staff document's name and role, 2026-09-24)
 - Weddings and building use at First Baptist Church Muncie: reserve the sanctuary for a Christian wedding, or the fellowship hall, kitchen or youth center for another event. (search description)
 
 ### Edits to the church’s own text
 
-- Cut, twice: "The Bridal Suite" and "Sanctuary" / "The Sanctuary" are each printed once on the Wix page as a heading with nothing but a photo carousel under it. Both are represented once each in the gallery below instead, each with a caption of its own (declared above).
-- Cut: "Exterior" as a bare heading over a photo carousel, for the same reason.
+- Moved, 2026-09-24: "The Bridal Suite" and "Sanctuary" (wedding.txt headings over photo carousels) and "Fellowship Hall", "Kitchen", "Youth Center" (reservation.txt's list of spaces) are now the names under the five room photos in "Our spaces", spelled as the church spelled them. They replace the six new captions this page used to carry.
+- Cut: "Exterior" as a bare heading over a photo carousel. The wedding party at the red doors is in "Weddings here" instead.
+- Moved, 2026-09-24: "Wedding Coordinator", "Ella Mae Lemen" and the paragraph under them (wedding.txt) now sit beside her portrait in their own band, instead of closing the "A wedding at First Baptist" text. Her name and role are read off her staff document.
+- Cut, 2026-09-24: the eyebrows "Why here", "Reserving your wedding" and "Building use" (each repeated the heading under it, rule 11), and the headings "Three documents" and "Reservation agreement and request form", replaced by the bands' old eyebrows "Wedding documents" and "Building documents".
+- Cut, 2026-09-24: the caption "Hanna and Nathan." on their processional photograph (no captions on photos, rule 7). Their names are on the quote beside it and in the photo credits.
 - Re-cased: "Hanna & Nathan" (a Wix profile heading, not the church's prose) becomes "Hanna and Nathan" for the quote's attribution, since it names two people rather than a company. The quote itself is unchanged.
 - Restored 2026-09-23: "Photos used with permission from the couples and the photographers." and the photo-credit sentence naming the three photographers, printed under the "Weddings here" gallery. They were cut on the reading that no couple's photograph was on the page, which was never quite true (the wedding party at the red doors is one) and stopped being true when the gallery of weddings was added. The sentences are the church's own, with "&" set as "and".
 - Linked, so it still works: "please see our wedding page" (reservation.txt) is cut, since the reader is already on that page (this page IS both pages now).

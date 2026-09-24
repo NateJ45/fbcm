@@ -314,7 +314,13 @@ export const gallerySection = defineType({
               type: 'string',
               validation: (R) => R.required(),
             }),
-            defineField({ name: 'caption', title: 'Caption (optional)', type: 'string' }),
+            defineField({
+              name: 'caption',
+              title: 'Name (optional)',
+              type: 'string',
+              description:
+                'A short name shown under the photo, like the room it shows ("Fellowship Hall"). Name every photo and the gallery draws as a row of arched doors; leave them all blank for photos of people.',
+            }),
           ],
         }),
       ],
