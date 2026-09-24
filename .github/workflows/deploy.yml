@@ -135,6 +135,9 @@ jobs:
           # problem.
           PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
           PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
+          # The NIV passages (src/lib/scripture-text.ts). Unset, every reading
+          # uses the Berean Standard Bible; the build never fails for its absence.
+          API_BIBLE_KEY: ${{ secrets.API_BIBLE_KEY }}
           # Analytics, and ONLY on this workflow. Do not "fix" the omission by
           # copying these into ci.yml, lighthouse.yml or deploy-staging.yml.
           # Lighthouse alone would file about eighteen localhost page views into
