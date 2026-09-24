@@ -406,12 +406,9 @@ export type SiteSettings = {
     _key: string;
   }>;
   churchCenterUrl?: string;
-  givingUrl?: string;
   churchTracUrl?: string;
   youtubeUrl?: string;
   livestreamUrl?: string;
-  visitorFormUrl?: string;
-  lifeEventFormUrl?: string;
   mapImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -420,6 +417,16 @@ export type SiteSettings = {
     _type: 'image';
   };
   directionsUrl?: string;
+  givingUrl?: string;
+  visitorFormUrl?: string;
+  lifeEventFormUrl?: string;
+  sermonsUrl?: string;
+  wednesdayUrl?: string;
+  calendarUrl?: string;
+  prayerUrl?: string;
+  appUrl?: string;
+  weddingEnquiryUrl?: string;
+  weddingBookingUrl?: string;
   navItems?: Array<
     | ({
         _key: string;

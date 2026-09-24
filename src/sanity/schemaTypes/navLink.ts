@@ -21,6 +21,7 @@
 
 import { defineType, defineField } from 'sanity';
 import { LinkIcon } from '@sanity/icons';
+import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 
 export const navLink = defineType({
   name: 'navLink',
@@ -67,8 +68,8 @@ export const navLink = defineType({
       name: 'externalUrl',
       title: 'Web address',
       type: 'url',
-      description: 'A full address like https://example.com. It opens in a new tab.',
-      validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
+      description: `A full address like https://example.com. It opens in a new tab. ${LINK_TOKEN_HINT}`,
+      validation: linkRule({ absoluteOnly: true, scheme: ['http', 'https'] }),
       hidden: ({ parent }) => parent?.linkType !== 'external',
     }),
     defineField({

@@ -11,6 +11,7 @@
 // actual post copy; everything else is metadata.
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
+import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 
 export const journalEntry = defineType({
   name: 'journalEntry',
@@ -176,7 +177,13 @@ export const journalEntry = defineType({
                 type: 'object',
                 title: 'Link',
                 fields: [
-                  { name: 'href', type: 'url', title: 'URL' },
+                  defineField({
+                    name: 'href',
+                    type: 'url',
+                    title: 'URL',
+                    description: LINK_TOKEN_HINT,
+                    validation: linkRule(),
+                  }),
                   {
                     name: 'openInNewTab',
                     type: 'boolean',
@@ -411,7 +418,13 @@ export const journalEntry = defineType({
                         type: 'object',
                         title: 'Link',
                         fields: [
-                          { name: 'href', type: 'url', title: 'URL' },
+                          defineField({
+                            name: 'href',
+                            type: 'url',
+                            title: 'URL',
+                            description: LINK_TOKEN_HINT,
+                            validation: linkRule(),
+                          }),
                           {
                             name: 'openInNewTab',
                             type: 'boolean',

@@ -28,6 +28,7 @@ import {
 } from '@sanity/icons';
 import { columnsField, headingAccentField, hideWhenRich, richTwin } from './_appearanceFields';
 import { anchorField } from './_anchorField';
+import { linkRule } from './_linkRule.ts';
 import { sideOptions } from '../../lib/layout-variants';
 // scaffold: church
 import { CHURCH_SECTION_TYPES } from './churchSections';
@@ -91,8 +92,9 @@ const proseBody = (name = 'body', title = 'Text') =>
                   // as "worship@fbcmuncie.org" failed validation, and a page with
                   // a validation error cannot be published (found 2026-09-22 on
                   // Contact, Ministries, Staff and Wedding).
-                  validation: (R) =>
-                    R.uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] }),
+                  // A church link placeholder ({giving}...) is allowed too
+                  // (_linkRule.ts, feat/church-links).
+                  validation: linkRule(),
                 }),
               ],
             },
