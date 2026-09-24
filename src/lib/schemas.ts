@@ -8,6 +8,17 @@
 // https://search.google.com/test/rich-results
 
 import { site } from '@/data/site';
+import {
+  breadcrumbNode,
+  churchNode,
+  ldJson,
+  ogCardPath,
+  SERVICE_PAGE_SLUG,
+  sundayWorshipNode,
+  type ChurchSettings,
+  type SiteFacts,
+} from './church-schema.ts';
+import { blogPostingNode, type PostForSchema } from './post-schema.ts'; // scaffold: journal
 
 // ---------- Types (loose — Sanity provides the actual document shapes) ----
 
@@ -17,12 +28,7 @@ interface SocialLink {
   label?: string;
 }
 
-interface SiteSettings {
-  title?: string;
-  email?: string;
-  phone?: string;
-  socialInstagram?: string;
-  socialFacebook?: string;
+interface SiteSettings extends Omit<ChurchSettings, 'socialLinks'> {
   /** New flexible social links array (U8). When present, merged with legacy fields in sameAs. */
   socialLinks?: SocialLink[] | null;
   /** Studio city name — set in Sanity businessInfo or update via apply-brand */
@@ -47,53 +53,39 @@ interface Breadcrumb {
   url: string;
 }
 
-// ---------- LocalBusiness (site-wide, BaseLayout injects on every page) ----
+// ---------- The church (site-wide, BaseLayout injects on every page) -------
+// Built by churchNode() in ./church-schema.ts, which says what the node holds
+// and why it is typed ["Church", "Organization"]. The function keeps its old
+// name so the starter's callers still read it.
+
+export const SITE_FACTS: SiteFacts = {
+  url: site.url,
+  name: site.name,
+  geo: site.geo,
+  logo: `${site.url}/icon-512.png`,
+  image: `${site.url}/og/home.png`,
+  sameAsPlace: site.wikidata ? [site.wikidata] : [],
+};
 
 export function localBusinessSchema(settings: SiteSettings | null | undefined): string {
-  const s = settings ?? {};
-  const schema: Record<string, any> = {
-    '@context': 'https://schema.org',
-    '@type': 'Church',
-    '@id': `${site.url}/#business`,
-    name: s.title ?? site.name,
-    url: site.url,
-    image: `${site.url}${site.assets.ogDefault}`,
-    email: s.email ?? undefined,
-    priceRange: '$$',
-    // Merge legacy fields + socialLinks urls, deduplicating by url string.
-    sameAs: Array.from(
-      new Set(
-        [s.socialInstagram, s.socialFacebook, ...(s.socialLinks ?? []).map((l) => l.url)].filter(
-          (u): u is string => Boolean(u),
-        ),
-      ),
-    ),
-  };
+  return ldJson(churchNode(settings as ChurchSettings | null | undefined, SITE_FACTS));
+}
 
-  // Omit address entirely when city/state are absent or still placeholder defaults.
-  const PLACEHOLDER_CITY = 'Your City';
-  const hasCity = s.city && s.city !== PLACEHOLDER_CITY;
-  const hasState = s.state && s.state !== 'Your State' && s.state !== 'XX';
-  if (hasCity || hasState) {
-    schema.address = {
-      '@type': 'PostalAddress',
-      ...(hasCity ? { addressLocality: s.city } : {}),
-      ...(hasState ? { addressRegion: s.state } : {}),
-      addressCountry: 'US',
-    };
-  }
+// ---------- The Sunday service (the Visit page) -----------------------------
 
-  // Omit GeoCoordinates unless both lat and lng are present and non-zero.
-  if (s.geoLat && s.geoLng) {
-    schema.geo = {
-      '@type': 'GeoCoordinates',
-      latitude: s.geoLat,
-      longitude: s.geoLng,
-    };
-  }
+export { SERVICE_PAGE_SLUG };
 
-  if (s.phone) schema.telephone = s.phone;
-  return JSON.stringify(schema);
+export function sundayWorshipSchema(
+  settings: SiteSettings | null | undefined,
+  occurrence: Date | null,
+): string | null {
+  const pageUrl = `${site.url}/${SERVICE_PAGE_SLUG}`;
+  const node = sundayWorshipNode(settings as ChurchSettings | null | undefined, SITE_FACTS, {
+    pageUrl,
+    occurrence,
+    image: `${site.url}${ogCardPath(`/${SERVICE_PAGE_SLUG}`)}`,
+  });
+  return node ? ldJson(node) : null;
 }
 
 // ---------- Service list (for /services) -----------------------------------
@@ -119,16 +111,7 @@ export function serviceListSchema(services: Service[] | null | undefined): strin
 // ---------- BreadcrumbList (every internal page) --------------------------
 
 export function breadcrumbSchema(crumbs: Breadcrumb[]): string {
-  return JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: crumbs.map((c, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: c.name,
-      item: c.url,
-    })),
-  });
+  return ldJson(breadcrumbNode(crumbs));
 }
 
 // ---------- CreativeWork (for /portfolio/[slug]) --------------------------
@@ -161,42 +144,15 @@ export function projectSchema(project: Project, heroImageUrl: string | null): st
 // scaffold: journal
 // ---------- BlogPosting (for /post/[slug]) --------------------------------
 
-interface JournalEntryForSchema {
-  title?: string;
-  slug?: { current?: string };
-  excerpt?: string;
-  author?: string;
-  publishedAt?: string;
-  updatedAt?: string;
-  body?: any;
-  categories?: Array<{ title?: string }>;
-}
-
-export function blogPostingSchema(
-  entry: JournalEntryForSchema,
-  coverImageUrl: string | null,
-): string {
-  const url = entry.slug?.current ? `${site.url}/post/${entry.slug.current}` : `${site.url}/blog`;
-  return JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: entry.title,
-    description: entry.excerpt,
-    url,
-    image: coverImageUrl ?? undefined,
-    datePublished: entry.publishedAt,
-    dateModified: entry.updatedAt ?? entry.publishedAt,
-    author: entry.author
-      ? { '@type': 'Person', name: entry.author }
-      : { '@id': `${site.url}/#business` },
-    publisher: { '@id': `${site.url}/#business` },
-    keywords: Array.isArray(entry.categories)
-      ? entry.categories
-          .map((c) => c?.title)
-          .filter(Boolean)
-          .join(', ')
-      : undefined,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-  });
+/**
+ * The post's BlogPosting (built by blogPostingNode in ./church-schema.ts). Its
+ * `image` leads with the post's own share card, /og/post-<slug>.png, which
+ * `npm run build` generates for every post before Astro runs
+ * (scripts/generate-og-pages.mjs), then the cover photograph when there is one.
+ */
+export function blogPostingSchema(entry: PostForSchema, coverImageUrl: string | null): string {
+  const slug = entry.slug?.current;
+  const cardUrl = slug ? encodeURI(`${site.url}${ogCardPath(`/post/${slug}`)}`) : null;
+  return ldJson(blogPostingNode(entry, SITE_FACTS, { cardUrl, coverUrl: coverImageUrl }));
 }
 // scaffold:end

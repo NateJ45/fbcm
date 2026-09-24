@@ -370,6 +370,24 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none: the goals' names and small lines are Who We Are's own)
 
+## Visit: "Which door?" and the share cards (2026-09-24, craft-details pass)
+
+### New sentences
+
+- "Choose a door to see where it is." (under the street-side sketch before a door is chosen)
+- "A sketch of the street side, not to scale. North is up." (the sketch's note)
+- The sketch's labels: "Adams Street", "Jefferson Street", "Offices", "Sanctuary", "Parking".
+- The sketch's description for screen readers: "The church stands on the corner of Adams Street
+  and Jefferson Street. Door 1, Adams Street circular drive, is on the Adams Street side, at the
+  circular drive. Door 2, The wooden front doors, is on the Adams Street side, at the foot of
+  the tower. Door 3, Jefferson Street side doors, is on the Jefferson Street side. The parking
+  lot is on the Adams Street side."
+- "Sermon previews, news and writing from the church" (the /blog share card's line).
+
+### Edits to the church's own text
+
+- (none: each door's words under the sketch are the list's own)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

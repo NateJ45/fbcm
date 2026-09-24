@@ -72,6 +72,8 @@ import {
   type BoardDoor,
 } from '@/lib/hymn-board';
 import { photoSubject } from '@/lib/photo-subject';
+import { doorPlan, doorPinId, doorRowId } from '@/lib/door-plan';
+import DoorPlan from '@/components/church/DoorPlan.astro';
 
 /** The notes' neutral mark: a quatrefoil, four circles of radius 9 (BuildingGlyph's QF). */
 const QUATREFOIL =
@@ -218,6 +220,17 @@ const sideNotes = [
     .map((r) => ({ title: r.item.label ?? '', body: r.item.body ?? '' })),
   ...validNotes.map((n) => ({ title: '', body: n })),
 ];
+// "Which door?" (2026-09-24, the craft-details pass): when the doors' own
+// words place at least two of them on the church's street side
+// (src/lib/door-plan.ts), a sketch of it sits above the list, and each placed
+// door's name links to its numbered pin. Home and Contact have no doors, so
+// their hymn board never reaches this.
+const plan = doorPath ? doorPlan(validDoors, items ?? []) : null;
+const planPrefix = headingId.replace(/-heading$/, '');
+const pinned = new Set(plan?.pins.map((p) => p.n) ?? []);
+const planNames: Record<number, string> = Object.fromEntries(
+  validDoors.map((d, i) => [i + 1, splitStega(d.name ?? '').cleaned.trim()]),
+);
 const objectPositionOf = (img: SanityImageObject): string => {
   const h = (img as { hotspot?: { x?: number; y?: number } }).hotspot;
   return typeof h?.x === 'number' && typeof h?.y === 'number'
@@ -265,6 +278,8 @@ const objectPositionOf = (img: SanityImageObject): string => {
             </div>
           )}
 
+          {plan && <DoorPlan plan={plan} idPrefix={planPrefix} names={planNames} />}
+
           <ul class="sd-doors m-0 list-none p-0">
             {timeRows.map((row) => (
               <li>
@@ -280,13 +295,37 @@ const objectPositionOf = (img: SanityImageObject): string => {
                 </div>
               </li>
             ))}
-            {validDoors.map((door) => {
+            {validDoors.map((door, i) => {
               const tag = doorTag(door.body);
+              const n = i + 1;
+              const onPlan = pinned.has(n);
               return (
-                <li data-reveal>
+                <li
+                  data-reveal
+                  id={onPlan ? doorRowId(planPrefix, n) : undefined}
+                  data-door-row={onPlan ? String(n) : undefined}
+                >
                   <BuildingGlyph name="door" class="mt-0.5 w-8 text-gold" />
                   <div class="min-w-0">
-                    {door.name && <h3 class="sd-door-name font-body">{door.name}</h3>}
+                    {door.name &&
+                      (onPlan ? (
+                        <h3 class="sd-door-name font-body">
+                          <a
+                            href={`#${doorPinId(planPrefix, n)}`}
+                            class="sd-door-link"
+                            data-door-link
+                          >
+                            <span class="sd-door-num" aria-hidden="true">
+                              {n}
+                            </span>
+                            <span class="sd-door-label" data-door-name>
+                              {door.name}
+                            </span>
+                          </a>
+                        </h3>
+                      ) : (
+                        <h3 class="sd-door-name font-body">{door.name}</h3>
+                      ))}
                     {tag && <span class="sd-tag font-ui">{tag}</span>}
                     {textParagraphs(door.body).map((p) => (
                       <p>{p}</p>

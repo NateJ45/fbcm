@@ -14,6 +14,7 @@ import { ClientRouter } from 'astro:transitions';
 import { site } from '@/data/site';
 import { urlFor } from '@/lib/sanity';
 import { localBusinessSchema } from '@/lib/schemas';
+import { ogCardPath } from '@/lib/church-schema';
 import { getActiveAnnouncement } from '@/lib/queries';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
@@ -30,9 +31,9 @@ import '@/styles/globals.css';
 interface Props {
   title: string;
   description: string;
-  /** Override the default OG image. If omitted, BaseLayout looks for a per-page OG at /og/&lt;slug&gt;.png, falling back to /og-default.png. */
+  /** A photograph to share when the route has no share card of its own (a post passes its cover). The route's card at /og/&lt;route&gt;.png outranks it; see THE SHARE CARD below. */
   ogImage?: string;
-  /** Raw Sanity image object for a per-page social share override (seoImage on the page singleton). Resolved through the Sanity image pipeline to a 1200x630 OG URL. Lower priority than ogImage, higher than the siteSettings default. */
+  /** Raw Sanity image object for a per-page social share override (seoImage on the page singleton). Resolved through the Sanity image pipeline to a 1200x630 OG URL. The highest priority: an editor's explicit choice for this page. */
   seoImage?: any;
   /** Pre-serialized JSON-LD strings injected into <head>. LocalBusiness is auto-injected from siteSettings on every page; pass per-page schemas (Service, FAQPage, BreadcrumbList, CreativeWork) here. */
   schemas?: string[];
@@ -66,28 +67,33 @@ const {
 
 const canonical = new URL(Astro.url.pathname, site.url).toString();
 
-// Per-page OG image: the convention is /og/<route-slug>.png, generated at build
-// time by `npm run og:pages`. `/` → /og/home.png, `/contact` → /og/contact.png.
+// THE SHARE CARD (2026-09-24, the craft-details pass). Every page and post has
+// its own 1200x630 card at /og/<route>.png (`/` -> /og/home.png, `/visit` ->
+// /og/visit.png, `/post/x` -> /og/post-x.png; ogCardPath in
+// src/lib/church-schema.ts), drawn in the church identity by
+// scripts/generate-og-pages.mjs at the start of every `npm run build`.
 //
-// 2026-09-18: the cards themselves are NOT in this repo. public/og/ held another
-// client's set and was deleted as residue, and nothing regenerated it, so every
-// page emitted an og:image URL that 404s -- which is worse than no card at all,
-// because a social scraper shows a broken preview rather than falling back.
-// So the convention is now CHECKED against what is actually on disk with
-// import.meta.glob (a build-time, statically analysed read of public/og/), and
-// a route with no card of its own gets /og-default.png, which is committed.
-// Posts resolve a real Sanity CDN image and never reach this function.
-// Keys only: the glob is never awaited, so nothing is bundled. It exists
-// purely to answer "is there a card for this route on disk right now?", and
-// it answers {} when public/og/ is absent entirely, which is today's state.
-const OG_PAGE_CARDS = import.meta.glob('../../public/og/*.png');
-const hasOgCard = (path: string) => `../..${path}` in OG_PAGE_CARDS;
-
-function ogPathForRoute(pathname: string): string {
-  const trimmed = pathname.replace(/^\/|\/$/g, '');
-  const candidate = trimmed ? `/og/${trimmed.replace(/\//g, '-')}.png` : '/og/home.png';
-  return hasOgCard(candidate) ? candidate : site.assets.ogDefault;
-}
+// The convention is CHECKED against the cards that were actually drawn: the
+// generator's manifest, src/data/og-cards.generated.json (gitignored), read
+// with an EAGER glob so a missing file (no Sanity project, a fresh clone)
+// reads as no cards rather than failing the build. A route without a card
+// (no project, or a route the generator does not draw: the paginated, tag and
+// category archives) gets /og-default.png, which is committed, and never an
+// og:image URL that 404s. NOT a glob of public/og/*.png: even un-awaited, a
+// lazy glob makes Vite emit every matched PNG into _astro/, which published
+// all 154 cards a second time (+8.97 MB, measured 2026-09-24).
+const OG_MANIFESTS = import.meta.glob<Record<string, unknown>>('../data/og-cards.generated.json', {
+  eager: true,
+  import: 'default',
+});
+const OG_CARDS = Object.values(OG_MANIFESTS)[0] ?? {};
+const routeCard = (() => {
+  // Decoded: a post slug with an accent (/post/händel-...) arrives here
+  // percent-encoded, while the card is named with the letter itself.
+  const candidate = ogCardPath(decodeURI(Astro.url.pathname));
+  const name = candidate.replace(/^\/og\//, '').replace(/\.png$/, '');
+  return name in OG_CARDS ? candidate : null;
+})();
 
 // Resolve a raw Sanity image object to a 1200x630 OG URL through the image
 // pipeline. Returns null when there's no asset (so the ?? chain falls through
@@ -97,13 +103,18 @@ function ogUrlFromImage(img: any): string | null {
   try { return urlFor(img).width(1200).height(630).fit('crop').auto('format').url(); } catch { return null; }
 }
 
-// OG image priority: explicit ogImage prop (a real photo passed by detail
-// pages) > per-page seoImage override (page singleton) > global seoImage
-// default (siteSettings) > the build-time /og/<route>.png convention.
+// OG image priority: the page's own seoImage (an editor's explicit choice for
+// this page) > the route's share card > the `ogImage` prop (a post's cover
+// photograph, the fallback when a post has no card) > siteSettings' global
+// seoImage > /og-default.png. The card outranks the cover since 2026-09-24:
+// the owner asked for every post to share as a branded card, and most covers
+// are series slides that crop badly to 1200x630.
 const perPageOg = ogUrlFromImage(seoImage);
 const globalOg = ogUrlFromImage(siteSettings?.seoImage);
-const resolvedOg = ogImage ?? perPageOg ?? globalOg ?? ogPathForRoute(Astro.url.pathname);
+const resolvedOg = perPageOg ?? routeCard ?? ogImage ?? globalOg ?? site.assets.ogDefault;
 const absOg = resolvedOg.startsWith('http') ? resolvedOg : new URL(resolvedOg, site.url).toString();
+const ogIsCard = resolvedOg === routeCard;
+const ogIsPng = ogIsCard || resolvedOg === site.assets.ogDefault;
 
 // Build the document title. If the editor-supplied seoTitle already contains
 // the brand name anywhere, use it verbatim. Otherwise append " | {site.name}"
@@ -119,6 +130,10 @@ const hasBrandInline = cleanTitle.toLowerCase().includes(site.name.toLowerCase()
 const fullTitle = cleanTitle === site.name || hasBrandInline
   ? cleanTitle
   : `${cleanTitle}${brandSuffix}`;
+
+// The share picture's alt text: the page's full title, which is what a card
+// sets (the title over the wordmark) and the nearest honest words for a photo.
+const ogAlt = fullTitle;
 
 // Auto-inject LocalBusiness on every page when siteSettings is available.
 // Pages can still pass their own additional schemas (Service, FAQPage, BreadcrumbList).
@@ -213,15 +228,17 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={absOg} />
+    {ogIsPng && <meta property="og:image:type" content="image/png" />}
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={fullTitle} />
+    <meta property="og:image:alt" content={ogAlt} />
 
     {/* Twitter */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={absOg} />
+    <meta name="twitter:image:alt" content={ogAlt} />
 
     {/* JSON-LD (LocalBusiness auto-injected from siteSettings + per-page schemas) */}
     {allSchemas.map((json) => (

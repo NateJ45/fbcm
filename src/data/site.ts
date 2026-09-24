@@ -79,6 +79,15 @@ export const site = {
     favicon: '/favicon.svg',
   },
 
+  /** The building's map point, for the Church node's `geo` in the JSON-LD
+   *  (src/lib/church-schema.ts). Not in Site settings because it is not an
+   *  editor's fact: it is where the building stands. Source: OpenStreetMap
+   *  way 399259467 ("First Baptist Church", amenity=place_of_worship), the
+   *  centre of its footprint, read 2026-09-24. The same way carries the
+   *  building's Wikidata record, which the Church node lists in `sameAs`. */
+  geo: { latitude: 40.19167, longitude: -85.38405 },
+  wikidata: 'https://www.wikidata.org/wiki/Q5452411',
+
   // Public repo URL (used in footer credit if shown)
   repo: '',
 };
