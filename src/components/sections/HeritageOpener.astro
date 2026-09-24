@@ -65,15 +65,15 @@ const hasDoor = !!image?.asset;
 const hasLancet = !!archive?.asset;
 ---
 
-<section class="ho bg-band-brown text-white-pure" aria-labelledby={heading ? headingId : undefined}>
+<section class="bg-band-brown text-white-pure" aria-labelledby={heading ? headingId : undefined}>
   <div
-    class="mx-auto grid max-w-content grid-cols-12 items-center gap-x-[clamp(16px,2.5vw,40px)] gap-y-14 px-gutter py-section-lg"
+    class="mx-auto grid max-w-content grid-cols-12 items-center gap-x-[clamp(16px,2.5vw,40px)] gap-y-10 px-gutter py-section-lg"
   >
     <div class:list={['col-span-12', (hasDoor || hasLancet) && 'lg:col-span-6']}>
       {
         span.length > 0 && (
           <p
-            class="mb-[clamp(20px,2.4vw,32px)] flex flex-wrap items-baseline gap-x-[0.18em] font-display text-[clamp(3rem,2.2rem+2.6vw,5rem)] leading-[0.9] tracking-[0.01em] text-gold lining-nums"
+            class="mb-[clamp(20px,2.4vw,32px)] flex flex-wrap items-baseline gap-[0.18em] font-display text-[clamp(3.25rem,2.4rem+2.6vw,5rem)] leading-[0.86] tracking-[0.01em] text-gold lining-nums"
             aria-hidden="true"
           >
             <span>{span[0]}</span>
@@ -100,14 +100,14 @@ const hasLancet = !!archive?.asset;
       />
       {
         body && (
-          <p class="mt-7 max-w-[32em] font-body text-[clamp(1.1875rem,1rem+0.6vw,1.5rem)] leading-[1.5] text-bg">
+          <p class="mt-6 max-w-[30em] font-body text-[clamp(1.25rem,1rem+0.8vw,1.6875rem)] leading-[1.4] text-bg">
             {body}
           </p>
         )
       }
       {
         cta?.label && (
-          <div class="mt-9">
+          <div class="mt-8">
             <CtaLink cta={cta} variant="gold" onDark />
           </div>
         )
