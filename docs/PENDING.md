@@ -773,9 +773,26 @@ now ties the schema max and the slice with a drift test.
     in dark mode (the drawing's multiply blend needs a light ground; gold and taupe are
     fixed grounds). In dark mode the home page ends on three light bands in a row
     before the indigo footer.
-- **Deferred to the rollout: the RichText, Timeline and FAQ headings.** Their h2s are
-  still the Castoro reading face beside the Titling band grammar (`H2_DISPLAY`); by
-  ruling (2026-09-23) they move with the Visit and Beliefs pages in the identity rollout.
+- **Visit identity (2026-09-24, `feat/visit-identity`): apply after the deploy.**
+  `node scripts/seed-pages.mjs --only visit` plans a full `pageBuilder` replace (7
+  bands); read it, then `--apply` once the schema with `heroSection.headingAccent`,
+  `imageTextSection.detail` and `timelineRow.image` is deployed (rule 1). The live
+  page was checked against main's module output before the recompose: no editor edits,
+  only settings placeholders. Then delete `src/pages/styleguide/visit.astro`, its
+  `tests/routes.ts` line and `scripts/data/fixtures/visit.json`, and recapture parity.
+- **Visit owner questions.** (1) Two prototype photos were swapped because they are
+  already on Home: the teens at the card table (`08181c_42c2e16b` is the same
+  photograph as Home's `b98776_a92b8eb7`, a twin the photo library does not mark) became
+  the young guitarist (`visit-hero-guitar`), and the congregation facing the band
+  (Home's Worship goal) became the congregation gathering at Christmas
+  (`visit-step-worship`), so the hero's middle light and the Worship step are both
+  Christmas services. One line each in `scripts/data/page-images.json` to change. (2)
+  The Sunday School step photo is 491px tall at source and the Fellowship and
+  classroom-floor photos are marked soft: top of the photo-morning list. (3) The site
+  sheet is 139,151 B against the 147,456 B ceiling (+11.7 KB in this branch): other
+  rollout branches add CSS too, so check rule 20 after every merge.
+- **Photo library: mark `08181c_42c2e16b` and `b98776_a92b8eb7` as twins** in
+  `scripts/data/photo-library.json`, so the next reuse check sees them.
 - **`weekOfLabel()` still reads the UTC day.** The sermon-preview "week of" label
   (`blog-derive.ts`, shared by the blog index and the home blog rows) is the one date
   left on UTC; every other date is on the church's day (`localDay()`,
