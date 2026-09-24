@@ -389,7 +389,7 @@ export type ProjectedHeritageBandSection = { _key: string } & Omit<
     cta?: ProjectedCtaBlock | null;
   };
 
-/** giveBandSection — the indigo giving band. */
+/** giveBandSection — the giving band, gold on every page and in both themes. */
 export type ProjectedGiveBandSection = { _key: string } & _GiveBandSection;
 
 /** hoursSection — the office and pastors' hours, read live off siteSettings. */

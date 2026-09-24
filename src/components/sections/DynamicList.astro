@@ -27,7 +27,15 @@ import { splitStega } from '@/lib/preview-stega'; // scaffold: journal
 import type { ProjectedDynamicListSection } from '@/lib/pageBuilder.types';
 import { columnsClass } from '@/lib/layout-variants';
 import { H2_DISPLAY } from '@/lib/heading-grammar';
-import { splitDurable, entryIsSermonPreview, weekOfEyebrow } from '@/lib/blog-derive'; // scaffold: journal
+// scaffold: journal
+import {
+  splitDurable,
+  entryIsSermonPreview,
+  weekOfEyebrow,
+  rowDate,
+  rowDateTime,
+} from '@/lib/blog-derive';
+// scaffold:end
 
 type Props = {
   eyebrow?: string;
@@ -111,22 +119,7 @@ const KNOWN_SOURCES: string[] = [
   'journal', // scaffold: journal
 ];
 
-// Format a datetime string to a short readable date.
-function formatDate(d?: string | null): string {
-  if (!d) return '';
-  const date = new Date(d);
-  if (Number.isNaN(date.getTime())) return '';
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
 // scaffold: journal
-// The <time datetime>: the calendar day of the post, or nothing.
-function isoDay(d?: string | null): string | undefined {
-  if (!d) return undefined;
-  const date = new Date(d);
-  return Number.isNaN(date.getTime()) ? undefined : date.toISOString().slice(0, 10);
-}
-
 // The row's picture sits beside the post's own title inside one link, and on
 // this site most posts' alt text IS the title, so a screen reader would read
 // the title twice. An alt that only repeats the title is dropped (the picture
@@ -196,13 +189,13 @@ const fallbackLabel: Record<string, string> = {
                         else says its date (derived from the category, CLAUDE.md
                         rule 15). */}
                     <time
-                      datetime={isoDay(item.meta)}
+                      datetime={rowDateTime(item.meta)}
                       class="col-start-2 row-start-1 font-ui text-[0.96875rem] leading-[1.35] font-semibold text-band-brown lining-nums md:col-start-1 md:row-span-2 md:self-center md:text-[1.0625rem] lg:row-span-1"
                     >
                       {item.meta
                         ? entryIsSermonPreview(item as any)
                           ? weekOfEyebrow(item.meta)
-                          : formatDate(item.meta)
+                          : rowDate(item.meta)
                         : ''}
                     </time>
 

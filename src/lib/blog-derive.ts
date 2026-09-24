@@ -502,3 +502,31 @@ export function registerMeta(entry: RegisterEntry): RegisterMeta {
     iso,
   };
 }
+
+/**
+ * A post row's date as a visitor reads it ("Dec 14, 2025") and as its
+ * <time datetime> carries it ("2025-12-14"), for the home page's Church Blog
+ * rows (DynamicList.astro). BOTH read the UTC calendar day, like
+ * weekOfLabel() above. They used to disagree: the label used the build
+ * machine's local zone and the attribute UTC, so a post stamped in the
+ * evening in Muncie (after midnight UTC) could print one day and carry the
+ * next, and the label moved with whichever machine ran the build.
+ */
+export function rowDate(iso: string | null | undefined): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-US', {
+    timeZone: 'UTC',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+/** The same UTC calendar day as rowDate(), as YYYY-MM-DD; undefined if none. */
+export function rowDateTime(iso: string | null | undefined): string | undefined {
+  if (!iso) return undefined;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? undefined : d.toISOString().slice(0, 10);
+}

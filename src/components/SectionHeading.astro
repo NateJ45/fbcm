@@ -101,6 +101,13 @@ interface Props {
   /** h2 only: 'display' is the church bands' titling h2. See the header. */
   face?: 'body' | 'display';
   /**
+   * Drop the wrapper's max-w-3xl measure, for a heading whose own column
+   * already sets the width (GiveBand's /give h1 beside the basin glyph). A
+   * prop rather than a `max-w-none` in `class`, which only won because
+   * Tailwind happened to emit it after max-w-3xl in the sheet.
+   */
+  wide?: boolean;
+  /**
    * Optional single word/phrase from the headline to render in handwritten
    * the script accent font. Matched case-insensitively against the headline,
    * first occurrence only.
@@ -135,6 +142,7 @@ const {
   align = 'left',
   tone = 'default',
   face = 'body',
+  wide = false,
   scriptAccent,
   headingAccent,
   rule = false,
@@ -214,7 +222,7 @@ const toneSub =
       : 'text-foreground';
 ---
 
-<div class:list={[wrapperAlign, 'max-w-3xl', extraClass]}>
+<div class:list={[wrapperAlign, !wide && 'max-w-3xl', extraClass]}>
   {eyebrow && <p class:list={['mb-5 font-ui text-ui font-medium', toneEyebrow]}>{eyebrow}</p>}
   {
     headline &&
