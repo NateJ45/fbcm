@@ -86,7 +86,8 @@ export default {
     'The documents below carry the fees. (documentListSection lead sentence, both instances: this page states no dollar figure, because neither source capture does)',
     'Fill this in online. (document note for the two Church Center forms, both instances)',
     "Ella Mae Lemen, the church's wedding coordinator (alt text on her portrait, built from her staff document's name and role, 2026-09-24)",
-    'Weddings and building use at First Baptist Church Muncie: reserve the sanctuary for a Christian wedding, or the fellowship hall, kitchen or youth center for another event. (search description)',
+    'Wedding venue and building use | First Baptist Church Muncie (search title, 2026-09-24 local search pass: "wedding venue" is what people search for)',
+    'Reserve the sanctuary of First Baptist Church Muncie for a Christian wedding in downtown Muncie, or the fellowship hall, kitchen or youth center for an event. (search description, not shown on the page; 2026-09-24 local search pass)',
   ],
 
   // Edits to the church's own sentences (ruling P16). Nothing is reworded: text
@@ -485,9 +486,9 @@ export default {
         },
       ],
 
-      seoTitle: 'Weddings and building use | First Baptist Church Muncie',
+      seoTitle: 'Wedding venue and building use | First Baptist Church Muncie',
       seoDescription:
-        'Weddings and building use at First Baptist Church Muncie: reserve the sanctuary for a Christian wedding, or the fellowship hall, kitchen or youth center for another event.',
+        'Reserve the sanctuary of First Baptist Church Muncie for a Christian wedding in downtown Muncie, or the fellowship hall, kitchen or youth center for an event.',
     };
   },
 };

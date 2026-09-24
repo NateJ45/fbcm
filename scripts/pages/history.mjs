@@ -121,7 +121,7 @@ export default {
   // reads is the church's own text, cut.
   newCopy: [
     'The story continues on Sunday. (the closing band’s headline)',
-    'First Baptist Church Muncie was founded by twelve people in 1859 and has worshipped in downtown Muncie ever since. (search description, not shown on the page)',
+    'Founded by twelve people in 1859, First Baptist Church Muncie has worshipped in downtown Muncie ever since. Our building on East Adams Street dates from 1929. (search description, not shown on the page; the 2026-09-24 local search pass added the second sentence, from the Visit FAQ: "Our building was built in 1929")',
     'The seven era names in the timeline and on the bands, which are labels the spec gives rather than sentences the church wrote: Founding; Struggle and Rairden; The gas boom to the debt paid; The Fighting Parson and the building; Sold and bought back; Postwar to Mattox; Saunders to the co-pastors.',
   ],
 
@@ -727,7 +727,7 @@ export default {
 
       seoTitle: 'History of First Baptist Church Muncie, 1859 to today',
       seoDescription:
-        'First Baptist Church Muncie was founded by twelve people in 1859 and has worshipped in downtown Muncie ever since.',
+        'Founded by twelve people in 1859, First Baptist Church Muncie has worshipped in downtown Muncie ever since. Our building on East Adams Street dates from 1929.',
     };
   },
 };

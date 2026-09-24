@@ -120,7 +120,7 @@ export default {
     'Sermon previews for the coming Sunday, news from around the church, and longer pieces from the pastors. (hero subhead, one sentence)',
     'The Visitor and two books (publications heading)',
     'Come and see for yourself. (closing band headline)',
-    'Sermon previews, church news and writing from the pastors of First Baptist Church Muncie. (search description)',
+    'Sermon previews, church news and writing from the pastors of First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana. (search description, not shown on the page; 2026-09-24 local search pass)',
   ],
 
   edits: [
@@ -330,7 +330,7 @@ export default {
 
       seoTitle: 'Blog | First Baptist Church Muncie',
       seoDescription:
-        'Sermon previews, church news and writing from the pastors of First Baptist Church Muncie.',
+        'Sermon previews, church news and writing from the pastors of First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana.',
     };
   },
 };

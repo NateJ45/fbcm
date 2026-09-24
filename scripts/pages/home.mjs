@@ -85,7 +85,11 @@ export default {
   // Every sentence below that did not exist on the Wix site. The generated note
   // (docs/superpowers/notes/2026-09-19-copy-for-church-approval.md) puts these
   // in front of the church before launch.
-  newCopy: ['A downtown church in Muncie, Indiana. (hero kicker, unchanged from the plan 2b page)'],
+  newCopy: [
+    'A downtown church in Muncie, Indiana. (hero kicker, unchanged from the plan 2b page)',
+    'First Baptist Church Muncie, Indiana | Sundays 10:45 am (search title, 2026-09-24 local search pass)',
+    'An American Baptist church in downtown Muncie, Indiana, at 309 East Adams Street. Worship is Sundays at 10:45 am, in person and online. All are welcome. (search description, not shown on the page; "in person and online" is the livestream, "All are welcome" is the Visit FAQ’s "Anyone is welcome to attend our time of Worship")',
+  ],
 
   // Edits to the church's own sentences (ruling P16). The words are still
   // theirs; each is made by a helper below that throws if the sentence moved.
@@ -531,12 +535,17 @@ export default {
         },
       ],
 
-      seoTitle: `First Baptist Church Muncie | Sundays ${serviceTime}, downtown Muncie`,
-      // The street comes from Site settings like everywhere else. "Muncie,
-      // Indiana" stays typed on purpose: the postal city line in the address
-      // is "Muncie, IN 47305", and the prose form of the state is not
-      // derivable from it without inventing an abbreviation table.
-      seoDescription: `${settings.tagline} ${streetLine}, Muncie, Indiana.`,
+      // 2026-09-24, the local search pass: the title and description say
+      // WHERE the church is and WHAT KIND it is, in the words a search for
+      // "baptist church muncie" or "church in downtown Muncie" would use. The
+      // tagline came out of the description: it says what the church hopes to
+      // be, and a search result needs what it is. The time and the street come
+      // from Site settings (seed-pages turns them into {time} and
+      // {service time} / {address}). "Muncie, Indiana" stays typed on purpose:
+      // the postal city line is "Muncie, IN 47305", and the prose form of the
+      // state is not derivable from it without inventing an abbreviation table.
+      seoTitle: `First Baptist Church Muncie, Indiana | Sundays ${serviceTime}`,
+      seoDescription: `An American Baptist church in downtown Muncie, Indiana, at ${streetLine}. Worship is ${settings.serviceTime}, in person and online. All are welcome.`,
     };
 
     // -- Guards ---------------------------------------------------------------------

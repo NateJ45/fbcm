@@ -119,7 +119,8 @@ export default {
   // One sentence on this page did not exist on the Wix site, and it is never
   // shown to a visitor: it is the search-result description.
   newCopy: [
-    'The staff and volunteers of First Baptist Church Muncie: our pastors, the Church Coordination Team, and our deacons. (SEO description, not shown on the page)',
+    'Pastors and staff | First Baptist Church Muncie (search title, 2026-09-24 local search pass)',
+    'The pastors, staff and volunteers of First Baptist Church Muncie, an American Baptist church in downtown Muncie: the Church Coordination Team and our deacons. (search description, not shown on the page; 2026-09-24 local search pass)',
   ],
 
   // Edits to the church's own sentences (ruling P16): the words are still
@@ -487,9 +488,9 @@ export default {
         },
       ],
 
-      seoTitle: 'Staff | First Baptist Church Muncie',
+      seoTitle: 'Pastors and staff | First Baptist Church Muncie',
       seoDescription:
-        'The staff and volunteers of First Baptist Church Muncie: our pastors, the Church Coordination Team, and our deacons.',
+        'The pastors, staff and volunteers of First Baptist Church Muncie, an American Baptist church in downtown Muncie: the Church Coordination Team and our deacons.',
     };
   },
 };

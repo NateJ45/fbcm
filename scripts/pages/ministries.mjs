@@ -102,7 +102,7 @@ export default {
   // Every other word a visitor reads is the church's own text, cut.
   newCopy: [
     'Every age has a place here. (hero headline)',
-    'Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and the person to talk to about each one. (search description)',
+    'Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and who to ask about each. (search description, not shown on the page; 2026-09-24 local search pass)',
     'Contact the church office. (the end of a ministry’s contact line when the staff document for that role carries no email address, which today is only the children’s ministry; it links to the contact page)',
   ],
 
@@ -596,7 +596,7 @@ export default {
 
       seoTitle: 'Ministries | First Baptist Church Muncie',
       seoDescription:
-        'Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and the person to talk to about each one.',
+        'Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and who to ask about each.',
     };
   },
 };
