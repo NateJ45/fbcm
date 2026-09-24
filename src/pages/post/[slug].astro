@@ -564,6 +564,21 @@ const schemas = [
       />
     )
   }
+
+  <script is:inline>
+    // On paper, every picture in the body: the figures are loading="lazy", and a
+    // browser prints a lazy image it has not fetched as an empty box. Printing
+    // flips them to eager first. Bound once for the session (the router keeps
+    // `window` across post pages) and read at print time, so it always sees the
+    // page that is actually being printed.
+    if (!window.__postPrintBound) {
+      window.__postPrintBound = true;
+      window.addEventListener('beforeprint', function () {
+        var imgs = document.querySelectorAll('.p2 img[loading="lazy"]');
+        for (var i = 0; i < imgs.length; i++) imgs[i].loading = 'eager';
+      });
+    }
+  </script>
 </BaseLayout>
 
 <style is:global>
@@ -1351,18 +1366,3 @@ const schemas = [
     }
   }
 </style>
-
-<script is:inline>
-  // On paper, every picture in the body: the figures are loading="lazy", and a
-  // browser prints a lazy image it has not fetched as an empty box. Printing
-  // flips them to eager first. Bound once for the session (the router keeps
-  // `window` across post pages) and read at print time, so it always sees the
-  // page that is actually being printed.
-  if (!window.__postPrintBound) {
-    window.__postPrintBound = true;
-    window.addEventListener('beforeprint', function () {
-      var imgs = document.querySelectorAll('.p2 img[loading="lazy"]');
-      for (var i = 0; i < imgs.length; i++) imgs[i].loading = 'eager';
-    });
-  }
-</script>
