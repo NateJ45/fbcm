@@ -5,7 +5,8 @@
 //
 // Component name kept as CopyEmailButton for now so all import sites stay
 // stable — the behavior shifted, not the API. Used in the Footer.
-// Requires sonner <Toaster /> in BaseLayout for the copy confirmation toast.
+// Requires sonner <Toaster /> mounted in BaseLayout for the copy confirmation toast.
+// It is NOT mounted since 2026-09-24 (no page renders this button); add it back with the button.
 
 import { useState } from 'react';
 import type { MouseEvent } from 'react';

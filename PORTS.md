@@ -5017,6 +5017,22 @@ and `docs/agent/component-sources.md` (100) and `docs/stack-template/CLAUDE.md`
 code and `components.md` are already correct), and the archived
 `ncs-church-starter`. wcp-website carries no copy of the claim and has no Sheet at all, so it is n/a; mas-monograms carries the wrong directive in `Header.astro` but no doc copy of the rule. nixoncreativestudio's `Header.astro` is already `client:idle`, so only its three doc copies are stale.
 
+**FBCM, 2026-09-24 (a finding for the starter, not yet a change to it):** the same
+"hydrate what does not need it" lesson, twice more. (1) `BaseLayout.astro` mounts
+`<Toaster client:idle />` from `src/components/ui/sonner.tsx`, which ships `sonner`
+(10 KB compressed, 36 KB raw) to every page for `CopyEmailButton`, the only `toast()`
+call site in `src/`, and no FBCM page renders that button (the Studio's toasts are
+Sanity UI's `useToast`, unrelated). FBCM removed the mount and kept the package, the
+`ui/sonner.tsx` primitive and `CopyEmailButton.tsx`, so the matched set is untouched and
+the mount goes back in one line with the button. The starter should mount the Toaster
+only where the button is used. (2) A journal post body was one `client:visible` React
+island (`JournalPortableText`), which pulled React, `@portabletext/react` and
+`@sanity/client` (through `urlFor`) onto every post and serialised the whole body into
+the page a second time as island props. FBCM renders the same component at build time
+with `react-dom/server` inside `src/components/JournalBody.astro` and hydrates only a
+before/after slider: post-page JS 147.6 KB to 97.1 KB transferred, measured in
+`docs/agent/performance.md`. Every sibling with a journal carries the same island.
+
 ## Card 53: One accent splitter, not two (2026-09-18)
 
 **Canonical:** `src/lib/heading-accent.ts` and `src/lib/heading-accent.test.ts`

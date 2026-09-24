@@ -25,6 +25,18 @@
 // utility added or dropped in this file changes the one global stylesheet
 // every page inlines, and the journal pass must leave every other page's
 // bytes alone (the parity gate).
+//
+// SERVER-ONLY SINCE 2026-09-24 (perf/post-body). This component is no longer
+// an island. src/components/JournalBody.astro renders it to static HTML at
+// build time with react-dom/server, so a post page ships none of this file,
+// @portabletext/react or the Sanity client (urlFor pulls @sanity/client in)
+// to the browser. It used to hydrate `client:visible` and serialise the whole
+// body into the page a second time as island props. Nothing in here may need
+// the browser: no state, no effects, no handlers. The before/after slider is
+// the one body type that does, so JournalBody cuts the body at each slider
+// (splitAtSliders in post-body.ts) and hydrates BeforeAfterSlider on its own;
+// the `beforeAfter` renderer below is only reached if some other caller hands
+// this component a raw body, and there it draws the slider's still first frame.
 
 import { PortableText as PT, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
@@ -44,6 +56,13 @@ interface Props {
   /** The body, raw or after prepareBody() (src/lib/post-body.ts). */
   value: PortableTextBlock[] | BodyNode[] | undefined | null;
   className?: string;
+  /** Skip the wrapping <div>: JournalBody draws one around every run. */
+  bare?: boolean;
+  /**
+   * Heading-id counts shared across the runs of one body, so a heading text
+   * repeated on either side of a slider still gets a unique id.
+   */
+  headingIds?: Map<string, number>;
 }
 
 // Stable, unique heading ids per render so anchors don't collide if a post
@@ -89,9 +108,7 @@ function videoEmbedSrc(url: string): string | null {
 
 const pad2 = (n: string) => (n.length === 1 ? `0${n}` : n);
 
-function makeComponents(): PortableTextComponents {
-  const seen = new Map<string, number>();
-
+function makeComponents(seen: Map<string, number> = new Map()): PortableTextComponents {
   // One section-head style for h2, h3 and h4 (191 of the 227 body headings are
   // Wix h4s, which is an accident of the import, not a level of the argument).
   // Castoro roman at --text-h3 with a hairline above; the one titling line on
@@ -569,11 +586,8 @@ function makeComponents(): PortableTextComponents {
   return components;
 }
 
-export default function JournalPortableText({ value, className }: Props) {
+export default function JournalPortableText({ value, className, bare, headingIds }: Props) {
   if (!value || value.length === 0) return null;
-  return (
-    <div className={className}>
-      <PT value={value as PortableTextBlock[]} components={makeComponents()} />
-    </div>
-  );
+  const body = <PT value={value as PortableTextBlock[]} components={makeComponents(headingIds)} />;
+  return bare ? body : <div className={className}>{body}</div>;
 }

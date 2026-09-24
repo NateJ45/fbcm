@@ -634,6 +634,7 @@ changing the guide that mentions it in the same commit.
 
 ### For ncs-astro-sanity-starter (the library of record), found on this fork
 
+- **Post bodies and the Toaster hydrate for nothing (2026-09-24).** The starter's `BaseLayout` mounts `<Toaster client:idle />` for a `CopyEmailButton` a site may never render (10 KB on every page), and `JournalPortableText` hydrates a whole post body to serve a slider most posts lack, pulling `@sanity/client` in through `urlFor`. FBCM's fix is `src/components/JournalBody.astro` (render at build time, hydrate only the slider) and removing the mount; details on PORTS.md card 52.
 - **Build reads must use the Sanity CDN even with a token (2026-09-23).** `src/lib/sanity.ts` had `useCdn: !readToken`, so any build with `SANITY_API_READ_TOKEN` in `.env` read the uncached API. On FBCM a day of local and agent builds spent 325k API requests against the 250k monthly quota while CI (no token) stayed on the CDN. Fixed here (`useCdn: true`; the CDN accepts tokens since API 2021-03-25), and `sanityFetch` now throws in a production build instead of silently returning fallback content, so a quota block or outage fails the deploy rather than shipping an empty site. Port both to the starter and every family repo.
 
 Six findings, each general, each worth a PORTS.md card. Two are already fixed in
@@ -1028,11 +1029,13 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       are image-LCP pages, and the photo competes with the island JS: blocking all JS gives
       2.57 s and 2.38 s. A custom client directive that waits for `load` would get most of that,
       and the cost is a menu button that does nothing until the page has loaded.
-- [ ] #nathan **Render post bodies statically.** `JournalPortableText` hydrates the whole body
-      (`client:visible`) and drags `@sanity/client` in through `urlFor`. Rendering it as Astro and
-      hydrating only the before/after slider is the bigger post-page lever.
-- [ ] #nathan **Drop `<Toaster />`?** It ships `sonner` (10 KB) on every page for
-      `CopyEmailButton`, which no page renders.
+- **Done (2026-09-24, `perf/post-body`): post bodies render statically.** `JournalBody.astro`
+  runs `JournalPortableText` at build time; only a before/after slider would hydrate (no post
+  has one). Post-page JS 147.6 KB to 97.1 KB transferred, LCP 3.31 s to 2.93 s on the Messiah
+  post. Numbers in `docs/agent/performance.md`.
+- **Done (2026-09-24, `perf/post-body`): `<Toaster />` is no longer mounted.** No page rendered
+  `CopyEmailButton`, the only `toast()` caller; the package and primitive stay. Put the mount
+  back with the button.
 - [ ] #nathan **Cap the hero's phone frame?** Frame 1 is the 2400 px variant on a phone (169 KB),
       by design since `heroSizes`; the largest request before first paint.
 - **Superseded by this pass:** "Mobile LCP on `/` is 3239 ms" (Ledger branch, below) and the

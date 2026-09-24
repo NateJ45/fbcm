@@ -17,6 +17,7 @@ import {
   listenHref,
   assetRefOf,
   textOf,
+  splitAtSliders,
   type BodyNode,
   type PTBlock,
   type JournalTable,
@@ -428,4 +429,40 @@ test('openingText joins the first six text blocks; listenHref finds the channel 
   assert.equal(listenHref(body), 'https://fbcmuncie.churchcenter.com/channels/12345');
   assert.equal(listenHref([p('none'), first]), '', 'only the opening block counts');
   assert.equal(listenHref(null), '');
+});
+
+// ── splitAtSliders ──────────────────────────────────────────────────────────
+test('splitAtSliders: a body with no slider is one run, in order', () => {
+  const body: BodyNode[] = [
+    { _type: 'block', _key: 'a' },
+    { _type: 'inlineImage', _key: 'b' },
+    { _type: 'block', _key: 'c' },
+  ];
+  const segs = splitAtSliders(body);
+  assert.equal(segs.length, 1);
+  assert.deepEqual(segs[0], { kind: 'blocks', nodes: body });
+});
+
+test('splitAtSliders: each slider is its own segment, runs either side kept whole', () => {
+  const body: BodyNode[] = [
+    { _type: 'beforeAfter', _key: 's0' },
+    { _type: 'block', _key: 'a' },
+    { _type: 'block', _key: 'b' },
+    { _type: 'beforeAfter', _key: 's1' },
+    { _type: 'beforeAfter', _key: 's2' },
+    { _type: 'block', _key: 'c' },
+  ];
+  const segs = splitAtSliders(body);
+  assert.deepEqual(
+    segs.map((s) =>
+      s.kind === 'slider' ? `S:${s.node._key}` : s.nodes.map((n) => n._key).join(''),
+    ),
+    ['S:s0', 'ab', 'S:s1', 'S:s2', 'c'],
+  );
+});
+
+test('splitAtSliders: empty and missing bodies give no segments', () => {
+  assert.deepEqual(splitAtSliders([]), []);
+  assert.deepEqual(splitAtSliders(null), []);
+  assert.deepEqual(splitAtSliders(undefined), []);
 });

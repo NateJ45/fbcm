@@ -1,0 +1,87 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// A post body as static HTML (perf/post-body, 2026-09-24).
+//
+// The body used to be one React island (`<JournalPortableText client:visible>`),
+// which shipped React's renderers, @portabletext/react and the Sanity client
+// (through urlFor) to every post page, and serialised the whole body into the
+// HTML a second time as island props, all to hydrate a page of text whose only
+// possible interactive part is the before/after slider (and no post has one).
+//
+// Now the SAME renderer, JournalPortableText.tsx, is run here at build time
+// with react-dom/server and its markup is written straight into the page, so
+// every rendering rule (tables, points, Q and A, the reading, headings and
+// their ids, figures and their srcset/sizes, links, quotes, lists, marks) is
+// unchanged by construction. The body is cut at each before/after slider
+// (splitAtSliders), and only the slider hydrates, `client:visible`.
+//
+// The runs are rendered here, in order, with ONE shared heading-id map, rather
+// than as sibling components in the template: Astro may render siblings
+// concurrently, and the "-2" suffix on a repeated heading depends on order.
+//
+// Not used by the Studio preview: /preview/** has no post route (a journal
+// entry previews only as the /blog listing's editable surface), so there is no
+// stega click-to-edit path through this component to keep.
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import JournalPortableText from '@/components/JournalPortableText';
+import BeforeAfterSlider from '@/components/BeforeAfterSlider';
+import { splitAtSliders, type BodyNode } from '@/lib/post-body';
+
+interface Props {
+  /** The body after prepareBody() (src/lib/post-body.ts). */
+  value: BodyNode[] | null | undefined;
+  class?: string;
+}
+
+type SliderImage = { asset?: { _ref?: string; _id?: string }; alt?: string };
+
+const { value, class: className } = Astro.props;
+const headingIds = new Map<string, number>();
+const parts = splitAtSliders(value).map((seg) => {
+  if (seg.kind === 'blocks') {
+    return {
+      kind: 'html' as const,
+      html: renderToStaticMarkup(
+        createElement(JournalPortableText, { value: seg.nodes, bare: true, headingIds }),
+      ),
+    };
+  }
+  const v = seg.node as {
+    beforeImage?: SliderImage;
+    afterImage?: SliderImage;
+    caption?: string;
+  };
+  // The renderer drew nothing for a slider missing either picture; nor does this.
+  return v.beforeImage?.asset && v.afterImage?.asset
+    ? {
+        kind: 'slider' as const,
+        beforeImage: v.beforeImage,
+        afterImage: v.afterImage,
+        caption: v.caption,
+      }
+    : null;
+});
+---
+
+{
+  parts.length > 0 && (
+    <div class={className}>
+      {parts.map((p) =>
+        !p ? null : p.kind === 'html' ? (
+          <Fragment set:html={p.html} />
+        ) : (
+          <div class="-mx-m my-section-md md:mx-0">
+            <BeforeAfterSlider
+              client:visible
+              beforeImage={p.beforeImage}
+              afterImage={p.afterImage}
+              caption={p.caption}
+            />
+          </div>
+        ),
+      )}
+    </div>
+  )
+}

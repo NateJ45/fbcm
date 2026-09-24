@@ -19,7 +19,6 @@ import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import BackToTop from '@/components/BackToTop';
 import Analytics from '@/components/Analytics.astro';
-import { Toaster } from '@/components/ui/sonner';
 import '@/styles/globals.css';
 // src/styles/starwind.css is deliberately NOT imported (2026-09-23, dead-CSS
 // trim). Nothing on this site uses a Starwind component, and the file has no
@@ -441,7 +440,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
     <Footer siteSettings={siteSettings} />
 
     {/*
-      Both islands were previously `client:load` which forced the JS to
+      BackToTop and the Toaster were both previously `client:load` which forced the JS to
       execute before the first paint completed. Neither is interactive
       until later in the page lifecycle (BackToTop only appears after the
       visitor scrolls 600px; Toaster only mounts a region, the toast call
@@ -451,8 +450,14 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
     */}
     <BackToTop client:idle />
 
-    {/* Sonner toast region. Used by CopyEmailButton. Position bottom-right by default. */}
-    <Toaster client:idle position="bottom-right" />
+    {/*
+      No <Toaster /> here since 2026-09-24 (perf/post-body). It shipped
+      sonner (about 10 KB) to every page for CopyEmailButton, which no page
+      renders. The package and src/components/ui/sonner.tsx stay (the starter's
+      set); a page that brings CopyEmailButton back mounts
+      `<Toaster client:idle position="bottom-right" />` from
+      '@/components/ui/sonner' here again.
+    */}
 
     {/* Lenis smooth scroll. The reduced-motion guard in globals.css already
         kills smooth-scroll behavior; we also bail out here so we don't pay

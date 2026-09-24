@@ -10,6 +10,23 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Post bodies as static HTML, and no Toaster (`perf/post-body`)._
+
+**The two speed-pass follow-ups Nathan approved.** A post body was one `client:visible` React
+island, which shipped `@portabletext/react`, the journal renderers and `@sanity/client` (through
+`urlFor`) to every post and serialised the whole body into the page a second time as island props.
+`src/components/JournalBody.astro` now runs the unchanged `JournalPortableText.tsx` through
+`react-dom/server` at build time, so the rendering rules are the same code, and hydrates only a
+before/after slider (none exists yet), cut out of the body by `splitAtSliders` in `post-body.ts`.
+The Studio preview has no post route, so there was no click-to-edit path to keep. `<Toaster />`
+came out of `BaseLayout.astro`: its only caller, `CopyEmailButton`, is rendered by no page; the
+package and primitive stay. On the Messiah post (mobile, 3 runs): JS 147.6 KB to 97.1 KB
+transferred (19 requests to 14), HTML 53.2 to 47.8 KB, LCP 3.31 s to 2.93 s, perf 0.92 to 0.94.
+Parity: 153 of 162 pages identical once the Toaster, the island wrapper and Astro's `visible`
+script are set aside; 9 posts differ by one space the old baseline's normaliser had collapsed
+between React's text separators. Baselines recaptured to a fixpoint. Details in
+`docs/agent/performance.md`; the starter finding is on PORTS.md card 52.
+
 _2026-09-24 — The mobile speed pass (`perf/speed-audit`)._
 
 **Measured first, one resource class at a time.** Home mobile LCP was 3.80 s locally (2.34 s

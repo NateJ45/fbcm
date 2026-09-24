@@ -100,10 +100,29 @@ The home LCP element is now the logo because Chrome does not count text whose fi
 ### Still open (owner decisions, numbers attached)
 
 - **`/visit` and post pages are image-LCP pages over 2.5 s**, and the cause is JS competing with the photo. Blocking all JS: visit 3.15 to 2.57 s, post 3.38 to 2.38 s. Blocking only React and MobileNav: visit 2.71 s. The islands hydrate `client:idle`, which on a fast machine fires about 110 ms in, in the middle of the image download. Hydrating after `load` (a custom client directive) would take them out of that window, at the price of the menu button doing nothing until the page has loaded.
-- **The post body hydrates as one React island** (`JournalPortableText client:visible`), which pulls React, `@sanity/client` (`compat.js`, 25 KB) and `resolveEditInfo.js` (8 KB) in through `urlFor` from `src/lib/sanity.ts`. Blocking those two alone: 3.38 to 3.23 s. Rendering the body statically and hydrating only the before/after slider is the bigger lever.
-- **`<Toaster />` ships `sonner` (10 KB) on every page for `CopyEmailButton`, which no page renders.**
+- ~~The post body hydrates as one React island~~ and ~~`<Toaster />` ships `sonner` on every page~~: both done the same day, see "Post bodies as static HTML" below.
 - **The home hero's frame 1 is the 2400 px variant on a phone** (169 KB at DPR 1.75), by design since `heroSizes` (2026-09-24). It is the largest request before first paint.
 - **The shared inline stylesheet is about 152 KB on every page**; a per-page purge measured -0.15 s FCP. Worth doing only with a build-time tool, which would be a new dependency.
+
+## Post bodies as static HTML, and no Toaster (2026-09-24, `perf/post-body`)
+
+Same harness as the speed pass: Lighthouse 12.6.1 mobile preset against `dist/client` behind `scripts/serve-dist.mjs`, 3 runs, medians, on `/post/händel-s-messiah-sing-in-carols` (the audit's post: a table, a Q and A, two figures, a photograph cover).
+
+**What changed.**
+
+1. **The body renders at build time.** `src/components/JournalBody.astro` runs the unchanged `JournalPortableText.tsx` through `react-dom/server`'s `renderToStaticMarkup` and writes the markup into the page, so every rendering rule (tables, points, Q and A, the reading, heading ids, figure `srcset`/`sizes`, links, quotes, lists, marks) is the same code as before. It was `<JournalPortableText client:visible>`, which shipped `@portabletext/react`, the journal renderers and `@sanity/client` (pulled in by `urlFor`) to every post, and serialised the whole body a second time into the island's `props` attribute. The body is cut at each before/after slider (`splitAtSliders`, `src/lib/post-body.ts`, tested) and only the slider hydrates, `client:visible`; no post has one today. The runs are rendered in order in the component's frontmatter with one shared heading-id map rather than as sibling components, because Astro may render siblings concurrently and a repeated heading's `-2` suffix depends on order.
+2. **`<Toaster />` is no longer mounted in `BaseLayout.astro`.** The only `toast()` call site in `src/` is `CopyEmailButton.tsx`, which no page renders (the Studio's toasts are Sanity UI's own `useToast`). The `sonner` package, `src/components/ui/sonner.tsx` and the button stay; the mount goes back in one line with the button.
+
+**Post page, before and after.**
+
+| Messiah post, mobile | Perf     | LCP (median)                  | FCP    | TBT | JS requests | JS transferred | JS uncompressed | HTML (brotli) |
+| -------------------- | -------- | ----------------------------- | ------ | --- | ----------- | -------------- | --------------- | ------------- |
+| before (2a5d612)     | 0.92     | 3.31 s (3.30, 3.31, 3.38)     | 1.65 s | 0   | 19          | 147.6 KB       | 461.5 KB        | 53.2 KB       |
+| after                | **0.94** | **2.93 s** (2.93, 2.93, 3.01) | 1.65 s | 0   | 14          | **97.1 KB**    | 300.2 KB        | 47.8 KB       |
+
+Gone from the post page: `JournalPortableText.js` (6.3 KB), `compat.js` (the Sanity client, 25.2 KB), `resolveEditInfo.js` (8.3 KB), `sonner.js` (10.2 KB), `EmptyError.js`. Every other page loses `sonner.js` (10.2 KB transferred, 36 KB raw) and the Toaster's island markup. React itself stays on every page for `MobileNav`, `StickyCTAChip` and `BackToTop`, so the remaining post-page LCP gap to 2.5 s is the "hydrate after `load`" question above, not the body.
+
+**Parity.** 153 of 162 baselines are byte-identical once three expected changes are removed from both sides: the Toaster island (every page), the body's `<astro-island ...>` wrapper and its `<!--astro:end-->` (every post), and Astro's inline `visible` directive script (every post, since nothing else on a post hydrates `client:visible`). The body's own markup lost React's hydration text separators (`<!-- -->`), which only exist for hydration. The other 9 posts differ by one whitespace-only text node each: the old hydrated markup was `life.<!-- --> <!-- -->We`, and the parity normaliser's tag-gap rule collapsed that space in the baseline; the new markup is `life. We`, so the visible text is the same, and full-page screenshots of three posts at 1440 and 390 match pixel for pixel apart from anti-aliasing.
 
 ### How the rule-20 limit actually applies
 
@@ -127,13 +146,13 @@ Target: 100 on all four categories (Performance, Accessibility, Best Practices, 
 
 ### Hydration strategy
 
-| Component          | Directive        | Why                                                                                                                                                                                                                                                                 |
-| ------------------ | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ThemeToggle`      | `client:idle`    | Anti-FOUC inline script in `BaseLayout` already applies the correct theme class before first paint, so the React island only needs to hydrate by the time the visitor moves to click it. Demoting from `client:load` shaves real TBT off mobile Lighthouse runs.    |
-| `MobileNav`        | `client:idle`    | The closed Radix Sheet server-renders its trigger and mounts the portal only when the drawer opens, so the hamburger is in the server HTML and React can arrive on idle. Was `client:only="react"` until 2026-09-18 on a Radix-can't-SSR claim that no longer holds |
-| `BackToTop`        | `client:idle`    | Doesn't appear until the visitor scrolls 600px, so the JS doesn't need to race first paint                                                                                                                                                                          |
-| `Toaster` (Sonner) | `client:idle`    | Region only -- toast calls fire from elsewhere, plenty of time for the region to mount                                                                                                                                                                              |
-| `FaqAccordion`     | `client:visible` | Interactive but not critical-path                                                                                                                                                                                                                                   |
+| Component           | Directive        | Why                                                                                                                                                                                                                                                                 |
+| ------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ThemeToggle`       | `client:idle`    | Anti-FOUC inline script in `BaseLayout` already applies the correct theme class before first paint, so the React island only needs to hydrate by the time the visitor moves to click it. Demoting from `client:load` shaves real TBT off mobile Lighthouse runs.    |
+| `MobileNav`         | `client:idle`    | The closed Radix Sheet server-renders its trigger and mounts the portal only when the drawer opens, so the hamburger is in the server HTML and React can arrive on idle. Was `client:only="react"` until 2026-09-18 on a Radix-can't-SSR claim that no longer holds |
+| `BackToTop`         | `client:idle`    | Doesn't appear until the visitor scrolls 600px, so the JS doesn't need to race first paint                                                                                                                                                                          |
+| `FaqAccordion`      | `client:visible` | Interactive but not critical-path                                                                                                                                                                                                                                   |
+| `BeforeAfterSlider` | `client:visible` | The one post-body type that needs JavaScript; `JournalBody.astro` renders the rest of the body as static HTML and hydrates only this                                                                                                                                |
 
 Default to `client:visible` or `client:idle` for anything not immediately above the fold. Astro ships less JS up front. `client:load` is reserved for islands that genuinely must be live before first interaction -- and even then, ask twice whether `client:idle` is acceptable.
 
