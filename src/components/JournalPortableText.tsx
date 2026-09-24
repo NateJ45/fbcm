@@ -40,7 +40,7 @@
 
 import { PortableText as PT, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { urlFor, parseSanityAssetDimensions } from '@/lib/sanity';
 import { slugify } from '@/lib/slugify';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
@@ -370,6 +370,7 @@ function makeComponents(seen: Map<string, number> = new Map()): PortableTextComp
               <span>{lec.reference}</span>
             </p>
             <PT value={lec.blocks as unknown as PortableTextBlock[]} components={components} />
+            {lec.passage && <LectionPassageText reference={lec.reference} passage={lec.passage} />}
           </div>
         );
       },
@@ -584,6 +585,44 @@ function makeComponents(seen: Map<string, number> = new Map()): PortableTextComp
     },
   };
   return components;
+}
+
+/**
+ * The reading's own text (feat/scripture-text): a native <details>, so it
+ * opens with no JavaScript, and the print sheet opens it on paper. Verse
+ * numbers are small superscripts; a poetry line break is a <br>. The credit
+ * sits under the passage. Built at build time; no text is fetched here.
+ */
+function LectionPassageText({
+  reference,
+  passage,
+}: {
+  reference: string;
+  passage: NonNullable<JournalLection['passage']>;
+}) {
+  return (
+    <details
+      className="pp-passage"
+      data-translation={passage.translation}
+      data-fums={passage.fums?.length ? passage.fums.join(' ') : undefined}
+    >
+      <summary className="pp-passage-s">
+        <span>Read {reference}</span>
+      </summary>
+      <div className="pp-passage-t">
+        <p>
+          {passage.verses.map((v, i) => (
+            <Fragment key={i}>
+              {i > 0 && ' '}
+              <sup className="pp-v">{v.label}</sup>
+              {v.text.split('\n').flatMap((line, j) => (j ? [<br key={`b${j}`} />, line] : [line]))}
+            </Fragment>
+          ))}
+        </p>
+        <p className="pp-passage-c">{passage.credit}</p>
+      </div>
+    </details>
+  );
 }
 
 export default function JournalPortableText({ value, className, bare, headingIds }: Props) {

@@ -421,6 +421,14 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - "Follow along" (the heading of the Facebook, Instagram and YouTube links on the Contact page’s office hours band, and the name a screen reader hears for the same row of icons at the foot of the mobile menu).
 - "First Baptist Church Muncie on Facebook", "... on Instagram" and "... on YouTube" (what a screen reader says for each round icon button in the footer and the mobile menu; nothing on screen).
 
+## Sermon previews: the passage, Read aloud, Share and Add to calendar (2026-09-24, `feat/scripture-text`)
+
+### New sentences
+
+- "Read Romans 13:11-14" (the line that opens a sermon preview’s reading into the passage itself; the reference is the post’s own). The passage is the Berean Standard Bible, credited under it as "Berean Standard Bible, public domain". If the church later licenses the NIV, the credit becomes Biblica’s required notice, word for word: "Scripture quotations taken from The Holy Bible, New International Version® NIV®. Copyright © 1973, 1978, 1984, 2011 by Biblica, Inc.™ Used by permission. All rights reserved worldwide."
+- The tools under a post’s order: "Read aloud", "Stop", "Share", "Add to calendar" (on a sermon preview, until its Sunday has passed). What a screen reader hears for the calendar link: "Add to calendar: Sunday worship, November 30". After Share copies the link: "Link copied", or "Copy the link from the address bar" when the browser will not let it copy.
+- The calendar event a sermon preview’s "Add to calendar" makes: the title "Sunday worship at First Baptist Church Muncie", and the note "This Sunday’s sermon: <the post’s title> (<its reading>).", "Sermon preview: <the post’s address>" and "Watch live: <the livestream address>". The date, time, length and address come from the post and Site settings.
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

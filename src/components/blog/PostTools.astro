@@ -1,0 +1,57 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand
+// The post's three quiet tools (2026-09-24, feat/scripture-text): Read
+// aloud, Share and, on a sermon preview, Add to calendar. One row under the
+// masthead's order, in the furniture face, divided by gold hairlines, each a
+// 44px target. Hidden on paper (the print sheet in src/pages/post/[slug].astro).
+//
+// NOTHING THAT DOES NOT WORK IS SHIPPED AS WORKING. Listen and Share are
+// rendered `hidden` and shown by src/scripts/post-tools.ts only when the
+// browser has what they need (speechSynthesis; navigator.share or the
+// clipboard). With no JavaScript the row holds the calendar link alone, which
+// is a plain link to a static .ics file and needs nothing.
+//
+// Styles are in the post page's page-scoped block (.p2-tools), not Tailwind
+// utilities, so no other page's inline stylesheet changes (CLAUDE.md rule 20).
+interface Props {
+  /** /post/<slug>/sunday.ics, when this post is a preview with a readable service time. */
+  icsHref?: string;
+  /** "YYYY-MM-DD" of that Sunday: the calendar link hides itself once it has passed. */
+  sundayIso?: string;
+  /** "November 16": the Sunday, for the link's accessible name. */
+  sundayLabel?: string;
+}
+const { icsHref, sundayIso, sundayLabel } = Astro.props;
+---
+
+<div class="p2-tools" data-post-tools data-pagefind-ignore>
+  {
+    /* "Read aloud", not "Listen": a preview's order already has a Listen row
+      (the livestream), and two Listens a line apart would be two meanings. */
+  }
+  <button type="button" class="p2-tool" data-listen aria-pressed="false" hidden>
+    Read aloud
+  </button>
+  <button type="button" class="p2-tool" data-listen-stop hidden>Stop</button>
+  <button type="button" class="p2-tool" data-share hidden>Share</button>
+  {
+    icsHref && (
+      <a
+        class="p2-tool"
+        href={icsHref}
+        download={`sunday-worship-${sundayIso}.ics`}
+        type="text/calendar"
+        data-until={sundayIso}
+      >
+        Add to calendar
+        <span class="sr-only">: Sunday worship{sundayLabel ? `, ${sundayLabel}` : ''}</span>
+      </a>
+    )
+  }
+  <span class="p2-tool-status" role="status" aria-live="polite"></span>
+</div>
+
+<script>
+  import '@/scripts/post-tools';
+</script>
