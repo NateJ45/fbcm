@@ -17,7 +17,7 @@
   "ministries-hero-musicians": { "library": "08181c_a2717a81ad3e430f968c0e7cea71152a_tilde_mv2.jpg", "alt": "Two musicians rehearsing by the staircase, one at the drums and one on bass guitar." },
   "ministries-handbells": { "file": "08181c_88fa93aff6f14b358d1ee43721b7e189_tilde_mv2.jpg", "alt": "The handbell choir rehearsing", "maxWidth": 1600, "consent": false },
   "ministries-children": { "same": "hero-children", "alt": "Children gathered under the sanctuary arch" },
-  "ministries-youth": { "file": "08181c_bd26ffeb7cc14d029caf2663a0452bf3_tilde_mv2.jpg", "alt": "Two teens speaking to the youth group on stage", "maxWidth": 1600, "consent": true },
+  "ministries-youth": { "file": "08181c_bd26ffeb7cc14d029caf2663a0452bf3_tilde_mv2.jpg", "alt": "Two teens singing into microphones in front of the youth group", "maxWidth": 1600, "consent": true },
 
   "staff-deacons-2026": { "file": "b98776_be609b7a431f4ad9a4f82e225deeb234_tilde_mv2.jpg", "alt": "The 2026 deacons of First Baptist Church Muncie", "maxWidth": 1600, "consent": false },
   "staff-hero-kendall": { "library": "08181c_edf48e7402e7487598cdeaafd16d5fa9_tilde_mv2.jpg", "alt": "Kendall Ellis smiles for a portrait outdoors, standing against a brick wall.", "consent": false },
@@ -103,5 +103,11 @@
   "visit-doors": { "library": "08181c_6714073c050b4ac28ea695fd3288b4aa_tilde_mv2.jpg", "alt": "The glass doors at the Adams Street circular drive, the church's wheelchair accessible entrance, set into a carved limestone archway." },
   "visit-children-floor": { "library": "08181c_48ba80a7454a4d42a300e61c2603a301_tilde_mv2.jpg", "alt": "Children are seen from directly above, gathered around strips of yellow tape laid out on the floor for a group game." },
   "visit-children-baby": { "library": "08181c_9663d13b5b4c47588862cfc8068ec5e4_tilde_mv2.jpg", "alt": "A sleeping newborn baby wrapped in a pink crocheted blanket, close-up portrait." },
+  "hero-worship": { "file": "08181c_360b7e1579244dbc95697ca78172c167_tilde_mv2.jpg", "alt": "A singer leads worship at the microphone, a guitarist on either side of her", "maxWidth": 2400, "consent": false, "hotspot": { "x": 0.62, "y": 0.4 } },
+  "hero-teens": { "library": "b98776_a92b8eb7e2d64a67a8b4599d6fd432fb_tilde_mv2.jpg", "alt": "Teenagers laughing together over a card game, a Bible on the table", "consent": true, "hotspot": { "x": 0.72, "y": 0.3 } },
+  "hero-communion": { "library": "08181c_8a3de1c55df544a49b041c05bdade510_tilde_mv2.jpg", "alt": "Members of the church preparing the communion trays at a table", "consent": false, "hotspot": { "x": 0.66, "y": 0.4 } },
+  "hero-chancel-steps": { "library": "81f7ac_0d2d5720c7d046c88380d6912d259765_tilde_mv2.jpg", "alt": "Children sit on the chancel steps around Kendall as she reads to them", "consent": true, "hotspot": { "x": 0.62, "y": 0.35 } },
+  "hero-balcony": { "same": "hero-congregation", "alt": "The congregation standing to sing on a Sunday morning, seen from the balcony", "consent": false, "hotspot": { "x": 0.5, "y": 0.85 } },
+  "home-expect-dinner": { "library": "08181c_1760306b3d9843a4a2eeb2c1e3f508ba_tilde_mv2.jpg", "alt": "A group of girls of different ages seated around a round table set with a blue tablecloth, plates and cups, smiling for the camera.", "consent": true, "hotspot": { "x": 0.55, "y": 0.35 } },
   "visit-building-corner": { "library": "08181c_1c05a295546247c2acfe971dd8b9bc4d_tilde_mv2.jpg", "alt": "The full limestone church building is seen from a street corner on a sunny day, tower and wings visible." }
 }

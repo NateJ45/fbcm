@@ -28,15 +28,20 @@
 // moving to stop. The script below is the only one in this file.
 
 import SanityImage from '@/components/SanityImage.astro';
-import { frameAnimationDelays } from '@/lib/hero-frames';
+import { frameAnimationDelays, heroObjectPosition, heroSizes } from '@/lib/hero-frames';
+import { photoAspect } from '@/lib/photo-shape';
 
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
 interface Props {
   images: SanityImageObject[];
+  /** The frame's height as a fraction of the viewport: 1 for the tall home
+      hero (min-h-[100svh]), 0.72 for an interior one (min-h-[72svh]). Only
+      the `sizes` attribute reads it. */
+  heightFraction?: number;
 }
 
-const { images } = Astro.props as Props;
+const { images, heightFraction = 1 } = Astro.props as Props;
 const slides = (images ?? []).filter((img) => !!img?.asset);
 const isSlideshow = slides.length >= 2;
 const first = slides[0];
@@ -52,6 +57,21 @@ const delays = frameAnimationDelays(slides.length, SECONDS_PER_FRAME);
 // at 4-6, so there are two keyframes (globals.css) and this is the choice
 // between them: `few-frames` picks the wider hold/fade-out tuned for 2-3.
 const fewFrames = slides.length <= 3;
+
+// FOCAL POINT AND SIZES, PER FRAME (2026-09-24, the hero people pass).
+// Each frame is cropped by object-fit: cover, so it honours its own Sanity
+// hotspot (an editor sets it in the Studio's image tool) through
+// object-position, and a frame with no hotspot keeps the centre it always had.
+// Its `sizes` is the width cover actually draws it at, which on a portrait
+// phone is the frame height times the photograph's aspect, not 100vw. Both
+// are pure and unit-tested in src/lib/hero-frames.test.ts; the hotspot is
+// numbers only, so stega never touches it.
+const frameStyle = (img: SanityImageObject) => {
+  const pos = heroObjectPosition(img.hotspot, img.crop);
+  return pos ? `object-position:${pos}` : '';
+};
+const frameSizes = (img: SanityImageObject) =>
+  heroSizes(photoAspect(img as Parameters<typeof photoAspect>[0])?.a ?? null, heightFraction);
 ---
 
 {first && (
@@ -62,13 +82,13 @@ const fewFrames = slides.length <= 3;
           <SanityImage
             source={img}
             width={2400}
-            sizes="100vw"
+            sizes={frameSizes(img)}
             loading={i === 0 ? 'eager' : 'lazy'}
             fetchpriority={i === 0 ? 'high' : 'low'}
             quality={70}
             alt={i === 0 ? undefined : ''}
             class="hero-frame"
-            style={`--frames:${slides.length}; --frame-s:${SECONDS_PER_FRAME}; animation-delay:${delays[i]}s`}
+            style={`--frames:${slides.length}; --frame-s:${SECONDS_PER_FRAME}; animation-delay:${delays[i]}s${frameStyle(img) ? `; ${frameStyle(img)}` : ''}`}
           />
         ))}
       </div>
@@ -76,11 +96,12 @@ const fewFrames = slides.length <= 3;
       <SanityImage
         source={first}
         width={2400}
-        sizes="100vw"
+        sizes={frameSizes(first)}
         loading="eager"
         fetchpriority="high"
         quality={70}
         class="absolute inset-0 w-full h-full object-cover"
+        style={frameStyle(first) || undefined}
       />
     )}
 

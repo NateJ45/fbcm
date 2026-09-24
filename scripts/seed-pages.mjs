@@ -538,6 +538,15 @@ async function main() {
     console.log('');
   }
 
+  // A dry run never uploads (scripts/lib/page-images.mjs); it lists what --apply
+  // would, so the operator knows the plan above carries placeholder refs there.
+  const pending = ctx.images.pending ?? [];
+  if (!apply && pending.length > 0) {
+    console.log(`--apply would upload ${pending.length} photo(s) first:`);
+    for (const p of pending) console.log(`  ${p.key}: ${p.file} -> ${p.path}`);
+    console.log('');
+  }
+
   // The note is built from ALL modules, never just the requested ones, so it is
   // always the whole picture the church is asked to approve.
   const notePath = writeApprovalNote(all, ctx.images.manifest ?? {});

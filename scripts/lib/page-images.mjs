@@ -13,6 +13,11 @@
 //     resized file and asset, so a photo reused on several pages is uploaded exactly
 //     once, under the target key's cache filename. The alias's own "alt" wins for the
 //     block it produces, so a shared photo can carry different alt text per page.
+//   Any entry may also carry "hotspot": { "x": 0.62, "y": 0.4 } (fractions of the
+//     uploaded image). The block then carries a Sanity hotspot there, which every
+//     cover-cropped frame honours (the full hero since 2026-09-24,
+//     src/lib/hero-frames.ts) and which an editor can move in the Studio. The
+//     CALLING key's hotspot wins over its alias target's, like its alt.
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -50,6 +55,30 @@ export function alreadyUploaded(manifest, key, map = readAssetMap()) {
 
 function readAssetMap() {
   return existsSync(ASSET_MAP) ? JSON.parse(readFileSync(ASSET_MAP, 'utf8')) : {};
+}
+
+/** A manifest hotspot { x, y } as the Sanity object the Studio expects, its box
+ *  kept inside the frame (the Studio rejects one that spills over an edge).
+ *  Null when the entry has none. */
+export function sanityHotspot(spot) {
+  if (!spot || typeof spot.x !== 'number' || typeof spot.y !== 'number') return null;
+  const { x, y } = spot;
+  if (x < 0 || x > 1 || y < 0 || y > 1) {
+    throw new Error(`page-images: hotspot (${x}, ${y}) is outside the image`);
+  }
+  const size = Math.min(0.3, 2 * Math.min(x, 1 - x), 2 * Math.min(y, 1 - y));
+  return { _type: 'sanity.imageHotspot', x, y, width: size, height: size };
+}
+
+/** The hotspot a key's block carries: its own, else its alias target's. */
+export function hotspotFor(manifest, key) {
+  const own = manifest[key]?.hotspot;
+  return sanityHotspot(own ?? resolveEntry(manifest, key).entry.hotspot);
+}
+
+/** The placeholder ref a dry run shows for a photo it would upload on --apply. */
+export function pendingRef(targetKey) {
+  return `image-PENDING-UPLOAD-${targetKey}`;
 }
 
 /** Follow "same" aliases to the real manifest entry, returning { key, entry }.
@@ -139,17 +168,31 @@ export function makePageImages(uploadClient) {
 
   async function image(key) {
     const target = resolveEntry(manifest, key).entry;
+    const spot = hotspotFor(manifest, key);
+    const withSpot = (img) => (spot ? { ...img, hotspot: spot } : img);
     if (target.library) {
       const _ref = await libraryAsset(target.library);
       const alt = manifest[key]?.alt ?? target.alt;
-      return { _type: 'image', asset: { _type: 'reference', _ref }, alt };
+      return withSpot({ _type: 'image', asset: { _type: 'reference', _ref }, alt });
     }
     // A DRY RUN NEVER UPLOADS (2026-09-23). Before this guard, `seed-pages` without
     // --apply still uploaded any photo missing from this checkout's asset cache, so a
     // dry run from a fresh worktree wrote duplicate assets (docs/PENDING.md, "Seeding
-    // from a nested worktree"). Now it refuses and says how to fill the cache.
+    // from a nested worktree"). Since 2026-09-24 it no longer stops the run either:
+    // it warns with the same message (the exact asset-map key and how to fill it),
+    // and the block carries a placeholder ref, image-PENDING-UPLOAD-<key>, so the
+    // rest of the page's plan still prints. --apply is unchanged: it uploads once.
     if (!alreadyUploaded(manifest, key) && !process.argv.includes('--apply')) {
-      throw new Error(unuploadedMessage(key, cachePath(manifest, key)));
+      const path = cachePath(manifest, key);
+      const { key: targetKey, entry } = resolveEntry(manifest, key);
+      console.warn(`WOULD UPLOAD on --apply: ${unuploadedMessage(key, path)}`);
+      pending.push({ key, path, file: entry.file });
+      const alt = manifest[key]?.alt ?? entry.alt;
+      return withSpot({
+        _type: 'image',
+        asset: { _type: 'reference', _ref: pendingRef(targetKey) },
+        alt,
+      });
     }
     const r = await resized(key);
     if (!r) return null;
@@ -157,8 +200,10 @@ export function makePageImages(uploadClient) {
     const _ref = await uploader.upload(rel);
     const callingEntry = manifest[key];
     const alt = callingEntry?.alt ?? r.entry.alt;
-    return { _type: 'image', asset: { _type: 'reference', _ref }, alt };
+    return withSpot({ _type: 'image', asset: { _type: 'reference', _ref }, alt });
   }
 
-  return { image, manifest };
+  /** Every photo this dry run would upload on --apply, in the order met. */
+  const pending = [];
+  return { image, manifest, pending };
 }

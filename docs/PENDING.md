@@ -942,6 +942,52 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   a pure token test and keeps the palette honest for the day dark mode returns); drop its
   dark half if it ever blocks a light-only change.
 
+### Hero people: before the home page is re-applied (2026-09-24, `feat/hero-people`)
+
+- **Apply after deploy:** `node scripts/seed-pages.mjs --only home --apply`. The dry
+  run (2026-09-24) changes `pageBuilder[0]` (the hero's five frames) and
+  `pageBuilder[1]` (What to Expect's wide arch) and nothing else. It uploads ONE photo
+  first: `hero-worship` (`08181c_360b7e15..._tilde_mv2.jpg` resized to 2400 wide, cached
+  as `scripts/.page-images/hero-worship.jpg`), because the library's copy of the
+  worship-team photo is only 1600x1067, too small for a desktop hero. The other four
+  frames and the dinner photo are library assets (2400 wide) and upload nothing.
+- **Re-seed Ministries too** (`--only ministries`): `ministries-youth`'s alt was a
+  mislabel ("speaking to the youth group"; the teens are singing) and only a re-seed
+  carries the fixed alt into the live band.
+- **The phone crop of frames 1, 3 and 5.** On a 390x844 phone the photograph is drawn at
+  full height (cover scales by height there), so a hotspot can only move it sideways;
+  the face lands wherever it sits in the picture vertically. Frames 2 (teens) and 4
+  (children on the steps) show faces above the words; frame 1 (the singer, y 0.40) and
+  frame 3 (communion) put the faces level with the headline, and frame 5 (the balcony)
+  has no readable face on a phone at all. Screenshots in the branch report. If that is
+  not good enough, the options are a phone-only frame order or a portrait crop of frame
+  1, both owner calls.
+- **Phone bytes went up on purpose.** The frames' `sizes` now say the width cover
+  actually draws (`src/lib/hero-frames.ts heroSizes`), so a DPR 3 phone fetches the 2400
+  variant (98 KB for the tower frame) instead of the 1200 one (32 KB) it was stretching
+  3.2x. Across the five frames Lighthouse mobile saw 269 KB of hero images become
+  881 KB, with LCP unchanged (the LCP element is the dated line's text, 5.6 to 5.8 s
+  simulated either way). Desktop bytes are unchanged. If phone data matters more than
+  sharpness, cap the portrait branch at 1600 with resolution media queries.
+- **The approval-note generator drops the footer and header sections** when run as
+  `--only home`: they come from hidden modules that join the note only when named. This
+  branch put them back by hand. Next time run the dry run with those modules named too,
+  or make the note include hidden modules.
+- **Photo-morning shot list** (the hero research, 2026-09-24), for the day the church
+  photographs a Sunday. Landscape, 24 MP or more, no flash, faces in the right 40% and the
+  upper half of the frame (the words sit bottom left), signed releases for identifiable
+  children:
+  - greeters at the red doors (the handshake on the right, shot from inside);
+  - the congregation singing, faces not backs (from the side aisle, long lens);
+  - the preacher from behind the front pews, plus the reverse angle of the listeners;
+  - children's time on the steps, wide, the adult on the right;
+  - coffee and donuts, mixed ages laughing;
+  - the worship team or choir during the service, with the room;
+  - families arriving on the Adams Street steps, people and building together (the one
+    shot that could replace the tower);
+  - hands: passing the peace, communion trays, a child's hand in an adult's;
+  - a community event in Muncie.
+
 ### History identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** No schema field is new (the `archive`
