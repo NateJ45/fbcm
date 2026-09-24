@@ -1,0 +1,421 @@
+{
+  "_createdAt": "2026-09-19T22:38:46Z",
+  "_id": "homePage",
+  "_rev": "r3OMep2eOIG3C5V371dWAC",
+  "_type": "homePage",
+  "_updatedAt": "2026-09-24T01:37:02Z",
+  "pageBuilder": [
+    {
+      "_key": "home-hero",
+      "_type": "heroSection",
+      "eyebrow": "A downtown church in Muncie, Indiana",
+      "facts": [
+        {
+          "_key": "fact-1",
+          "_type": "heroFact",
+          "label": "Sundays",
+          "value": "{time}"
+        },
+        {
+          "_key": "fact-2",
+          "_type": "heroFact",
+          "label": "Where",
+          "value": "{address}"
+        },
+        {
+          "_key": "fact-3",
+          "_type": "heroFact",
+          "label": "Online",
+          "value": "Live on YouTube"
+        }
+      ],
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "The limestone bell tower of First Baptist Church against a blue sky",
+          "asset": {
+            "_ref": "image-1a41db0a8944c3ca0243432d2e1f6e4930537aab-2400x1596-jpg",
+            "_type": "reference"
+          }
+        },
+        {
+          "_key": "frame-2",
+          "_type": "image",
+          "alt": "The sanctuary from the balcony, light through the stained glass",
+          "asset": {
+            "_ref": "image-4f97d6a7a89d4d8631d2f7249e58a7e2b5ad510e-2400x1596-jpg",
+            "_type": "reference"
+          }
+        },
+        {
+          "_key": "frame-3",
+          "_type": "image",
+          "alt": "Children gathered under the sanctuary arch",
+          "asset": {
+            "_ref": "image-e7b7e945ad95143ef6a2513b12d3f48d90244b64-2400x1600-jpg",
+            "_type": "reference"
+          }
+        },
+        {
+          "_key": "frame-4",
+          "_type": "image",
+          "alt": "The congregation standing to sing on a Sunday morning",
+          "asset": {
+            "_ref": "image-03d6da95af3fbc02c3ba9eaa95ab533dbdfa8b4b-2400x1309-jpg",
+            "_type": "reference"
+          }
+        },
+        {
+          "_key": "frame-5",
+          "_type": "image",
+          "alt": "The corner of the church at Adams and Jefferson",
+          "asset": {
+            "_ref": "image-b25b1dd66a7db3b86f1716653999abff376e4533-2400x2574-jpg",
+            "_type": "reference"
+          }
+        }
+      ],
+      "headline": "Praise and proclaim.",
+      "layout": "full",
+      "primaryCta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-visit",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Plan a visit",
+        "linkType": "internal"
+      },
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+        "label": "Watch online",
+        "linkType": "external",
+        "openInNewTab": true
+      },
+      "size": "tall",
+      "subhead": "We're a Spirit-led people gathered to join Christ's presence in our community."
+    },
+    {
+      "_key": "home-sundays",
+      "_type": "sundayTimesSection",
+      "cta": {
+        "_key": "cta-3",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-visit",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "What to expect",
+        "linkType": "internal"
+      },
+      "heading": "What to Expect",
+      "intro": "At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have.",
+      "items": [
+        {
+          "_key": "time-1",
+          "_type": "timeItem",
+          "big": "9:30 am",
+          "body": "A time of small group Bible study during the hour before our regular worship service.",
+          "label": "Sunday School"
+        },
+        {
+          "_key": "time-2",
+          "_type": "timeItem",
+          "big": "10:15 am",
+          "body": "Between Bible study and Worship, join in a time of fellowship (and, of course, donuts)!",
+          "label": "Donut [Semi-] Hour"
+        },
+        {
+          "_key": "time-3",
+          "_type": "timeItem",
+          "big": "{time}",
+          "body": "For live streams, please visit our YouTube channel.",
+          "label": "Worship"
+        }
+      ],
+      "notes": [
+        "For children ages 3 and younger, nursery care is available throughout the service.",
+        "The first Sunday of each month is communion Sunday, a service with the whole church family."
+      ],
+      "photos": [
+        {
+          "_key": "expect-table",
+          "_type": "image",
+          "alt": "Teenagers laughing around a table over a card game, a Bible beside the cards.",
+          "asset": {
+            "_ref": "image-1b7806427fe8c419a24455260bd7f274a4516335-2400x1136-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.58,
+            "y": 0.4
+          }
+        },
+        {
+          "_key": "expect-children",
+          "_type": "image",
+          "alt": "Two little girls smiling, cheek to cheek.",
+          "asset": {
+            "_ref": "image-6df9b49a87b78d8b7f0ed57bfca7ae1ff18f4614-2995x1016-png",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.44,
+            "y": 0.5
+          }
+        }
+      ],
+      "showMap": false
+    },
+    {
+      "_key": "home-goals",
+      "_type": "linkCardsSection",
+      "cards": [
+        {
+          "_key": "goal-worship",
+          "_type": "linkCard",
+          "body": "FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.",
+          "cta": {
+            "_key": "cta-4",
+            "_type": "ctaBlock",
+            "externalUrl": "/who-we-are#worship",
+            "label": "Read more",
+            "linkType": "external",
+            "openInNewTab": false
+          },
+          "glyph": "window",
+          "image": {
+            "_type": "image",
+            "alt": "The congregation standing in the pews during worship, the worship team leading from the front beneath the words on the screen.",
+            "asset": {
+              "_ref": "image-e6666c121c6318a9ce9f82798fefbfe16d6ac9d4-4032x1908-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.45,
+              "y": 0.5
+            }
+          },
+          "title": "Worship"
+        },
+        {
+          "_key": "goal-way",
+          "_type": "linkCard",
+          "body": "FBCM proclaims God's faithfulness with people who are curious about faith, as well as new believers.",
+          "cta": {
+            "_key": "cta-5",
+            "_type": "ctaBlock",
+            "externalUrl": "/who-we-are#the-way",
+            "label": "Read more",
+            "linkType": "external",
+            "openInNewTab": false
+          },
+          "glyph": "door",
+          "image": {
+            "_type": "image",
+            "alt": "Four teenagers reading open Bibles together around a table.",
+            "asset": {
+              "_ref": "image-6b98171a13972b551bb5738bc7617e326a7342a9-2048x969-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.58,
+              "y": 0.5
+            }
+          },
+          "title": "The Way"
+        },
+        {
+          "_key": "goal-witness",
+          "_type": "linkCard",
+          "body": "To make known what God has done, FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.",
+          "cta": {
+            "_key": "cta-6",
+            "_type": "ctaBlock",
+            "externalUrl": "/who-we-are#witness",
+            "label": "Read more",
+            "linkType": "external",
+            "openInNewTab": false
+          },
+          "glyph": "rose",
+          "image": {
+            "_type": "image",
+            "alt": "Teens and adults lying together on snow tubes on a snowy hill, smiling for the camera.",
+            "asset": {
+              "_ref": "image-26ba0c9d1556ee7aef717050786cccedad6f5da3-1908x1967-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.5
+            }
+          },
+          "title": "Witness"
+        },
+        {
+          "_key": "goal-work",
+          "_type": "linkCard",
+          "body": "FBCM exalts God by following Jesus’ example of serving others, rather than seeking to be served ourselves (Mark 10:45).",
+          "cta": {
+            "_key": "cta-7",
+            "_type": "ctaBlock",
+            "externalUrl": "/who-we-are#work",
+            "label": "Read more",
+            "linkType": "external",
+            "openInNewTab": false
+          },
+          "glyph": "basin",
+          "image": {
+            "_type": "image",
+            "alt": "The handbell choir ringing together at their music stands, a pianist beside them.",
+            "asset": {
+              "_ref": "image-72fb10cfd85a903fa781ca41304ae050c2ed6bed-1600x908-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.3,
+              "y": 0.4
+            }
+          },
+          "title": "Work"
+        }
+      ],
+      "heading": "Our Goals",
+      "intro": "Our Church Coordination Team (CCT) has set certain goals for our church this season, in pursuit of following the calling God has given us as a congregation in different areas of our life together."
+    },
+    {
+      "_key": "home-heritage",
+      "_type": "heritageBandSection",
+      "archive": {
+        "_type": "image",
+        "alt": "The congregation, adults and children, gathered outside the church entrance in a black and white photograph.",
+        "asset": {
+          "_ref": "image-7aff980f17a59db067b89ff2d6fa792de173b301-1749x1650-jpg",
+          "_type": "reference"
+        },
+        "crop": {
+          "_type": "sanity.imageCrop",
+          "bottom": 0.27,
+          "left": 0,
+          "right": 0,
+          "top": 0
+        },
+        "hotspot": {
+          "_type": "sanity.imageHotspot",
+          "height": 0.3,
+          "width": 0.3,
+          "x": 0.5,
+          "y": 0.45
+        }
+      },
+      "body": "First Baptist’s third, and most recent, building was completed in 1929. It has been on the National Register of Historic Places since 1988.",
+      "cta": {
+        "_key": "cta-8",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-history",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Our history",
+        "linkType": "internal"
+      },
+      "dates": [
+        {
+          "_key": "date-1859",
+          "_type": "heritageDate",
+          "text": "Twelve Indiana residents, meeting at the county courthouse, founded the first Baptist Church in Muncie.",
+          "year": "1859"
+        },
+        {
+          "_key": "date-1862",
+          "_type": "heritageDate",
+          "text": "The tiny congregation moved into their new church building.",
+          "year": "1862"
+        },
+        {
+          "_key": "date-1890",
+          "_type": "heritageDate",
+          "text": "The congregation eventually moved into a new building on July 20, 1890.",
+          "year": "1890"
+        },
+        {
+          "_key": "date-1929",
+          "_type": "heritageDate",
+          "text": "On May 12, 1929, 1200 people marched from the old church to the new one on the corner of Jefferson and Adams streets.",
+          "year": "1929"
+        },
+        {
+          "_key": "date-now",
+          "_type": "heritageDate",
+          "now": true,
+          "text": "First Baptist Muncie continues to discern God’s will to serve in a new era in the life of Muncie."
+        }
+      ],
+      "heading": "Our Building",
+      "image": {
+        "_type": "image",
+        "alt": "Samuel Hannaford and Sons’ original rendering of the church, drawn in 1927: the tower on the corner and the long limestone wings, a car of the period parked out front.",
+        "asset": {
+          "_ref": "image-d85152a1d17899795a394cf04985a1731a15ad04-1000x605-jpg",
+          "_type": "reference"
+        },
+        "hotspot": {
+          "_type": "sanity.imageHotspot",
+          "height": 0.3,
+          "width": 0.3,
+          "x": 0.5,
+          "y": 0.5
+        }
+      }
+    },
+    {
+      "_key": "home-blog",
+      "_type": "dynamicListSection",
+      "cta": {
+        "_key": "cta-9",
+        "_type": "ctaBlock",
+        "externalUrl": "/blog",
+        "label": "All posts",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "headline": "Church Blog",
+      "limit": 3,
+      "source": "journal",
+      "subhead": "Read the latest from FBCM"
+    },
+    {
+      "_key": "home-give",
+      "_type": "giveBandSection",
+      "body": "We give sacrificially to help those in need through regular offerings and donations.",
+      "heading": "Give"
+    }
+  ],
+  "seoDescription": "We're a Spirit-led people gathered to join Christ's presence in our community. {address}, Muncie, Indiana.",
+  "seoTitle": "First Baptist Church Muncie | Sundays {time}, downtown Muncie"
+}
