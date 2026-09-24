@@ -403,7 +403,8 @@ export async function getNotFoundPage() {
     heroImage${IMAGE_PROJECTION},
     primaryCtaLabel, primaryCtaHref,
     secondaryCtaLabel, secondaryCtaHref,
-    tertiaryCtaLabel, tertiaryCtaHref
+    tertiaryCtaLabel, tertiaryCtaHref,
+    fourthCtaLabel, fourthCtaHref
   }`,
     {},
     null,

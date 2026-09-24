@@ -1,145 +1,235 @@
 ---
 // Safe to edit by hand
-// Custom 404. Warm, on-brand, three clear paths back. No search (there isn't one).
+// Custom 404. Warm, plain, in the church's own colours, with four doors back
+// into the site. No search (there isn't one).
 //
-// Layout: the interior image hero. The photograph is full-bleed under the two
-// gradients in HeroBackground with the words on the bottom-left gutter, which
-// is what every other hero on this site does, and the header overlays it the
-// same way. The photo is sourced from Sanity (the notFoundPage singleton's
-// heroImage) and
-// pipes through the same SanityImage CDN/transform pipeline as every other
-// photo on the site. There is no code-drawn fallback photo any more (rule
-// 11: the previous fallback was a leftover Reid Design asset ref, "Studio
-// dogs on the sofa", that shipped because nothing in the build ever pointed
-// at the placeholder to notice it was somebody else's photo). When the
-// singleton has no image, the page simply renders without one.
+// THE LOOK (2026-09-24, the utility identity pass; rollout plan step 10).
+// Two bands, the grammar every other page opener on the site now speaks:
+//
+//   1. The apology on the brand INDIGO band, like the window hero and the
+//      journal's opener: "404" as the small gold titling label the window
+//      hero uses for its eyebrow, the headline in the titling capitals sized
+//      by its own length (headlineScale, so nothing breaks mid-word), the
+//      body as the paper lede, and the church's door, the Tudor door glyph,
+//      drawn large in gold at the right: the way back in. The header keeps
+//      its paper bar above it (a colour, not a picture).
+//   2. FOUR DOORS on the page surface: Visit, Who We Are, Blog and Give, each
+//      a whole-link door with its building glyph (door, window, rose, basin,
+//      by position) over its name in the titling face. A ruled row, not
+//      boxed cards (rollout rule 10). The labels and destinations are the
+//      notFoundPage singleton's four door fields; a blank one falls back to
+//      the same four doors in code, so the page never shows fewer.
+//
+// NO PHOTOGRAPH. Until this pass the page was the tower photograph full-bleed
+// under the hero gradients. That photo is the home hero's first frame and the
+// history opener's too, and the rollout does not reuse a photo across pages,
+// so the singleton's heroImage is no longer drawn (scripts/pages/
+// not-found.mjs stops setting it; the schema field says so). A lost visitor
+// needs the doors more than a picture.
+//
+// The CSS is in this file's <style> block, so it ships on /404 only
+// (CLAUDE.md rule 20).
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getNotFoundPage, getSiteSettings } from '@/lib/queries';
-import HeroBackground from '@/components/HeroBackground.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import CtaLink from '@/components/CtaLink.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import { headlineScale } from '@/lib/headline-scale';
 
 const [notFoundPage, siteSettings] = await Promise.all([
   getNotFoundPage().catch(() => null),
   getSiteSettings().catch(() => null),
 ]);
 
-const seoTitle = notFoundPage?.seoTitle ?? 'Page not found';
+type NotFoundDoc = {
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  eyebrow?: string | null;
+  headline?: string | null;
+  body?: string | null;
+  primaryCtaLabel?: string | null;
+  primaryCtaHref?: string | null;
+  secondaryCtaLabel?: string | null;
+  secondaryCtaHref?: string | null;
+  tertiaryCtaLabel?: string | null;
+  tertiaryCtaHref?: string | null;
+  fourthCtaLabel?: string | null;
+  fourthCtaHref?: string | null;
+};
+const doc = (notFoundPage ?? null) as NotFoundDoc | null;
+
+const seoTitle = doc?.seoTitle || 'Page not found';
 const seoDescription =
-  notFoundPage?.seoDescription ??
-  'That page wandered off. Head back to the homepage or get in touch.';
+  doc?.seoDescription || 'That page has moved or never was. Head back to the site or get in touch.';
 
-const eyebrow = notFoundPage?.eyebrow ?? '404';
-const headline = notFoundPage?.headline ?? 'That page wandered off.';
+const eyebrow = doc?.eyebrow || '404';
+const headline = doc?.headline || 'That page has moved or never was.';
 const body =
-  notFoundPage?.body ??
-  "It happens. Maybe a link is old, maybe the URL has a typo. Either way, here's where to head next.";
+  doc?.body ||
+  "It happens. If you followed an old link, it may have moved when we rebuilt this site. Here's where to go instead.";
 
-// CtaLink draws every button on the site (CLAUDE.md rule 17: one button
-// family). The singleton's three CTA slots are plain label/href strings
-// rather than the ctaBlock shape CtaLink resolves references from, so each
-// is wrapped as an "external" cta here: resolveHref() just returns
-// externalUrl unchanged for that link type, and openInNewTab is forced to
-// false because these are same-site paths, not a link off the site.
-function asCta(label: string, href: string) {
-  return { label, linkType: 'external' as const, externalUrl: href, openInNewTab: false };
-}
-
-const primaryCta = asCta(
-  notFoundPage?.primaryCtaLabel ?? 'Plan a visit',
-  notFoundPage?.primaryCtaHref ?? '/visit',
-);
-const secondaryCta = asCta(
-  notFoundPage?.secondaryCtaLabel ?? 'Read the blog',
-  notFoundPage?.secondaryCtaHref ?? '/blog',
-);
-const tertiaryCta = asCta(
-  notFoundPage?.tertiaryCtaLabel ?? 'Contact us',
-  notFoundPage?.tertiaryCtaHref ?? '/contact',
-);
-
-const photo = notFoundPage?.heroImage ?? null;
+// The four doors. Each slot is the singleton's label and destination when an
+// editor filled both, and the site's own door in that position otherwise.
+const DOORS = [
+  { glyph: 'door', label: 'Visit', href: '/visit' },
+  { glyph: 'window', label: 'Who We Are', href: '/who-we-are' },
+  { glyph: 'rose', label: 'Blog', href: '/blog' },
+  { glyph: 'basin', label: 'Give', href: '/give' },
+] as const;
+const slots: [string | null | undefined, string | null | undefined][] = [
+  [doc?.primaryCtaLabel, doc?.primaryCtaHref],
+  [doc?.secondaryCtaLabel, doc?.secondaryCtaHref],
+  [doc?.tertiaryCtaLabel, doc?.tertiaryCtaHref],
+  [doc?.fourthCtaLabel, doc?.fourthCtaHref],
+];
+const doors = DOORS.map((fallback, i) => {
+  const [label, href] = slots[i];
+  return label && href ? { glyph: fallback.glyph, label, href } : fallback;
+});
 ---
 
 <BaseLayout
   title={seoTitle}
   description={seoDescription}
   siteSettings={siteSettings}
-  overlayHeader={!!photo}
+  overlayHeader={false}
   noindex
 >
-  {
-    /* THE 404 IS A HERO NOW (art-direction pass, 2026-09-20, task 11).
-      It used to be a two-column band: words in a centred column on mobile,
-      the tower photograph beside them in a rounded panel, with the caption
-      set in an uppercase label under it. So the one page on this site whose
-      job is to look like the site looked like nothing else on it.
-      It is the interior hero instead: the photograph full-bleed under the
-      same two gradients every other hero uses, the words on the bottom-left
-      gutter, the headline in the titling capitals. Same component
-      (HeroBackground), same gradient, same left edge.
+  <section class="nf-open" aria-labelledby="not-found-heading">
+    <div class="nf-grid mx-auto max-w-content px-gutter">
+      <BuildingGlyph name="door" class="nf-glyph" />
+      <div class="nf-words min-w-0">
+        {eyebrow && <p class="hw-label font-display text-gold uppercase">{eyebrow}</p>}
+        <SectionHeading
+          headline={headline}
+          headingId="not-found-heading"
+          level="h1"
+          scale={headlineScale(headline, { tall: false })}
+          align="left"
+          tone="band"
+          wide
+        />
+        {body && <p class="nf-lede font-body">{body}</p>}
+      </div>
+    </div>
+  </section>
 
-      The caption is dropped with the panel. A credit line over a photograph
-      the visitor is reading an apology on is furniture, and the alt text on
-      the image still describes it. */
-  }
-  {
-    photo ? (
-      <section
-        class="relative isolate flex min-h-[72svh] flex-col justify-end overflow-hidden bg-accent-dark text-bg"
-        aria-labelledby="not-found-heading"
-      >
-        <HeroBackground images={[photo]} />
-
-        <div class="relative mx-auto w-full max-w-content px-gutter pt-[clamp(72px,12vh,128px)] pb-[clamp(40px,7vh,72px)]">
-          <p class="mb-[clamp(18px,3vh,32px)] inline-flex items-center gap-3.5 font-ui text-ui font-medium">
-            <span class="h-px w-11 bg-gold" aria-hidden="true" />
-            <span>{eyebrow}</span>
-          </p>
-
-          <h1
-            id="not-found-heading"
-            class="max-w-[12ch] font-display text-h1 leading-none font-normal tracking-[0.01em] text-bg uppercase"
-          >
-            {headline}
-          </h1>
-
-          <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[44ch] font-body text-lede font-normal text-bg italic">
-            {body}
-          </p>
-
-          <div class="mt-[clamp(26px,4vh,40px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
-            {/* One gold button and two text links: the way back to Sunday is
-                the loud one, the other two are quieter and should look it. */}
-            <CtaLink cta={primaryCta} variant="gold" onDark />
-            <CtaLink cta={secondaryCta} variant="link" onDark />
-            <CtaLink cta={tertiaryCta} variant="link" onDark />
-          </div>
-        </div>
-      </section>
-    ) : (
-      /* No photograph in the singleton: the text hero, drawn by the same
-         SectionHeading every other page opener on this site uses. */
-      <section class="bg-background" aria-labelledby="not-found-heading">
-        <div class="mx-auto flex min-h-[42svh] max-w-content items-end px-gutter py-section-lg md:min-h-[52svh]">
-          <div>
-            <SectionHeading
-              eyebrow={eyebrow}
-              headline={headline}
-              subhead={body}
-              headingId="not-found-heading"
-              level="h1"
-              tone="church"
-            />
-            <div class="mt-[clamp(26px,4vh,40px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
-              <CtaLink cta={primaryCta} variant="gold" />
-              <CtaLink cta={secondaryCta} variant="link" />
-              <CtaLink cta={tertiaryCta} variant="link" />
-            </div>
-          </div>
-        </div>
-      </section>
-    )
-  }
+  <nav class="nf-doors" aria-label="Where to go instead">
+    <ul class="nf-row mx-auto max-w-content px-gutter">
+      {
+        doors.map((door) => (
+          <li>
+            <a class="nf-door" href={door.href}>
+              <BuildingGlyph name={door.glyph} class="nf-door-glyph" />
+              <span class="nf-door-name font-display">{door.label}</span>
+              <span class="nf-door-arrow font-ui" aria-hidden="true">
+                &rarr;
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
 </BaseLayout>
+
+<style>
+  .nf-open {
+    background: var(--color-band-indigo);
+    color: var(--color-white-pure);
+    padding-block: clamp(56px, 9vw, 140px);
+  }
+  .nf-grid {
+    display: grid;
+    gap: 24px clamp(32px, 5vw, 96px);
+    align-items: end;
+  }
+  .nf-open :global(.nf-glyph) {
+    width: 64px;
+    color: var(--color-gold);
+  }
+  @media (min-width: 1024px) {
+    .nf-grid {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .nf-words {
+      grid-row: 1;
+      grid-column: 1;
+    }
+    .nf-open :global(.nf-glyph) {
+      grid-row: 1;
+      grid-column: 2;
+      width: clamp(150px, 15vw, 230px);
+    }
+  }
+  .nf-lede {
+    margin: clamp(18px, 2.4vw, 28px) 0 0;
+    max-width: 32em;
+    font-size: var(--text-lede);
+    font-style: italic;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  }
+
+  .nf-doors {
+    background: var(--color-background);
+    padding-block: clamp(48px, 6vw, 96px);
+  }
+  .nf-row {
+    list-style: none;
+    margin-block: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(16px, 3vw, 40px);
+  }
+  @media (min-width: 1024px) {
+    .nf-row {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .nf-door {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 14px 12px;
+    min-height: 44px;
+    padding-block: clamp(20px, 2.4vw, 28px);
+    border-top: 1px solid var(--color-hair-strong);
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+  .nf-door :global(.nf-door-glyph) {
+    grid-column: 1 / -1;
+    width: clamp(40px, 4vw, 56px);
+    color: var(--color-gold-ink);
+    transition: transform 0.25s ease;
+  }
+  .nf-door-name {
+    font-size: clamp(1.375rem, 1.1rem + 1vw, 2.125rem);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .nf-door-arrow {
+    font-size: 1.25rem;
+    color: var(--color-gold-ink);
+    transition: transform 0.25s ease;
+  }
+  .nf-door:hover .nf-door-name,
+  .nf-door:focus-visible .nf-door-name {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .nf-door:hover .nf-door-arrow {
+      transform: translateX(4px);
+    }
+    .nf-door:hover :global(.nf-door-glyph) {
+      transform: translateY(-3px);
+    }
+  }
+</style>

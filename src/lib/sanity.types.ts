@@ -321,6 +321,8 @@ export type NotFoundPage = {
   secondaryCtaHref?: string;
   tertiaryCtaLabel?: string;
   tertiaryCtaHref?: string;
+  fourthCtaLabel?: string;
+  fourthCtaHref?: string;
 };
 
 export type BusinessInfo = {
