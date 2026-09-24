@@ -532,6 +532,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         without rIC support. */}
     <script>
       import '@/components/search/trigger'; // scaffold: journal
+      import '@/components/transitions/shared-title'; // scaffold: journal
       function startLenis() {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         import('lenis').then(({ default: Lenis }) => {
