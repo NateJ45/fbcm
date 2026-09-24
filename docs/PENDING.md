@@ -804,17 +804,31 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   page was checked against main's module output before the recompose: no editor edits,
   only settings placeholders. Then delete `src/pages/styleguide/visit.astro`, its
   `tests/routes.ts` line and `scripts/data/fixtures/visit.json`, and recapture parity.
-- **Visit owner questions.** (1) Two prototype photos were swapped because they are
-  already on Home: the teens at the card table (`08181c_42c2e16b` is the same
-  photograph as Home's `b98776_a92b8eb7`, a twin the photo library does not mark) became
-  the young guitarist (`visit-hero-guitar`), and the congregation facing the band
-  (Home's Worship goal) became the congregation gathering at Christmas
-  (`visit-step-worship`), so the hero's middle light and the Worship step are both
-  Christmas services. One line each in `scripts/data/page-images.json` to change. (2)
-  The Sunday School step photo is 491px tall at source and the Fellowship and
-  classroom-floor photos are marked soft: top of the photo-morning list. (3) The site
-  sheet is 139,151 B against the 147,456 B ceiling (+11.7 KB in this branch): other
-  rollout branches add CSS too, so check rule 20 after every merge.
+- **Visit owner questions.** (1) The teens at the card table in the prototype
+  (`08181c_42c2e16b`) is the same photograph as Home's `b98776_a92b8eb7` (a twin the
+  photo library does not mark), so the hero's third light is the young guitarist
+  (`visit-hero-guitar`). (2) **Visit's Worship step and Home's Worship goal share a
+  photo** (`08181c_30a02cce`, the congregation facing the band): the controller's
+  ruling (2026-09-24, fix round 1) accepts that cross-page share, the photo Nathan said
+  to keep, over a same-page twin with the hero's Christmas congregation, until the photo
+  morning. (3) The Sunday School step photo is 491px tall at source and the Fellowship
+  and classroom-floor photos are marked soft: top of the photo-morning list.
+- **Rule 20 after the Visit fix round (2026-09-24).** This branch's component CSS left
+  globals.css (component style blocks, `src/styles/ledger.css`,
+  `src/styles/photo-shapes.css`), which took post, 404 and privacy pages down to
+  131,426 / 121,371 B. The page-builder pages still inline one 143,964 B bundle,
+  because SectionRenderer statically imports every section, so every section's CSS
+  ships on every page-builder page; /blog inlines that bundle plus its own 5.4 KB
+  (149,334 B in one `<style>`, two files each under the per-file limit). Under 140 KB
+  for those pages needs the section CSS split by page (not possible with static
+  imports) or a trim of shared CSS; a dead-class scan of globals.css found 12 unused
+  selectors, too few to matter.
+- **Headings gate known finding (not Visit's):** DocumentList's register year heading
+  "Undated" (h3, `font-display text-h3` in a `md:col-span-2` column) breaks mid-word at
+  768 and 1024 on /blog and /styleguide. `tests/headings.spec.ts` lists it in `KNOWN`;
+  take it off the list when the owner applies `headingFit` (heading-grammar.ts) to it.
+- **`src/components/blog/Opener.astro` fails `npm run format:check` on main** (one
+  `<h1>` line over the print width). Formatting only; the journal branch's file.
 - **Photo library: mark `08181c_42c2e16b` and `b98776_a92b8eb7` as twins** in
   `scripts/data/photo-library.json`, so the next reuse check sees them.
 - **`weekOfLabel()` still reads the UTC day.** The sermon-preview "week of" label

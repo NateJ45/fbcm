@@ -70,8 +70,10 @@
 //    changed for that reason: the teens at the card table is the same
 //    photograph as Home's What to Expect picture (a second archive copy the
 //    library does not mark as a twin), so the hero's third light is the young
-//    guitarist; and the congregation facing the band is Home's Worship goal,
-//    so the Worship step is the congregation gathering at Christmas.
+//    guitarist. The Worship step keeps the prototype's congregation facing the band
+//    (the photo Nathan said to keep), which is also Home's Worship goal card:
+//    the controller's ruling (2026-09-24) accepts that cross-page share over a
+//    same-page twin, until the photo morning.
 
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -180,7 +182,7 @@ export default {
     const stepWelcome = await photo('visit-step-welcome', 0.5, 0.35);
     const stepSchool = await photo('visit-step-school', 0.42, 0.5);
     const stepFellowship = await photo('visit-step-fellowship', 0.62, 0.5);
-    const stepWorship = await photo('visit-step-worship', 0.5, 0.55);
+    const stepWorship = await photo('visit-step-worship', 0.58, 0.5);
     const doorsPhoto = await photo('visit-doors', 0.5, 0.5);
     const childrenFloor = await photo('visit-children-floor', 0.5, 0.55);
     const childrenBaby = await photo('visit-children-baby', 0.5, 0.4);

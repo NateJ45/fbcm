@@ -418,25 +418,25 @@
           "image": {
             "_type": "image",
             "asset": {
-              "_id": "image-bb20bc75e6f5f72c75489c9f6e7898898d26c89f-2720x1195-png",
+              "_id": "image-e6666c121c6318a9ce9f82798fefbfe16d6ac9d4-4032x1908-jpg",
               "_type": "sanity.imageAsset",
-              "altText": "A congregation gathering in the sanctuary decorated for Christmas, a screen visible at the front.",
+              "altText": "The congregation is seated in pews facing forward during a worship service, with a screen displaying song lyrics at the front.",
               "metadata": {
                 "dimensions": {
                   "_type": "sanity.imageDimensions",
-                  "aspectRatio": 2.276150627615063,
-                  "height": 1195,
-                  "width": 2720
+                  "aspectRatio": 2.1132075471698113,
+                  "height": 1908,
+                  "width": 4032
                 },
-                "lqip": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsSAAALEgHS3X78AAACUUlEQVQokR3SaU/aAACA4f4gsk/bPpiYbTp1unksU6dybBwtLXK0XAIFhVIphSEMFGhRYR7R7EqW/cB3yZ7f8AiOO8C2TW4f7rj8NkWJySwuvMTj8eB54uHN6gqi+JlEUiYaDbP2do2nz57y+vUrDrx7JDMaA9elN+xTrVcQHh5nXF9dcHc/w712MRsGohhicXGB1bUVwkEviuRDEb2o8RCS+InNzXf4fB8pV0rUrFP6zpjJbMLQ+YpwcdHi2u1yf+MwnbmMnCFmw0RLJ9FLGu16hk49TbeRZ/ilRLdZJJ9NoGoJGnaTs/MBQ2fIcNihaZcRwqEPFDIibavEeNTh6nrE2L3Acc+5mfb5OWvyMGkwHdn8mHX4c99lMu5gtU5pdVr0Bh3aX2oUjmSC4S2E3Z1l9vdWCfi3UFMhzHqRXr/F5dTh8d7l18zG7VWwjAKX/Rp/H/t8f7jkfNSjYR1TLMU5jHsJBrcIBNYRjnJx1JREJLyPGNpFUfxoGRnTqjIYtOnbOpahc1I1aJs6k76B65xhWmW0TIRY7IBIZBcl6qV0dIhgGSXOmlWMchY9HyefSxCPh1E1BV3PoSVjZAs1jPYV1RMDo5LBNAukMxKpVAi9mCSfVsiqUexTHSHt3+VEDpGK+JGkTyRSKaSogiiJxJQoAZ8fUVbJ6Q1SqkY2rVAqJJDCByhSgHJRpX6coVlNM/5qIMjzz5Hm59h4McfC8gJL69ssrfvY2A6w+X6bne0dJEUjma0QjkrI0SCHcpAPW+/+H/0c9GKbOW7HNX7PLP4BsoyttiCStGgAAAAASUVORK5CYII="
+                "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAJABQDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAUGAgf/xAAmEAACAgEBBgcAAAAAAAAAAAABAgMEAAUGERIxMnITFTQ1NlFx/8QAFgEBAQEAAAAAAAAAAAAAAAAAAwAE/8QAGxEAAgIDAQAAAAAAAAAAAAAAAAECAxESE1H/2gAMAwEAAhEDEQA/AOfJrt0tTaxGwgqv0StvDk/eNlteYaybliqleuIuBVj6WY8iMmdoPb27hjOv8ao94yUm6semq6POWqM27dilL4Ujcb8yUkAGGR2qeul/cMHmgdz/2Q=="
               },
-              "url": "https://cdn.sanity.io/images/7jw947g5/production/bb20bc75e6f5f72c75489c9f6e7898898d26c89f-2720x1195.png"
+              "url": "https://cdn.sanity.io/images/7jw947g5/production/e6666c121c6318a9ce9f82798fefbfe16d6ac9d4-4032x1908.jpg"
             },
-            "alt": "A congregation gathering in the sanctuary decorated for Christmas, a screen visible at the front.",
+            "alt": "The congregation standing in the sanctuary, facing the worship band at the front.",
             "hotspot": {
               "_type": "sanity.imageHotspot",
-              "x": 0.5,
-              "y": 0.55,
+              "x": 0.58,
+              "y": 0.5,
               "width": 0.3,
               "height": 0.3
             }
