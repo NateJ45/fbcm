@@ -840,7 +840,7 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   field's description changed only), but the opener is new code: deploy first, then
   `npm run seed-pages -- --only history` (the plan on 2026-09-24: 19 sections still,
   "would be replaced" on `pageBuilder` [0] opener, [1] timeline, [2], [13] and [15] era
-  photo alts, [18] closing band; the live page matched the old module exactly, so no
+  photo alts, [17] books band, [18] closing band; the live page matched the old module exactly, so no
   editor edits to carry over; re-read the plan in case one has been made since) and
   `--apply` (backup first). Then shoot /history light and dark at 1440 and 375, and
   check click-to-edit on the opener once.
