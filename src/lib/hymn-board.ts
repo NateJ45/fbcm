@@ -30,6 +30,7 @@
 //
 // Pure, no Astro, unit-tested in hymn-board.test.ts.
 import { splitStega, reattachStega } from './preview-stega.ts';
+import { readBig } from './clock-read.ts';
 
 export interface BoardItem {
   _key?: string;
@@ -58,8 +59,6 @@ export interface BoardRow {
   /** The row whose clock time is the service time. At most one per board. */
   main: boolean;
 }
-
-const TIME = /^(\d{1,2}(?:[:.]\d{2})?)\s*([ap])\.?\s*m\.?$|^(\d{1,2}[:.]\d{2})$/i;
 
 /** The clock and meridiem a string names, if any. */
 function timeOf(
@@ -90,21 +89,9 @@ export function sameTime(a: string | null | undefined, b: string | null | undefi
   return x.meridiem === null || y.meridiem === null || x.meridiem === y.meridiem;
 }
 
-/** Classify one big line and split it into numeral and meridiem. */
-export function readBig(raw: string | null | undefined): {
-  kind: 'time' | 'word' | 'none';
-  big: string;
-  meridiem: string;
-} {
-  const { cleaned, encoded } = splitStega(raw ?? '');
-  const text = cleaned.trim();
-  if (!text) return { kind: 'none', big: '', meridiem: '' };
-  const m = text.match(TIME);
-  if (!m) return { kind: 'word', big: reattachStega(text, encoded), meridiem: '' };
-  const numeral = (m[1] ?? m[3] ?? text).replace('.', ':');
-  const meridiem = m[2] ? `${m[2].toLowerCase()}m` : '';
-  return { kind: 'time', big: reattachStega(numeral, encoded), meridiem };
-}
+// readBig moved to clock-read.ts (2026-09-24) so the hero facts, which are not a
+// church-capability file, can use it; re-exported here for the board's callers.
+export { readBig };
 
 /** The board's rows: every item with something in it, then every door. */
 export function boardRows(
@@ -150,4 +137,31 @@ export function boardRows(
   });
 
   return rows;
+}
+
+/**
+ * The gold tag on a door (2026-09-24, the Visit identity pass): a door whose
+ * own directions say it is wheelchair accessible is tagged so, read from the
+ * church's words rather than a checkbox (CLAUDE.md rule 15). Null otherwise.
+ */
+export function doorTag(body: string | null | undefined): string | null {
+  const text = splitStega(body ?? '').cleaned;
+  return /\bwheel-?\s?chair[\s-]+accessible\b/i.test(text) ? 'Wheelchair accessible' : null;
+}
+
+/**
+ * A plain-text field split into paragraphs on blank lines, each trimmed. The
+ * stega payload (at the end of the raw string) goes back on the LAST
+ * paragraph, so click-to-edit still resolves on the text in the preview.
+ */
+export function textParagraphs(raw: string | null | undefined): string[] {
+  const { cleaned, encoded } = splitStega(raw ?? '');
+  const paras = cleaned
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (paras.length > 0 && encoded) {
+    paras[paras.length - 1] = reattachStega(paras[paras.length - 1], encoded);
+  }
+  return paras;
 }

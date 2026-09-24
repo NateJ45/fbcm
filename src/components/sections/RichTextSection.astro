@@ -18,7 +18,11 @@
 // share their opening words is set as a said text), many short statements
 // become a two-column register, long prose goes into balanced columns. The
 // approved prototype is docs/superpowers/prototypes/2026-09-22-richtext-and-photos/richtext/.
+// The band heading is in the one heading grammar (H2_DISPLAY through
+// SectionHeading face="display", CLAUDE.md rule 17, 2026-09-24, the Visit
+// identity pass); the body's look is the Beliefs pass's to settle.
 // `width` and `align` stay in the schema for old documents and have no effect.
+import '@/styles/ledger.css';
 import SectionHeading from '@/components/SectionHeading.astro';
 import RichBody from '@/components/sections/RichBody.astro';
 import { surfaceClass } from '@/lib/surfaces';
@@ -76,6 +80,7 @@ const measure = layout.pieces[0];
                 headingId={headingId}
                 scriptAccent={scriptAccent}
                 headingAccent={headingAccent}
+                face="display"
               />
             </div>
             <div class:list={['rt-rt', layout.rowLong && 'is-long']}>
@@ -95,6 +100,7 @@ const measure = layout.pieces[0];
                 headingId={headingId}
                 scriptAccent={scriptAccent}
                 headingAccent={headingAccent}
+                face="display"
               />
             </div>
           )}

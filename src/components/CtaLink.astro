@@ -69,7 +69,7 @@ interface Props {
   variant?: 'primary' | 'secondary' | 'gold' | 'outline' | 'link' | 'rule';
   /** When true, swap variant colors for legibility on a dark surface. */
   onDark?: boolean;
-  /** Outline only: dark ink on the fixed gold band, in both themes. */
+  /** Outline and link: dark ink on the fixed gold band, in both themes. */
   onGold?: boolean;
   /** Fallback href if the CTA can't be resolved (e.g., siteSettings hasn't been populated). */
   fallbackHref?: string;
@@ -110,9 +110,13 @@ const newTab = cta?.openInNewTab ?? isExternal;
 // The text link is the UI face, underlined on the baseline, with a trailing
 // arrow that nudges on hover. `group` is on the <a> so the arrow can react to
 // the link's hover without a second hover target.
-const linkClasses = onDark
-  ? 'group font-ui text-ui font-semibold border-b border-current pb-1 inline-flex gap-2 items-center text-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
-  : 'group font-ui text-ui font-semibold border-b border-current pb-1 inline-flex gap-2 items-center text-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+// onGold (2026-09-24, the gold closing band): the link in band ink, which
+// never flips, so it reads on the fixed gold ground in both themes.
+const linkClasses = onGold
+  ? 'group font-ui text-ui font-semibold border-b border-current pb-1 inline-flex gap-2 items-center text-band-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-band-ink focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+  : onDark
+    ? 'group font-ui text-ui font-semibold border-b border-current pb-1 inline-flex gap-2 items-center text-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+    : 'group font-ui text-ui font-semibold border-b border-current pb-1 inline-flex gap-2 items-center text-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 // The button plate. Padding is in em so it tracks the label's own size, and
 // the 44px floor stays for the tap target.
