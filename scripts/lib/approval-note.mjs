@@ -77,6 +77,19 @@ export const CHROME_SECTIONS = [
       'Search result rows say "Page" in the date column for a page (a post shows its Sunday or posted date).',
     ],
   },
+  {
+    // src/lib/llms-text.ts. Everything else in the file is Site settings, each
+    // page's own title and search description, and the Visit page's own
+    // questions and answers.
+    heading: '/llms.txt, the summary for AI assistants (2026-09-24, the local search pass)',
+    newCopy: [
+      'An American Baptist church in downtown Muncie, Indiana. (the opening line, before the tagline)',
+      'The headings "Sundays", "What to expect", "Contact", "Pages", "Elsewhere" and "About this file", and the labels "Worship", "Where", "Directions", "Watch online", "Plan a visit", "Phone", "Email", "Office hours", "Give", "Church Center (calendar and giving)" and "Church Trac (newsletters and the app)".',
+      "Generated from the site's own content every time the site is built, so it always matches the pages.",
+      'Sermon previews and church news are at https://www.fbcmuncie.org/blog, each post at /post/<slug>, with a feed at https://www.fbcmuncie.org/blog/rss.xml.',
+      "A longer companion with more of the site's text: https://www.fbcmuncie.org/llms-full.txt",
+    ],
+  },
 ];
 
 /** `manifest[key].alt`, following `.same` chains, matching seed-pages.mjs's altFor. */

@@ -98,6 +98,16 @@ export const site = {
    *  change for a value set once. apply-brand never touches this. */
   googleBusinessProfile: '',
 
+  /** The IndexNow key (2026-09-24, the local search pass). Not a secret: the
+   *  protocol publishes it at <site.url>/<key>.txt (src/pages/[indexNowKey].txt.ts)
+   *  so Bing, Yandex, Seznam and the other IndexNow engines can check that a
+   *  URL submission really comes from the site's owner. scripts/indexnow.mjs
+   *  submits the sitemap after each deploy, and does nothing until the
+   *  production host serves this file (so not before the cutover). Changing it
+   *  is harmless: the next deploy publishes the new file. 32 hex characters,
+   *  generated once with crypto.randomBytes(16). apply-brand never touches it. */
+  indexNowKey: '1aadd9425437cc7a001d23cbec702fef',
+
   // Public repo URL (used in footer credit if shown)
   repo: '',
 };
