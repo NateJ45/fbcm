@@ -482,14 +482,22 @@ export function openingText(body: readonly unknown[] | null | undefined, n = 6):
     .join(' ');
 }
 
-/** The first Church Center channel link in the opening block, or ''. */
-export function listenHref(body: readonly unknown[] | null | undefined): string {
+/**
+ * The sermon-recordings link in the opening block, or ''. That is a Church
+ * Center channel link as the posts were written, or, once the posts hold
+ * {sermons} (src/lib/church-links.ts), whatever address that token filled to,
+ * passed in as `sermonsHref` (the Sermon recordings setting, else the live
+ * stream address).
+ */
+export function listenHref(body: readonly unknown[] | null | undefined, sermonsHref = ''): string {
   if (!Array.isArray(body)) return '';
   const first = body.find(isBlock);
   if (!first) return '';
+  const sermons = cleaned(sermonsHref).trim();
   for (const def of first.markDefs ?? []) {
     const href = def._type === 'link' ? cleaned(def.href ?? '') : '';
     if (href.includes('churchcenter.com/channels')) return href;
+    if (sermons && href === sermons) return href;
   }
   return '';
 }
