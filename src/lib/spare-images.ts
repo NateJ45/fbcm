@@ -42,6 +42,9 @@ import type { SanityImageObject } from '@/lib/pageBuilder.types';
 // path. The parser lives apart from the Sanity client for the same reason:
 // src/lib/sanity.ts reads import.meta.env at module scope.
 import { parseSanityAssetDimensions } from './sanity-asset.ts';
+// scaffold: church
+import { heritageDates, type HeritageDateInput } from './heritage-dates.ts';
+// scaffold:end
 
 /** The shape this reads: a page-builder row, loosely typed. */
 export interface SpareImageRow {
@@ -133,7 +136,8 @@ const borrowable = (value: unknown): value is SanityImageObject =>
  *
  * CONSUMERS, in this order: the first `linkCardsSection` that has a non-empty
  * heading takes pool[0] as its statement backdrop, then the first
- * `sundayTimesSection` takes the next unused entry as its door. Whatever is
+ * `sundayTimesSection` with no photos of its own takes the next unused entry
+ * as its door. Whatever is
  * left is the strip.
  */
 export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
@@ -168,6 +172,15 @@ export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
         break;
       }
       case 'heritageBandSection': {
+        // scaffold: church
+        // A building band WITH DATES (the cream "Our Building" band,
+        // HeritageBand.astro note 5) draws its own image as the main picture
+        // and has no strip, so lending that image would show it twice on the
+        // page. Only the brown band, which has no dates, lends its picture.
+        if (heritageDates(row.dates as HeritageDateInput[] | undefined, new Date()).length > 0) {
+          break;
+        }
+        // scaffold:end
         if (borrowable(row.image)) bandImages.push(row.image);
         break;
       }
@@ -185,7 +198,11 @@ export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
         break;
       }
       case 'sundayTimesSection': {
-        if (doorIndex === null) doorIndex = index;
+        // A Sunday band that carries its own photos (the hymn board's
+        // `photos`, 2026-09-23) draws those and borrows nothing, so it is not
+        // the door; a later Sunday band without photos still can be.
+        const own = Array.isArray(row.photos) ? row.photos.some(hasAsset) : false;
+        if (doorIndex === null && !own) doorIndex = index;
         break;
       }
       default:

@@ -46,6 +46,13 @@
 //     rays (2026-09-23, Who We Are). Nathan preferred the header's GIVE plate,
 //     so the same day it became an alias for gold: one button family.
 //
+//   `onGold` toggle (2026-09-23, the Home give band) — for an outline button
+//     on the FIXED gold band. The ordinary outline inks in --foreground, which
+//     flips to paper-white under .dark, and its inset rule is drawn in
+//     --color-bg, a cream ring on gold. onGold draws the same plate in
+//     --color-band-ink (never flips; 6.75:1 on gold, gated in
+//     theme-tokens.test.ts) with the pseudo-element rule onDark uses.
+//
 // All variants are set in the UI face at the shared label size, and the two
 // button variants share the inset double rule, em-based padding and a 44x44
 // minimum tap target.
@@ -62,6 +69,8 @@ interface Props {
   variant?: 'primary' | 'secondary' | 'gold' | 'outline' | 'link' | 'rule';
   /** When true, swap variant colors for legibility on a dark surface. */
   onDark?: boolean;
+  /** Outline only: dark ink on the fixed gold band, in both themes. */
+  onGold?: boolean;
   /** Fallback href if the CTA can't be resolved (e.g., siteSettings hasn't been populated). */
   fallbackHref?: string;
   /** Fallback label if cta.label is missing. */
@@ -73,6 +82,7 @@ const {
   cta,
   variant = 'gold',
   onDark = false,
+  onGold = false,
   fallbackHref = '/contact',
   fallbackLabel = 'Get in touch',
   class: extraClass = '',
@@ -106,9 +116,11 @@ const linkClasses = onDark
 
 // The button plate. Padding is in em so it tracks the label's own size, and
 // the 44px floor stays for the tap target.
-const baseClasses = onDark
-  ? 'press-tactile inline-flex items-center justify-center min-h-[44px] font-ui text-ui font-semibold px-[1.6em] py-[1.05em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
-  : 'press-tactile inline-flex items-center justify-center min-h-[44px] font-ui text-ui font-semibold px-[1.6em] py-[1.05em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+const baseClasses = onGold
+  ? 'press-tactile inline-flex items-center justify-center min-h-[44px] font-ui text-ui font-semibold px-[1.6em] py-[1.05em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-band-ink focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+  : onDark
+    ? 'press-tactile inline-flex items-center justify-center min-h-[44px] font-ui text-ui font-semibold px-[1.6em] py-[1.05em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+    : 'press-tactile inline-flex items-center justify-center min-h-[44px] font-ui text-ui font-semibold px-[1.6em] py-[1.05em] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 // The two looks, and the two aliases that resolve into them. The aliases are
 // resolved HERE, in one expression, rather than at each call site: that is the
@@ -144,6 +156,9 @@ const variantClasses = (() => {
   // --color-foreground flips between themes while the band does not. The
   // pseudo-element draws the 1px line 3px inside the edge over whatever is
   // behind it, in both themes, on every band.
+  if (onGold) {
+    return 'relative border border-band-ink text-band-ink before:pointer-events-none before:absolute before:inset-[3px] before:rounded-[1px] before:border before:border-current hover:bg-band-ink/10';
+  }
   return onDark
     ? 'relative border border-bg text-bg before:pointer-events-none before:absolute before:inset-[3px] before:rounded-[1px] before:border before:border-current hover:bg-bg/10'
     : 'border border-foreground text-foreground shadow-[inset_0_0_0_3px_var(--color-bg),inset_0_0_0_4px_var(--color-foreground)]';

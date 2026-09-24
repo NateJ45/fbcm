@@ -326,8 +326,33 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
   // Witness: white, and gold for every accent including the 15px ring scope.
   ['color-white-pure', 'color-band-brown', 'white on the Witness band', 'body'],
   ['color-gold', 'color-band-brown', 'gold accent on the Witness band', 'body'],
+  // The hymn board (SundayTimes, 2026-09-23, the Home pass): the intro, the
+  // row titles, the notes and the address in paper; each row's small line in
+  // taupe; the heading, the numerals and the glyphs in gold (the pair above).
+  ['color-bg', 'color-band-brown', 'reading text on the hymn-board band', 'body'],
+  ['color-band-taupe', 'color-band-brown', "each hymn-board row's small line", 'body'],
   // Work.
   ['color-band-ink', 'color-band-taupe', 'ink on the Work band', 'body'],
+  // Our Building (HeritageBand with dates, 2026-09-23, the Home pass): a FIXED
+  // cream band in both themes (--color-bg never flips), so its inks are the
+  // band tokens and brown-mid, none of which may flip to a light value.
+  ['color-band-indigo', 'color-bg', 'Our Building: heading, lead, the years and each date', 'body'],
+  ['color-band-brown', 'color-bg', 'Our Building: the text beside each date', 'body'],
+  ['color-brown-mid', 'color-bg', 'Our Building: the eyebrow and the ampersand', 'body'],
+  // Church Blog (DynamicList, journal source, 2026-09-23, the Home pass): a
+  // FIXED taupe band in both themes. Titles and authors in band-ink (the Work
+  // pair above); the heading in indigo; the date, excerpt, subhead and
+  // category in brown. The "All posts" gold plate keeps its own gated label.
+  ['color-band-indigo', 'color-band-taupe', 'Church Blog: the heading', 'body'],
+  [
+    'color-band-brown',
+    'color-band-taupe',
+    'Church Blog: the date, excerpt, subhead and category',
+    'body',
+  ],
+  // Give (GiveBand, the gold band): the heading and glyph in indigo; the
+  // paragraph and the onGold outline button in band-ink (The Way pair above).
+  ['color-band-indigo', 'color-band-gold', 'Give: the heading on the gold band', 'body'],
 ];
 
 // Inks that FLIP with the theme, measured on the ground each theme actually

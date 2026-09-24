@@ -219,6 +219,18 @@ export const guides: Guide[] = [
         title: 'There is no switch to hide a band for a while.',
         text: 'Taking a band off the page removes it. If you might want it back, save a copy first: click the `...` button beside `Publish`, choose `Save a section as preset...` and pick the band. It then waits under `Pages`, then `Saved sections`, and you can add it back from the `Saved sections` list in Presentation.',
       },
+      { kind: 'h', text: 'The building band and its dates' },
+      {
+        kind: 'p',
+        text: 'The `Building band` is brown with a row of photos across the top. Give it `Dates` and it becomes the cream band from the home page instead: the first and last years large beside the heading, the `Photo` set straight onto the page (a drawing of the building suits it best), the `Old photograph` in an arched frame, and the dates listed underneath.',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          'Each date is a `Year` and one sentence of `What happened`, up to six, in order.',
+          'Tick `This year` on the last one to say what the church is doing now. Its year is filled in when the site is built, so it never goes out of date.',
+        ],
+      },
       { kind: 'h', text: 'Before you publish a big change' },
       {
         kind: 'p',
@@ -284,7 +296,21 @@ export const guides: Guide[] = [
       },
       {
         kind: 'p',
-        text: '_Two times are not settings and are still typed where they appear: Sunday school at 9:30 am, and the fellowship hour (10:15 to 10:45) in the Youth band on the Ministries page. If either changes, change it there._',
+        text: '_Two times are not settings and are still typed where they appear: Sunday school at 9:30 am, and the fellowship hour (10:15 to 10:45), in the Youth band on the Ministries page and in the What to Expect band on the home page. If either changes, change it in both places._',
+      },
+      { kind: 'h', text: 'The brown band with the Sunday times' },
+      {
+        kind: 'p',
+        text: 'The brown band that lists the Sunday times ("Doors, parking and access" on the Visit page, "Find us on Sunday" on the Contact page) is changed on its page in `Presentation`. Each row on it has a `Small label`, a `Big line` and a line of `Text`. The row whose time matches the `Service time` in Site settings is drawn largest, so it moves by itself when the time changes.',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          '`Introduction` is a sentence or two above the times.',
+          '`Notes` are up to three short lines under the photo, like the nursery or communion.',
+          '`Photos` takes one or two photos. The first is the larger. Leave it empty and the band borrows a photo from elsewhere on the same page.',
+          '`Button (optional)` puts one button under the times. Leave it empty and the band shows the Google Maps directions button instead.',
+        ],
       },
       {
         kind: 'callout',

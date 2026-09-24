@@ -817,6 +817,7 @@ export type LinkCardsSection = {
     body?: string;
     cta?: CtaBlock;
     image?: LinkCardImage;
+    glyph?: 'window' | 'door' | 'rose' | 'basin';
     _type: 'linkCard';
     _key: string;
   }>;
@@ -868,6 +869,21 @@ export type HeritageBandSection = {
     alt?: string;
     _type: 'image';
   };
+  archive?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  dates?: Array<{
+    now?: boolean;
+    year?: string;
+    text?: string;
+    _type: 'heritageDate';
+    _key: string;
+  }>;
   cta?: CtaBlock;
   anchor?: Slug;
 };
@@ -956,6 +972,7 @@ export type SundayTimesSection = {
   _type: 'sundayTimesSection';
   eyebrow?: string;
   heading?: string;
+  intro?: string;
   items?: Array<{
     label?: string;
     big?: string;
@@ -963,6 +980,17 @@ export type SundayTimesSection = {
     _type: 'timeItem';
     _key: string;
   }>;
+  notes?: Array<string>;
+  photos?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+    _key: string;
+  }>;
+  cta?: CtaBlock;
   doors?: Array<{
     name?: string;
     body?: string;

@@ -1,8 +1,9 @@
 // scaffold: church
 // The church blocks: what a church page needs and a service business does not. Every
 // description says what to TYPE. No block carries a colour field: the dark bands
-// (sundayTimes is cream, faq/scripture/give are indigo, heritage is brown) are dark
-// by TYPE, which is what keeps SectionRenderer's cadence the only source of surface.
+// (sundayTimes and heritage are brown, faq/scripture/give are indigo) are dark
+// by TYPE (a heritage band that carries dates draws on cream instead, from its
+// content), which is what keeps SectionRenderer's cadence the only source of surface.
 //
 // scriptureBandSection.accentWord is a plain string, not a headingAccentField().
 // It is deliberately NOT registered in src/lib/section-fields.ts: that registry's
@@ -36,12 +37,22 @@ export const sundayTimesSection = defineType({
   fields: [
     eyebrow,
     heading,
+    // The three hymn-board additions (2026-09-23, the Home identity pass). All
+    // optional, so the Visit and Contact bands written before them stay valid.
+    defineField({
+      name: 'intro',
+      title: 'Introduction',
+      type: 'text',
+      rows: 3,
+      description: 'A sentence or two above the times.',
+    }),
     defineField({
       name: 'items',
-      title: 'Three columns',
+      title: 'The times',
       type: 'array',
       validation: (r) => r.min(1).max(3),
-      description: 'Up to three. The first usually carries the service time.',
+      description:
+        'Up to three rows on the board. The big line is set in gold, and the row whose time matches the service time in Site settings is drawn largest.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -70,6 +81,43 @@ export const sundayTimesSection = defineType({
           preview: { select: { title: 'label', subtitle: 'big' } },
         }),
       ],
+    }),
+    defineField({
+      name: 'notes',
+      title: 'Notes',
+      type: 'array',
+      validation: (r) => r.max(3),
+      description: 'Short lines under the photo, like the nursery or communion.',
+      of: [defineArrayMember({ type: 'string' })],
+    }),
+    defineField({
+      name: 'photos',
+      title: 'Photos',
+      type: 'array',
+      validation: (r) => r.max(2),
+      description:
+        "One or two photos. The first is the larger. Leave empty to use a photo from the page's spare pool.",
+      of: [
+        defineArrayMember({
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Describe the photo',
+              type: 'string',
+              validation: (r) => r.required(),
+            }),
+          ],
+        }),
+      ],
+    }),
+    defineField({
+      name: 'cta',
+      title: 'Button (optional)',
+      type: 'ctaBlock',
+      description:
+        'Like "What to expect", pointing at the Visit page. Leave empty and the band shows the directions button instead.',
     }),
     defineField({
       name: 'doors',
@@ -104,10 +152,11 @@ export const sundayTimesSection = defineType({
     anchorField(),
   ],
   preview: {
-    select: { title: 'heading' },
-    prepare: ({ title }) => ({
+    select: { title: 'heading', media: 'photos.0' },
+    prepare: ({ title, media }) => ({
       title: title || 'Sunday times',
       subtitle: 'Sunday times and location',
+      media,
     }),
   },
 });
@@ -297,7 +346,7 @@ export const scriptureBandSection = defineType({
 
 export const heritageBandSection = defineType({
   name: 'heritageBandSection',
-  title: 'Building band (brown)',
+  title: 'Building band',
   type: 'object',
   fields: [
     eyebrow,
@@ -314,7 +363,8 @@ export const heritageBandSection = defineType({
       title: 'Photo',
       type: 'image',
       options: { hotspot: true },
-      description: 'A photo of the building or the glass.',
+      description:
+        'A photo of the building or the glass. When the band has dates, this is the large picture beside the heading, so a drawing of the building suits it best.',
       // SanityImage.astro reads `source.alt` for every image it draws, so this
       // block always intended to carry alt text; the field was simply never
       // declared. Without it the Studio renders a stored alt as "Unknown field
@@ -328,6 +378,75 @@ export const heritageBandSection = defineType({
         }),
       ],
     }),
+    // The Home identity pass (2026-09-23): an old photograph and a dated list
+    // that ends in the present. Both optional, so /history's opener and
+    // /visit's building band keep drawing as the brown band. A band WITH dates
+    // draws as the cream "Our Building" band instead (HeritageBand.astro): the
+    // look follows the content, never a colour field (CLAUDE.md rule 9).
+    defineField({
+      name: 'archive',
+      title: 'Old photograph (optional)',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'An old photograph shown beside the dates.',
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Describe the photo',
+          type: 'string',
+          validation: (r) => r.required(),
+        }),
+      ],
+    }),
+    defineField({
+      name: 'dates',
+      title: 'Dates (optional)',
+      type: 'array',
+      validation: (r) => r.max(6),
+      description:
+        "Dates in order. Tick 'This year' on the last one to show what the church is doing now: its year is filled in when the site is built.",
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'heritageDate',
+          title: 'Date',
+          fields: [
+            defineField({
+              name: 'now',
+              title: 'This year',
+              type: 'boolean',
+              initialValue: false,
+              description:
+                'Tick for what the church is doing now. The year is filled in when the site is built.',
+            }),
+            defineField({
+              name: 'year',
+              title: 'Year',
+              type: 'string',
+              description: 'For example 1859.',
+              // The present-day entry's year is derived at build time
+              // (src/lib/heritage-dates.ts), so there is nothing to type.
+              // Never required, so hiding it can never trap a document.
+              hidden: ({ parent }) => (parent as { now?: boolean } | undefined)?.now === true,
+            }),
+            defineField({
+              name: 'text',
+              title: 'What happened',
+              type: 'text',
+              rows: 2,
+              description: 'One sentence.',
+            }),
+          ],
+          preview: {
+            select: { year: 'year', text: 'text', now: 'now' },
+            prepare: ({ year, text, now }) => ({
+              title: now ? 'This year' : typeof year === 'string' && year ? year : 'Date',
+              subtitle: typeof text === 'string' ? text : undefined,
+            }),
+          },
+        }),
+      ],
+    }),
     defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
     anchorField(),
   ],
@@ -335,7 +454,7 @@ export const heritageBandSection = defineType({
     select: { title: 'heading', media: 'image' },
     prepare: ({ title, media }) => ({
       title: title || 'Building band',
-      subtitle: 'Building band (brown)',
+      subtitle: 'Building band',
       media,
     }),
   },
@@ -519,6 +638,32 @@ export const linkCardsSection = defineType({
                   validation: (r) => r.required(),
                 }),
               ],
+            }),
+            // 2026-09-23 (Home identity, Task 2): optional. `glyph` picks which
+            // of the four building drawings draws beside the card's title, the
+            // same component switch as goalsSection's `goal.glyph` above (a
+            // component switch, not display text, so 'glyph' is already on
+            // NON_STEGA_FIELDS by name). Give EVERY card in the band one and,
+            // with every card already pictured (the arched-door look above),
+            // the band also switches to the indigo-dark ground and the CTA
+            // draws as a text link instead of the gold plate: this is the four
+            // goals as the home page's ways in. Leave any card's glyph blank
+            // and the band with images stays exactly the arched-door look it
+            // is today (Who We Are's "Where To Go Next"); parity proves it.
+            defineField({
+              name: 'glyph',
+              title: 'Building drawing',
+              type: 'string',
+              description: 'Optional. Give every card one to draw the goals band.',
+              options: {
+                list: [
+                  { title: 'Window', value: 'window' },
+                  { title: 'Door', value: 'door' },
+                  { title: 'Rose window', value: 'rose' },
+                  { title: 'Basin niche', value: 'basin' },
+                ],
+                layout: 'radio',
+              },
             }),
           ],
           preview: { select: { title: 'title', subtitle: 'body', media: 'image' } },

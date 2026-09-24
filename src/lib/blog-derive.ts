@@ -502,3 +502,23 @@ export function registerMeta(entry: RegisterEntry): RegisterMeta {
     iso,
   };
 }
+
+/**
+ * A post row's date as a visitor reads it ("Dec 8, 2025") and as its
+ * <time datetime> carries it ("2025-12-08"), for the home page's Church Blog
+ * rows (DynamicList.astro). BOTH read the calendar day in the CHURCH's zone
+ * (localDay(), America/Indiana/Indianapolis), as the blog register and the
+ * post page already do, so a post published at 9:30 pm in Muncie (02:30 UTC
+ * the next day) is dated the day it was written. They used to disagree: the
+ * label took the build machine's zone and the attribute UTC.
+ */
+export function rowDate(iso: string | null | undefined): string {
+  const d = localDay(iso);
+  return d ? formatDay(d, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+}
+
+/** The same church-zone day as rowDate(), as YYYY-MM-DD; undefined if none. */
+export function rowDateTime(iso: string | null | undefined): string | undefined {
+  const d = localDay(iso);
+  return d ? isoDay(d) : undefined;
+}

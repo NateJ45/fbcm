@@ -55,33 +55,37 @@ if (!slug) {
 const env = loadEnv(root);
 const projectId = env.PUBLIC_SANITY_PROJECT_ID;
 const token = env.SANITY_API_READ_TOKEN;
-if (!projectId || !token) {
-  console.error('page-fixture: needs PUBLIC_SANITY_PROJECT_ID and SANITY_API_READ_TOKEN in .env');
+if (!projectId) {
+  console.error('page-fixture: needs PUBLIC_SANITY_PROJECT_ID in .env');
   process.exit(1);
 }
+// With no read token (it is commented out of .env since 2026-09-23 so builds
+// read through the CDN and spare the API quota), the fixture reads the public
+// dataset through the CDN too: everything it asks for is published.
 const client = createClient({
   projectId,
   dataset: env.PUBLIC_SANITY_DATASET ?? 'production',
-  token,
+  ...(token ? { token } : {}),
   apiVersion: '2026-05-01',
-  useCdn: false,
+  useCdn: !token,
 });
 
 const mod = (await import(pathToFileURL(resolve(root, 'scripts', 'pages', `${slug}.mjs`)).href))
   .default;
-const { makePageImages, resolveEntry } = await import('./lib/page-images.mjs');
+const { makePageImages, alreadyUploaded } = await import('./lib/page-images.mjs');
 
-// Only media-library photos. Any other manifest entry would resize and UPLOAD
-// (page-images.mjs), so this refuses before the module can ask for one.
+// Only photos already in the dataset: media-library entries, or `file` entries
+// this checkout has already uploaded (scripts/.asset-map.json holds them, as the
+// home hero's frames). Anything else would resize and UPLOAD (page-images.mjs),
+// so this refuses before the module can ask for one.
 const pageImages = makePageImages(client);
 const images = {
   ...pageImages,
   async image(key) {
-    const { entry } = resolveEntry(pageImages.manifest, key);
-    if (!entry.library) {
+    if (!alreadyUploaded(pageImages.manifest, key)) {
       throw new Error(
-        `page-fixture: "${key}" is not a library entry in scripts/data/page-images.json; ` +
-          'a fixture only resolves photos already in the media library, and uploads nothing.',
+        `page-fixture: "${key}" is neither a library entry in scripts/data/page-images.json ` +
+          'nor an upload this checkout has made; a fixture uploads nothing.',
       );
     }
     return pageImages.image(key);

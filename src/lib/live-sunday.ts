@@ -21,6 +21,20 @@ export function timeOnly(serviceTime: string): string {
   return serviceTime.replace(/^Sundays?\s+at\s+/i, '').trim();
 }
 
+/**
+ * A time split for display: "10:45 am" -> { clock: "10:45", meridiem: "am" }.
+ * The footer's closing band sets the clock in Castoro Titling, which has no
+ * lower case, so a meridiem left inside it would read "AM" while every other
+ * time on the site reads "am". The meridiem is returned lower-case, with its
+ * dots dropped ("P.M." -> "pm"), for the reading face. A string with no
+ * trailing meridiem comes back whole as the clock with an empty meridiem.
+ */
+export function clockParts(time: string): { clock: string; meridiem: string } {
+  const m = /^(.*?\d)\s*([ap])\.?\s*m\.?$/i.exec(time.trim());
+  if (!m) return { clock: time.trim(), meridiem: '' };
+  return { clock: m[1] ?? '', meridiem: `${(m[2] ?? '').toLowerCase()}m` };
+}
+
 /** The server-rendered form: true whatever day it is, so no-JS sees no lie. */
 export function staticSunday(serviceTime: string): string {
   return `Sundays · Worship at ${timeOnly(serviceTime)}`;

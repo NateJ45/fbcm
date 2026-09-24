@@ -89,7 +89,11 @@ export function sectionsProjection(field = 'pageBuilder'): string {
           // travel with the item. Since the art-direction pass the journal list
           // also PRINTS the first one, in the right-hand rubric column.
           "categories": categories[]->{ _id, title, slug },
-          "coverImage": coverImage${IMAGE_PROJECTION}
+          // Home's blog rows (2026-09-23, the Home identity pass) draw each
+          // post's featured image in a small lancet and print the author's
+          // name as text beside the category. Never an author portrait.
+          "coverImage": coverImage${IMAGE_PROJECTION},
+          author
         },
         // scaffold:end
         // 2026-09-18: the trailing [] is the select's DEFAULT arm, and it is
@@ -110,7 +114,9 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     _type == "sundayTimesSection" => {
       ...,
       items[],
-      doors[]
+      doors[],
+      photos[]${IMAGE_PROJECTION},
+      cta${CTA_PROJECTION}
     },
     _type == "timelineSection" => {
       ...,
@@ -149,6 +155,8 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     _type == "heritageBandSection" => {
       ...,
       image${IMAGE_PROJECTION},
+      archive${IMAGE_PROJECTION},
+      dates[]{ _key, year, text, now },
       cta${CTA_PROJECTION}
     },
     _type == "giveBandSection" => {
@@ -176,7 +184,8 @@ export function sectionsProjection(field = 'pageBuilder'): string {
         title,
         body,
         cta${CTA_PROJECTION},
-        image${IMAGE_PROJECTION}
+        image${IMAGE_PROJECTION},
+        glyph
       }
     },
     // A Ministry band holds only a reference. Everything it draws is on the

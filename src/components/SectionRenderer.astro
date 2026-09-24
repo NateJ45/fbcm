@@ -38,12 +38,11 @@ import WatchwordBand from '@/components/sections/WatchwordBand.astro';
 import PledgeReading from '@/components/sections/PledgeReading.astro';
 import PastorsLetter from '@/components/sections/PastorsLetter.astro';
 import GoalsBand from '@/components/sections/GoalsBand.astro';
-import { goalsEndDark } from '@/lib/goal-layout';
 import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
 import { splitStega } from '@/lib/preview-stega';
-import { assignSpareImages, cardsPictured } from '@/lib/spare-images';
+import { assignSpareImages } from '@/lib/spare-images';
 import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
 import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
@@ -270,39 +269,10 @@ const heritageYears = (() => {
   return out;
 })();
 
-// IS THE ROW AT THIS INDEX A DARK BAND?
-//
-// The give band asks, because the spec's rule is that two dark surfaces never
-// touch and it is the one block whose surface is allowed to change. The list
-// is the set of blocks that paint dark whatever the cadence says: the hero
-// only when it actually carries a photograph (a text hero is paper), the
-// statement band only when it received a borrowed frame, and the Sunday band
-// never, whatever else it does. Everything else is a paper band.
-const isDarkBand = (block: unknown, index: number): boolean => {
-  const b = block as { _type?: string; frames?: unknown[]; backgroundImage?: unknown };
-  switch (b._type) {
-    case 'heroSection':
-      return (Array.isArray(b.frames) && b.frames.length > 0) || !!b.backgroundImage;
-    case 'ctaBandSection':
-    case 'scriptureBandSection':
-    case 'faqSection':
-    case 'heritageBandSection':
-      return true;
-    // scaffold: church
-    // The Watchword band is night green by type; the goals end on their last
-    // goal's band, dark unless that lands on gold (goalsEndDark).
-    case 'watchwordSection':
-      return true;
-    case 'goalsSection':
-      return goalsEndDark((b as { goals?: unknown }).goals);
-    // scaffold:end
-    case 'linkCardsSection':
-      // The statement, or the arched doors on green (cardsPictured).
-      return index === spares.statementIndex || cardsPictured((b as { cards?: unknown }).cards);
-    default:
-      return false;
-  }
-};
+// THE GIVE BAND IS GOLD ON EVERY PAGE (2026-09-23, the Home identity pass).
+// It used to ask whether the row above it was dark (an `isDarkBand` walk over
+// the rows) and paint indigo or soft paper to suit. Gold is a light, fixed
+// ground that sits beside every band on the site, so nothing asks any more.
 
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
@@ -444,7 +414,11 @@ const wrapAttrs = (key: string | undefined) =>
           <SundayTimes
             eyebrow={s.eyebrow}
             heading={s.heading}
+            intro={s.intro}
             items={s.items ?? []}
+            notes={s.notes ?? []}
+            photos={s.photos ?? []}
+            cta={s.cta}
             doors={s.doors ?? []}
             showMap={s.showMap}
             frame={blockIndex === spares.doorIndex ? spares.door : null}
@@ -489,6 +463,8 @@ const wrapAttrs = (key: string | undefined) =>
             heading={s.heading}
             body={s.body}
             image={s.image}
+            archive={s.archive}
+            dates={s.dates}
             cta={s.cta}
             extraImages={spares.strip.slice(0, 2)}
             heroFirstRef={heroFirstRef}
@@ -502,8 +478,6 @@ const wrapAttrs = (key: string | undefined) =>
             body={s.body}
             buttonLabel={s.buttonLabel}
             buttonUrl={s.buttonUrl}
-            lastBeforeFooter={blockIndex === rows.length - 1}
-            prevIsDark={blockIndex > 0 && isDarkBand(rows[blockIndex - 1].block, blockIndex - 1)}
             level={openingLevel(blockIndex)}
             headingId={headingId}
             settings={settings}

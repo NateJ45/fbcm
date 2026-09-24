@@ -28,6 +28,7 @@
 // brand indigo and gold-brown inks both flip under .dark and are measured on the
 // ground each theme paints (theme-tokens.test.ts, THEMED_IDENTITY_PAIRS).
 import ArchFrame from '@/components/church/ArchFrame.astro';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import PortableText from '@/components/PortableText';
 import { splitStega } from '@/lib/preview-stega';
 import type { ProjectedPledgeSection } from '@/lib/pageBuilder.types';
@@ -63,7 +64,7 @@ const QF =
     <div class="pl-side">
       {
         heading && (
-          <h2 id={headingId} class="font-display text-title leading-none text-indigo">
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'text-indigo']}>
             {heading}
           </h2>
         )

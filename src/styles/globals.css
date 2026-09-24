@@ -2382,6 +2382,11 @@ body::before {
   --arch-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 130' preserveAspectRatio='none'%3E%3Cpath d='M0 130V30C0 17 28 8 50 0C72 8 100 17 100 30V130Z'/%3E%3C/svg%3E");
   aspect-ratio: var(--arch-ratio, 100 / 130);
 }
+/* An arch with no photograph (ArchFrame's `glyph`): the indigo band, with a
+   building glyph drawn in it, so a row never shows an empty frame. */
+.arch-glyph {
+  background: var(--color-band-indigo);
+}
 /* The thin outline, 9px proud of the arch on three sides (6px on a phone). */
 .arch-mould {
   position: absolute;
@@ -2404,9 +2409,39 @@ body::before {
     height: calc(100% + 6px);
   }
 }
+/* The hymn board's small lancet (SundayTimes.astro) is cut out of the door
+   photo behind it by a halo of the band's own brown, 10px proud of the arch
+   (the lancet mask comes from .arch-lancet on the same element). */
+.hb-halo {
+  position: absolute;
+  inset: -10px;
+  background: var(--color-band-brown);
+  mask-image: var(--arch-mask);
+  mask-size: 100% 100%;
+}
 /* One grade for every amateur photograph: a touch warmer, a touch firmer. */
 .graded {
   filter: saturate(0.9) contrast(1.05) sepia(0.07) brightness(1.02);
+}
+/* Our Building (HeritageBand.astro note 5): the main picture sits straight on
+   the fixed cream band, no frame and no shadow. The grade lifts a drawing's
+   paper to white and the multiply turns that white into the band's cream; the
+   mask fades every edge into the page, so a scanned plate's own border and
+   any tone left in its paper never draw a rectangle. The figure carries the
+   same cream and isolates, so the blend still lands on cream while a reveal
+   composites the figure on its own layer. */
+.ob-drawing {
+  background: var(--color-bg);
+  isolation: isolate;
+}
+.ob-drawing img {
+  mix-blend-mode: multiply;
+  filter: grayscale(1) contrast(1.12) brightness(1.1) sepia(0.14);
+  --ob-fade: linear-gradient(to right, transparent 2.5%, #000 11%, #000 89%, transparent 97.5%);
+  mask-image:
+    var(--ob-fade),
+    linear-gradient(to bottom, transparent 3.5%, #000 14%, #000 86%, transparent 96.5%);
+  mask-composite: intersect;
 }
 
 /* The building glyphs: line art at a constant 2px whatever the size. */

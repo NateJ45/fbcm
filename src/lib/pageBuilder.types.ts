@@ -267,6 +267,8 @@ export interface ProjectedDynamicListItem {
   summary?: string | null;
   href?: string | null;
   coverImage?: ProjectedImage | null;
+  /** journal source only: the byline as typed on the entry, printed as text. */
+  author?: string | null;
   /**
    * journal source only: the entry's categories, carried so the card can DERIVE
    * whether it is a weekly sermon preview (and so the list can order the
@@ -318,8 +320,18 @@ export interface ProjectedDynamicListSection extends AnchoredSection {
 // are the generated type plus a _key.
 // ---------------------------------------------------------------------------
 
-/** sundayTimesSection — three columns, doors, and the map from siteSettings. */
-export type ProjectedSundayTimesSection = { _key: string } & _SundayTimesSection;
+/**
+ * sundayTimesSection — the hymn board: the times, the notes, its own photos
+ * (resolved through IMAGE_PROJECTION), its button (CTA_PROJECTION), the doors,
+ * and the map from siteSettings.
+ */
+export type ProjectedSundayTimesSection = { _key: string } & Omit<
+  _SundayTimesSection,
+  'photos' | 'cta'
+> & {
+    photos?: ProjectedImage[] | null;
+    cta?: ProjectedCtaBlock | null;
+  };
 
 /** One timeline row after `"anchor": anchor.current` flattens the slug. */
 export type ProjectedTimelineRow = Omit<NonNullable<_TimelineSection['rows']>[number], 'anchor'> & {
@@ -363,16 +375,21 @@ export type ProjectedFaqSection = { _key: string } & _FaqSection;
 /** scriptureBandSection — verse, reference and the one gold accent word. */
 export type ProjectedScriptureBandSection = { _key: string } & _ScriptureBandSection;
 
-/** heritageBandSection — the brown band: text left, photo right. */
+/**
+ * heritageBandSection — the brown band, or (with dates) the cream "Our
+ * Building" band: the drawing, an old photograph in a door arch, and a dated
+ * list that ends in the present.
+ */
 export type ProjectedHeritageBandSection = { _key: string } & Omit<
   _HeritageBandSection,
-  'image' | 'cta'
+  'image' | 'archive' | 'cta'
 > & {
     image?: ProjectedImage | null;
+    archive?: ProjectedImage | null;
     cta?: ProjectedCtaBlock | null;
   };
 
-/** giveBandSection — the indigo giving band. */
+/** giveBandSection — the giving band, gold on every page and in both themes. */
 export type ProjectedGiveBandSection = { _key: string } & _GiveBandSection;
 
 /** hoursSection — the office and pastors' hours, read live off siteSettings. */

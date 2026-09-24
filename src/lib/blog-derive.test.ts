@@ -27,6 +27,8 @@ import {
   thinStateTags,
   groupByYear,
   registerMeta,
+  rowDate,
+  rowDateTime,
   type BlogEntry,
 } from './blog-derive.ts';
 import { localDay } from './sermon-derive.ts';
@@ -376,4 +378,25 @@ test('registerMeta: a preview names its Sunday and reading, anything else its ca
   assert.equal(registerMeta({ publishedAt: '2024-01-01T15:00:00.000Z' }).key, '');
   // No reference in the opening: no reading, never a guess.
   assert.equal(registerMeta({ ...entries[0], opening: 'No verse here.' }).value, '');
+});
+
+// The home page's blog rows print and stamp the same calendar day, the
+// church's (America/Indiana/Indianapolis), whatever zone the build runs in.
+test('rowDate and rowDateTime agree on the church-zone calendar day', () => {
+  // 9:30 pm EST on Dec 8 is 02:30 UTC on Dec 9: the church's day is the 8th.
+  const lateEvening = '2025-12-09T02:30:00Z';
+  assert.equal(rowDate(lateEvening), 'Dec 8, 2025');
+  assert.equal(rowDateTime(lateEvening), '2025-12-08');
+  // Summer (EDT, UTC-4): 11:59 pm on July 4 is 03:59 UTC on July 5.
+  assert.equal(rowDate('2025-07-05T03:59:00Z'), 'Jul 4, 2025');
+  assert.equal(rowDateTime('2025-07-05T03:59:00Z'), '2025-07-04');
+  // Just after midnight in Muncie is the next day.
+  assert.equal(rowDate('2025-12-09T05:30:00Z'), 'Dec 9, 2025');
+  assert.equal(rowDateTime('2025-12-09T05:30:00Z'), '2025-12-09');
+});
+test('rowDate and rowDateTime return nothing for a missing or bad date', () => {
+  assert.equal(rowDate(null), '');
+  assert.equal(rowDate('not a date'), '');
+  assert.equal(rowDateTime(undefined), undefined);
+  assert.equal(rowDateTime('not a date'), undefined);
 });

@@ -361,3 +361,56 @@ test('a link-card band with a photo on every card is not the statement consumer'
   assert.equal(out.statementIndex, null);
   assert.deepEqual(out.strip, [photo]);
 });
+
+test('a Sunday band with its own photos borrows nothing, and a later one without can', () => {
+  const a = img('sanctuary');
+  const own = img('greeter');
+  const alone = assignSpareImages([
+    { _type: 'sundayTimesSection', photos: [own] },
+    { _type: 'imageTextSection', image: a },
+  ]);
+  assert.equal(alone.door, null);
+  assert.equal(alone.doorIndex, null);
+
+  const second = assignSpareImages([
+    { _type: 'sundayTimesSection', photos: [own] },
+    { _type: 'imageTextSection', image: a },
+    { _type: 'sundayTimesSection' },
+  ]);
+  assert.equal(second.doorIndex, 2);
+  assert.equal(second.door, a);
+
+  // An empty photos list (or photos with no asset) is no photos at all.
+  const empty = assignSpareImages([
+    { _type: 'sundayTimesSection', photos: [{ _type: 'image' }] },
+    { _type: 'imageTextSection', image: a },
+  ]);
+  assert.equal(empty.doorIndex, 0);
+});
+
+test('a building band with dates keeps its picture to itself; one without dates lends it', () => {
+  const drawing = img('rendering');
+  const dated = assignSpareImages([
+    { _type: 'sundayTimesSection' },
+    {
+      _type: 'heritageBandSection',
+      image: drawing,
+      dates: [{ year: '1859', text: 'The church is founded.' }],
+    },
+  ]);
+  assert.equal(dated.door, null, 'the Sunday band must not borrow the dated band picture');
+  assert.deepEqual(dated.strip, []);
+
+  // Dates with no text are dropped (heritageDates), so the band counts as undated.
+  const blankDates = assignSpareImages([
+    { _type: 'sundayTimesSection' },
+    { _type: 'heritageBandSection', image: drawing, dates: [{ year: '1859', text: '  ' }] },
+  ]);
+  assert.equal(blankDates.door, drawing);
+
+  const undated = assignSpareImages([
+    { _type: 'sundayTimesSection' },
+    { _type: 'heritageBandSection', image: drawing },
+  ]);
+  assert.equal(undated.door, drawing);
+});

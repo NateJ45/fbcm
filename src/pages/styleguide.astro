@@ -38,6 +38,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
+import DynamicList from '@/components/sections/DynamicList.astro'; // scaffold: journal
 import { site } from '@/data/site';
 import { surfaceClass } from '@/lib/surfaces';
 // Church identity primitives (2026-09-23, the Who We Are "alive" pass).
@@ -212,49 +213,6 @@ function paragraph(key: string, text: string) {
   ];
 }
 
-const SUNDAY_TIMES_FIXTURE = {
-  eyebrow: 'This Sunday',
-  heading: 'When we gather',
-  items: [
-    {
-      _key: 'st-1',
-      label: 'Sunday school',
-      big: '9:30 am',
-      body: 'Classes for all ages meet before worship.',
-    },
-    {
-      _key: 'st-2',
-      label: 'Donut hour',
-      big: '10:15 am',
-      body: 'Coffee and donuts in the fellowship hall, a relaxed way to meet people before the service.',
-    },
-    {
-      _key: 'st-3',
-      label: 'Worship',
-      big: '10:45 am',
-      body: 'The main service, in the sanctuary.',
-    },
-  ],
-  doors: [
-    {
-      _key: 'door-1',
-      name: 'Adams Street circular drive',
-      body: 'The accessible entrance. An automatic door opener sits beside the mailbox.',
-    },
-    {
-      _key: 'door-2',
-      name: 'Front doors',
-      body: 'The large wooden doors open straight into the sanctuary.',
-    },
-    {
-      _key: 'door-3',
-      name: 'Jefferson Street side doors',
-      body: 'Near the church offices, on the Jefferson Street side of the building.',
-    },
-  ],
-  showMap: true,
-};
-
 const TIMELINE_FIXTURE = {
   eyebrow: 'A Sunday morning',
   heading: 'How the morning runs',
@@ -376,6 +334,74 @@ const HERITAGE_FIXTURE = {
   },
 };
 
+// The Home identity pass (2026-09-23): the building band WITH dates, which
+// draws as the cream "Our Building" band (HeritageBand.astro note 5). Both
+// photographs are in the project's library: Hannaford's 1927 pencil rendering
+// and the old congregation photograph. The present-day line is a styleguide
+// fixture only; the home page's own words come with scripts/pages/home.mjs.
+const HERITAGE_HOME_FIXTURE = {
+  heading: 'Our Building',
+  body: 'Founded in 1859, First Baptist Church of Muncie has a long history of serving God and our neighbor in the Muncie community.',
+  image: {
+    asset: { _ref: 'image-d85152a1d17899795a394cf04985a1731a15ad04-1000x605-jpg' },
+    alt: 'Samuel Hannaford and Sons’ pencil rendering of the church, drawn in 1927: the tower on the corner and the long limestone wings, a period car parked out front.',
+  },
+  archive: {
+    asset: { _ref: 'image-7aff980f17a59db067b89ff2d6fa792de173b301-1749x1650-jpg' },
+    alt: 'An old black and white photograph of the congregation, adults and children, gathered outside the church entrance.',
+  },
+  dates: [
+    {
+      year: '1859',
+      text: 'Twelve Indiana residents, meeting at the county courthouse, founded the first Baptist Church in Muncie.',
+    },
+    { year: '1862', text: 'The tiny congregation moved into their new church building.' },
+    { year: '1890', text: 'The congregation moved into a new building on July 20, 1890.' },
+    {
+      year: '1929',
+      text: 'This building completed. On the National Register of Historic Places since 1988.',
+    },
+    // A typed year on the present-day entry is replaced by the build year.
+    { year: '2019', text: 'The congregation still worships here every Sunday.', now: true },
+  ],
+  cta: { label: 'Our history', linkType: 'external' as const, externalUrl: '#' },
+};
+
+// /history's opener as it is published today: no dates, so the brown band,
+// with the strip and the numerals the renderer derives from its timeline.
+const HERITAGE_HISTORY_FIXTURE = {
+  eyebrow: 'Our history',
+  heading: 'Since 1859.',
+  body: 'Founded in 1859, First Baptist Church of Muncie has a long history of serving God and our neighbor in the Muncie community. On September 10, 1859 twelve Indiana residents, meeting at the county courthouse, founded the first Baptist Church in Muncie.',
+  image: {
+    asset: { _ref: 'image-1a41db0a8944c3ca0243432d2e1f6e4930537aab-2400x1596-jpg' },
+    alt: 'The limestone bell tower of First Baptist Church against a blue sky',
+  },
+  cta: { label: 'Seven eras', linkType: 'external' as const, externalUrl: '#' },
+  years: [
+    { year: '1859 to 1862', label: 'Founding' },
+    { year: '1921 to 1929', label: 'The Fighting Parson and the building' },
+    { year: '1990 to 2022', label: 'Saunders to the co-pastors' },
+  ],
+};
+
+// The building band's year column with RANGES (2026-09-23, Task 4): the
+// column is one track shared by every row, so "1921 to 1929" widens it for
+// all of them and the sentences still start on one edge. No archive, so the
+// list sits alone in the right-hand columns.
+const HERITAGE_RANGE_FIXTURE = {
+  // A heading of its own: two landmarks named 'Our Building' fail axe.
+  heading: 'Built in stages',
+  body: 'Founded in 1859, First Baptist Church of Muncie has a long history of serving God and our neighbor in the Muncie community.',
+  image: HERITAGE_HOME_FIXTURE.image,
+  dates: [
+    { year: '1859 to 1862', text: 'The founding, and the first building.' },
+    { year: '1890', text: 'The congregation moved into a new building on July 20, 1890.' },
+    { year: '1921 to 1929', text: 'The Fighting Parson, and this building.' },
+    { year: '', text: 'The congregation still worships here every Sunday.', now: true },
+  ],
+};
+
 // Task 7: temporary hero fixtures. Three real FBCM photos (from this
 // project's own asset library, same source as HERITAGE_FIXTURE above) for the
 // full-bleed cross-fade, and one for the split layout with three facts.
@@ -428,7 +454,7 @@ const HERO_SPLIT_FIXTURE = {
 
 const GIVE_BAND_FIXTURE = {
   heading: 'Give',
-  body: 'Give online, in the offering plate on Sunday, or by mail.',
+  body: 'We give sacrificially to help those in need through regular offerings and donations.',
   buttonLabel: 'Give through Church Center',
   buttonUrl: 'https://fbcmuncie.churchcenter.com/giving',
 };
@@ -800,6 +826,109 @@ const P = {
   ),
 };
 
+// =============================================================================
+// The hymn board (Home identity Task 1, 2026-09-23)
+// =============================================================================
+// Four states of sundayTimesSection: the home band (three times, two photos,
+// two notes), Visit's current content (a word and a door list, with a spare
+// frame as SectionRenderer would hand it), Contact's current content (no
+// photo, so the map from Site settings stands in), and no picture at all (the
+// board alone, centred). The words are the church's, from scripts/pages/.
+const SUNDAY_HOME_FIXTURE = {
+  eyebrow: 'Sundays',
+  heading: 'What to Expect',
+  intro:
+    'At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have.',
+  items: [
+    {
+      _key: 'h1',
+      label: 'Sunday School',
+      big: '9:30 am',
+      body: 'Classes for adults, youth and children',
+    },
+    { _key: 'h2', label: 'Donut [Semi-] Hour', big: '10:15 am', body: 'Fellowship Hall' },
+    { _key: 'h3', label: 'Worship', big: '10:45 am', body: 'Sanctuary' },
+  ],
+  notes: [
+    'For children ages 3 and younger, nursery care is available throughout the service.',
+    'The first Sunday of each month is communion Sunday.',
+  ],
+  photos: [P.door, P.children],
+  cta: {
+    _type: 'ctaBlock' as const,
+    label: 'What to expect',
+    linkType: 'external' as const,
+    externalUrl: '/visit',
+    openInNewTab: false,
+  },
+  showMap: false,
+};
+const SUNDAY_VISIT_FIXTURE = {
+  eyebrow: 'Getting in',
+  heading: 'Doors, parking and access',
+  items: [
+    { _key: 'v1', label: 'Worship', big: '10:45 am', body: 'Worship is at 10:45 AM each Sunday.' },
+    {
+      _key: 'v2',
+      label: 'Find us',
+      big: '309 East Adams',
+      body: 'Our parking lot is located on the Adams Street side.',
+    },
+    {
+      _key: 'v3',
+      label: 'Assisted listening',
+      big: 'Available',
+      body: 'On Sundays, if you would like an assisted listening device, please ask one of our greeters or the Welcome Center and they will be happy to give you one.',
+    },
+  ],
+  doors: [
+    {
+      _key: 'd1',
+      name: 'Adams Street circular drive',
+      body: 'Our wheelchair accessible entrance is off our circular drive, on the Adams street side of the building. Those wishing to use our automatic door should use the circular drive entrance. The door opener is on the side of our mailbox, close to the door on its right. Once inside, there is an elevator which will go to any floor: our lower level (B) which houses our fellowship hall, the first floor (where the sanctuary and offices are) or the second floor (which hosts classrooms and our youth center).',
+    },
+    {
+      _key: 'd2',
+      name: 'The wooden front doors',
+      body: 'The large wooden front doors which go into the sanctuary.',
+    },
+    {
+      _key: 'd3',
+      name: 'Jefferson Street side doors',
+      body: 'The Jefferson Street side doors which enter our main hallway near the church offices.',
+    },
+  ],
+  showMap: true,
+  frame: P.nave,
+};
+const SUNDAY_CONTACT_FIXTURE = {
+  eyebrow: 'Sunday',
+  heading: 'Find us on Sunday',
+  items: [
+    { _key: 'c1', label: 'Worship', big: '10:45 am', body: 'Worship is at 10:45 AM each Sunday.' },
+    {
+      _key: 'c2',
+      label: 'Find us',
+      big: '309 East Adams',
+      body: 'Our wheelchair accessible entrance is off our circular drive, on the Adams street side of the building.',
+    },
+    {
+      _key: 'c3',
+      label: 'Online',
+      big: 'Live',
+      body: 'For live streams, please visit our YouTube channel.',
+    },
+  ],
+  showMap: true,
+};
+const SUNDAY_BARE_FIXTURE = {
+  eyebrow: 'Sundays',
+  heading: 'When we gather',
+  items: SUNDAY_HOME_FIXTURE.items,
+  notes: SUNDAY_HOME_FIXTURE.notes,
+  showMap: false,
+};
+
 const GOALS_FIXTURE: ProjectedGoalsSection = {
   _key: 'sg-goals',
   _type: 'goalsSection',
@@ -1040,6 +1169,158 @@ const DOOR_CARDS_FIXTURE = {
         openInNewTab: false,
       },
       image: P.singer,
+    },
+  ],
+};
+
+// Four cards, each pictured AND glyphed: the goals variant of the arched
+// doors (Task 2, Home identity plan, 2026-09-23). Same shape as
+// DOOR_CARDS_FIXTURE, plus `glyph`, which is what switches the band to
+// indigo-dark and the CTA to a text link.
+// The heading reads "Our Goals, as link cards" rather than plain "Our Goals":
+// the page also carries GOALS_FIXTURE's own "Our Goals" heading (the
+// goalsSection church block, styleguide-goals), and two landmarks with the
+// same accessible name fail axe's landmark-unique rule (caught by
+// tests/a11y.spec.ts). On the real pages this never collides: the home page
+// carries this band alone, and goalsSection lives only on Who We Are.
+const GOALS_CARDS_FIXTURE = {
+  eyebrow: 'First Baptist Muncie',
+  heading: 'Our Goals, as link cards',
+  intro: 'We’re a Spirit-led people gathered to join Christ’s presence in our community.',
+  cards: [
+    {
+      _key: 'gc-worship',
+      _type: 'linkCard' as const,
+      title: 'Worship',
+      body: 'FBCM gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.',
+      glyph: 'window' as const,
+      cta: {
+        label: 'Plan a visit',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/visit',
+        openInNewTab: false,
+      },
+      image: P.nave,
+    },
+    {
+      _key: 'gc-way',
+      _type: 'linkCard' as const,
+      title: 'The Way',
+      body: 'We offer a growth track to help us all come and see who Jesus is and grow spiritually.',
+      glyph: 'door' as const,
+      cta: {
+        label: 'Who we are',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/who-we-are',
+        openInNewTab: false,
+      },
+      image: P.deacons,
+    },
+    {
+      _key: 'gc-witness',
+      _type: 'linkCard' as const,
+      title: 'Witness',
+      body: 'FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.',
+      glyph: 'rose' as const,
+      cta: {
+        label: 'Our ministries',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/ministries',
+        openInNewTab: false,
+      },
+      image: P.children,
+    },
+    {
+      _key: 'gc-work',
+      _type: 'linkCard' as const,
+      title: 'Work',
+      body: 'We actively and practically help and work alongside our neighbors.',
+      glyph: 'basin' as const,
+      cta: {
+        label: 'How we serve',
+        _type: 'ctaBlock' as const,
+        linkType: 'external' as const,
+        externalUrl: '/ministries',
+        openInNewTab: false,
+      },
+      image: P.building,
+    },
+  ],
+};
+// scaffold:end
+// scaffold: journal
+// The Church Blog band (DynamicList, journal source, 2026-09-23, Task 4):
+// four real posts from the dataset, three with their featured image and one
+// without (the job listing has none), which draws the building glyph in the
+// arch. "A Light Wardrobe" is a sermon preview, so it sorts last and says
+// which week it is for.
+const JOURNAL_LIST_FIXTURE = {
+  headline: 'Church Blog',
+  subhead: 'Read the latest from FBCM',
+  cta: {
+    _type: 'ctaBlock' as const,
+    label: 'All posts',
+    linkType: 'external' as const,
+    externalUrl: '/blog',
+    openInNewTab: false,
+  },
+  items: [
+    {
+      _id: 'sg-post-messiah',
+      title: 'Händel’s Messiah Sing-In & Carols Muncie',
+      meta: '2026-09-17T14:55:15.000Z',
+      summary:
+        'Some Christmas events invite you to sit back and listen, but Messiah Sing-In & Carols is a time to join in and be a participant in the music!',
+      href: '/post/händel-s-messiah-sing-in-carols',
+      author: 'Cynthia Smith',
+      categories: [{ _id: 'c-events', title: 'FBCM Events' }],
+      coverImage: {
+        _type: 'image' as const,
+        asset: { _ref: 'image-bbf1c177d25f566c939b84b97b5f097fb527d581-4023x2221-jpg' },
+        alt: 'Händel’s Messiah Sing-In & Carols Muncie',
+      },
+    },
+    {
+      _id: 'sg-post-blue',
+      title: 'Blue Christmas? Hope & Mental Health for the Holidays',
+      meta: '2025-12-08T19:01:13.570Z',
+      summary: 'If Christmas feels heavy this year, you are not alone.',
+      href: '/post/blue-christmas-hope-mental-health-for-the-holidays',
+      author: 'Kendall Ellis',
+      categories: [{ _id: 'c-events', title: 'FBCM Events' }],
+      coverImage: {
+        _type: 'image' as const,
+        asset: { _ref: 'image-004b902395a6cecad0ee00299fd10558163f08a0-940x726-png' },
+        alt: 'Blue Christmas? Hope & Mental Health for the Holidays',
+      },
+    },
+    {
+      _id: 'sg-post-wardrobe',
+      title: 'A Light Wardrobe',
+      meta: '2025-11-25T20:46:35.525Z',
+      summary: 'Advent is upon us: the great time of anticipation and preparation. Get ready!',
+      href: '/post/a-light-wardrobe',
+      author: 'Jonathan Balmer',
+      categories: [{ _id: 'c-sermon', title: 'Sermon Preview' }],
+      coverImage: {
+        _type: 'image' as const,
+        asset: { _ref: 'image-a0dbaaa674380d86d42c3f00b2cc41b31563ce7a-940x726-png' },
+        alt: 'A Light Wardrobe',
+      },
+    },
+    {
+      _id: 'sg-post-job',
+      title: 'Job Listing: Worship Arts Pastor (Part-time)',
+      meta: '2025-09-16T18:08:30.353Z',
+      summary:
+        'First Baptist Church Muncie is seeking a part-time Worship Arts Pastor to lead our congregation in Christ-centered, intergenerational worship.',
+      href: '/post/job-listing-worship-arts-pastor',
+      author: 'Jonathan Balmer',
+      categories: [{ _id: 'c-resources', title: 'Church Resources' }],
+      coverImage: null,
     },
   ],
 };
@@ -1401,6 +1682,17 @@ const DOOR_CARDS_FIXTURE = {
     />
   </div>
 
+  {/* Every card also glyphed: the goals variant, indigo-dark ground and a text-link CTA. */}
+  <div id="styleguide-linkcards-goals">
+    <LinkCards
+      eyebrow={GOALS_CARDS_FIXTURE.eyebrow}
+      heading={GOALS_CARDS_FIXTURE.heading}
+      intro={GOALS_CARDS_FIXTURE.intro}
+      cards={GOALS_CARDS_FIXTURE.cards}
+      headingId="styleguide-linkcards-goals-h"
+    />
+  </div>
+
   {/* Task 7: temporary hero fixtures, see the note by the fixture data above. */}
   <Hero
     eyebrow={HERO_FULL_FIXTURE.eyebrow}
@@ -1427,14 +1719,18 @@ const DOOR_CARDS_FIXTURE = {
     headingId="styleguide-hero-split"
   />
 
-  <SundayTimes
-    eyebrow={SUNDAY_TIMES_FIXTURE.eyebrow}
-    heading={SUNDAY_TIMES_FIXTURE.heading}
-    items={SUNDAY_TIMES_FIXTURE.items}
-    doors={SUNDAY_TIMES_FIXTURE.doors}
-    showMap={SUNDAY_TIMES_FIXTURE.showMap}
-    headingId="styleguide-sundaytimes"
-  />
+  <div id="sg-sunday-home">
+    <SundayTimes {...SUNDAY_HOME_FIXTURE} headingId="styleguide-sundaytimes" />
+  </div>
+  <div id="sg-sunday-visit">
+    <SundayTimes {...SUNDAY_VISIT_FIXTURE} headingId="styleguide-sundaytimes-visit" />
+  </div>
+  <div id="sg-sunday-contact">
+    <SundayTimes {...SUNDAY_CONTACT_FIXTURE} headingId="styleguide-sundaytimes-contact" />
+  </div>
+  <div id="sg-sunday-bare">
+    <SundayTimes {...SUNDAY_BARE_FIXTURE} headingId="styleguide-sundaytimes-bare" />
+  </div>
 
   <Timeline
     eyebrow={TIMELINE_FIXTURE.eyebrow}
@@ -1476,6 +1772,47 @@ const DOOR_CARDS_FIXTURE = {
     headingId="styleguide-heritage"
   />
 
+  <HeritageBand
+    eyebrow={HERITAGE_HISTORY_FIXTURE.eyebrow}
+    heading={HERITAGE_HISTORY_FIXTURE.heading}
+    body={HERITAGE_HISTORY_FIXTURE.body}
+    image={HERITAGE_HISTORY_FIXTURE.image}
+    cta={HERITAGE_HISTORY_FIXTURE.cta}
+    years={HERITAGE_HISTORY_FIXTURE.years}
+    headingId="styleguide-heritage-history"
+  />
+
+  <HeritageBand
+    heading={HERITAGE_HOME_FIXTURE.heading}
+    body={HERITAGE_HOME_FIXTURE.body}
+    image={HERITAGE_HOME_FIXTURE.image}
+    archive={HERITAGE_HOME_FIXTURE.archive}
+    dates={HERITAGE_HOME_FIXTURE.dates}
+    cta={HERITAGE_HOME_FIXTURE.cta}
+    headingId="styleguide-heritage-home"
+  />
+
+  <HeritageBand
+    heading={HERITAGE_RANGE_FIXTURE.heading}
+    body={HERITAGE_RANGE_FIXTURE.body}
+    image={HERITAGE_RANGE_FIXTURE.image}
+    dates={HERITAGE_RANGE_FIXTURE.dates}
+    headingId="styleguide-heritage-range"
+  />
+
+  {/* scaffold:end */}
+  {/* scaffold: journal */}
+  <DynamicList
+    headline={JOURNAL_LIST_FIXTURE.headline}
+    subhead={JOURNAL_LIST_FIXTURE.subhead}
+    source="journal"
+    items={JOURNAL_LIST_FIXTURE.items}
+    limit={4}
+    cta={JOURNAL_LIST_FIXTURE.cta}
+    headingId="styleguide-journal"
+  />
+  {/* scaffold:end */}
+  {/* scaffold: church */}
   <GiveBand
     heading={GIVE_BAND_FIXTURE.heading}
     body={GIVE_BAND_FIXTURE.body}
