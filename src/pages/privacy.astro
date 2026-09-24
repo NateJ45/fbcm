@@ -104,7 +104,7 @@ const hasSanityBody = Boolean(page?.body);
 const H2 = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground';
 ---
 
-<BaseLayout {title} {description} {schemas} {siteSettings} seoImage={page?.seoImage}>
+<BaseLayout {title} {description} {schemas} {siteSettings} seoImage={page?.seoImage} searchBody>
   {
     /* One region landmark per band, each named by its heading. The opener is
       the h1; the policy is one column at the same gutter (CLAUDE.md rule 17). */

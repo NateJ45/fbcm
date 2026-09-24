@@ -10,6 +10,30 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — The scripture index and site search (`feat/scripture-search`)._
+
+**`/blog/scripture` lists every passage preached**, Genesis to Revelation: 106 passages from 24
+books across the 107 previews that name a reading, each linked to its post with the Sunday it
+was preached. Derived at build time (`src/lib/scripture-index.ts`, 21 unit tests) from the same
+`readingOf()` the post page prints, so the places a reading appears cannot disagree; no schema
+change. All 107 readings parsed (the "Other readings" list is empty); the 11 previews without a
+reading are the ones `readingOf()` already leaves without a Reading row. The blog's browse row
+gained "By passage", and all 107 posts' Reading rows now link to their book.
+
+**Site search, with Pagefind 1.5.2** (a devDependency Nathan approved). `npm run build` is now
+`with-workerd astro build && node scripts/pagefind-index.mjs`; 153 pages are indexed (142 posts,
+home, the nine builder pages and /privacy). The UI is the site's own: a native `<dialog>` built
+on first open, register-style rows, no Pagefind UI stylesheet. A dialog rather than a /search
+page because the search is reached from every page and a reader mid-sermon wants to look
+something up and come back. Cost on load: no extra request (the ~0.7 KB trigger rides in the
+layout's existing script; a first cut as its own module added one), so home and a post keep 34
+and 27 requests. An interleaved Lighthouse A/B on one build (trigger stripped vs in, 5 runs
+each, home, mobile): FCP 1202 ms and LCP 1727 ms medians on both. Verified through the Worker
+(`wrangler dev`): `/pagefind/pagefind.js`, the WASM and the fragments serve 200 and a query
+answers. New tests: `search-results` (5 unit), `tests/scripture.spec.ts` and
+`tests/search.spec.ts` (header and mobile menu, "Jeremiah", Escape, arrows, axe on the open
+dialog at 1440 and 320, nothing loads until opened); `/blog/scripture` joined `tests/routes.ts`.
+
 _2026-09-24 — This Sunday's sermon, and a real "Live now" (`feat/sunday`)._
 
 **The home hero's dated line names this Sunday's sermon** when the church has posted the preview

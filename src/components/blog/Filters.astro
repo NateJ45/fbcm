@@ -9,6 +9,10 @@
 // so no link here can point at a page the build did not make.
 //
 // The current page is underlined in gold with aria-current.
+//
+// The last link is the scripture index (/blog/scripture, 2026-09-24): not a
+// category but the other way into the same posts, by the passage preached. It
+// sits after a short gold rule so it does not read as one more category.
 import { categoryFilters, type BlogEntry } from '@/lib/blog-derive';
 
 interface Props {
@@ -18,14 +22,16 @@ interface Props {
   activeSlug?: string;
   /** "All posts" is the current list (/blog and /blog/page/N). */
   allCurrent?: boolean;
+  /** The scripture index is the current page. */
+  scriptureCurrent?: boolean;
 }
-const { entries, activeSlug, allCurrent = false } = Astro.props as Props;
+const { entries, activeSlug, allCurrent = false, scriptureCurrent = false } = Astro.props as Props;
 const filters = categoryFilters(entries ?? []);
 ---
 
 {
   filters.length > 0 && (
-    <nav class="filters" aria-label="Post categories">
+    <nav class="filters" aria-label="Browse the blog">
       <a href="/blog/" aria-current={allCurrent ? 'page' : undefined}>
         All posts<sup class="oldstyle">{entries.length}</sup>
       </a>
@@ -38,6 +44,13 @@ const filters = categoryFilters(entries ?? []);
           <sup class="oldstyle">{f.count}</sup>
         </a>
       ))}
+      <a
+        href="/blog/scripture/"
+        class="by-passage"
+        aria-current={scriptureCurrent ? 'page' : undefined}
+      >
+        By passage
+      </a>
     </nav>
   )
 }
@@ -68,6 +81,11 @@ const filters = categoryFilters(entries ?? []);
   a[aria-current='page'] {
     color: var(--color-indigo);
     background-size: 100% 1px;
+  }
+  .by-passage {
+    margin-left: auto;
+    font-weight: 600;
+    color: var(--color-indigo);
   }
   sup {
     font-size: 0.75em;

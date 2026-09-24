@@ -29,6 +29,7 @@ export const routes: string[] = [
   '/blog/category/sermon-preview', // scaffold: journal
   '/blog/category/sermon-preview/page/2', // scaffold: journal
   '/blog/tag/advent', // scaffold: journal
+  '/blog/scripture', // scaffold: journal
   '/privacy',
   // The styleguide (Task 6, 2026-09-19): fixed-data wall the visual-regression
   // suite screenshots. Listed here so it also gets smoke, axe light/dark,

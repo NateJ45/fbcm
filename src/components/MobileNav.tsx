@@ -382,6 +382,38 @@ export default function MobileNav({
               </ul>
             </nav>
 
+            {/* scaffold: journal */}
+            {/* Search (2026-09-24), under the rows in the sheet's furniture
+                face, a 44px tap target. The sheet closes first and hands its
+                focus back; the search dialog (search-dialog.ts) waits for that
+                before it opens, so the two never hold focus at once. */}
+            <button
+              type="button"
+              onClick={() => {
+                close();
+                window.dispatchEvent(new CustomEvent('site-search:open'));
+              }}
+              aria-haspopup="dialog"
+              className="relative mt-8 inline-flex min-h-[44px] items-center gap-3 self-start font-ui text-ui font-semibold tracking-[0.02em] text-bg underline-offset-4 hover:underline"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                aria-hidden="true"
+                className="text-gold"
+              >
+                <circle cx="8.5" cy="8.5" r="6" />
+                <path d="M13 13l5 5" />
+              </svg>
+              Search the site
+            </button>
+            {/* scaffold:end */}
+
             {/* The foot: when the church meets and where, then the ways to
                 reach it. */}
             <div className="relative mt-10 grid grid-cols-2 gap-6 border-t border-bg/15 pt-6 font-ui text-sm">

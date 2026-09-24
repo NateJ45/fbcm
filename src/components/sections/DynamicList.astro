@@ -165,7 +165,9 @@ const fallbackLabel: Record<string, string> = {
               />
             </div>
 
-            <ol class="m-0 list-none border-t border-band-brown/40 p-0">
+            {/* data-pagefind-ignore: the rows are other posts' titles and
+                excerpts; the site search finds those posts themselves. */}
+            <ol class="m-0 list-none border-t border-band-brown/40 p-0" data-pagefind-ignore>
               {visibleItems.map((item) => (
                 <PostRow
                   href={item.href ?? '/blog'}

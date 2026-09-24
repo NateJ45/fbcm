@@ -50,6 +50,12 @@ interface Props {
    *  until the visitor scrolls 8px. The routes that can know this compute it
    *  from their first pageBuilder block; see src/lib/heroOverlay.ts. */
   overlayHeader?: boolean;
+  /** True when this page's <main> is what the site search indexes (Pagefind's
+   *  data-pagefind-body). Set by the content routes: home, the builder pages
+   *  and the privacy page. A post marks its own <article> instead, and the
+   *  archives, the scripture index, the 404 and the Studio carry none, so
+   *  scripts/pagefind-index.mjs leaves them out of the index. */
+  searchBody?: boolean;
 }
 
 const {
@@ -63,6 +69,7 @@ const {
   ogType = 'website',
   ogArticle,
   overlayHeader = false,
+  searchBody = false,
 } = Astro.props as Props;
 
 const canonical = new URL(Astro.url.pathname, site.url).toString();
@@ -478,7 +485,18 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
       })();
     </script>
 
-    <main id="main" class="flex-1">
+    <main id="main" class="flex-1" data-pagefind-body={searchBody ? '' : undefined}>
+      {
+        /* The name a search result shows for this page: the page's own
+          <title> up to its " | " (a builder page's h1 is its hero line, "Married
+          here.", which says nothing in a list of results). Hidden, and kept out
+          of the indexed words; Pagefind still reads it as metadata. */
+        searchBody && (
+          <span hidden data-pagefind-meta="title" data-pagefind-ignore>
+            {title.split(' | ')[0].trim()}
+          </span>
+        )
+      }
       <slot />
     </main>
 
@@ -513,6 +531,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         critical-path race with hero LCP. setTimeout fallback for browsers
         without rIC support. */}
     <script>
+      import '@/components/search/trigger'; // scaffold: journal
       function startLenis() {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         import('lenis').then(({ default: Lenis }) => {

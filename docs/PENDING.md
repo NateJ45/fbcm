@@ -1102,6 +1102,37 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   (hundreds of near-identical routes; the generator draws pages and posts only), and a build with
   no Sanity project draws no cards at all (every route falls back, nothing 404s).
 
+### Scripture index and site search (2026-09-24, `feat/scripture-search`)
+
+- [ ] #nathan **Approve the new copy** listed in
+      `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md`, "Scripture index and site
+      search" (the index's lede and headings, "By passage", and the search's labels).
+- **11 sermon previews have no Reading, so they are not in the index.** `readingOf()` wants a
+  chapter:verse reference in the opening; three of the eleven name only a chapter ("From 1
+  Thessalonians 1" on /post/imitators, "excerpt from Psalm 93" on /post/one-forevermore,
+  "- Psalm 130" on /post/sing-to-our-redeemer), and the rest quote a passage without naming it.
+  Teaching `readingOf()` whole-chapter references would add those three to the post pages and
+  the index at once (`parseReading` already reads "Psalm 130"); it is a judgement call about the
+  rule "never guess", so it is left for a decision.
+- **The first reference is the reading, as everywhere else.** A few previews name a verse before
+  the passage (e.g. `Zephaniah 3:19` ahead of `Zephaniah 3:14-20`, `Luke 24:30-32` ahead of
+  `Luke 24:13-35`), so the index lists the verse the post page already prints as its Reading.
+  Fixing that is a change to `readingOf()` and would move the post pages too.
+- **Pagefind's fuzzy matching finds near words.** A nonsense query can still return one loose
+  match (e.g. "xylophone" finds a post); "zebrafinch" returns nothing and is what the test uses.
+  This is Pagefind's ranking, not a bug here.
+- **Pagefind's default UI files ship in `dist/client/pagefind/`** (`pagefind-ui.js/.css`,
+  modular and component UI and the highlighter, about 410 KB together). The Node API writes them unconditionally;
+  nothing links them, so no visitor downloads them. Deleting them after the write is possible if
+  the asset count ever matters.
+- **Scaffold proof (rule 14):** `npm run scaffold -- --remove journal` lists every new file
+  (the scripture and search modules, the page, both Playwright files) and the marked lines in
+  Header, MobileNav, BaseLayout, DynamicList and `tests/routes.ts`; after `--write`,
+  `node scripts/pagefind-index.mjs` skips itself. The removed tree still has the 4 type errors
+  noted under `feat/sunday` above, plus 5 unit failures from the same unmarked leftovers
+  (`convert-body.test.ts`, `import-post.test.ts`, which need `schemaTypes/journalEntry.ts`),
+  none from this branch.
+
 ### Beliefs identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** `scripts/pages/beliefs.mjs` uses no new
