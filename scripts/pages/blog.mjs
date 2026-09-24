@@ -241,14 +241,17 @@ export default {
     // offline plan run must still be able to load this module. (An offline run
     // never reaches here: images.image() above has already thrown.)
     const { client, makeUploader } = await import('../lib/sanity-lib.mjs');
-    const uploader = makeUploader(client);
-    const uploadPdf = async (file) => ({
-      _type: 'file',
-      asset: {
-        _type: 'reference',
-        _ref: await uploader.uploadFile(`../fbcm-archive/files/${file}`),
-      },
-    });
+    const { uploadClient } = await import('../lib/dry-run-upload.mjs');
+    const uploadPdf = async (file) => {
+      const path = `../fbcm-archive/files/${file}`;
+      return {
+        _type: 'file',
+        asset: {
+          _type: 'reference',
+          _ref: await makeUploader(uploadClient(client, 'blog.mjs', path)).uploadFile(path),
+        },
+      };
+    };
 
     const docs = [];
     let n = 0;

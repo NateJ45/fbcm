@@ -258,23 +258,13 @@ export default {
     // when this checkout's asset map already holds the file; without --apply
     // it is handed a client whose upload throws, so a nested worktree with an
     // empty map fails the dry run by name instead of writing to the dataset.
-    const applying = process.argv.includes('--apply');
     const uploadPdf = async (file) => {
       const { client, makeUploader } = await import('../lib/sanity-lib.mjs');
-      const uploadClient = applying
-        ? client
-        : {
-            assets: {
-              upload: () => {
-                throw new Error(
-                  `wedding.mjs: "file:../fbcm-archive/files/${file}" is not in scripts/.asset-map.json, ` +
-                    'and a dry run never uploads. Copy its file asset id from the live page (or the ' +
-                    'main checkout) into the map, or run with --apply to upload it once.',
-                );
-              },
-            },
-          };
-      const assetId = await makeUploader(uploadClient).uploadFile(`../fbcm-archive/files/${file}`);
+      const { uploadClient } = await import('../lib/dry-run-upload.mjs');
+      const path = `../fbcm-archive/files/${file}`;
+      const assetId = await makeUploader(uploadClient(client, 'wedding.mjs', path)).uploadFile(
+        path,
+      );
       return { _type: 'file', asset: { _type: 'reference', _ref: assetId } };
     };
 
