@@ -41,8 +41,18 @@ export const site = {
    *  "first-baptist-church-muncie"). apply-brand never touches this. */
   storageKeyPrefix: _storageKeyPrefix,
 
-  /** localStorage key for theme preference. apply-brand never touches this. */
+  /** localStorage key for theme preference. apply-brand never touches this.
+   *  Unused while `theme` is 'light': nothing reads or writes it. */
   themeStorageKey: _storageKeyPrefix + '-theme',
+
+  /** FBCM-specific (2026-09-24): the site renders LIGHT ONLY. The theme init
+   *  script in BaseLayout reads this and, while it says 'light', never looks
+   *  at localStorage or prefers-color-scheme and never adds `.dark`. The dark
+   *  palette (`.dark` in globals.css) and ThemeToggle.tsx are kept dormant:
+   *  bringing dark mode back is this value set to 'system', the toggle put
+   *  back in the header, footer and menu, and the dark test runs restored
+   *  (see CLAUDE.md rule 3). apply-brand never touches this. */
+  theme: 'light' as 'light' | 'system',
 
   // Brand colors are also declared in src/styles/globals.css.
   // Mirrored here for any script that needs them outside CSS (OG generator, structured data, etc.).

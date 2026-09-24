@@ -1,6 +1,7 @@
 // scripts/shoot-pages.mjs
-// Full-page screenshots of built routes at two viewports in both colour
-// schemes, each page walked top to bottom first so [data-reveal] fires and
+// Full-page screenshots of built routes at two viewports (light only since
+// 2026-09-24: the site never renders dark, so a dark shot would be a duplicate),
+// each page walked top to bottom first so [data-reveal] fires and
 // lazy images load (the vault gotcha fullpage-screenshot-skips-scroll-reveal).
 // Usage: node scripts/shoot-pages.mjs <outDir> [route ...]   (routes default to the eleven pages)
 // On Git Bash / Windows, a bare "/" route argument gets mangled by MSYS path
@@ -78,7 +79,7 @@ for (const route of routes) {
     ['desk', 1440, 900],
     ['mob', 390, 844],
   ]) {
-    for (const scheme of ['light', 'dark']) {
+    for (const scheme of ['light']) {
       const ctx = await browser.newContext({
         viewport: { width: w, height: h },
         colorScheme: scheme,

@@ -3532,6 +3532,12 @@ PORTABLE scripts, `sync-check.mjs` and `page-parity.mjs`, were listed in
 put sibling repos into DRIFT on the next check. That family-wide pass happened
 on 2026-09-06: see card 36. They are formatted and no longer ignored anywhere.
 
+**FBCM, 2026-09-24 (site-specific, not a change to this standard):** FBCM went
+light-only, so it deleted its `tests/a11y-dark.spec.ts` (the case this card already
+allows: "a site with no dark theme skips it"; FBCM has no form, so the
+focus-indicator check had nothing to measure) and dropped `a11y-dark` from the WebKit
+project's `testMatch`. Nothing here changes for the family.
+
 **Adapt per site:** `tests/routes.ts` (derive from `src/pages` and check each
 path against the built `dist/client`), the `url` list in `lighthouserc.json`,
 the `env:` blocks, the reveal selectors in `tests/helpers.ts` if a site's polish
@@ -4002,6 +4008,12 @@ emails correctly reported as notices rather than failures.
 
 ## Card 37: Visual regression on a fixed-data styleguide (2026-09-07)
 
+**FBCM, 2026-09-24 (site-specific):** FBCM is light-only, so its
+`tests/visual/styleguide.spec.ts` dropped the dark shot and `styleguide-dark.png`, and the
+file's PORTABLE marker came off deliberately (the same move as `playwright.config.ts` on
+card 35). Read FBCM's copy as a divergent fork, not a source to pull from. The canonical
+two-theme copy is unchanged.
+
 **What it is.** A `/styleguide` route that renders the design system with every value
 hardcoded, plus a SEPARATE Playwright config that screenshot-diffs it in both themes.
 Proven on stonesteps-50k; the technique came from wcp-website. **Brought home
@@ -4200,6 +4212,10 @@ scheduled run.
 **Needs no secrets** when the dataset is public.
 
 ## Card 43: Contrast for the elements axe declines to judge (2026-09-08)
+
+**FBCM, 2026-09-24 (site-specific):** FBCM is light-only, so its `tests/contrast.spec.ts`
+runs the light sweep only, and the file's PORTABLE marker came off deliberately. Read
+FBCM's copy as a divergent fork; the canonical copy keeps both themes.
 
 **What it is.** `tests/contrast.spec.ts`: a Playwright suite that runs axe for
 colour-contrast, takes the INCOMPLETE list rather than the violations, and measures each

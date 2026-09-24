@@ -173,7 +173,16 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         chrome in a palette it had otherwise replaced, and the values did not
         even match the starter's own brand.config.json. */}
     <meta name="theme-color" content="#F4EFE6" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#14121B" media="(prefers-color-scheme: dark)" />
+    {/* Light-only since 2026-09-24 (site.theme, CLAUDE.md rule 3): the dark
+        chrome colour is not emitted, so a phone in dark mode is never told to
+        paint its bar near-black over a cream page. The literal stays in the
+        source because apply-brand's regex rewrites it. `color-scheme` keeps
+        the browser's own UI (form controls, scrollbars) light before any
+        script runs. */}
+    {site.theme !== 'light' && (
+      <meta name="theme-color" content="#14121B" media="(prefers-color-scheme: dark)" />
+    )}
+    <meta name="color-scheme" content={site.theme === 'light' ? 'light' : 'light dark'} />
 
     {/* THE ICON SET, all rendered from public/favicon.svg by `npm run favicon`.
         The SVG is what modern browsers take; the .ico answers the bare
@@ -225,20 +234,29 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         replaces <html>'s className with the new page's (empty), so without
         this listener a user who set dark mode would see the next page
         render in light. The listener registers exactly once via the
-        __themeBootstrapBound flag. */}
-    <script is:inline define:vars={{ key: site.themeStorageKey }}>
+        __themeBootstrapBound flag.
+
+        LIGHT ONLY since 2026-09-24 (site.theme === 'light', CLAUDE.md rule 3).
+        While lightOnly is true the stored preference and prefers-color-scheme
+        are never read, `.dark` is never added (and is taken off, in case a
+        View Transitions swap ever carried it), and color-scheme is pinned to
+        light. The 'system' branch is the dormant dark mode, kept so it can
+        come back by changing site.theme. */}
+    <script is:inline define:vars={{ key: site.themeStorageKey, lightOnly: site.theme === 'light' }}>
       (function () {
         function applyTheme() {
           let dark = false;
-          try {
-            const stored = localStorage.getItem(key) ?? 'system';
-            dark =
-              stored === 'dark' ||
-              (stored === 'system' &&
-                window.matchMedia('(prefers-color-scheme: dark)').matches);
-            document.documentElement.classList.toggle('dark', dark);
-            document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
-          } catch (_) { /* localStorage unavailable, default light */ }
+          if (!lightOnly) {
+            try {
+              const stored = localStorage.getItem(key) ?? 'system';
+              dark =
+                stored === 'dark' ||
+                (stored === 'system' &&
+                  window.matchMedia('(prefers-color-scheme: dark)').matches);
+            } catch (_) { /* localStorage unavailable, default light */ }
+          }
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
 
           // Theme-aware images (header logo) — swap src/srcset to match the
           // active theme. Single-img approach means only one variant is ever
@@ -808,6 +826,77 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         if (!window.__liveSundayBound) {
           window.__liveSundayBound = true;
           document.addEventListener('astro:page-load', upgradeSunday);
+        }
+      })();
+    </script>
+
+    {/* WATCH LIVE -> LIVE NOW (2026-09-24). The header's [data-live-service]
+        link is server-rendered as "Watch live", true at any moment. This
+        upgrades it to "Live now" (and sets data-live, which shows the pulsing
+        gold dot) only inside the service window: Sunday, from the service
+        time, for 75 minutes, on the CHURCH's clock (America/Indiana/
+        Indianapolis), not the visitor's. It re-checks once a minute so a page
+        left open at 10:44 turns over at 10:45, and after every View
+        Transitions navigation.
+
+        serviceStart and isLive are hand-inlined copies of
+        serviceStartMinutes / weekMinutesIn / isLiveNow in
+        src/lib/live-service.ts, where the unit tests are; the drift gate is
+        src/lib/live-service-inline.test.ts. The mobile menu imports the
+        module directly, because its rows only render in the browser. */}
+    <script is:inline>
+      (function () {
+        var TZ = 'America/Indiana/Indianapolis';
+        var WINDOW = 75;
+        function serviceStart(t) {
+          var m = /^(\d{1,2})(?::(\d{2}))?\s*(?:([ap])\.?\s*m\.?)?$/i.exec(
+            t.replace(/^Sundays?\s+at\s+/i, '').trim(),
+          );
+          if (!m) return null;
+          var h = Number(m[1]);
+          var min = Number(m[2] || '0');
+          var ap = (m[3] || '').toLowerCase();
+          if (min > 59 || h > 23 || (ap && (h < 1 || h > 12))) return null;
+          if (ap === 'a' && h === 12) h = 0;
+          if (ap === 'p' && h !== 12) h += 12;
+          return h * 60 + min;
+        }
+        function isLive(now, t) {
+          var start = serviceStart(t);
+          if (start === null) return false;
+          var parts = new Intl.DateTimeFormat('en-US', {
+            timeZone: TZ,
+            weekday: 'short',
+            hour: 'numeric',
+            minute: 'numeric',
+            hourCycle: 'h23',
+          }).formatToParts(now);
+          var get = function (type) {
+            for (var i = 0; i < parts.length; i++) if (parts[i].type === type) return parts[i].value;
+            return '';
+          };
+          var day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
+          var w = day * 1440 + Number(get('hour')) * 60 + Number(get('minute'));
+          return w >= start && w < start + WINDOW;
+        }
+        function upgradeLive() {
+          var links = document.querySelectorAll('[data-live-service]');
+          for (var i = 0; i < links.length; i++) {
+            var a = links[i];
+            var live = false;
+            try {
+              live = isLive(new Date(), a.getAttribute('data-live-service') || '');
+            } catch (_) { /* no Intl time zone support: stay "Watch live" */ }
+            a.toggleAttribute('data-live', live);
+            var label = a.querySelector('[data-live-label]');
+            if (label) label.textContent = live ? 'Live now' : 'Watch live';
+          }
+        }
+        upgradeLive();
+        if (!window.__liveServiceBound) {
+          window.__liveServiceBound = true;
+          document.addEventListener('astro:page-load', upgradeLive);
+          setInterval(upgradeLive, 60000);
         }
       })();
     </script>

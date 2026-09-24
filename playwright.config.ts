@@ -40,11 +40,11 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   // Chromium runs everything. A real WebKit iPhone profile runs the
-  // viewport-agnostic suites (smoke + both axe sweeps): Safari's engine finds
-  // layout and JS issues Chromium never will, and it is where the
-  // focus-indicator bug in a11y-dark.spec.ts actually lives (WebKit renders
-  // native form controls itself and drops box-shadow on them, so a Tailwind
-  // `focus:ring` is invisible there). reflow.spec.ts drives its own explicit
+  // viewport-agnostic suites (smoke + the axe sweep): Safari's engine finds
+  // layout and JS issues Chromium never will. (It also ran a11y-dark.spec.ts
+  // and its focus-indicator check until 2026-09-24, when the site went
+  // light-only and that suite was removed; FBCM has no form, so the focus
+  // check had nothing to measure here anyway.) reflow.spec.ts drives its own explicit
   // viewport widths, which fights device emulation, so it is chromium-only.
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
@@ -81,7 +81,7 @@ export default defineConfig({
       // the DESKTOP header, and an explicit width fights device emulation. On
       // a phone the Give button lives in the menu sheet and the header has no
       // overlay state to seed, so there is nothing for this profile to check.
-      testMatch: /(smoke|a11y|a11y-dark|anchors|menu|motion)\.spec\.ts$/,
+      testMatch: /(smoke|a11y|anchors|menu|motion)\.spec\.ts$/,
     },
   ],
   webServer: {

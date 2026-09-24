@@ -556,7 +556,11 @@
   --hair-strong: rgba(23, 21, 31, 0.34);
 }
 
-/* ---------- Dark mode --------------------------------------------------
+/* ---------- Dark mode (DORMANT) ----------------------------------------
+   DORMANT since 2026-09-24: the site is light-only (CLAUDE.md rule 3). The
+   theme init in BaseLayout never adds `.dark` while site.theme is 'light', so
+   nothing below applies. It is kept, not deleted, so dark mode can come back
+   by setting site.theme to 'system' and putting ThemeToggle back.
    Light mode is the primary display. Dark mode supports OS-level preference.
    Slate and Ink hold their identity; surfaces flip to deep cool grays. */
 
@@ -1024,6 +1028,37 @@
    is excluded here. */
 .site-header[data-overlay]:not([data-scrolled]) :where(a, button, summary):not(.header-give) {
   color: inherit;
+}
+
+/* "Live now" (2026-09-24): the header's Watch live link and the menu's row.
+   The dot exists in the markup at all times and shows only while the link
+   carries data-live, which the upgrade script (header) or the render (menu)
+   sets inside the Sunday service window. The pulse is a ring on the entry
+   curve, gated on no-preference so a visitor who asked for less motion gets
+   a still gold dot. Decorative: the label says "Live now". */
+.live-dot {
+  display: none;
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 9999px;
+  background: var(--color-gold);
+}
+[data-live] > .live-dot {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-live] > .live-dot {
+    animation: live-pulse 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+}
+@keyframes live-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-gold) 70%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--color-gold) 0%, transparent);
+  }
 }
 
 /* THE CARD LIFT IS GONE (2026-09-21, plan 3 task 12, the motion pass).

@@ -44,7 +44,7 @@
 //      1859", over the Hannaford rendering drawn as faint gold line art along
 //      the bottom edge.
 //   6. Thin base rail: the wordmark (the footer's link home), auto-year
-//      copyright, small print, the theme control
+//      copyright, small print (the theme control came off 2026-09-24: light-only)
 //
 // THE RENDERING. Samuel Hannaford and Sons' 1927 drawing of the building (the
 // same drawing Home's "Our Building" band shows), baked into the repo as
@@ -74,7 +74,6 @@ import {
 } from '@tabler/icons-react';
 import { Mail, Phone } from 'lucide-react';
 import NewsletterSignup from '@/components/NewsletterSignup';
-import ThemeToggle from '@/components/ThemeToggle';
 // THE SVG, NOT A PNG, and the same files the header uses.
 //
 // Until 2026-09-08 this imported logo-{light,dark}.png, which were a REAL
@@ -254,12 +253,33 @@ function socialIcon(platform: string | undefined) {
 }
 
 // Copyright auto-updates every build via new Date(). The credit line is a
-// SEPARATE concept that sits next to it in the thin bottom bar. The field is
-// still on the siteSettings schema, so the reader stays; it is empty in this
-// church's dataset and nothing renders.
+// SEPARATE concept that sits next to it in the thin bottom bar.
 const currentYear = new Date().getFullYear();
-const siteCredit = siteSettings?.footerCredit;
-const siteCreditUrl = siteSettings?.footerCreditUrl;
+
+// THE DESIGNER CREDIT (2026-09-24, Nathan). Always shown, the way
+// presacademy's colophon does it: Site settings' optional footerCredit /
+// footerCreditUrl override it, and the defaults are the studio that built the
+// site, so the credit is never missing. The label is drawn in two voices, the
+// small UI caps of this rail for "Designed by" and Castoro italic in paper for
+// the name, so it is split at its last "by". The split runs on the
+// stega-cleaned text (a payload's U+FEFF matches \s) and the payload goes back
+// on the name, so click-to-edit still finds the field in the preview. A label
+// with no "by" in it is all name.
+const creditRaw =
+  typeof siteSettings?.footerCredit === 'string' && siteSettings.footerCredit.trim()
+    ? siteSettings.footerCredit
+    : 'Designed by Nixon Creative Studio';
+const creditUrl =
+  (typeof siteSettings?.footerCreditUrl === 'string' &&
+    splitStega(siteSettings.footerCreditUrl).cleaned.trim()) ||
+  'https://www.nixoncreativestudio.com';
+const creditSplit = splitStega(creditRaw);
+const creditMatch = /^(.*\bby)\s+(\S.*)$/i.exec(creditSplit.cleaned.trim());
+const creditPrefix = creditMatch?.[1] ?? '';
+const creditName = reattachStega(
+  creditMatch?.[2] ?? creditSplit.cleaned.trim(),
+  creditSplit.encoded,
+);
 
 // Editor-managed footer link columns. Empty is fine: the brand column and the
 // Office column below always render, so the footer is never bare.
@@ -482,14 +502,18 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
   </div>
 
   {
-    /* The base rail — the wordmark, the copyright, small print, the theme
-       control, on one line so they don't add a tall block.
+    /* The base rail — the wordmark, the copyright and the small print,
+       on one line so they don't add a tall block.
 
        The extra `sm:pr-20`: BackToTop is `fixed right-6 bottom-6` and 44px
        wide, so it owns the bottom 68px of the right edge on every page. This
        row turns into a single line at `sm` and puts its links hard against
        that edge, which parked the chip on top of "Privacy policy". 5rem of
-       right padding clears the chip with a gap to spare. */
+       right padding clears the chip with a gap to spare. Below `sm` the same
+       5rem sits on the small-print row alone (2026-09-24, the designer
+       credit): on a phone the credit is the rail's last line, which is
+       exactly where the chip sits, so it wraps short of the chip instead of
+       under it, and the copyright line above keeps its full width. */
   }
   <div class="relative border-t border-bg/15">
     <div
@@ -521,7 +545,7 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
         </a>
         <p>&copy; {currentYear} {brandName}</p>
       </div>
-      <div class="flex items-center gap-m">
+      <div class="flex flex-wrap items-center gap-x-m gap-y-xs pr-20 sm:pr-0">
         {
           LEGAL_LINKS.length > 0 ? (
             LEGAL_LINKS.map((l) => (
@@ -536,44 +560,64 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
           )
         }
         {
-          siteCredit &&
-            (siteCreditUrl ? (
-              <a
-                href={siteCreditUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class:list={['underline underline-offset-2', bandLink]}
-              >
-                {siteCredit}
-              </a>
-            ) : (
-              <span>{siteCredit}</span>
-            ))
+          /* The designer credit: quiet, and a little special. The gold rule
+            under the name draws in from the left on hover and on keyboard
+            focus (.footer-credit below), and appears at once, with no
+            draw, for a visitor who asked for less motion. The link is plain
+            inline text with a real space between its two voices, so its
+            accessible name reads "Designed by Nixon Creative Studio" and it
+            wraps at that space on a narrow phone. */
         }
-        {
-          /* The theme control. It lives down here because task 3 took it off
-             the header bar below lg and this rail is where the small print
-             lives on every page. */
-        }
-        <span class="footer-theme inline-flex">
-          <ThemeToggle client:idle />
-        </span>
+        <a
+          href={creditUrl}
+          target="_blank"
+          rel="noopener"
+          class="footer-credit rounded-sm focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:outline-none"
+        >
+          {
+            creditPrefix && (
+              <span class="font-ui text-[0.6875rem] tracking-[0.14em] text-bg/70 uppercase">
+                {creditPrefix}
+              </span>
+            )
+          }{' '}
+          <span
+            class="footer-credit__name ml-1 inline-block font-body text-[0.9375rem] text-bg italic"
+          >
+            {creditName}
+          </span>
+        </a>
       </div>
     </div>
   </div>
 </footer>
 
 <style>
-  /* The ThemeToggle island paints itself `text-foreground` and hovers to
-     `bg-accent`, both of which are theme-aware. This band is not: it is indigo
-     in both themes, so in the light theme the island would draw a near-black
-     icon on a near-black ground. Repaint it here rather than in the island,
-     which the header and the mobile sheet also use on their own surfaces. */
-  .footer-theme :global(button) {
-    color: var(--color-bg);
+  /* The credit's gold rule: a pseudo-element scaled from 0 to 1 from its
+     left edge, so it draws left to right. Transform only, so nothing reflows.
+     Under reduced motion the change is instant (no transition). */
+  .footer-credit__name {
+    position: relative;
   }
-  .footer-theme :global(button:hover) {
-    background-color: color-mix(in srgb, var(--color-bg) 14%, transparent);
+  .footer-credit__name::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: var(--color-gold);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  .footer-credit:hover .footer-credit__name::after,
+  .footer-credit:focus-visible .footer-credit__name::after {
+    transform: scaleX(1);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .footer-credit__name::after {
+      transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
   }
 
   /* Three columns from lg: Pages takes two tracks of five (its list split

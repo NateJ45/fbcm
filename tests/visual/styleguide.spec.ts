@@ -1,14 +1,16 @@
-// PORTABLE: canonical copy - ncs-astro-sanity-starter is the library of record for this file
+// NOT PORTABLE on FBCM since 2026-09-24. The marker came off deliberately
+// (PORTS.md card 37): the site is light-only, so the dark shot and its
+// baseline were removed, which the family's canonical copy must not carry.
 /* ============================================================================
    Visual regression - the styleguide wall
    ============================================================================
    See playwright.visual.config.ts for why this is a separate suite, why the
    baselines are generated in CI, and why this file refuses to run on Windows.
 
-   One full-page shot per theme. Two shots, because the bug that prompted this
-   suite was theme-specific: on the repo it came from, every heading was cream
-   on cream in LIGHT mode while dark mode was fine, so a single-theme baseline
-   would have sailed past it.
+   One full-page shot per theme. FBCM has one theme since 2026-09-24 (it is
+   light-only; the dark palette is dormant), so it has one shot. The starter's
+   copy takes two, because the bug that prompted this suite was
+   theme-specific.
    ============================================================================ */
 import { test, expect, type Page } from '@playwright/test';
 import { site } from '../../src/data/site';
@@ -68,22 +70,4 @@ test('styleguide, light', async ({ page }) => {
   }, THEME_KEY);
   await settle(page);
   await expect(page).toHaveScreenshot('styleguide-light.png', { fullPage: true, timeout: 30_000 });
-});
-
-test('styleguide, dark', async ({ page }) => {
-  await page.addInitScript((key) => {
-    try {
-      localStorage.setItem(key, 'dark');
-    } catch {
-      /* nothing to do; the assertion below will catch it */
-    }
-  }, THEME_KEY);
-  await settle(page);
-  // Assert the theme actually applied before trusting the pixels. A seeded key
-  // that silently failed would produce a light screenshot filed as the dark
-  // baseline, and the suite would then defend the wrong picture forever. That
-  // exact mistake happened once in the family, with the wrong key name, which
-  // is also why THEME_KEY is imported rather than typed out.
-  await expect(page.locator('html')).toHaveClass(/dark/);
-  await expect(page).toHaveScreenshot('styleguide-dark.png', { fullPage: true, timeout: 30_000 });
 });

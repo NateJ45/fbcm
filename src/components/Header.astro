@@ -10,7 +10,7 @@
 // chrome above the wordmark.
 //
 //   +-----------------------------------------------+  74px, 88px from lg
-//   | [wordmark]   Visit  Who We Are ... Blog  [ GIVE ]  (*)
+//   | [wordmark]   Visit  Our Church ... Blog  Watch live  [ GIVE ]
 //   +-----------------------------------------------+
 //
 // Four things about the layout are deliberate.
@@ -31,8 +31,15 @@
 //      polish script in BaseLayout adds `data-scrolled` when it pins the bar
 //      (a scroll up past 150px slides it in over the page) and the bar becomes
 //      ordinary paper. The logo swap below follows the same state.
-//   4. The theme toggle is a 28px icon button at the row's end, desktop only.
-//      Below lg it lives in the mobile menu, so it is not duplicated here.
+//   4. WATCH LIVE (2026-09-24) sits beside Give in the nav's own quiet link
+//      style, not as a second gold plate. It goes to Site settings' live
+//      stream address (the channel when that is empty; nothing when both
+//      are). It is built saying "Watch live", which is true at any moment,
+//      and BaseLayout's inline script upgrades it to "Live now" with a
+//      pulsing gold dot only during the Sunday service window, on the
+//      church's clock (src/lib/live-service.ts).
+//   5. No theme toggle. The site is light-only since 2026-09-24 (CLAUDE.md
+//      rule 3); ThemeToggle.tsx is kept dormant and rendered nowhere.
 //
 // The seven links and the Give button both come from Sanity (Site Settings ->
 // Navigation). Desktop nav is SERVER-RENDERED (CLAUDE.md rule 4): real <a>
@@ -43,7 +50,6 @@
 
 import { getImage } from 'astro:assets';
 import { site } from '@/data/site';
-import ThemeToggle from './ThemeToggle';
 import MobileNav from './MobileNav';
 import GoalsRow from '@/components/church/GoalsRow.astro';
 import { ChevronDown } from 'lucide-react';
@@ -52,6 +58,7 @@ import logoDarkAsset from '@/assets/logo-dark.svg';
 import menuWindowAsset from '@/assets/menu-window.jpg';
 import { splitStega } from '@/lib/preview-stega';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
+import { watchLiveHref } from '@/lib/live-service';
 import { urlFor } from '@/lib/sanity';
 
 // SVG logos are passed through Astro's image pipeline for cache-busted URLs.
@@ -90,6 +97,8 @@ interface Props {
         phone?: string;
         serviceTime?: string;
         address?: string;
+        youtubeUrl?: string;
+        livestreamUrl?: string;
       })
     | null;
 }
@@ -135,6 +144,15 @@ const street =
     .cleaned.split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)[0] ?? undefined;
+
+// Where "Watch live" goes: the live stream, else the channel, else nowhere.
+// Cleaned of stega because it becomes an href, and a URL with zero-width
+// characters in it is a different URL.
+const cleanUrl = (u: unknown) => (typeof u === 'string' ? splitStega(u).cleaned : undefined);
+const watchHref = watchLiveHref(
+  cleanUrl(siteSettings?.livestreamUrl),
+  cleanUrl(siteSettings?.youtubeUrl),
+);
 
 // Subset of siteSettings the mobile menu needs. Pass as a plain object so the
 // React island doesn't try to serialize the whole Sanity document graph.
@@ -274,7 +292,7 @@ function isGroupActive(items: { href: string }[]) {
       })();
     </script>
 
-    {/* Nav, Give and the theme toggle grouped on the right (lg+ only). */}
+    {/* Nav, Watch live and Give grouped on the right (lg+ only). */}
     <div class="hidden items-center gap-m lg:flex xl:gap-l">
       <nav class="site-nav flex items-center gap-5 xl:gap-l" aria-label="Primary">
         {
@@ -338,6 +356,25 @@ function isGroupActive(items: { href: string }[]) {
         }
       </nav>
       {
+        /* Watch live: the nav's own link style, so Give stays the one plate.
+          data-live-service carries the cleaned service time for the upgrade
+          script in BaseLayout, which sets data-live (the dot shows) and swaps
+          the label to "Live now" during the service. The dot is decorative;
+          the words carry the state, so the accessible name changes with them. */
+        watchHref && (
+          <a
+            href={watchHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-live-service={serviceTime}
+            class="watch-live nav-underline inline-flex items-center gap-2 py-1 font-ui text-[0.9375rem] font-medium tracking-[0.01em] whitespace-nowrap text-foreground transition-colors hover:text-link"
+          >
+            <span class="live-dot" aria-hidden="true" />
+            <span data-live-label>Watch live</span>
+          </a>
+        )
+      }
+      {
         headerCta.show && (
           <a
             href={headerCta.href}
@@ -349,18 +386,6 @@ function isGroupActive(items: { href: string }[]) {
           </a>
         )
       }
-      {
-        /* Theme toggle, 28px, desktop only. The island itself draws a 36px
-          button because the mobile drawer wants a comfortable tap target; here
-          it is an afterthought at the end of the row, so the wrapper below
-          squeezes it. Below lg it is not here at all: the drawer carries it.
-          Hydrates when idle, not on load, because the anti-FOUC inline script
-          in BaseLayout already applies the right theme class before first
-          paint. */
-      }
-      <span class="header-theme hidden lg:inline-flex">
-        <ThemeToggle client:idle />
-      </span>
     </div>
 
     {
@@ -380,6 +405,7 @@ function isGroupActive(items: { href: string }[]) {
       logoDarkUrl={logoDarkWebpMobile.src}
       serviceTime={serviceTime || undefined}
       street={street}
+      watchUrl={watchHref}
       windowUrl={menuWindowImg.src}
       {...mobileCtaProps}
     >
@@ -416,18 +442,6 @@ function isGroupActive(items: { href: string }[]) {
   }
   .site-nav__group[open] > .site-nav__menu {
     display: block;
-  }
-
-  /* Squeeze the ThemeToggle island down to a 28px icon button, for the header
-     row only. :global() because the button is rendered by React and carries no
-     Astro scope attribute; the wrapper does, so this still scopes to here. */
-  .header-theme :global(button) {
-    height: 28px;
-    width: 28px;
-  }
-  .header-theme :global(svg) {
-    height: 16px;
-    width: 16px;
   }
 </style>
 

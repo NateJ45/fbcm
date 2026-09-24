@@ -357,6 +357,13 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### New sentences
 
 - An American Baptist congregation in downtown Muncie since 1859. (the footer's bottom line, under Praise & Proclaim; built from "We Are American Baptists" on Beliefs, and "Founded in 1859" and "downtown Muncie" on History)
+- "Designed by Nixon Creative Studio" (the base rail's credit, always shown; Site settings' footer credit overrides it). Approved by Nathan 2026-09-24.
+
+## Header and mobile menu (every page)
+
+### New sentences
+
+- "Watch live", and "Live now" during the Sunday service (the link to the live stream beside Give). UI labels, approved by Nathan 2026-09-24.
 
 ### Edits to the church’s own text
 

@@ -10,6 +10,50 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Light-only, Watch live, the menu's groups, the designer credit, and the menu test flake (`feat/light-only`)._
+
+**Light-only.** Dark mode left Home practically unchanged (its identity is fixed
+brand bands) and only flipped the cream reading pages, while costing each branch a
+second design pass, dark-only clashes and about a third of its checks, so the site now
+always renders light (CLAUDE.md rule 3, `site.theme` in `src/data/site.ts`). The theme
+init never reads localStorage or `prefers-color-scheme` and never adds `.dark`; the head
+says `color-scheme: light` and no longer offers a dark `theme-color`. The theme toggle
+came out of the header, the footer rail and the mobile menu; `ThemeToggle.tsx` and the
+`.dark` block stay, dormant. The dark axe sweep (`a11y-dark.spec.ts`), the dark runs of
+`contrast.spec.ts` and `menu.spec.ts`, the dark styleguide shot and baseline, and the
+dark pairs in `theme-tokens.test.ts` came off; the shoot scripts shoot light only.
+
+**Watch live.** A "Watch live" link beside Give on the desktop bar (the nav's own quiet
+link style, not a second plate) and above Give in the mobile menu (44px tap target),
+to Site settings' live stream address, else the YouTube channel, else nothing; new tab,
+`rel="noopener noreferrer"`. During the service it reads "Live now" with a pulsing gold
+dot: Sunday, from the Site settings service time, for 75 minutes, on the church's clock
+(America/Indiana/Indianapolis), start inclusive and end exclusive. The logic is
+`src/lib/live-service.ts` (15 unit tests: before, at start, inside, at end, other days,
+the visitor's zone, winter time, both DST changeover Sundays, a late service past
+midnight); the header is upgraded by a hand-inlined copy in BaseLayout (re-checked every
+minute and on every navigation) guarded by `live-service-inline.test.ts`, which also
+runs both copies over two days of instants; the menu imports the module, because its
+rows only render in the browser. The dot is `aria-hidden` and stops pulsing under
+reduced motion; the words carry the state.
+
+**The menu's dropdown group** (Nathan's review): "Our Church" is set in the rows' own
+display face and size, is not a link, carries a small gold caret, and names a nested
+list (`aria-labelledby`) whose links are indented 25px, one step smaller, under a thin
+gold rule. Always open.
+
+**The designer credit.** The footer rail now always carries "Designed by Nixon Creative
+Studio" (Site settings' `footerCredit` / `footerCreditUrl` still override it), the
+prefix in the rail's small caps and the name in Castoro italic with a gold rule that
+draws in from the left on hover and focus (instant under reduced motion). Below `sm`
+the small-print row keeps 5rem clear of the back-to-top chip.
+
+**The menu test flake.** `tests/menu.spec.ts` clicked the server-rendered trigger before
+the `client:idle` island had hydrated, and under load the click was lost. MobileNav now
+sets `data-menu-ready` in a mount effect (not in the server HTML) and the tests wait for
+it. `--repeat-each=10 --workers=4`: 70 passed, 10 skipped (the WebKit-on-Windows skip),
+0 failed.
+
 _2026-09-24 — Footer and mobile menu in the church identity (`feat/footer-identity`)._
 
 The rollout plan's "footer carries the Praise & Proclaim mark and the four
