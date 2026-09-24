@@ -8,7 +8,7 @@
 // is declared below, so the church can replace this page's copy with its own
 // stewardship words the day it has them (spec 5.9's own closing line).
 //
-// Three things about this file are deliberate.
+// Four things about this file are deliberate.
 //
 // 1. NO AMOUNTS AND NOTHING ABOUT TAX STATUS. Neither Wix source that
 //    mentions giving (who-we-are.txt, outreach.txt) states a dollar figure or
@@ -32,6 +32,14 @@
 //    heritage-only `heritageLevel()` in this same commit) give it an h1 when
 //    it opens a page and an h2 everywhere else, exactly the way the heritage
 //    band already worked.
+//
+// 4. THE IDENTITY PASS (2026-09-24, feat/utility-identity). The opener is
+//    now the brand INDIGO band with the basin drawn large in gold
+//    (GiveBand.astro's h1 path), because the closing call to action became a
+//    gold band with a glyph in the Visit pass and a gold opener made the page
+//    begin and end on the same band. The two "Ways to give" / "Where it goes"
+//    eyebrows came off: each named the heading under it a second time
+//    (rollout rule 11). Nothing else on the page changed.
 
 export default {
   id: 'page-give',
@@ -165,7 +173,6 @@ export default {
         {
           _type: 'richTextSection',
           _key: 'give-ways',
-          eyebrow: 'Ways to give',
           heading: 'Three ways to give',
           body: [
             ...paragraphs(
@@ -189,7 +196,6 @@ export default {
         {
           _type: 'richTextSection',
           _key: 'give-where',
-          eyebrow: 'Where it goes',
           heading: 'What your gift supports',
           body: [
             ...paragraphs(supportSentence, 'gwh-a'),

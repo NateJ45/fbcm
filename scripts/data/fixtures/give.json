@@ -1,0 +1,135 @@
+{
+  "_generatedBy": "scripts/page-fixture.mjs give",
+  "title": "Give",
+  "pageBuilder": [
+    {
+      "_type": "giveBandSection",
+      "_key": "give-open",
+      "heading": "Support the work of this church.",
+      "body": "Your gift keeps this church running and reaching Muncie."
+    },
+    {
+      "_type": "richTextSection",
+      "_key": "give-ways",
+      "heading": "Three ways to give",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "gw-online-1",
+          "style": "normal",
+          "markDefs": [
+            {
+              "_type": "link",
+              "_key": "gw-online-1l1",
+              "href": "https://fbcmuncie.churchcenter.com/giving"
+            }
+          ],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "gw-online-1s1",
+              "text": "You can give online through Church Center any time. ",
+              "marks": []
+            },
+            {
+              "_type": "span",
+              "_key": "gw-online-1s2",
+              "text": "Give through Church Center",
+              "marks": [
+                "gw-online-1l1"
+              ]
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "gw-person-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "gw-person-1s1",
+              "text": "You can also give in person during Sunday worship, when the offering is taken. Sundays at 10:45 am.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "gw-post-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "gw-post-1s1",
+              "text": "Or mail a check to the church office: First Baptist Church, 309 East Adams Street, Muncie, IN 47305.",
+              "marks": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "richTextSection",
+      "_key": "give-where",
+      "heading": "What your gift supports",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "gwh-a-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "gwh-a-1s1",
+              "text": "We give sacrificially to help those in need through regular offerings and donations.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "gwh-b-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "gwh-b-1s1",
+              "text": "Special offerings and projects for disaster relief, mission work, and other needs.",
+              "marks": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "ctaBandSection",
+      "_key": "give-cta",
+      "eyebrow": "Questions?",
+      "headline": "Ask the office.",
+      "subhead": "Sundays at 10:45 am. 309 East Adams Street, Muncie, IN 47305.",
+      "cta": {
+        "_type": "ctaBlock",
+        "_key": "cta-1",
+        "label": "Contact us",
+        "linkType": "internal",
+        "internalLink": {
+          "_type": "page",
+          "slug": "contact"
+        }
+      },
+      "secondaryCta": {
+        "_type": "ctaBlock",
+        "_key": "cta-2",
+        "label": "Give online",
+        "linkType": "external",
+        "externalUrl": "https://fbcmuncie.churchcenter.com/giving",
+        "openInNewTab": true
+      }
+    }
+  ]
+}

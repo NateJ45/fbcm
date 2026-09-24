@@ -1,6 +1,14 @@
-// 404 page singleton. Drives the eyebrow, headline, body, image, and the
-// three CTAs on /404. Default values match what was hardcoded in the page
-// before this singleton existed, so the site looks identical on launch.
+// 404 page singleton. Drives the eyebrow, headline, body and the four doors
+// on /404. Default values match what was hardcoded in the page before this
+// singleton existed, so the site looks identical on launch.
+//
+// 2026-09-24 (the utility identity pass): the page became an indigo band with
+// the apology and a row of four doors, each with a building glyph (Visit, Who
+// We Are, Blog, Give). The three CTA pairs became the first three doors and a
+// fourth pair was added, optional (CLAUDE.md rule 1: additive only). The
+// photo is no longer drawn (the church's tower is the home hero's and the
+// history opener's, and a photo is not reused across pages); the field stays
+// so the value an editor set is not orphaned, and its description says so.
 
 import { defineType, defineField } from 'sanity';
 
@@ -12,7 +20,7 @@ export const notFoundPage = defineType({
   groups: [
     { name: 'seo', title: 'SEO' },
     { name: 'content', title: 'Content' },
-    { name: 'ctas', title: 'CTAs' },
+    { name: 'ctas', title: 'Doors' },
   ],
   fields: [
     defineField({
@@ -72,7 +80,7 @@ export const notFoundPage = defineType({
       type: 'image',
       group: 'content',
       description:
-        'Image shown to the right of the text (stacks above on mobile). On-brand vignette that grounds the page in the studio identity.',
+        'Not shown on the page since 2026-09-24: the 404 draws the church door and four doors to the main pages instead. Leave it blank.',
       options: { hotspot: true },
       fields: [
         defineField({
@@ -85,55 +93,68 @@ export const notFoundPage = defineType({
           name: 'caption',
           title: 'Caption (optional)',
           type: 'string',
-          initialValue: 'From the studio',
+          description: 'Not shown anywhere on the site.',
         }),
       ],
     }),
 
     defineField({
       name: 'primaryCtaLabel',
-      title: 'Primary CTA label',
+      title: 'First door label',
       type: 'string',
       group: 'ctas',
-      initialValue: 'Back home',
+      initialValue: 'Plan a visit',
     }),
     defineField({
       name: 'primaryCtaHref',
-      title: 'Primary CTA destination',
+      title: 'First door destination',
       type: 'string',
       group: 'ctas',
-      initialValue: '/',
+      initialValue: '/visit',
       description: 'Use a relative URL like "/" or "/contact". External URLs work too.',
     }),
     defineField({
       name: 'secondaryCtaLabel',
-      title: 'Secondary CTA label',
+      title: 'Second door label',
       type: 'string',
       group: 'ctas',
-      initialValue: 'Browse our services',
+      initialValue: 'Who we are',
     }),
     defineField({
       name: 'secondaryCtaHref',
-      title: 'Secondary CTA destination',
+      title: 'Second door destination',
       type: 'string',
       group: 'ctas',
-      // A core route. /portfolio comes from an opt-in module and is not built
-      // unless a project enables it.
-      initialValue: '/',
+      initialValue: '/who-we-are',
     }),
     defineField({
       name: 'tertiaryCtaLabel',
-      title: 'Tertiary CTA label',
+      title: 'Third door label',
       type: 'string',
       group: 'ctas',
-      initialValue: 'Get in touch',
+      initialValue: 'Read the blog',
     }),
     defineField({
       name: 'tertiaryCtaHref',
-      title: 'Tertiary CTA destination',
+      title: 'Third door destination',
       type: 'string',
       group: 'ctas',
-      initialValue: '/contact',
+      initialValue: '/blog',
+    }),
+    // 2026-09-24: the fourth door. Optional; blank falls back to Give (/give).
+    defineField({
+      name: 'fourthCtaLabel',
+      title: 'Fourth door label',
+      type: 'string',
+      group: 'ctas',
+      description: 'The fourth door on the 404 page. Blank shows "Give".',
+    }),
+    defineField({
+      name: 'fourthCtaHref',
+      title: 'Fourth door destination',
+      type: 'string',
+      group: 'ctas',
+      description: 'Use a relative URL like "/give". Blank goes to /give.',
     }),
   ],
   preview: { prepare: () => ({ title: '404 Page' }) },

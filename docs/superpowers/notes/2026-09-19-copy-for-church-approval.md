@@ -282,6 +282,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Dropped: the trailing comma on "Engagement/Marriage Announcement," (contact.txt line 19). It reads as a typo in a bulleted list, and every other item in the list ends with no punctuation at all.
 - Re-laid out, not rewritten: the "For Business, Billing, or Related Needs" block. The capture puts the heading, the phone number and the email address on four separate lines (contact.txt lines 44 to 48). Here the heading is an h3 and the two values print under it, read from Site settings rather than retyped, so they cannot drift from the header, the footer and the hero facts.
 - Not carried over: the "Other questions?" paragraph and the second copy of the phone number and email under "Mailing Address". The old page printed its contact details twice, which the content map lists as a problem; this page prints them once, in the hero facts, and once more under the business heading where the church deliberately distinguishes billing enquiries.
+- Not repeated: the pastors' "Tuesday Office Hours | 9:00 a.m. - 12:00 p.m. and 1:00 p.m - 5:00 p.m." line (contact.txt line 60). The hours band above the pastors now prints the same hours from Site settings, so the page gives them once.
 
 ### Photos of children
 

@@ -5,26 +5,41 @@
 // reachable), a plain-voice fallback policy is rendered so the page is always
 // live and accurate.
 //
-// Reuses PortableText for the body when Sanity content is present; falls back
-// to static HTML copy for the period before the editor publishes the doc.
+// THE LOOK (2026-09-24, the utility identity pass; rollout plan step 10).
+// The same opener as /404 and /give: the brand INDIGO band with the words at
+// the gutter and one building glyph drawn large in gold at the right (the
+// window: the page is the church letting a visitor see in). The eyebrow is the
+// window hero's small gold titling label (its own .pv-label: .hw-label ships
+// only with Hero.astro), the h1 is sized by its own length
+// (headlineScale), and the last-updated date sits under it in paper. Below,
+// the policy stays READABLE LEGAL TEXT on the page surface: one column at the
+// gutter, in the measured PROSE_MEASURE, sub-heads in Castoro roman. Nothing
+// decorates it.
 //
-// The sub-heads in that fallback are Castoro ROMAN (font-body), never the
-// titling face: Castoro Titling is capitals-only, so `font-display` here set
-// "What gets collected" in full caps on a page of plain prose. The one
-// titling line on this page is the h1 that SectionHeading draws.
+// THE FALLBACK IS THIS CHURCH'S POLICY (CLAUDE.md rule 11). Until this pass
+// the no-singleton fallback still carried the starter's client copy: a
+// contact form, a newsletter, "studio updates, room ideas, and project
+// previews". None of that is true of this site. It now says what
+// scripts/pages/privacy.mjs seeds, from the same facts: no form, no account,
+// no cookies of its own, the measurement paragraph branched on the real build
+// configuration (src/lib/analytics-config.ts), and the linked services named
+// from Site settings.
+//
+// The sub-heads in the fallback are Castoro ROMAN (font-body), never the
+// titling face: Castoro Titling is capitals-only. The CSS is in this file's
+// <style> block, so it ships on /privacy only (CLAUDE.md rule 20).
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import PortableTextStatic from '@/components/PortableTextStatic.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { PROSE_MEASURE } from '@/lib/prose';
+import { headlineScale } from '@/lib/headline-scale';
 import { getPrivacyPage, getSiteSettings } from '@/lib/queries';
 
 // What this build ACTUALLY ships, read from the same module that decides whether
 // each tag renders. The fallback copy below branches on these rather than
-// asserting a fixed answer: this page used to state flatly that traffic was
-// counted "without setting cookies", which stopped being true the day GA4
-// became available and would have been a false statement to visitors rather
-// than a missing one. See src/lib/analytics-config.ts.
+// asserting a fixed answer. See src/lib/analytics-config.ts.
 import { hasCfAnalytics, hasGa } from '@/lib/analytics-config';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
@@ -37,9 +52,9 @@ const [page, siteSettings] = await Promise.all([
 const title = page?.seoTitle ?? `Privacy Policy · ${site.name}`;
 const description =
   page?.seoDescription ??
-  'How we handle the information you share when you reach out or subscribe.';
+  'What this site does and does not do with your information, and where its linked services keep their own privacy policies.';
 
-const heroEyebrow = page?.heroEyebrow ?? 'Transparency first.';
+const heroEyebrow = page?.heroEyebrow ?? 'This site, plainly.';
 const heroHeadline = page?.heroHeadline ?? 'Privacy Policy';
 const heroSubhead = page?.heroSubhead ?? '';
 
@@ -70,156 +85,193 @@ const schemas = [
   ]),
 ];
 
-// Contact email for the fallback copy
-const contactEmail = siteSettings?.email ?? `hello@${site.domain}`;
+// The fallback's facts, from Site settings (never typed here).
+const contactEmail = siteSettings?.email ?? `office@${site.domain}`;
+const contactPhone = siteSettings?.phone ?? null;
+const services = [
+  {
+    name: 'Church Center',
+    url: siteSettings?.churchCenterUrl,
+    does: 'handles online giving and event registration.',
+  },
+  { name: 'Church Trac', url: siteSettings?.churchTracUrl, does: 'holds other church records.' },
+  {
+    name: 'YouTube',
+    url: siteSettings?.youtubeUrl,
+    does: 'hosts our livestream and sermon recordings.',
+  },
+];
 
 // Whether to use Sanity body content
 const hasSanityBody = Boolean(page?.body);
+const H2 = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground';
 ---
 
 <BaseLayout {title} {description} {schemas} {siteSettings} seoImage={page?.seoImage}>
   {
-    /* ONE GRAMMAR PER PAGE (CLAUDE.md rule 17, fixed 2026-09-20).
-      This page used to open on the starter's full-bleed <Hero> and then set its
-      policy text in `mx-auto max-w-3xl`, which put a second left edge about
-      280px in at 1280 and ran the body to roughly 90 characters a line. Every
-      other page on this site starts at the `max-w-content px-gutter` gutter and sets
-      its body in the measured 52ch from src/lib/prose.ts. So does this one now:
-      a SectionHeading h1 with the church's gold rule at the gutter, and the
-      policy directly beneath it on the same edge, in the same measure.
-
-      One <section>, so there is exactly one region landmark and it takes its
-      accessible name from the h1. (The old two-section shape needed a separate
-      aria-label on the body section precisely because the hero already used
-      the heading's name.) */
+    /* One region landmark per band, each named by its heading. The opener is
+      the h1; the policy is one column at the same gutter (CLAUDE.md rule 17). */
   }
-  <section class="bg-background" aria-labelledby="privacy-hero-heading">
+  <section class="pv-open" aria-labelledby="privacy-hero-heading">
+    <div class="pv-grid mx-auto max-w-content px-gutter">
+      <BuildingGlyph name="window" class="pv-glyph" />
+      <div class="pv-words min-w-0">
+        {heroEyebrow && <p class="pv-label font-display text-gold uppercase">{heroEyebrow}</p>}
+        <SectionHeading
+          headline={heroHeadline}
+          subhead={heroSubhead}
+          headingId="privacy-hero-heading"
+          level="h1"
+          scale={headlineScale(heroHeadline, { tall: false })}
+          align="left"
+          tone="band"
+          wide
+        />
+        {lastUpdated && <p class="pv-date font-ui">Last updated {lastUpdated}</p>}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-background" aria-label="The policy">
     <div class="mx-auto max-w-content px-gutter py-section-lg">
-      <SectionHeading
-        eyebrow={heroEyebrow}
-        headline={heroHeadline}
-        subhead={heroSubhead}
-        headingId="privacy-hero-heading"
-        level="h1"
-        tone="church"
-      />
+      {
+        hasSanityBody ? (
+          <PortableTextStatic value={page!.body} className={`prose-friendly ${PROSE_MEASURE}`} />
+        ) : (
+          <div class:list={['space-y-l', PROSE_MEASURE]}>
+            <p>
+              This site is run by {site.name} to share what is happening at the church. This policy
+              explains what the site itself does with information from anyone who visits it.
+            </p>
 
-      <div class="mt-section-md">
-        {
-          lastUpdated && (
-            <p class="mb-l font-ui text-ui text-gold-ink">Last updated: {lastUpdated}</p>
-          )
-        }
+            <div>
+              <h2 class={H2}>What this site does not do</h2>
+              <ul class="list-disc space-y-1 pl-6 marker:text-gold">
+                <li>This site has no contact form, sign-up form or account system of its own.</li>
+                <li>It does not ask you to create an account or log in.</li>
+                <li>It does not set any cookies of its own.</li>
+              </ul>
+            </div>
 
-        {
-          hasSanityBody ? (
-            <PortableTextStatic value={page!.body} className={`prose-friendly ${PROSE_MEASURE}`} />
-          ) : (
-            <div class:list={['space-y-l', PROSE_MEASURE]}>
-              <p class="text-foreground/80">
-                This is the privacy policy for {site.name}. The goal here is to be straightforward
-                about what information is collected and why.
-              </p>
-
-              <div>
-                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
-                  What gets collected
-                </h2>
-                <p class="text-foreground/80">
-                  When you fill out the contact form on this site, you share your name, email
-                  address, and whatever details you include in your message. That information is
-                  used only to respond to you and to help plan your project. Nothing else.
-                </p>
-                <p class="mt-s text-foreground/80">
-                  If you subscribe to the newsletter, your email address goes to the email marketing
-                  provider so occasional studio updates, room ideas, and project previews can reach
-                  you. It is not shared with anyone else.
-                </p>
-              </div>
-
-              <div>
-                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
-                  What doesn't happen
-                </h2>
-                <ul class="list-disc space-y-1 pl-6 text-foreground/80 marker:text-gold">
-                  <li>Your information is never sold.</li>
-                  <li>There is no ad targeting on this site.</li>
-                </ul>
-              </div>
-
-              {/*
+            {/*
               Measurement, described from the build's real configuration rather
               than asserted. Each branch says what that tool actually does,
               including the cookie, because Google's own terms require a policy
               that discloses the use of Analytics and of cookies.
             */}
-              <div>
-                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
-                  How traffic is measured
-                </h2>
-                {!hasGa && !hasCfAnalytics && (
-                  <p class="text-foreground/80">
-                    This site runs no analytics at all. Visits are not counted, and nothing is
-                    stored on your device for measurement.
-                  </p>
-                )}
-                {hasCfAnalytics && (
-                  <p class="text-foreground/80">
-                    Page visits are counted with Cloudflare Web Analytics, which sets no cookies and
-                    does not identify individual visitors.
-                  </p>
-                )}
-                {hasGa && (
-                  <p class="mt-s text-foreground/80">
-                    {/* "also" only reads right when the cookieless paragraph above it rendered. */}
-                    Page visits are {hasCfAnalytics ? 'also ' : ''}measured with Google Analytics,
-                    which does set cookies on your device (named <code>_ga</code> and{' '}
-                    <code>_ga_</code> followed by a stream id) so returning visits are recognised as
-                    the same session. It records which pages are opened, roughly where in the world
-                    the visit came from, and what kind of device was used. It is not used for
-                    advertising, and the data is not sold or shared beyond Google's own processing.
-                    You can block these cookies in your browser settings, or with any
-                    tracker-blocking extension, and the site will work exactly the same.
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
-                  Unsubscribing from the newsletter
-                </h2>
-                <p class="text-foreground/80">
-                  Every email includes an unsubscribe link at the bottom. Click it and you're off
-                  the list right away. If you run into any trouble, email directly and it'll be
-                  handled promptly.
+            <div>
+              <h2 class={H2}>How visits are measured</h2>
+              {!hasGa && !hasCfAnalytics && (
+                <p>
+                  This site runs no analytics at all. Visits are not counted, and nothing is stored
+                  on your device for measurement.
                 </p>
-              </div>
-
-              <div>
-                <h2 class="mt-10 mb-3 font-body text-h3 font-normal text-foreground">
-                  Questions or data requests
-                </h2>
-                <p class="text-foreground/80">
-                  If you have questions about how your information is handled, or want your data
-                  removed, reach out at{' '}
-                  <a
-                    href={`mailto:${contactEmail}`}
-                    class="text-link underline underline-offset-2 transition-colors hover:text-primary"
-                  >
-                    {contactEmail}
-                  </a>
-                  . You'll hear back within a few business days.
+              )}
+              {hasCfAnalytics && (
+                <p>
+                  Page visits are counted with Cloudflare Web Analytics, which sets no cookies and
+                  does not identify individual visitors.
                 </p>
-              </div>
+              )}
+              {hasGa && (
+                <p class="mt-s">
+                  {/* "also" only reads right when the cookieless paragraph above it rendered. */}
+                  Page visits are {hasCfAnalytics ? 'also ' : ''}measured with Google Analytics,
+                  which does set cookies on your device (named <code>_ga</code> and{' '}
+                  <code>_ga_</code> followed by a stream id) so returning visits are recognised as
+                  the same session. It records which pages are opened, roughly where in the world
+                  the visit came from, and what kind of device was used. It is not used for
+                  advertising, and the data is not sold or shared beyond Google's own processing.
+                  You can block these cookies in your browser settings, or with any tracker-blocking
+                  extension, and the site will work exactly the same.
+                </p>
+              )}
+            </div>
 
-              <p class="border-t border-hair pt-l font-ui text-[0.8125rem] text-muted-foreground">
-                This policy was last reviewed in May 2026 and will be updated if anything meaningful
-                changes about how this site handles your data.
+            <div>
+              <h2 class={H2}>Links to other services</h2>
+              <p>
+                This site links out to a few services the church uses for things this site itself
+                does not do.
+              </p>
+              <ul class="mt-s list-disc space-y-1 pl-6 marker:text-gold">
+                {services.map((s) => (
+                  <li>
+                    {s.url ? (
+                      <a
+                        href={s.url}
+                        class="text-link underline underline-offset-2 hover:text-primary"
+                      >
+                        {s.name}
+                      </a>
+                    ) : (
+                      s.name
+                    )}{' '}
+                    {s.does} It has its own privacy policy, separate from this one.
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h2 class={H2}>How to reach us</h2>
+              <p>
+                Questions about this policy, or about anything on this site, can go to the church
+                office. Email{' '}
+                <a
+                  href={`mailto:${contactEmail}`}
+                  class="text-link underline underline-offset-2 hover:text-primary"
+                >
+                  {contactEmail}
+                </a>
+                {contactPhone ? ` or call ${contactPhone}` : ''}.
               </p>
             </div>
-          )
-        }
-      </div>
+          </div>
+        )
+      }
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .pv-open {
+    background: var(--color-band-indigo);
+    color: var(--color-white-pure);
+    padding-block: clamp(56px, 8vw, 128px);
+  }
+  .pv-grid {
+    display: grid;
+    gap: 24px clamp(32px, 5vw, 96px);
+    align-items: end;
+  }
+  .pv-open :global(.pv-glyph) {
+    width: 64px;
+    color: var(--color-gold);
+  }
+  @media (min-width: 1024px) {
+    .pv-grid {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .pv-words {
+      grid-row: 1;
+      grid-column: 1;
+    }
+    .pv-open :global(.pv-glyph) {
+      grid-row: 1;
+      grid-column: 2;
+      width: clamp(130px, 13vw, 200px);
+    }
+  }
+  .pv-label {
+    margin: 0 0 0.5em;
+    font-size: clamp(26px, 2.4vw, 34px);
+    line-height: 1;
+    letter-spacing: 0.06em;
+  }
+  .pv-date {
+    margin: clamp(18px, 2.4vw, 28px) 0 0;
+    font-size: 1rem;
+    color: color-mix(in srgb, var(--color-bg) 85%, transparent);
+  }
+</style>

@@ -1,35 +1,50 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: the hours band. Three ruled rows, all of them READ FROM
-// SITE SETTINGS rather than typed into the block.
+// Page-builder block: the hours band, drawn as THE OFFICE DOOR (2026-09-24,
+// the utility identity pass; rollout plan "Give, Contact: short utility pages;
+// CtaBand, Hours").
 //
 // THE BLOCK STORES NO HOURS, AND THAT IS THE POINT (CLAUDE.md rule 15). The
-// office hours, the pastors' hours and the street address are each typed once,
-// on siteSettings, where the footer already reads them. A field on this block
-// would be a second copy, and the second copy is the one that goes stale the
-// week the office changes its Friday closing time. The editor gets the eyebrow
-// and the heading, which are about THIS page; the hours themselves stay where
-// every other surface reads them from.
+// office hours and the pastors' hours are each typed once, on siteSettings,
+// where the footer already reads them. A field on this block would be a second
+// copy, and the second copy is the one that goes stale the week the office
+// changes its Friday closing time. The editor gets the eyebrow and the heading,
+// which are about THIS page; the hours stay where every surface reads them.
 //
-// THE SHAPE (art-direction pass, 2026-09-21, task 10). Three columns of small
-// grey type became three ruled rows: the label on the left in the UI face at
-// gold-ink, the hours themselves on the right at h3 in old-style figures, a
-// hairline over each row. A time is the thing a visitor came for, so it is set
-// as the largest type on the band, and old-style figures keep a row of numbers
-// from standing up like capitals in the middle of a page of Castoro.
+// THE LOOK. A full-width brand TAUPE band (the church's "Work" ground), fixed
+// in both themes like the gold give band and the brown hymn board, so it takes
+// no cadence surface and carries no colour field (rule 9). The Tudor door
+// glyph stands at the left above the heading, the one building glyph on the
+// band: this is the notice on the office door. The heading is the one church
+// band h2 (H2_DISPLAY, rule 17) in brand indigo, fitted so no word breaks
+// mid-word (headingFit). On the right, each group of
+// hours is a short ruled list: the days in indigo Castoro, the times beside
+// them larger and in old-style figures, because the time is what a visitor
+// came for. The day/time split is DERIVED from the line the office typed
+// (src/lib/office-hours.ts, unit-tested, stega-safe); a line with no
+// "days: times" shape ("Hours may change on holidays.") prints whole, in
+// italic, under its group.
 //
-// Surface (background / muted) is assigned by SectionRenderer, so the band
-// takes its place in the page cadence like any other content block.
-import SectionHeading from '@/components/SectionHeading.astro';
+// THE ADDRESS IS NO LONGER A ROW HERE. It used to be the third row, which put
+// the street on the Contact page three times over (the hero's facts, this
+// band and the Sunday band) and a fourth in the footer. This band is hours.
+//
+// Every ink on the band is a pair gated in theme-tokens.test.ts: band-indigo
+// and band-ink on band-taupe (the Church Blog pairs). Hairlines are band-ink
+// at 30%. The CSS lives in this file's <style> block, not globals.css, so it
+// ships only on the pages that draw the band (CLAUDE.md rule 20).
 import PortableTextStatic from '@/components/PortableTextStatic.astro';
-import { surfaceClass } from '@/lib/surfaces';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { getSiteSettings } from '@/lib/queries';
+import { hoursLines, type HoursBlock } from '@/lib/office-hours';
 import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
 
 interface Props {
   eyebrow?: string;
   heading?: string;
+  /** Accepted and ignored: the band is taupe on every page. */
   surface?: 'background' | 'muted';
   headingId: string;
   /**
@@ -41,93 +56,156 @@ interface Props {
   settings?: SectionSiteSettings | null;
 }
 
-const { eyebrow, heading, surface = 'background', headingId, settings: settingsProp } = Astro.props;
+const { eyebrow, heading, headingId, settings: settingsProp } = Astro.props;
 
 const settings: SectionSiteSettings | null =
   settingsProp !== undefined ? settingsProp : await getSiteSettings();
 
-const bg = surfaceClass(surface);
-
-// The address is one field with a newline in it, so it prints line by line
-// rather than as one run-on line.
-const addressLines = String(settings?.address ?? '')
-  .split(/\r?\n/)
-  .map((line) => line.trim())
-  .filter(Boolean);
-
-// SectionSiteSettings types both hours fields as `unknown` on purpose: the
-// block shape belongs to PortableTextStatic, not to the settings interface.
-// These two casts are where it narrows, and the shape below is a mirror of that
-// component's own `Block`. If it ever stops matching, this is the one place to
-// change.
-interface PtSpan {
-  _type: 'span';
-  _key: string;
-  text?: string;
-  marks?: string[];
-}
-interface PtBlock {
+// PortableTextStatic's own block shape, which the notes are handed back to.
+interface PtBlock extends HoursBlock {
   _type: 'block';
   _key: string;
-  style?: string;
   listItem?: 'bullet' | 'number';
-  level?: number;
-  children?: PtSpan[];
+  children?: { _type: 'span'; _key: string; text?: string; marks?: string[] }[];
   markDefs?: { _key: string; _type: string; href?: string; openInNewTab?: boolean }[];
 }
 
-const officeHours = (settings?.officeHours ?? null) as PtBlock[] | null;
-const pastoralHours = (settings?.pastoralHours ?? null) as PtBlock[] | null;
-
-// The one row grammar, written once: label left, value right, hairline over.
-const ROW = 'grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] border-t border-hair py-6';
-const LABEL = 'col-span-12 font-ui text-ui text-gold-ink lg:col-span-3';
-const VALUE =
-  'col-span-12 mt-2 font-body text-h3 leading-snug text-foreground oldstyle lg:col-span-8 lg:col-start-5 lg:mt-0 [&_p]:my-0';
+// SectionSiteSettings types both hours fields as `unknown` on purpose: the
+// block shape belongs to PortableTextStatic. This is where it narrows.
+const groups = [
+  {
+    label: 'Church office',
+    lines: hoursLines((settings?.officeHours ?? null) as PtBlock[] | null),
+  },
+  {
+    label: 'Pastors, by appointment',
+    lines: hoursLines((settings?.pastoralHours ?? null) as PtBlock[] | null),
+  },
+].filter((g) => g.lines.length > 0);
 ---
 
-<section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-gutter py-section-lg">
-    <SectionHeading
-      eyebrow={eyebrow}
-      headline={heading}
-      headingId={headingId}
-      level="h2"
-      align="left"
-      tone="church"
-    />
-
-    <div class="mt-section-md">
+<section class="hours-door" aria-labelledby={heading ? headingId : undefined}>
+  <div class="hd-grid mx-auto max-w-content px-gutter">
+    <div class="hd-head">
+      <BuildingGlyph name="door" class="hd-glyph" />
+      {eyebrow && <p class="hd-eyebrow font-ui text-ui">{eyebrow}</p>}
       {
-        officeHours && (
-          <div class={ROW}>
-            <h3 class={LABEL}>Church office</h3>
-            <PortableTextStatic value={officeHours} className={`${VALUE} space-y-1`} />
-          </div>
-        )
-      }
-
-      {
-        pastoralHours && (
-          <div class={ROW}>
-            <h3 class={LABEL}>Pastors, by appointment</h3>
-            <PortableTextStatic value={pastoralHours} className={`${VALUE} space-y-1`} />
-          </div>
-        )
-      }
-
-      {
-        addressLines.length > 0 && (
-          <div class={ROW}>
-            <h3 class={LABEL}>Where to find us</h3>
-            <address class:list={[VALUE, 'space-y-1 not-italic']}>
-              {addressLines.map((line) => (
-                <span class="block">{line}</span>
-              ))}
-            </address>
-          </div>
+        heading && (
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'hd-h2 h-fit']} style={headingFit(heading)}>
+            <span class="h-fit-in">{heading}</span>
+          </h2>
         )
       }
     </div>
+
+    {
+      groups.length > 0 && (
+        <div class="hd-board">
+          {groups.map((group) => (
+            <div class="hd-group">
+              <h3 class="hd-label font-ui">{group.label}</h3>
+              {group.lines.some((l) => l.kind === 'row') && (
+                <dl class="hd-rows">
+                  {group.lines.map((l) =>
+                    l.kind === 'row' ? (
+                      <div class="hd-row">
+                        <dt class="hd-days font-body">{l.days}</dt>
+                        <dd class="hd-times font-body oldstyle">{l.times}</dd>
+                      </div>
+                    ) : null,
+                  )}
+                </dl>
+              )}
+              {group.lines.map((l) =>
+                l.kind === 'note' ? (
+                  <PortableTextStatic value={[l.block as PtBlock]} className="hd-note" />
+                ) : null,
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
   </div>
 </section>
+
+<style>
+  .hours-door {
+    background: var(--color-band-taupe);
+    color: var(--color-band-ink);
+    padding-block: clamp(64px, 7vw, 110px);
+  }
+  .hd-grid {
+    display: grid;
+    gap: clamp(32px, 4vw, 56px) clamp(24px, 4vw, 64px);
+  }
+  @media (min-width: 1024px) {
+    .hd-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: start;
+    }
+  }
+  .hd-head :global(.hd-glyph) {
+    display: block;
+    width: clamp(56px, 6vw, 88px);
+    color: var(--color-band-indigo);
+    margin-bottom: clamp(18px, 2.4vw, 32px);
+  }
+  .hd-eyebrow {
+    margin: 0 0 12px;
+    font-weight: 600;
+    color: var(--color-band-ink);
+  }
+  .hd-h2 {
+    color: var(--color-band-indigo);
+    margin: 0;
+  }
+  .hd-board {
+    display: grid;
+    gap: clamp(28px, 3.5vw, 44px);
+  }
+  .hd-label {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-band-ink);
+  }
+  .hd-rows {
+    margin: 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-band-ink) 30%, transparent);
+  }
+  .hd-row {
+    display: grid;
+    gap: 4px 24px;
+    padding-block: clamp(12px, 1.4vw, 16px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-band-ink) 30%, transparent);
+  }
+  @media (min-width: 640px) {
+    .hd-row {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      align-items: baseline;
+    }
+  }
+  .hd-days {
+    font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.3rem);
+    line-height: 1.25;
+    color: var(--color-band-indigo);
+  }
+  .hd-times {
+    margin: 0;
+    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+    line-height: 1.3;
+    color: var(--color-band-ink);
+  }
+  .hours-door :global(.hd-note) {
+    margin-top: 12px;
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 1.0625rem;
+    color: var(--color-band-ink);
+  }
+  .hours-door :global(.hd-note p) {
+    margin: 0;
+    color: inherit;
+  }
+</style>

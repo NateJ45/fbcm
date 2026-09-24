@@ -845,6 +845,42 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   `src/pages/styleguide/home.astro`, the `'/styleguide/home'` line in `tests/routes.ts`
   and `scripts/data/fixtures/home.json`, then recapture parity.
 
+### Utility identity: before the pages are applied (2026-09-24)
+
+- **Deploy first, then apply** (CLAUDE.md rule 1: `notFoundPage` gained the optional
+  `fourthCtaLabel` / `fourthCtaHref`). Then `npm run seed-pages -- --only give,contact,not-found`,
+  read the plans, and `--apply` (backup first). The dry runs on 2026-09-24: give "would
+  be replaced" (pageBuilder [1] and [2], the two eyebrows off); contact "would be
+  replaced" (hero, hours, pastors and Notify Us reordered and renamed); the live
+  documents matched the old modules exactly, so no editor edits to carry over.
+  `privacy` is unchanged (its page code changed, not its content). Re-read each plan
+  in case an editor has changed a page since.
+- **The 404 page is drawn from live data until then**: before `--apply` it shows the
+  old slots (Plan a visit, Read the blog, Contact us) plus the code's fourth door
+  (Give), and the singleton still holds the tower photo, which the page no longer
+  draws; `--apply` replaces the document and clears it.
+- **Contact's new hero photo is `contact-exterior`** (the church at dusk from the
+  street, library file `08181c_4d5376a9...`), unused elsewhere; the manifest's
+  `contact-building` entry (an alias of the home hero's `hero-building`) is now used by
+  no module and can go once nothing else wants it.
+- **Owner question: the contact hero's h1 is now the church's own "Contact"** (the Wix
+  page title) rather than plan 2b's "Get in touch.", following the rollout's rule that
+  headings go back to the church's. Easy to put back in `contact.mjs`.
+- **Owner question: /give opens on indigo, not gold.** Home's give band stays gold; on
+  /give the opener is indigo because the closing CtaBand is gold since the Visit pass.
+  The alternative was to drop /give's closing band.
+- **For the RichText ground picker (`src/lib/rich-ground.ts`, the Beliefs branch's):** it
+  reads every `giveBandSection` as gold by type, but the band is indigo when it OPENS a
+  page with no hero (/give). Harmless on /give today (the band after the opener is the
+  paper turn, and "What your gift supports" lands on indigo between paper and the gold
+  closing band), but a muted text band placed straight under the /give opener would pick
+  indigo beside indigo. The fix is one line in `familyOf` (index 0, no hero -> indigo),
+  left to the file's owner.
+- **Clean-up once `/give` and `/contact` show the composition.** Delete
+  `src/pages/styleguide/give.astro` and `contact.astro`, their two lines in
+  `tests/routes.ts` and `scripts/data/fixtures/give.json` / `contact.json`, then
+  recapture parity.
+
 ### Ministries identity: before the page is applied (2026-09-24)
 
 - **The order is: deploy, then goals, then the page.** The ministry document gains an
