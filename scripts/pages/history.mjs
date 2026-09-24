@@ -54,8 +54,8 @@
 //    three lines: two headlines and the search description.
 //
 // 5. TWO ANCHORS, AND THEY MUST NOT COLLIDE. `#eras` is the timeline (the
-//    heritage band's button points at it) and `#building` is the 1921-1929
-//    band, which is where /history#building lands from Home, from Visit and
+//    opener's button pointed at it until P26 took the button off) and
+//    `#building` is the 1921-1929 band, which is where /history#building lands from Home, from Visit and
 //    from plan 1's redirects. The timeline's own row for that era carries
 //    `building-1929` rather than `building`, so the row and the band cannot
 //    fight over the same fragment.
@@ -116,7 +116,7 @@ export default {
   type: 'page',
   slug: 'history',
 
-  // Three sentences on this page did not exist on the Wix site, plus the seven
+  // Two sentences on this page did not exist on the Wix site, plus the seven
   // era NAMES, which are labels rather than prose. Everything else a visitor
   // reads is the church's own text, cut.
   newCopy: [
