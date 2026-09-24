@@ -60,16 +60,46 @@ for (const theme of ['light', 'dark'] as const) {
   });
 }
 
-test('Escape closes the menu and the rows are numbered', async ({ page }) => {
+test('Escape closes the menu; the rows carry no numbers; the goals link to Who We Are', async ({
+  page,
+}) => {
   await openMenu(page);
 
-  // Every link row carries its own two-digit number, in order.
-  const numbers = await page
-    .locator('nav[aria-label="Primary mobile"] li a > span:first-child')
-    .allInnerTexts();
-  expect(numbers.length).toBeGreaterThan(0);
-  expect(numbers).toEqual(numbers.map((_, i) => String(i + 1).padStart(2, '0')));
+  // The rows are words only: a menu is not a sequence, so no 01, 02, 03
+  // (rollout plan rule 11, 2026-09-24).
+  const rows = await page.locator('nav[aria-label="Primary mobile"] li a').allInnerTexts();
+  expect(rows.length).toBeGreaterThan(0);
+  for (const row of rows) expect(row.trim()).not.toMatch(/^\d/);
+
+  // The four goals at the foot, each to its band on Who We Are.
+  const dialog = page.getByRole('dialog');
+  const goals = dialog.locator('.goals-row a');
+  await expect(goals).toHaveCount(4);
+  expect(await goals.evaluateAll((as) => as.map((a) => a.getAttribute('href')))).toEqual([
+    '/who-we-are#worship',
+    '/who-we-are#the-way',
+    '/who-we-are#witness',
+    '/who-we-are#work',
+  ]);
 
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
+});
+
+test('following a goal from the menu closes the sheet', async ({ page, browserName }) => {
+  // Playwright's WebKit on Windows crashes the page when ANY link in the open
+  // sheet is followed (the existing Visit row does it too, measured
+  // 2026-09-24), so the delegation is proved on Chromium.
+  test.skip(
+    browserName === 'webkit',
+    'WebKit on Windows crashes on any link followed from the sheet',
+  );
+  await page.goto('/who-we-are/', { waitUntil: 'domcontentloaded' });
+  const trigger = page.getByRole('button', { name: /^menu$/i });
+  await trigger.waitFor({ state: 'visible' });
+  await trigger.click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await page.getByRole('dialog').locator('.goals-row a[href="/who-we-are#witness"]').click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page).toHaveURL(/#witness$/);
 });

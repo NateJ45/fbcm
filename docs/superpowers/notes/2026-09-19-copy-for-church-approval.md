@@ -352,6 +352,16 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none)
 
+## Site footer (every page)
+
+### New sentences
+
+- An American Baptist congregation in downtown Muncie since 1859. (the footer's bottom line, under Praise & Proclaim; built from "We Are American Baptists" on Beliefs, and "Founded in 1859" and "downtown Muncie" on History)
+
+### Edits to the church’s own text
+
+- (none: the goals' names and small lines are Who We Are's own)
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.

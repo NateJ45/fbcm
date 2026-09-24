@@ -16,25 +16,45 @@
 // ships. Same reason the wordmark here is the DARK-MODE logo file in both
 // themes and carries no data-theme-logo attribute: there is nothing to swap.
 //
-// Gold is used for exactly two things, and both sit on the indigo ground where
-// it clears AA: the poster eyebrow, and the row numbers. Gold on cream is
-// 2.37:1 and is never used for text anywhere in this build.
+// Gold is used on the indigo ground only, where it clears AA: the poster
+// eyebrow, the column labels, the goals' glyphs and the watchword mark. Gold
+// on cream is 2.37:1 and is never used for text anywhere in this build.
 //
-// Structure (top to bottom):
-//   1. The window texture, masked into the top-right corner at 10%
-//   2. Optional newsletter signup (only when siteSettings.newsletter.enabled)
-//   3. THE POSTER ROW: the live dated line, the service time at poster scale,
-//      the street line as the lede, and the gold Give button. This is the one
-//      moment in the footer, and it is the same promise the hero opens with,
-//      which is what makes the header and the footer read as one object.
-//   4. Four columns on one left edge, sharing the max-w-content px-gutter
+// Structure (top to bottom), redrawn 2026-09-24 in the church identity (the
+// footer identity pass; rollout plan: "footer carries the Praise & Proclaim
+// mark and the four goals"):
+//   1. Optional newsletter signup (only when siteSettings.newsletter.enabled)
+//   2. THE POSTER ROW, the closing Sunday band: the live dated line, the
+//      service time at poster scale, the street line as the lede, and the gold
+//      Give button. The same promise the hero opens with, which is what makes
+//      the header and the footer read as one object. Because it gives the time,
+//      the street and Give on every page, nothing below repeats them.
+//   3. THE FOUR GOALS (GoalsRow): each goal's building glyph in gold, its name
+//      and its small line, linking to its band on Who We Are.
+//   4. Three columns on one left edge, sharing the max-w-content px-gutter
 //      container the header and every church block use:
-//        a. the wordmark, the tagline, the phone, the social marks
-//        b. + c. the editor's footer link columns, as NUMBERED rows (the same
-//           device the mobile menu draws, so the two link lists rhyme)
-//        d. Office — the office hours and the street address, drawn in code
-//           because it is prose, not a link list
-//   5. Thin base rail: auto-year copyright, small print, the theme control
+//        a. Pages, the editor's first footer column, set in two short
+//           columns. No numbers: a page list is not a sequence (rollout plan
+//           rule 11), so it is a <ul>.
+//        b. Elsewhere, the editor's second column, the same way.
+//        c. Office: the office hours, the phone, the email. The street
+//           address only when the poster row above did not print it.
+//   5. THE SIGN-OFF: the Praise & Proclaim mark (WatchwordMark) and the bottom
+//      line, "An American Baptist congregation in downtown Muncie since
+//      1859", over the Hannaford rendering drawn as faint gold line art along
+//      the bottom edge.
+//   6. Thin base rail: the wordmark (the footer's link home), auto-year
+//      copyright, small print, the theme control
+//
+// THE RENDERING. Samuel Hannaford and Sons' 1927 drawing of the building (the
+// same drawing Home's "Our Building" band shows), baked into the repo as
+// src/assets/footer-rendering.webp: the pencil lines lifted off the paper
+// (background divided out, levels, four alpha steps, edges faded), 952x452,
+// lossless WebP with alpha, ~31 KB. It is not an <img>: it is a CSS MASK on a
+// gold-filled box, so the drawing takes the brand gold token itself (no
+// colour in the file, no hex in the code) at low opacity. It is absolutely
+// positioned and aria-hidden, so it moves no layout and is never a candidate
+// for the page's largest paint.
 //
 // Tailwind v4 gotcha: max-w-xs/s/m/l are shadowed by this project's custom
 // --spacing-* tokens (they resolve to a few px, not the container scale). Use
@@ -68,10 +88,9 @@ import ThemeToggle from '@/components/ThemeToggle';
 // this is the failure mode. The footer picks the DARK-MODE file of the pair in
 // both themes, because the band under it is dark in both themes.
 import logoDarkAsset from '@/assets/logo-dark.svg';
-// The same photograph the mobile menu sheet uses, so the two dark surfaces are
-// obviously the same room. Narrower here (900w) because it only ever covers a
-// corner of the band.
-import menuWindowAsset from '@/assets/menu-window.jpg';
+import renderingAsset from '@/assets/footer-rendering.webp';
+import GoalsRow from '@/components/church/GoalsRow.astro';
+import WatchwordMark from '@/components/church/WatchwordMark.astro';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
 import { telHref } from '@/lib/phone';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
@@ -81,20 +100,6 @@ import { clockParts, staticSunday, timeOnly } from '@/lib/live-sunday';
 // no webp conversion: this is an SVG, so one file is sharp at every size and
 // asking the optimizer to rasterise it would be a downgrade.
 const footerLogo = await getImage({ src: logoDarkAsset });
-
-// The texture. 900w at quality 60 is generous for something that renders at
-// 10% opacity under a radial mask.
-const footerTexture = await getImage({
-  src: menuWindowAsset,
-  width: 900,
-  quality: 60,
-  format: 'jpg',
-});
-// Real dimensions on the tag, the same rule the wordmark below states. This one
-// is absolutely positioned and sized in CSS so it cannot shrink-wrap or shift
-// layout, but the numbers cost nothing and the file keeps one habit.
-const textureWidth = footerTexture.options.width ?? 900;
-const textureHeight = Math.round(textureWidth * (menuWindowAsset.height / menuWindowAsset.width));
 
 interface NewsletterConfig {
   enabled?: boolean;
@@ -150,7 +155,6 @@ const chrome = resolveSiteSettings(siteSettings);
 const brandName = siteSettings?.title ?? site.name;
 const email = siteSettings?.email ?? '';
 const phone = siteSettings?.phone ?? '';
-const tagline = siteSettings?.tagline ?? '';
 
 // The Office column. Office hours are portable text, one paragraph per line;
 // this footer needs the plain text of each, so the spans are joined rather than
@@ -270,25 +274,29 @@ const LEGAL_LINKS = chrome.legalNav;
 const bandLink =
   'text-bg/85 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm';
 const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold uppercase';
+
+// The street address prints in the Office column only when the poster row did
+// not print it (no service time set, or no address), so a visitor always finds
+// it once and never twice.
+const showOfficeAddress = !(showPoster && streetLine) && addressLines.length > 0;
+
+// The bottom line. The church's own words: "We Are American Baptists"
+// (Beliefs), "Founded in 1859" (History), "the new building in downtown
+// Muncie" (History). The year is a fact in site.ts, not a computation.
+const bottomLine = `An American Baptist congregation in downtown Muncie since ${site.founded}`;
+
+// The rendering's mask, as a custom property so the scoped <style> below can
+// read it. The imported asset's URL is content-hashed by the build.
+const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-ratio: ${renderingAsset.width} / ${renderingAsset.height};`;
 ---
 
 <footer class="relative isolate overflow-hidden bg-indigo-deep text-bg">
   {
-    /* The window, masked into the top-right corner so it never crosses the
-       poster line. Decorative: no alt text, hidden from the tree, and lazy,
-       because it is the last thing on the page and the least important. */
+    /* The Hannaford rendering along the bottom edge: gold line art, masked
+       from the baked drawing. Decorative, hidden from the tree, and it takes
+       no space: absolutely positioned under everything else. */
   }
-  <img
-    src={footerTexture.src}
-    alt=""
-    aria-hidden="true"
-    width={textureWidth}
-    height={textureHeight}
-    loading="lazy"
-    decoding="async"
-    class="pointer-events-none absolute top-0 right-0 h-[60%] w-1/2 object-cover opacity-10"
-    style="mask-image: radial-gradient(ellipse at top right, #000, transparent 70%); -webkit-mask-image: radial-gradient(ellipse at top right, #000, transparent 70%);"
-  />
+  <div class="footer-rendering" aria-hidden="true" style={renderingStyle}></div>
 
   {
     /* Newsletter signup — renders only when siteSettings.newsletter.enabled is
@@ -342,43 +350,57 @@ const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold up
     )
   }
 
+  {/* THE FOUR GOALS, each to its own band on Who We Are. */}
   <div class:list={['relative', showPoster && 'border-t border-bg/15']}>
+    <nav aria-label="Our goals" class="mx-auto max-w-content px-gutter py-l">
+      <GoalsRow size="footer" />
+    </nav>
+  </div>
+
+  <div class="relative border-t border-bg/15">
     <div class="mx-auto max-w-content px-gutter pt-section-md pb-l">
-      <div class="grid grid-cols-1 gap-l md:grid-cols-2 lg:grid-cols-4">
-        {/* --- 1. The wordmark, the tagline, and how to reach a person. --- */}
-        <div>
-          <a
-            href="/"
-            aria-label={`${brandName} home`}
-            class="inline-block transition-opacity hover:opacity-80"
-          >
-            {
-              /* Sized by HEIGHT, with real width/height attributes at the
-                wordmark's own 249.45:97.06 aspect (NOT the old 280x60 lockup).
-                An unloaded lazy image with width:auto shrink-wraps to 0x0,
-                never intersects the viewport and so never loads, which is a
-                real bug this family has hit more than once. Give it real
-                dimensions. */
-            }
-            <img
-              src={footerLogo.src}
-              alt={brandName}
-              width={257}
-              height={100}
-              class="h-16 w-auto"
-              loading="lazy"
-              decoding="async"
-            />
-          </a>
-
-          {
-            tagline && (
-              <p class="mt-m max-w-[26ch] font-body text-lede font-normal text-bg/75 italic">
-                {tagline}
+      <div class="footer-cols grid grid-cols-1 gap-l md:grid-cols-2">
+        {
+          /* --- a and b. The editor's link columns. A plain list: a page list
+             is not a sequence, so it takes no numbers. The first column (the
+             long one, Pages) sets its list in two short columns. --- */
+        }
+        {
+          sanityFooterColumns.map((col, colIdx) => (
+            <nav
+              aria-labelledby={`footer-col-${colIdx}`}
+              class:list={[colIdx === 0 && sanityFooterColumns.length > 1 && 'footer-col-wide']}
+            >
+              <p id={`footer-col-${colIdx}`} class={columnHeading}>
+                {col.title}
               </p>
-            )
-          }
+              <ul
+                class:list={[
+                  'm-0 list-none p-0',
+                  colIdx === 0 && col.links.length > 5 && 'footer-list-split',
+                ]}
+              >
+                {col.links.map((link) => (
+                  <li class="border-b border-bg/12 py-2">
+                    <a href={link.href} class:list={['block font-body text-[1.125rem]', bandLink]}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))
+        }
 
+        {
+          /* --- c. Office: the hours, then how to reach a person. Prose, not a
+             link list, so it is drawn here. --- */
+        }
+        <div>
+          <p class={columnHeading}>Office</p>
+          <div class="space-y-1 font-body text-bg/80">
+            {officeLines.map((line) => <p>{line}</p>)}
+          </div>
           <div class="mt-m space-y-1 font-body text-bg/80">
             {
               phone && (
@@ -395,19 +417,27 @@ const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold up
             }
             {
               email && (
-                <p>
+                <p class="max-w-full">
                   <a
                     href={`mailto:${email}`}
-                    class:list={['inline-flex items-center gap-xs', bandLink]}
+                    class:list={['inline-flex max-w-full items-center gap-xs break-all', bandLink]}
                   >
-                    <Mail size={14} aria-hidden="true" />
+                    <Mail size={14} aria-hidden="true" className="shrink-0" />
                     {email}
                   </a>
                 </p>
               )
             }
           </div>
-
+          {
+            showOfficeAddress && (
+              <address class="mt-m space-y-1 font-body text-bg/80 not-italic">
+                {addressLines.map((line) => (
+                  <p>{line}</p>
+                ))}
+              </address>
+            )
+          }
           {
             socialLinksToRender.length > 0 && (
               <ul class="mt-m flex list-none gap-s p-0">
@@ -432,73 +462,63 @@ const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold up
             )
           }
         </div>
-
-        {
-          /* --- 2 and 3. The editor's link columns, NUMBERED. An ordered list
-             because the numbers carry meaning: they are the order of the
-             column, the same device the mobile menu sheet draws. The count
-             restarts in each column, so two short lists read as two lists
-             rather than one long one broken in half. --- */
-        }
-        {
-          sanityFooterColumns.map((col, colIdx) => (
-            <nav aria-labelledby={`footer-col-${colIdx}`}>
-              <p id={`footer-col-${colIdx}`} class={columnHeading}>
-                {col.title}
-              </p>
-              <ol class="m-0 list-none p-0">
-                {col.links.map((link, i) => (
-                  <li class="border-b border-bg/12 py-2">
-                    <a href={link.href} class:list={['flex items-baseline gap-4', bandLink]}>
-                      <span class="font-ui text-[0.75rem] tracking-[0.14em] text-gold">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <span class="font-body text-[1.25rem] font-normal">{link.label}</span>
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          ))
-        }
-
-        {/* --- 4. Office. Prose, not a link list, so it is drawn here. --- */}
-        <div>
-          <p class={columnHeading}>Office</p>
-          <div class="space-y-1 font-body text-bg/80">
-            {officeLines.map((line) => <p>{line}</p>)}
-            {
-              addressLines.length > 0 && (
-                <address class="mt-m space-y-1 not-italic">
-                  {addressLines.map((line) => (
-                    <p>{line}</p>
-                  ))}
-                </address>
-              )
-            }
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   {
-    /* The base rail — copyright, small print, the theme control, on one line so
-       they don't add a tall block to a footer column.
+    /* THE SIGN-OFF: the watchword mark, and the bottom line under it, over
+       the rendering. */
+  }
+  <div class="relative">
+    <div class="footer-signoff mx-auto max-w-content px-gutter pt-l pb-section-md">
+      <WatchwordMark size="hero" />
+      <p class="mt-m max-w-[34ch] font-body text-lede font-normal text-bg/80 italic">
+        {bottomLine}
+      </p>
+    </div>
+  </div>
+
+  {
+    /* The base rail — the wordmark, the copyright, small print, the theme
+       control, on one line so they don't add a tall block.
 
        The extra `sm:pr-20`: BackToTop is `fixed right-6 bottom-6` and 44px
        wide, so it owns the bottom 68px of the right edge on every page. This
        row turns into a single line at `sm` and puts its links hard against
        that edge, which parked the chip on top of "Privacy policy". 5rem of
-       right padding clears the chip with a gap to spare. Nothing about the
-       chip's own behaviour changes, and the row's LEFT edge still lines up
-       with the four columns above it. */
+       right padding clears the chip with a gap to spare. */
   }
   <div class="relative border-t border-bg/15">
     <div
       class="mx-auto flex max-w-content flex-col gap-xs px-gutter py-m font-ui text-[0.8125rem] text-bg/70 sm:flex-row sm:items-center sm:justify-between sm:pr-20"
     >
-      <p>&copy; {currentYear} {brandName}</p>
+      <div class="flex items-center gap-m">
+        <a
+          href="/"
+          aria-label={`${brandName} home`}
+          class="inline-block shrink-0 transition-opacity hover:opacity-80"
+        >
+          {
+            /* Sized by HEIGHT, with real width/height attributes at the
+              wordmark's own 249.45:97.06 aspect (NOT the old 280x60 lockup).
+              An unloaded lazy image with width:auto shrink-wraps to 0x0,
+              never intersects the viewport and so never loads, which is a
+              real bug this family has hit more than once. Give it real
+              dimensions. */
+          }
+          <img
+            src={footerLogo.src}
+            alt={brandName}
+            width={257}
+            height={100}
+            class="h-10 w-auto"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+        <p>&copy; {currentYear} {brandName}</p>
+      </div>
       <div class="flex items-center gap-m">
         {
           LEGAL_LINKS.length > 0 ? (
@@ -552,5 +572,50 @@ const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold up
   }
   .footer-theme :global(button:hover) {
     background-color: color-mix(in srgb, var(--color-bg) 14%, transparent);
+  }
+
+  /* Three columns from lg: Pages takes two tracks of five (its list split
+     in two short columns), Elsewhere and Office one each. */
+  @media (min-width: 1024px) {
+    .footer-cols {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+  /* The Pages list in two short columns at every width. */
+  .footer-list-split {
+    column-count: 2;
+    column-gap: var(--spacing-l);
+  }
+  .footer-list-split > li {
+    break-inside: avoid;
+  }
+  @media (min-width: 768px) and (max-width: 1023.98px) {
+    .footer-col-wide {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* The watchword mark, a size between the band and the hero. */
+  .footer-signoff :global(.watchword-mark) {
+    --mark-a: clamp(52px, 6.2vw, 96px);
+    --mark-b: clamp(30px, 4vw, 62px);
+  }
+
+  /* The rendering: the brand gold, cut to the drawing's lines by the mask,
+     right-aligned along the bottom edge and faint. */
+  .footer-rendering {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: min(100%, 72rem);
+    pointer-events: none;
+    background-color: var(--color-gold);
+    opacity: 0.16;
+    -webkit-mask-image: var(--footer-rendering);
+    mask-image: var(--footer-rendering);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
   }
 </style>

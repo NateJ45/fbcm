@@ -36,17 +36,19 @@ import type {
   ProjectedMinistrySection,
 } from './pageBuilder.types';
 import { splitStega } from './preview-stega.ts';
+import { CHURCH_GOALS, goalHref } from './church-goals.ts';
 
-/** The four goals, in the church's order, as Who We Are names them. */
-export const GOALS: readonly Omit<MinistryGoalColumn, 'ministries'>[] = [
-  { value: 'worship', name: 'Worship', aside: null, glyph: 'window' },
-  { value: 'the-way', name: 'The Way', aside: 'Discipleship', glyph: 'door' },
-  { value: 'witness', name: 'Witness', aside: 'Evangelism', glyph: 'rose' },
-  { value: 'work', name: 'Work', aside: 'Acts of Mercy', glyph: 'basin' },
-];
+/**
+ * The four goals, in the church's order, as Who We Are names them. Read from
+ * church-goals.ts, the one list the site chrome (footer, mobile menu) also
+ * draws from, so the Ministries index and the chrome cannot disagree.
+ */
+export const GOALS: readonly Omit<MinistryGoalColumn, 'ministries'>[] = CHURCH_GOALS.map(
+  ({ value, name, aside, glyph }) => ({ value, name, aside, glyph }),
+);
 
 /** Where each goal is described: its band on Who We Are. */
-export const goalHref = (value: string): string => `/who-we-are#${value}`;
+export { goalHref };
 
 const clean = (v: unknown): string => (typeof v === 'string' ? splitStega(v).cleaned.trim() : '');
 

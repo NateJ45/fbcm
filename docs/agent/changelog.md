@@ -10,6 +10,32 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Footer and mobile menu in the church identity (`feat/footer-identity`)._
+
+The rollout plan's "footer carries the Praise & Proclaim mark and the four
+goals". The 01 to 10 numbers came off the footer's link columns and the
+mobile menu's rows (rule 11: a menu is not a sequence), and both lists are
+now `<ul>`. The footer gained a row of the four goals under the poster row
+(`src/components/church/GoalsRow.astro`, glyph, name and Who We Are's small
+line, each to its band on /who-we-are, two by two on a phone), the Praise &
+Proclaim mark as its sign-off in place of the italic tagline, and the
+bottom line "An American Baptist congregation in downtown Muncie since 1859"
+(`site.founded`, a new constant in `src/data/site.ts`). The stained-glass
+photo texture is gone; the 1927 Hannaford rendering runs along the bottom
+edge as faint gold line art (`src/assets/footer-rendering.webp`, the pencil
+lines lifted off the paper into a four-step alpha, 31,556 B, used as a CSS
+mask over the gold token). The Pages column sets its list in two short
+columns; Office now holds the hours, phone and email, and prints the street
+only when the poster row above it did not, so the address appears once. The
+wordmark moved to the base rail as the footer's home link. The mobile menu
+gained the same goals, compact, at its foot, slotted into the island by
+Header.astro; a goal followed from the menu closes the sheet (a new
+menu.spec.ts test covers it, and the numbering test became a no-numbers
+test). `src/lib/church-goals.ts` is the one code-side list of the goals,
+outside the `church` scaffold capability because the chrome draws it on
+every page; `ministry-goals.ts` reads its `GOALS` from it. The theme toggle
+is untouched.
+
 _2026-09-24 — Utility identity: /give, /contact, /404 and /privacy (`feat/utility-identity`)._
 
 The four utility pages in the church identity (rollout plan step 8 and 10).
