@@ -280,7 +280,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
         )}
         {(primaryCta || secondaryCta) && (
           <div class="flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
-            {primaryCta && <CtaLink cta={primaryCta} variant="rule" onDark />}
+            {primaryCta && <CtaLink cta={primaryCta} variant="gold" onDark />}
             {secondaryCta && <CtaLink cta={secondaryCta} variant="link" onDark />}
           </div>
         )}
@@ -372,7 +372,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
           )}
           {(primaryCta || secondaryCta) && (
             <div class="mt-[clamp(26px,4vh,40px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
-              {primaryCta && <CtaLink cta={primaryCta} variant="rule" />}
+              {primaryCta && <CtaLink cta={primaryCta} variant="gold" />}
               {secondaryCta && <CtaLink cta={secondaryCta} variant="link" />}
             </div>
           )}
@@ -460,7 +460,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
         <div class="mt-[clamp(26px,4vh,40px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
           {/* One rule button and one text link with an arrow, not two buttons:
               the second action is quieter than the first and should look it. */}
-          {primaryCta && <CtaLink cta={primaryCta} variant="rule" onDark />}
+          {primaryCta && <CtaLink cta={primaryCta} variant="gold" onDark />}
           {secondaryCta && <CtaLink cta={secondaryCta} variant="link" onDark />}
         </div>
       )}

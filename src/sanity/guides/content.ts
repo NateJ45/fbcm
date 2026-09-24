@@ -296,7 +296,7 @@ export const guides: Guide[] = [
       },
       {
         kind: 'p',
-        text: '_Two times are not settings and are still typed where they appear: Sunday school at 9:30 am, and the fellowship hour (10:15 to 10:45) in the Youth band on the Ministries page. If either changes, change it there._',
+        text: '_Two times are not settings and are still typed where they appear: Sunday school at 9:30 am, and the fellowship hour (10:15 to 10:45), in the Youth band on the Ministries page and in the What to Expect band on the home page. If either changes, change it in both places._',
       },
       { kind: 'h', text: 'The brown band with the Sunday times' },
       {

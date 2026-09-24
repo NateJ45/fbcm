@@ -776,6 +776,16 @@ now ties the schema max and the slice with a drift test.
 - **Deferred to the rollout: the RichText, Timeline and FAQ headings.** Their h2s are
   still the Castoro reading face beside the Titling band grammar (`H2_DISPLAY`); by
   ruling (2026-09-23) they move with the Visit and Beliefs pages in the identity rollout.
+- **`weekOfLabel()` still reads the UTC day.** The sermon-preview "week of" label
+  (`blog-derive.ts`, shared by the blog index and the home blog rows) is the one date
+  left on UTC; every other date is on the church's day (`localDay()`,
+  America/Indiana/Indianapolis). A preview published after 8pm Eastern names the next
+  day, and on a home row its label can disagree with the row's `<time datetime>`. Move
+  it to `localDay()` with a late-evening test; it changes blog index renders, so
+  recapture parity.
+- **Owner questions from the final review:** the handbell photo is on Home (Work goal)
+  and on Ministries (a separate upload of the same photograph, so the spare-pool dedup
+  cannot see it); the two-girls lancet photo in What to Expect is low resolution.
 - **Clean-up once `/` itself shows the composition.** Delete
   `src/pages/styleguide/home.astro`, the `'/styleguide/home'` line in `tests/routes.ts`
   and `scripts/data/fixtures/home.json`, then recapture parity.
