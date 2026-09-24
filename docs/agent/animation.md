@@ -1,29 +1,21 @@
 # Animation layer
 
-> Lenis smooth scroll, scroll reset on navigation, Motion integration, scroll-triggered reveals, hero entry stagger, Ken Burns slideshow, view-transition cross-fade, and the opt-in script accent.
+> Native scrolling and the scroll reset on navigation (Lenis was removed 2026-09-24), Motion integration, scroll-triggered reveals (including the glyph draw and the Hannaford ink-in), hero entry stagger, Ken Burns slideshow, the view-transition cross-fade and the post title that carries over, and the opt-in script accent.
 
 Non-animation polish (brand stripe, image zoom, surface-warm, reading-progress, sticky-header, paper-grain, print stylesheet) is covered in `polish-layer.md`.
 
-## Lenis smooth scroll
+## Scrolling: the browser's own (Lenis removed 2026-09-24)
 
-Lenis is initialized once in `BaseLayout.astro` and exposed as `window.lenis`. The instance persists across View Transitions navigations -- it is NOT re-created on `astro:page-load`. This is intentional: re-creating Lenis on every navigation causes a flash of native scroll before the new instance takes over.
+Lenis ran here until 2026-09-24 (`feat/print-motion`), when Nathan had it taken out. It added only a wheel glide, and for that it cost 5.4 KB gzip on every page (measured: gzipped JS on `/` 98,272 B to 92,707 B, on a post 99,376 B to 93,811 B, one request fewer each), ran a `requestAnimationFrame` loop that never stopped, started 1.5 to 2 s after load (it waited on `requestIdleCallback`), and caused the day's dead-wheel bug: the search dialog stopped it, a router swap threw the dialog away before its `close` fired, and the wheel did nothing until a reload. Trackpad users found it floaty. The `lenis` package is gone from `package.json`.
 
-Lenis init is wrapped in `requestIdleCallback` so it doesn't compete with first-paint work.
+What replaced each thing it did:
 
-In-page anchor navigation routes through the persistent `window.lenis` instance so it glides instead of snapping. Controls that need programmatic scroll (home hero scroll cue, case-study TOC) call `window.lenis.scrollTo(target)` and fall back to native `scrollTo` when Lenis hasn't loaded or the user prefers reduced motion. Lenis honors `scroll-mt-*` values on heading targets, so TOC targets clear the sticky header without a manual offset -- don't add one (it double-applies).
-
-`prefers-reduced-motion` is respected: when the OS prefers reduced motion, Lenis is initialized with its `lerp: 1` (instant) or not initialized at all, depending on implementation. Verify the current behavior in `BaseLayout.astro` before changing.
-
-### Scroll reset on navigation (do not remove)
-
-Because the single Lenis instance persists, any in-flight scroll momentum carries across a View Transitions swap. While Lenis is actively smoothing it ignores the router's scroll-to-top reset, so a link clicked mid-scroll would open the next page partway down (the stale scroll target clamps to the new, often shorter, page's maximum).
-
-The fix lives in the Lenis init block:
-
-- An `astro:after-swap` listener calls `lenis.scrollTo(0, { immediate: true, force: true })` (cancels momentum and resets to top) plus `lenis.resize()`.
-- It runs on **forward navigations only**: the listener reads `navigationType` off the `astro:before-swap` event and skips the reset when that is `traverse`, so browser back/forward keeps Astro's built-in scroll restoration.
-
-**Caveat for testing:** Astro dev full-reloads on back/forward, so the traverse (restore-position) behavior can only be verified against the production build via `npm run preview`, not `npm run dev`.
+- **Forward navigation lands at the top; Back/Forward restores the position** (CLAUDE.md rule 5). Astro's router does both itself: `scrollTo({ top: 0, behavior: 'instant' })` on a push, and the saved `scrollX`/`scrollY` on a traverse, inside the swap and before `astro:after-swap`. The old Lenis reset (an `after-swap` `lenis.scrollTo(0, { immediate, force })`) existed only because Lenis's own momentum overrode the router; with Lenis gone there is nothing to cancel. `tests/transitions.spec.ts` reads `scrollY` at `astro:after-swap` and proves both placements happen in the swap, not after it.
+- **In-page anchors and programmatic scrolls glide** through `html[data-smooth-scroll] { scroll-behavior: smooth }` in `globals.css`, inside `prefers-reduced-motion: no-preference`. The attribute is set by BaseLayout's layout script on the visitor's first `pointerdown` or `keydown`, never before, for a measured reason: with smooth scrolling on from the first paint, Chrome GLIDES its own scroll restoration on a reload (0 to 600px over 400 ms), which is visible and also left the header unseeded (the glide is a scroll with no gesture behind it; `tests/header.spec.ts` caught it). Every anchor click and scroll control follows a press, so nothing a visitor does loses the glide.
+- **The router's placement is never animated.** Its swap copies the incoming document's `<html>` attributes onto the live one (`swapRootAttributes`), which removes `data-smooth-scroll` before the router scrolls; the next press puts it back.
+- **Code that places the page itself uses `behavior: 'instant'`**: the header's fragment landing in BaseLayout (a glide re-aimed every frame by its correction loop would never land). `BackToTop` and `DoorPlan` ask for `'smooth'` explicitly and were never Lenis's.
+- **The search dialog's scroll lock** is `html.ss-open { overflow: hidden }` alone, released on `close` and again on `astro:before-swap`.
+- **The wheel is the browser's own**, untouched. Tests that set a scroll position as setup do it with `behavior: 'instant'`, since `scroll-behavior` would otherwise turn a two-argument `scrollTo` into a glide once a test has clicked something.
 
 ---
 
@@ -46,8 +38,23 @@ Apply selectively to section blocks. Don't add `data-reveal` to above-the-fold c
 - a `<figure>` or a `SanityImage` wrapper inside a band
 - the big numerals: the SundayTimes service time, the StatsRow band, the Timeline year markers, the HeritageBand years
 - the JournalCard cover image
+- every `BuildingGlyph` (the `draw` variant, below) and the Hannaford rendering (the `ink` variant)
 
 Headings, prose, lists and CTAs are painted, not revealed. If you are about to add `data-reveal` to a heading, the answer is no.
+
+### The glyph draw (`[data-reveal='draw']`, 2026-09-24)
+
+Every `BuildingGlyph` (window, door, rose, basin: the church's line art from the building) is on the reveal observer with the `draw` variant, and every stroke carries `pathLength="1"`. The first time a glyph scrolls into view its lines draw themselves, one after another (1.1 s each on `cubic-bezier(0.45, 0, 0.2, 1)`, 140 ms apart, the fifth and later together at 560 ms), and it stays drawn: the observer lets go of it, so it is once per page view. The basin's dotted pour (`.glyph-dots`) is not a line to trace; it fades in last. The svg itself never moves or fades, so the draw can never shift layout, and it drops the base reveal's `will-change` (a page carries dozens of glyphs).
+
+**The dash is sized on screen, which is the trap.** The glyphs keep a constant 2px line with `vector-effect: non-scaling-stroke`, and with that set, Chromium and WebKit both lay the dash out in SCREEN space while `pathLength` scales it in the path's own units. Measured 2026-09-24: a `1.01` dash covers a 48-unit glyph drawn at 48px, stops halfway at 96px, and covers a fraction of an arch mould stretched by `preserveAspectRatio="none"`. So BaseLayout's reveal script reads each stroke's screen scale once (`--k`, `Math.hypot(a, b)` of its `getScreenCTM()`, every read before any write), and the dash and offset are `calc(1.01 * var(--k, 1))`. Two seconds after the reveal it adds `.is-drawn`, which takes the dash off entirely, so a later resize can never leave a stroke short. (The transition delays sit under `:not(.is-drawn)` too: WebKit otherwise held the old dash on the delayed strokes for a beat after `.is-drawn` landed.)
+
+Tried and rejected the same day: **drawing the arch mould** (`ArchFrame`'s gold outline). Its non-uniform stretch means no single `--k` is right for the whole path; it keeps its fade.
+
+Reduced motion and paper both get the final state: the draw rules live inside `prefers-reduced-motion: no-preference`, and the print block in `globals.css` forces `stroke-dasharray: none` and every reveal visible. `tests/motion.spec.ts` asserts both halves (reduced motion: every stroke whole, no dash, no animation object; no preference: a glyph below the fold waits undrawn, draws, lands whole with no dash, and does not replay), on Chromium and the WebKit iPhone profile.
+
+### The Hannaford ink-in (`[data-reveal='ink']`, 2026-09-24)
+
+The 1927 Hannaford rendering is a raster, so it is not drawn; it inks in. The footer's gold line art (`.footer-rendering`) and Home's Our Building drawing (`.ob-drawing` in `HeritageBand.astro`) carry `data-reveal="ink"`: their children fade in over 2.4 s, and the drawing also comes up from pale pencil (`contrast(0.55) brightness(1.5)`) to its full grade over 2.8 s (the same four filter functions, so the browser can interpolate them). The mobile menu's copy (`.menu-rendering`) is not on the observer; it inks in with a 1.8 s keyframe 0.6 s after the sheet opens, once the rows have risen. None of the three is ever a largest-paint candidate (the footer's is a mask in a `content-visibility: auto` box, the drawing is lazy and far below the fold, the menu's is a background).
 
 ### Grid stagger entrance (`[data-stagger-grid]` / `.is-staggered`)
 
@@ -105,9 +112,17 @@ The first slide stays the eager `fetchpriority="high"` LCP image; the rest lazy-
 
 ---
 
-## View-transition cross-fade
+## View transitions
 
-`<main id="main">` carries `view-transition-name: main-content` and cross-fades on every navigation (`vt-fade-out` 150ms -> `vt-fade-in` 200ms). The header and footer are named (`site-header` / `site-footer`) and pinned with `animation: none` so they stay put through the swap instead of flashing. Astro respects `prefers-reduced-motion` automatically -- reduced-motion users get an instant cut. Pure CSS, no JS.
+Astro's `<ClientRouter />` (BaseLayout) swaps pages without a reload. Under `prefers-reduced-motion` Astro cuts every transition.
+
+**The page cross-fades in place.** The root snapshot fades out over 150 ms and the new one in over 200 ms (`::view-transition-old(root)` / `-new(root)` in `globals.css`). Only the header is named (`site-header`), and its group and both images are `animation: none`, so the bar and the logo stay put.
+
+Until 2026-09-24 `<main>` (`main-content`) and the footer (`site-footer`) were named too, and that made the page SLIDE: a named element's group animates from its old box to its new one, and leaving a page scrolled 1000px down, the old `<main>` sat 1000px above the screen and the new one at the top, so the whole page travelled down the screen through the fade (seen frame by frame, on `main` as well as the branch), and a footer link slid the footer away. Do not name a whole-page region again; a named element should be something that is genuinely in both pages, at a comparable size.
+
+**The post title carries over.** On a FORWARD navigation from a blog row (`PostRow.astro`, whose heading carries `[data-vt-title]`) to that row's post, the row's heading and the post's `h1.p2-title` share the name `post-title` for that navigation only, so the title travels from the row up into the masthead while the page cross-fades: the group moves over 460 ms on `cubic-bezier(0.2, 0.7, 0.2, 1)`, the row's small title fades out in the first 160 ms and the masthead's fades in after it, so the two never show at full strength together (the row sets it in Castoro, the masthead in Castoro Titling capitals). The wiring is `src/components/transitions/shared-title.ts`, imported by the layout script: it wraps the router's `loader` in `astro:before-preparation`, so the names are set after the new document has loaded and before the old page's snapshot, and they are cleared at the start of the next navigation. Nothing carries the name in markup, because `/blog` lists some posts twice and two elements with one name make the browser skip the whole transition. When it pairs is `src/lib/shared-title.ts` (unit-tested): forward only (Back gets the plain cross-fade, since the row may be anywhere on the restored page), only from a row title at least half on screen, only to a page with a post title, never under reduced motion.
+
+**What must survive a swap, and is tested** (`tests/transitions.spec.ts`: Home, Blog, a post by its row, the search, then Back): the window persists (a client-side swap), the page is at the top at `after-swap` and at the restored position on Back, the header's `data-scrolled` is absent at the top and seeded from the restored position alone, the This Sunday line (`[data-live-sunday]`) is upgraded on every page, the search dialog opens and closes on the swapped-in page, and after Back nothing carries a shared name.
 
 ---
 

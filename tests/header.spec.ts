@@ -98,7 +98,7 @@ test('data-scrolled follows a scroll up, and is seeded on a restore', async ({ p
 
   // The harder half: a full reload at a restored offset, which produces no
   // scroll event at all. This is the one that fails if the seed call goes.
-  await page.evaluate(() => window.scrollTo(0, 600));
+  await page.evaluate(() => window.scrollTo({ top: 600, behavior: 'instant' }));
   await page.waitForTimeout(400);
   await page.reload({ waitUntil: 'load' });
   const reloaded = await whenScrolledSeeded(page);

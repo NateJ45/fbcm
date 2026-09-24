@@ -39,7 +39,7 @@ The core component set, by role. All in `src/components/` unless noted.
 - `Footer.astro` -- one indigo-deep band in both themes, redrawn in the church identity 2026-09-24 (the footer identity pass). Top to bottom: the poster row (the closing Sunday band: the live dated line, the time, the street, Give), the four goals (`GoalsRow size="footer"`), the editor's link columns as plain unnumbered lists (Pages set in two short columns, Elsewhere) beside Office (hours, phone, email; the street only when the poster row did not print it), the sign-off (the Praise & Proclaim `WatchwordMark` and the bottom line "An American Baptist congregation in downtown Muncie since 1859", the year from `site.founded`), and the base rail (wordmark home link, auto-year copyright, privacy, theme toggle). Behind the sign-off, along the bottom edge, the 1927 Hannaford rendering as faint gold line art: `src/assets/footer-rendering.webp` (952x452, lossless WebP alpha, ~31 KB) used as a CSS mask over a `--color-gold` box at 16% opacity, absolutely positioned and aria-hidden, inside a `content-visibility: auto` box so the mask is not fetched until the footer nears the viewport (no layout shift, no LCP cost).
 - `MobileNav.tsx` -- full-screen indigo Sheet (`client:idle`; the closed Sheet server-renders its trigger, so the "Menu" button is in the server HTML). Unnumbered display-face rows, the Sundays and contact foot, the Give button, and the four goals at the bottom (`GoalsRow size="menu"`, slotted in by `Header.astro` as the island's children so the glyphs are drawn by the one Astro component; a delegated click closes the sheet when a goal is followed).
 - `church/GoalsRow.astro` -- the four goals as one row of links to their bands on /who-we-are (`#worship`, `#the-way`, `#witness`, `#work`): gold building glyph, display-capital name, and in the footer the small line Who We Are's goal index prints. Data from `src/lib/church-goals.ts`, the one code-side list of the goals (outside the `church` scaffold capability; `ministry-goals.ts` reads its `GOALS` from it).
-- `BaseLayout.astro` -- anti-FOUC theme bootstrap, View Transitions, Lenis init, scroll-reveal observer, sticky-header scroll listener.
+- `BaseLayout.astro` -- anti-FOUC theme bootstrap, View Transitions (with the shared post title, `src/components/transitions/shared-title.ts`), the smooth-scroll press listener (no Lenis since 2026-09-24), scroll-reveal observer (and the glyph draw's `--k` measure), sticky-header scroll listener.
 
 **Hero + page-top:**
 
@@ -93,6 +93,14 @@ The core component set, by role. All in `src/components/` unless noted.
    Sunday after", `post-neighbours.ts`), other posts Older / Newer. Every ink on the page is a
    brand token (`--color-indigo`, `--color-brown-ink`, gold rules). There is no closing CTA
    band on posts.
+5. **On paper** (2026-09-24) -- the post prints as a bulletin: masthead and order, a
+   photograph cover as a plain rectangle, the body at a print measure, a derived foot line
+   (`.p2-print-foot`: site name, address, the post's URL), and none of the screen's chrome.
+   The rules are the `@media print` block at the end of the page's own style; the whole list
+   is in `polish-layer.md`, "Print stylesheet", and the gate is `tests/print.spec.ts`.
+
+A row's title carries over into the h1 when the row is followed (the shared `post-title`
+view transition, `animation.md`); `PostRow.astro`'s heading carries `[data-vt-title]` for it.
 
 The Portable Text renderer (`JournalPortableText.tsx`) detects image orientation from the Sanity asset `_ref`; portrait inline images cap at 360px.
 
@@ -285,8 +293,9 @@ Both belong to the `journal` scaffold capability; every new file is `scaffold-fi
   rule, the paper Close plate), results on paper as register rows (date or "Page" | title and
   excerpt with the match in `<mark>` | reading), 10 at a time with "More results", a foot link
   to the scripture index. Escape always closes (Chromium otherwise spends it clearing a search
-  box), arrows move between results, Enter follows the first, focus returns to the opener, Lenis
-  stops while it is open. Row rules are `src/lib/search-results.ts` (unit-tested); excerpts are
+  box), arrows move between results, Enter follows the first, focus returns to the opener, and
+  the page behind it is locked with `html.ss-open { overflow: hidden }` (released on close and
+  on `astro:before-swap`; the lock stopped Lenis too until Lenis was removed on 2026-09-24). Row rules are `src/lib/search-results.ts` (unit-tested); excerpts are
   rebuilt node by node (text and `<mark>` only). Pagefind's own UI files are written by its API
   but nothing links them.
 
@@ -297,7 +306,7 @@ Ported from the prototype at `docs/superpowers/prototypes/2026-09-23-who-we-are/
 **Primitives (`src/components/church/`):**
 
 - `ArchFrame.astro` -- a photograph inside one of the building's two arches, `shape="lancet"` (the tall pointed window, 2:3) or `shape="door"` (the four-centred Adams Street door, 10:13). The arch is a CSS mask, so any `--arch-ratio` keeps the same arch; a thin SVG mould is drawn just outside it in `--arch-mould`. `reveal` puts it on the `[data-reveal]` observer (`arch` variant), `grade="warm"` applies the shared photo grade, and the crop follows the editor's hotspot, else the top of the photo.
-- `BuildingGlyph.astro` -- the four goal drawings from the building: `window` (Worship), `door` (The Way), `rose` (Witness), `basin` (Work). Line art in currentColor at a constant 2px stroke, always decorative.
+- `BuildingGlyph.astro` -- the four goal drawings from the building: `window` (Worship), `door` (The Way), `rose` (Witness), `basin` (Work). Line art in currentColor at a constant 2px stroke, always decorative. Since 2026-09-24 every stroke has `pathLength="1"` and the svg is `data-reveal="draw"`: it draws itself once when it scrolls into view (`animation.md`, "The glyph draw"); the basin's dotted pour is `.glyph-dots` and fades in instead.
 - `WatchwordMark.astro` -- the "Praise & PROCLAIM" mark with the megaphone rays, `size="band"` or `size="hero"`. Fixed colours (it only ever sits on the indigo-dark Watchword band: white "Praise", gold ampersand, PROCLAIM and rays); one image to a screen reader ("Praise and Proclaim").
 - `CtaLink.astro` `variant="rule"` -- since 2026-09-23 an ALIAS for `gold`, the header's GIVE plate with the inset double rule (Nathan's ruling: one button family, rule 17). The square button with a bar and rays (`.btn-rule`) is gone. `onGold` (the Home give band) draws the outline plate in band-ink on the gold ground.
 

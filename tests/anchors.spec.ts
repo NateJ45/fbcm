@@ -173,7 +173,7 @@ test('pinning the header does not shift the content', async ({ page }) => {
     );
   const before = await mainTop();
   for (const y of [20, 150, 400, 1200, 0]) {
-    await page.evaluate((to) => window.scrollTo(0, to), y);
+    await page.evaluate((to) => window.scrollTo({ top: to, behavior: 'instant' }), y);
     await page.waitForTimeout(100);
     expect(await mainTop(), `main moved at scrollY ${y}`).toBeCloseTo(before, 0);
   }
@@ -192,7 +192,7 @@ test('pinning the header does not shift the content', async ({ page }) => {
 
 test('back/forward restores scroll position, not the fragment landing', async ({ page }) => {
   await page.goto('/beliefs#baptists', { waitUntil: 'load' });
-  await page.evaluate(() => window.scrollTo(0, 2000));
+  await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }));
   // Give the polish script's own correction loop a chance to react (it
   // shouldn't, since this is a real scrollTo with no gesture behind it, but
   // the point of this test is the back-navigation case below, not this one).

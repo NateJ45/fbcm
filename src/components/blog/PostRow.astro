@@ -23,6 +23,11 @@
 //          a gold underline.
 // The taupe markup is byte-for-byte the row DynamicList drew before it was
 // lifted, so the home page did not move.
+//
+// [data-vt-title] on the heading (2026-09-24, feat/print-motion) marks it as
+// the title that carries over into the post's h1 when this row is followed
+// (src/components/transitions/shared-title.ts). An attribute and nothing else:
+// the name itself is only set for the navigation that needs it.
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import { splitStega } from '@/lib/preview-stega';
 
@@ -118,7 +123,7 @@ const C = taupe
   <div
     class="col-start-2 row-start-2 min-w-0 md:col-start-3 md:row-start-1 md:self-end lg:self-center"
   >
-    <Heading class={C.h}>
+    <Heading class={C.h} data-vt-title>
       <a href={href} class={C.a}>
         {title}
       </a>

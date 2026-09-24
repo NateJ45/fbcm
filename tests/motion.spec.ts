@@ -93,3 +93,83 @@ test.describe('no preference', () => {
     expect(opacity).toBe('1');
   });
 });
+
+// =============================================================================
+// The glyph draw (feat/print-motion, 2026-09-24)
+// =============================================================================
+// Every BuildingGlyph is on the reveal observer with the `draw` variant: its
+// strokes draw themselves once, the first time it scrolls into view. The two
+// halves again: still means fully drawn and never animating; moving means it
+// really does draw, lands whole, and lets go of the dash.
+
+test.describe('glyph draw, reduced motion', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  test('every glyph stroke is fully drawn, with no dash and no animation', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'load' });
+    // Below the fold as well as above it: a reduced-motion visitor never
+    // waits on the observer.
+    const all = await page.evaluate(() =>
+      [...document.querySelectorAll('svg[data-reveal="draw"] > :not(.glyph-dots)')].map((el) => {
+        const cs = getComputedStyle(el);
+        return {
+          dash: cs.strokeDasharray,
+          offset: cs.strokeDashoffset,
+          animations: el.getAnimations().length,
+        };
+      }),
+    );
+    expect(all.length, 'no glyph strokes on the home page').toBeGreaterThan(10);
+    for (const s of all) {
+      expect(s, JSON.stringify(s)).toEqual({ dash: 'none', offset: '0px', animations: 0 });
+    }
+  });
+});
+
+test.describe('glyph draw, no preference', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  test('a glyph below the fold waits, draws once, and lands whole', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'load' });
+    const glyph = page.locator('main svg[data-reveal="draw"]').last();
+    // Waiting, undrawn: the dash is offset by its whole length.
+    const before = await glyph.evaluate((svg) => {
+      const p = svg.querySelector(':scope > :not(.glyph-dots)') as SVGElement;
+      const cs = getComputedStyle(p);
+      return {
+        visible: svg.classList.contains('is-visible'),
+        dash: cs.strokeDasharray,
+        offset: parseFloat(cs.strokeDashoffset),
+      };
+    });
+    expect(before.visible).toBe(false);
+    expect(before.dash).not.toBe('none');
+    expect(before.offset).toBeGreaterThan(0);
+
+    await glyph.scrollIntoViewIfNeeded();
+    await expect(glyph).toHaveClass(/is-visible/);
+    // Mid-draw, something is moving.
+    const moving = await glyph.evaluate((svg) =>
+      [...svg.children].some((c) => c.getAnimations().some((a) => a.playState === 'running')),
+    );
+    expect(moving, 'the glyph became visible without drawing').toBe(true);
+    // Landed: the dash comes off, so every stroke is whole whatever the size.
+    await expect(glyph).toHaveClass(/is-drawn/, { timeout: 4000 });
+    const after = await glyph.evaluate((svg) =>
+      [...svg.querySelectorAll(':scope > :not(.glyph-dots)')].map(
+        (c) => getComputedStyle(c).strokeDasharray,
+      ),
+    );
+    expect(new Set(after)).toEqual(new Set(['none']));
+
+    // Once per page view: scrolled away and back, nothing replays.
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await page.waitForTimeout(300);
+    await glyph.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
+    const replay = await glyph.evaluate((svg) =>
+      [...svg.children].some((c) => c.getAnimations().length > 0),
+    );
+    expect(replay, 'the glyph drew again').toBe(false);
+  });
+});
