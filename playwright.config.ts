@@ -88,6 +88,12 @@ export default defineConfig({
     command: `npm run build && npx http-server dist/client -p ${PORT} -s -c-1 --silent`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
+    // "Last Sunday" (2026-09-24): the home page's band is read from the
+    // church's YouTube feed at BUILD time, so the suite's build reads the
+    // committed feed in tests/fixtures/youtube-feed.xml at a fixed Thursday
+    // instead, offline and identical on every run (src/pages/index.astro).
+    // Merged over process.env by Playwright; no deploy sets these.
+    env: { LAST_SUNDAY_FIXTURE: '1', LAST_SUNDAY_NOW: '2026-09-24T16:00:00Z' },
     // A full build of a 400-page site takes 3 to 4 minutes on a CI runner;
     // 10 minutes is the floor for any repo in the family.
     timeout: 600_000,
