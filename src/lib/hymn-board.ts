@@ -151,3 +151,30 @@ export function boardRows(
 
   return rows;
 }
+
+/**
+ * The gold tag on a door (2026-09-24, the Visit identity pass): a door whose
+ * own directions say it is wheelchair accessible is tagged so, read from the
+ * church's words rather than a checkbox (CLAUDE.md rule 15). Null otherwise.
+ */
+export function doorTag(body: string | null | undefined): string | null {
+  const text = splitStega(body ?? '').cleaned;
+  return /\bwheel-?\s?chair[\s-]+accessible\b/i.test(text) ? 'Wheelchair accessible' : null;
+}
+
+/**
+ * A plain-text field split into paragraphs on blank lines, each trimmed. The
+ * stega payload (at the end of the raw string) goes back on the LAST
+ * paragraph, so click-to-edit still resolves on the text in the preview.
+ */
+export function textParagraphs(raw: string | null | undefined): string[] {
+  const { cleaned, encoded } = splitStega(raw ?? '');
+  const paras = cleaned
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (paras.length > 0 && encoded) {
+    paras[paras.length - 1] = reattachStega(paras[paras.length - 1], encoded);
+  }
+  return paras;
+}

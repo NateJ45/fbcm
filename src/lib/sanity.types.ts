@@ -15,6 +15,22 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+};
+
+export type TimelineRowImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "timelineRow.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  _type: 'image';
+};
+
 export type SanityFileAssetReference = {
   _ref: string;
   _type: 'reference';
@@ -26,13 +42,6 @@ export type ListedDocumentFile = {
   asset?: SanityFileAssetReference;
   media?: unknown; // Unable to locate the referenced type "file.media" in schema
   _type: 'file';
-};
-
-export type SanityImageAssetReference = {
-  _ref: string;
-  _type: 'reference';
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
 };
 
 export type LinkCardImage = {
@@ -961,6 +970,7 @@ export type TimelineSection = {
       _key: string;
     }>;
     note?: string;
+    image?: TimelineRowImage;
     anchor?: Slug;
     _type: 'timelineRow';
     _key: string;
@@ -1142,6 +1152,14 @@ export type ImageTextSection = {
     _key: string;
   }>;
   cta?: CtaBlock;
+  detail?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
   anchor?: Slug;
 };
 
@@ -1178,6 +1196,7 @@ export type HeroSection = {
   _type: 'heroSection';
   eyebrow?: string;
   headline?: string;
+  headingAccent?: string;
   subhead?: string;
   backgroundImage?: {
     asset?: SanityImageAssetReference;
@@ -1895,9 +1914,10 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+  | SanityImageAssetReference
+  | TimelineRowImage
   | SanityFileAssetReference
   | ListedDocumentFile
-  | SanityImageAssetReference
   | LinkCardImage
   | Photo
   | Redirect

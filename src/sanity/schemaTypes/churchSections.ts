@@ -184,8 +184,7 @@ export const timelineSection = defineType({
               title: 'Marker',
               type: 'string',
               description:
-                'What sits in the left column: a time like "9:30" or a year like "1859".',
-              validation: (r) => r.required(),
+                'A time like "9:30 am" or a year like "1859". Leave blank for a step with no time, like a welcome. On a timeline of times, a last row with words here (like "First Sundays") is set after the steps as a closing note.',
             }),
             defineField({
               name: 'title',
@@ -204,7 +203,25 @@ export const timelineSection = defineType({
               name: 'note',
               title: 'Small note under the text',
               type: 'string',
-              description: 'Like room numbers: "Rooms B-04, B-05, 201". Leave blank for none.',
+              description:
+                'The room, like "Sanctuary", or a place and its room, like "Donut [Semi-] Hour (Fellowship Hall)". The room is shown as a small tag. Leave blank for none.',
+            }),
+            // A step's photo (2026-09-24, the Visit identity pass): drawn in a
+            // door arch at the top of its step. Optional and additive.
+            defineField({
+              name: 'image',
+              title: 'Photo (optional)',
+              type: 'image',
+              options: { hotspot: true },
+              description: 'A photo for this step, shown in an arched doorway.',
+              fields: [
+                defineField({
+                  name: 'alt',
+                  title: 'Describe the photo',
+                  type: 'string',
+                  validation: (r) => r.required(),
+                }),
+              ],
             }),
             defineField({
               name: 'anchor',
