@@ -54,7 +54,7 @@ import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
-import { H2_DISPLAY } from '@/lib/heading-grammar';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { getSiteSettings } from '@/lib/queries';
 import type {
   ProjectedCtaBlock,
@@ -233,8 +233,12 @@ const objectPositionOf = (img: SanityImageObject): string => {
         <div class="min-w-0">
           {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
           {heading && (
-            <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
-              {heading}
+            <h2
+              id={headingId}
+              class:list={[H2_DISPLAY, 'h-fit text-gold']}
+              style={headingFit(heading)}
+            >
+              <span class="h-fit-in">{heading}</span>
             </h2>
           )}
           {intro && (
@@ -432,8 +436,12 @@ const objectPositionOf = (img: SanityImageObject): string => {
         >
           {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
           {heading && (
-            <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
-              {heading}
+            <h2
+              id={headingId}
+              class:list={[H2_DISPLAY, 'h-fit text-gold']}
+              style={headingFit(heading)}
+            >
+              <span class="h-fit-in">{heading}</span>
             </h2>
           )}
           {intro && (
@@ -572,3 +580,152 @@ const objectPositionOf = (img: SanityImageObject): string => {
     </section>
   )
 }
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+  /* Doors, parking and access (SundayTimes.astro's doors path, 2026-09-24, the
+   Visit identity pass; the prototype's .access). */
+  .sd-findus {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 4px 22px;
+    align-items: start;
+    padding-bottom: clamp(28px, 3vw, 40px);
+    margin-bottom: clamp(8px, 1vw, 14px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  }
+  .sd-findus > :not(.sd-findus-glyph) {
+    grid-column: 2;
+  }
+  .sd-findus-glyph {
+    grid-row: 1 / 4;
+    width: 44px;
+    margin-top: 6px;
+  }
+  .sd-findus-label {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .sd-findus-big {
+    margin: 2px 0 10px;
+    font-size: clamp(34px, 3.4vw, 50px);
+    line-height: 1.02;
+  }
+  /* One first column for every row, as wide as its widest cell: a door
+     glyph (36px) or a time ("10:45 am"), so the titles share one edge. */
+  .sd-doors {
+    display: grid;
+    grid-template-columns: minmax(36px, max-content) minmax(0, 1fr);
+    column-gap: 20px;
+  }
+  .sd-doors > li {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    padding: clamp(20px, 2.2vw, 28px) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  }
+  .sd-doors p,
+  .sd-notes p {
+    margin: 6px 0 0;
+    max-width: 36em;
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  }
+  .sd-door-name {
+    margin: 0;
+    font-size: clamp(23px, 1.9vw, 27px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--color-bg);
+  }
+  .sd-when {
+    font-size: 26px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  .sd-tag {
+    display: inline-block;
+    margin: 8px 0 4px;
+    padding: 3px 8px 2px;
+    border-radius: 2px;
+    background: var(--color-gold);
+    color: var(--color-band-ink);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .sd-rect {
+    aspect-ratio: 4 / 5;
+  }
+  .sd-notes {
+    display: grid;
+    gap: 26px;
+    margin-top: clamp(30px, 3vw, 44px);
+  }
+  .sd-notes > li {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .sd-note-title {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .sd-notes p {
+    margin-top: 0;
+  }
+  @media (max-width: 1023px) {
+    .sd-side {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+    .sd-notes {
+      margin-top: 0;
+    }
+  }
+  @media (max-width: 620px) {
+    .sd-findus {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .sd-findus > :not(.sd-findus-glyph) {
+      grid-column: 1;
+    }
+    .sd-findus-glyph {
+      grid-row: auto;
+      width: 34px;
+      margin: 0 0 6px;
+    }
+    .sd-side {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .sd-rect {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20). */
+  /* The hymn board's small lancet (SundayTimes.astro) is cut out of the door
+   photo behind it by a halo of the band's own brown, 10px proud of the arch
+   (the lancet mask comes from .arch-lancet on the same element). */
+  .hb-halo {
+    position: absolute;
+    inset: -10px;
+    background: var(--color-band-brown);
+    mask-image: var(--arch-mask);
+    mask-size: 100% 100%;
+  }
+</style>

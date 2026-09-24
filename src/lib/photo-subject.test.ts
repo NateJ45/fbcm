@@ -25,12 +25,21 @@ test('a description of the building or a room is a place', () => {
     'The fellowship hall',
     'The youth center',
     'The bridal suite lounge',
+    'The family room, with rocking chairs and toys',
+    "The pastor's study",
+    "The children's wing hallway",
+    'The party room set for a shower',
     '',
   ]) {
     assert.equal(photoSubject(alt), 'place', alt);
   }
   assert.equal(photoSubject(null), 'place');
   assert.equal(photoSubject(undefined), 'place');
+});
+
+test('a room word does not hide people who are really there', () => {
+  assert.equal(photoSubject('Two girls laughing in the family room'), 'people');
+  assert.equal(photoSubject("Children playing in the children's wing"), 'people');
 });
 
 test('the subject is read on the stega-cleaned alt', () => {

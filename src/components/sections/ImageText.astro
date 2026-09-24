@@ -52,6 +52,8 @@
 //    (`data-photo-shape="none"`): the heading, then the body across the full
 //    grid, and no figure. That is a real layout, not a broken one, which is
 //    why there is no placeholder box.
+import '@/styles/ledger.css';
+import '@/styles/photo-shapes.css';
 import { surfaceClass } from '@/lib/surfaces';
 import SanityImage from '@/components/SanityImage.astro';
 import PortableText from '@/components/PortableText';
@@ -65,7 +67,7 @@ import { splitStega } from '@/lib/preview-stega';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import { photoSubject } from '@/lib/photo-subject';
 import { roomBoard } from '@/lib/room-board';
-import { H2_DISPLAY } from '@/lib/heading-grammar';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 
 interface Props {
   image?: any;
@@ -168,8 +170,8 @@ const QF =
                 </>
               )}
               {heading && (
-                <h2 id={headingId} class={H2_DISPLAY}>
-                  {heading}
+                <h2 id={headingId} class:list={[H2_DISPLAY, 'h-fit']} style={headingFit(heading)}>
+                  <span class="h-fit-in">{heading}</span>
                 </h2>
               )}
               {ledeBlock && (
@@ -207,8 +209,12 @@ const QF =
           <header class="rt-head">
             {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
             {heading && (
-              <h2 id={headingId} class:list={[H2_DISPLAY, 'max-w-[22ch] text-foreground']}>
-                {heading}
+              <h2
+                id={headingId}
+                class:list={[H2_DISPLAY, 'h-fit max-w-[22ch] text-foreground']}
+                style={headingFit(heading)}
+              >
+                <span class="h-fit-in">{heading}</span>
               </h2>
             )}
           </header>
@@ -360,7 +366,12 @@ const QF =
                               ))}
                             </p>
                             <div class="min-w-0">
-                              <h3 class="it-room-title font-body">{r.title}</h3>
+                              <h3
+                                class="it-room-title h-fit font-body"
+                                style={headingFit(r.title, 'body')}
+                              >
+                                <span class="h-fit-in">{r.title}</span>
+                              </h3>
                               {r.blocks.filter((b) => !b.listItem).length > 0 && (
                                 <PortableText
                                   value={r.blocks
@@ -426,3 +437,89 @@ const QF =
     )
   }
 </section>
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+  /* ImageText, people in arches (2026-09-24, the Visit identity pass). The
+   small second photo sits over the main arch's lower corner, cut out of it
+   by a halo of the band's own ground (--band, set by ImageText). */
+  .it-arches.has-detail {
+    padding-bottom: clamp(60px, 7vw, 110px);
+  }
+  .it-detail {
+    position: absolute;
+    right: -3%;
+    bottom: 0;
+    width: 38%;
+  }
+  .it-halo {
+    position: absolute;
+    inset: -10px;
+    background: var(--band);
+    mask-image: var(--arch-mask);
+    mask-size: 100% 100%;
+  }
+  /* A body written as rooms: the room board. */
+  .it-rooms {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--hair);
+  }
+  .it-rooms > li {
+    display: grid;
+    grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+    gap: 6px clamp(18px, 2.4vw, 32px);
+    padding: clamp(20px, 2.2vw, 28px) 0;
+    border-bottom: 1px solid var(--hair);
+  }
+  .it-room-no {
+    margin: 0;
+    font-size: clamp(30px, 2.8vw, 42px);
+    line-height: 1;
+    color: var(--color-indigo);
+    white-space: nowrap;
+  }
+  .it-room-no i {
+    padding: 0 0.12em;
+    font-family: var(--font-body);
+    font-size: 0.55em;
+    color: var(--color-brown-ink);
+  }
+  .it-room-title {
+    margin: 0 0 6px;
+    font-size: clamp(23px, 2vw, 28px);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--color-foreground);
+  }
+  .it-room-body {
+    font-size: 18.5px;
+    line-height: 1.55;
+  }
+  .it-room-list {
+    display: grid;
+    gap: 8px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .it-room-list li {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 12px;
+    font-size: 18px;
+    line-height: 1.45;
+  }
+  @media (max-width: 620px) {
+    .it-rooms > li {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .it-detail {
+      right: 0;
+      width: 40%;
+    }
+  }
+</style>

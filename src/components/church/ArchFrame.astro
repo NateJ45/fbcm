@@ -44,6 +44,8 @@ interface Props {
   style?: string;
   /** Drawn in the arch when there is no photograph (see the header note). */
   glyph?: 'window' | 'door' | 'rose' | 'basin';
+  /** 'high' when this frame is the page's LCP image (a split hero's photo). */
+  fetchpriority?: 'high' | 'auto';
 }
 
 const {
@@ -58,6 +60,7 @@ const {
   loading = 'lazy',
   style,
   glyph,
+  fetchpriority,
 } = Astro.props;
 
 const hasImage = !!image?.asset;
@@ -92,6 +95,7 @@ const mould =
           sizes={sizes}
           alt={alt}
           loading={loading}
+          fetchpriority={fetchpriority}
           class:list={['h-full w-full object-cover', grade === 'warm' && 'graded']}
           style={`object-position: ${objectPosition};`}
         />

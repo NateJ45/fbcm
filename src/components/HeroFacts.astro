@@ -45,3 +45,55 @@ const rows = facts.map((f) => ({ ...f, read: readBig(f.value) }));
     ))
   }
 </dl>
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+  /* The hero facts on a brand band (HeroFacts.astro, 2026-09-24, the Visit
+   identity pass): label over value, a gold hairline between them. */
+  .hero-facts {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 14px;
+    margin: 0 0 clamp(28px, 3.4vw, 44px);
+  }
+  .hero-facts > div {
+    padding-right: clamp(16px, 1.8vw, 26px);
+    margin-right: clamp(16px, 1.8vw, 26px);
+    border-right: 1px solid color-mix(in srgb, var(--color-gold) 50%, transparent);
+  }
+  .hero-facts > div:last-child {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+  .hero-facts dt {
+    margin-bottom: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .hero-facts dd {
+    margin: 0;
+    font-size: clamp(18px, 1.4vw, 21px);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .hero-facts .hf-time {
+    font-size: clamp(24px, 2vw, 30px);
+    font-weight: 400;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  @media (max-width: 380px) {
+    .hero-facts {
+      display: grid;
+    }
+    .hero-facts > div {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+  }
+</style>

@@ -47,6 +47,7 @@ import { headlineScale, headlineClass } from '@/lib/headline-scale';
 import { staticSunday, timeOnly } from '@/lib/live-sunday';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import HeroFacts from '@/components/HeroFacts.astro';
+import { headingFit, longestWord, EM_BODY, EM_DISPLAY } from '@/lib/heading-grammar';
 import { photoSubject } from '@/lib/photo-subject';
 import { photoAspect } from '@/lib/photo-shape';
 
@@ -167,6 +168,13 @@ const colour = scriptFound
   ? { found: false, before: '', word: '', after: '', heading: headline }
   : splitHeadingAccent(headline, headingAccent);
 const colourCloses = colour.found && splitStega(colour.after).cleaned.trim() === '';
+// The window sentence is italic Castoro, but a closing accent is set in the
+// titling capitals, which are wider: fit whichever word needs more room.
+const windowFit = (() => {
+  const body = longestWord(headline) * EM_BODY;
+  const caps = colourCloses ? longestWord(colour.word) * EM_DISPLAY : 0;
+  return caps > body ? headingFit(colour.word, 'display') : headingFit(headline, 'body');
+})();
 
 // THE LIVE DATED LINE. Two strings come out of one setting:
 //   - `sundayStatic` is what the SERVER renders. It carries no date, so it is
@@ -291,8 +299,10 @@ const windowDrops = dropInto && windowOrder.length > 0;
             rather than in the script face. */}
         <h1
           id={headingId}
-          class:list={[headlineClass('sentence', headlineOpts), 'hw-statement italic']}
+          class:list={[headlineClass('sentence', headlineOpts), 'hw-statement h-fit italic']}
+          style={windowFit}
         >
+          <span class="h-fit-in">
           {scriptFound ? (
             <>
               {scriptBefore}<em class="text-gold not-italic">{scriptWord}</em>{scriptAfter}
@@ -312,6 +322,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
           ) : (
             headline
           )}
+        </span>
         </h1>
         {subhead && (
           <p class="lede mb-8 max-w-[34ch] font-body text-lede">
@@ -379,7 +390,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
       <div class="order-2 lg:order-1 lg:col-span-7">
         <div class="hero-entry-stagger max-w-2xl">
           {eyebrow && <p class="hw-label font-display text-gold uppercase">{eyebrow}</p>}
-          <h1 id={headingId} class:list={[displayHeadlineClass, 'text-white-pure']}>
+          <h1 id={headingId} class:list={[displayHeadlineClass, 'h-fit text-white-pure']} style={headingFit(headline, scale === 'sentence' ? 'body' : 'display')}><span class="h-fit-in">
             {scriptFound ? (
               <>
                 {scriptBefore}<span class="font-script">{scriptWord}</span>{scriptAfter}
@@ -391,7 +402,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
             ) : (
               headline
             )}
-          </h1>
+          </span></h1>
           {subhead && (
             <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body text-lede font-normal text-bg/85 italic">
               {subheadParts.map((part) =>
@@ -422,6 +433,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
             alt={splitAlt}
             grade="warm"
             loading="eager"
+            fetchpriority="high"
             class="hs-arch"
             style={`--arch-ratio: ${splitArchRatio};`}
           />
@@ -477,7 +489,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
           </p>
         )
       )}
-      <h1 id={headingId} class:list={[displayHeadlineClass, 'text-bg']}>
+      <h1 id={headingId} class:list={[displayHeadlineClass, 'h-fit text-bg']} style={headingFit(headline, scale === 'sentence' ? 'body' : 'display')}><span class="h-fit-in">
         {scriptFound ? (
           <>
             {scriptBefore}<span class="font-script">{scriptWord}</span>{scriptAfter}
@@ -485,7 +497,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
         ) : (
           headline
         )}
-      </h1>
+      </span></h1>
       {subhead && (
         <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body italic font-normal text-lede text-bg">
           {subheadParts.map((part) =>
@@ -542,3 +554,166 @@ const windowDrops = dropInto && windowOrder.length > 0;
     </div>
   </section>
 )}
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a
+     component's styles only into the pages that render it. is:global because
+     the rules reach into ArchFrame, PortableText and SanityImage children. */
+/* The window headline's closing accent: its own line, in the gold capitals. */
+.hw-close {
+  display: block;
+  letter-spacing: 0.01em;
+}
+/* The split hero on the brand band (Hero.astro, 2026-09-24). */
+.hs-grid {
+  column-gap: clamp(16px, 2.5vw, 40px);
+  row-gap: 32px;
+  padding-block: clamp(40px, 6vw, 88px);
+}
+.hs-grid .hero-facts {
+  margin-bottom: 0;
+}
+.hs-arch {
+  width: min(72%, 22rem);
+}
+.hs-rect {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  width: calc(100% - 18px);
+  margin: 9px;
+}
+.hs-rect::after {
+  content: '';
+  position: absolute;
+  inset: -9px;
+  border: 1px solid var(--color-gold);
+  pointer-events: none;
+}
+@media (min-width: 1024px) {
+  .hs-arch {
+    width: min(100%, 30rem);
+    margin-left: auto;
+  }
+}
+</style>
+
+<style is:global>
+  /* Moved out of globals.css (2026-09-24, rule 20). */
+/* The window hero. The triple lancet stays inside the band unless the hero
+   is `.hw-drop` (SectionRenderer sets it only when the next block is the
+   Watchword band, which reads --after-window to clear the drop). */
+.hw-drop + *,
+:has(> .hw-drop) + * {
+  --after-window: clamp(64px, 7.5vw, 110px);
+}
+.hw-grid {
+  display: grid;
+  gap: clamp(28px, 4vw, 72px);
+  align-items: end;
+  padding-block: clamp(40px, 6vw, 88px) clamp(40px, 5vw, 72px);
+}
+.hw-drop .hw-grid {
+  padding-bottom: 0;
+}
+.hw-drop .hw-window {
+  margin-bottom: calc(-1 * clamp(64px, 7.5vw, 110px));
+}
+.hw-text {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 40px;
+}
+.hw-label {
+  margin: 0 0 0.5em;
+  font-size: clamp(26px, 2.4vw, 34px);
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+.hw-statement {
+  margin: 0 0 clamp(28px, 3.4vw, 48px);
+  /* Modest on purpose (2026-09-23): the window, not the sentence, sets the
+     band's height, so the arches' tops sit level with the words. */
+  font-size: clamp(36px, 3.5vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+}
+.hw-window {
+  position: relative;
+  display: grid;
+  /* The middle light is the wide one (2026-09-23): a two-person photo must
+     keep both faces, so it is about 0.8 wide to 1 tall, still the tallest. */
+  grid-template-columns: 1fr 2.4fr 1fr;
+  gap: clamp(8px, 1.4vw, 20px);
+  align-items: end;
+}
+.hw-window[data-count='2'] {
+  grid-template-columns: 1fr 1fr;
+  width: 70%;
+  justify-self: center;
+}
+.hw-window[data-count='1'] {
+  grid-template-columns: 1fr;
+  width: 46%;
+  justify-self: center;
+}
+.hw-side {
+  --arch-ratio: 100 / 260;
+}
+.hw-mid {
+  --arch-ratio: 100 / 140;
+}
+.hw-rays {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 46%;
+  transform: translate(-50%, 6%);
+  pointer-events: none;
+}
+.hw-rays .mark-rays {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+@media (min-width: 901px) {
+  .hw-grid:has(.hw-window) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  /* Room for the rays inside the window's own box, so they never rise past
+     the band's top edge when the words are shorter than the window. */
+  .hw-window {
+    padding-top: 12%;
+  }
+  .hw-rays {
+    top: 0;
+    bottom: auto;
+  }
+  .hw-text {
+    padding-bottom: clamp(24px, 3vw, 48px);
+  }
+}
+/* From 1200px the window takes two thirds (2026-09-23): wide enough that the
+   middle light, at its fixed 100/140, is about as tall as the words beside it,
+   so its top sits level with the top of the text instead of far below it. */
+@media (min-width: 1200px) {
+  .hw-grid:has(.hw-window) {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  }
+}
+@media (max-width: 620px) {
+  .hw-window {
+    margin-inline: calc(8px - var(--spacing-gutter));
+    grid-template-columns: 0.7fr 2.3fr 0.7fr;
+    gap: 8px;
+  }
+  .hw-side {
+    --arch-ratio: 100 / 250;
+  }
+  .hw-mid {
+    --arch-ratio: 100 / 122;
+  }
+  .hw-rays {
+    width: 40%;
+  }
+}
+</style>
