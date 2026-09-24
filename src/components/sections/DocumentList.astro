@@ -4,35 +4,38 @@
 // Page-builder block: documents to download or open. Newsletters, annual
 // reports, the constitution, the wedding contract.
 //
-// ON THE INDIGO BAND (2026-09-24, the Wedding identity pass). The list is a
-// full-width brand band (rule 2) in both of its forms, never a boxed card on
-// cream (rule 10). The heading is the one church band h2 (H2_DISPLAY, rule
-// 17) in gold; the eyebrow, when an editor sets one, is the small gold UI
-// label the link-card doors use. It paints its own ground, so the cadence
-// surface SectionRenderer hands it is accepted and not used.
+// ON THE INDIGO BAND (2026-09-24, the document list as a ruled list; Nathan:
+// the arch cards felt repetitive and an arch doesn't suit a document). The
+// list is a full-width brand band (rule 2) in both of its forms, never a
+// boxed card on cream (rule 10). The heading is the one church band h2
+// (H2_DISPLAY, rule 17) in gold; the eyebrow, when an editor sets one, is
+// the small gold UI label the rest of the church bands use.
 //
 // THE FORM IS DERIVED (documentForm() in src/lib/document-doors.ts, rule 15).
 //
-// DOOR CARDS: one to four documents. Each is a cream door standing on the
-// band: the four-centred head of the Adams Street door (the same curve as
-// ArchFrame's door arch) over a cream panel, then the year in Castoro
-// Titling if it has one, the title, the note, and the gold plate (the one
-// button family) saying what the door does: "Download PDF" for an uploaded
-// file, "Open on churchcenter.com" for a link (docAction()). The whole door
-// is the one link. A document with neither a file nor a link (a book on the
-// church library's shelf) is a door with no button and no link. The panel is
-// the FIXED cream (--color-bg never flips), like Our Building, so its inks
-// are band tokens already gated on it in theme-tokens.test.ts: band-indigo
-// for the year and title, band-brown for the note. Doors keep the order
-// sortDocsByYearDesc() gives (newest first, undated last, ties by title).
+// A SHORT LIST (one to four documents) is a ruled list: a gold rule above
+// the list, a hairline below each row. Each row is a grid of three columns
+// at desktop: the year in Castoro Titling gold (an empty cell when a
+// document has no year, so every title still lines up), the title in
+// Castoro paper with its note beneath in italic taupe, and the action at
+// the right: a gold UI-caps text link with a trailing arrow, "Download PDF"
+// for an uploaded file, "Open on churchcenter.com" for a link (docAction()).
+// A document with neither gets no link, just the row. The title itself is
+// plain text, never a link: the action link is the one control, and its
+// accessible name carries the document's title too (several rows in a list
+// say "Download PDF"), in visually-hidden text. On a phone the row stacks:
+// year, title, note, link. Rows keep the order sortDocsByYearDesc() gives
+// (newest first, undated last, ties by title).
 //
 // THE REGISTER: five or more (the blog's issues of The Visitor). The same
-// band, the documents in year groups under gold Titling years when they span
-// two or more years (groupDocsByYear()), each group's titles in a run of
-// columns, each title the link, its note under it in taupe. Paper and taupe
-// on the indigo are gated beside the rest of the identity pairs. A file keeps
-// the `download` attribute; a link to somebody else's page opens in a new tab
-// and never carries `download`, because you cannot download a website.
+// band, the same gold rule and the same heading grammar, so the two forms
+// read as one family: the documents in year groups under gold Titling years
+// when they span two or more years (groupDocsByYear()), each group's titles
+// in a run of columns, each title the link, its note under it in taupe.
+// Paper and taupe on the indigo are gated beside the rest of the identity
+// pairs. A file keeps the `download` attribute; a link to somebody else's
+// page opens in a new tab and never carries `download`, because you cannot
+// download a website.
 import { sortDocsByYearDesc, groupDocsByYear } from '@/lib/church-derive';
 import { docAction, documentForm } from '@/lib/document-doors';
 import { H2_DISPLAY } from '@/lib/heading-grammar';
@@ -64,10 +67,13 @@ const sorted = sortDocsByYearDesc(
 const form = documentForm(sorted.length);
 const groups = form === 'register' ? groupDocsByYear(sorted) : [];
 
-// The gold plate: the same class string as the link-card doors' button, so
-// the one button family costs the sheet nothing new (CLAUDE.md rule 20).
-const PLATE =
-  'mt-auto inline-flex min-h-[44px] items-center self-start rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] transition-transform group-hover:-translate-y-px';
+// The action link: a gold UI-caps text link with a trailing arrow that nudges
+// on hover, the same shape as CtaLink's "link" look (CtaLink.astro), just
+// recoloured gold for this band. Kept here rather than routed through
+// CtaLink because the href is a raw docAction() result, not a ctaBlock, and
+// a file needs the `download` attribute CtaLink has no concept of.
+const ACTION_LINK =
+  'group inline-flex items-center gap-2 border-b border-current pb-1 font-ui text-ui font-semibold text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-transparent';
 ---
 
 {
@@ -84,46 +90,53 @@ const PLATE =
           </h2>
         )}
 
-        {form === 'doors' ? (
-          <ul
-            class="dl-doors"
-            style={`--n:${sorted.length};--n-md:${Math.min(sorted.length, 2)}`}
-            role="list"
-          >
+        {form === 'rows' ? (
+          <ol class="mt-[clamp(36px,4vw,64px)] border-t border-gold/35" role="list">
             {sorted.map((doc) => {
               const action = docAction(doc);
-              const Door = action ? 'a' : 'div';
+              const hasYear = typeof doc.year === 'number';
               return (
-                <li>
-                  <Door
-                    class="dl-door group"
-                    href={action?.href}
-                    download={action?.kind === 'file' ? true : undefined}
-                    target={action?.kind === 'link' ? '_blank' : undefined}
-                    rel={action?.kind === 'link' ? 'noopener noreferrer' : undefined}
+                <li class="dl-row border-b border-bg/20 py-[clamp(20px,2.5vw,28px)]">
+                  <span
+                    class:list={[
+                      'dl-row-year font-display text-h3 leading-none text-gold',
+                      !hasYear && 'dl-row-year-empty',
+                    ]}
                   >
-                    <span class="dl-head" aria-hidden="true" />
-                    <span class="dl-body">
-                      {typeof doc.year === 'number' && (
-                        <span class="mb-2 block font-display text-h3 leading-none text-band-indigo">
-                          {doc.year}
-                        </span>
-                      )}
-                      <span class="block font-body text-h3 leading-[1.18] text-band-indigo">
-                        {doc.title}
+                    {hasYear ? doc.year : ''}
+                  </span>
+                  <span class="dl-row-body min-w-0">
+                    <span class="block font-body text-xl leading-snug text-bg">{doc.title}</span>
+                    {doc.note && (
+                      <span class="mt-1 block text-base leading-[1.45] text-band-taupe italic">
+                        {doc.note}
                       </span>
-                      {doc.note && (
-                        <span class="mt-3 mb-6 block text-lg leading-[1.45] text-band-brown">
-                          {doc.note}
+                    )}
+                  </span>
+                  <span class="dl-row-action">
+                    {action && (
+                      <a
+                        href={action.href}
+                        download={action.kind === 'file' ? true : undefined}
+                        target={action.kind === 'link' ? '_blank' : undefined}
+                        rel={action.kind === 'link' ? 'noopener noreferrer' : undefined}
+                        class={ACTION_LINK}
+                      >
+                        {action.label}
+                        <span class="sr-only"> {doc.title}</span>
+                        <span
+                          aria-hidden="true"
+                          class="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                        >
+                          &#8594;
                         </span>
-                      )}
-                      {action && <span class={PLATE}>{action.label}</span>}
-                    </span>
-                  </Door>
+                      </a>
+                    )}
+                  </span>
                 </li>
               );
             })}
-          </ul>
+          </ol>
         ) : (
           <div class="mt-[clamp(36px,4vw,64px)] border-t border-gold/35">
             {groups.map((group) => (
@@ -174,3 +187,25 @@ const PLATE =
     </section>
   )
 }
+
+<style>
+  /* The ruled list (one to four documents): three columns at desktop -- the
+     year, the title-and-note, the action -- stacked on a phone. The column
+     widths are the one thing Tailwind's arbitrary grid-cols syntax reads
+     worse than a rule, so they live here instead of inline. */
+  .dl-row {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr) auto;
+    column-gap: clamp(20px, 2.5vw, 40px);
+    align-items: baseline;
+  }
+  @media (max-width: 640px) {
+    .dl-row {
+      grid-template-columns: 1fr;
+      row-gap: 8px;
+    }
+    .dl-row-year-empty {
+      display: none;
+    }
+  }
+</style>

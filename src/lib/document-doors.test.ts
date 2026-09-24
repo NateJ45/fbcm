@@ -2,15 +2,15 @@
 // scaffold-file: church
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { DOOR_LIMIT, docAction, documentForm, fileExtension, linkHost } from './document-doors.ts';
+import { ROW_LIMIT, docAction, documentForm, fileExtension, linkHost } from './document-doors.ts';
 
 const RUN = '​​​​‌‍﻿​‌‍﻿​';
 
 test('one to four documents are doors; more, or none, are a register', () => {
-  assert.equal(DOOR_LIMIT, 4);
-  assert.equal(documentForm(1), 'doors');
-  assert.equal(documentForm(3), 'doors');
-  assert.equal(documentForm(4), 'doors');
+  assert.equal(ROW_LIMIT, 4);
+  assert.equal(documentForm(1), 'rows');
+  assert.equal(documentForm(3), 'rows');
+  assert.equal(documentForm(4), 'rows');
   assert.equal(documentForm(5), 'register');
   assert.equal(documentForm(42), 'register');
   assert.equal(documentForm(0), 'register');
