@@ -39,14 +39,18 @@ Street", from Site settings.
   so the eyebrow and date line always fit. `typeset()` curls the quotes.
 - **Cost, measured 2026-09-24:** 154 cards (11 pages + /blog + /privacy + 142 posts),
   8.6 MB in all, 57 KB on average, the largest 64.5 KB (palette PNG, quality 80). A cold
-  run takes 3 to 5 s; a warm build reads `public/og/.manifest.json` (a hash of each card's
+  run takes 3 to 5 s; a warm build reads `src/data/og-cards.generated.json` (gitignored; a hash of each card's
   words, the generator, `og-card.ts`, the fonts and the drawing) and redraws nothing in
   under a second.
 - **No Sanity project, no cards.** On a fresh clone the generator prints one line and exits
-  0; BaseLayout's `import.meta.glob` of `public/og/*.png` then finds nothing and every route
+  0; BaseLayout's eager `import.meta.glob` of that manifest then finds nothing and every route
   falls back to `og-default.png`. A route the generator does not draw (the paginated, tag
   and category archives) falls back the same way. Nothing ever points at a card that was
   not made.
+- **Never glob the PNGs.** BaseLayout learns which routes have a card from the manifest,
+  not from `import.meta.glob('public/og/*.png')`: a lazy glob, even never awaited, makes
+  Vite emit every matched file into `_astro/`, which published all 154 cards a second time
+  (+8.97 MB, measured and fixed 2026-09-24).
 - **A slug with an accent** (`/post/händel-...`) arrives in BaseLayout percent-encoded, so
   the lookup decodes the pathname first; the card file carries the letter itself.
 

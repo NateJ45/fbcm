@@ -20,7 +20,11 @@ reading or its date). Text is set as outlines by opentype.js from the site's own
 and rasterised by sharp, so it runs in CI with no browser and no new dependency; cards are
 cached by a content hash and not committed. 8.6 MB in all, 64.5 KB at most, 3 to 5 s cold.
 BaseLayout now ranks a route's card above a post's cover photo, and the old `og:pages`
-script (which could not have run: it called an unimported `closeRenderer`) is gone.
+script (which could not have run: it called an unimported `closeRenderer`) is gone. BaseLayout knows which routes have a card from the generator's manifest
+(`src/data/og-cards.generated.json`), not from a glob of `public/og/*.png`: a lazy glob made
+Vite publish every card a second time into `_astro/` (+8.97 MB, caught by comparing `dist/`
+against main's). Net cost: `dist/client` 93.2 MB to 102.5 MB (9.0 MB of cards, 0.35 MB of
+HTML); `/visit` mobile Lighthouse unchanged (perf 0.93, LCP 3.08 to 3.15 s before and after).
 
 **Structured data.** The starter's LocalBusiness became one `["Church", "Organization"]` node
 from Site settings (full address, the building's map point from OpenStreetMap, phone, email,

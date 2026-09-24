@@ -74,18 +74,26 @@ const canonical = new URL(Astro.url.pathname, site.url).toString();
 // src/lib/church-schema.ts), drawn in the church identity by
 // scripts/generate-og-pages.mjs at the start of every `npm run build`.
 //
-// The convention is CHECKED against what is actually on disk with
-// import.meta.glob (a build-time, statically analysed read of public/og/), so
-// a route whose card was not made (no Sanity project, or a route the generator
-// does not draw: the paginated and tag archives) gets /og-default.png, which
-// is committed, and never an og:image URL that 404s. Keys only: the glob is
-// never awaited, so nothing is bundled.
-const OG_PAGE_CARDS = import.meta.glob('../../public/og/*.png');
+// The convention is CHECKED against the cards that were actually drawn: the
+// generator's manifest, src/data/og-cards.generated.json (gitignored), read
+// with an EAGER glob so a missing file (no Sanity project, a fresh clone)
+// reads as no cards rather than failing the build. A route without a card
+// (no project, or a route the generator does not draw: the paginated, tag and
+// category archives) gets /og-default.png, which is committed, and never an
+// og:image URL that 404s. NOT a glob of public/og/*.png: even un-awaited, a
+// lazy glob makes Vite emit every matched PNG into _astro/, which published
+// all 154 cards a second time (+8.97 MB, measured 2026-09-24).
+const OG_MANIFESTS = import.meta.glob<Record<string, unknown>>('../data/og-cards.generated.json', {
+  eager: true,
+  import: 'default',
+});
+const OG_CARDS = Object.values(OG_MANIFESTS)[0] ?? {};
 const routeCard = (() => {
   // Decoded: a post slug with an accent (/post/händel-...) arrives here
-  // percent-encoded, while the card on disk is named with the letter itself.
+  // percent-encoded, while the card is named with the letter itself.
   const candidate = ogCardPath(decodeURI(Astro.url.pathname));
-  return `../../public${candidate}` in OG_PAGE_CARDS ? candidate : null;
+  const name = candidate.replace(/^\/og\//, '').replace(/\.png$/, '');
+  return name in OG_CARDS ? candidate : null;
 })();
 
 // Resolve a raw Sanity image object to a 1200x630 OG URL through the image

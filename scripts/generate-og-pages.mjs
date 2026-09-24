@@ -31,7 +31,8 @@
 // set in the real face on any machine, and the output is byte-stable.
 //
 // FAST AND CACHED. Each card's inputs (its words, this file, og-card.ts, the
-// fonts and the drawing) are hashed into public/og/.manifest.json; a card whose
+// fonts and the drawing) are hashed into src/data/og-cards.generated.json
+// (gitignored); a card whose
 // hash has not changed is not redrawn. A cold run of ~155 cards takes a few
 // seconds; a warm one reads a manifest. Cards for routes that no longer exist
 // are deleted.
@@ -63,7 +64,12 @@ const started = Date.now();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
 const outDir = resolve(root, 'public/og');
-const manifestPath = resolve(outDir, '.manifest.json');
+// The manifest is also the list BaseLayout reads to know which routes HAVE a
+// card (an eager import.meta.glob of this one JSON file). It lives outside
+// public/ so it is not published, and it replaced a glob of public/og/*.png:
+// a lazy glob still makes Vite emit every matched PNG into _astro/, which
+// published all 154 cards twice (measured: +8.97 MB).
+const manifestPath = resolve(root, 'src/data/og-cards.generated.json');
 
 const env = loadEnv(root);
 const projectId = env.PUBLIC_SANITY_PROJECT_ID;
@@ -436,10 +442,9 @@ await Promise.all(Array.from({ length: 4 }, worker));
 
 // Cards for routes that are gone, and anything else in the folder (an
 // OG_DEBUG_SVG run's .svg files, a stray download): public/og/ is copied into
-// the build whole, so only the current cards and the manifest may stay.
+// the build whole, so only the current cards may stay.
 let removed = 0;
 for (const f of readdirSync(outDir)) {
-  if (f === '.manifest.json') continue;
   if (!(f.endsWith('.png') && next[f.replace(/\.png$/, '')])) {
     rmSync(resolve(outDir, f));
     removed += 1;
