@@ -138,6 +138,129 @@
       "showBios": true
     },
     {
+      "_type": "richTextSection",
+      "_key": "st-letter",
+      "anchor": {
+        "_type": "slug",
+        "current": "letter"
+      },
+      "heading": "A Note From Our Pastors",
+      "body": [
+        {
+          "_type": "block",
+          "_key": "lt-a-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-a-1s1",
+              "text": "If you’re looking not only for a place to attend a service, but for a community of faith, we would love to welcome you to First Baptist. And, if you’re unsure what you believe (or even if you consider yourself a great skeptic!), but are wondering if there may be something more out there, we’d love for you to join us for worship too!",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-b-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-b-1s1",
+              "text": "After all, Jesus did not say to his first followers: “Figure it all out, and then get back to me.” He said to them, “Come and see” (John 1:39).",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-c-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-c-1s1",
+              "text": "Even so, we know people curious about a church wonder what a particular church, including its pastors, “are all about.”",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-d-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-d-1s1",
+              "text": "We love the Good News – the Gospel – that Christ came and lived a life as it was meant to be lived: in full obedience to the Father. And in doing that, all the way to the cross, he destroyed our death by dying. He gave us new life in rising by the power of the Holy Spirit. He Ascended to heaven, and he will come again in glory to make all that is wrong right. That’s life-changing, and truly good, news. It’s news good enough to set all of us free.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-e-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-e-1s1",
+              "text": "We’re all about the church. This church is made up of people who are all imperfect, all of us with our own struggles, all of us failing, falling into our old selfish ways, and getting up again only by God’s grace. And those same people are also filled by God’s own Spirit, have a sincere desire to be “good news” people, and to serve one another as we grow in our love of Christ together.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-f-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-f-1s1",
+              "text": "We’re honored to serve as Co-Pastors here. And it’s not only because First Baptist decided to do something a little unusual in calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-g-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-g-1s1",
+              "text": "We love to serve here because we love being part of this Spirit-led people gathered to join Christ's presence in our community.",
+              "marks": []
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "lt-h-1",
+          "style": "normal",
+          "markDefs": [],
+          "children": [
+            {
+              "_type": "span",
+              "_key": "lt-h-1s1",
+              "text": "Finally, we would love for you to join us this Sunday, or anytime we’re gathered to encounter the same Christ who was, and is, and will come again – as we meet him in worship, the word, and the Lord’s table. “Come and see!”",
+              "marks": []
+            }
+          ]
+        }
+      ]
+    },
+    {
       "_type": "staffGridSection",
       "_key": "st-coordination",
       "anchor": {
