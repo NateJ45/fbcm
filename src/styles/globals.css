@@ -1605,18 +1605,21 @@ a:focus-visible .zoom-img img,
   transform: scaleY(1);
 }
 
-/* ---- View transitions — cross-fade for <main> content on every navigation.
-   Header and footer are named and pinned with animation: none so they stay
-   put during the swap. Astro's ClientRouter is already wired in BaseLayout.
-   Astro respects prefers-reduced-motion automatically — no extra rule needed. ---- */
-main#main {
-  view-transition-name: main-content;
-}
+/* ---- View transitions: one cross-fade of the screen on every navigation,
+   with the header held still. Astro's ClientRouter is wired in BaseLayout and
+   cuts every transition under prefers-reduced-motion.
+
+   Reworked 2026-09-24 (feat/print-motion). <main> and the footer used to be
+   named too, and a named element's GROUP animates from where it was to where
+   it lands: leaving a page scrolled 1000px down, the old <main> sat 1000px
+   above the screen and the new one at the top, so the whole page SLID down
+   the screen through the fade (measured frame by frame), and a footer link
+   slid the footer away. Now nothing but the header is named, so the page is
+   the root snapshot, screen-sized in both states, and it simply cross-fades
+   in place. The header's group and images do not animate at all, so the bar
+   and the logo stay put. ---- */
 .site-header {
   view-transition-name: site-header;
-}
-footer {
-  view-transition-name: site-footer;
 }
 
 @keyframes vt-fade-out {
@@ -1635,17 +1638,17 @@ footer {
     opacity: 1;
   }
 }
-::view-transition-old(main-content) {
+::view-transition-old(root) {
   animation: vt-fade-out 150ms ease forwards;
 }
-::view-transition-new(main-content) {
+::view-transition-new(root) {
   animation: vt-fade-in 200ms ease forwards;
 }
 
 /* The post title carries over (2026-09-24): a blog row's title and the post's
    h1 share the name `post-title` for one forward navigation
    (src/components/transitions/shared-title.ts), so the title travels from the
-   row into the masthead while <main> cross-fades around it. A little longer
+   row into the masthead while the page cross-fades around it. A little longer
    than the cross-fade, on the site's settle curve, so it lands after the page
    has changed rather than racing it. Reduced motion never gets here:
    the pairing is skipped in script, and Astro cuts every transition. */
@@ -1664,10 +1667,9 @@ footer {
   animation: vt-fade-in 320ms 140ms cubic-bezier(0, 0, 0.2, 1) both;
 }
 
+::view-transition-group(site-header),
 ::view-transition-old(site-header),
-::view-transition-new(site-header),
-::view-transition-old(site-footer),
-::view-transition-new(site-footer) {
+::view-transition-new(site-header) {
   animation: none;
 }
 
