@@ -108,8 +108,12 @@ jobs:
       # never be able to stop a content change reaching the live site. Stale
       # cards are a much smaller problem than a site that quietly stopped
       # updating. The same check belongs in ci.yml as a hard failure, where a
-      # human is pushing code and can act on it. The starter has no committed
-      # per-page cards yet, so there is nothing to check.
+      # human is pushing code and can act on it.
+      #
+      # FBCM (2026-09-24): nothing to check here, by construction. The share
+      # cards are not committed; `npm run build` draws them from the published
+      # content before Astro runs (scripts/generate-og-pages.mjs, no browser
+      # needed), so every deploy ships cards as fresh as its pages.
 
       - name: Build
         env:

@@ -88,3 +88,8 @@ sanity-backup-*.tar.gz.enc
 # ledgers under .superpowers/sdd/<plan>/). Local working state, never repo
 # source; each SDD run's ledger is deleted once its final review is clean.
 .superpowers/
+
+# Share cards: generated from the published content at the start of every
+# `npm run build` (scripts/generate-og-pages.mjs), never committed. The
+# manifest beside them is the generator's cache.
+public/og/
