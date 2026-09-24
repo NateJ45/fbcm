@@ -1238,6 +1238,58 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   deploy (no dates in the sitemap to tell changed pages apart; the engines ignore unchanged
   ones); post `<title>`s are unchanged, a place name would not read naturally there.
 
+### Scripture text and the post tools (2026-09-24, `feat/scripture-text`)
+
+- [ ] #nathan **Confirm the translation with the pastors, or get an NIV route.** Every sermon
+      preview's reading now opens into its passage in the Berean Standard Bible (public domain,
+      no key). The church quotes the NIV. The code already switches to the NIV when
+      `API_BIBLE_KEY` is set at build time and API.Bible has the NIV for that key, inside
+      Biblica's allowance. The steps, in order:
+  1. Ask the pastors: BSB (nothing to do), or NIV.
+  2. If NIV, **ask Biblica for written permission** (biblica.com/permissions). Without it the
+     site may show only part of what it needs: the previews quote **1,014 distinct verses**,
+     twice the 500-verse allowance, and three books pass a quarter of their text (1
+     Thessalonians 47 of 89 verses, 52.8%; 1 John 48 of 105, 45.7%; Philippians 32 of 104,
+     30.8%). Biblica's notice also says the verses may not be 25% or more of "the work in which
+     they are quoted"; read as the page, the passage is at least a quarter of 52 of the 107
+     preview pages (median 24.8%, largest 79.5%). Under all three limits the build's cap gives
+     the NIV to 54 readings (303 verses) and leaves 52 in the BSB. With written permission the
+     allowance in `TRANSLATIONS.NIV` (`src/lib/scripture-text.ts`) is changed to what Biblica
+     grants.
+  3. Get a free API.Bible key (api.bible, Starter plan: non-commercial, up to three copyrighted
+     Bibles, 5,000 calls a month) and pick the NIV. Confirm with API.Bible that a church site
+     with a Give link counts as non-commercial ("NIV commercial use not available").
+  4. Put the key in GitHub as the `API_BIBLE_KEY` secret and pass it to the build step in
+     `deploy.yml` (and in `.env` locally). Build and read the `[scripture]` warnings: each
+     reading that stays BSB is named.
+  5. Two API.Bible terms come with it: **FUMS**, a third-party script
+     (`https://pkg.api.bible/fumsV3.min.js`) that must run where its text is shown (built:
+     `src/scripts/fums.ts`, loaded only when a reader opens an NIV passage; it is the only
+     third-party script a post would load, beside the cookieless analytics); and **cached text
+     cleared within 14 days**, which for a static site means a rebuild at least every 14 days
+     (the build refetches NIV text older than that; weekly previews already trigger rebuilds,
+     but a scheduled weekly build would make it certain).
+- [ ] #nathan **Approve the new copy**: "Read Romans 13:11-14", "Read aloud", "Stop",
+      "Share", "Add to calendar", "Link copied" and the calendar event's words, in the approval
+      note's "Sermon previews: the passage..." section.
+- **"Read aloud", not "Listen".** The brief asked for "Listen to this post"; a preview's order
+  already has a Listen row (the livestream) one line above, so the tool says "Read aloud".
+- **For the Visit agent:** `src/lib/ics.ts` exports `buildIcs`, `escapeText`, `foldLine`,
+  `localStamp`, `utcStamp`, `ICS_TZID` and `VTIMEZONE_INDIANAPOLIS`. A weekly Sunday service is
+  `buildIcs({ prodId, stamp, events: [{ uid, start: { date, minutes }, durationMinutes,
+summary, location, rrule: 'FREQ=WEEKLY;BYDAY=SU' }] })`; `src/lib/worship-ics.ts` shows how
+  the time, length and address are read from Site settings (`serviceMinutes`, `addressLine`).
+  `ics.ts` carries no scaffold marker on purpose: it is not the journal's.
+- **The NIV path is unverified end to end** (no key exists). `versesOfBracketText` is tested
+  against the text format API.Bible's docs describe; the first keyed build should be read line
+  by line, and a passage checked against a printed NIV.
+- **A whole-chapter or verse-list reading** ("Psalm 130", "Romans 5:1, 6") is handled by
+  `passageSpans`, but `readingOf()` still only finds chapter:verse references (see the scripture
+  index entry below), so none reaches the page today.
+- **`/blog/scripture` carries no passage text**, on purpose: the index lists 106 passages, and
+  their text is about 190 KB of JSON (1,037 verses) that would make a light register page heavy.
+  Each row already links to its post, where the passage opens.
+
 ### Beliefs identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** `scripts/pages/beliefs.mjs` uses no new

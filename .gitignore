@@ -94,3 +94,8 @@ sanity-backup-*.tar.gz.enc
 # manifest is the generator's cache and BaseLayout's list of drawn cards.
 public/og/
 src/data/og-cards.generated.json
+
+# The passage text behind every sermon preview's reading: fetched at the start
+# of every `npm run build` (scripts/fetch-scripture.mjs), never committed. The
+# chapters themselves are cached in node_modules/.cache/scripture/.
+src/data/scripture.generated.json

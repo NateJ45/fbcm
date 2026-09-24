@@ -305,6 +305,60 @@ Both belong to the `journal` scaffold capability; every new file is `scaffold-fi
   rebuilt node by node (text and `<mark>` only). Pagefind's own UI files are written by its API
   but nothing links them.
 
+### The passage, Read aloud, Share and Add to calendar (2026-09-24, `feat/scripture-text`)
+
+All `journal` capability except `src/lib/ics.ts`, which is generic on purpose.
+
+- **The passage.** A sermon preview's "The reading" block (the `journalLection` from
+  `post-body.ts`) ends in a native `<details class="pp-passage">`: "Read Romans 13:11-14", then
+  the passage in Castoro roman with verse numbers as small gold superscripts (`c:v` where a
+  passage turns a chapter) and the translation's credit under it. No JavaScript: it opens as a
+  plain disclosure, and on paper it prints open (CSS `::details-content` under `@media print`,
+  plus the post page's `beforeprint` script for browsers without it; the "Read" line does not
+  print). A preview whose reading is only in the masthead (5 of 107) gets a reading block of its
+  own at the top of the body. A reading with no text (not fetched, did not parse) renders exactly
+  as before. The page attaches the passage after `prepareBody` (which stays pure);
+  `JournalPortableText.tsx` `LectionPassageText` draws it.
+- **Where the text comes from.** `scripts/fetch-scripture.mjs` runs inside `npm run build`
+  (after the share cards, before Astro; `npm run scripture` by hand). It reads the posts from
+  Sanity (read only), derives every preview's readings the way the page does (`readingOf` over
+  the opening, and `findLection` through `prepareBody`), fetches each chapter once from
+  bible.helloao.org (BSB, public domain), at most four requests in flight, and writes
+  `src/data/scripture.generated.json` (gitignored), which the post page reads with an eager
+  glob. Chapters are cached in `node_modules/.cache/scripture/` (CI and deploy restore it with
+  `actions/cache` after `npm ci`). Measured: cold 5.0 s, warm 1.2 s (90 chapters, 106 readings).
+  Nothing fails the build: a failed chapter drops its readings with a warning.
+- **`src/lib/scripture-text.ts`** (pure, unit-tested): the translation config (`TRANSLATIONS`,
+  the one place to switch it), `passageSpans` (ranges, cross-chapter ranges, several references,
+  a carried book and chapter, part-verse marks like `12a`, stega-safe), `chaptersOf`,
+  `versesOfHelloao`, `versesOfBracketText` (API.Bible and ESV text), `sliceSpans` (null rather
+  than a wrong passage), `verseLabels`, and `allocateTranslations`, the NIV cap.
+- **The NIV switch.** With `API_BIBLE_KEY` set at build time and the NIV available to that key
+  (checked against API.Bible first), the newest readings get the NIV until Biblica's allowance
+  is spent: 500 distinct verses, under 25% of any book, and each passage under 25% of the page
+  it is on. The rest stay BSB, each with a build warning. NIV text is cached at most 14 days
+  (API.Bible's terms), carries Biblica's full notice as its credit, and its FUMS tokens go on the
+  `<details>` so `src/scripts/fums.ts` records a view when a reader opens it. The ESV hook is a
+  documented comment in `TRANSLATIONS`. Unverified end to end: no key exists yet.
+- **The tools row** (`src/components/blog/PostTools.astro`, under the order in the masthead's
+  right column): "Read aloud", "Stop", "Share" and, on a preview, "Add to calendar", in the
+  furniture face with short gold dividers, 44px targets, hidden in print. Read aloud and Share
+  are rendered `hidden`; `src/scripts/post-tools.ts` (1,760 B, 885 B gzip) shows them only where
+  they work. Read aloud (`src/scripts/read-aloud.ts`, loaded on the first press) reads the title
+  and then the body's blocks one utterance each, prefers a natural English voice, is a toggle
+  with `aria-pressed`, and stops on `astro:before-swap`. It is "Read aloud", not "Listen",
+  because the order already has a Listen row. Share uses `navigator.share`, else copies the
+  canonical link and says "Link copied" in a polite live region.
+- **Add to calendar** links to `/post/<slug>/sunday.ics` (`src/pages/post/[slug]/sunday.ics.ts`),
+  a static file per preview: the Sunday, the Site settings service time and length (the Church
+  JSON-LD's own parsers), the address, in `America/Indiana/Indianapolis` with a VTIMEZONE.
+  A static route rather than a data: URL because iOS opens a real `text/calendar` URL in
+  Calendar and ignores `download` on a data: URL, and it keeps ~1.6 KB out of every page. The
+  link hides itself (client side) once the Sunday has passed on the church's calendar.
+- **`src/lib/ics.ts`** is the reusable RFC 5545 writer: 75-octet folding that never splits a
+  character, TEXT escaping, CRLF, TZID plus the Indianapolis VTIMEZONE, a caller-supplied
+  DTSTAMP (byte-stable builds) and an optional `rrule` for a weekly event.
+
 ### Church identity (the Who We Are "alive" pass, 2026-09-23)
 
 Ported from the prototype at `docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html`. Every colour on these components is an identity token in globals.css `@theme` and `.dark` (`--color-band-indigo`, `-deep`, `-gold`, `-brown`, `-taupe`, `-ink`, `--color-gold-hover`, `--color-brown-ink`), each holding a value from the church's brand palette (the owner's ruling, 2026-09-23: no off-brand greens, mint, violet, red or purple), and every ink-on-ground pair is measured in both themes by `theme-tokens.test.ts` (`IDENTITY_PAIRS`, `THEMED_IDENTITY_PAIRS`). Geometry, masks and motion live in the `/* Church identity (2026-09-23) */` block of globals.css. No block carries a colour field (rule 9): colour comes from the block's type or the goal's position. Site owner decisions that bind all of them: no visible photo captions anywhere, and buttons are square with a gold rule (no arched head).

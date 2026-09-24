@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run og:pages && node scripts/with-workerd.mjs astro build && node scripts/pagefind-index.mjs",
+    "build": "npm run og:pages && npm run scripture && node scripts/with-workerd.mjs astro build && node scripts/pagefind-index.mjs",
     "build:full": "npm run typegen && npm run build",
     "preview": "wrangler dev -c dist/server/wrangler.json",
     "astro": "astro",
@@ -16,6 +16,7 @@
     "typegen": "sanity schema extract --force && sanity typegen generate",
     "og": "node scripts/generate-og-default.mjs",
     "og:pages": "node --experimental-strip-types scripts/generate-og-pages.mjs",
+    "scripture": "node --experimental-strip-types scripts/fetch-scripture.mjs",
     "check:jsonld": "node --experimental-strip-types scripts/validate-jsonld.mjs",
     "indexnow": "node --experimental-strip-types scripts/indexnow.mjs",
     "apply-brand": "node scripts/apply-brand.mjs",

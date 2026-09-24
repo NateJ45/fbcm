@@ -83,6 +83,26 @@ import { H2_DISPLAY } from '@/lib/heading-grammar';
 import JournalBody from '@/components/JournalBody.astro';
 import ReadingProgress from '@/components/ReadingProgress.astro';
 import StickyCTAChip from '@/components/StickyCTAChip';
+import PostTools from '@/components/blog/PostTools.astro';
+import {
+  passageFor,
+  verseLabels,
+  TRANSLATIONS,
+  type ScriptureManifest,
+} from '@/lib/scripture-text';
+import type { JournalLection } from '@/lib/post-body';
+import { serviceMinutes, worshipIcsPath } from '@/lib/worship-ics';
+
+// The passage text for every reading, fetched before the build by
+// scripts/fetch-scripture.mjs into src/data/scripture.generated.json
+// (gitignored). An EAGER glob, as BaseLayout reads the share-card manifest: a
+// missing file (a fresh clone, no Sanity project) reads as no passages, and
+// every reading then renders exactly as it did before the passages existed.
+const SCRIPTURE_FILES = import.meta.glob<ScriptureManifest>('../../data/scripture.generated.json', {
+  eager: true,
+  import: 'default',
+});
+const scripture = Object.values(SCRIPTURE_FILES)[0] ?? null;
 
 // Enumerate slugs, and carry the foot of each page (doors + series rows).
 // Returns [] when journal is off: no detail pages build and they 404.
@@ -202,10 +222,53 @@ const renderBody = sermonVideoHref ? retargetLinks(rawBody, sermonsHref, sermonV
 // The body as the reader gets it: Wix residue repaired, tables, points, Q and
 // A, and a preview's reading found (src/lib/post-body.ts). Stored text is not
 // touched; this is a render pass.
-const body = prepareBody(renderBody, {
+const prepared = prepareBody(renderBody, {
   coverRef: assetRefOf(entry.coverImage),
   preview: isPreview,
 });
+
+// THE PASSAGE (2026-09-24, feat/scripture-text). A preview's reading opens
+// into its own text: each "The reading" block gets the passage the build
+// fetched for its reference, as a <details> under the church's quotation
+// (JournalPortableText's LectionPassageText). A preview whose reading is only
+// in the masthead (no reading block in the body; 5 of 107) gets a reading
+// block of its own at the top of the body, holding just the disclosure. No
+// passage for a reading (not fetched, did not parse) leaves the markup as it
+// was. The text is derived from the reading, never stored (rule 15).
+const lectionPassage = (reference: string): JournalLection['passage'] | undefined => {
+  const p = isPreview ? passageFor(scripture, reference) : null;
+  if (!p) return undefined;
+  const labels = verseLabels(p.verses);
+  return {
+    verses: p.verses.map((v, i) => ({ label: labels[i], text: v.text })),
+    credit: TRANSLATIONS[p.translation].credit,
+    translation: p.translation,
+    ...(p.fums?.length ? { fums: p.fums } : {}),
+  };
+};
+const withPassages = prepared.map((node) => {
+  if (node._type !== 'journalLection') return node;
+  const lec = node as JournalLection;
+  const passage = lectionPassage(lec.reference);
+  return passage ? { ...lec, passage } : lec;
+});
+const mastReading = isPreview ? readingOf(openingText(rawBody)) : '';
+const mastPassage =
+  mastReading && !withPassages.some((n) => n._type === 'journalLection')
+    ? lectionPassage(mastReading)
+    : undefined;
+const body: BodyNode[] = mastPassage
+  ? [
+      {
+        _type: 'journalLection',
+        _key: 'reading-lection',
+        reference: mastReading,
+        blocks: [],
+        passage: mastPassage,
+      } satisfies JournalLection,
+      ...withPassages,
+    ]
+  : withPassages;
 
 // The lede is the excerpt, UNLESS the excerpt is the first paragraph again
 // (33 of 142 posts), in which case the reader would meet it twice in a screen.
@@ -223,6 +286,13 @@ const sunday = isPreview ? sundayOf(entry.publishedAt) : null;
 const postedDay = localDay(entry.publishedAt);
 const readMinutes = readingTimeFromPortableText(entry.body);
 const listen = isPreview ? sermonVideoHref || listenHref(rawBody, sermonsHref) : '';
+// "Add to calendar": a preview's Sunday, when Site settings' service time can
+// be read (the same check the .ics route makes, so the link never points at a
+// file that was not built).
+const icsHref =
+  isPreview && sunday && serviceMinutes(siteSettings?.serviceTime) !== null
+    ? worshipIcsPath(slug as string)
+    : undefined;
 // `meta` names the Pagefind metadata a fact carries into a search result row
 // (the site search, 2026-09-24): the date column and the reading.
 type Fact = {
@@ -364,33 +434,41 @@ const schemas = [
           {showLede && <p class="p2-lede">{entry.excerpt}</p>}
         </div>
 
-        {
-          facts.length > 0 && (
-            <div class="p2-mast-r">
-              <p class="p2-order-h font-ui text-ui text-gold-ink" data-pagefind-ignore>
-                {isPreview ? 'This Sunday’s order' : 'About this post'}
-              </p>
-              <dl class="p2-facts">
-                {facts.map((f) => (
-                  <div>
-                    <dt class="font-ui text-ui">{f.label}</dt>
-                    <dd class:list={{ 'p2-big': f.big }} data-pagefind-meta={f.meta}>
-                      {f.href ? (
-                        <a href={f.href}>{f.value}</a>
-                      ) : f.datetime ? (
-                        <time datetime={f.datetime} class="oldstyle">
-                          {f.value}
-                        </time>
-                      ) : (
-                        f.value
-                      )}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          )
-        }
+        <div class="p2-mast-r">
+          {
+            facts.length > 0 && (
+              <Fragment>
+                <p class="p2-order-h font-ui text-ui text-gold-ink" data-pagefind-ignore>
+                  {isPreview ? 'This Sunday’s order' : 'About this post'}
+                </p>
+                <dl class="p2-facts">
+                  {facts.map((f) => (
+                    <div>
+                      <dt class="font-ui text-ui">{f.label}</dt>
+                      <dd class:list={{ 'p2-big': f.big }} data-pagefind-meta={f.meta}>
+                        {f.href ? (
+                          <a href={f.href}>{f.value}</a>
+                        ) : f.datetime ? (
+                          <time datetime={f.datetime} class="oldstyle">
+                            {f.value}
+                          </time>
+                        ) : (
+                          f.value
+                        )}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </Fragment>
+            )
+          }
+          {/* Listen, Share and (a preview) Add to calendar: one quiet row. */}
+          <PostTools
+            icsHref={icsHref}
+            sundayIso={sunday ? isoDay(sunday) : undefined}
+            sundayLabel={sunday ? formatDay(sunday, { month: 'long', day: 'numeric' }) : undefined}
+          />
+        </div>
       </div>
     </header>
 
@@ -593,7 +671,9 @@ const schemas = [
   }
 
   <script is:inline>
-    // On paper, every picture in the body: the figures are loading="lazy", and a
+    // On paper, every picture in the body, and the reading's passage open (the
+    // CSS opens it where ::details-content is known; this covers the rest, and
+    // closes it again after). The figures are loading="lazy", and a
     // browser prints a lazy image it has not fetched as an empty box. Printing
     // flips them to eager first. Bound once for the session (the router keeps
     // `window` across post pages) and read at print time, so it always sees the
@@ -603,6 +683,18 @@ const schemas = [
       window.addEventListener('beforeprint', function () {
         var imgs = document.querySelectorAll('.p2 img[loading="lazy"]');
         for (var i = 0; i < imgs.length; i++) imgs[i].loading = 'eager';
+        var shut = document.querySelectorAll('.p2 details.pp-passage:not([open])');
+        for (var j = 0; j < shut.length; j++) {
+          shut[j].open = true;
+          shut[j].setAttribute('data-print-opened', '');
+        }
+      });
+      window.addEventListener('afterprint', function () {
+        var opened = document.querySelectorAll('.p2 details[data-print-opened]');
+        for (var k = 0; k < opened.length; k++) {
+          opened[k].open = false;
+          opened[k].removeAttribute('data-print-opened');
+        }
       });
     }
   </script>
@@ -731,6 +823,69 @@ const schemas = [
   .p2-tags a:hover,
   .p2-related a:hover {
     color: var(--color-gold-ink);
+  }
+
+  /* ---- The tools: Listen, Share, Add to calendar (2026-09-24) -------------
+     One row under the order, in the furniture face, each a 44px target and
+     divided by short gold hairlines. A tool the browser cannot use stays
+     `hidden` (PostTools.astro), and a hidden tool draws no divider. */
+  .p2-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    /* The first tool's text on the column's edge: every tool pads 14px each
+       side, and the row steps back by one padding. */
+    margin: 6px 0 0 -14px;
+  }
+  .p2-tool {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 0;
+    background: none;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-indigo);
+    cursor: pointer;
+  }
+  .p2-tool:not([hidden]) ~ .p2-tool:not([hidden])::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 1px;
+    height: 14px;
+    margin-top: -7px;
+    background: var(--color-gold);
+  }
+  .p2-tool:hover,
+  .p2-tool[aria-pressed='true'] {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+  }
+  .p2-tool[aria-pressed='true'] {
+    color: var(--color-gold-ink);
+  }
+  .p2-tool:focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 2px;
+  }
+  .p2-tool-status {
+    padding-left: 14px;
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    color: var(--color-brown-ink);
+  }
+  .p2-tool-status:empty {
+    display: none;
   }
 
   /* ---- The ground: a photograph cover as a wide door arch ---------------
@@ -1134,6 +1289,82 @@ const schemas = [
     box-shadow: none;
   }
 
+  /* The passage itself (2026-09-24, feat/scripture-text): a disclosure under
+     the church's quotation, "Read Romans 13:11-14" in the furniture face, the
+     text in the reading face (roman, so it never reads as the church's own
+     italic quotation), verse numbers as small gold superscripts, and the
+     translation's credit under it. */
+  .post-prose .pp-passage {
+    margin-top: 14px;
+  }
+  .post-prose .pp-lection-h + .pp-passage {
+    margin-top: 0;
+  }
+  .post-prose .pp-passage-s {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-indigo);
+  }
+  .post-prose .pp-passage-s::-webkit-details-marker {
+    display: none;
+  }
+  .post-prose .pp-passage-s::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    margin: 0 3px 2px 1px;
+    border-right: 1.5px solid var(--color-gold-ink);
+    border-bottom: 1.5px solid var(--color-gold-ink);
+    transform: rotate(-45deg);
+    transition: transform 0.2s;
+  }
+  .post-prose .pp-passage[open] > .pp-passage-s::before {
+    transform: rotate(45deg);
+  }
+  .post-prose .pp-passage-s:hover span {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-underline-offset: 0.35em;
+  }
+  .post-prose .pp-passage-s:focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 2px;
+  }
+  .post-prose .pp-lection .pp-passage-t p {
+    font-size: 1.0625rem;
+    font-style: normal;
+    line-height: 1.7;
+  }
+  .post-prose .pp-passage-t {
+    padding: 4px 0 2px;
+  }
+  .post-prose .pp-v {
+    margin-right: 0.22em;
+    font-family: var(--font-ui);
+    font-size: 0.66em;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    line-height: 0;
+    color: var(--color-gold-ink);
+  }
+  .post-prose .pp-lection .pp-passage-c {
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+    color: var(--color-brown-ink);
+  }
+
   /* ---- Tablet and phone ------------------------------------------------------
      One column. The order stays under the title; the plate (at most 300px)
      comes up above the body; the contents list is dropped. */
@@ -1203,6 +1434,7 @@ const schemas = [
     body::after,
     .p2-foot,
     .p2-side,
+    .p2-tools,
     .p2-tags,
     .p2-related,
     main > astro-island,
@@ -1353,6 +1585,23 @@ const schemas = [
     .post-prose .pp-lection blockquote {
       font-size: 12pt;
     }
+    /* The passage prints open (the paper bulletin carries the whole reading)
+       and without its "Read ..." line, which the reading's own header already
+       names. A long passage may cross a page, so its block may break. */
+    .post-prose .pp-lection:has(.pp-passage) {
+      break-inside: auto;
+    }
+    .post-prose .pp-passage-s {
+      display: none;
+    }
+    .post-prose .pp-lection .pp-passage-t p {
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+    .post-prose .pp-lection .pp-passage-c {
+      font-size: 8pt;
+      color: #444 !important;
+    }
     .post-prose .pp-lection-h,
     .post-prose .pp-pn,
     .post-prose th {
@@ -1390,6 +1639,17 @@ const schemas = [
       font-size: 8.5pt;
       letter-spacing: 0.02em;
       break-inside: avoid;
+    }
+  }
+
+  /* On paper the passage is open even where no script ran to open it: the
+     details' content box is made visible by CSS. Its own rule, so a browser
+     that does not know ::details-content drops only this rule (the
+     beforeprint script opens it there instead). */
+  @media print {
+    .post-prose .pp-passage::details-content {
+      content-visibility: visible;
+      display: block;
     }
   }
 </style>

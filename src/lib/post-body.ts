@@ -91,6 +91,24 @@ export interface JournalLection extends BodyNode {
   _type: 'journalLection';
   reference: string;
   blocks: BodyNode[];
+  /**
+   * The passage's own text, when the build has it (feat/scripture-text,
+   * src/lib/scripture-text.ts). Attached by the post page, never by
+   * prepareBody: the body pass stays pure and network-free.
+   */
+  passage?: LectionPassage;
+}
+
+/** A reading's text as the lection's disclosure prints it. */
+export interface LectionPassage {
+  /** One entry per verse: its label ("11", or "4:1" where a chapter turns) and text. */
+  verses: { label: string; text: string }[];
+  /** The translation's credit line, printed under the passage. */
+  credit: string;
+  /** The translation's code ("BSB", "NIV"). */
+  translation: string;
+  /** API.Bible FUMS tokens, when the text came through it. */
+  fums?: string[];
 }
 
 // ---- Small readers -----------------------------------------------------------
