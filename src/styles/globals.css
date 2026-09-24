@@ -1496,6 +1496,15 @@ a:focus-visible .zoom-img img,
   transform-origin: bottom right;
   animation-duration: calc(var(--frames, 1) * var(--frame-s, 8) * 1s), 20s;
 }
+/* Until frames 2-6 are in the document (HeroBackground.astro releases them
+   from a <template> on window load, 2026-09-24 speed pass), hold the
+   cross-fade at its first keyframe, where frame 1 is fully opaque, and keep
+   only the Ken Burns zoom running. The two values follow the animation list:
+   crossfade, then zoom. Written before the hover/pause rule so that rule,
+   at the same specificity, still pauses both. */
+.hero-fade:not([data-frames-ready]) .hero-frame {
+  animation-play-state: paused, running;
+}
 .hero-fade:hover .hero-frame,
 .hero-fade:focus-within .hero-frame,
 .hero-fade.is-paused .hero-frame {

@@ -50,6 +50,10 @@ import HeroFacts from '@/components/HeroFacts.astro';
 import { headingFit, longestWord, EM_BODY, EM_DISPLAY } from '@/lib/heading-grammar';
 import { photoSubject } from '@/lib/photo-subject';
 import { photoAspect } from '@/lib/photo-shape';
+// The Latin subset of the furniture face, preloaded on the tall hero only (see
+// the <link> by the dated line). `?url` returns the same hashed /_astro/ path
+// the @font-face rule in globals.css resolves to, so both share one request.
+import uiFontUrl from '@fontsource-variable/sofia-sans-semi-condensed/files/sofia-sans-semi-condensed-latin-wght-normal.woff2?url';
 
 interface CtaBlock {
   label?: string;
@@ -481,7 +485,28 @@ const windowDrops = dropInto && windowOrder.length > 0;
         // rewrites the inner span from data-live-sunday and the visitor's clock.
         <p class="font-ui text-ui font-medium inline-flex items-center gap-3.5 mb-[clamp(18px,3vh,32px)]">
           <span class="h-px w-11 bg-gold" aria-hidden="true"></span>
+          {/* THE ONE FONT PRELOAD (2026-09-24, the speed pass). This line is
+              set in Sofia Sans and sits in the hero's fade-up, so its first
+              paint is at opacity 0 and Chrome does not count it; when the
+              web font then SWAPS in, the repaint does count, as a new
+              Largest Contentful Paint. With the frames deferred that
+              happened in 9 of 11 Lighthouse runs (LCP 2.9 s instead of
+              1.7 s) and never with fonts blocked. Preloaded from HERE, in
+              the body, the font is in before the swap matters: 5 of 5 runs
+              at 1.7 to 2.1 s, performance 1.00. In <head> it did the same
+              for this page but held the first paint of every other page
+              (post page FCP 1.65 s to 2.25 s), and preloading all four faces
+              was worse than none. A body-ok rel, so valid inside the <p>. */}
+          <link rel="preload" href={uiFontUrl} as="font" type="font/woff2" crossorigin />
           <span data-live-sunday={sundayTime}>{sundayStatic}</span>
+          {/* Date the line NOW, before the hero's first paint (2026-09-24, the
+              speed pass). The function is defined in BaseLayout's <head>;
+              rewriting the span later, after the hero had painted, made the
+              line a second LCP candidate and cost 2 s of mobile LCP. Inside
+              the <p> on purpose: a <script> as a direct child of
+              .hero-entry-stagger would take an nth-child slot and shift every
+              line's entry delay. */}
+          <script is:inline>if (window.__liveSunday) window.__liveSunday();</script>
         </p>
       ) : (
         eyebrow && (

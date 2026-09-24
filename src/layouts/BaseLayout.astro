@@ -3,7 +3,7 @@
 // Site-wide layout. Provides:
 //   - <html lang>, document head, OG/Twitter meta
 //   - Anti-FOUC theme bootstrap (runs before first paint)
-//   - Cormorant Garamond font preload (LCP element on hero)
+//   - The live-Sunday definition (in <head> since the speed pass)
 //   - Cloudflare Web Analytics beacon (conditional)
 //   - Astro View Transitions <ClientRouter />
 //   - Skip-to-main link, Header, <main id="main">, Footer
@@ -194,10 +194,11 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
     <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    {/* Note: Cormorant Garamond is loaded via @fontsource @import in globals.css.
-        Vite hashes the woff2 filename at build time so a static preload here
-        would 404. If hero h1 LCP needs faster fonts, switch to font-display: optional
-        or generate the preload tag from the built CSS manifest. */}
+    {/* No font preload here, on purpose (2026-09-24, the speed pass): a font
+        preload in <head> held the first paint of every page until the font
+        arrived (post page, observed first paint 82 ms to 165 ms, mobile FCP
+        1.65 s to 2.25 s). The one preload the site needs is in Hero.astro,
+        in the body, on the home hero only. See docs/agent/performance.md. */}
 
     {/* Open Graph */}
     <meta property="og:type" content={ogType} />
@@ -297,6 +298,69 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           // View Transitions: html className gets reset on every swap, so
           // re-apply the persisted theme after each navigation.
           document.addEventListener('astro:after-swap', applyTheme);
+        }
+      })();
+    </script>
+
+    {/* THE LIVE DATED LINE. Every [data-live-sunday] element is server-rendered
+        with the dateless form ("Sundays · Worship at 10:45 am"), which is true
+        at any moment and is what a no-JS visitor keeps. This rewrites it from
+        the VISITOR's clock, so the hero can say "Today" on a Sunday morning and
+        name the date the rest of the week. It has to happen in the browser
+        rather than at build time: the page is static and cached, and a baked
+        date would be wrong for everyone after the following Sunday.
+
+        WHY IT IS DEFINED IN <head> (2026-09-24, the speed pass). It used to
+        run at the end of <body>, and on the 265 KB home page the parser paints
+        the hero BEFORE it reaches the end of the document. The rewrite then
+        replaced the hero line's text node after first paint, which Chrome
+        counts as a new Largest Contentful Paint candidate, and Lighthouse's
+        simulation pulled every request that had started by that moment (four
+        slideshow frames, the React islands, the fonts) into the LCP. Measured
+        on a local build, mobile: LCP 3.8 s with the old script, 1.7 s with it
+        removed (docs/agent/performance.md has the whole table). So the
+        function is only DEFINED here, before any content, and Hero.astro calls
+        it from an inline script placed right after the dated span, so the
+        line's first paint already carries the date. It runs again on
+        DOMContentLoaded (the footer's poster line, far below the fold) and
+        after every View Transitions navigation, and it writes only when the
+        text differs: assigning textContent replaces the node even when the
+        string is identical, and a replaced node is exactly what re-arms LCP.
+
+        The two functions are hand-inlined copies of src/lib/live-sunday.ts,
+        which is where the unit tests are (live-sunday-inline.test.ts is the
+        drift gate). An is:inline script cannot import. Keep the two in step.
+        It runs under prefers-reduced-motion too, because this is text, not
+        motion. */}
+    <script is:inline>
+      (function () {
+        function timeOnly(t) {
+          return t.replace(/^Sundays?\s+at\s+/i, '').trim();
+        }
+        function formatLiveSunday(now, t) {
+          var add = (7 - now.getDay()) % 7;
+          if (add === 0) return 'Today · Worship at ' + timeOnly(t);
+          var s = new Date(now);
+          s.setDate(now.getDate() + add);
+          var label = s.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+          return 'This Sunday, ' + label + ' · Worship at ' + timeOnly(t);
+        }
+        function upgradeSunday() {
+          var nodes = document.querySelectorAll('[data-live-sunday]');
+          for (var i = 0; i < nodes.length; i++) {
+            var t = nodes[i].getAttribute('data-live-sunday');
+            if (!t) continue;
+            var next = formatLiveSunday(new Date(), t);
+            if (nodes[i].textContent !== next) nodes[i].textContent = next;
+          }
+        }
+        window.__liveSunday = upgradeSunday;
+        if (!window.__liveSundayBound) {
+          window.__liveSundayBound = true;
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', upgradeSunday, { once: true });
+          }
+          document.addEventListener('astro:page-load', upgradeSunday);
         }
       })();
     </script>
@@ -786,48 +850,6 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
       // Run on first load and after every View Transitions navigation.
       initPolish();
       document.addEventListener('astro:page-load', initPolish);
-    </script>
-
-    {/* THE LIVE DATED LINE. Every [data-live-sunday] element is server-rendered
-        with the dateless form ("Sundays · Worship at 10:45 am"), which is true
-        at any moment and is what a no-JS visitor keeps. This rewrites it from
-        the VISITOR's clock, so the hero can say "Today" on a Sunday morning and
-        name the date the rest of the week. It has to happen here rather than at
-        build time: the page is static and cached, and a baked date would be
-        wrong for everyone after the following Sunday.
-
-        The two functions are hand-inlined copies of src/lib/live-sunday.ts,
-        which is where the unit tests are. An `is:inline` script cannot import,
-        and this one must stay inline so the line settles before paint instead
-        of flickering a week later. Twelve lines is the price; keep the two in
-        step. It runs under prefers-reduced-motion too, because this is text,
-        not motion. */}
-    <script is:inline>
-      (function () {
-        function timeOnly(t) {
-          return t.replace(/^Sundays?\s+at\s+/i, '').trim();
-        }
-        function formatLiveSunday(now, t) {
-          var add = (7 - now.getDay()) % 7;
-          if (add === 0) return 'Today · Worship at ' + timeOnly(t);
-          var s = new Date(now);
-          s.setDate(now.getDate() + add);
-          var label = s.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-          return 'This Sunday, ' + label + ' · Worship at ' + timeOnly(t);
-        }
-        function upgradeSunday() {
-          var nodes = document.querySelectorAll('[data-live-sunday]');
-          for (var i = 0; i < nodes.length; i++) {
-            var t = nodes[i].getAttribute('data-live-sunday');
-            if (t) nodes[i].textContent = formatLiveSunday(new Date(), t);
-          }
-        }
-        upgradeSunday();
-        if (!window.__liveSundayBound) {
-          window.__liveSundayBound = true;
-          document.addEventListener('astro:page-load', upgradeSunday);
-        }
-      })();
     </script>
 
     {/* WATCH LIVE -> LIVE NOW (2026-09-24). The header's [data-live-service]

@@ -10,6 +10,28 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — The mobile speed pass (`perf/speed-audit`)._
+
+**Measured first, one resource class at a time.** Home mobile LCP was 3.80 s locally (2.34 s
+on production), and the LCP element was the hero's dated line. Blocking fonts, JS, images,
+the slideshow frames, the fade-up, and purging the inline sheet to what the page uses each
+moved it 0.1 to 1.2 s; removing the live-Sunday script alone took it to 1.73 s. That script
+rewrote the dated line at the end of `<body>`, after the hero had painted, and a replaced text
+node is a new LCP candidate; Lighthouse then counted every request already in flight (four
+2400 px slideshow frames, the islands) in front of it. The full tables are in
+`docs/agent/performance.md`.
+
+**Four changes.** The live-Sunday function is defined in `<head>` and called inline beside the
+hero's span, writing only when the text differs. Slideshow frames 2-6 wait in a `<template>`
+until `load`, with the cross-fade held on frame 1 until they arrive (bytes requested before
+`load` on Home: 1,360 KB to 579 KB; none under reduced motion). Sofia Sans is preloaded from the
+home hero's body, which stopped its swap from re-arming LCP (a `<head>` preload did the same but
+delayed first paint on every other page). Post-body figures use width descriptors and their
+drawn width (a 268 KB portrait is 59 KB). Home is now perf 1.00, LCP 1.73 s in 5 of 5 runs;
+`/blog` 0.98 / 2.10 s; `/visit` 0.93 / 3.15 s and the post 0.91 / 3.38 s are image-LCP pages
+whose remaining cost is island JS, left as an owner decision in `docs/PENDING.md`. Rule 20's
+limit is now documented as per CSS chunk, not per page (CLAUDE.md).
+
 _2026-09-24 — The home hero shows people, and two hero fixes (`feat/hero-people`)._
 
 **People in the hero.** Nathan approved replacing the building frames with five
