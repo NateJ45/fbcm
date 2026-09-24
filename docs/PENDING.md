@@ -869,6 +869,13 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
 - **Owner question: /give opens on indigo, not gold.** Home's give band stays gold; on
   /give the opener is indigo because the closing CtaBand is gold since the Visit pass.
   The alternative was to drop /give's closing band.
+- **For the RichText ground picker (`src/lib/rich-ground.ts`, the Beliefs branch's):** it
+  reads every `giveBandSection` as gold by type, but the band is indigo when it OPENS a
+  page with no hero (/give). Harmless on /give today (the band after the opener is the
+  paper turn, and "What your gift supports" lands on indigo between paper and the gold
+  closing band), but a muted text band placed straight under the /give opener would pick
+  indigo beside indigo. The fix is one line in `familyOf` (index 0, no hero -> indigo),
+  left to the file's owner.
 - **Clean-up once `/give` and `/contact` show the composition.** Delete
   `src/pages/styleguide/give.astro` and `contact.astro`, their two lines in
   `tests/routes.ts` and `scripts/data/fixtures/give.json` / `contact.json`, then
