@@ -1,12 +1,30 @@
 // scripts/pages/staff.mjs
 //
-// The Staff page, composed exactly as section 5.6 of
-// docs/superpowers/specs/2026-09-19-fbcm-plan2-pages-design.md describes it:
-// two Wix pages (ministers 1,162 words, team 213 words) plus sixteen separate
-// /team/<slug> profile pages become ONE page with three staff grids, one
-// deacons band, and two bands of the church's own prose about how it is led.
+// The Staff page, in the church identity (2026-09-24, the Staff identity pass,
+// docs/superpowers/plans/2026-09-24-fbcm-rollout-overnight.md; first composed
+// as section 5.6 of docs/superpowers/specs/2026-09-19-fbcm-plan2-pages-design.md).
+// Two Wix pages (ministers 1,162 words, team 213 words) plus sixteen separate
+// /team/<slug> profile pages are ONE page, in the church's own order and under
+// the church's own headings (rollout rule 6):
 //
-// Seven things about this file are deliberate.
+//   heroSection (window)   "Get to know the ministers of FBCM", the two
+//                          Co-Pastors in a two-light window, on indigo
+//   staffGridSection       Pastors & Staff, with the church's account of how
+//                          it is led beside the heading (gold band)
+//   staffGridSection       Church Coordination Team, with the church's
+//                          definition of it beside the heading (brown band)
+//   imageTextSection       Deacons, beside the photograph, with "What are
+//                          Deacons?" restored as its own heading
+//   staffGridSection       Support and volunteer roles (taupe band)
+//   scriptureBandSection   Every Member of this Church: 1 Corinthians 12:4-6
+//                          and the church's paragraph (indigo-dark band)
+//   ctaBandSection         Ask the office.
+//
+// The staff bands' grounds are DERIVED from the group each one shows
+// (src/lib/staff-band.ts), which is why the page reads indigo, gold, brown,
+// the paper, taupe, indigo-dark: the Who We Are goals sequence.
+//
+// Nine things about this file are deliberate.
 //
 // 1. NOT ONE PERSON IS TYPED HERE. Every name, role, email, portrait and bio on
 //    this page is read at BUILD time from the staffMember documents
@@ -22,27 +40,26 @@
 //    and #molly-flodder. StaffGrid.astro puts each person's slug on their
 //    card, so those five land as long as the right GROUPS render here: the
 //    first three need the pastors grid, the last two the coordination grid.
-//    Two more anchors are this page's own: `coordination` (the Church
-//    Coordination Team band) and `letter` (the pastors' full letter, which is
-//    where /who-we-are's "Read the full letter" link points). Neither collides
-//    with a card id or with SectionRenderer's `<headingId>-band` fallback.
+//    Three more anchors are this page's own: `pastors` and `coordination`
+//    (the hero's two buttons) and `deacons`. None collides with a card id or
+//    with SectionRenderer's `<headingId>-band` fallback.
 //
-// 3. THE HERO TAKES A PASTOR'S PORTRAIT, NOT THE DEACONS PHOTO. Spec 5.6 gives
-//    the hero "the 2026 deacons group photo or the co-pastors portrait", and
-//    gives the deacons band that same group photo unconditionally. Only one of
-//    those two readings puts each photo on the page once: the group photo
-//    belongs to the deacons band, where the church's own caption ("left to
-//    right in photo") depends on it being there, so the hero takes the other
-//    option. There is no joint portrait of the two Co-Pastors in the archive,
-//    so the hero reads Kendall Ellis's portrait off her staff document rather
-//    than holding a seventeenth copy of a photo the dataset already has.
+// 3. THE HERO IS THE TWO CO-PASTORS, NOT A GRID PORTRAIT. The window hero's
+//    lights take two library photographs used nowhere else on the site
+//    (Kendall and Jonathan outdoors by a brick wall, the church's own older
+//    headshots), so the hero does not repeat a portrait the pastors band draws
+//    a screen later, and a two-light window is the building's own window glyph.
+//    The pair also keeps Kendall from standing alone for the whole staff, which
+//    is an open question on /who-we-are's "Meet Our Staff" card; this page does
+//    not answer it and does not touch that card.
 //
-// 4. THE FULL LETTER LIVES HERE, WHOLE. Task 7 put three of its eight
-//    paragraphs on /who-we-are and linked here for the rest; this band is the
-//    target of that link, so it carries all eight, verbatim, in the church's
-//    own order. One punctuation edit: the em-dash in the Co-Pastors paragraph
-//    becomes a comma (CLAUDE.md rule 2). The en-dashes elsewhere in the letter
-//    are left alone, as they are on every other plan-2b page.
+// 4. THE PASTORS' LETTER IS NO LONGER HERE. Plan 2b put the whole letter on
+//    this page because /who-we-are carried three paragraphs and linked here;
+//    the Who We Are identity pass (2026-09-23) put the whole letter back on
+//    /who-we-are (#letter), and no link on the site, in Sanity or in code
+//    points at /staff#letter any more (checked 2026-09-24). Eight paragraphs
+//    printed twice is a page and a half of repetition, so the copy here came
+//    off. The letter's one edit (its em-dash) lives in who-we-are.mjs now.
 //
 // 5. THE DEACON CHAIR GETS A REAL @. The Wix page writes the address as
 //    "deaconchair[at]fbcmuncie.org", which is a human-readable spam dodge that
@@ -51,18 +68,42 @@
 //    footnote asterisk that pairs the line with Jim Butler's name is kept on
 //    both, exactly as the church wrote it.
 //
-// 6. THE GRIDS DO NOT EXPLAIN THEMSELVES, SO THE CHURCH DOES (ruling P22).
-//    Two richText bands carry four paragraphs of ministers.txt that the Wix
-//    page printed above its own lists and that the first draft of this page
-//    dropped: what a pastor is, why two of ours are married to each other,
-//    what the Worship Director does, and what the Church Coordination Team
-//    is. Each sits BEFORE the grid it explains. Neither carries an anchor,
-//    so `#coordination` stays on the grid and every redirect still lands on
-//    a person.
+// 6. THE GRIDS EXPLAIN THEMSELVES IN THE CHURCH'S WORDS (ruling P22). The four
+//    paragraphs of ministers.txt that the Wix page printed above its own lists
+//    (what a pastor is, why two of ours are married to each other, what the
+//    Worship Director does, and what the Church Coordination Team is) were two
+//    richText bands before the grids; they are now each grid's own `intro`
+//    (added 2026-09-24), beside the heading, so an explanation and its faces
+//    are one band under one heading, as the church had them.
 //
-// 7. EVERY BLOCK IS READ OFF A CAPTURE. pick() and linesBetween() THROW when an
+// 7. THE CHURCH'S OWN HEADINGS COME BACK (rollout rule 6). "Get to know the
+//    ministers of FBCM" (the Wix page's own title), "Pastors & Staff",
+//    "Church Coordination Team", "Deacons", "What are Deacons?" and "Every
+//    Member of this Church" are all ministers.txt's; the plan 2b stand-ins
+//    ("The people who serve here.", "How we are led", "Our deacons") are gone.
+//    The support band keeps "Support and volunteer roles": the Wix page had no
+//    one heading over those three people (only the tab labels "Ministry
+//    Intern" and "Pianist"), so the Studio's own name for the group stands.
+//    The decorative eyebrows are gone (rule 11).
+//
+// 8. THE SCRIPTURE BAND IS THE CHURCH'S WHOLE SECTION NOW. Plan 2b cut the
+//    last clause of the "Every Member" paragraph into a one-line band. The
+//    church's section is a heading, 1 Corinthians 12:4-6 with its reference,
+//    and that paragraph whole, so the band carries all four (scriptureBand
+//    `heading` and `intro`, added 2026-09-24) and nothing is cut. The quote
+//    marks in the capture come off the stored verse because the band draws
+//    them (a band with a reference is a quotation). "same" is picked out in
+//    gold: the Spirit, the Lord and God, the three the verse names.
+//
+// 9. EVERY BLOCK IS READ OFF A CAPTURE. pick() and linesBetween() THROW when an
 //    anchor phrase moves, so a band that would have seeded empty, or
 //    half-empty, fails the run instead of shipping a hole.
+
+/** A hotspot centred on (x, y), kept inside the frame so the Studio accepts it. */
+function hotspot(x, y) {
+  const size = Math.min(0.3, 2 * Math.min(x, 1 - x), 2 * Math.min(y, 1 - y));
+  return { _type: 'sanity.imageHotspot', x, y, width: size, height: size };
+}
 
 export default {
   id: 'page-staff',
@@ -80,15 +121,14 @@ export default {
   // the sentence it is editing has moved.
   edits: [
     'Deacon chair address: "deaconchair[at]fbcmuncie.org" becomes a real mailto link to deaconchair@fbcmuncie.org, because a visitor cannot click "[at]". (Deacons band; spec 5.6 "Fixes".)',
-    'Em-dash to comma (site style): "...calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community." (A note from our pastors.)',
-    'Cut and re-cased: the scripture band is the closing sentence of the "Every Member of this Church" paragraph with its opening clause cut, so it reads "Every Christian is called to minister to others in some way." rather than "And, even if not currently serving in those particular capacities, every...".',
-    'Punctuation: "we also have a Worship Director. who coordinates and supports our worship leaders" becomes "...a Worship Director, who coordinates and supports our worship leaders". The full stop mid-sentence is a typo in scripts/data/pages/ministers.txt line 12; no word changes. ("How we are led.")',
+    'Punctuation: "we also have a Worship Director. who coordinates and supports our worship leaders" becomes "...a Worship Director, who coordinates and supports our worship leaders". The full stop mid-sentence is a typo in scripts/data/pages/ministers.txt line 12; no word changes. (Pastors & Staff.)',
     'Em-dash to comma (CLAUDE.md rule 2), inside a verbatim scripture quotation: Kendall Ellis’s staff bio quotes Romans 8:17 (NIV) as “...then we are heirs—heirs of God and co-heirs with Christ...” and it now reads “...then we are heirs, heirs of God...”. No other word changes. The bio is a field on her staff document rather than a sentence this module builds, so the change was made by scripts/fix-bio-em-dashes.mjs (backed up first); it is declared here because this is one of the two pages that print it.',
+    'Typography only: the curly quotation marks around 1 Corinthians 12:4-6 come off the stored verse because the scripture band draws them itself; the page shows the verse in quotation marks exactly as the Wix page did. (Every Member of this Church.)',
   ],
 
   // No band on this page shows an identifiable child. Every portrait is an
-  // adult who serves in a named role, and the deacons group photo is five
-  // adults.
+  // adult who serves in a named role, the two hero lights are the Co-Pastors,
+  // and the deacons group photo is five adults.
   photoConsent: [],
 
   async build(ctx) {
@@ -96,6 +136,7 @@ export default {
     const {
       paragraphs,
       bullets,
+      heading,
       linesBetween,
       ctaAnchor,
       ctaInternal,
@@ -130,23 +171,24 @@ export default {
       );
     }
 
-    // -- The hero portrait, read off the staff document ---------------------
-    // See note 3 at the top of this file. The alt text is built from the
-    // document's own name and role, so it cannot disagree with the card below.
-    const kendall = staff.find((s) => s?.slug?.current === 'kendall-ellis');
-    if (!kendall?.photo?.asset) {
-      throw new Error(
-        'staff.mjs: no staffMember document with slug "kendall-ellis" carrying a photo. The hero ' +
-          'reads its portrait off that document rather than holding a second copy of it.',
-      );
-    }
-    const heroFrame = {
-      ...kendall.photo,
-      _key: 'frame-1',
-      alt: `${kendall.name}, ${kendall.role}`,
+    // -- Photographs ---------------------------------------------------------
+    /** A manifest photo with a hotspot, throwing when the manifest lacks it. */
+    const photo = async (key, x, y, extra = {}) => {
+      const img = await images.image(key);
+      if (!img) throw new Error(`staff.mjs: no photo in the manifest for "${key}"`);
+      return { ...img, hotspot: hotspot(x, y), ...extra };
     };
 
-    // -- The deacons group photo --------------------------------------------
+    // The hero's two lights (note 3). Kendall first, as the church lists her.
+    // Both are square headshots in a tall lancet, so only x matters: each face
+    // sits at the middle of its photograph.
+    const heroFrames = [
+      await photo('staff-hero-kendall', 0.5, 0.4, { _key: 'frame-1' }),
+      await photo('staff-hero-jonathan', 0.48, 0.4, { _key: 'frame-2' }),
+    ];
+
+    // The deacons group photo: the church's caption names the five "left to
+    // right in photo", so the band cannot be seeded without it.
     const deaconsPhoto = await images.image('staff-deacons-2026');
     if (!deaconsPhoto) {
       throw new Error(
@@ -191,37 +233,48 @@ export default {
       return sentence.replace(find, replaceWith);
     };
 
-    /** An em-dash between words becomes a comma (CLAUDE.md rule 2). Throws if there is none. */
-    const comma = (sentence) => {
-      if (!sentence.includes('—')) {
-        throw new Error(
-          `staff.mjs: expected an em-dash to fix in "${sentence.slice(0, 60)}..."; the capture no ` +
-            'longer has one, so drop this call.',
-        );
-      }
-      return sentence.replace(/\s*—\s*/g, ', ');
-    };
+    // 1. The hero: the Wix page's own title and the line under it, which the
+    //    capture wraps across two lines.
+    const heroTitle = line('ministers', 'Get to know the ministers of FBCM');
+    const heroLead = [
+      line('ministers', 'Learn about the staff'),
+      ...linesBetween('ministers', 'Learn about the staff', 'Pastors & Staff'),
+    ]
+      .map((l) => decodeEntities(l).trim())
+      .filter(Boolean)
+      .join(' ');
+    if (!heroLead.startsWith('Learn about the staff') || !heroLead.endsWith('below.')) {
+      throw new Error(
+        `staff.mjs: the ministers page's lead no longer reads as one sentence ending "below.": "${heroLead}"`,
+      );
+    }
 
-    // 1. The pastors' letter, whole. Eight paragraphs between their sign-off
-    //    heading and the next section of the Who We Are capture. Task 7 keeps
-    //    three of them on /who-we-are and links here for all eight.
-    const letterLines = linesBetween('who-we-are', 'Pastors Kendall & Jonathan', 'Sunday Worship');
-    const letterLine = (phrase) => pick(letterLines, phrase, 'who-we-are');
-    const letter = [
-      ...paragraphs(letterLine('If you'), 'lt-a'),
-      ...paragraphs(letterLine('Figure it all out'), 'lt-b'),
-      ...paragraphs(letterLine('Even so, we know people curious'), 'lt-c'),
-      ...paragraphs(letterLine('We love the Good News'), 'lt-d'),
-      ...paragraphs(letterLine('all about the church'), 'lt-e'),
-      // The one em-dash in the letter.
-      ...paragraphs(comma(letterLine('honored to serve as Co-Pastors')), 'lt-f'),
-      ...paragraphs(letterLine('We love to serve here'), 'lt-g'),
-      ...paragraphs(letterLine('Finally, we would love'), 'lt-h'),
+    // 2. Pastors & Staff: the church's account of how it is led (ruling P22),
+    //    the three paragraphs the Wix page printed above its pastor cards. The
+    //    one edit is a full stop that should be a comma.
+    const howWeAreLed = [
+      ...paragraphs(line('ministers', 'under-shepherds'), 'hw-a'),
+      ...paragraphs(line('ministers', 'two Co-Pastors, a married couple'), 'hw-b'),
+      ...paragraphs(
+        swap(
+          line('ministers', 'we also have a Worship Director'),
+          'a Worship Director. who coordinates',
+          'a Worship Director, who coordinates',
+        ),
+        'hw-c',
+      ),
     ];
 
-    // 2. The deacons. Three spans of ministers.txt: the lead-in and the five
+    // 3. What the Church Coordination Team IS: ministers.txt line 37, the
+    //    church's own definition of the body whose eleven faces follow it.
+    const whatTheCctIs = paragraphs(
+      line('ministers', 'Members of the Church Coordination Team'),
+      'cct',
+    );
+
+    // 4. The deacons. Three spans of ministers.txt: the lead-in and the five
     //    names, the chair's footnote, and the church's own answer to "What are
-    //    Deacons?" including the three-year term.
+    //    Deacons?" (its heading restored, note 7), including the three-year term.
     const deaconNamesLines = linesBetween(
       'ministers',
       'Current Deacons (left to right in photo):',
@@ -262,58 +315,33 @@ export default {
         ),
         'dc-chair',
       ),
+      heading(line('ministers', 'What are Deacons?'), 3, 'dc-what'),
       ...paragraphs(pick(whatAreDeacons, 'Each active member', 'ministers'), 'dc-a'),
       ...paragraphs(pick(whatAreDeacons, 'In the New Testament', 'ministers'), 'dc-b'),
       ...paragraphs(pick(whatAreDeacons, 'Following that example', 'ministers'), 'dc-c'),
     ];
 
-    // 2b. The church's own account of how it is led (ruling P22). Three
-    //     paragraphs of ministers.txt that the Wix page printed above its
-    //     pastor cards and that this page dropped on the way here: what a
-    //     pastor is, why two of them are married to each other, and what the
-    //     Worship Director does. They go BEFORE the pastors grid, because that
-    //     is where the church put them and because the grid means less
-    //     without them. The one edit is a full stop that should be a comma.
-    const howWeAreLed = [
-      ...paragraphs(line('ministers', 'under-shepherds'), 'hw-a'),
-      ...paragraphs(line('ministers', 'two Co-Pastors, a married couple'), 'hw-b'),
-      ...paragraphs(
-        swap(
-          line('ministers', 'we also have a Worship Director'),
-          'a Worship Director. who coordinates',
-          'a Worship Director, who coordinates',
-        ),
-        'hw-c',
-      ),
-    ];
-
-    // 4b. What the Church Coordination Team IS. One paragraph, ministers.txt
-    //     line 37, the church's own definition of the body whose eleven cards
-    //     follow it. No eyebrow: the grid below carries one, and two eyebrows
-    //     stacked would read as two sections rather than one explanation and
-    //     its list (CLAUDE.md rule 17).
-    const whatTheCctIs = paragraphs(
-      line('ministers', 'Members of the Church Coordination Team'),
-      'cct',
-    );
-
-    // 3. The scripture band. The closing sentence of the church's "Every Member
-    //    of this Church" paragraph, with its opening clause cut so the band can
-    //    stand on its own, and "every" re-cased to start the sentence. No word
-    //    is changed or added.
-    const everyMember = pick(
-      linesBetween('ministers', '1 Corinthians 12:4-6', 'Seeking more information'),
-      'FBCM challenges each member',
+    // 5. Every Member of this Church (note 8): the heading, the verse with its
+    //    reference, and the paragraph, whole.
+    const everyMemberLines = linesBetween(
       'ministers',
+      'Every Member of this Church',
+      'Seeking more information',
     );
-    const closingClause = 'every Christian is called to minister to others in some way.';
-    if (!everyMember.endsWith(closingClause)) {
+    const everyMemberHeading = line('ministers', 'Every Member of this Church');
+    const quoted = pick(everyMemberLines, 'There are different kinds of gifts', 'ministers');
+    if (!quoted.startsWith('“') || !quoted.endsWith('”')) {
       throw new Error(
-        'staff.mjs: the "Every Member of this Church" paragraph no longer ends with the sentence ' +
-          'the scripture band quotes. Re-read ministers.txt line 127 before changing this.',
+        'staff.mjs: 1 Corinthians 12:4-6 is no longer in curly quotation marks in ministers.txt; ' +
+          'the band draws its own, so re-read the line before changing this.',
       );
     }
-    const verse = `E${closingClause.slice(1)}`;
+    const verse = quoted.slice(1, -1).trim();
+    const reference = pick(everyMemberLines, '1 Corinthians 12:4-6', 'ministers');
+    const everyMember = pick(everyMemberLines, 'FBCM challenges each member', 'ministers');
+    if (!/\bsame\b/.test(verse)) {
+      throw new Error('staff.mjs: the verse no longer says "same", the word the band picks out.');
+    }
 
     return {
       title: 'Staff',
@@ -322,113 +350,81 @@ export default {
       addToMainNav: false,
 
       pageBuilder: [
-        // 1. Hero. One pastor's portrait beside the line, and two buttons that
-        //    are really a table of contents for a long page.
+        // 1. The window: the church's own title, the two Co-Pastors (note 3),
+        //    and two buttons that are a table of contents for a long page.
         {
           _type: 'heroSection',
           _key: 'st-hero',
-          layout: 'split',
-          size: 'short',
+          layout: 'window',
           eyebrow: 'Staff',
-          headline: 'The people who serve here.',
-          frames: [heroFrame],
-          primaryCta: ctaAnchor('Pastors', '/staff#kendall-ellis'),
+          headline: heroTitle,
+          subhead: heroLead,
+          frames: heroFrames,
+          primaryCta: ctaAnchor('Pastors & Staff', '/staff#pastors'),
           secondaryCta: ctaAnchor('Church Coordination Team', '/staff#coordination'),
         },
 
-        // 2. How the church says it is led, in its own words, before the
-        //    faces. See the note beside `howWeAreLed` above.
-        {
-          _type: 'richTextSection',
-          _key: 'st-how-led',
-          eyebrow: 'Pastors and staff',
-          heading: 'How we are led',
-          body: howWeAreLed,
-        },
-
-        // 3. The pastors. Three people today, not two: the two Co-Pastors and
-        //    the Worship Arts Director, who is filed in the same group. The
-        //    heading says what the band actually draws, exactly as the same
-        //    band on /who-we-are does. /staff#kendall-ellis, #jonathan-balmer
-        //    and #cynthia-smith land on cards inside this grid.
+        // 2. Pastors & Staff, on the gold band: the two Co-Pastors and the
+        //    Worship Arts Director, filed in the same group, with the church's
+        //    account of how it is led beside the heading. /staff#kendall-ellis,
+        //    #jonathan-balmer and #cynthia-smith land on cards in this band.
         {
           _type: 'staffGridSection',
           _key: 'st-pastors',
-          eyebrow: 'Pastors',
-          heading: 'Our pastors and worship arts director',
+          anchor: { _type: 'slug', current: 'pastors' },
+          heading: 'Pastors & Staff',
+          intro: howWeAreLed,
           group: 'pastors',
           showBios: true,
         },
 
-        // 4. Their letter, whole. /who-we-are carries three of these eight
-        //    paragraphs and links to `#letter` for the rest, so this anchor may
-        //    not be renamed without that link changing in the same commit.
-        {
-          _type: 'richTextSection',
-          _key: 'st-letter',
-          anchor: { _type: 'slug', current: 'letter' },
-          eyebrow: 'A note from our pastors',
-          heading: 'From Kendall and Jonathan',
-          body: letter,
-        },
-
-        // 5. What the Church Coordination Team is, before the eleven faces.
-        //    It carries NO anchor: `#coordination` stays on the grid below, so
-        //    the hero button and the redirects still land on the people.
-        {
-          _type: 'richTextSection',
-          _key: 'st-cct-what',
-          heading: 'What the Church Coordination Team is',
-          body: whatTheCctIs,
-        },
-
-        // 6. The Church Coordination Team. Eleven cards, bios expanding where
-        //    the church wrote one. /staff#loraine-garrett and #molly-flodder
-        //    land on cards inside this grid, and the hero's second button
-        //    points at `#coordination`.
+        // 3. The Church Coordination Team, on the brown band, its definition
+        //    beside the heading. /staff#loraine-garrett and #molly-flodder land
+        //    on cards here, and the hero's second button on the band.
         {
           _type: 'staffGridSection',
           _key: 'st-coordination',
           anchor: { _type: 'slug', current: 'coordination' },
-          eyebrow: 'Church Coordination Team',
-          heading: 'The Church Coordination Team',
+          heading: 'Church Coordination Team',
+          intro: whatTheCctIs,
           group: 'coordination',
           showBios: true,
         },
 
-        // 7. Support and volunteer roles: the intern, the wedding coordinator
-        //    and the pianist/organist. Bios are shown for the same reason as
-        //    above, which is that all three have one.
-        {
-          _type: 'staffGridSection',
-          _key: 'st-support',
-          eyebrow: 'Support and volunteer roles',
-          heading: 'Support and volunteer roles',
-          group: 'support',
-          showBios: true,
-        },
-
-        // 8. The deacons, in their own words, beside the photograph their own
+        // 4. The deacons, in their own words, beside the photograph their own
         //    caption depends on.
         {
           _type: 'imageTextSection',
           _key: 'st-deacons',
-          eyebrow: 'Deacons',
-          heading: 'Our deacons',
+          anchor: { _type: 'slug', current: 'deacons' },
+          heading: 'Deacons',
           image: deaconsPhoto,
           imageSide: 'left',
           body: deaconsBody,
         },
 
-        // 9. The sentence the whole page is for, on the indigo field.
+        // 5. Support and volunteer roles, on the taupe band: the intern, the
+        //    wedding coordinator and the pianist/organist. All three have a bio.
+        {
+          _type: 'staffGridSection',
+          _key: 'st-support',
+          heading: 'Support and volunteer roles',
+          group: 'support',
+          showBios: true,
+        },
+
+        // 6. Every Member of this Church, on the indigo-dark band (note 8).
         {
           _type: 'scriptureBandSection',
           _key: 'st-scripture',
+          heading: everyMemberHeading,
           verse,
-          accentWord: 'minister',
+          reference,
+          accentWord: 'same',
+          intro: everyMember,
         },
 
-        // 10. Closing band, with both buttons (plan 2b ruling P13) and a subhead
+        // 7. Closing band, with both buttons (plan 2b ruling P13) and a subhead
         //    built from Site settings rather than retyped.
         {
           _type: 'ctaBandSection',
