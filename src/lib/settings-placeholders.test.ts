@@ -11,6 +11,7 @@ import {
   fillString,
   findTypedCopies,
   hasPlaceholder,
+  PLACEHOLDERS,
   placeholderValues,
   placeholdersForTypedCopies,
   typedCopiesToPlaceholders,
@@ -24,9 +25,12 @@ const settings = {
   email: 'office@fbcmuncie.org',
 };
 const values = placeholderValues(settings);
+const TEXT = Object.fromEntries(PLACEHOLDERS.map((p) => [p.token, true]));
 
 test('each placeholder reads the right part of Site settings', () => {
-  assert.deepEqual(values, {
+  // The text placeholders; the link tokens ride along, blank here (see below).
+  const text = Object.fromEntries(Object.entries(values).filter(([k]) => k in TEXT));
+  assert.deepEqual(text, {
     '{service time}': 'Sundays at 10:45 am',
     '{time}': '10:45 am',
     '{service length}': 'About an hour',
@@ -80,6 +84,73 @@ test('hasPlaceholder finds one anywhere, and only a known one', () => {
   assert.equal(hasPlaceholder({ a: [{ b: 'at {time}' }] }), true);
   assert.equal(hasPlaceholder({ a: [{ b: 'at {pastor}' }] }), false);
   assert.equal(hasPlaceholder('plain'), false);
+});
+
+// ── Link tokens ({giving}, {sermons}...), feat/church-links ─────────────────
+const CC = 'https://fbcmuncie.churchcenter.com';
+const linked = placeholderValues({
+  ...settings,
+  givingUrl: `${CC}/giving`,
+  visitorFormUrl: `${CC}/people/forms/159198`,
+  livestreamUrl: 'https://www.youtube.com/@FbcmuncieOrg/streams',
+});
+
+test('a link token fills a link target: href, externalUrl, url, anywhere in the tree', () => {
+  const doc = {
+    _type: 'page',
+    pageBuilder: [
+      {
+        _key: 'a',
+        body: [{ _key: 'b', markDefs: [{ _key: 'l', _type: 'link', href: '{giving}' }] }],
+        primaryCta: { externalUrl: '{connect}' },
+        docs: [{ _key: 'd', url: '{Sermons}' }],
+      },
+    ],
+  };
+  const out = fillPlaceholders(doc, linked, () => assert.fail('nothing is unfilled here'));
+  const band = out.pageBuilder[0];
+  assert.equal(band.body[0].markDefs[0].href, `${CC}/giving`);
+  assert.equal(band.primaryCta.externalUrl, `${CC}/people/forms/159198`);
+  assert.equal(
+    band.docs[0].url,
+    'https://www.youtube.com/@FbcmuncieOrg/streams',
+    '{sermons} with no Sermon recordings setting uses the live stream address',
+  );
+});
+
+test('an unfilled link token becomes /contact, never a broken link, and is reported', () => {
+  const heard: string[] = [];
+  const out = fillPlaceholders(
+    { a: { href: '{wedding-enquiry}' }, b: { externalUrl: '{prayer}' } },
+    linked,
+    (t) => heard.push(t),
+  );
+  assert.deepEqual(out, { a: { href: '/contact' }, b: { externalUrl: '/contact' } });
+  assert.deepEqual(heard, ['{wedding-enquiry}', '{prayer}']);
+});
+
+test('a link token inside a sentence is left as typed; text placeholders still skip hrefs', () => {
+  assert.equal(fillPlaceholders('Give at {giving}.', linked), 'Give at {giving}.');
+  assert.deepEqual(fillPlaceholders({ href: 'mailto:{email}' }, linked), {
+    href: 'mailto:{email}',
+  });
+});
+
+test('hasPlaceholder sees a whole-value link token, and nothing else new', () => {
+  assert.equal(hasPlaceholder({ markDefs: [{ href: '{giving}' }] }), true);
+  assert.equal(hasPlaceholder({ href: 'https://fbcmuncie.churchcenter.com/giving' }), false);
+  assert.equal(hasPlaceholder({ href: '{nope}' }), false);
+});
+
+test('with no link token in it, a result fills exactly as before (render-neutral)', () => {
+  const doc = {
+    cta: { externalUrl: `${CC}/giving` },
+    body: [{ markDefs: [{ href: `${CC}/channels/4999` }], text: '{time}' }],
+  };
+  assert.deepEqual(fillPlaceholders(doc, linked), {
+    cta: { externalUrl: `${CC}/giving` },
+    body: [{ markDefs: [{ href: `${CC}/channels/4999` }], text: '10:45 am' }],
+  });
 });
 
 // The real typed copies, and what each should become.
