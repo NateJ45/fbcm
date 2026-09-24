@@ -814,9 +814,10 @@ from the old site is approved by the church.
   asset map, and REFUSES any other `file` entry with an error that names the exact
   map key (`scripts/.page-images/<key>.jpg`) and the asset filename (`<key>.jpg`).
   To fill it, copy the id from the main checkout's `scripts/.asset-map.json`, or
-  look it up with `npx sanity documents query
-  '*[_type=="sanity.imageAsset" && originalFilename=="<key>.jpg"]._id'`; only a
-  genuinely new photo should reach `--apply`, which uploads it once and caches it.
+  look it up by filename:
+  `npx sanity documents query '*[_type=="sanity.imageAsset" && originalFilename=="<key>.jpg"]._id'`.
+  Only a genuinely new photo should reach `--apply`, which uploads it once and
+  caches it.
   `alreadyUploaded()` is unit-tested in `scripts/lib/page-images.test.mjs`
   (`npm run test:scripts`).
 - **Correction:** the photo of children on the chancel steps around a woman
