@@ -46,7 +46,8 @@ const { goals, headingId } = Astro.props;
                 {g.name}
               </span>
             </a>
-            {g.aside && <p class="mg-aside font-ui text-ui text-bg/75">{g.aside}</p>}
+            {/* The church writes each goal's own word in brackets under its name; Worship has none, and its slot stays so the lists line up. */}
+            <p class="mg-aside">{g.aside ? `(${g.aside})` : ''}</p>
             {g.ministries.length > 0 && (
               <ul class="mg-list">
                 {g.ministries.map((m) => (
@@ -91,7 +92,13 @@ const { goals, headingId } = Astro.props;
     text-decoration: none;
   }
   .mg-aside {
-    margin: 4px 0 0;
+    min-height: 1.5em;
+    margin: 2px 0 0;
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--color-bg) 78%, transparent);
   }
   .mg-list {
     margin: 18px 0 0;

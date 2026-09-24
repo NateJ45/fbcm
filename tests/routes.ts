@@ -43,6 +43,8 @@ export const routes: string[] = [
   '/styleguide/wedding', // scaffold: church
   // And the composed staff page (src/pages/styleguide/staff.astro, 2026-09-24).
   '/styleguide/staff', // scaffold: church
+  // And the composed ministries page (src/pages/styleguide/ministries.astro, 2026-09-24).
+  '/styleguide/ministries', // scaffold: church
   // The plan-2b pages are listed here as they land.
   '/visit',
   '/who-we-are',

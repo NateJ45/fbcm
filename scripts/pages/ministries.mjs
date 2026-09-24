@@ -60,6 +60,26 @@
 // 7. CITY LIFE CLUB'S 7:17 pm IS KEPT EXACTLY AS THE CHURCH WROTE IT. It looks
 //    like a typo for 7:15 and it is not treated as one: it is on the church's
 //    own confirm list in the approval note, where a human decides.
+//
+// THE CHURCH IDENTITY PASS (2026-09-24, rollout step 6: "the four goals as the
+// organising motif; Ministry bands under the four goals"). Three changes here,
+// and one that is not here at all:
+//
+//   - The hero is the window: three lights, every age (the palm-branch
+//     children, the youth room, two musicians), photos no other page uses.
+//     The worship-team photo it replaces is Who We Are's worship singer.
+//   - No decorative small lines: the hero's "Ministries" and the timeline's
+//     "Sunday" only repeated the menu and the heading (rollout rule 11).
+//   - The two children's-church lines in the 10:45 row are written as class
+//     lines, "Kickstart Children's Church (102): Preschool - 2nd grade", so
+//     the timeline reads each as a class with its room, as /visit's board
+//     does, instead of as more lines about the Family Room (declared in
+//     `edits`).
+//   - THE GOALS ARE NOT COMPOSED HERE. Which goal a ministry serves is the
+//     optional "Goal it serves" on the ministry document, and the goal index
+//     in front of the first Ministry band is derived from those at build time
+//     (src/lib/ministry-goals.ts). scripts/set-ministry-goals.mjs writes the
+//     answers the church's own words give; the rest wait for the church.
 
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -102,6 +122,7 @@ export default {
     'Em-dash to comma (site style): "join Christ where he is already at work in our world—in Muncie and across the globe" becomes "...in our world, in Muncie and across the globe".',
     'Linked: "Our website has links to our building use policy here" had no link behind it on the Wix site. "here" now points at /wedding#building-use.',
     'Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band listing the whole Church Coordination Team.',
+    'Reordered, so each reads as a class with its room: "Preschool - 2nd grade: Kickstart Children’s Church (102)" becomes "Kickstart Children’s Church (102): Preschool - 2nd grade", and "3rd - 5th grade: The Underground Children’s Church (B-03)" becomes "The Underground Children’s Church (B-03): 3rd - 5th grade" (what-to-expect.txt lines 65 and 69; the 10:45 row of the Sunday timeline). No word changes.',
     'Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now follows that page’s own redirect to /blog#publications.',
   ],
 
@@ -121,7 +142,12 @@ export default {
   // Bands with identifiable children in them, for the consent conversation.
   // The children's band photo lives on the ministry-children document (set by
   // scripts/place-ministry-photos.mjs); ministry-children-vbs is its manifest record.
-  photoConsent: ['ministry-children-vbs', 'ministries-youth'],
+  photoConsent: [
+    'ministry-children-vbs',
+    'ministries-youth',
+    'ministries-hero-palms',
+    'ministries-hero-youth',
+  ],
 
   async build(ctx) {
     const { images, copy, settings, ministries } = ctx;
@@ -174,12 +200,24 @@ export default {
     const roomRuling = (sentence, find, replaceWith) => swap(sentence, find, replaceWith);
 
     // -- Photos --------------------------------------------------------------
-    // Only the hero's photograph is the page's own now. The ministry bands draw
+    // Only the hero's three lights are the page's own. The ministry bands draw
     // their photographs from the ministry documents (see ministryBand below).
-    const worshipTeam = await images.image('ministries-worship-team');
-    if (!worshipTeam) {
-      throw new Error('ministries.mjs: no photo in the manifest for "ministries-worship-team"');
-    }
+    // The focal point is set here because the library carries no hotspot and
+    // the window's lights are tall crops of these.
+    // Kept inside the frame so the Studio accepts it (home.mjs's rule).
+    const hotspot = (x, y) => {
+      const size = Math.min(0.3, 2 * Math.min(x, 1 - x), 2 * Math.min(y, 1 - y));
+      return { _type: 'sanity.imageHotspot', x, y, width: size, height: size };
+    };
+    const photo = async (key, x, y) => {
+      const img = await images.image(key);
+      if (!img) throw new Error(`ministries.mjs: no photo in the manifest for "${key}"`);
+      return { ...img, hotspot: hotspot(x, y) };
+    };
+    // The middle light is the widest, so it goes first (Hero.astro's window).
+    const heroYouth = await photo('ministries-hero-youth', 0.78, 0.45);
+    const heroPalms = await photo('ministries-hero-palms', 0.5, 0.55);
+    const heroMusicians = await photo('ministries-hero-musicians', 0.42, 0.5);
 
     // ── The five ministry bands, POINTERS to the ministry documents ─────────
     //
@@ -274,6 +312,21 @@ export default {
     // what-to-expect.txt line 47.
     const tenFifteen = paragraphs(line('what-to-expect', 'and, of course, donuts'), 'dh');
 
+    // "3rd - 5th grade: The Underground Children's Church (B-03)" -> the class
+    // first, "The Underground Children's Church (B-03): 3rd - 5th grade", the
+    // shape Timeline reads as a class with its room (see `edits`). Throws if
+    // the capture's line stops being "ages: name (room)".
+    const classFirst = (sentence) => {
+      const m = sentence.match(/^([^:]+):\s*(.+\([^()]+\))$/);
+      if (!m) {
+        throw new Error(
+          `ministries.mjs: "${sentence}" is no longer "ages: class (room)"; re-read ` +
+            'what-to-expect.txt before reordering it.',
+        );
+      }
+      return `${m[2].trim()}: ${m[1].trim()}`;
+    };
+
     // what-to-expect.txt lines 53 to 69. The two rooms here are the ruling the
     // children band below is edited to agree with (note 5).
     const worshipRooms = [
@@ -282,8 +335,8 @@ export default {
         [
           `Nursery Care (104): ${line('what-to-expect', 'nursery care is available throughout the service')}`,
           `Family Room (105): ${line('what-to-expect', 'rocking chairs, nursing privacy')}`,
-          line('what-to-expect', "Kickstart Children's Church"),
-          line('what-to-expect', 'The Underground'),
+          classFirst(line('what-to-expect', "Kickstart Children's Church")),
+          classFirst(line('what-to-expect', 'The Underground')),
         ],
         'wrb',
       ),
@@ -420,16 +473,19 @@ export default {
       addToMainNav: false,
 
       pageBuilder: [
-        // 1. Hero. The worship team on the right, and the two doors most
-        //    visitors arrive through on the left.
+        // 1. Hero. The window: every age in three lights, and the two doors
+        //    most visitors arrive through.
         {
           _type: 'heroSection',
           _key: 'ministries-hero',
-          layout: 'split',
+          layout: 'window',
           size: 'short',
-          eyebrow: 'Ministries',
           headline: 'Every age has a place here.',
-          frames: [{ ...worshipTeam, _key: 'frame-1' }],
+          frames: [
+            { ...heroYouth, _key: 'frame-1' },
+            { ...heroPalms, _key: 'frame-2' },
+            { ...heroMusicians, _key: 'frame-3' },
+          ],
           primaryCta: ctaAnchor('Children', '/ministries#children'),
           secondaryCta: ctaAnchor('Adults', '/ministries#adult'),
         },
@@ -439,7 +495,6 @@ export default {
         {
           _type: 'timelineSection',
           _key: 'ministries-sunday',
-          eyebrow: 'Sunday',
           heading: 'A Sunday for every age',
           rows: [
             {

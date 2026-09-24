@@ -12,6 +12,9 @@
   "beliefs-glass": { "file": "08181c_ac4bdf55910a4bf08971622eadbe31f6_tilde_mv2.jpg", "alt": "Light through the sanctuary's stained glass window", "maxWidth": 1600, "crop": { "left": 0.55 } },
 
   "ministries-worship-team": { "file": "08181c_360b7e1579244dbc95697ca78172c167_tilde_mv2.jpg", "alt": "The worship team leading music on a Sunday morning", "maxWidth": 1600, "consent": false },
+  "ministries-hero-palms": { "library": "08181c_ca2a2650d5b54e349593ab188f4b6057_tilde_mv2.jpg", "alt": "Children holding palm branches in a stone hallway, warm light coming through the leaded windows.", "consent": false },
+  "ministries-hero-youth": { "library": "08181c_42c2e16bcb3147238759e922c478a5ed_tilde_mv2.jpg", "alt": "Teenagers laughing around a table in the youth room, cards in hand and a Bible on the table.", "consent": false },
+  "ministries-hero-musicians": { "library": "08181c_a2717a81ad3e430f968c0e7cea71152a_tilde_mv2.jpg", "alt": "Two musicians rehearsing by the staircase, one at the drums and one on bass guitar." },
   "ministries-handbells": { "file": "08181c_88fa93aff6f14b358d1ee43721b7e189_tilde_mv2.jpg", "alt": "The handbell choir rehearsing", "maxWidth": 1600, "consent": false },
   "ministries-children": { "same": "hero-children", "alt": "Children gathered under the sanctuary arch" },
   "ministries-youth": { "file": "08181c_bd26ffeb7cc14d029caf2663a0452bf3_tilde_mv2.jpg", "alt": "Two teens speaking to the youth group on stage", "maxWidth": 1600, "consent": true },
