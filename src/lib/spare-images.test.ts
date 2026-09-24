@@ -387,3 +387,30 @@ test('a Sunday band with its own photos borrows nothing, and a later one without
   ]);
   assert.equal(empty.doorIndex, 0);
 });
+
+test('a building band with dates keeps its picture to itself; one without dates lends it', () => {
+  const drawing = img('rendering');
+  const dated = assignSpareImages([
+    { _type: 'sundayTimesSection' },
+    {
+      _type: 'heritageBandSection',
+      image: drawing,
+      dates: [{ year: '1859', text: 'The church is founded.' }],
+    },
+  ]);
+  assert.equal(dated.door, null, 'the Sunday band must not borrow the dated band picture');
+  assert.deepEqual(dated.strip, []);
+
+  // Dates with no text are dropped (heritageDates), so the band counts as undated.
+  const blankDates = assignSpareImages([
+    { _type: 'sundayTimesSection' },
+    { _type: 'heritageBandSection', image: drawing, dates: [{ year: '1859', text: '  ' }] },
+  ]);
+  assert.equal(blankDates.door, drawing);
+
+  const undated = assignSpareImages([
+    { _type: 'sundayTimesSection' },
+    { _type: 'heritageBandSection', image: drawing },
+  ]);
+  assert.equal(undated.door, drawing);
+});

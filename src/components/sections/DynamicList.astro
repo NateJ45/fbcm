@@ -6,19 +6,24 @@
 // fork keeps only journal (see the "source" prop doc below).
 //
 // Sources and their shape:
-//   journal      - an editorial LIST (art-direction pass, 2026-09-20): a ruled
-//                  row per post, the date in the first column, the title and
-//                  excerpt in the middle, the category on the right. It was a
-//                  grid of cover-image cards; three photographs stacked beside
-//                  each other said less about the posts than their titles do,
-//                  and the band now reads as a contents page. Links to the
-//                  journal entry at /post/<slug>.
+//   journal      - the Church Blog band (2026-09-23, the Home identity pass):
+//                  a FIXED taupe band in both themes, the heading in the
+//                  display face, and one ruled row per post: the date, the
+//                  post's FEATURED image in a small lancet (a post with none
+//                  shows a building glyph in the arch, never an empty frame),
+//                  the title and excerpt, and the author's name and the
+//                  category as text. Never an author portrait. "All posts" is
+//                  the gold button. Before this pass it was a text-only list
+//                  on the page ground (the art-direction pass, 2026-09-20).
+//                  Links to the journal entry at /post/<slug>.
 //   anything else - the generic card grid at the foot of this file.
 //
 // SELF_CONTAINED: manages its own surface. Never receives a surface prop.
 // Empty state: renders nothing when items is empty or absent (graceful absence).
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
+import ArchFrame from '@/components/church/ArchFrame.astro'; // scaffold: journal
+import { splitStega } from '@/lib/preview-stega'; // scaffold: journal
 import type { ProjectedDynamicListSection } from '@/lib/pageBuilder.types';
 import { columnsClass } from '@/lib/layout-variants';
 import { splitDurable, entryIsSermonPreview, weekOfEyebrow } from '@/lib/blog-derive'; // scaffold: journal
@@ -113,80 +118,138 @@ function formatDate(d?: string | null): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+// scaffold: journal
+// The <time datetime>: the calendar day of the post, or nothing.
+function isoDay(d?: string | null): string | undefined {
+  if (!d) return undefined;
+  const date = new Date(d);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString().slice(0, 10);
+}
+
+// The row's picture sits beside the post's own title inside one link, and on
+// this site most posts' alt text IS the title, so a screen reader would read
+// the title twice. An alt that only repeats the title is dropped (the picture
+// is then decorative); any other alt is kept. Compared on the stega-CLEANED
+// strings, never the raw ones (the preview rules in CLAUDE.md).
+function rowAlt(alt?: string | null, title?: string | null): string {
+  const a = typeof alt === 'string' ? splitStega(alt).cleaned.trim() : '';
+  const t = typeof title === 'string' ? splitStega(title).cleaned.trim() : '';
+  return a && a.toLowerCase() !== t.toLowerCase() ? (alt as string) : '';
+}
+// scaffold:end
+
 // Source-specific fallback CTA link if no cta prop provided.
 const fallbackHref: Record<string, string> = {
   journal: '/blog', // scaffold: journal
 };
 const fallbackLabel: Record<string, string> = {
-  journal: 'Read all posts', // scaffold: journal
+  journal: 'All posts', // scaffold: journal
 };
 ---
 
 {
   hasItems && (
-    <section class="bg-background" aria-labelledby={headingId}>
+    <section
+      class:list={[source === 'journal' ? 'bg-band-taupe text-band-ink' : 'bg-background']}
+      aria-labelledby={headingId}
+    >
       <div class="mx-auto max-w-content px-gutter py-section-lg">
         {/* scaffold: journal */}
-        {/* ── The journal, as an editorial list ─────────────────────────── */}
+        {/* ── The journal, as the Church Blog band ──────────────────────── */}
         {source === 'journal' && (
           <Fragment>
-            {/* The band's name and its way out, on one ruled line. The <h2> is
-                set in the UI face at label size on purpose: it is a rubric over
-                a list, not a headline, and the posts' own titles are the type
-                on this band. It stays a real heading so the section's
-                aria-labelledby points at something. */}
-            <div class="flex items-baseline justify-between gap-6 border-b border-hair-strong pb-4">
-              <h2 id={headingId} class="font-ui text-ui text-gold-ink">
-                {eyebrow || headline}
-              </h2>
+            {/* The heading and the way out on one line, as the prototype's
+                .jr-top: the button wraps under the heading on a phone. */}
+            <div class="mb-[clamp(36px,4vw,60px)] flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+              <div>
+                {eyebrow && headline && (
+                  <p class="mb-4 font-ui text-ui font-medium text-band-brown">{eyebrow}</p>
+                )}
+                <h2
+                  id={headingId}
+                  class="font-display text-h2 leading-[1.02] font-normal text-band-indigo"
+                >
+                  {headline || eyebrow}
+                </h2>
+                {subhead && (
+                  <p class="mt-3 mb-0 max-w-[46ch] font-body text-[1.3125rem] text-band-brown">
+                    {subhead}
+                  </p>
+                )}
+              </div>
               <CtaLink
                 cta={cta}
-                variant="link"
+                variant="gold"
                 fallbackHref={fallbackHref[source]}
                 fallbackLabel={fallbackLabel[source]}
               />
             </div>
 
-            {subhead && (
-              <p class="mt-6 max-w-[46ch] text-lede font-normal text-muted-foreground">{subhead}</p>
-            )}
+            <ol class="m-0 list-none border-t border-band-brown/40 p-0">
+              {visibleItems.map((item) => {
+                const author =
+                  typeof item.author === 'string' && splitStega(item.author).cleaned.trim()
+                    ? item.author
+                    : null;
+                const category = item.categories?.[0]?.title ?? null;
+                return (
+                  <li class="group relative grid grid-cols-[64px_minmax(0,1fr)] gap-x-[18px] gap-y-1.5 border-b border-band-brown/40 py-[clamp(22px,2.4vw,32px)] md:grid-cols-[8em_76px_minmax(0,1fr)] md:gap-x-[clamp(18px,2.6vw,40px)] lg:grid-cols-[9em_88px_minmax(0,1fr)_12em] lg:items-center">
+                    {/* A sermon preview says which week it is for; everything
+                        else says its date (derived from the category, CLAUDE.md
+                        rule 15). */}
+                    <time
+                      datetime={isoDay(item.meta)}
+                      class="col-start-2 row-start-1 font-ui text-[0.96875rem] leading-[1.35] font-semibold text-band-brown lining-nums md:col-start-1 md:row-span-2 md:self-center md:text-[1.0625rem] lg:row-span-1"
+                    >
+                      {item.meta
+                        ? entryIsSermonPreview(item as any)
+                          ? weekOfEyebrow(item.meta)
+                          : formatDate(item.meta)
+                        : ''}
+                    </time>
 
-            {visibleItems.map((item) => (
-              <a
-                href={item.href ?? '/blog'}
-                class="group grid grid-cols-12 items-baseline gap-x-[clamp(16px,2.5vw,40px)] border-b border-hair py-8"
-              >
-                {/* A sermon preview says which week it is for; everything else
-                    says its date. Same line, same size, one of two sentences,
-                    derived from the category (CLAUDE.md rule 15). */}
-                <span class="col-span-12 font-ui text-[0.8125rem] tracking-[.06em] text-muted-foreground md:col-span-2">
-                  {item.meta
-                    ? entryIsSermonPreview(item as any)
-                      ? weekOfEyebrow(item.meta)
-                      : formatDate(item.meta)
-                    : ''}
-                </span>
+                    <ArchFrame
+                      image={item.coverImage}
+                      glyph="window"
+                      shape="lancet"
+                      width={176}
+                      sizes="(min-width: 1024px) 88px, (min-width: 768px) 76px, 64px"
+                      alt={rowAlt(item.coverImage?.alt, item.title)}
+                      class="col-start-1 row-span-3 row-start-1 self-start md:col-start-2 md:row-span-2 md:self-center lg:row-span-1"
+                      style="--arch-ratio: 100 / 140; --arch-mould: var(--color-band-brown);"
+                    />
 
-                <span class="col-span-12 md:col-span-6 md:col-start-3">
-                  <span class="block font-body text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] leading-[1.15] font-normal text-foreground transition-colors group-hover:text-gold-ink">
-                    {item.title}
-                  </span>
-                  {item.summary && (
-                    <span class="mt-2.5 block max-w-[56ch] text-muted-foreground">
-                      {item.summary}
-                    </span>
-                  )}
-                </span>
+                    <div class="col-start-2 row-start-2 min-w-0 md:col-start-3 md:row-start-1 md:self-end lg:self-center">
+                      <h3 class="m-0 font-body text-[1.4375rem] leading-[1.15] font-normal text-band-ink md:text-[clamp(1.5rem,1.1rem+1.2vw,2.125rem)]">
+                        <a
+                          href={item.href ?? '/blog'}
+                          class="bg-[linear-gradient(var(--color-band-indigo),var(--color-band-indigo))] bg-[length:0_2px] bg-[position:0_100%] bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_2px] after:absolute after:inset-0 after:content-[''] focus-visible:bg-[length:100%_2px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-band-ink"
+                        >
+                          {item.title}
+                        </a>
+                      </h3>
+                      {item.summary && (
+                        <p class="mt-1.5 mb-0 hidden max-w-[36em] font-body text-[1.125rem] leading-[1.5] text-band-brown md:block">
+                          {item.summary}
+                        </p>
+                      )}
+                    </div>
 
-                {/* The category travelled with the item for the ordering and
-                    the eyebrow above; on this list it also EARNS its place as
-                    the right-hand rubric, which is what the prototype's `.tag`
-                    column is. */}
-                <span class="col-span-12 mt-2.5 font-ui text-ui text-muted-foreground md:col-span-3 md:col-start-10 md:mt-0 md:justify-self-end">
-                  {item.categories?.[0]?.title}
-                </span>
-              </a>
-            ))}
+                    {(author || category) && (
+                      <p class="col-start-2 row-start-3 m-0 font-ui text-[0.9375rem] leading-[1.35] text-band-brown md:col-start-3 md:row-start-2 md:self-start md:text-base lg:col-start-4 lg:row-start-1 lg:self-center lg:text-right">
+                        {author && (
+                          <span class="font-semibold text-band-ink md:block md:text-[1.0625rem]">
+                            {author}
+                          </span>
+                        )}
+                        {author && category && <span class="md:hidden">, </span>}
+                        {category}
+                      </p>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
           </Fragment>
         )}
         {/* scaffold:end */}

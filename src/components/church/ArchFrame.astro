@@ -20,8 +20,13 @@
 // - `grade="warm"` applies the prototype's one shared photo grade.
 // - The crop follows the editor's hotspot, exactly as Hero.astro's split frame
 //   does; with no hotspot it keeps the top of the photograph, where faces are.
+// - `glyph` (2026-09-23, the Home blog rows): with no photograph the frame
+//   normally draws nothing, but a caller whose rows must line up (a post with
+//   no featured image) passes a building glyph, and the arch is drawn filled
+//   with the indigo band and the glyph in gold instead. Never an empty frame.
 
 import SanityImage from '@/components/SanityImage.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
 interface Props {
@@ -37,6 +42,8 @@ interface Props {
   loading?: 'lazy' | 'eager';
   /** Inline style on the figure, e.g. `--arch-ratio: 100/190`. */
   style?: string;
+  /** Drawn in the arch when there is no photograph (see the header note). */
+  glyph?: 'window' | 'door' | 'rose' | 'basin';
 }
 
 const {
@@ -50,10 +57,12 @@ const {
   grade = 'none',
   loading = 'lazy',
   style,
+  glyph,
 } = Astro.props;
 
-// No photograph, no frame: an empty grey arch is not a designed state.
-if (!image?.asset) return null;
+const hasImage = !!image?.asset;
+// No photograph and no glyph, no frame: an empty grey arch is not a designed state.
+if (!hasImage && !glyph) return null;
 
 const hotspot = image?.hotspot;
 const objectPosition =
@@ -74,17 +83,30 @@ const mould =
   data-arch={shape}
   style={style}
 >
-  <div class:list={['arch', shape === 'lancet' ? 'arch-lancet' : 'arch-door']}>
-    <SanityImage
-      source={image}
-      width={width}
-      sizes={sizes}
-      alt={alt}
-      loading={loading}
-      class:list={['h-full w-full object-cover', grade === 'warm' && 'graded']}
-      style={`object-position: ${objectPosition};`}
-    />
-  </div>
+  {
+    hasImage ? (
+      <div class:list={['arch', shape === 'lancet' ? 'arch-lancet' : 'arch-door']}>
+        <SanityImage
+          source={image}
+          width={width}
+          sizes={sizes}
+          alt={alt}
+          loading={loading}
+          class:list={['h-full w-full object-cover', grade === 'warm' && 'graded']}
+          style={`object-position: ${objectPosition};`}
+        />
+      </div>
+    ) : (
+      <div
+        class:list={[
+          'arch arch-glyph flex items-end justify-center',
+          shape === 'lancet' ? 'arch-lancet' : 'arch-door',
+        ]}
+      >
+        <BuildingGlyph name={glyph ?? 'window'} class="mb-[14%] w-[52%] text-gold" />
+      </div>
+    )
+  }
   <svg class="arch-mould" viewBox={mould.viewBox} preserveAspectRatio="none" aria-hidden="true">
     <path d={mould.d}></path>
   </svg>

@@ -247,19 +247,24 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
           )}
           <ol
             class:list={[
-              'col-span-12 m-0 list-none p-0',
+              'col-span-12 m-0 grid list-none grid-cols-[fit-content(7rem)_minmax(0,1fr)] gap-x-[clamp(16px,2.4vw,36px)] p-0 sm:grid-cols-[fit-content(13rem)_minmax(0,1fr)]',
               hasArchive ? 'lg:col-span-7' : 'lg:col-span-8 lg:col-start-5',
             ]}
           >
+            {/* The year column is ONE track shared by every row (each <li> is
+                a subgrid), sized to the widest year: a single year keeps the
+                minimum on the year itself, a range like "1921 to 1929" widens
+                the whole column up to the fit-content cap and then wraps
+                inside it, so the sentences still start on one edge. */}
             {shownDates.map((d) => (
               <li
                 class:list={[
-                  'grid grid-cols-[4.25rem_minmax(0,1fr)] items-baseline gap-x-[clamp(16px,2.4vw,36px)] py-[clamp(16px,1.8vw,22px)] sm:grid-cols-[6.5rem_minmax(0,1fr)]',
+                  'col-span-2 grid grid-cols-subgrid items-baseline py-[clamp(16px,1.8vw,22px)]',
                   d.now ? 'border-t-[3px] border-gold' : 'border-t border-band-brown/25',
                 ]}
                 data-reveal
               >
-                <span class="font-display text-[clamp(1.75rem,1.2rem+1.4vw,2.5rem)] leading-none text-band-indigo lining-nums">
+                <span class="min-w-[4.25rem] font-display text-[clamp(1.5rem,1.1rem+1.6vw,2.5rem)] leading-[1.05] text-band-indigo lining-nums sm:min-w-[6.5rem]">
                   {d.year}
                 </span>
                 <p class="m-0 max-w-[36em] font-body text-[1.09375rem] leading-[1.5]">{d.text}</p>

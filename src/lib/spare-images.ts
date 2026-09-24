@@ -42,6 +42,9 @@ import type { SanityImageObject } from '@/lib/pageBuilder.types';
 // path. The parser lives apart from the Sanity client for the same reason:
 // src/lib/sanity.ts reads import.meta.env at module scope.
 import { parseSanityAssetDimensions } from './sanity-asset.ts';
+// scaffold: church
+import { heritageDates, type HeritageDateInput } from './heritage-dates.ts';
+// scaffold:end
 
 /** The shape this reads: a page-builder row, loosely typed. */
 export interface SpareImageRow {
@@ -169,6 +172,15 @@ export function assignSpareImages(rows: SpareImageRow[]): SpareImages {
         break;
       }
       case 'heritageBandSection': {
+        // scaffold: church
+        // A building band WITH DATES (the cream "Our Building" band,
+        // HeritageBand.astro note 5) draws its own image as the main picture
+        // and has no strip, so lending that image would show it twice on the
+        // page. Only the brown band, which has no dates, lends its picture.
+        if (heritageDates(row.dates as HeritageDateInput[] | undefined, new Date()).length > 0) {
+          break;
+        }
+        // scaffold:end
         if (borrowable(row.image)) bandImages.push(row.image);
         break;
       }

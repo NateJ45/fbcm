@@ -38,6 +38,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
+import DynamicList from '@/components/sections/DynamicList.astro'; // scaffold: journal
 import { site } from '@/data/site';
 import { surfaceClass } from '@/lib/surfaces';
 // Church identity primitives (2026-09-23, the Who We Are "alive" pass).
@@ -384,6 +385,23 @@ const HERITAGE_HISTORY_FIXTURE = {
   ],
 };
 
+// The building band's year column with RANGES (2026-09-23, Task 4): the
+// column is one track shared by every row, so "1921 to 1929" widens it for
+// all of them and the sentences still start on one edge. No archive, so the
+// list sits alone in the right-hand columns.
+const HERITAGE_RANGE_FIXTURE = {
+  // A heading of its own: two landmarks named 'Our Building' fail axe.
+  heading: 'Built in stages',
+  body: 'Founded in 1859, First Baptist Church of Muncie has a long history of serving God and our neighbor in the Muncie community.',
+  image: HERITAGE_HOME_FIXTURE.image,
+  dates: [
+    { year: '1859 to 1862', text: 'The founding, and the first building.' },
+    { year: '1890', text: 'The congregation moved into a new building on July 20, 1890.' },
+    { year: '1921 to 1929', text: 'The Fighting Parson, and this building.' },
+    { year: '', text: 'The congregation still worships here every Sunday.', now: true },
+  ],
+};
+
 // Task 7: temporary hero fixtures. Three real FBCM photos (from this
 // project's own asset library, same source as HERITAGE_FIXTURE above) for the
 // full-bleed cross-fade, and one for the split layout with three facts.
@@ -436,7 +454,7 @@ const HERO_SPLIT_FIXTURE = {
 
 const GIVE_BAND_FIXTURE = {
   heading: 'Give',
-  body: 'Give online, in the offering plate on Sunday, or by mail.',
+  body: 'We give sacrificially to help those in need through regular offerings and donations.',
   buttonLabel: 'Give through Church Center',
   buttonUrl: 'https://fbcmuncie.churchcenter.com/giving',
 };
@@ -1233,6 +1251,80 @@ const GOALS_CARDS_FIXTURE = {
   ],
 };
 // scaffold:end
+// scaffold: journal
+// The Church Blog band (DynamicList, journal source, 2026-09-23, Task 4):
+// four real posts from the dataset, three with their featured image and one
+// without (the job listing has none), which draws the building glyph in the
+// arch. "A Light Wardrobe" is a sermon preview, so it sorts last and says
+// which week it is for.
+const JOURNAL_LIST_FIXTURE = {
+  headline: 'Church Blog',
+  subhead: 'Read the latest from FBCM',
+  cta: {
+    _type: 'ctaBlock' as const,
+    label: 'All posts',
+    linkType: 'external' as const,
+    externalUrl: '/blog',
+    openInNewTab: false,
+  },
+  items: [
+    {
+      _id: 'sg-post-messiah',
+      title: 'Händel’s Messiah Sing-In & Carols Muncie',
+      meta: '2026-09-17T14:55:15.000Z',
+      summary:
+        'Some Christmas events invite you to sit back and listen, but Messiah Sing-In & Carols is a time to join in and be a participant in the music!',
+      href: '/post/händel-s-messiah-sing-in-carols',
+      author: 'Cynthia Smith',
+      categories: [{ _id: 'c-events', title: 'FBCM Events' }],
+      coverImage: {
+        _type: 'image' as const,
+        asset: { _ref: 'image-bbf1c177d25f566c939b84b97b5f097fb527d581-4023x2221-jpg' },
+        alt: 'Händel’s Messiah Sing-In & Carols Muncie',
+      },
+    },
+    {
+      _id: 'sg-post-blue',
+      title: 'Blue Christmas? Hope & Mental Health for the Holidays',
+      meta: '2025-12-08T19:01:13.570Z',
+      summary: 'If Christmas feels heavy this year, you are not alone.',
+      href: '/post/blue-christmas-hope-mental-health-for-the-holidays',
+      author: 'Kendall Ellis',
+      categories: [{ _id: 'c-events', title: 'FBCM Events' }],
+      coverImage: {
+        _type: 'image' as const,
+        asset: { _ref: 'image-004b902395a6cecad0ee00299fd10558163f08a0-940x726-png' },
+        alt: 'Blue Christmas? Hope & Mental Health for the Holidays',
+      },
+    },
+    {
+      _id: 'sg-post-wardrobe',
+      title: 'A Light Wardrobe',
+      meta: '2025-11-25T20:46:35.525Z',
+      summary: 'Advent is upon us: the great time of anticipation and preparation. Get ready!',
+      href: '/post/a-light-wardrobe',
+      author: 'Jonathan Balmer',
+      categories: [{ _id: 'c-sermon', title: 'Sermon Preview' }],
+      coverImage: {
+        _type: 'image' as const,
+        asset: { _ref: 'image-a0dbaaa674380d86d42c3f00b2cc41b31563ce7a-940x726-png' },
+        alt: 'A Light Wardrobe',
+      },
+    },
+    {
+      _id: 'sg-post-job',
+      title: 'Job Listing: Worship Arts Pastor (Part-time)',
+      meta: '2025-09-16T18:08:30.353Z',
+      summary:
+        'First Baptist Church Muncie is seeking a part-time Worship Arts Pastor to lead our congregation in Christ-centered, intergenerational worship.',
+      href: '/post/job-listing-worship-arts-pastor',
+      author: 'Jonathan Balmer',
+      categories: [{ _id: 'c-resources', title: 'Church Resources' }],
+      coverImage: null,
+    },
+  ],
+};
+// scaffold:end
 ---
 
 <BaseLayout
@@ -1700,6 +1792,27 @@ const GOALS_CARDS_FIXTURE = {
     headingId="styleguide-heritage-home"
   />
 
+  <HeritageBand
+    heading={HERITAGE_RANGE_FIXTURE.heading}
+    body={HERITAGE_RANGE_FIXTURE.body}
+    image={HERITAGE_RANGE_FIXTURE.image}
+    dates={HERITAGE_RANGE_FIXTURE.dates}
+    headingId="styleguide-heritage-range"
+  />
+
+  {/* scaffold:end */}
+  {/* scaffold: journal */}
+  <DynamicList
+    headline={JOURNAL_LIST_FIXTURE.headline}
+    subhead={JOURNAL_LIST_FIXTURE.subhead}
+    source="journal"
+    items={JOURNAL_LIST_FIXTURE.items}
+    limit={4}
+    cta={JOURNAL_LIST_FIXTURE.cta}
+    headingId="styleguide-journal"
+  />
+  {/* scaffold:end */}
+  {/* scaffold: church */}
   <GiveBand
     heading={GIVE_BAND_FIXTURE.heading}
     body={GIVE_BAND_FIXTURE.body}

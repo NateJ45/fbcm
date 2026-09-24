@@ -57,14 +57,25 @@ export function heritageDates(
  * and the last dates that are NOT the present, by their cleaned year, with
  * blanks skipped and never the same year twice. One dated entry gives one
  * year; none gives an empty list, and the band then draws no pair.
+ *
+ * A RANGE gives its outer year (2026-09-23): the pair is set poster-size, so
+ * "1859 to 1862 & 1921 to 1929" would stack into six lines. The first entry
+ * gives its first four-digit year and the last entry its last; a year with no
+ * four-digit number in it is used as typed.
  */
+const outerYear = (y: string, end: 'first' | 'last'): string => {
+  const found = y.match(/\d{4}/g);
+  if (!found) return y;
+  return end === 'first' ? found[0] : found[found.length - 1];
+};
+
 export function heritageBookends(dates: ReadonlyArray<HeritageDate>): string[] {
   const years = dates
     .filter((d) => !d.now)
     .map((d) => clean(d.year))
     .filter((y) => y.length > 0);
   if (years.length === 0) return [];
-  const first = years[0];
-  const last = years[years.length - 1];
+  const first = outerYear(years[0], 'first');
+  const last = outerYear(years[years.length - 1], 'last');
   return first === last ? [first] : [first, last];
 }

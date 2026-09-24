@@ -339,6 +339,20 @@ const IDENTITY_PAIRS: Array<[string, string, string, Floor]> = [
   ['color-band-indigo', 'color-bg', 'Our Building: heading, lead, the years and each date', 'body'],
   ['color-band-brown', 'color-bg', 'Our Building: the text beside each date', 'body'],
   ['color-brown-mid', 'color-bg', 'Our Building: the eyebrow and the ampersand', 'body'],
+  // Church Blog (DynamicList, journal source, 2026-09-23, the Home pass): a
+  // FIXED taupe band in both themes. Titles and authors in band-ink (the Work
+  // pair above); the heading in indigo; the date, excerpt, subhead and
+  // category in brown. The "All posts" gold plate keeps its own gated label.
+  ['color-band-indigo', 'color-band-taupe', 'Church Blog: the heading', 'body'],
+  [
+    'color-band-brown',
+    'color-band-taupe',
+    'Church Blog: the date, excerpt, subhead and category',
+    'body',
+  ],
+  // Give (GiveBand, the gold band): the heading and glyph in indigo; the
+  // paragraph and the onGold outline button in band-ink (The Way pair above).
+  ['color-band-indigo', 'color-band-gold', 'Give: the heading on the gold band', 'body'],
 ];
 
 // Inks that FLIP with the theme, measured on the ground each theme actually

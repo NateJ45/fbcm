@@ -267,6 +267,8 @@ export interface ProjectedDynamicListItem {
   summary?: string | null;
   href?: string | null;
   coverImage?: ProjectedImage | null;
+  /** journal source only: the byline as typed on the entry, printed as text. */
+  author?: string | null;
   /**
    * journal source only: the entry's categories, carried so the card can DERIVE
    * whether it is a weekly sermon preview (and so the list can order the

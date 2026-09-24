@@ -133,3 +133,27 @@ test('bookends do not repeat one year', () => {
     ['1929'],
   );
 });
+
+test('bookends take the outer years of a range, not the whole range', () => {
+  assert.deepEqual(
+    heritageBookends([
+      { year: '1859 to 1862', text: 'A.', now: false },
+      { year: '1890', text: 'B.', now: false },
+      { year: '1921 to 1929', text: 'C.', now: false },
+    ]),
+    ['1859', '1929'],
+  );
+  // One range alone gives both of its ends.
+  assert.deepEqual(heritageBookends([{ year: '1921 to 1929', text: 'A.', now: false }]), [
+    '1921',
+    '1929',
+  ]);
+  // A year with no four-digit number is used as typed.
+  assert.deepEqual(
+    heritageBookends([
+      { year: 'Early days', text: 'A.', now: false },
+      { year: '1929', text: 'B.', now: false },
+    ]),
+    ['Early days', '1929'],
+  );
+});
