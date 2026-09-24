@@ -1,42 +1,59 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// Page-builder block: a timeline. One ruled row per entry: the marker (a time
-// like "9:30" or a year like "1859") set large in old-style figures on the
-// left, the entry beside it, and a hairline across the top of each row.
+// Page-builder block: a timeline, drawn as THE DOOR-STEP PATH (2026-09-24,
+// the Visit identity pass; the prototype's `.morning`,
+// docs/superpowers/prototypes/2026-09-23-visit/visit.html, after The Way on
+// Who We Are).
 //
-// THE CONNECTOR LINE IS GONE (art-direction pass, 2026-09-21, task 10). The
-// rows used to hang off a 2px gold vertical rule, which drew a diagram of a
-// list that the list already was: the marker column and the hairlines say
-// "these are in order" without a second device saying it again. The numerals
-// carry the band now, which is why they are set at h2 in oldstyle figures
-// rather than at body size in the display face.
+// Each row is a numbered step: a doorway (the row's own photo in a door arch,
+// or a rectangle when the photo is of the building, photo-subject.ts), the
+// number on the doorstep, and beside it the marker, the title, the note and
+// the text. A dotted trail runs from under each door to the next. A short
+// path with pictures climbs as a staircase; a long one (History's seven
+// eras) or one without pictures (Ministries) walks straight down, with the
+// numbers as its doors, so it never runs off the page.
 //
-// ALTERNATION. A row that carries a picture puts it on the OUTSIDE edge, and
-// the side alternates by index: even rows on the right, odd rows on the left,
-// where it bleeds to the edge of the screen. Nothing in the schema gives a row
-// an image today, so on the live site every row takes the default columns; the
-// grammar lives here so a row that gains one does not have to invent it.
+// Everything that changes the drawing is DERIVED (src/lib/morning-path.ts,
+// unit-tested; CLAUDE.md rule 15):
+//   - a marker that is a clock time is a titling numeral with its am/pm small
+//     and lower case; the step at Site settings' service time is the main
+//     step, drawn largest; a marker in words (a year) is set smaller; an
+//     empty marker (a welcome) draws no numeral;
+//   - on a timeline that tells the time, a row after the last time whose
+//     marker is words ("First Sundays") is a change to the morning rather
+//     than a step in it, so it lands after the path as a closing note, with
+//     the basin glyph (the prototype's Communion);
+//   - a note "Place (Room)" is split into the place and a gold-ruled room
+//     tag; a run of bullet lines "Class (Room): description" becomes a ruled
+//     class list with room tags.
+// Numbering stays because it is a real sequence (rule 11).
 //
-// Each row carries the id its `anchor` slug generated, so a link like
-// /visit#accessibility lands on the row rather than the top of the band.
-// `scroll-mt` keeps the sticky header from covering the row it just jumped to.
+// The rows' anchors still land on the row (scroll-mt clears the header). When
+// the window hero above drops its lancets into this band (SectionRenderer's
+// dropInto), --after-window pads the top to clear them.
 //
-// A CONTENT block: the alternating surface arrives as a prop from SectionRenderer.
+// A CONTENT block: the surface arrives as a prop from SectionRenderer.
 import SectionHeading from '@/components/SectionHeading.astro';
 import PortableText from '@/components/PortableText';
 import SanityImage from '@/components/SanityImage.astro';
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { surfaceClass } from '@/lib/surfaces';
+import { splitStega } from '@/lib/preview-stega';
+import { photoSubject } from '@/lib/photo-subject';
+import { bodySegments, noteParts, pathPlan, pathStairs } from '@/lib/morning-path';
+import { textParagraphs } from '@/lib/hymn-board';
+import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
 interface TimelineRow {
   _key?: string;
-  marker?: string;
-  title?: string;
+  marker?: string | null;
+  title?: string | null;
   body?: any;
-  note?: string;
+  note?: string | null;
   anchor?: string;
-  /** Optional, and no schema field feeds it yet. See the ALTERNATION note. */
-  image?: any;
+  image?: SanityImageObject | null;
 }
 
 interface Props {
@@ -44,16 +61,34 @@ interface Props {
   heading?: string;
   rows?: TimelineRow[];
   surface?: 'background' | 'muted';
+  /** Site settings' service time: the main step is the one at this time. */
+  serviceTime?: string | null;
   headingId: string;
 }
 
-const { eyebrow, heading, rows = [], surface = 'background', headingId } = Astro.props as Props;
+const {
+  eyebrow,
+  heading,
+  rows = [],
+  surface = 'background',
+  serviceTime,
+  headingId,
+} = Astro.props as Props;
 const bg = surfaceClass(surface);
-const validRows = rows.filter((r) => r?.marker || r?.title);
+const plan = pathPlan(rows, serviceTime);
+const withPictures = plan.steps.some((s) => !!s.row.image?.asset);
+const stairs = pathStairs(plan.steps.length, withPictures);
+const altOf = (img: SanityImageObject | null | undefined) =>
+  splitStega(((img as { alt?: string } | null)?.alt ?? '') as string).cleaned;
+const blocksOf = (body: unknown) => (Array.isArray(body) ? body : []);
 ---
 
-<section class={bg} aria-labelledby={heading ? headingId : undefined}>
-  <div class="mx-auto max-w-content px-gutter py-section-lg">
+<section
+  class:list={[bg, 'tp-band']}
+  style={`--tp-ground: var(--color-${surface === 'muted' ? 'muted' : 'background'});`}
+  aria-labelledby={heading ? headingId : undefined}
+>
+  <div class="tp-wrap mx-auto max-w-content px-gutter">
     <SectionHeading
       eyebrow={eyebrow}
       headline={heading}
@@ -61,79 +96,143 @@ const validRows = rows.filter((r) => r?.marker || r?.title);
       level="h2"
       align="left"
       tone="church"
+      face="display"
     />
 
     {
-      validRows.length > 0 && (
-        <div class="mt-section-md">
-          {validRows.map((row, i) => {
-            // A picture on the left is the odd row's asymmetry. Without one,
-            // the row keeps the default columns whatever its index is, so a
-            // band with no pictures reads as one straight column of numerals.
-            const hasImage = !!row.image?.asset;
-            const imageLeft = hasImage && i % 2 === 1;
-
-            const markerCols = imageLeft ? 'lg:col-start-4 lg:col-span-3' : 'lg:col-span-3';
-            const bodyCols = imageLeft
-              ? 'lg:col-start-7 lg:col-span-6'
-              : 'lg:col-start-4 lg:col-span-6';
-            const imageCols = imageLeft
-              ? 'lg:col-start-1 lg:col-span-3 bleed-left'
-              : 'lg:col-start-10 lg:col-span-3';
-
+      plan.steps.length > 0 && (
+        <ol
+          class="tp-path"
+          data-stairs={stairs ? '' : undefined}
+          data-pictures={withPictures ? '' : undefined}
+        >
+          {plan.steps.map((step, i) => {
+            const row = step.row;
+            const img = row.image?.asset ? row.image : null;
+            const note = noteParts(row.note);
             return (
-              <div
+              <li
                 id={row.anchor || undefined}
-                class="grid scroll-mt-[var(--header-offset)] grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] border-t border-hair py-10"
+                class:list={['tp-step scroll-mt-[var(--header-offset)]', step.main && 'is-main']}
+                style={stairs ? `--n:${i}` : undefined}
               >
-                {/* Every column is pinned to row 1 on a desktop, so the DOM can
-                    stay in reading order (marker, entry, picture) while the
-                    picture sits to the LEFT of both on an odd row. Without it
-                    the grid's auto-placement would push a col-start-1 item that
-                    comes last in the DOM onto a second line. */}
-                <p
-                  class:list={[
-                    'col-span-12 font-body text-h2 leading-none font-normal text-foreground oldstyle lg:row-start-1',
-                    markerCols,
-                  ]}
-                  data-reveal
-                >
-                  {row.marker}
-                </p>
-
-                <div class:list={['col-span-12 mt-4 lg:row-start-1 lg:mt-0', bodyCols]}>
-                  {row.title && (
-                    <h3 class="font-body text-h3 leading-snug font-normal text-foreground">
-                      {row.title}
-                    </h3>
-                  )}
-                  {row.body && (
-                    <PortableText
-                      value={row.body}
-                      className="mt-3 max-w-[58ch] font-body text-body [&>p+p]:mt-4 [&>p]:my-0 [&_p]:text-muted-foreground"
-                    />
-                  )}
-                  {row.note && <p class="mt-4 font-ui text-ui text-gold-ink">{row.note}</p>}
+                <div class="tp-door">
+                  {withPictures &&
+                    (img && photoSubject(altOf(img)) === 'place' ? (
+                      <figure class="tp-rect m-0" data-reveal>
+                        <SanityImage
+                          source={img}
+                          width={440}
+                          sizes="(min-width: 721px) 220px, 96px"
+                          alt={altOf(img)}
+                          class="graded h-full w-full object-cover"
+                        />
+                      </figure>
+                    ) : img ? (
+                      <ArchFrame
+                        image={img}
+                        shape="door"
+                        width={440}
+                        sizes="(min-width: 721px) 220px, 96px"
+                        alt={altOf(img)}
+                        grade="warm"
+                        style="--arch-ratio: 100 / 124; --arch-mould: var(--color-brown-ink);"
+                      />
+                    ) : (
+                      <ArchFrame
+                        image={null}
+                        glyph="door"
+                        shape="door"
+                        width={440}
+                        sizes="220px"
+                        alt=""
+                        style="--arch-ratio: 100 / 124; --arch-mould: var(--color-brown-ink);"
+                      />
+                    ))}
+                  <span class="tp-no" aria-hidden="true">
+                    {step.n}
+                  </span>
                 </div>
-
-                {hasImage && (
-                  <div
-                    class:list={['col-span-12 mt-6 lg:row-start-1 lg:mt-0', imageCols]}
-                    data-reveal
-                  >
-                    <SanityImage
-                      source={row.image}
-                      width={520}
-                      sizes="(min-width: 1024px) 24vw, 100vw"
-                      class="aspect-[4/5] w-full object-cover"
-                    />
-                  </div>
-                )}
-              </div>
+                <div class="tp-text" data-reveal>
+                  {step.kind === 'time' ? (
+                    <p class="tp-when">
+                      <span>{step.big}</span>
+                      {step.meridiem && <small>{step.meridiem}</small>}
+                    </p>
+                  ) : step.kind === 'word' ? (
+                    <p class="tp-when is-word">{step.big}</p>
+                  ) : null}
+                  {row.title && <h3 class="tp-title">{row.title}</h3>}
+                  {(note.place || note.room) && (
+                    <p class="tp-place">
+                      {note.place && <span>{note.place}</span>}
+                      {note.room && <span class="tp-room">{note.room}</span>}
+                    </p>
+                  )}
+                  {bodySegments(blocksOf(row.body)).map((seg) =>
+                    seg.kind === 'classes' ? (
+                      <ul class="tp-classes">
+                        {seg.items.map((c) => (
+                          <li>
+                            <b>{c.name}</b>
+                            <span class="tp-room">{c.room}</span>
+                            <p>{c.desc}</p>
+                            {c.extra.map((x) => (
+                              <p>{x}</p>
+                            ))}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <PortableText
+                        value={seg.blocks}
+                        className="tp-body font-body text-body [&>p+p]:mt-4 [&>p]:my-0 [&_a]:decoration-gold [&_p]:text-foreground"
+                      />
+                    ),
+                  )}
+                </div>
+              </li>
             );
           })}
-        </div>
+        </ol>
       )
+    }
+
+    {
+      plan.landings.map((row) => {
+        const paras = blocksOf(row.body);
+        const [first, ...rest] = paras;
+        return (
+          <div
+            id={row.anchor || undefined}
+            class="tp-landing scroll-mt-[var(--header-offset)]"
+            data-reveal
+          >
+            <div class="tp-lh">
+              <BuildingGlyph name="basin" class="w-12 shrink-0 text-indigo" />
+              <div>
+                {row.marker && <p class="tp-kick">{row.marker}</p>}
+                {row.title && <h3 class="tp-land-title">{row.title}</h3>}
+              </div>
+            </div>
+            <div>
+              {first && (
+                <PortableText
+                  value={[first]}
+                  className="tp-say font-body [&>p]:my-0 [&_p]:text-indigo"
+                />
+              )}
+              {rest.length > 0 && (
+                <PortableText
+                  value={rest}
+                  className="tp-body mt-4 font-body text-body [&>p+p]:mt-4 [&>p]:my-0 [&_p]:text-foreground"
+                />
+              )}
+              {row.note && textParagraphs(row.note).map((n) => <p class="tp-place mt-4">{n}</p>)}
+            </div>
+          </div>
+        );
+      })
     }
   </div>
 </section>

@@ -1,7 +1,15 @@
 // scaffold-file: church
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { classEntry, noteParts, pathPlan, pathStairs, roomHeading } from './morning-path.ts';
+import {
+  bodySegments,
+  classEntry,
+  noteParts,
+  pathPlan,
+  pathStairs,
+  roomBoard,
+  roomHeading,
+} from './morning-path.ts';
 import { splitStega } from './preview-stega.ts';
 
 // A stega run as the preview client appends it (see hymn-board.test.ts).
@@ -134,4 +142,85 @@ test('roomHeading reads "Nursery Care (104)" and refuses a heading with no room'
   });
   assert.equal(roomHeading('Nursery Care'), null);
   assert.equal(roomHeading(null), null);
+});
+
+const li = (text: string, key: string) => ({
+  _type: 'block',
+  _key: key,
+  style: 'normal',
+  listItem: 'bullet',
+  children: [{ text }],
+});
+const p = (text: string, key: string) => ({
+  _type: 'block',
+  _key: key,
+  style: 'normal',
+  children: [{ text }],
+});
+
+test('bodySegments gathers class lines, folds a stray line into the class above, keeps prose', () => {
+  const segs = bodySegments([
+    p('Intro.', 'a'),
+    li('Friendship Class (B-05): Led by Pastor Jonathan.', 'b'),
+    li("Children's Sunday School (B-03 & 104): Worship Arts.", 'c'),
+    li('6 weeks - 3 years: Nursery (104)', 'd'),
+    p('After.', 'e'),
+  ]);
+  assert.deepEqual(
+    segs.map((s) => s.kind),
+    ['text', 'classes', 'text'],
+  );
+  const classes = segs[1];
+  assert.equal(classes.kind, 'classes');
+  if (classes.kind === 'classes') {
+    assert.deepEqual(
+      classes.items.map((i) => [i.name, i.room, i.extra]),
+      [
+        ['Friendship Class', 'B-05', []],
+        ["Children's Sunday School", 'B-03 & 104', ['6 weeks - 3 years: Nursery (104)']],
+      ],
+    );
+  }
+});
+
+test('bodySegments leaves a list that does not open on a class line as text', () => {
+  const segs = bodySegments([li('One thing', 'a'), li('Another', 'b')]);
+  assert.deepEqual(
+    segs.map((s) => s.kind),
+    ['text'],
+  );
+  assert.deepEqual(bodySegments(null), []);
+});
+
+const h3 = (text: string, key: string) => ({
+  _type: 'block',
+  _key: key,
+  style: 'h3',
+  children: [{ text }],
+});
+
+test('roomBoard reads headings that name rooms, each owning the blocks under it', () => {
+  const board = roomBoard([
+    h3('Nursery Care (104)', 'a'),
+    p('For children ages 3 and younger.', 'b'),
+    h3("Children's Church (B-03 & 102)", 'c'),
+    p('There are two classes.', 'd'),
+    li('Preschool - 2nd grade: Kickstart (102)', 'e'),
+  ]);
+  assert.ok(board);
+  assert.deepEqual(
+    board?.rooms.map((r) => [r.title, r.room, r.blocks.length]),
+    [
+      ['Nursery Care', '104', 1],
+      ["Children's Church", 'B-03 & 102', 2],
+    ],
+  );
+  assert.equal(board?.intro.length, 0);
+});
+
+test('roomBoard refuses a body whose headings do not all name a room, or has only one', () => {
+  assert.equal(roomBoard([h3('Nursery Care (104)', 'a'), h3('Our history', 'b')]), null);
+  assert.equal(roomBoard([h3('Nursery Care (104)', 'a'), p('x', 'b')]), null);
+  assert.equal(roomBoard([p('x', 'b')]), null);
+  assert.equal(roomBoard(null), null);
 });

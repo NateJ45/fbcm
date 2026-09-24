@@ -156,3 +156,89 @@ export function roomHeading(
   if (!m) return null;
   return { title: reattachStega(m[1].trim(), encoded), room: m[2].trim() };
 }
+
+export interface SegBlock {
+  _type?: string;
+  _key?: string;
+  style?: string;
+  listItem?: string;
+  children?: { text?: string }[];
+}
+
+export interface ClassItem {
+  key: string;
+  name: string;
+  room: string;
+  desc: string;
+  /** List lines after it that are not class lines ("6 weeks - 3 years: Nursery (104)"). */
+  extra: string[];
+}
+
+export type BodySegment<B extends SegBlock = SegBlock> =
+  { kind: 'text'; blocks: B[] } | { kind: 'classes'; items: ClassItem[] };
+
+/**
+ * A step's body in reading order, with every run of bullet lines that opens
+ * on a class line gathered into one class list (name, room tag, description).
+ * A bullet line that is not a class line joins the class above it; a run that
+ * does not open on a class line stays ordinary text. The raw span text is
+ * used, so each description keeps its stega payload.
+ */
+export function bodySegments<B extends SegBlock>(
+  blocks: readonly B[] | null | undefined,
+): BodySegment<B>[] {
+  const out: BodySegment<B>[] = [];
+  const rawOf = (b: B) => (b.children ?? []).map((c) => c?.text ?? '').join('');
+  for (const b of blocks ?? []) {
+    const entry = b.listItem ? classEntry(rawOf(b)) : null;
+    const last = out[out.length - 1];
+    if (entry) {
+      const item: ClassItem = { key: b._key ?? `c${out.length}`, ...entry, extra: [] };
+      if (last?.kind === 'classes') last.items.push(item);
+      else out.push({ kind: 'classes', items: [item] });
+      continue;
+    }
+    if (b.listItem && last?.kind === 'classes') {
+      last.items[last.items.length - 1].extra.push(rawOf(b));
+      continue;
+    }
+    if (last?.kind === 'text') last.blocks.push(b);
+    else out.push({ kind: 'text', blocks: [b] });
+  }
+  return out;
+}
+
+export interface RoomEntry<B extends SegBlock = SegBlock> {
+  key: string;
+  title: string;
+  room: string;
+  blocks: B[];
+}
+
+/**
+ * A body written as rooms (Visit's "Where the children go": "Nursery Care
+ * (104)", "Family Room (105)", ...) read as a room board: every small heading
+ * (h3 or h4) names its room in brackets, and each heading owns the blocks
+ * under it. Null unless there are at least two headings and EVERY heading
+ * names a room, so an ordinary body is never drawn as a board by accident.
+ * `intro` is whatever comes before the first heading.
+ */
+export function roomBoard<B extends SegBlock>(
+  blocks: readonly B[] | null | undefined,
+): { intro: B[]; rooms: RoomEntry<B>[] } | null {
+  const list = blocks ?? [];
+  const isHead = (b: B) => !b.listItem && (b.style === 'h3' || b.style === 'h4');
+  const heads = list.filter(isHead);
+  if (heads.length < 2) return null;
+  const intro: B[] = [];
+  const rooms: RoomEntry<B>[] = [];
+  for (const b of list) {
+    if (isHead(b)) {
+      const parsed = roomHeading((b.children ?? []).map((c) => c?.text ?? '').join(''));
+      if (!parsed) return null;
+      rooms.push({ key: b._key ?? `room-${rooms.length}`, ...parsed, blocks: [] });
+    } else if (rooms.length === 0) intro.push(b);
+    else rooms[rooms.length - 1].blocks.push(b);
+  }
+  return { intro, rooms };
+}

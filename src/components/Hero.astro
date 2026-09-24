@@ -5,19 +5,20 @@
 //      the photograph fills the viewport (100svh on the home hero, 72svh on an
 //      interior one) under the two gradients in HeroBackground, with the words
 //      sitting bottom-left over it.
-//   2) "image, split" hero (layout="split") — cream two-column band: words on
-//      the left (eyebrow, headline, lede, facts, buttons), the photo on the
-//      right bleeding to the viewport edge. 7:5 columns at lg, stacked with
-//      the photo first on mobile.
-//   3) "text" hero (interior pages with no photograph) — clean editorial
-//      heading on paper with eyebrow + headline + subhead.
+//   2) "image, split" hero (layout="split") — since 2026-09-24 (the Visit
+//      identity pass) the brand indigo band: words on the left (gold label,
+//      headline, lede, facts, buttons), the first photo on the right in one
+//      frame, a door arch for people and a rectangle for the building. 7:5
+//      columns at lg, stacked with the photo first on mobile.
+//   3) "text" hero (interior pages with no photograph) — the same indigo
+//      band with the words alone.
 //   4) "window" hero (layout="window", 2026-09-23, the Who We Are "alive"
 //      pass; the prototype's `.opener`) — a brand indigo band, the eyebrow as
 //      a small gold label, the headline as a sentence in Castoro italic with
 //      the script-accent word in brand gold, and the first three frames as a
 //      triple lancet (middle largest, rays above it). With
 //      `dropInto` (set by SectionRenderer only when the next block is the
-//      Watchword band) the window drops over the band's bottom edge into that
+//      Watchword band or, since 2026-09-24, a Timeline) the window drops over the band's bottom edge into that
 //      band; otherwise it stays inside its own band. Two frames draw
 //      two lancets, one draws one; none draws the words alone. The header does
 //      NOT overlay it (heroOverlay.ts): the band is a colour, not a picture.
@@ -45,6 +46,9 @@ import { splitStega } from '@/lib/preview-stega';
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
 import { staticSunday, timeOnly } from '@/lib/live-sunday';
 import ArchFrame from '@/components/church/ArchFrame.astro';
+import HeroFacts from '@/components/HeroFacts.astro';
+import { photoSubject } from '@/lib/photo-subject';
+import { photoAspect } from '@/lib/photo-shape';
 
 interface CtaBlock {
   label?: string;
@@ -112,9 +116,18 @@ interface Props {
   scriptAccent?: string;
   /** The window layout only: let the lancets hang over the band's bottom
       edge into the next block. SectionRenderer sets it only when that block
-      is the Watchword band, the one band that pads its top to clear them; on
+      is the Watchword band or a Timeline, the two bands that pad their top
+      (var(--after-window)) to clear them; on
       any other neighbour (or the footer) the window stays inside the band. */
   dropInto?: boolean;
+  /**
+   * heroSection.headingAccent (2026-09-24): words of the headline set in the
+   * brand gold. On the window layout, when they END the headline, they close
+   * it on a line of their own in the gold capitals ("What to Expect / ON
+   * SUNDAY", the Visit prototype); anywhere else they are gold in place. The
+   * script accent, when a caller passes one, wins (one accent per heading).
+   */
+  headingAccent?: string;
 }
 
 const {
@@ -132,6 +145,7 @@ const {
   serviceTime,
   scriptAccent,
   dropInto = false,
+  headingAccent,
 } = Astro.props as Props;
 
 const heroFacts = (facts ?? []).filter((f) => f?.label || f?.value).slice(0, 3);
@@ -146,6 +160,13 @@ const {
   word: scriptWord,
   after: scriptAfter,
 } = splitHeadingAccent(headline, scriptAccent);
+
+// The colour accent, only when the script accent did not fire. "Closing" is
+// an accent with nothing after it: the window sets it as a line of its own.
+const colour = scriptFound
+  ? { found: false, before: '', word: '', after: '', heading: headline }
+  : splitHeadingAccent(headline, headingAccent);
+const colourCloses = colour.found && splitStega(colour.after).cleaned.trim() === '';
 
 // THE LIVE DATED LINE. Two strings come out of one setting:
 //   - `sundayStatic` is what the SERVER renders. It carries no date, so it is
@@ -212,6 +233,13 @@ const splitObjectPosition =
   typeof splitHotspot?.x === 'number' && typeof splitHotspot?.y === 'number'
     ? `${(splitHotspot.x * 100).toFixed(2)}% ${(splitHotspot.y * 100).toFixed(2)}%`
     : '50% 0%';
+// The split frame's shape (2026-09-24): people in a door arch, a building as a
+// rectangle, read from the photo's own alt text (src/lib/photo-subject.ts). A
+// landscape photo gets a wider door so a group keeps its edges.
+const splitAlt = splitStega((splitFrame as { alt?: string } | undefined)?.alt ?? '').cleaned;
+const splitArch = photoSubject(splitAlt) === 'people';
+const splitDims = photoAspect(splitFrame as Parameters<typeof photoAspect>[0]);
+const splitArchRatio = splitDims && splitDims.a >= 1.2 ? '100 / 104' : '100 / 128';
 
 // The image hero's height. The header overlays it, so these are the whole
 // viewport (home) and a deep interior band, with nothing subtracted.
@@ -269,6 +297,18 @@ const windowDrops = dropInto && windowOrder.length > 0;
             <>
               {scriptBefore}<em class="text-gold not-italic">{scriptWord}</em>{scriptAfter}
             </>
+          ) : colour.found && colourCloses ? (
+            <>
+              {colour.before}
+              <b class="hw-close font-display font-normal text-gold uppercase not-italic">
+                {colour.word}
+              </b>
+              {colour.after}
+            </>
+          ) : colour.found ? (
+            <>
+              {colour.before}<em class="text-gold not-italic">{colour.word}</em>{colour.after}
+            </>
           ) : (
             headline
           )}
@@ -278,6 +318,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
             {subheadParts.map((part) => (part.type === 'em' ? <em>{part.value}</em> : part.value))}
           </p>
         )}
+        {heroFacts.length > 0 && <HeroFacts facts={heroFacts} />}
         {(primaryCta || secondaryCta) && (
           <div class="flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
             {primaryCta && <CtaLink cta={primaryCta} variant="gold" onDark />}
@@ -323,73 +364,83 @@ const windowDrops = dropInto && windowOrder.length > 0;
     </div>
   </section>
 ) : hasImage && layout === 'split' ? (
-  <section class="bg-background text-foreground" aria-labelledby={headingId}>
-    {/* Split hero: words left, photo right, 7:5 at lg. Stacked with the photo
-        first on mobile so the page doesn't open on a wall of text. The words
-        share the site's left edge and container with every other band on the
-        page (CLAUDE.md rule 17: one grammar per page); the picture breaks that
-        container and bleeds to the viewport edge, which is the art-direction
-        pass's rule for any photograph beside words. */}
-    <div class="mx-auto grid max-w-content grid-cols-1 items-stretch gap-0 px-gutter lg:grid-cols-12">
-      <div class="order-2 flex flex-col justify-center py-section-md lg:order-1 lg:col-span-7 lg:pr-l">
+  <section class="hero-split bg-band-indigo text-white-pure" aria-labelledby={headingId}>
+    {/* THE SPLIT HERO ON THE BRAND BAND (2026-09-24, the Visit identity pass;
+        rollout plan: "window or single-arch opener on a brand band; people
+        first"). The words on the left in the window hero's grammar (gold
+        label, white headline sized by length, lede, facts, the gold button
+        and a paper text link), and the first photo on the right in ONE
+        frame: a photo of people in a door arch, a photo of the building as a
+        plain rectangle (photo-subject.ts reads which from its alt text). The
+        band is indigo in both themes, like the window hero, and the header
+        keeps its paper bar above it (heroOverlay.ts: split is never
+        overlaid). One left edge with every band below (rule 17). */}
+    <div class="hs-grid mx-auto grid max-w-content grid-cols-1 items-end px-gutter lg:grid-cols-12">
+      <div class="order-2 lg:order-1 lg:col-span-7">
         <div class="hero-entry-stagger max-w-2xl">
-          {eyebrow && (
-            <p class="font-ui text-ui font-medium mb-[clamp(18px,3vh,32px)] text-foreground/80">
-              {eyebrow}
-            </p>
-          )}
-          <h1 id={headingId} class:list={[displayHeadlineClass, 'text-foreground']}>
+          {eyebrow && <p class="hw-label font-display text-gold uppercase">{eyebrow}</p>}
+          <h1 id={headingId} class:list={[displayHeadlineClass, 'text-white-pure']}>
             {scriptFound ? (
               <>
                 {scriptBefore}<span class="font-script">{scriptWord}</span>{scriptAfter}
+              </>
+            ) : colour.found ? (
+              <>
+                {colour.before}<span class="text-gold">{colour.word}</span>{colour.after}
               </>
             ) : (
               headline
             )}
           </h1>
           {subhead && (
-            <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body italic font-normal text-lede text-foreground/80">
+            <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body text-lede font-normal text-bg/85 italic">
               {subheadParts.map((part) =>
                 part.type === 'em' ? <em class="not-italic">{part.value}</em> : part.value,
               )}
             </p>
           )}
           {heroFacts.length > 0 && (
-            <dl class="mt-[clamp(28px,5vh,48px)] flex max-w-[960px] flex-wrap gap-[clamp(24px,4vw,64px)] border-t border-hair pt-[clamp(20px,3vh,28px)]">
-              {heroFacts.map((fact) => (
-                <div>
-                  {fact.label && (
-                    <dt class="font-ui text-ui mb-1.5 text-foreground/70">{fact.label}</dt>
-                  )}
-                  {fact.value && (
-                    <dd class="font-body text-[clamp(1.25rem,1rem+.9vw,1.625rem)] leading-tight">
-                      {fact.value}
-                    </dd>
-                  )}
-                </div>
-              ))}
-            </dl>
+            <div class="mt-[clamp(26px,4vh,40px)]">
+              <HeroFacts facts={heroFacts} />
+            </div>
           )}
           {(primaryCta || secondaryCta) && (
-            <div class="mt-[clamp(26px,4vh,40px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
-              {primaryCta && <CtaLink cta={primaryCta} variant="gold" />}
-              {secondaryCta && <CtaLink cta={secondaryCta} variant="link" />}
+            <div class="mt-[clamp(22px,3vh,34px)] flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
+              {primaryCta && <CtaLink cta={primaryCta} variant="gold" onDark />}
+              {secondaryCta && <CtaLink cta={secondaryCta} variant="link" onDark />}
             </div>
           )}
         </div>
       </div>
-      <div class="bleed-right order-1 lg:order-2 lg:col-span-5">
-        <SanityImage
-          source={effectiveImages[0]}
-          width={1200}
-          height={900}
-          sizes="(min-width: 1024px) 45vw, 100vw"
-          loading="eager"
-          fetchpriority="high"
-          quality={75}
-          class="h-full min-h-[16rem] w-full object-cover"
-          style={`object-position: ${splitObjectPosition};`}
-        />
+      <div class="order-1 w-full max-w-[34rem] lg:order-2 lg:col-span-5 lg:max-w-none">
+        {splitArch ? (
+          <ArchFrame
+            image={splitFrame}
+            shape="door"
+            width={1100}
+            sizes="(min-width: 1024px) 38vw, 100vw"
+            alt={splitAlt}
+            grade="warm"
+            loading="eager"
+            class="hs-arch"
+            style={`--arch-ratio: ${splitArchRatio};`}
+          />
+        ) : (
+          <figure class="hs-rect m-0">
+            <SanityImage
+              source={splitFrame}
+              width={1200}
+              height={900}
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              loading="eager"
+              fetchpriority="high"
+              quality={75}
+              alt={splitAlt}
+              class="graded h-full w-full object-cover"
+              style={`object-position: ${splitObjectPosition};`}
+            />
+          </figure>
+        )}
       </div>
     </div>
   </section>
@@ -467,22 +518,25 @@ const windowDrops = dropInto && windowOrder.length > 0;
     </div>
   </section>
 ) : (
-  <section class="bg-background" aria-labelledby={headingId}>
+  <section class="bg-band-indigo text-white-pure" aria-labelledby={headingId}>
     <div
       class:list={[
         'mx-auto flex max-w-content items-end px-gutter py-section-lg',
-        size === 'tall' ? 'min-h-[100svh]' : 'min-h-[42svh] md:min-h-[52svh]',
+        size === 'tall' ? 'min-h-[100svh]' : 'min-h-[36svh] md:min-h-[44svh]',
       ]}
     >
-      {/* The text-only hero speaks the same grammar as the two above; the type
-          itself lives in SectionHeading, which the primitives pass redrew. */}
+      {/* The text-only hero on the brand band (2026-09-24, the Visit identity
+          pass): the same indigo ground and ink as the window and split heroes,
+          so an opener without a photograph still opens in the church's
+          colours. The type itself lives in SectionHeading (tone "band"). */}
       <SectionHeading
         eyebrow={eyebrow}
         headline={headline}
         subhead={subhead}
         headingId={headingId}
         level="h1"
-        tone="church"
+        tone="band"
+        headingAccent={headingAccent}
         scale={headlineScale(headline, { tall: false })}
       />
     </div>

@@ -1,0 +1,47 @@
+---
+// Safe to edit by hand
+// The hero's three facts on a brand band (2026-09-24, the Visit identity
+// pass; the prototype's `.facts`): a small taupe label over each value, a gold
+// hairline between them. A value that is a clock time ("10:45 am") is set as
+// the gold titling numeral with its am/pm small, italic and lower case, read
+// by hymn-board's readBig on the stega-cleaned text, exactly as the hymn board
+// sets its times; any other value is set in the UI face. Used by the window
+// and split branches of Hero.astro, both of which sit on a fixed dark band.
+import { readBig } from '@/lib/hymn-board';
+
+interface Fact {
+  _key?: string;
+  label?: string | null;
+  value?: string | null;
+}
+
+interface Props {
+  facts: Fact[];
+}
+
+const { facts } = Astro.props as Props;
+const rows = facts.map((f) => ({ ...f, read: readBig(f.value) }));
+---
+
+<dl class="hero-facts">
+  {
+    rows.map((f) => (
+      <div>
+        {f.label && <dt class="font-ui text-band-taupe">{f.label}</dt>}
+        {f.value &&
+          (f.read.kind === 'time' ? (
+            <dd class="hf-time font-display text-gold lining-nums">
+              {f.read.big}
+              {f.read.meridiem && (
+                <span class="ml-[.2em] font-body text-[.62em] text-band-taupe italic">
+                  {f.read.meridiem}
+                </span>
+              )}
+            </dd>
+          ) : (
+            <dd class="font-ui">{f.value}</dd>
+          ))}
+      </div>
+    ))
+  }
+</dl>
