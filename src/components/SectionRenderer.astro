@@ -108,6 +108,16 @@ interface Props {
    * as it would without it. Absent (every other route), nothing changes.
    */
   insertBefore?: string[];
+  /**
+   * Visit's calendar file (2026-09-24), for the hero's "Add Sundays to your
+   * calendar" line under its facts. Only /visit passes it.
+   */
+  calendarHref?: string;
+  /*
+   * A `findus-extra` slot, when given, is passed into the FIRST Sunday-times
+   * band that has doors, under its "Find us" address (Visit's Sunday weather
+   * line). No other band sees it.
+   */
 }
 
 const {
@@ -117,6 +127,7 @@ const {
   settings,
   sermon,
   insertBefore,
+  calendarHref,
 } = Astro.props as Props;
 // A MINISTRY BAND IS RESOLVED FIRST (2026-09-22). A ministrySection only points
 // at a ministry document; src/lib/ministry-band.ts swaps it for the exact
@@ -323,6 +334,15 @@ const insertAt =
       )
     : -1;
 
+// The Sunday-times band that receives the `findus-extra` slot: the first one
+// with doors (the Doors, parking and access band), or -1.
+const findUsExtraAt = Astro.slots.has('findus-extra')
+  ? rows.findIndex(({ block }) => {
+      const b = block as { _type?: string; doors?: unknown[] };
+      return b._type === 'sundayTimesSection' && Array.isArray(b.doors) && b.doors.length > 0;
+    })
+  : -1;
+
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
 ---
@@ -358,6 +378,7 @@ const wrapAttrs = (key: string | undefined) =>
             )}
             headingAccent={s.headingAccent ?? undefined}
             sermon={sermon}
+            calendarHref={calendarHref}
             headingId={headingId}
           />
         ) : s._type === 'ctaBandSection' ? (
@@ -479,7 +500,9 @@ const wrapAttrs = (key: string | undefined) =>
             frame={blockIndex === spares.doorIndex ? spares.door : null}
             headingId={headingId}
             settings={settings}
-          />
+          >
+            {blockIndex === findUsExtraAt && <slot name="findus-extra" slot="findus-after" />}
+          </SundayTimes>
         ) : /* scaffold-branch: church */ s._type === 'timelineSection' ? (
           <Timeline
             eyebrow={s.eyebrow}
