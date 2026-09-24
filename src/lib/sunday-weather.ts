@@ -28,7 +28,29 @@
 // circular-drive entrance and its automatic door, never a canopy. The line
 // states the forecast and nothing about the building.
 
-import { SERVICE_TIME_ZONE, weekMinutesIn } from './live-service.ts';
+// SELF-CONTAINED ON PURPOSE. This file is bundled into Visit's browser
+// script, and importing live-service.ts (where the same zone and a week-minutes
+// helper live) made Vite split that module into a shared chunk, which BaseLayout's
+// script on EVERY page then fetched as an extra request in its critical chain
+// (measured: Home mobile LCP 1,727 ms to 2,026 ms in two of three runs). The
+// zone constant and the ten-line clock read below are the price of no
+// shared chunk. live-service.ts stays the source of the church's zone.
+const SERVICE_TIME_ZONE = 'America/Indiana/Indianapolis';
+
+const WEEK = new Intl.DateTimeFormat('en-US', {
+  timeZone: SERVICE_TIME_ZONE,
+  weekday: 'short',
+  hour: 'numeric',
+  minute: 'numeric',
+  hourCycle: 'h23',
+});
+/** Minutes since Sunday 00:00 on the church's wall clock. */
+function weekMinutes(now: Date): number {
+  const parts = WEEK.formatToParts(now);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
+  return day * 1440 + Number(get('hour')) * 60 + Number(get('minute'));
+}
 
 export const NWS_POINTS_URL = 'https://api.weather.gov/points/40.1917,-85.3841';
 export const NWS_FORECAST_URL = 'https://api.weather.gov/gridpoints/IND/84,90/forecast';
@@ -50,7 +72,7 @@ const SUNDAY_NOON = 12 * 60;
 /** Wednesday 00:00 up to Sunday 12:00 on the church's clock. */
 export function inWeatherWindow(now: Date): boolean {
   if (Number.isNaN(now.getTime())) return false;
-  const m = weekMinutesIn(now, SERVICE_TIME_ZONE);
+  const m = weekMinutes(now);
   return m >= WED || m < SUNDAY_NOON;
 }
 

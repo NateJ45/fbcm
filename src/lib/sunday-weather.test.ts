@@ -145,3 +145,16 @@ test('no temperature or no words: no sentence', () => {
   assert.equal(weatherSentence({ temperature: null, shortForecast: 'Sunny' }), null);
   assert.equal(weatherSentence({ temperature: 70, shortForecast: '' }), null);
 });
+
+test('the browser module imports nothing, so Vite cannot split a shared chunk out of it', async () => {
+  const { readFileSync } = await import('node:fs');
+  const src = readFileSync(new URL('./sunday-weather.ts', import.meta.url), 'utf8');
+  assert.equal(/^import\s/m.test(src), false);
+});
+
+test('its zone is the church’s zone in live-service.ts', async () => {
+  const { SERVICE_TIME_ZONE } = await import('./live-service.ts');
+  const { readFileSync } = await import('node:fs');
+  const src = readFileSync(new URL('./sunday-weather.ts', import.meta.url), 'utf8');
+  assert.ok(src.includes(`const SERVICE_TIME_ZONE = '${SERVICE_TIME_ZONE}';`));
+});
