@@ -220,8 +220,12 @@ const desc = [
   document.addEventListener('astro:page-load', initDoorPlans);
 </script>
 
-<style is:global>
-  /* The door plan (DoorPlan.astro). Gold line art on the band's brown. */
+<style is:inline>
+  /* The door plan (DoorPlan.astro). Gold line art on the band's brown.
+     is:inline ON PURPOSE (measured 2026-09-24): as a bundled style this
+     landed in the chunk every SectionRenderer page inlines, +3,183 B of CSS
+     on ~370 pages that never draw the sketch. Inline, it ships only with the
+     sketch itself (/visit). */
   .dp {
     margin: clamp(26px, 3vw, 40px) 0 clamp(4px, 1vw, 10px);
   }
