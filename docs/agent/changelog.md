@@ -10,6 +10,46 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-23 — Home identity: the home page composed from the church blocks (`feat/home-identity`)._
+
+The home page's six bands, ported from the approved prototype
+(`docs/superpowers/prototypes/2026-09-23-home/home.html`) with Nathan's
+overrides, and the section changes they needed, which also reach /visit,
+/contact, /history and /give. **What to Expect** is the hymn board: the
+Sunday-times band redrawn as a full-width brown band with the times set
+straight onto it in gold numerals (`src/lib/hymn-board.ts`), optional
+`intro`, `notes`, `photos` and `cta` fields, the photos in a wide door arch
+with a lancet over its corner. **Our Goals** is the link-card doors with a
+new `glyph` per card, drawn on indigo-dark as the four goals. **Our
+Building** is the heritage band with `dates` and an `archive` photograph: a
+fixed cream band, the Hannaford rendering multiplied onto the paper, and a
+dated list ending in the present, whose year is the build year
+(`src/lib/heritage-dates.ts`). **Church Blog** is the journal list as taupe
+rows with a lancet cover each, and **Give** is gold on every page, in both
+themes. The hero is unchanged except that its buttons are the gold plate
+(the one button family, ruled the same day). `scripts/pages/home.mjs`
+composes it and waits on a deploy before `--apply`; `/styleguide/home`
+renders it from a read-only fixture until then.
+
+Task 6 closed the review's loose ends. **One heading grammar** for every
+church band h2, Castoro Titling at `text-h2` (`H2_DISPLAY`,
+`src/lib/heading-grammar.ts`): the arched-door LinkCards heading came down
+from `text-title` and HeritageBand's moved from the reading face through a
+new `SectionHeading face="display"`, measured before and after at 1440 so
+that only those headings moved. The footer's closing band now reads "10:45
+am", not "10:45 AM" (`clockParts()` in `live-sunday.ts`). The 1890 date is
+cut to its move clause. The greeter photo, already on Who We Are, left the
+home page for the teenagers at a table with a Bible (Nathan's decision).
+`goalsEndDark` went with its last caller; GiveBand's h1 width is a `wide`
+prop instead of two fighting `max-w` classes; the blog rows print and stamp
+one (UTC) day; a seed dry run refuses, with instructions, rather than
+uploads (`scripts/lib/page-images.mjs`, now tested).
+
+Gates: 792 unit tests across 53 files, `test:scripts` 24, `astro check` 0
+errors, format clean, `audit:studio` clean, Playwright 339 passed, 1 skipped.
+Sheet 127,475 B inline on the home page (limit 147,456 B). Parity
+recaptured at the fixpoint, 164/164, the sheet identical on both builds.
+
 _2026-09-23 — Who We Are: brand palette only, church year removed, window proportions (`fix/window-height`)._
 
 The site owner reviewed the identity pass below and ruled on three things.
