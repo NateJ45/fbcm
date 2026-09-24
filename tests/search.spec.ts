@@ -93,6 +93,34 @@ test.describe('desktop', () => {
   });
 });
 
+// Lenis only runs without reduced motion, so this one opts back in. Going Back
+// with the search open swapped the dialog away before its `close` fired, and
+// Lenis stayed stopped on the next page: the wheel did nothing until a reload.
+test.describe('with smooth scroll', () => {
+  test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: 'no-preference' });
+
+  test('navigating away with the search open leaves the wheel working', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'load' });
+    await page.click('header a[href="/blog/"], header a[href="/blog"]');
+    await expect(page).toHaveURL(/\/blog\/?$/);
+    await page.getByRole('button', { name: 'Search the site' }).click();
+    await expect(page.getByRole('dialog', { name: 'Search the site' })).toBeVisible();
+    await page.goBack();
+    await expect(page).toHaveURL(/\/$/);
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => (window as unknown as { lenis?: { isStopped: boolean } }).lenis?.isStopped,
+        ),
+      )
+      .toBe(false);
+    await expect(page.locator('html')).not.toHaveClass(/ss-open/);
+    await page.mouse.move(720, 450);
+    await page.mouse.wheel(0, 800);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100);
+  });
+});
+
 test.describe('phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
 
