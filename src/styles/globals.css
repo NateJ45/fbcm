@@ -2983,6 +2983,34 @@ body::before {
     page-break-inside: avoid;
   }
 
+  /* Paper gets every reveal's final state. A figure, a glyph or a drawing the
+     visitor never scrolled to is still waiting for the observer, and would
+     print blank. */
+  [data-reveal] {
+    opacity: 1 !important;
+    translate: none !important;
+  }
+  [data-reveal] .arch {
+    clip-path: none !important;
+  }
+  [data-reveal] .arch img,
+  [data-reveal] .mark-amp {
+    transform: none !important;
+  }
+  [data-reveal] .arch-mould,
+  [data-reveal] .mark-amp {
+    opacity: 1 !important;
+  }
+  [data-reveal] path {
+    stroke-dashoffset: 0 !important;
+  }
+  [data-reveal='draw'] > :not(.glyph-dots) {
+    stroke-dasharray: none !important;
+  }
+  [data-reveal]:not(.is-visible) > * {
+    opacity: 1 !important;
+  }
+
   /* Images — preserve aspect ratio, cap height so they fit on a printed page. */
   img {
     max-width: 100%;

@@ -285,6 +285,19 @@ const tagLinks = (((entry as { tags?: string[] }).tags ?? []) as string[])
   .map((label) => ({ label, slug: slugify(label) }))
   .filter((t) => t.slug);
 
+// THE PRINTED FOOT (2026-09-24, feat/print-motion). One line under the body
+// on paper only: the church's name, its street address and this post's own
+// address. All three are derived (site.name, the Site settings address the
+// footer prints, and the canonical URL BaseLayout builds the same way), never
+// typed, so a printed bulletin always says where it came from.
+const addressLine = clean(typeof siteSettings?.address === 'string' ? siteSettings.address : '')
+  .split('\n')
+  .map((l) => l.trim())
+  .filter(Boolean)
+  .join(', ');
+const postUrl = decodeURI(new URL(`/post/${slug}`, site.url).toString());
+const printFoot = [site.name, addressLine, postUrl].filter(Boolean);
+
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
@@ -454,6 +467,14 @@ const schemas = [
       </div>
     </div>
   </article>
+
+  {
+    /* On paper only (display: none on screen, so no reader and no screen
+      reader meets it twice): where this bulletin came from. */
+  }
+  <p class="p2-print-foot" data-pagefind-ignore>
+    {printFoot.map((part, i) => (i === 0 ? part : <> · {part}</>))}
+  </p>
 
   {
     /* ------- 4. More from this series ---------------------------------------
@@ -1110,4 +1131,238 @@ const schemas = [
       left: -12px;
     }
   }
+
+  /* ---- On paper: the post prints as a bulletin (2026-09-24) ----------------
+     US Letter. The masthead (title, the lede, the order as a ruled list), a
+     photograph cover (a slide is lettering and stays on screen), the body in
+     the reading face at a print measure, and one derived line at the foot.
+     Everything that only makes sense on a screen goes: the site's header,
+     footer and menu, the reading bar, the sticky chip, back-to-top, the "In
+     this post" list, the tags, More from this series and the doors, and the
+     search dialog. Black ink on white; the brand gold survives only as thin
+     rules. Here rather than in globals.css so it ships with /post/* alone
+     (CLAUDE.md rule 20: the global sheet is the chunk every page inlines).
+     The generic print block in globals.css still applies underneath. */
+  .p2-print-foot {
+    display: none;
+  }
+  @media print {
+    @page {
+      size: letter;
+      margin: 0.7in 0.8in 0.75in;
+      @bottom-right {
+        content: counter(page) ' of ' counter(pages);
+        font-family: var(--font-ui);
+        font-size: 8pt;
+        letter-spacing: 0.08em;
+        color: #555;
+      }
+    }
+    body::after,
+    .p2-foot,
+    .p2-side,
+    .p2-tags,
+    .p2-related,
+    main > astro-island,
+    dialog {
+      display: none !important;
+    }
+    .p2,
+    .p2 *,
+    .p2-print-foot {
+      color: #000 !important;
+    }
+    .p2 .max-w-content {
+      max-width: none;
+      padding: 0;
+    }
+    .p2-grid {
+      display: block;
+    }
+    .p2-mast {
+      padding: 0 0 18pt;
+    }
+    .p2-cat {
+      font-size: 8.5pt;
+    }
+    .p2-title,
+    .p2-title-long {
+      margin-top: 8pt;
+      max-width: none;
+      font-size: 26pt;
+      line-height: 1.05;
+    }
+    .p2-lede {
+      margin-top: 10pt;
+      font-size: 13pt;
+    }
+    .p2-mast-r {
+      margin-top: 16pt;
+      break-inside: avoid;
+    }
+    .p2-order-h {
+      margin-bottom: 4pt;
+      font-size: 8.5pt;
+    }
+    .p2-facts,
+    .p2-facts > div,
+    .p2-facts > div:first-child {
+      border-color: var(--color-gold);
+    }
+    .p2-facts > div {
+      grid-template-columns: 7em minmax(0, 1fr);
+      padding: 4pt 0 5pt;
+    }
+    .p2-facts dt {
+      font-size: 8.5pt;
+      color: #444 !important;
+    }
+    .p2-facts dd,
+    .p2-facts dd.p2-big {
+      font-size: 11pt;
+    }
+    .p2 a {
+      text-decoration: none;
+    }
+    /* A photograph cover, kept whole and short enough to leave the body room. */
+    .p2-ground {
+      margin: 0 0 18pt;
+      max-width: 5.9in;
+      break-inside: avoid;
+    }
+    /* The door arch is a CSS mask, which a print without background graphics
+       drops while keeping the gold mould, so on paper the photograph is a
+       plain rectangle and the mould goes. */
+    .p2-ground .arch {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .p2-ground .arch-mould {
+      display: none;
+    }
+    /* The body: the reading face at a print measure. */
+    .p2-body {
+      max-width: none;
+    }
+    .post-prose {
+      max-width: 5.9in;
+      font-size: 11pt;
+      line-height: 1.5;
+      orphans: 3;
+      widows: 3;
+    }
+    .post-prose a {
+      text-decoration: underline;
+      text-decoration-color: var(--color-gold);
+      text-decoration-thickness: 0.5pt;
+    }
+    /* The external address after a link, never after one of the site's own. */
+    .p2 a[href^='http']::after {
+      content: ' (' attr(href) ')';
+      font-family: var(--font-ui);
+      font-size: 8pt;
+      letter-spacing: 0.02em;
+      color: #444;
+      overflow-wrap: anywhere;
+    }
+    .post-prose strong {
+      box-shadow: none;
+      text-decoration: underline;
+      text-decoration-color: var(--color-gold);
+      text-decoration-thickness: 0.5pt;
+      text-underline-offset: 0.2em;
+    }
+    .post-prose .pp-sh {
+      margin-top: 1.6em;
+      padding-top: 6pt;
+      border-top: 0.5pt solid var(--color-gold);
+      font-size: 14pt;
+      break-after: avoid;
+      break-inside: avoid;
+    }
+    .post-prose .pp-point,
+    .post-prose .pp-q {
+      font-size: 12.5pt;
+      break-after: avoid;
+    }
+    .post-prose .pp-qa,
+    .post-prose .pp-lection,
+    .post-prose blockquote,
+    .post-prose li,
+    .post-prose tr {
+      break-inside: avoid;
+    }
+    .post-prose .pp-qa,
+    .post-prose .pp-lection,
+    .post-prose table,
+    .post-prose th,
+    .post-prose td {
+      border-color: var(--color-gold);
+    }
+    /* A background does not print by default, so the gold rules drawn as
+       backgrounds on screen (the bullet, the caption tick) become borders. */
+    .post-prose ul > li::before,
+    .pp-tick {
+      height: 0;
+      background: none;
+      border-top: 1px solid var(--color-gold);
+    }
+    .post-prose .pp-lection p,
+    .post-prose .pp-lection blockquote {
+      font-size: 12pt;
+    }
+    .post-prose .pp-lection-h,
+    .post-prose .pp-pn,
+    .post-prose th {
+      font-size: 8pt;
+    }
+    .post-prose .pp-table {
+      overflow: visible;
+    }
+    .post-prose thead {
+      display: table-header-group;
+    }
+    .post-prose table {
+      font-size: 10pt;
+    }
+    .post-prose .pp-fig {
+      margin: 14pt 0;
+      break-inside: avoid;
+    }
+    .post-prose img {
+      max-height: 3.2in;
+      width: auto;
+      max-width: 100%;
+    }
+    .pp-cap {
+      margin-top: 6pt;
+      font-size: 9pt;
+      color: #444 !important;
+    }
+    .p2-print-foot {
+      display: block;
+      margin-top: 24pt;
+      padding-top: 6pt;
+      border-top: 0.5pt solid var(--color-gold);
+      font-family: var(--font-ui);
+      font-size: 8.5pt;
+      letter-spacing: 0.02em;
+      break-inside: avoid;
+    }
+  }
 </style>
+
+<script is:inline>
+  // On paper, every picture in the body: the figures are loading="lazy", and a
+  // browser prints a lazy image it has not fetched as an empty box. Printing
+  // flips them to eager first. Bound once for the session (the router keeps
+  // `window` across post pages) and read at print time, so it always sees the
+  // page that is actually being printed.
+  if (!window.__postPrintBound) {
+    window.__postPrintBound = true;
+    window.addEventListener('beforeprint', function () {
+      var imgs = document.querySelectorAll('.p2 img[loading="lazy"]');
+      for (var i = 0; i < imgs.length; i++) imgs[i].loading = 'eager';
+    });
+  }
+</script>
