@@ -23,10 +23,11 @@ treatment on indigo-dark, highlights every occurrence of its accent word, and
 gains an optional `heading` and `intro`. **TeamGrid** (unused) follows the staff
 list layout. `scripts/pages/staff.mjs` recomposes the page under the church's
 own headings: a two-light window hero of the Co-Pastors (library headshots used
-nowhere else), Pastors & Staff, Church Coordination Team, Deacons (with "What
-are Deacons?" restored), Support and volunteer roles, and Every Member of this
-Church as the whole church section (1 Corinthians 12:4-6). The duplicate
-pastors' letter came off (it is whole on /who-we-are#letter). Dry run only;
+nowhere else), Pastors & Staff, the pastors' whole letter (`#letter`, kept on
+both /staff and /who-we-are until the owner decides), Church Coordination Team,
+Deacons (with "What are Deacons?" restored), Support and volunteer roles, and
+Every Member of this Church as the whole church section (1 Corinthians
+12:4-6). Dry run only;
 `/styleguide/staff` renders it from a read-only fixture until it is applied.
 /ministries and /beliefs change with the two components.
 

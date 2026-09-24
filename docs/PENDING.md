@@ -796,12 +796,13 @@ now ties the schema max and the slice with a drift test.
   deployed schema does not have yet (`staffGridSection.intro`, `scriptureBandSection.heading`
   and `.intro`). Deploy first (CLAUDE.md rule 1), then
   `npm run seed-pages -- --only staff` (the plan on 2026-09-24: `pageBuilder` length
-  10 -> 7, "would be replaced"; the live page matched the old module exactly, so no
+  10 -> 8, "would be replaced"; the live page matched the old module exactly, so no
   editor edits to carry over; re-read the plan in case one has been made since) and
   `--apply` (backup first). Then shoot /staff, /ministries and /beliefs in production.
-- **Nothing links to `/staff#letter` any more, and the letter is gone from /staff.**
-  It lives whole on `/who-we-are#letter` since the Who We Are pass. If an outside link
-  to /staff#letter turns up, it lands on the top of the page.
+- **Owner question: the pastors' letter appears on both /who-we-are and /staff; keep
+  both or drop one?** Both pages carry all eight paragraphs (`/who-we-are#letter` as the
+  letterSection with the pastors' portrait, `/staff#letter` as a richTextSection after
+  Pastors & Staff). The content stays on both until Nathan decides.
 - **The hero's two headshots are older photos** (Kendall and Jonathan outdoors by a
   brick wall, the Wix blog's author photos). They are the only unused photographs of
   the two Co-Pastors; the staff-document portraits are drawn in the Pastors band
