@@ -217,7 +217,10 @@ const openingLevel = (index: number): 'h1' | 'h2' => (index === 0 && !hasHero ? 
 // divider is suppressed for exactly that one position. Without a frame the
 // statement is an ordinary light band and nothing changes.
 const afterFullBleed = (index: number): boolean =>
-  spares.statementIndex !== null && index === spares.statementIndex + 1;
+  (spares.statementIndex !== null && index === spares.statementIndex + 1) ||
+  // The goal index is a deep indigo band edge to edge, so the same stray rule
+  // would sit an inch under it (2026-09-24, the Ministries identity pass).
+  (rows[index - 1]?.block as { _type?: string } | undefined)?._type === 'ministryGoalsIndex';
 
 // THE HERO'S FIRST FRAME, by asset ref, or null when the page has no hero.
 //

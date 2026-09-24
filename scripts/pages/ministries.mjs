@@ -214,8 +214,10 @@ export default {
       if (!img) throw new Error(`ministries.mjs: no photo in the manifest for "${key}"`);
       return { ...img, hotspot: hotspot(x, y) };
     };
-    // The middle light is the widest, so it goes first (Hero.astro's window).
-    const heroYouth = await photo('ministries-hero-youth', 0.78, 0.45);
+    // The middle light is the widest and tallest, so it goes first (Hero.astro's
+    // window): the palm-branch children, the one portrait of the three. The
+    // youth room and the musicians are landscapes, cropped to the side lights.
+    const heroYouth = await photo('ministries-hero-youth', 0.78, 0.3);
     const heroPalms = await photo('ministries-hero-palms', 0.5, 0.55);
     const heroMusicians = await photo('ministries-hero-musicians', 0.42, 0.5);
 
@@ -482,8 +484,8 @@ export default {
           size: 'short',
           headline: 'Every age has a place here.',
           frames: [
-            { ...heroYouth, _key: 'frame-1' },
-            { ...heroPalms, _key: 'frame-2' },
+            { ...heroPalms, _key: 'frame-1' },
+            { ...heroYouth, _key: 'frame-2' },
             { ...heroMusicians, _key: 'frame-3' },
           ],
           primaryCta: ctaAnchor('Children', '/ministries#children'),

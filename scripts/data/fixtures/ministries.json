@@ -12,33 +12,6 @@
         {
           "_type": "image",
           "asset": {
-            "_id": "image-f4a02d623edfdb736ef24629dbeb367ac7e24923-2048x969-jpg",
-            "_type": "sanity.imageAsset",
-            "altText": "A group of teens laughing while playing Uno around a table, a Bible sitting nearby.",
-            "metadata": {
-              "dimensions": {
-                "_type": "sanity.imageDimensions",
-                "aspectRatio": 2.113519091847265,
-                "height": 969,
-                "width": 2048
-              },
-              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAJABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAYHBf/EACgQAAEDAwIDCQAAAAAAAAAAAAECAwQABQYHEQgScxQiNTZEUXGBsf/EABUBAQEAAAAAAAAAAAAAAAAAAAQD/8QAGxEAAgIDAQAAAAAAAAAAAAAAAAECEQMSIUH/2gAMAwEAAhEDEQA/AMTAMrvGR3K4xIMxEMFwOc7ve+UimHUWU5anokycpnsSnAgqI351D3FSfSv1XUTVI4hvI9p6g/KJOT3rwZiSUdq6LFwRCvMx2c1MLaHTulKFEDailbHvC2vuiqpKg0sjTo//2Q=="
-            },
-            "url": "https://cdn.sanity.io/images/7jw947g5/production/f4a02d623edfdb736ef24629dbeb367ac7e24923-2048x969.jpg"
-          },
-          "alt": "Teenagers laughing around a table in the youth room, cards in hand and a Bible on the table.",
-          "hotspot": {
-            "_type": "sanity.imageHotspot",
-            "x": 0.78,
-            "y": 0.45,
-            "width": 0.3,
-            "height": 0.3
-          },
-          "_key": "frame-1"
-        },
-        {
-          "_type": "image",
-          "asset": {
             "_id": "image-66199736e30b8ec5c160729ea87001f77a00ef08-1920x2400-jpg",
             "_type": "sanity.imageAsset",
             "altText": "A group of children holding large palm branches in a hallway with tall leaded windows.",
@@ -58,6 +31,33 @@
             "_type": "sanity.imageHotspot",
             "x": 0.5,
             "y": 0.55,
+            "width": 0.3,
+            "height": 0.3
+          },
+          "_key": "frame-1"
+        },
+        {
+          "_type": "image",
+          "asset": {
+            "_id": "image-f4a02d623edfdb736ef24629dbeb367ac7e24923-2048x969-jpg",
+            "_type": "sanity.imageAsset",
+            "altText": "A group of teens laughing while playing Uno around a table, a Bible sitting nearby.",
+            "metadata": {
+              "dimensions": {
+                "_type": "sanity.imageDimensions",
+                "aspectRatio": 2.113519091847265,
+                "height": 969,
+                "width": 2048
+              },
+              "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAJABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAYHBf/EACgQAAEDAwIDCQAAAAAAAAAAAAECAwQABQYHEQgScxQiNTZEUXGBsf/EABUBAQEAAAAAAAAAAAAAAAAAAAQD/8QAGxEAAgIDAQAAAAAAAAAAAAAAAAECEQMSIUH/2gAMAwEAAhEDEQA/AMTAMrvGR3K4xIMxEMFwOc7ve+UimHUWU5anokycpnsSnAgqI351D3FSfSv1XUTVI4hvI9p6g/KJOT3rwZiSUdq6LFwRCvMx2c1MLaHTulKFEDailbHvC2vuiqpKg0sjTo//2Q=="
+            },
+            "url": "https://cdn.sanity.io/images/7jw947g5/production/f4a02d623edfdb736ef24629dbeb367ac7e24923-2048x969.jpg"
+          },
+          "alt": "Teenagers laughing around a table in the youth room, cards in hand and a Bible on the table.",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "x": 0.78,
+            "y": 0.3,
             "width": 0.3,
             "height": 0.3
           },
