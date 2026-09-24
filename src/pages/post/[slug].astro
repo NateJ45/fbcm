@@ -23,6 +23,15 @@
 // poster already says it, and three bands saying one sentence was the audit's
 // finding 10.
 //
+// THE CHURCH IDENTITY PASS (2026-09-24) kept all of that and changed how it
+// is dressed: every ink is a brand token (--color-indigo for the text,
+// --color-brown-ink for the facts and meta, gold for the rules that carry
+// structure), the cover hangs in a DOOR ARCH with its gold mould and no
+// caption (a slide as a plate in the right column, a photograph as a wide door
+// across the measure), and the foot (More from this series and the two doors)
+// is the taupe band the home page's Church Blog rows sit on, with the same
+// rows (PostRow.astro) and the gold "All posts" plate.
+//
 // Static-site routing: getStaticPaths enumerates every journalEntry slug at
 // build time and works out the doors and the series rows there, once.
 //
@@ -61,7 +70,10 @@ import { extractHeadings } from '@/lib/portable-text-headings';
 import { site } from '@/data/site';
 import { urlFor, parseSanityAssetDimensions, sanityFetch } from '@/lib/sanity';
 
-import SanityImage from '@/components/SanityImage.astro';
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import PostRow from '@/components/blog/PostRow.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
 import JournalPortableText from '@/components/JournalPortableText';
 import ReadingProgress from '@/components/ReadingProgress.astro';
 import StickyCTAChip from '@/components/StickyCTAChip';
@@ -209,22 +221,24 @@ const coverDims = cover ? parseSanityAssetDimensions(cover) : null;
 const coverIsPhoto = coverDims
   ? coverDims.width >= 2000 && coverDims.width / coverDims.height >= 1.3
   : false;
-// NO VISIBLE CAPTION DERIVED FROM ALT (2026-09-23, the owner: "the pictures
-// speak for themselves"). This plate used to fall back to the cover's alt
-// text when the editor had not typed an explicit caption. It no longer does:
-// the plate shows the editor's own `caption` field (a real, separately typed
-// field on coverImage, distinct from alt), or in preview the generic "The
-// series slide" label, or the post title. The alt text stays on the <img>
-// for screen readers either way.
+// NO CAPTION on the cover (2026-09-23, the owner: "the pictures speak for
+// themselves"; the identity rollout's rule 7). The plate used to print the
+// editor's caption, "The series slide" or the post title under the print. The
+// alt text stays on the <img> for screen readers, and is dropped only when it
+// merely repeats the title the reader has just met in the h1.
 const coverAlt = clean((cover as { alt?: string } | null)?.alt);
-const plateCaption = cover
-  ? clean((cover as { caption?: string }).caption) ||
-    (isPreview ? 'The series slide' : clean(entry.title))
-  : '';
-// When the caption happens to say exactly what the alt would, the alt goes
-// empty so a screen reader does not hear it twice.
-const plateAlt = plateCaption === coverAlt ? '' : undefined;
+const plateAlt =
+  coverAlt && coverAlt.toLowerCase() !== clean(entry.title).toLowerCase()
+    ? ((cover as { alt?: string }).alt ?? '')
+    : '';
 const hasPlate = !!cover && !coverIsPhoto;
+// A slide carries its own lettering, so it is never cropped to fit the door:
+// the frame is the slide's own proportion plus the door's head (the top 23%
+// of the arch, 30 of the mask's 130 units), the slide sits at the foot at its
+// full width, and the head above it is the indigo band (see .p2-plate).
+const plateRatio = coverDims
+  ? `${coverDims.width} / ${Math.round((coverDims.height * 130) / 100)}`
+  : '100 / 112';
 const titleIsLong = clean(entry.title).length > 34;
 
 // Tags, as text links at the foot. Each is a built page (/blog/tag/<slug>/),
@@ -303,16 +317,17 @@ const schemas = [
     {
       cover && coverIsPhoto && (
         <div class="mx-auto max-w-content px-gutter">
-          <figure class="p2-ground">
-            <SanityImage
-              source={cover}
-              width={2400}
-              loading="eager"
-              fetchpriority="high"
-              sizes="100vw"
-              quality={70}
-            />
-          </figure>
+          <ArchFrame
+            image={cover}
+            shape="door"
+            width={2400}
+            sizes="(min-width: 1320px) 1240px, 94vw"
+            alt={plateAlt}
+            loading="eager"
+            reveal={false}
+            class="p2-ground"
+            style="--arch-ratio: 100 / 42;"
+          />
         </div>
       )
     }
@@ -364,23 +379,17 @@ const schemas = [
             <aside class="p2-side" aria-label="About this post">
               <div class="p2-side-in">
                 {hasPlate && cover && (
-                  <figure class="p2-plate">
-                    <div class="p2-print">
-                      <SanityImage
-                        source={cover}
-                        width={900}
-                        loading="eager"
-                        sizes="(min-width: 1024px) 30vw, 300px"
-                        alt={plateAlt}
-                      />
-                    </div>
-                    {plateCaption && (
-                      <figcaption class="pp-cap">
-                        <span class="pp-tick" aria-hidden="true" />
-                        {plateCaption}
-                      </figcaption>
-                    )}
-                  </figure>
+                  <ArchFrame
+                    image={cover}
+                    shape="door"
+                    width={900}
+                    sizes="(min-width: 1024px) 28vw, 300px"
+                    alt={plateAlt}
+                    loading="eager"
+                    reveal={false}
+                    class="p2-plate"
+                    style={`--arch-ratio: ${plateRatio};`}
+                  />
                 )}
                 {hasContents && (
                   <nav class="p2-contents" aria-label="In this post">
@@ -413,57 +422,70 @@ const schemas = [
       its Sunday and its reading, which is what a reader scans for. */
   }
   {
-    series.length > 0 && (
+    (series.length > 0 || doors.before || doors.after) && (
       <section
-        class="p2-series mx-auto max-w-content px-gutter"
-        aria-labelledby="post-series-heading"
+        class="p2-foot bg-band-taupe text-band-ink"
+        aria-labelledby={series.length > 0 ? 'post-series-heading' : undefined}
+        aria-label={series.length > 0 ? undefined : 'More posts'}
       >
-        <h2 id="post-series-heading" class="p2-series-h font-ui text-ui text-gold-ink">
-          More from this series
-        </h2>
-        {series.map((item) => (
-          <a href={`/post/${item.slug}`} class="p2-rrow">
-            <span class="p2-rrow-d oldstyle">{item.date}</span>
-            <span class="p2-rrow-t">
-              <span class="p2-rrow-title">{item.title}</span>
-              {item.excerpt && <span class="p2-rrow-ex">{item.excerpt}</span>}
-            </span>
-            <span class="p2-rrow-c font-ui text-ui">{item.meta}</span>
-          </a>
-        ))}
-      </section>
-    )
-  }
-
-  {
-    /* ------- 5. The doors ----------------------------------------------------
-      A preview's doors are the Sunday before and after, among previews; any
-      other post's are Older / Newer by date (src/lib/post-neighbours.ts). */
-  }
-  {
-    (doors.before || doors.after) && (
-      <nav class="mx-auto max-w-content px-gutter" aria-label="More posts">
-        <div class="p2-doors">
-          {doors.before ? (
-            <a href={`/post/${doors.before.slug}`}>
-              <span class="font-ui text-ui text-gold-ink">&larr; {doors.before.label}</span>
-              <span class="p2-door-t">{doors.before.title}</span>
-              {doors.before.sub && <span class="p2-door-s oldstyle">{doors.before.sub}</span>}
-            </a>
-          ) : (
-            <span />
+        <div class="mx-auto max-w-content px-gutter py-section-lg">
+          {series.length > 0 && (
+            <Fragment>
+              <div class="mb-[clamp(36px,4vw,60px)] flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+                <h2 id="post-series-heading" class:list={[H2_DISPLAY, 'text-band-indigo']}>
+                  More from this series
+                </h2>
+                <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
+              </div>
+              <ol class="m-0 list-none border-t border-band-brown/40 p-0">
+                {series.map((item) => (
+                  <PostRow
+                    href={`/post/${item.slug}`}
+                    title={item.title}
+                    dateLabel={item.date}
+                    datetime={item.datetime || undefined}
+                    image={item.cover}
+                    excerpt={item.excerpt}
+                    byline={item.meta}
+                    tone="taupe"
+                  />
+                ))}
+              </ol>
+            </Fragment>
           )}
-          {doors.after ? (
-            <a href={`/post/${doors.after.slug}`}>
-              <span class="font-ui text-ui text-gold-ink">{doors.after.label} &rarr;</span>
-              <span class="p2-door-t">{doors.after.title}</span>
-              {doors.after.sub && <span class="p2-door-s oldstyle">{doors.after.sub}</span>}
-            </a>
-          ) : (
-            <span />
+
+          {/* The doors. A preview's are the Sunday before and after, among
+              previews; any other post's are Older / Newer by date
+              (src/lib/post-neighbours.ts). */}
+          {(doors.before || doors.after) && (
+            <nav class="p2-doors" aria-label="Older and newer posts">
+              {doors.before ? (
+                <a href={`/post/${doors.before.slug}`}>
+                  <span class="p2-door-l font-ui text-ui">&larr; {doors.before.label}</span>
+                  <span class="p2-door-t">{doors.before.title}</span>
+                  {doors.before.sub && <span class="p2-door-s">{doors.before.sub}</span>}
+                </a>
+              ) : (
+                <span />
+              )}
+              {doors.after ? (
+                <a href={`/post/${doors.after.slug}`}>
+                  <span class="p2-door-l font-ui text-ui">{doors.after.label} &rarr;</span>
+                  <span class="p2-door-t">{doors.after.title}</span>
+                  {doors.after.sub && <span class="p2-door-s">{doors.after.sub}</span>}
+                </a>
+              ) : (
+                <span />
+              )}
+            </nav>
+          )}
+          {series.length === 0 && (
+            <div class="mt-10">
+              <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
+            </div>
           )}
         </div>
-      </nav>
+      </section>
     )
   }
 
@@ -541,7 +563,7 @@ const schemas = [
     letter-spacing: 0.01em;
     text-transform: uppercase;
     overflow-wrap: break-word;
-    color: var(--color-foreground);
+    color: var(--color-indigo);
   }
   .p2-title-long {
     font-size: clamp(2.1rem, 1rem + 4.2vw, 4.6rem);
@@ -554,44 +576,42 @@ const schemas = [
     font-size: var(--text-lede);
     font-style: italic;
     line-height: 1.35;
-    color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
+    color: color-mix(in srgb, var(--color-indigo) 88%, transparent);
   }
   .p2-order-h {
     margin-bottom: 10px;
   }
   .p2-facts {
     margin: 0;
-    border-bottom: 1px solid var(--color-hair);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
   }
   .p2-facts > div {
     display: grid;
     grid-template-columns: 7.5em minmax(0, 1fr);
     gap: 12px;
     align-items: baseline;
-    border-top: 1px solid var(--color-hair);
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
     padding: 9px 0 10px;
   }
   .p2-facts > div:first-child {
-    border-top-color: var(--color-hair-strong);
+    border-top-color: color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
   }
   .p2-facts dt {
-    color: var(--color-muted-foreground);
+    color: var(--color-brown-ink);
   }
   .p2-facts dd {
     margin: 0;
     font-family: var(--font-body);
     font-size: 1.0625rem;
     line-height: 1.4;
-    color: var(--color-foreground);
+    color: var(--color-indigo);
     overflow-wrap: break-word;
     min-width: 0;
   }
   .p2-facts dd.p2-big {
     font-size: 1.25rem;
   }
-  .p2 a,
-  .p2-series a,
-  .p2-doors a {
+  .p2 a {
     color: inherit;
   }
   .p2-facts dd a,
@@ -609,47 +629,26 @@ const schemas = [
     color: var(--color-gold-ink);
   }
 
-  /* ---- The ground (a photograph cover), full bleed ------------------------
-     100cqw against #main, NEVER 100vw (CLAUDE.md rule 19): 100vw includes the
-     scrollbar and would push the page sideways on a desktop browser. */
+  /* ---- The ground: a photograph cover as a wide door arch ---------------
+     Until the identity pass it bled to the viewport edge; it now stands in
+     the measure as a door (ArchFrame, shape="door"), its mould in gold, so
+     every cover on the journal is framed the same way. */
   .p2-ground {
-    position: relative;
-    width: 100cqw;
-    margin: 0 0 clamp(48px, 6vw, 80px) calc(50% - 50cqw);
-    height: clamp(360px, 44cqw, 680px);
-    overflow: hidden;
-    background: var(--color-indigo-deep);
-  }
-  .p2-ground img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 40%;
+    margin: 9px 9px clamp(48px, 6vw, 80px);
   }
 
   /* ---- The plate (a slide cover) and the contents -------------------------- */
+  /* The slide cover, in a door arch 9px inside the column so the gold mould
+     has room. No caption. */
   .p2-plate {
-    margin: 0;
-    background: var(--color-muted);
-    padding: clamp(18px, 2vw, 28px);
+    margin: 9px 9px 0;
   }
-  .p2-print {
-    position: relative;
+  .p2-plate .arch {
+    background: var(--color-band-indigo);
   }
-  .p2-print::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border: 1px solid var(--color-gold);
-    pointer-events: none;
-  }
-  .p2-print img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-  .p2-plate .pp-cap {
-    margin-top: 18px;
+  .p2-plate .arch img {
+    object-fit: contain;
+    object-position: 50% 100% !important;
   }
   .p2-contents {
     margin-top: 36px;
@@ -662,10 +661,10 @@ const schemas = [
     list-style: none;
     margin: 0;
     padding: 0;
-    border-bottom: 1px solid var(--color-hair);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
   }
   .p2-contents li {
-    border-top: 1px solid var(--color-hair);
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
   }
   .p2-contents a {
     display: grid;
@@ -693,18 +692,18 @@ const schemas = [
   .p2-related {
     margin-top: 56px;
     padding-top: 16px;
-    border-top: 1px solid var(--color-hair);
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
     font-family: var(--font-ui);
     font-size: 0.9375rem;
     letter-spacing: 0.02em;
     line-height: 1.6;
-    color: var(--color-foreground);
+    color: var(--color-indigo);
   }
   .p2-tags > span:first-child {
     margin-right: 10px;
   }
   .p2-tags a {
-    text-decoration-color: var(--color-hair-strong);
+    text-decoration-color: color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
   }
   .p2-tags a:hover {
     text-decoration-color: var(--color-gold);
@@ -716,105 +715,61 @@ const schemas = [
     font-size: var(--text-h3);
   }
 
-  .p2-series {
-    padding-top: clamp(40px, 5vw, 64px);
-  }
-  .p2-series-h {
-    margin: 0;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--color-hair-strong);
-  }
-  .p2-rrow {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: clamp(16px, 2.5vw, 40px);
-    align-items: baseline;
-    padding: 22px 0 24px;
-    border-bottom: 1px solid var(--color-hair);
-    text-decoration: none;
-  }
-  .p2-rrow-d {
-    grid-column: 1 / 3;
-    font-family: var(--font-ui);
-    font-size: 0.8125rem;
-    letter-spacing: 0.06em;
-    color: var(--color-muted-foreground);
-  }
-  .p2-rrow-t {
-    grid-column: 3 / 9;
-    min-width: 0;
-  }
-  .p2-rrow-title {
-    display: block;
-    font-family: var(--font-body);
-    font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem);
-    line-height: 1.15;
-    color: var(--color-foreground);
-    transition: color 0.2s;
-  }
-  .p2-rrow-ex {
-    display: block;
-    margin-top: 8px;
-    max-width: 56ch;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.55;
-    color: var(--color-muted-foreground);
-  }
-  .p2-rrow-c {
-    grid-column: 10 / 13;
-    justify-self: end;
-    text-align: right;
-    color: var(--color-muted-foreground);
-  }
-  .p2-rrow:hover .p2-rrow-title,
-  .p2-rrow:focus-visible .p2-rrow-title {
-    color: var(--color-gold-ink);
-  }
-
+  /* The doors, on the taupe foot band: band inks, which hold in both themes. */
   .p2-doors {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     column-gap: clamp(16px, 2.5vw, 40px);
-    margin-top: clamp(48px, 6vw, 80px);
-    margin-bottom: clamp(48px, 6vw, 80px);
-    border-top: 1px solid var(--color-hair-strong);
+    margin-top: clamp(48px, 6vw, 72px);
+    border-top: 2px solid var(--color-band-brown);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-band-brown) 40%, transparent);
+  }
+  .p2-foot .p2-doors:first-child {
+    margin-top: 0;
   }
   .p2-doors a {
     display: block;
     min-width: 0;
     padding: 22px 0 26px;
     text-decoration: none;
+    color: var(--color-band-ink);
   }
   .p2-doors a + a,
   .p2-doors span + a {
     text-align: right;
-    border-left: 1px solid var(--color-hair);
+    border-left: 1px solid color-mix(in srgb, var(--color-band-brown) 40%, transparent);
     padding-left: clamp(16px, 2.5vw, 40px);
   }
-  .p2-doors a > span:first-child {
+  .p2-door-l {
     display: block;
     margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--color-band-brown);
   }
   .p2-door-t {
-    display: block;
+    display: inline;
     font-family: var(--font-body);
     font-size: var(--text-h3);
     line-height: 1.2;
-    color: var(--color-foreground);
-    transition: color 0.2s;
+    background: linear-gradient(var(--color-band-indigo), var(--color-band-indigo)) 0 100% / 0 2px
+      no-repeat;
+    transition: background-size 0.3s;
   }
   .p2-door-s {
     display: block;
-    margin-top: 6px;
+    margin-top: 8px;
     font-family: var(--font-ui);
-    font-size: 0.8125rem;
-    letter-spacing: 0.06em;
-    color: var(--color-muted-foreground);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-band-brown);
   }
   .p2-doors a:hover .p2-door-t,
   .p2-doors a:focus-visible .p2-door-t {
-    color: var(--color-gold-ink);
+    background-size: 100% 2px;
+  }
+  .p2-doors a:focus-visible {
+    outline: 2px solid var(--color-band-ink);
+    outline-offset: 4px;
   }
 
   /* ---- The reading (the body, rendered by JournalPortableText) ------------- */
@@ -823,7 +778,7 @@ const schemas = [
     font-family: var(--font-body);
     font-size: var(--text-body);
     line-height: 1.72;
-    color: var(--color-foreground);
+    color: var(--color-indigo);
   }
   /* :where() keeps the spacing rule at zero specificity, so the element rules
      below (headings, figures, the lection) set their own space above. */
@@ -862,7 +817,7 @@ const schemas = [
   .post-prose .pp-sh {
     margin-top: 2.1em;
     padding-top: 16px;
-    border-top: 1px solid var(--color-hair-strong);
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
     font-family: var(--font-body);
     font-size: var(--text-h3);
     font-weight: 400;
@@ -915,7 +870,7 @@ const schemas = [
   .post-prose .pp-qa {
     margin-top: 1.1em;
     padding-top: 12px;
-    border-top: 1px solid var(--color-hair);
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
   }
   .post-prose .pp-q {
     font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
@@ -982,7 +937,7 @@ const schemas = [
     font-size: 0.9375rem;
     font-style: italic;
     line-height: 1.45;
-    color: var(--color-muted-foreground);
+    color: var(--color-brown-ink);
     overflow-wrap: break-word;
   }
   .pp-tick {
@@ -1005,22 +960,22 @@ const schemas = [
     border-collapse: collapse;
     font-size: 1rem;
     line-height: 1.4;
-    border-bottom: 1px solid var(--color-hair);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
   }
   .post-prose th {
     padding: 0 12px 8px 0;
-    border-bottom: 1px solid var(--color-hair-strong);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
     font-family: var(--font-ui);
     font-size: var(--text-ui);
     font-weight: 500;
     letter-spacing: 0.14em;
     text-align: left;
     text-transform: uppercase;
-    color: var(--color-muted-foreground);
+    color: var(--color-brown-ink);
   }
   .post-prose td {
     padding: 9px 12px 10px 0;
-    border-top: 1px solid var(--color-hair);
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
     vertical-align: baseline;
   }
   .post-prose td.pp-num {
@@ -1031,15 +986,15 @@ const schemas = [
   }
   .post-prose td.pp-last {
     font-style: italic;
-    color: var(--color-muted-foreground);
+    color: var(--color-brown-ink);
   }
 
   /* The lection: a preview's reading, between two rules. */
   .post-prose .pp-lection {
     margin-bottom: 2em;
     padding: 18px 0 20px;
-    border-top: 1px solid var(--color-hair-strong);
-    border-bottom: 1px solid var(--color-hair);
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
   }
   .post-prose .pp-lection .pp-lection-h {
     display: flex;
@@ -1095,21 +1050,8 @@ const schemas = [
       display: none;
     }
     .p2-plate {
-      max-width: 300px;
-      margin-bottom: 36px;
-    }
-    .p2-rrow-d,
-    .p2-rrow-t,
-    .p2-rrow-c {
-      grid-column: 1 / -1;
-      justify-self: start;
-      text-align: left;
-    }
-    .p2-rrow-t {
-      margin-top: 6px;
-    }
-    .p2-rrow-c {
-      margin-top: 10px;
+      max-width: 260px;
+      margin-bottom: 44px;
     }
   }
   @media (max-width: 640px) {
@@ -1121,7 +1063,7 @@ const schemas = [
       text-align: left;
       border-left: 0;
       padding-left: 0;
-      border-top: 1px solid var(--color-hair);
+      border-top: 1px solid color-mix(in srgb, var(--color-band-brown) 40%, transparent);
     }
     .post-prose blockquote::before {
       left: -12px;
