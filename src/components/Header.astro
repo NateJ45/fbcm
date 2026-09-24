@@ -45,6 +45,7 @@ import { getImage } from 'astro:assets';
 import { site } from '@/data/site';
 import ThemeToggle from './ThemeToggle';
 import MobileNav from './MobileNav';
+import GoalsRow from '@/components/church/GoalsRow.astro';
 import { ChevronDown } from 'lucide-react';
 import logoLightAsset from '@/assets/logo-light.svg';
 import logoDarkAsset from '@/assets/logo-dark.svg';
@@ -381,7 +382,9 @@ function isGroupActive(items: { href: string }[]) {
       street={street}
       windowUrl={menuWindowImg.src}
       {...mobileCtaProps}
-    />
+    >
+      <GoalsRow size="menu" />
+    </MobileNav>
   </div>
 </header>
 

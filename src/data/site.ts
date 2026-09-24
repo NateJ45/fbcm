@@ -27,6 +27,11 @@ export const site = {
   // BCP 47 language tag for the <html lang> attribute. Change if the site is not in English.
   lang: 'en',
 
+  /** The year the church was founded: a fact, not a computation ("Founded in
+   *  1859", the church's own History page). The footer's bottom line reads
+   *  it. apply-brand never touches this. */
+  founded: 1859,
+
   /** Short display name alias — same as name, kept for any consumer that
    *  accessed the old `site.studio` property. */
   studio: _name,

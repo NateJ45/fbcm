@@ -6,20 +6,23 @@
 // and the trigger reads the word "Menu" beside two hairlines. The spec's
 // section 6 asks for the church's stained glass where the Stone Steps survey
 // had trail iconography, so a window photograph sits masked behind the top 40%
-// of the sheet and drifts very slowly, and the seven links are numbered rows in
-// the display face that rise in sequence when the sheet opens.
+// of the sheet and drifts very slowly, and the links are rows in the display
+// face that rise in sequence when the sheet opens. (They were numbered 01 to
+// 10 until 2026-09-24; the footer identity pass took the numbers off, because
+// a menu is not a sequence: rollout plan rule 11.)
 //
 //   +-------------------------------------------+
 //   | [wordmark]                      [ Close ×]|   <- 58px row, window behind
 //   |                                            |
-//   |  01  VISIT                                 |   <- numbered rows, staggered
-//   |  02  WHO WE ARE                            |
+//   |  VISIT                                     |   <- rows, staggered
+//   |  WHO WE ARE                                |
 //   |  ...                                       |
 //   |                                            |
 //   |  Sundays            (219) ...              |   <- two-column foot
 //   |  10:45 am           Contact                |
 //   |  309 East Adams     [theme]                |
 //   |  [ GIVE ]                                  |
+//   |  [win] [door] [rose] [basin]               |   <- the four goals
 //   +-------------------------------------------+
 //
 // Five things about it are deliberate.
@@ -43,8 +46,8 @@
 //      header's utility row off; this is where they went.
 //   4. DROPDOWN GROUPS FLATTEN. The church's menu is seven flat links today,
 //      but an editor can add a group in Sanity without a code change, so the
-//      shape still renders: the group label becomes a quiet non-link row and
-//      its children carry on the numbering.
+//      shape still renders: the group label becomes a quiet non-link row
+//      with its children under it.
 //   5. THE CURRENT PAGE ROW is marked aria-current="page", which locks
 //      .nav-underline drawn (globals.css). It is read from
 //      window.location.pathname at render, which is safe because the sheet's
@@ -54,8 +57,16 @@
 // come from Sanity siteSettings via Header.astro, which also pre-renders the
 // window texture and the logo through Astro's image pipeline (a React island
 // cannot call getImage() itself).
+//
+// THE FOUR GOALS at the foot are the island's CHILDREN: Header.astro renders
+// GoalsRow (src/components/church/) into this island's default slot, so the
+// building glyphs are drawn by the one Astro component that draws them
+// everywhere else, never redrawn in JSX. Astro serialises the slot as static
+// HTML; the wrapper here only closes the sheet when one of its links is
+// followed, so a goal on the page the visitor is already on (Who We Are)
+// does not leave the sheet open over it.
 
-import { useState, type CSSProperties } from 'react';
+import { useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import ThemeToggle from './ThemeToggle';
 import { telHref } from '@/lib/phone';
@@ -113,6 +124,8 @@ interface Props {
   street?: string;
   /** getImage() URL for src/assets/menu-window.jpg, 1200w, quality 70. */
   windowUrl?: string;
+  /** The four goals row (GoalsRow.astro), slotted in by Header.astro. */
+  children?: ReactNode;
 }
 
 /**
@@ -125,24 +138,21 @@ const DEFAULT_CTA = { show: true, label: 'Contact us', href: '/contact' };
 
 /**
  * One rendered line in the sheet. A `label` row is a dropdown group's heading:
- * it is not a link and takes no number, and the numbering carries straight on
- * through the child links underneath it.
+ * it is not a link, and the group's child links follow it.
  */
-type MenuRow =
-  { kind: 'label'; label: string } | { kind: 'link'; label: string; href: string; n: number };
+type MenuRow = { kind: 'label'; label: string } | { kind: 'link'; label: string; href: string };
 
-/** Flatten the nav tree into the rows the sheet draws, numbering links only. */
+/** Flatten the nav tree into the rows the sheet draws. */
 function toRows(links: NavItem[]): MenuRow[] {
   const rows: MenuRow[] = [];
-  let n = 0;
   for (const item of links) {
     if (item.kind === 'flat') {
-      rows.push({ kind: 'link', label: item.label, href: item.href, n: ++n });
+      rows.push({ kind: 'link', label: item.label, href: item.href });
       continue;
     }
     rows.push({ kind: 'label', label: item.label });
     for (const sub of item.items) {
-      rows.push({ kind: 'link', label: sub.label, href: sub.href, n: ++n });
+      rows.push({ kind: 'link', label: sub.label, href: sub.href });
     }
   }
   return rows;
@@ -177,6 +187,7 @@ export default function MobileNav({
   serviceTime,
   street,
   windowUrl,
+  children,
 }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -191,6 +202,11 @@ export default function MobileNav({
   const ctaIsExternal = /^https?:\/\//i.test(cta.href);
 
   const close = () => setOpen(false);
+  // The slotted goals row is static HTML, so its links cannot carry onClick;
+  // one listener on the wrapper closes the sheet when any of them is followed.
+  const closeOnLink = (e: MouseEvent<HTMLDivElement>) => {
+    if ((e.target as Element | null)?.closest('a')) close();
+  };
 
   return (
     <div className="absolute top-1/2 right-gutter -translate-y-1/2 lg:hidden">
@@ -255,10 +271,10 @@ export default function MobileNav({
               </button>
             </div>
 
-            {/* The rows. An ordered list because they are numbered and the
-                numbers mean something: they are the order of the menu. */}
+            {/* The rows. A plain list: a menu is not a sequence, so it
+                carries no numbers (rollout plan rule 11). */}
             <nav aria-label="Primary mobile" className="relative mt-10 flex-1">
-              <ol className="m-0 list-none p-0">
+              <ul className="m-0 list-none p-0">
                 {rows.map((row, i) =>
                   row.kind === 'label' ? (
                     <li
@@ -280,11 +296,8 @@ export default function MobileNav({
                         href={row.href}
                         onClick={close}
                         aria-current={isCurrent(row.href) ? 'page' : undefined}
-                        className="group flex items-baseline gap-5 py-4"
+                        className="group flex items-baseline py-4"
                       >
-                        <span className="font-ui text-[0.75rem] tracking-[0.14em] text-gold">
-                          {String(row.n).padStart(2, '0')}
-                        </span>
                         <span className="nav-underline font-display text-[clamp(1.75rem,6.4vw,2.75rem)] leading-none font-normal tracking-[0.02em] uppercase">
                           {row.label}
                         </span>
@@ -292,7 +305,7 @@ export default function MobileNav({
                     </li>
                   ),
                 )}
-              </ol>
+              </ul>
             </nav>
 
             {/* The foot: when the church meets and where, then the ways to
@@ -331,6 +344,15 @@ export default function MobileNav({
               >
                 {cta.label}
               </a>
+            )}
+
+            {/* The four goals, each to its band on Who We Are. The click
+                listener is delegation only: the links inside are the
+                controls, and Enter on a link fires click too. */}
+            {children && (
+              <div onClick={closeOnLink} className="relative mt-8 border-t border-bg/15 pt-4">
+                {children}
+              </div>
             )}
           </div>
         </SheetContent>

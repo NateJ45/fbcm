@@ -1,0 +1,119 @@
+---
+// Safe to edit by hand
+// The church's four goals as one row of links, each to its own band on Who We
+// Are (2026-09-24, the footer identity pass; the rollout plan's "footer
+// carries the Praise & Proclaim mark and the four goals"). Each goal is its
+// building glyph in gold, its name in the display capitals and, in the
+// footer, the small line Who We Are's own goal index prints under it
+// (goalIndexLine: the church's bracketed word, or Worship's subtitle).
+//
+// Two sizes:
+//   footer  four across, stacking to two by two below 640px, with the line.
+//   menu    four across at every width, glyph over name, no line: the mobile
+//           menu's foot, where there is room for a word and a drawing only.
+//
+// Always drawn on a dark brand ground (the footer's indigo-deep, the menu's
+// indigo-field), so the inks are fixed: paper names, gold glyphs, paper at
+// 70% for the line. The list is a plain <ul>: the goals are four things, not
+// a sequence, so they carry no numbers (rollout plan rule 11).
+//
+// The list data is src/lib/church-goals.ts, the one code-side list of the
+// goals, which the Ministries index also reads.
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import { CHURCH_GOALS, goalHref, goalIndexLine } from '@/lib/church-goals';
+
+interface Props {
+  size: 'footer' | 'menu';
+}
+
+const { size } = Astro.props;
+---
+
+<ul class:list={['goals-row m-0 list-none p-0', `goals-row--${size}`]}>
+  {
+    CHURCH_GOALS.map((g) => (
+      <li>
+        <a
+          href={goalHref(g.value)}
+          class="goal-link rounded-sm text-bg focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:outline-none"
+        >
+          <BuildingGlyph name={g.glyph} class="goal-glyph shrink-0 text-gold" />
+          <span class="goal-text">
+            <span class="goal-name font-display">{g.name}</span>
+            {size === 'footer' && (
+              <span class="goal-line font-ui text-bg/70">{goalIndexLine(g)}</span>
+            )}
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .goals-row {
+    display: grid;
+  }
+  .goal-link {
+    display: flex;
+    text-decoration: none;
+  }
+  .goal-name {
+    display: block;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .goal-link:hover .goal-name {
+    color: var(--color-gold);
+  }
+
+  /* FOOTER: four across, two by two on a phone; glyph beside the words. */
+  .goals-row--footer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-l) var(--spacing-m);
+  }
+  @media (min-width: 640px) {
+    .goals-row--footer {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .goals-row--footer .goal-link {
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+  .goals-row--footer :global(.goal-glyph) {
+    width: clamp(1.75rem, 2.6vw, 2.5rem);
+  }
+  .goals-row--footer .goal-name {
+    font-size: clamp(1.125rem, 1.8vw, 1.5rem);
+    padding-top: 0.2em;
+  }
+  .goals-row--footer .goal-line {
+    display: block;
+    margin-top: 0.45em;
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+
+  /* MENU: four across at every width; glyph over the name. */
+  .goals-row--menu {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--spacing-s);
+  }
+  .goals-row--menu .goal-link {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 0.5rem;
+    text-align: center;
+  }
+  .goals-row--menu :global(.goal-glyph) {
+    width: 1.75rem;
+  }
+  /* Four names across a 320px phone: held to what fits a quarter of it. */
+  .goals-row--menu .goal-name {
+    font-size: clamp(0.6875rem, 3.5vw, 0.9375rem);
+  }
+</style>

@@ -2,6 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { GOALS, goalFor, goalHref, goalIndex } from './ministry-goals.ts';
+import { CHURCH_GOALS } from './church-goals.ts';
 import type { ProjectedMinistrySection } from './pageBuilder.types';
 
 const band = (
@@ -66,4 +67,11 @@ test('the label falls back to the name; a band with no anchor is listed without 
 test('no goal named anywhere, or no ministry behind a band: no index', () => {
   assert.equal(goalIndex([band('a', { title: 'Worship' }), band('b', null)]), null);
   assert.equal(goalIndex([]), null);
+});
+
+test('the Ministries index reads the four goals from church-goals, so the two cannot disagree', () => {
+  assert.deepEqual(
+    GOALS.map((g) => [g.value, g.name, g.aside, g.glyph]),
+    CHURCH_GOALS.map((g) => [g.value, g.name, g.aside, g.glyph]),
+  );
 });
