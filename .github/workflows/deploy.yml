@@ -96,6 +96,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # The scripture chapters scripts/fetch-scripture.mjs fetches at the start
+      # of `npm run build` (feat/scripture-text). Restored AFTER npm ci, which
+      # deletes node_modules and the cache inside it. The key moves every run so
+      # a new chapter is saved; the prefix restores the last one.
+      - name: Restore the scripture cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/scripture
+          key: scripture-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: scripture-${{ runner.os }}-
+
       - name: Generate Sanity types
         run: npm run typegen
 
