@@ -10,6 +10,27 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-24 — Beliefs identity: /beliefs and the RichText body in the church identity (`feat/beliefs-identity`)._
+
+The overnight rollout's Beliefs branch, owning the RichText BODY (`RichBody.astro`,
+`src/lib/rich-shape.ts`, the `.rt-*` CSS, now in `src/styles/ledger.css`); the band
+heading stays the Visit pass's. **Grounds:** a new pure module, `src/lib/rich-ground.ts`,
+gives each text band a ground from its place on the page: the cadence's paper turn stays
+paper, its muted turn becomes a full-width brand band (indigo, brown or taupe), never
+the colour of the band beside it or of the previous brand text band; SectionRenderer
+passes it as `ground` and draws no divider beside a brand band. No schema change, no
+colour field (rule 9). **Shapes (rule 11):** prose is always one reading measure (the
+`run2` / `run3` newspaper columns are gone, in both flows), three or four h3 columns
+hold at most 70 words each (`columnWords()`), a section of reading text sets its head
+beside the text (`beside`), the row shape lost its decorative rules, and run-in labels
+are italic heads instead of tracked capitals. **The page:** `scripts/pages/beliefs.mjs`
+takes the church's own headings back (Our Basic Beliefs; Four Values Baptists
+Emphasize with its four headings unmerged; Our Confession & Denominational Identity
+Statement; Membership; Our Church Covenant; Our Baptist Affiliation; Have questions?),
+drops every band eyebrow, and moves Membership before the covenant so the covenant is
+read on the indigo. Not a word of doctrine changed. `/styleguide/beliefs` renders the
+composition from `scripts/data/fixtures/beliefs.json`. Dry run only.
+
 _2026-09-24 — Visit identity: the Visit page and the shared looks it settles (`feat/visit-identity`)._
 
 The Visit page composed from the approved prototype

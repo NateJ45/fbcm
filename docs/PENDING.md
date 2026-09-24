@@ -874,6 +874,39 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
 
 ---
 
+### Beliefs identity: before the page is applied (2026-09-24)
+
+- **The page is composed but not applied.** `scripts/pages/beliefs.mjs` uses no new
+  field, so the schema does not block it, but the look is this branch's code: deploy
+  first, then `npm run seed-pages -- --only beliefs` (the plan on 2026-09-24: "would
+  be replaced", `pageBuilder` [1], [2], [5] to [10] changed; the live page matched the
+  old module exactly apart from the stored `{service time}. {address}.` placeholders,
+  so no editor edits to carry over; re-read the plan in case one has been made since)
+  and `--apply` (backup first). Its three PDFs are already in the asset map. Then shoot
+  /beliefs in production, light and dark, 1440 and 375.
+- **Owner question: brand grounds on text bands, site-wide.** `src/lib/rich-ground.ts`
+  turns every text band on the cadence's muted turn into a brand band (indigo, brown or
+  taupe), on every page, not only /beliefs: /staff (brown, indigo), /wedding (brown,
+  indigo), /history (indigo, brown, taupe) and /give (indigo) change with it. It is the
+  rollout's "RichText: brand colours" read as grounds, derived (no field). If Nathan
+  wants it on /beliefs only, the lever is `richGrounds()`; there is no per-page switch
+  without a field, which rule 9 forbids.
+- **Owner question: the page's headings are the church's own again**, including the long
+  "Our Confession & Denominational Identity Statement" and the four value headings
+  unmerged (declared in the module's `edits`). "Read the documents" (the document band)
+  and "Baptism" remain the only headings the church did not write.
+- **Rule 20 on /blog is over the line on `main` already.** The blog index inlines one
+  150,098 B sheet on this branch (149,330 B on `main` at 3334ee3, before this branch),
+  past the 147,456 B ceiling, because it renders through SectionRenderer and so carries
+  every section's CSS. It still inlines (Vite checks each CSS chunk, not the page). This
+  branch's share is +768 B (the Ledger's brand grounds and beside-heads, net of the
+  removed newspaper columns). The fix belongs to whoever owns the blog index's imports.
+- **Clean-up once `/beliefs` itself shows the composition.** Delete
+  `src/pages/styleguide/beliefs.astro`, the `'/styleguide/beliefs'` line in
+  `tests/routes.ts` and `scripts/data/fixtures/beliefs.json`, then recapture parity.
+
+---
+
 ## Photo library uploaded (2026-09-23)
 
 Branch `feat/photo-library-upload`. Every church photograph captured from the old
@@ -1009,7 +1042,10 @@ on the Ledger branch):**
   them. The classifier's column rules are tuned for longer running text.
 - **`/beliefs` and `/ministries` carry heavy hairline density.** Both pages
   stack several ruled/columned bands in a row; nothing in the Ledger branch reduced
-  the rule count, only reshaped what sits inside each rule.
+  the rule count, only reshaped what sits inside each rule. (2026-09-24, the Beliefs
+  identity pass: partly answered. The newspaper columns and their column rules are
+  gone, the row shape lost its three rules, and a brand text band draws no divider on
+  either side; /ministries keeps its h4 columns.)
 - **The ground test cannot detect a crowded photo.** `assignPhotoShapes`
   budgets grounds by count and spacing, not by how busy the photograph itself
   is; catching a crowded ground would need a field an editor sets, which
