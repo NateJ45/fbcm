@@ -833,6 +833,11 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
 - **Owner questions from the final review:** the handbell photo is on Home (Work goal)
   and on Ministries (a separate upload of the same photograph, so the spare-pool dedup
   cannot see it); the two-girls lancet photo in What to Expect is low resolution.
+- **Owner question (2026-09-24): sermon-preview cadence.** The home hero's "This Sunday"
+  line names the sermon only when a sermon preview exists for that Sunday (otherwise it
+  stays the date and service time). Previews ran 38 / 46 / 33 a year in 2023 to 2025,
+  but there has been one in 2026 (January 6). Ask whether the pastors will post them
+  again; each one would now show on the home page automatically.
 - **Done (2026-09-24): the `/` preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
 ### Utility identity: before the pages are applied (2026-09-24)
