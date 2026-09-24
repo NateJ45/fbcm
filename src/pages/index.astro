@@ -45,6 +45,13 @@ const sections = page?.pageBuilder?.length ? page.pageBuilder : DEFAULT_HOME_SEC
 const overlayHeader = shouldOverlayHeader(sections as any);
 ---
 
-<BaseLayout {title} {description} {siteSettings} {overlayHeader} seoImage={page?.seoImage}>
+<BaseLayout
+  {title}
+  {description}
+  {siteSettings}
+  {overlayHeader}
+  seoImage={page?.seoImage}
+  searchBody
+>
   <SectionRenderer {sections} idPrefix="home" settings={siteSettings} {sermon} />
 </BaseLayout>

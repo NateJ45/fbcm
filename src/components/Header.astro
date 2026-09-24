@@ -356,6 +356,35 @@ function isGroupActive(items: { href: string }[]) {
           )
         }
       </nav>
+      {/* scaffold: journal */}
+      {
+        /* Search (2026-09-24): the nav's own quiet style, a glass drawn in
+          currentColor so it follows the bar (paper over an image hero, ink on
+          paper). A button, not a link: it opens the search dialog, which
+          SiteSearch.astro loads on the first click and never before. */
+      }
+      <button
+        type="button"
+        data-search-open
+        aria-haspopup="dialog"
+        class="site-search-btn nav-underline inline-flex min-h-[44px] min-w-[44px] items-center justify-center py-1 text-foreground transition-colors hover:text-link"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <circle cx="8.5" cy="8.5" r="6"></circle>
+          <path d="M13 13l5 5"></path>
+        </svg>
+        <span class="sr-only">Search the site</span>
+      </button>
+      {/* scaffold:end */}
       {
         /* Watch live: the nav's own link style, so Give stays the one plate.
           data-live-service carries the cleaned service time for the upgrade

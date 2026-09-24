@@ -189,7 +189,16 @@ const sunday = isPreview ? sundayOf(entry.publishedAt) : null;
 const postedDay = localDay(entry.publishedAt);
 const readMinutes = readingTimeFromPortableText(entry.body);
 const listen = isPreview ? listenHref(rawBody) : '';
-type Fact = { label: string; value: string; href?: string; datetime?: string; big?: boolean };
+// `meta` names the Pagefind metadata a fact carries into a search result row
+// (the site search, 2026-09-24): the date column and the reading.
+type Fact = {
+  label: string;
+  value: string;
+  href?: string;
+  datetime?: string;
+  big?: boolean;
+  meta?: 'date' | 'reading';
+};
 const facts: Fact[] = (
   isPreview
     ? [
@@ -198,6 +207,7 @@ const facts: Fact[] = (
           value: sunday ? formatDay(sunday) : '',
           datetime: sunday ? isoDay(sunday) : undefined,
           big: true,
+          meta: 'date' as const,
         },
         {
           label: 'Reading',
@@ -205,6 +215,7 @@ const facts: Fact[] = (
           // To this book on the scripture index (/blog/scripture), when the
           // index lists this post.
           href: readingAnchor ? `/blog/scripture/#${readingAnchor}` : undefined,
+          meta: 'reading' as const,
         },
         { label: 'Series', value: seriesOf(opening) },
         { label: 'Preaching', value: clean(entry.author) },
@@ -215,6 +226,7 @@ const facts: Fact[] = (
           label: 'Posted',
           value: postedDay ? formatDay(postedDay) : '',
           datetime: postedDay ? isoDay(postedDay) : undefined,
+          meta: 'date' as const,
         },
         { label: 'Written by', value: clean(entry.author) },
         {
@@ -288,12 +300,17 @@ const schemas = [
   {/* 2px gold hairline tracking scroll through the article. */}
   <ReadingProgress />
 
-  <article class="p2">
+  {
+    /* data-pagefind-body: the site search indexes the article (the masthead,
+      its facts and the body) and nothing outside it, so the foot's series
+      rows and doors never turn up as a match for another post's words. */
+  }
+  <article class="p2" data-pagefind-body>
     {/* ------- 1. Masthead: title left, the order right ------------------- */}
     <header class="mx-auto max-w-content px-gutter">
       <div class="p2-grid p2-mast">
         <div class="p2-mast-l">
-          <p class="p2-cat font-ui text-ui text-gold-ink">
+          <p class="p2-cat font-ui text-ui text-gold-ink" data-pagefind-ignore>
             <a href={isPreview || !categoryHref ? '/blog' : categoryHref}>{eyebrowLabel}</a>
           </p>
           <h1 class:list={['p2-title', { 'p2-title-long': titleIsLong }]}>{entry.title}</h1>
@@ -303,14 +320,14 @@ const schemas = [
         {
           facts.length > 0 && (
             <div class="p2-mast-r">
-              <p class="p2-order-h font-ui text-ui text-gold-ink">
+              <p class="p2-order-h font-ui text-ui text-gold-ink" data-pagefind-ignore>
                 {isPreview ? 'This Sunday’s order' : 'About this post'}
               </p>
               <dl class="p2-facts">
                 {facts.map((f) => (
                   <div>
                     <dt class="font-ui text-ui">{f.label}</dt>
-                    <dd class:list={{ 'p2-big': f.big }}>
+                    <dd class:list={{ 'p2-big': f.big }} data-pagefind-meta={f.meta}>
                       {f.href ? (
                         <a href={f.href}>{f.value}</a>
                       ) : f.datetime ? (
@@ -378,7 +395,7 @@ const schemas = [
           }
           {
             tagLinks.length > 0 && (
-              <nav class="p2-tags" aria-label="Tags on this post">
+              <nav class="p2-tags" aria-label="Tags on this post" data-pagefind-ignore>
                 <span class="font-ui text-ui text-gold-ink">Tagged</span>
                 {tagLinks.map((tag, i) => (
                   <>
@@ -393,7 +410,7 @@ const schemas = [
 
         {
           (hasPlate || hasContents) && (
-            <aside class="p2-side" aria-label="About this post">
+            <aside class="p2-side" aria-label="About this post" data-pagefind-ignore>
               <div class="p2-side-in">
                 {hasPlate && cover && (
                   <ArchFrame

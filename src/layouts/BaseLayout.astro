@@ -19,6 +19,7 @@ import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import BackToTop from '@/components/BackToTop';
 import Analytics from '@/components/Analytics.astro';
+import SiteSearch from '@/components/search/SiteSearch.astro'; // scaffold: journal
 import '@/styles/globals.css';
 // src/styles/starwind.css is deliberately NOT imported (2026-09-23, dead-CSS
 // trim). Nothing on this site uses a Starwind component, and the file has no
@@ -49,6 +50,12 @@ interface Props {
    *  until the visitor scrolls 8px. The routes that can know this compute it
    *  from their first pageBuilder block; see src/lib/heroOverlay.ts. */
   overlayHeader?: boolean;
+  /** True when this page's <main> is what the site search indexes (Pagefind's
+   *  data-pagefind-body). Set by the content routes: home, the builder pages
+   *  and the privacy page. A post marks its own <article> instead, and the
+   *  archives, the scripture index, the 404 and the Studio carry none, so
+   *  scripts/pagefind-index.mjs leaves them out of the index. */
+  searchBody?: boolean;
 }
 
 const {
@@ -62,6 +69,7 @@ const {
   ogType = 'website',
   ogArticle,
   overlayHeader = false,
+  searchBody = false,
 } = Astro.props as Props;
 
 const canonical = new URL(Astro.url.pathname, site.url).toString();
@@ -461,11 +469,23 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
       })();
     </script>
 
-    <main id="main" class="flex-1">
+    <main id="main" class="flex-1" data-pagefind-body={searchBody ? '' : undefined}>
+      {
+        /* The name a search result shows for this page: the page's own
+          <title> up to its " | " (a builder page's h1 is its hero line, "Married
+          here.", which says nothing in a list of results). Hidden, and kept out
+          of the indexed words; Pagefind still reads it as metadata. */
+        searchBody && (
+          <span hidden data-pagefind-meta="title" data-pagefind-ignore>
+            {title.split(' | ')[0].trim()}
+          </span>
+        )
+      }
       <slot />
     </main>
 
     <Footer siteSettings={siteSettings} />
+    <SiteSearch /> {/* scaffold: journal */}
 
     {/*
       BackToTop and the Toaster were both previously `client:load` which forced the JS to
