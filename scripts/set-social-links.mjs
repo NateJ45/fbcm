@@ -14,6 +14,9 @@ import { client, ROOT, APPLY, key } from './lib/sanity-lib.mjs';
 const LINKS = [
   { platform: 'Facebook', url: 'https://www.facebook.com/firstbaptistmuncie' },
   { platform: 'Instagram', url: 'https://www.instagram.com/fbcmuncie/' },
+  // Added 2026-09-25: the church's Threads and Linktree, from the Wix site.
+  { platform: 'Threads', url: 'https://www.threads.net/@fbcmuncie' },
+  { platform: 'Linktree', url: 'https://linktr.ee/fbcmuncie' },
 ];
 
 const norm = (u) =>
@@ -25,8 +28,12 @@ const norm = (u) =>
 const doc = await client.fetch('*[_id == "siteSettings"][0]');
 if (!doc) throw new Error('siteSettings not found');
 const have = new Set((doc.socialLinks ?? []).map((l) => norm(l?.url)));
+// Keys named after the platform, never the shared k0, k1 counter: the links
+// written on 2026-09-24 already hold k0 and k1, and a repeated _key breaks the
+// array in the Studio.
+const taken = new Set((doc.socialLinks ?? []).map((l) => l?._key));
 const add = LINKS.filter((l) => !have.has(norm(l.url))).map((l) => ({
-  _key: key(),
+  _key: [`social-${l.platform.toLowerCase()}`, key()].find((k) => !taken.has(k)),
   _type: 'socialLink',
   ...l,
 }));
@@ -36,7 +43,7 @@ if (add.length === 0) {
   console.log('Nothing to add: both links are already there.');
   process.exit(0);
 }
-for (const l of add) console.log(`would append: ${l.platform} ${l.url}`);
+for (const l of add) console.log(`would append: ${l.platform} ${l.url} (key ${l._key})`);
 
 if (!APPLY) {
   console.log('\nDry run. Re-run with --apply to back up and write.');
@@ -45,7 +52,10 @@ if (!APPLY) {
 
 const dir = join(ROOT, 'scripts', 'data', 'backups');
 mkdirSync(dir, { recursive: true });
-const file = join(dir, `siteSettings-2026-09-24-pre-social-links.json`);
+const file = join(
+  dir,
+  `siteSettings-${new Date().toISOString().slice(0, 10)}-pre-social-links.json`,
+);
 writeFileSync(file, JSON.stringify(doc, null, 2));
 console.log(`backup: ${file}`);
 
