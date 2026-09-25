@@ -1,0 +1,568 @@
+{
+  "_createdAt": "2026-09-20T04:49:09Z",
+  "_id": "journalPage",
+  "_rev": "r3OMep2eOIG3C5V375kpXc",
+  "_type": "journalPage",
+  "_updatedAt": "2026-09-24T21:30:57Z",
+  "additionalSections": [
+    {
+      "_key": "blog-publications",
+      "_type": "documentListSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "publications"
+      },
+      "docs": [
+        {
+          "_key": "visitor-1",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-de132347204944b39b114a243047446336c93c8a-pdf",
+              "_type": "reference"
+            }
+          },
+          "note": "The latest issue",
+          "title": "Current Visitor",
+          "year": 2026
+        },
+        {
+          "_key": "visitor-2",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-ae5ca2978bab7968a6eb9aff676456afd37e4e5a-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "June",
+          "year": 2026
+        },
+        {
+          "_key": "visitor-3",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-9a3c09c92f6a1b4fde0200c90757d6eb525b85c8-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "March",
+          "year": 2026
+        },
+        {
+          "_key": "visitor-4",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-3fc2247399571fb766487dac70400aea09c1e1ef-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "December",
+          "year": 2025
+        },
+        {
+          "_key": "visitor-5",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-fd8f72273afc58bbc4040e7ad770de4a424fa353-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "September",
+          "year": 2025
+        },
+        {
+          "_key": "visitor-6",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-cbc882498958e09beb7ce506e741ed90f79d4aab-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "June",
+          "year": 2025
+        },
+        {
+          "_key": "visitor-7",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-e99edfa40e7c1f3a7289ab950d60f2beb22f254d-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "March",
+          "year": 2025
+        },
+        {
+          "_key": "visitor-8",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-089e419e13299f244141913139463af3bfbad817-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "December",
+          "year": 2024
+        },
+        {
+          "_key": "visitor-9",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-c0c21d2940bf971759877c3b93a143d8baa803e6-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "September",
+          "year": 2024
+        },
+        {
+          "_key": "visitor-10",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-899c8ea1e49d10697b76b703ae7c2ed2dd76ceaa-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "August",
+          "year": 2024
+        },
+        {
+          "_key": "visitor-11",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-4c114429d1938369bf1e0590117317f91b2ed031-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "July",
+          "year": 2024
+        },
+        {
+          "_key": "visitor-12",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-b1788068c6bbe742540eb5282402d1640028b2c5-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "June",
+          "year": 2024
+        },
+        {
+          "_key": "visitor-13",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-15d5fc0f3d453c0112eed4d4ebf2bb8381ae9fb3-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "March",
+          "year": 2024
+        },
+        {
+          "_key": "visitor-14",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-b4cb819cb515970e4206ec3da853432174b55543-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "December",
+          "year": 2023
+        },
+        {
+          "_key": "visitor-15",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-e9d4e7ab770a46fd7debab10fc6d8a194d9efaea-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "September",
+          "year": 2023
+        },
+        {
+          "_key": "visitor-16",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-eab8fbffc273ae192141c2f7b7ea68c090039412-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "June",
+          "year": 2023
+        },
+        {
+          "_key": "visitor-17",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-f383bdfab922c3b56d453549579be55b382d5a68-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "March",
+          "year": 2023
+        },
+        {
+          "_key": "visitor-18",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-13607ad3ac9d09c2d579d3c7585954873cd0b19a-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "December",
+          "year": 2022
+        },
+        {
+          "_key": "visitor-19",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-1a49a22734f6eb9748a0cabd3e7840c1fff84509-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "September",
+          "year": 2022
+        },
+        {
+          "_key": "visitor-20",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-a4d52565bff21cf08cf2e8fe1983569c0e20fd97-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "March",
+          "year": 2022
+        },
+        {
+          "_key": "visitor-21",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-060a1a508396fecb9c2c96dbde9413921384eae3-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "December",
+          "year": 2021
+        },
+        {
+          "_key": "visitor-22",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-4e5795eca769bda139cf62a764fa17bcbc00e96f-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "September",
+          "year": 2021
+        },
+        {
+          "_key": "visitor-23",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-21bb6b7768d7ee6722a80ab763e534baec3bd592-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "June",
+          "year": 2021
+        },
+        {
+          "_key": "visitor-24",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-eee26d4c3df304ec844b8470158748f38dcf5bf5-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "March",
+          "year": 2021
+        },
+        {
+          "_key": "visitor-25",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-966b2d898cc14ed1fa82c9cc3981c4f4ccda5893-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "February",
+          "year": 2021
+        },
+        {
+          "_key": "visitor-26",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-035768ed97ba29645347aba342f6103df4ccbe0f-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "January",
+          "year": 2021
+        },
+        {
+          "_key": "visitor-27",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-0ed3cb40818aa940ca5c0f134228fe357fec2bc8-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "December",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-28",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-2237cbda1eaeb7985039558d2cfc547c3a11aaaa-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "November",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-29",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-f514f7d63effd2d365299bc6c674f79698422e7e-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "October",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-30",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-2351202d43b56c2965dfdaf5b21dcee4468a5c0d-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "September",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-31",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-4197d2e47a8d7d2c141753d002f9ff3a7cfae78f-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "August",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-32",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-4799310feb961b3b2ef13bc48be5a78126aa149e-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "July",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-33",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-3aed9bbafefa1a0f1b0c7a69ed6447939602b1e1-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "June",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-34",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-f9360dd98c30f684d94b38a90c4af0ce3e4b5f5d-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "May",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-35",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-3c57dedd828b2828210aa79159c27133a078a447-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "April",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-36",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-6bcfc968954898c2710b027099761da408328634-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "March",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-37",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-ee856dbe7433a0f115e685023d5fa60de58e4fb0-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "February",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-38",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-c77d3ddd5c0a1ed03e14e0b5f9059823819acbea-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "January",
+          "year": 2020
+        },
+        {
+          "_key": "visitor-39",
+          "_type": "listedDocument",
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_ref": "file-4cf9f5fae6559cc979270f103ca722262402519e-pdf",
+              "_type": "reference"
+            }
+          },
+          "title": "June"
+        },
+        {
+          "_key": "book-clay",
+          "_type": "listedDocument",
+          "note": "Testimonies written by church members, edited by Julie Downey Davis",
+          "title": "We Are the Clay: God Molding Lives at First Baptist Church",
+          "url": "https://www.amazon.com/We-Are-Clay-Molding-Baptist/dp/1087276802",
+          "year": 2019
+        },
+        {
+          "_key": "book-journey",
+          "_type": "listedDocument",
+          "note": "By Dr. William G. Eidson. Several copies are in the church library",
+          "title": "Journey Down Jefferson Street: A History of the First Baptist Church of Muncie, Indiana"
+        }
+      ],
+      "eyebrow": "Publications",
+      "heading": "The Visitor and two books"
+    }
+  ],
+  "finalCta": {
+    "_key": "cta-1",
+    "_type": "ctaBlock",
+    "internalLink": {
+      "_ref": "page-visit",
+      "_type": "reference",
+      "_weak": true
+    },
+    "label": "Plan a visit",
+    "linkType": "internal"
+  },
+  "finalCtaHeadline": "Come and see for yourself.",
+  "finalCtaSubhead": "{service time}. {address}, {city}.",
+  "heroEyebrow": "Blog",
+  "heroHeadline": "Writing from First Baptist.",
+  "heroImage": {
+    "_type": "image",
+    "alt": "The sanctuary from the balcony, light through the stained glass",
+    "asset": {
+      "_ref": "image-4f97d6a7a89d4d8631d2f7249e58a7e2b5ad510e-2400x1596-jpg",
+      "_type": "reference"
+    }
+  },
+  "heroSubhead": "Sermon previews for the coming Sunday, news from around the church, and longer pieces from the pastors.",
+  "seoDescription": "Sermon previews, church news and writing from the pastors of First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana.",
+  "seoTitle": "Blog | First Baptist Church Muncie"
+}

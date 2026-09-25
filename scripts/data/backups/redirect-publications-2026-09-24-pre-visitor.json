@@ -1,0 +1,11 @@
+{
+  "_createdAt": "2026-09-18T23:35:48Z",
+  "_id": "redirect-publications",
+  "_rev": "QjI0kncFolotw4PTBkaZwv",
+  "_type": "redirect",
+  "_updatedAt": "2026-09-20T18:47:56Z",
+  "from": "/publications",
+  "note": "Newsletters moved into the archive",
+  "permanent": true,
+  "to": "/blog#publications"
+}
