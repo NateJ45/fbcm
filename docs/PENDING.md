@@ -1189,8 +1189,7 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       steps were wrong ("Show Additional Options"); corrected to Cards, the form's card, the
       Form tab.
 - [ ] #nathan **The only form in Church Trac is the Connection Card**
-      (`fbcmuncie.churchtrac.com/connectcard`, 4 submissions so far). Its `Form/Giving Embed
-    Domain` is empty, so Church Trac shows no embed code yet (one domain only: set
+      (`fbcmuncie.churchtrac.com/connectcard`, 4 submissions so far). Its embed-domain setting (Form/Giving Embed Domain) is empty, so Church Trac shows no embed code yet (one domain only: set
       `fbcm-site.nathanjnixon86.workers.dev` now, `www.fbcmuncie.org` at the cutover).
 - [ ] #nathan **Urgent for the church: the Connection Card's `Notify User` is empty**, so
       nobody is emailed when a visitor fills it in (4 have). Someone should read Form
