@@ -1,3 +1,4 @@
+// scaffold-file: church
 // A Church Trac form's pasted embed code (src/lib/church-trac-form.ts): only
 // an https churchtrac.com address survives, whatever else was pasted.
 import test from 'node:test';
