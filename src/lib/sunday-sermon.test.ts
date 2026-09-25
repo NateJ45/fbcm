@@ -5,7 +5,12 @@
 // machine whatever its own time zone.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { previewForSunday, sermonForUpcomingSunday, upcomingSunday } from './sunday-sermon.ts';
+import {
+  preacherForUpcomingSunday,
+  previewForSunday,
+  sermonForUpcomingSunday,
+  upcomingSunday,
+} from './sunday-sermon.ts';
 import type { RegisterEntry } from './blog-derive.ts';
 
 const preview = (over: Partial<RegisterEntry> = {}): RegisterEntry => ({
@@ -180,4 +185,39 @@ test('upcomingSunday agrees with the feed’s comingSunday over five weeks of ho
     const now = new Date(t0 + h * 3_600_000);
     assert.equal(comingSunday(now), upcomingSunday(now), now.toISOString());
   }
+});
+
+// ── preacherForUpcomingSunday (2026-09-25) ──────────────────────────────────
+
+test("the coming Sunday's preview names its author as the preacher", () => {
+  const now = new Date('2026-09-24T16:00:00Z'); // Thursday
+  assert.deepEqual(preacherForUpcomingSunday([preview({ author: 'Kendall Ellis' })], now), {
+    sunday: '2026-09-27',
+    name: 'Kendall Ellis',
+  });
+});
+
+test("the church's own account, no author, or no preview for the Sunday: nobody", () => {
+  const now = new Date('2026-09-24T16:00:00Z');
+  assert.equal(preacherForUpcomingSunday([preview({ author: 'FBC Muncie' })], now), null);
+  assert.equal(preacherForUpcomingSunday([preview({ author: null })], now), null);
+  assert.equal(
+    preacherForUpcomingSunday(
+      [preview({ author: 'Kendall Ellis' })],
+      new Date('2026-09-28T14:00:00Z'),
+    ),
+    null,
+  );
+  assert.equal(preacherForUpcomingSunday([], now), null);
+});
+
+test('the newest preview for the Sunday is the one whose author counts', () => {
+  const now = new Date('2026-09-24T16:00:00Z');
+  const older = preview({
+    _id: 'a',
+    author: 'Jonathan Balmer',
+    publishedAt: '2026-09-21T15:00:00Z',
+  });
+  const newer = preview({ _id: 'b', author: 'Kendall Ellis', publishedAt: '2026-09-23T15:00:00Z' });
+  assert.equal(preacherForUpcomingSunday([older, newer], now)?.name, 'Kendall Ellis');
 });

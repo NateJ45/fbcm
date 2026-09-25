@@ -28,6 +28,7 @@
 // returns null and the band does not render.
 
 import { SERVICE_TIME_ZONE } from './live-service.ts';
+import { preacherOf } from './preacher.ts';
 
 /** One <entry> of the feed, decoded. */
 export interface FeedEntry {
@@ -137,11 +138,10 @@ export function splitVideoTitle(raw: string): { title: string; reading: string; 
   };
 }
 
-/** "Rev. Jonathan Balmer" from a description line "Preaching: Rev. Jonathan Balmer". */
-export function preacherOf(description: string): string {
-  const m = /^\s*Preaching:\s*(.{3,60}?)\s*$/im.exec(description);
-  return m?.[1]?.trim() ?? '';
-}
+// The preacher's line in a description ("Preaching: Rev. Jonathan Balmer",
+// "Preacher:", "Speaker:") is read by src/lib/preacher.ts, the one parser for
+// both the "Last Sunday" band and this Sunday's hero fact.
+export { preacherOf };
 
 const DAY = new Intl.DateTimeFormat('en-US', {
   timeZone: SERVICE_TIME_ZONE,
@@ -319,4 +319,29 @@ export function upcomingBroadcast(
   const first = found[0];
   if (!first) return null;
   return found.every((b) => b.title === first.title && b.reading === first.reading) ? first : null;
+}
+
+/**
+ * The name on the "Preaching:" line of the broadcast scheduled for the coming
+ * Sunday, as of `now`, or null (2026-09-25, `feat/preacher-and-feel`). Read
+ * from every zero-view upload for that Sunday, whether or not its title
+ * splits into a sermon and a reading: the name does not depend on the title.
+ * Two uploads naming two different people name nobody (never guess).
+ */
+export function upcomingPreacher(
+  entries: readonly FeedEntry[],
+  now: Date,
+): { sunday: string; name: string } | null {
+  const target = comingSunday(now);
+  if (!target) return null;
+  const names = new Set<string>();
+  for (const e of entries) {
+    if (e.views !== 0) continue;
+    if (Date.parse(e.published) > now.getTime()) continue;
+    if (broadcastSunday(e.published) !== target) continue;
+    const name = preacherOf(e.description);
+    if (name) names.add(name);
+  }
+  const [only] = [...names];
+  return names.size === 1 && only ? { sunday: target, name: only } : null;
 }

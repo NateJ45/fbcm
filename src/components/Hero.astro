@@ -52,6 +52,7 @@ import {
   type SundaySermon,
 } from '@/lib/live-sunday';
 import { sermonIsExternal } from '@/lib/this-sunday';
+import type { SundayPreacher } from '@/lib/preacher';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import HeroFacts from '@/components/HeroFacts.astro';
 import { headingFit, longestWord, EM_BODY, EM_DISPLAY } from '@/lib/heading-grammar';
@@ -80,6 +81,8 @@ interface HeroFact {
   _key?: string;
   label?: string;
   value?: string;
+  /** A few words under the value (2026-09-25): what the service is like. */
+  note?: string;
 }
 
 interface Props {
@@ -149,6 +152,15 @@ interface Props {
    * line exactly as it was.
    */
   sermon?: SundaySermon | null;
+  /**
+   * This Sunday's preacher (2026-09-25, `feat/preacher-and-feel`), picked at
+   * build time by src/lib/preacher.ts (the sermon preview's author first,
+   * else the YouTube broadcast's "Preaching:" line). Drawn on the tall photo
+   * hero as a fourth fact after the editor's three, server-rendered hidden
+   * and shown by the upgrade script only while its Sunday is the coming one.
+   * null leaves the facts row exactly as it was.
+   */
+  preacher?: SundayPreacher | null;
   /** Visit's calendar file, shown under the facts (HeroFacts.astro). */
   calendarHref?: string;
 }
@@ -170,10 +182,14 @@ const {
   dropInto = false,
   headingAccent,
   sermon,
+  preacher,
   calendarHref,
 } = Astro.props as Props;
 
 const heroFacts = (facts ?? []).filter((f) => f?.label || f?.value).slice(0, 3);
+// A fact's note is display text, trimmed of stray space only (never measured,
+// so a stega payload in the preview is harmless).
+const noteOf = (f: HeroFact) => (f.note && splitStega(f.note).cleaned.trim() ? f.note : '');
 
 // Script accent: split the headline around the accent word so it can be
 // rendered in three pieces (before / accent-span / after). Delegates to the
@@ -220,6 +236,23 @@ const sundayTime = showLiveSunday ? timeOnly(serviceTimeClean) : '';
 // service time back. All before first paint (the script runs right after the
 // line), so the line is never rewritten after it is on screen.
 const sundaySermon = showLiveSunday && sermon ? sermon : null;
+// THIS SUNDAY'S PREACHER. A fourth fact, after the editor's three, on the same
+// tall hero as the dated line. Not on the line itself: the line's sermon half
+// is already held to one 320px line by the length rules in live-sunday.ts, and
+// a name after it would wrap it. The facts row is where "who, when, where"
+// already sits, label over value, so the name reads as one more fact.
+const sundayPreacher = showLiveSunday && preacher?.name ? preacher : null;
+// Three facts sit in one wrapping row, as they always have (the class string
+// is unchanged, so every three-fact hero renders byte-for-byte as before).
+// Four facts are a 2 x 2 grid below 1280px, so the fourth never sits alone on
+// a second row and the row is two deep, not four, on a 320px phone (measured:
+// the stacked row put "Preaching" below a 320 x 640 first screen), and one
+// row of four from 1280px, where the content column has room for it.
+const fourFacts = heroFacts.length + (sundayPreacher ? 1 : 0) === 4;
+const FACTS_ROW =
+  'mt-[clamp(28px,5vh,48px)] flex max-w-[960px] flex-wrap gap-[clamp(24px,4vw,64px)] border-t border-bg/18 pt-[clamp(20px,3vh,28px)]';
+const FACTS_FOUR =
+  'mt-[clamp(28px,5vh,48px)] grid max-w-[960px] grid-cols-2 gap-x-[clamp(20px,4vw,64px)] gap-y-[clamp(20px,3vh,32px)] border-t border-bg/18 pt-[clamp(20px,3vh,28px)] xl:flex xl:max-w-[1180px] xl:flex-wrap xl:gap-[clamp(24px,4vw,64px)] [&>div]:min-w-0';
 const sundayLead = sundaySermon ? datedSunday(sundaySermon.sunday) : sundayStatic;
 // A sermon named from the YouTube broadcast (src/lib/this-sunday.ts) links to
 // the watch page, which opens in a new tab like the "Last Sunday" band's.
@@ -591,8 +624,8 @@ const windowDrops = dropInto && windowOrder.length > 0;
           )}
         </p>
       )}
-      {heroFacts.length > 0 && (
-        <dl class="mt-[clamp(28px,5vh,48px)] flex max-w-[960px] flex-wrap gap-[clamp(24px,4vw,64px)] border-t border-bg/18 pt-[clamp(20px,3vh,28px)]">
+      {(heroFacts.length > 0 || sundayPreacher) && (
+        <dl class={fourFacts ? FACTS_FOUR : FACTS_ROW}>
           {heroFacts.map((fact) => (
             <div>
               {fact.label && <dt class="font-ui text-ui mb-1.5 text-bg/70">{fact.label}</dt>}
@@ -601,8 +634,30 @@ const windowDrops = dropInto && windowOrder.length > 0;
                   {fact.value}
                 </dd>
               )}
+              {/* The fact's small line (2026-09-25): under the Sunday time, what
+                  the service is like, in the church's own words. Held to a
+                  narrow measure so it wraps under the time rather than
+                  widening the row. */}
+              {noteOf(fact) && (
+                <dd class="mt-1.5 max-w-[22ch] font-ui text-[0.9375rem] leading-snug break-words text-bg/80" data-fact-note>
+                  {noteOf(fact)}
+                </dd>
+              )}
             </div>
           ))}
+          {/* Hidden until the upgrade script (BaseLayout) has checked, before
+              first paint, that the coming Sunday is still this fact's Sunday.
+              The inline call is inside the fact's <div>, where a <dl> allows
+              a script, so it takes no flex slot. */}
+          {sundayPreacher && (
+            <div hidden data-sunday-fact={sundayPreacher.sunday} data-preacher-source={sundayPreacher.source} data-pagefind-ignore>
+              <dt class="font-ui text-ui mb-1.5 text-bg/70">Preaching</dt>
+              <dd class="font-body text-[clamp(1.25rem,1rem+.9vw,1.625rem)] leading-tight break-words">
+                {sundayPreacher.name}
+              </dd>
+              <script is:inline>if (window.__liveSunday) window.__liveSunday();</script>
+            </div>
+          )}
         </dl>
       )}
       {(primaryCta || secondaryCta) && (

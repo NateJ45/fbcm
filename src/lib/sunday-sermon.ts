@@ -18,6 +18,7 @@ import { entryIsSermonPreview, type RegisterEntry } from './blog-derive.ts';
 import { isoDay, localDay, readingOf, sundayOf } from './sermon-derive.ts';
 import { splitStega } from './preview-stega.ts';
 import { sermonParts, type SundaySermon } from './live-sunday.ts';
+import { previewPreacher } from './preacher.ts';
 
 /** The coming Sunday on the church's calendar; today when today is Sunday. */
 export function upcomingSunday(now: Date): string | null {
@@ -66,6 +67,24 @@ export function sermonForUpcomingSunday(
   const parts = sermonParts(clean(best.title), readingOf(best.opening));
   if (!parts) return null;
   return { sunday: target, href: `/post/${clean(best.slug?.current)}`, ...parts };
+}
+
+/**
+ * The preacher named by the sermon preview for the coming Sunday (the same
+ * preview sermonForUpcomingSunday picks), or null (2026-09-25,
+ * `feat/preacher-and-feel`). The name is the post's author, as the post page
+ * prints it under "Preaching"; the church's own account names nobody, and
+ * then the hero falls back to the YouTube broadcast (src/lib/preacher.ts).
+ */
+export function preacherForUpcomingSunday(
+  entries: readonly RegisterEntry[] | null | undefined,
+  now: Date,
+): { sunday: string; name: string } | null {
+  const target = upcomingSunday(now);
+  if (!target) return null;
+  const best = newestPreviewFor(entries, target);
+  const name = previewPreacher(clean(best?.author));
+  return best && name ? { sunday: target, name } : null;
 }
 
 /** A past Sunday's preview, whole, for the home page's "Last Sunday" band. */

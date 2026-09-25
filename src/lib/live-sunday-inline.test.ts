@@ -94,3 +94,33 @@ test('the inline liveSundayLine agrees with the module over three weeks of hours
     }
   }
 });
+
+// This Sunday's preacher (2026-09-25). The inline copy shows and hides the
+// hero's "Preaching" fact; its decision is RUN against the module's.
+test('the inline copy shows the preacher fact by the same attribute', () => {
+  assert.ok(inlineScript.includes("'[data-sunday-fact]'"));
+  assert.ok(inlineScript.includes("'data-sunday-fact'"));
+});
+
+test('the inline sundayFactKept agrees with the module over three weeks of hours', async () => {
+  const { sundayFactKept } = await import('./live-sunday.ts');
+  const body = inlineScript.split('</script>')[0] ?? '';
+  const start = body.indexOf('function timeOnly');
+  const end = body.indexOf('function upgradeSunday');
+  assert.ok(start > 0 && end > start, 'could not find the inline functions');
+  const inlineKept = new Function(`${body.slice(start, end)}; return sundayFactKept;`)() as (
+    now: Date,
+    sunday: string,
+  ) => boolean;
+  const t0 = new Date(2026, 8, 20, 0, 30).getTime(); // a Sunday, local time
+  for (let h = 0; h < 21 * 24; h += 1) {
+    const now = new Date(t0 + h * 3_600_000);
+    for (const sunday of ['', '2026-09-27', '2026-10-04']) {
+      assert.equal(
+        inlineKept(now, sunday),
+        sundayFactKept(now, sunday),
+        `${now.toString()} / ${sunday || 'no Sunday'}`,
+      );
+    }
+  }
+});
