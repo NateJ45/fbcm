@@ -28,24 +28,42 @@ export const feedUrl = (channelId: string) =>
 
 type Fetch = (input: string, init?: RequestInit) => Promise<Response>;
 
-/** The feed's XML, or null on any failure (network, status, timeout, not a feed). */
+/**
+ * The feed's XML, or null on any failure (network, status, timeout, not a
+ * feed). Two tries, and every failure is LOGGED with its reason: the deploy
+ * build of 2026-09-25 fetched nothing, the band and the sermon line vanished,
+ * and the log said nothing about why (the feed answered 200 from a laptop the
+ * same hour). A failure here must be visible in the build log, never silent.
+ */
 export async function fetchFeed(
   channelId: string,
   fetchImpl: Fetch = fetch,
   timeoutMs: number = FEED_TIMEOUT_MS,
+  log: (msg: string) => void = (m) => console.warn(m),
 ): Promise<string | null> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const res = await fetchImpl(feedUrl(channelId), { signal: controller.signal });
-    if (!res.ok) return null;
-    const text = await res.text();
-    return /<feed[\s>]/.test(text) ? text : null;
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timer);
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetchImpl(feedUrl(channelId), {
+        signal: controller.signal,
+        headers: { Accept: 'application/atom+xml, application/xml;q=0.9, */*;q=0.1' },
+      });
+      const text = await res.text();
+      if (res.ok && /<feed[\s>]/.test(text)) return text;
+      log(
+        `[youtube-feed] try ${attempt}: HTTP ${res.status} ${res.url !== feedUrl(channelId) ? `(ended at ${res.url}) ` : ''}` +
+          `not a feed: ${JSON.stringify(text.slice(0, 160))}`,
+      );
+    } catch (err) {
+      log(
+        `[youtube-feed] try ${attempt}: ${String((err as Error)?.name === 'AbortError' ? `timed out after ${timeoutMs} ms` : err)}`,
+      );
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  return null;
 }
 
 /** Whether a thumbnail size exists for this video (YouTube 404s the sizes it never made). */

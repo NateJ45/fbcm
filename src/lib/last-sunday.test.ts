@@ -107,3 +107,29 @@ test('loadLastSunday with a given feed (the test seam) never fetches', async () 
   assert.equal(rec?.sunday, '2026-09-20');
   assert.equal(await loadLastSunday(null, THURSDAY, { xml: null }), null);
 });
+
+test('fetchFeed: a failure is retried once and logged with its reason, never silent', async () => {
+  let calls = 0;
+  const logs: string[] = [];
+  const html = async () => {
+    calls++;
+    return new Response('<html>consent</html>', { status: 200 });
+  };
+  const xml = await fetchFeed('UC123', html as typeof fetch, 1000, (m) => logs.push(m));
+  assert.equal(xml, null);
+  assert.equal(calls, 2);
+  assert.equal(logs.length, 2);
+  assert.match(logs[0], /try 1: HTTP 200 .*not a feed: "<html>consent/);
+
+  const logs2: string[] = [];
+  let n = 0;
+  const flaky = async () =>
+    ++n === 1
+      ? new Response('busy', { status: 503 })
+      : new Response('<feed></feed>', { status: 200 });
+  assert.equal(
+    await fetchFeed('UC123', flaky as typeof fetch, 1000, (m) => logs2.push(m)),
+    '<feed></feed>',
+  );
+  assert.match(logs2[0], /HTTP 503/);
+});
