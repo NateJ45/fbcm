@@ -1090,6 +1090,26 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
 
 ### What's On: the Church Trac calendar at /events (2026-09-25, `claude/kind-heisenberg-jf34rt`)
 
+- [x] **Local review, 2026-09-25 (main session, branch `review/cloud-whats-on`).** Every real
+      build got **403** from Church Trac for the calendar feed and the newsletter pages, so
+      /events and Home's What's On band built empty. Cause, measured with curl: Church Trac
+      refuses a request with NO User-Agent (the build's workerd prerender sends none) and one
+      with `Accept-Language: *` (Node fetch's default); either alone is refused. Fixed in both
+      fetchers (commit `b2ee5189`), with a stand-in-server test for each. After the fix: /events
+      has 4 dated events and 3 weekly ones, both newsletters build, no fetch failures in the log,
+      parity 176/176 on two builds, 1278 unit and 513 Playwright tests pass.
+- [ ] **/events: the October month group sits on a darker cream** than November and December
+      (seen at 1280 on the real data). Looks unintended; check the month-group ground rule.
+- [ ] **/youth-news at 1280: the "6th-12th Grade" style sections leave the whole left column
+      empty.** The Kid's Corner does not show it at 375. Check the Newsletter section layout
+      when a section has no image.
+- [ ] #nathan **The Kid's Corner still shows summer content** from Church Trac ("Summer Day
+      Camps", "Register for Water Wars" on July 11). The church edits that page in Church Trac.
+- [ ] **Church Trac's own calendar embed shows "No events to display"** on this site (the
+      /styleguide form-band sample). Use /events for the calendar, not the embed.
+- [ ] **The footer's "Elsewhere" column still says "Church Center: calendar and giving".**
+      Change it in Site settings when Church Center goes.
+
 - [ ] #nathan **Fix the time zone in Church Trac.** Every event in the feed says
       `TZID=America/Halifax` (Atlantic time) while its times are Muncie's (Sunday School 9:30,
       Worship 10:45). The site ignores the zone and reads the times as Muncie's clock, so
@@ -1187,7 +1207,7 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
 
 ### Church links, for the move to Church Trac (2026-09-24, `feat/church-links`)
 
-- [ ] #nathan **Deploy, then run the migration.** The Church systems boxes are new schema
+- [x] **Done 2026-09-24 (commit `8ccde56`, backup `scripts/data/backups/church-links-2026-09-24.json`):** deployed, then `church-links.mjs --apply --deployed` with Nathan's OK; 113 links in 102 documents now read from Site settings > Church systems. Original entry: **Deploy, then run the migration.** The Church systems boxes are new schema
       fields (rule 1), so the order is: merge, deploy, open the live `/studio`, check Site
       settings shows the **Church systems** tab and nothing offers "Remove field", then
       `node scripts/church-links.mjs` (read the plan: 113 links in 102 documents, 6 boxes
