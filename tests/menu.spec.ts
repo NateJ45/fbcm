@@ -144,8 +144,10 @@ test.describe('with motion', () => {
     // Drawn means the strokes show: no dash left on any path.
     const dashed = await glyphs.evaluateAll((svgs) =>
       svgs.flatMap((s) =>
-        // A stroke dotted by design (the basin's towel, stroke-dasharray="2 3")
-        // is part of the drawing, not a draw left half-done.
+        // A stroke dotted by design (a stroke-dasharray attribute) would be part
+        // of the drawing, not a draw left half-done. None of the four carries
+        // one since the 2026-09-24 redraw (the basin's dotted pour went with
+        // the jug), but the filter stays for the next dotted line.
         Array.from(s.querySelectorAll('path, circle, line, rect'))
           .filter((p) => !p.hasAttribute('stroke-dasharray'))
           .map((p) => getComputedStyle(p).strokeDasharray)
