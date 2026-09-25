@@ -95,6 +95,16 @@
 //      /children page (children.txt). Every sentence is read off those files
 //      and THROWS if it moves; only the four column heads and the band's
 //      heading are new. Nothing is stated that the church has not written.
+//
+// 9. THE CONNECTION CARD ON THE PAGE (2026-09-25, Nathan). The church's Church
+//    Trac connection card is a "Church Trac form" band ("Let us know you’re
+//    coming", anchored #connect) after the questions and before Our building,
+//    pointing at the churchTracForm document connection-card, so a visitor
+//    fills it in without leaving the site. Both "Let us know you’re coming"
+//    buttons now jump to it instead of opening Site settings' connection card
+//    link, which still pointed at the old Church Center form: two different
+//    cards on one page would split the replies across two systems. The
+//    heading is the buttons' own words, so no new copy.
 
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -110,6 +120,10 @@ const WHAT_TO_EXPECT_CATEGORY = '6c034276-fcae-490d-b6ea-a222d2dfcbeb';
 // The "Children FAQ" category (Wix /children), the one ministries.mjs prints
 // as "Questions parents ask".
 const CHILDREN_FAQ_CATEGORY = '6c6a9707-a64e-46ec-ab90-92f48bf3359a';
+
+// The Church Trac connection card's "Church Trac form" document (created
+// 2026-09-25 with the real embed code, size Long). Note 9.
+const CONNECTION_CARD_ID = 'churchTracForm-connection-card';
 
 /** A hotspot centred on (x, y), kept inside the frame so the Studio accepts it. */
 function hotspot(x, y) {
@@ -498,9 +512,8 @@ export default {
             { _type: 'heroFact', _key: 'fact-2', label: 'Where', value: streetLine },
             { _type: 'heroFact', _key: 'fact-3', label: 'How long', value: serviceLength },
           ],
-          // Site settings > Church systems > connection card: seed-pages
-          // stores it as {connect}, so it follows the move to Church Trac.
-          primaryCta: ctaExternal('Let us know you’re coming', settings.visitorFormUrl),
+          // The connection card is on this page (note 9).
+          primaryCta: ctaAnchor('Let us know you’re coming', '/visit#connect'),
           secondaryCta: ctaExternal('Watch a service', settings.livestreamUrl),
         },
 
@@ -658,7 +671,17 @@ export default {
           items: readWhatToExpectFaq(copy),
         },
 
-        // 6. Our building, on cream. This is where /visit#building lands.
+        // 6. The connection card, in the site's own frame (note 9). The embed
+        //    code lives on the churchTracForm document, never here.
+        {
+          _type: 'churchTracFormSection',
+          _key: 'visit-connect',
+          anchor: { _type: 'slug', current: 'connect' },
+          heading: 'Let us know you’re coming',
+          form: { _type: 'reference', _ref: CONNECTION_CARD_ID },
+        },
+
+        // 6b. Our building, on cream. This is where /visit#building lands.
         {
           _type: 'heritageBandSection',
           _key: 'visit-heritage',
@@ -677,7 +700,7 @@ export default {
           _key: 'visit-cta',
           headline: 'Come as you are.',
           subhead: `${settings.serviceTime}. ${streetLine}. A greeter will look out for you.`,
-          cta: ctaExternal('Let us know you’re coming', settings.visitorFormUrl),
+          cta: ctaAnchor('Let us know you’re coming', '/visit#connect'),
           secondaryCta: ctaExternal('Watch live', settings.livestreamUrl),
         },
       ],

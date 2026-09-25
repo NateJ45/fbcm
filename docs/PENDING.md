@@ -1195,7 +1195,13 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       `fbcmuncie.churchtrac.com/form/<hash>`, which the reader accepts as written. Framed from
       the allowed domain, its Submit button sits at 919 px (640 wide) and 1025 px (340 wide),
       so it is saved as the Studio document "Connection card" (`churchTracForm-connection-card`)
-      at size Long. It is on no page yet: placing it (suggested: Visit) is a content decision.
+      at size Long (now 1040 px, from that measurement). On Visit since 2026-09-25 (Nathan):
+      a "Let us know you’re coming" band at `#connect` after the questions, and both of Visit's
+      buttons jump to it. Site settings' connection-card link still points at the old Church
+      Center form (159198), which Home and the rest of the site use: switch it to
+      `https://fbcmuncie.churchtrac.com/connectcard` when the church stops reading Church
+      Center's replies. And nobody is notified of a Church Trac reply until Notify User is set
+      (below), so that must happen before the cutover sends real visitors here.
 - [ ] #nathan **Urgent for the church: the Connection Card's `Notify User` is empty**, so
       nobody is emailed when a visitor fills it in (4 have). Someone should read Form
       Responses and set Notify User to the office.
@@ -1228,7 +1234,7 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       iframe's `src` when it is https on churchtrac.com. If Church Trac's code turns out to be a
       script, or points at another host, the Studio refuses it with a message and the reader
       needs one more case. Also check a real form's height against the three sizes (560, 820
-      and 1180 px, a quarter more on a phone) and whether it scrolls inside its frame.
+      and 1180 px, a quarter more on a phone; Long became 1040 once the Connection Card was measured) and whether it scrolls inside its frame.
 - **The embed domain changes at the cutover.** Step 5 of "After the move" in the cutover plan.
 - **The frame does not size itself.** Church Trac's documentation says nothing of a resize
   message, so the Studio's `Form size` sets the height. If Church Trac turns out to post its

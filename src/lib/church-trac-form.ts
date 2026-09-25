@@ -24,11 +24,18 @@
 
 import { splitStega } from './preview-stega.ts';
 
-/** The heights a form's frame can take, by the Studio's "Form size" choice. */
+/**
+ * The heights a form's frame can take, by the Studio's "Form size" choice.
+ * Long was 1180 until the first real form was measured (2026-09-25, the
+ * Connection Card): its Submit button ends at 919 to 979 px on a wide screen
+ * and 1025 px on a phone (1167 at 320 wide), so 1180 left a quarter of the
+ * frame empty. 1040 clears it at every width, including the phone's quarter
+ * more (1300 against 1167).
+ */
 export const FORM_SIZES = {
   short: 560,
   medium: 820,
-  long: 1180,
+  long: 1040,
 } as const;
 export type FormSize = keyof typeof FORM_SIZES;
 
