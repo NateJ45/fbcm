@@ -720,8 +720,8 @@ export const linkCardsSection = defineType({
                 list: [
                   { title: 'Window', value: 'window' },
                   { title: 'Door', value: 'door' },
-                  { title: 'Rose window', value: 'rose' },
-                  { title: 'Basin niche', value: 'basin' },
+                  { title: 'Lamp on a stand', value: 'rose' },
+                  { title: 'Basin and towel', value: 'basin' },
                 ],
                 layout: 'radio',
               },
@@ -873,8 +873,8 @@ const goal = defineArrayMember({
         list: [
           { title: 'Window', value: 'window' },
           { title: 'Door', value: 'door' },
-          { title: 'Rose window', value: 'rose' },
-          { title: 'Basin niche', value: 'basin' },
+          { title: 'Lamp on a stand', value: 'rose' },
+          { title: 'Basin and towel', value: 'basin' },
         ],
         layout: 'radio',
       },

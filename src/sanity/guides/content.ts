@@ -612,7 +612,7 @@ export const guides: Guide[] = [
       { kind: 'h', text: 'Our goals (four bands)' },
       {
         kind: 'p',
-        text: 'Up to four goals, each with its own colour: green, gold, purple, brown, in the order you list them. Each goal has a `Name` ("Worship"), a `Subtitle` ("Worshiping as the Body of Christ"), and an optional `In brackets` word ("Discipleship"). `Building drawing` picks which of the four drawings of the building the band shows beside its words: window, door, rose window, or basin niche. `Opening sentence` introduces the goal, and `Pull quote` is an optional short line shown large, normally on the second goal only.',
+        text: 'Up to four goals, each with its own colour: green, gold, purple, brown, in the order you list them. Each goal has a `Name` ("Worship"), a `Subtitle` ("Worshiping as the Body of Christ"), and an optional `In brackets` word ("Discipleship"). `Building drawing` picks which of the four goal drawings the band shows beside its words: window, door, lamp on a stand, or basin and towel. `Opening sentence` introduces the goal, and `Pull quote` is an optional short line shown large, normally on the second goal only.',
       },
       {
         kind: 'p',

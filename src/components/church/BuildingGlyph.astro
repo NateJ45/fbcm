@@ -13,21 +13,28 @@
 //           in the redraw; at 32px they merged with the centre line into a
 //           cross, and the arch and the split leaves already say door.
 //   rose    Witness. Despite the name, since 2026-09-24 a LAMP ON A STAND: a
-//           clay oil lamp, spout and handle, its flame at the spout, set on a
-//           squat pedestal. "Neither do men light a candle, and put it under a
-//           bushel, but on a candlestick" (Matthew 5:15); "ye are the light of
-//           the world" (5:14). It replaced the rose window, which read as a sun,
-//           a gear or a virus at 32px. The name `rose` stays because it is a
-//           stored value (the goals' `glyph` field in Sanity, church-goals.ts),
-//           so renaming it would be a data migration, not a code edit.
+//           clay oil lamp of the biblical kind (a low body with a pointed
+//           nozzle, the flame rising from the nozzle tip, a loop handle at the
+//           back and the filling hole on top) resting on a slim lampstand, a
+//           small tray on one upright with a small foot. "Neither do men light
+//           a candle, and put it under a bushel, but on a candlestick"
+//           (Matthew 5:15); "ye are the light of the world" (5:14). It replaced
+//           the rose window, which read as a sun, a gear or a virus at 32px. A
+//           first redraw set a genie-like lamp on a squat pedestal; Nathan
+//           found it did not read as an oil lamp, and picked this one from
+//           three (the lamp alone sat too low in the row; the lamp on a hill,
+//           Matthew 5:14, read as legs at 32px). The name `rose` stays because
+//           it is a stored value (the goals' `glyph` field in Sanity,
+//           church-goals.ts), so renaming it would be a data migration; the
+//           Studio's option title reads "Lamp on a stand".
 //   basin   Work. The BASIN AND TOWEL of John 13, the foot-washing, since the
 //           church's Work is "following Jesus' example of serving others".
 //           Since 2026-09-24 one large basin seen a little from above, its
 //           towel draped over the front rim; the jug that used to pour into it
 //           came off, because three objects were too small to read at 32px.
 //
-// The redraw of 2026-09-24 (feat/goal-glyphs) chose each drawing from two
-// candidates by the at-a-glance test: at 32px, without the label, could a
+// The redraw of 2026-09-24 (feat/goal-glyphs) chose each drawing from two or
+// three candidates by the at-a-glance test: at 32px, without the label, could a
 // visitor name it? Line art in currentColor at a constant 2px stroke whatever
 // the size, and always decorative: the goal's name beside it is the label.
 // Each glyph is 3 to 6 strokes so the staggered draw below still reads.
@@ -93,15 +100,19 @@ const QF =
       <>
         <path
           pathLength="1"
-          d="M36 6C39 11 43 14 43 19C43 22.5 40.5 25 37 25C33.5 25 31 22.5 31 19C31 15 34 12 36 6ZM37 22C35.5 22 35 20.5 35 19.5C35 18 36.5 16.5 37 15"
+          d="M9.6 31.6C9.6 27.4 14.7 25.2 20.6 25.2C25.7 25.2 29.1 26.5 32.5 27.4L39.3 27.8C41.4 28 41.4 30.6 39.3 30.8L32.5 31.6C29.1 35 25.7 38 20.6 38C14.7 38 9.6 35.9 9.6 31.6Z"
         />
         <path
           pathLength="1"
-          d="M37 27L28 26.5C25 25 21 24 17 24C10 24 6 27.5 6 31C6 34.5 11 37 18 37C24 37 28 35 30 33L37 29Z"
+          d="M17.6 28.6a3 1.1 0 1 0 6 0a3 1.1 0 1 0-6 0M10.4 29C5.3 27.4 4.5 34.2 10 34.6"
         />
-        <path pathLength="1" d="M7 28C2 27 2 34 7 34" />
-        <path pathLength="1" d="M9 40H29M12 40V57M26 40V57" />
-        <path pathLength="1" d="M7 57H31M4 62H34" />
+        <path
+          pathLength="1"
+          d="M40.2 7.8C42.7 13.8 43.6 18 43.6 21.4A3.4 3.4 0 0 1 36.8 21.4C36.8 18 37.6 13.8 40.2 7.8Z"
+        />
+        <path pathLength="1" d="M11 38H31" />
+        <path pathLength="1" d="M21 38V58" />
+        <path pathLength="1" d="M15 62C16 59.5 18.5 58 21 58C23.5 58 26 59.5 27 62M10 62H32" />
       </>
     )
   }
