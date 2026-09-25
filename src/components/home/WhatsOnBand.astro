@@ -1,0 +1,248 @@
+---
+// Safe to edit by hand
+// "What's On" on the home page (2026-09-25): the next three dated events on
+// the church calendar, each with its day, time and room, and a way to the
+// whole calendar at /events. The events are read from Church Trac's iCal feed
+// at build time (src/lib/church-calendar-feed.ts), the same read /events
+// makes, so the two can never disagree (CLAUDE.md rule 15). The band renders
+// only when there is at least one dated event ahead; a failed feed or an
+// empty calendar means no band, never an empty one. The weekly gatherings are
+// not repeated here: the Sunday-times band near the top of Home already has
+// the Sunday morning.
+//
+// NOT A PAGE-BUILDER BLOCK, like "Last Sunday" and The Visitor: the home page
+// is composed in Sanity, and adding a block there is a content write, so the
+// band is drawn from code and placed through SectionRenderer's `insert` slot,
+// after The Visitor and before the Church Blog rows (src/pages/index.astro):
+// last Sunday, the church's news, what is coming, then the writing.
+//
+// ONE GRAMMAR WITH THE BANDS ABOVE (rule 17): the same split as Last Sunday
+// and The Visitor (the words in five twelfths at the left, the events in
+// seven at the right), the h2 in the shared heading grammar. Each event row
+// is /events' own row in small: a date tile, the title (a link to that row
+// on /events), and the day, time and room.
+//
+// THE GROUND comes from the band above, by The Visitor's rule
+// (visitor-band.ts visitorGround): paper under a dark band, indigo under a
+// light one, decided in src/pages/index.astro.
+import CtaLink from '@/components/CtaLink.astro';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
+import {
+  dayOfMonth,
+  dayShort,
+  monthShort,
+  timeRange,
+  whenLine,
+  type DatedItem,
+} from '@/lib/church-calendar';
+
+interface Props {
+  events: DatedItem[];
+  ground: 'indigo' | 'paper';
+  headingId: string;
+}
+
+const { events, ground, headingId } = Astro.props as Props;
+const dark = ground === 'indigo';
+const heading = "What's On";
+// "Fellowship Hall" is worth saying on Home; the church's own name is not.
+const where = (loc: string) => (loc && loc !== 'First Baptist Church' ? loc : '');
+---
+
+<section
+  class:list={['wo-band', dark ? 'bg-band-indigo text-bg' : 'bg-bg text-indigo']}
+  aria-labelledby={headingId}
+  data-whats-on-band
+  data-ground={ground}
+  data-pagefind-ignore
+>
+  <div class="wo-grid mx-auto max-w-content px-gutter py-section-lg">
+    <div class="wo-head min-w-0">
+      <p
+        class:list={[
+          'mt-0 mb-4 font-ui text-ui font-semibold tracking-eyebrow uppercase',
+          dark ? 'text-gold' : 'text-gold-ink',
+        ]}
+      >
+        Coming up
+      </p>
+      <h2
+        id={headingId}
+        class:list={[H2_DISPLAY, 'h-fit', dark ? 'text-bg' : 'text-indigo']}
+        style={headingFit(heading)}
+      >
+        <span class="h-fit-in">{heading}</span>
+      </h2>
+    </div>
+
+    <div class="wo-body min-w-0">
+      <p
+        class:list={[
+          'mt-0 mb-0 max-w-[36rem] font-body text-lg leading-relaxed',
+          dark ? 'text-bg/85' : 'text-indigo',
+        ]}
+      >
+        Events, classes and gatherings at First Baptist, from the church calendar.
+      </p>
+      <div class="mt-8">
+        <CtaLink
+          cta={{ label: 'Everything on the calendar' }}
+          fallbackHref="/events"
+          variant="gold"
+          onDark={dark}
+        />
+      </div>
+    </div>
+
+    <ol class:list={['wo-list', dark && 'wo-dark']}>
+      {
+        events.map((it) => (
+          <li class="wo-row">
+            <p class="wo-tile" aria-hidden="true">
+              <span class="wo-tile-d">{dayShort(it.date)}</span>
+              <span class="wo-tile-n">{dayOfMonth(it.date)}</span>
+              <span class="wo-tile-m">{monthShort(it.date)}</span>
+            </p>
+            <div class="min-w-0">
+              <h3 class="wo-title">
+                <a href={`/events#${it.key}`}>{it.title}</a>
+              </h3>
+              <p class="wo-when">
+                <time datetime={it.date}>{whenLine(it)}</time>
+                <span>{timeRange(it.startMinutes, it.durationMinutes)}</span>
+                {where(it.location) && <span>{where(it.location)}</span>}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* The phone reads the name, the events, then the words and the button. A
+     wide screen is Last Sunday's split: five twelfths of words at the left,
+     the heading over the body, and the events in seven at the right. */
+  .wo-grid {
+    display: grid;
+    grid-template-areas: 'head' 'list' 'body';
+    row-gap: clamp(28px, 4vw, 40px);
+  }
+  .wo-head {
+    grid-area: head;
+  }
+  .wo-body {
+    grid-area: body;
+  }
+  .wo-list {
+    grid-area: list;
+  }
+  @media (min-width: 1024px) {
+    .wo-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      grid-template-areas: 'head list' 'body list';
+      grid-template-rows: auto 1fr;
+      column-gap: clamp(40px, 5vw, 72px);
+      row-gap: 28px;
+    }
+    .wo-list {
+      align-self: center;
+    }
+  }
+
+  /* The events: /events' rows in small, under a gold rule, on the ground's
+     hairline. The tokens swap under .wo-dark for the indigo ground. */
+  .wo-list {
+    --wo-ink: var(--color-indigo);
+    --wo-meta: var(--color-brown-ink);
+    --wo-rule: color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    --wo-accent: var(--color-gold-ink);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    border-top: 2px solid var(--color-gold);
+  }
+  .wo-dark {
+    --wo-ink: var(--color-bg);
+    --wo-meta: var(--color-taupe);
+    --wo-rule: color-mix(in srgb, var(--color-taupe) 40%, transparent);
+    --wo-accent: var(--color-gold);
+  }
+  .wo-row {
+    display: grid;
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    column-gap: clamp(16px, 2.2vw, 28px);
+    align-items: start;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--wo-rule);
+  }
+  .wo-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .wo-tile {
+    display: grid;
+    justify-items: center;
+    margin: 0;
+    padding: 7px 0 9px;
+    border: 1px solid var(--wo-rule);
+    font-family: var(--font-ui);
+    font-variant-numeric: lining-nums;
+    line-height: 1;
+  }
+  .wo-tile-d,
+  .wo-tile-m {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--wo-accent);
+  }
+  .wo-tile-n {
+    margin: 6px 0 5px;
+    font-family: var(--font-display);
+    font-size: 1.875rem;
+    color: var(--wo-ink);
+  }
+  .wo-title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(1.1875rem, 1rem + 0.5vw, 1.4375rem);
+    line-height: 1.2;
+  }
+  .wo-title a {
+    color: var(--wo-ink);
+    text-decoration: none;
+    background: linear-gradient(var(--color-gold), var(--color-gold)) 0 100% / 0 2px no-repeat;
+    transition: background-size 0.3s;
+  }
+  .wo-title a:hover,
+  .wo-title a:focus-visible {
+    background-size: 100% 2px;
+  }
+  .wo-title a:focus-visible {
+    outline: 2px solid var(--wo-accent);
+    outline-offset: 4px;
+  }
+  /* Day, time and room one to a line: short lines, and no "·" to wrap. */
+  .wo-when {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 6px 0 0;
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    font-variant-numeric: lining-nums;
+    color: var(--wo-meta);
+  }
+  @media (min-width: 640px) {
+    .wo-when {
+      flex-direction: row;
+      flex-wrap: wrap;
+      column-gap: 18px;
+    }
+  }
+</style>

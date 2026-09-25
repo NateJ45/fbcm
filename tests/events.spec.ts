@@ -73,3 +73,46 @@ test('no sideways scroll at 320px', async ({ page }) => {
   );
   expect(over).toBeLessThanOrEqual(0);
 });
+
+test.describe("Home's What's On band", () => {
+  test('the next three events, after The Visitor, on the opposite ground', async ({ page }) => {
+    await page.goto('/');
+    const band = page.locator('[data-whats-on-band]');
+    await expect(band.getByRole('heading', { level: 2 })).toHaveText("What's On");
+    await expect(band.locator('.wo-title')).toHaveText([
+      'Membership Class - Week 1',
+      'Sam Pace Recital',
+      'Amahl and the Night Visitors (BSU Opera)',
+    ]);
+    await expect(band.locator('.wo-title a').first()).toHaveAttribute(
+      'href',
+      '/events#membership-class-week-1-2026-10-04',
+    );
+    await expect(band.getByRole('link', { name: 'Everything on the calendar' })).toHaveAttribute(
+      'href',
+      '/events',
+    );
+    // It follows The Visitor, and never shares its ground.
+    const order = await page.evaluate(() => {
+      const v = document.querySelector('[data-visitor-band]')!;
+      const w = document.querySelector('[data-whats-on-band]')!;
+      return {
+        after: !!(v.compareDocumentPosition(w) & Node.DOCUMENT_POSITION_FOLLOWING),
+        visitor: v.getAttribute('data-ground'),
+        whatsOn: w.getAttribute('data-ground'),
+      };
+    });
+    expect(order.after).toBe(true);
+    expect(order.whatsOn).not.toBe(order.visitor);
+  });
+
+  test('no sideways scroll at 320px', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 700 });
+    await page.goto('/');
+    await page.locator('[data-whats-on-band]').scrollIntoViewIfNeeded();
+    const over = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(over).toBeLessThanOrEqual(0);
+  });
+});

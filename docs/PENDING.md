@@ -1114,10 +1114,14 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   characters, mid-word. The page trims a cut one back to its last whole sentence (or its last
   word and an ellipsis): Worship's and the Messiah Sing-In's read shorter than the church wrote
   them. The full text is only in Church Trac.
-- **A Home band for the next few events was not built.** It needs a place in Home's insert
-  slot beside Last Sunday and The Visitor, and the Visitor band's ground is derived from the
-  band above it (`src/lib/visitor-band.ts`), so a third band there wants its own look first.
-  `loadWhatsOn()` is ready for it.
+- **Home's What's On band (`src/components/home/WhatsOnBand.astro`)** shows the next three
+  dated events after The Visitor, in the insert slot, on the opposite ground to the band above
+  (The Visitor's rule). It repeats what the Church Blog rows below may carry for the same event
+  (today the Messiah Sing-In is both an FBCM Events post and a calendar event). If that reads as
+  a duplicate, the blog rows could drop an events post whose date is on the calendar.
+- **Playwright in the Claude cloud container** cannot check Home's band order or The Visitor's
+  covers: there is no Sanity project there (no blog rows, no /visit) and `cdn.sanity.io` is
+  refused. The calendar's own suite passes there; the full suite is CI's.
 - **Node's fetch in the Claude cloud container is refused `www.churchtrac.com`** even when curl
   is allowed through, so a build there draws the "could not be read" state. The deploy runner
   and a laptop reach it. Use `CHURCH_CALENDAR_FIXTURE=1` to see the page there.

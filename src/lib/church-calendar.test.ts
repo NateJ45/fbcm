@@ -336,3 +336,15 @@ test('each dated row is a valid schema.org Event with the church clock offset', 
     'Fellowship Hall, First Baptist Church',
   );
 });
+
+test("Home's band: the next three dated rows, soonest first, or none", async () => {
+  const { nextEvents } = await import('./church-calendar.ts');
+  const on = whatsOn(parseIcs(FIXTURE), FRIDAY);
+  assert.deepEqual(
+    nextEvents(on).map((i) => i.title),
+    ['Membership Class - Week 1', 'Sam Pace Recital', 'Amahl and the Night Visitors (BSU Opera)'],
+  );
+  assert.deepEqual(nextEvents(null), []);
+  // After the last dated event, nothing: the band is not drawn.
+  assert.deepEqual(nextEvents(whatsOn(parseIcs(FIXTURE), new Date('2026-12-20T16:00:00Z'))), []);
+});

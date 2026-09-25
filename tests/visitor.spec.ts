@@ -187,7 +187,9 @@ test.describe('home', () => {
         el ? getComputedStyle(el as Element).backgroundColor : '';
       const prev = band.previousElementSibling;
       const above = prev?.matches('section') ? prev : prev?.querySelector('section');
-      const below = band.nextElementSibling?.querySelector('section');
+      // What's On (2026-09-25) follows in the same slot as a bare section.
+      const next = band.nextElementSibling;
+      const below = next?.matches('section') ? next : next?.querySelector('section');
       return { band: bg(band), above: bg(above), below: bg(below) };
     });
     expect(grounds.band).not.toBe(grounds.above);

@@ -21,6 +21,9 @@ import VisitorBand from '@/components/home/VisitorBand.astro';
 import type { VisitorManifest } from '@/lib/visitor-issues';
 import { isDarkRow, visitorGround } from '@/lib/visitor-band';
 import { insertIndex } from '@/lib/band-insert';
+import WhatsOnBand from '@/components/home/WhatsOnBand.astro';
+import { loadWhatsOn } from '@/lib/church-calendar-feed';
+import { nextEvents, type DatedItem } from '@/lib/church-calendar';
 // scaffold:end
 // scaffold: journal
 import { getAllJournalEntries } from '@/lib/queries';
@@ -97,6 +100,16 @@ visitor =
   )[0] ?? null;
 // scaffold:end
 
+// WHAT'S ON (2026-09-25). The next dated events on the church calendar, read
+// from Church Trac at build time, the same read /events makes
+// (src/lib/church-calendar-feed.ts). [] when the feed fails or nothing dated
+// is ahead, and then the band is simply not drawn. The Playwright build reads
+// the committed feed (CHURCH_CALENDAR_FIXTURE=1).
+let upcoming: DatedItem[] = [];
+// scaffold: church
+upcoming = nextEvents(await loadWhatsOn(siteSettings));
+// scaffold:end
+
 const title = page?.seoTitle ?? site.name;
 const description =
   page?.seoDescription ??
@@ -116,8 +129,14 @@ const insertBefore = ['dynamicListSection', 'giveBandSection'];
 const rowTypes = (sections as unknown[])
   .filter((s): s is { _type: string } => !!s && typeof s === 'object' && '_type' in s)
   .map((s) => s._type);
-const visitorOn = visitorGround(
-  !!lastSunday || isDarkRow(rowTypes[insertIndex(rowTypes, insertBefore) - 1]),
+const aboveSlotIsDark = isDarkRow(rowTypes[insertIndex(rowTypes, insertBefore) - 1]);
+const visitorOn = visitorGround(!!lastSunday || aboveSlotIsDark);
+// What's On follows The Visitor, by the same rule: its ground is the opposite
+// of whichever band ends up directly above it (The Visitor, else Last Sunday's
+// indigo, else the page-builder row before the slot).
+const visitorDrawn = !!(visitor?.latest && visitor.listHref);
+const whatsOnGround = visitorGround(
+  visitorDrawn ? visitorOn === 'indigo' : !!lastSunday || aboveSlotIsDark,
 );
 // scaffold:end
 
@@ -165,6 +184,16 @@ const overlayHeader = shouldOverlayHeader(sections as any);
           now={buildNow}
           ground={visitorOn}
           headingId="home-visitor"
+        />
+      )
+    }
+    {
+      upcoming.length > 0 && (
+        <WhatsOnBand
+          slot="insert"
+          events={upcoming}
+          ground={whatsOnGround}
+          headingId="home-whats-on"
         />
       )
     }

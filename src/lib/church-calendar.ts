@@ -727,3 +727,16 @@ export function whenLine(it: Pick<DatedItem, 'date' | 'through' | 'allDayDays'>)
   }
   return `${dayName(it.date)}, ${dateLabel(it.date)}`;
 }
+
+// ── Home ────────────────────────────────────────────────────────────────────
+
+/** How many dated rows Home's "What's On" band shows. */
+export const HOME_EVENTS = 3;
+
+/**
+ * The next dated rows for Home's band, soonest first, or [] (the band is then
+ * not drawn). Weekly gatherings are left to the Sunday-times band above them.
+ */
+export function nextEvents(on: WhatsOn | null | undefined, n: number = HOME_EVENTS): DatedItem[] {
+  return (on?.months ?? []).flatMap((m) => m.items).slice(0, Math.max(0, n));
+}
