@@ -15,6 +15,18 @@
 //   unparseable  the broadcast's title does not split into sermon and
 //                reading: no sermon, and the line reads as it always did.
 //
+// And, for This Sunday's preacher and the service's small line (2026-09-25,
+// `feat/preacher-and-feel`):
+//
+//   preacher-preview  a preview for the same Sunday whose author names a
+//                     person: its preacher wins over the broadcast's;
+//   no-preacher       no preview, and the broadcast's "Preaching:" line
+//                     removed: no fourth fact, the row reads as before;
+//   feel              the youtube state with the small line under the
+//                     Sunday time that home.mjs proposes (the live home page
+//                     carries it only once the church approves it and the
+//                     page is applied), for the screenshots and the tests.
+//
 // Not for visitors: noindex, and under /styleguide, which astro.config.mjs
 // keeps out of the sitemap and src/lib/reservedSlugs.ts keeps from being
 // shadowed by a page.
@@ -25,15 +37,24 @@ import { DEFAULT_HOME_SECTIONS } from '@/data/defaultSections';
 import { getHomePage, getSiteSettings } from '@/lib/queries';
 import { sermonParts, type SundaySermon } from '@/lib/live-sunday';
 import { thisSundaySermon } from '@/lib/this-sunday';
-import { comingSunday, parseYoutubeFeed, upcomingBroadcast } from '@/lib/youtube-feed';
+import { thisSundayPreacher } from '@/lib/preacher';
+import {
+  comingSunday,
+  parseYoutubeFeed,
+  upcomingBroadcast,
+  upcomingPreacher,
+} from '@/lib/youtube-feed';
 import { shouldOverlayHeader } from '@/lib/heroOverlay';
 import feed from '../../../../tests/fixtures/youtube-feed.xml?raw';
 
 export function getStaticPaths() {
-  return ['youtube', 'preview', 'unparseable'].map((state) => ({ params: { state } }));
+  return ['youtube', 'preview', 'unparseable', 'preacher-preview', 'no-preacher', 'feel'].map(
+    (state) => ({ params: { state } }),
+  );
 }
 
-const { state } = Astro.params as { state: 'youtube' | 'preview' | 'unparseable' };
+type State = 'youtube' | 'preview' | 'unparseable' | 'preacher-preview' | 'no-preacher' | 'feel';
+const { state } = Astro.params as { state: State };
 
 const NOW = new Date('2026-09-24T16:00:00Z');
 const sunday = comingSunday(NOW);
@@ -43,18 +64,39 @@ const xml =
         /How to Let Your 'Yes' Be Yes and Your 'No,' No - Matthew 21:23-32 - Kingdom Come/g,
         'Sunday Worship Service',
       )
-    : feed;
+    : state === 'no-preacher'
+      ? feed.replace(/\nPreaching: [^<\n]*/g, '')
+      : feed;
 const parts = sermonParts('When God Shows Up', 'Jeremiah 29:10-12');
+const withPreview = state === 'preview' || state === 'preacher-preview';
 const preview: SundaySermon | null =
-  state === 'preview' && sunday && parts ? { sunday, href: '/blog', ...parts } : null;
-const sermon = thisSundaySermon(sunday, preview, upcomingBroadcast(parseYoutubeFeed(xml), NOW));
+  withPreview && sunday && parts ? { sunday, href: '/blog', ...parts } : null;
+const entries = parseYoutubeFeed(xml);
+const sermon = thisSundaySermon(sunday, preview, upcomingBroadcast(entries, NOW));
+const preacher = thisSundayPreacher(
+  sunday,
+  state === 'preacher-preview' && sunday ? { sunday, name: 'Kendall Ellis' } : null,
+  upcomingPreacher(entries, NOW),
+);
 
 const [page, siteSettings] = await Promise.all([
   getHomePage().catch(() => null),
   getSiteSettings().catch(() => null),
 ]);
 const all = page?.pageBuilder?.length ? page.pageBuilder : DEFAULT_HOME_SECTIONS;
-const sections = all.slice(0, 1);
+// The proposed small line under the Sunday time (scripts/pages/home.mjs,
+// SERVICE_NOTE), set on the first fact in the `feel` state only.
+const SERVICE_NOTE = 'Intergenerational, casual dress welcome';
+type HeroLike = { _type?: string; facts?: Record<string, unknown>[] | null };
+const sections = (all.slice(0, 1) as HeroLike[]).map((s: HeroLike) => {
+  if (state !== 'feel' || s._type !== 'heroSection') return s;
+  return {
+    ...s,
+    facts: (s.facts ?? []).map((f: Record<string, unknown>, i: number) =>
+      i === 0 ? { ...f, note: SERVICE_NOTE } : f,
+    ),
+  };
+}) as typeof all;
 const overlayHeader = shouldOverlayHeader(sections as any);
 ---
 
@@ -66,6 +108,6 @@ const overlayHeader = shouldOverlayHeader(sections as any);
   noindex
 >
   <div data-state={state}>
-    <SectionRenderer {sections} idPrefix="home" settings={siteSettings} {sermon} />
+    <SectionRenderer {sections} idPrefix="home" settings={siteSettings} {sermon} {preacher} />
   </div>
 </BaseLayout>

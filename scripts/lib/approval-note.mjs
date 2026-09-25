@@ -121,6 +121,7 @@ export const CHROME_SECTIONS = [
     newCopy: [
       'Home: the band heading "Last Sunday"; the buttons "Watch on YouTube" and, when the church posted a sermon preview for that Sunday, "Read the sermon preview". The date ("Sunday, September 20"), the sermon title, the reading and the preacher are the YouTube video’s own title and description; the series name is followed by the word "series" ("Kingdom Come series").',
       'Visit: "Add Sundays to your calendar" (under the hero’s Sundays, Where and How long).',
+      'Home: the hero’s fourth fact "Preaching", with the name of the coming Sunday’s preacher (2026-09-25, `feat/preacher-and-feel`). The name is the church’s own: the sermon preview’s author when the church posted one for that Sunday, else the "Preaching:" line of the YouTube broadcast scheduled for it. It shows only until that Sunday has passed, and not at all when neither names anyone.',
       'Visit: the weather line, Wednesday to Sunday noon, "Sunday: 58°, light rain." (the forecast words are the National Weather Service’s own, in lower case; a chance of rain reads "45% chance of rain showers").',
       'The calendar file: the event is named "Sunday worship, First Baptist Church Muncie" and its note reads "What to expect on Sunday: https://www.fbcmuncie.org/visit".',
     ],

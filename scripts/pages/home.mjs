@@ -71,6 +71,33 @@
 //    entry's year in at build time (src/lib/heritage-dates.ts), so 2026 is never
 //    typed here and the band never goes stale.
 
+import { readFileSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const FAQ_PATH = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  '..',
+  'data',
+  'pages',
+  'faq-entries.json',
+);
+
+// WHAT THE SERVICE IS LIKE (2026-09-25, `feat/preacher-and-feel`): the small
+// line under the hero's Sunday time. Two of the church's own statements about
+// its Sunday worship, and nothing else:
+//   "Intergenerational"   the Worship goal on Who We Are: "FBCM gives praise to
+//                         the Lord by gathering to worship as the full,
+//                         intergenerational body of Christ."
+//   "casual dress welcome" the Visit FAQ "What should I wear?": "Casual dress
+//                         is welcome."
+// Deliberately NOT used: "about an hour" (Site settings' serviceLength is the
+// schema's default, never stated by the church, and the livestreams run 10:40
+// to about noon), and "hymns" (no page of the church's says hymns; the one
+// sentence that does, Visit's "to the last hymn", is ours). New copy: it is on
+// the approval note, and the build guards below throw if either source moved.
+export const SERVICE_NOTE = 'Intergenerational, casual dress welcome';
+
 /** A hotspot centred on (x, y), kept inside the frame so the Studio accepts it. */
 function hotspot(x, y) {
   const size = Math.min(0.3, 2 * Math.min(x, 1 - x), 2 * Math.min(y, 1 - y));
@@ -88,6 +115,7 @@ export default {
   newCopy: [
     'A downtown church in Muncie, Indiana. (hero kicker, unchanged from the plan 2b page)',
     'First Baptist Church Muncie, Indiana | Sundays 10:45 am (search title, 2026-09-24 local search pass)',
+    `${SERVICE_NOTE} (the small line under the hero's Sunday time, 2026-09-25; "Intergenerational" is the Worship goal's "gathering to worship as the full, intergenerational body of Christ" on Who We Are, and "casual dress welcome" is the Visit FAQ's "Casual dress is welcome.")`,
     'An American Baptist church in downtown Muncie, Indiana, at 309 East Adams Street. Worship is Sundays at 10:45 am, in person and online. All are welcome. (search description, not shown on the page; "in person and online" is the livestream, "All are welcome" is the Visit FAQ’s "Anyone is welcome to attend our time of Worship")',
   ],
 
@@ -230,6 +258,19 @@ export default {
       frames.push({ ...img, _key: frameKey() });
     }
 
+    // The service's small line: both of its sources must still say what it
+    // repeats (see SERVICE_NOTE at the top of this file).
+    line('who-we-are', 'worship as the full, intergenerational body of Christ');
+    const wear = JSON.parse(readFileSync(FAQ_PATH, 'utf8')).entries.find(
+      (e) => e.question === 'What should I wear?',
+    );
+    if (!wear?.answer?.startsWith('Casual dress is welcome.')) {
+      throw new Error(
+        'home.mjs: the FAQ "What should I wear?" no longer opens "Casual dress is welcome.", ' +
+          "which the hero's service line repeats. Re-read scripts/data/pages/faq-entries.json.",
+      );
+    }
+
     // As on the plan 2b page: five frames cross-fade, the Sunday, the
     // street and the livestream as facts. Built first, so its two buttons keep
     // the keys the live page already has (cta-1, cta-2).
@@ -243,7 +284,13 @@ export default {
       subhead: settings.tagline,
       frames,
       facts: [
-        { _type: 'heroFact', _key: 'fact-1', label: 'Sundays', value: serviceTime },
+        {
+          _type: 'heroFact',
+          _key: 'fact-1',
+          label: 'Sundays',
+          value: serviceTime,
+          note: SERVICE_NOTE,
+        },
         { _type: 'heroFact', _key: 'fact-2', label: 'Where', value: streetLine },
         { _type: 'heroFact', _key: 'fact-3', label: 'Online', value: 'Live on YouTube' },
       ],

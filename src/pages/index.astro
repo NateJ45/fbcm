@@ -14,8 +14,14 @@ import { shouldOverlayHeader } from '@/lib/heroOverlay';
 import type { SundaySermon } from '@/lib/live-sunday';
 import LastSunday from '@/components/home/LastSunday.astro';
 import { loadFeedXml, loadLastSunday } from '@/lib/last-sunday';
-import { comingSunday, parseYoutubeFeed, upcomingBroadcast } from '@/lib/youtube-feed';
+import {
+  comingSunday,
+  parseYoutubeFeed,
+  upcomingBroadcast,
+  upcomingPreacher,
+} from '@/lib/youtube-feed';
 import { thisSundaySermon } from '@/lib/this-sunday';
+import { thisSundayPreacher, type SundayPreacher } from '@/lib/preacher';
 // scaffold: church
 import VisitorBand from '@/components/home/VisitorBand.astro';
 import type { VisitorManifest } from '@/lib/visitor-issues';
@@ -30,7 +36,11 @@ import { nextEvents } from '@/lib/church-calendar';
 import type { DatedItem } from '@/lib/church-calendar';
 // scaffold: journal
 import { getAllJournalEntries } from '@/lib/queries';
-import { previewForSunday, sermonForUpcomingSunday } from '@/lib/sunday-sermon';
+import {
+  preacherForUpcomingSunday,
+  previewForSunday,
+  sermonForUpcomingSunday,
+} from '@/lib/sunday-sermon';
 import type { RegisterEntry } from '@/lib/blog-derive';
 // scaffold:end
 
@@ -62,14 +72,26 @@ const buildNow = import.meta.env.LAST_SUNDAY_NOW
 // scheduled for it on YouTube (src/lib/this-sunday.ts). The upgrade script in
 // BaseLayout drops it again when the page outlives that Sunday.
 let preview: SundaySermon | null = null;
+let previewPreacher: { sunday: string; name: string } | null = null;
 // scaffold: journal
 const journal = (await getAllJournalEntries()) as RegisterEntry[];
 preview = sermonForUpcomingSunday(journal, buildNow);
+previewPreacher = preacherForUpcomingSunday(journal, buildNow);
 // scaffold:end
+const feedEntries = parseYoutubeFeed(feedXml);
 const sermon: SundaySermon | null = thisSundaySermon(
   comingSunday(buildNow),
   preview,
-  upcomingBroadcast(parseYoutubeFeed(feedXml), buildNow),
+  upcomingBroadcast(feedEntries, buildNow),
+);
+// THIS SUNDAY'S PREACHER (2026-09-25, `feat/preacher-and-feel`): the same two
+// sources in the same order (src/lib/preacher.ts), a fourth fact in the hero.
+// With neither, the facts row is exactly as it was; with no feed (the deploy
+// build's failure), only a preview can name one.
+const preacher: SundayPreacher | null = thisSundayPreacher(
+  comingSunday(buildNow),
+  previewPreacher,
+  upcomingPreacher(feedEntries, buildNow),
 );
 
 // LAST SUNDAY (2026-09-24, `feat/last-sunday`). The most recent Sunday
@@ -163,7 +185,14 @@ const overlayHeader = shouldOverlayHeader(sections as any);
       Visitor's band follows it in the same slot: the church's news, between
       last Sunday and the blog. */
   }
-  <SectionRenderer {sections} idPrefix="home" settings={siteSettings} {sermon} {insertBefore}>
+  <SectionRenderer
+    {sections}
+    idPrefix="home"
+    settings={siteSettings}
+    {sermon}
+    {preacher}
+    {insertBefore}
+  >
     {
       lastSunday && (
         <LastSunday

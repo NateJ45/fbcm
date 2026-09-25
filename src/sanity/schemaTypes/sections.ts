@@ -183,6 +183,18 @@ export const heroSection = defineType({
               type: 'string',
               description: 'Like "10:45 am".',
             }),
+            // 2026-09-25 (`feat/preacher-and-feel`): the one place the church
+            // says what its service is like, in a few words, under the time.
+            // Display text only: nothing branches on it, so it stays out of
+            // NON_STEGA_FIELDS. Drawn by the photo hero (the home page).
+            defineField({
+              name: 'note',
+              title: 'Small line under the value (optional)',
+              type: 'string',
+              description:
+                'A few words under the value, like "Intergenerational, casual dress welcome" under the Sunday time. Leave blank for none.',
+              validation: (R) => R.max(48),
+            }),
           ],
           preview: { select: { title: 'value', subtitle: 'label' } },
         },
