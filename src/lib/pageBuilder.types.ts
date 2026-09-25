@@ -40,6 +40,7 @@ import type {
   GoalsSection as _GoalsSection,
   PledgeSection as _PledgeSection,
   LetterSection as _LetterSection,
+  ChurchTracFormSection as _ChurchTracFormSection,
   // scaffold:end
   // U7 new blocks — hand-authored below since typegen has not run yet
   // FaqSection, LogoStripSection, TeamSection, EmbedSection — not imported from
@@ -534,6 +535,22 @@ export type ProjectedPledgeSection = { _key: string } & Omit<_PledgeSection, 'im
 export type ProjectedLetterSection = { _key: string } & Omit<_LetterSection, 'portrait'> & {
     portrait?: ProjectedImage | null;
   };
+
+/** The Church Trac form a churchTracFormSection points at, as the projection reads it. */
+export interface ProjectedChurchTracForm {
+  _id: string;
+  title?: string | null;
+  embed?: string | null;
+  size?: string | null;
+}
+
+/** churchTracFormSection — heading and words, plus the dereferenced form. */
+export type ProjectedChurchTracFormSection = { _key: string } & Omit<
+  _ChurchTracFormSection,
+  'form'
+> & {
+    form?: ProjectedChurchTracForm | null;
+  };
 // scaffold:end
 
 // ---------------------------------------------------------------------------
@@ -571,7 +588,8 @@ export type PageBuilderBlock =
   | ProjectedWatchwordSection
   | ProjectedGoalsSection
   | ProjectedPledgeSection
-  | ProjectedLetterSection;
+  | ProjectedLetterSection
+  | ProjectedChurchTracFormSection;
 // scaffold:end
 
 /**

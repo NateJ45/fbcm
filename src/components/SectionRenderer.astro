@@ -39,6 +39,7 @@ import PledgeReading from '@/components/sections/PledgeReading.astro';
 import PastorsLetter from '@/components/sections/PastorsLetter.astro';
 import GoalsBand from '@/components/sections/GoalsBand.astro';
 import MinistryGoals from '@/components/sections/MinistryGoals.astro';
+import ChurchTracForm from '@/components/sections/ChurchTracForm.astro';
 import { resolveMinistryBands } from '@/lib/ministry-band';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
@@ -601,6 +602,15 @@ const wrapAttrs = (key: string | undefined) =>
           <PastorsLetter block={s} headingId={headingId} settings={settings} />
         ) : /* scaffold-branch: church */ s._type === 'goalsSection' ? (
           <GoalsBand block={s} headingId={headingId} />
+        ) : /* scaffold-branch: church */ s._type === 'churchTracFormSection' ? (
+          <ChurchTracForm
+            eyebrow={s.eyebrow}
+            heading={s.heading}
+            intro={s.intro}
+            form={s.form}
+            surface={surface ?? 'background'}
+            headingId={headingId}
+          />
         ) : s._type === 'dynamicListSection' ? (
           <DynamicList
             eyebrow={s.eyebrow}

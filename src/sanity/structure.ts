@@ -33,6 +33,7 @@ import {
   BellIcon,
   BlockElementIcon,
   BookIcon,
+  ClipboardIcon,
   CogIcon,
   DocumentsIcon,
   DocumentTextIcon,
@@ -80,6 +81,7 @@ const HIDDEN_FROM_DEFAULT = new Set<string>([
   'redirect', // placed explicitly under "Site settings" -> Old web addresses
   'ministry', // placed explicitly at the top level as "Ministries"
   'staffMember', // placed explicitly under "People"
+  'churchTracForm', // scaffold: church -- placed explicitly as "Church Trac forms"
   // sanity-plugin-media registers this tag type; keep it out of the desk root
   // (the "Media" tool in the top sidebar is where tags belong).
   'media.tag',
@@ -266,6 +268,22 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
               { field: 'title', direction: 'asc' },
             ]),
         ),
+
+      // scaffold: church
+      // ── Church Trac forms ────────────────────────────────────────────────
+      // One per form the church built in Church Trac. A page shows one through
+      // a "Church Trac form" band (churchTracFormSection), which only points
+      // here, so changing a form here changes every page that shows it.
+      S.documentTypeListItem('churchTracForm')
+        .title('Church Trac forms')
+        .icon(ClipboardIcon)
+        .child(
+          S.documentList()
+            .title('Church Trac forms')
+            .filter('_type == "churchTracForm"')
+            .defaultOrdering([{ field: 'title', direction: 'asc' }]),
+        ),
+      // scaffold:end
 
       S.divider(),
 

@@ -163,6 +163,9 @@ export type SectionPreset = {
       } & LetterSection)
     | ({
         _key: string;
+      } & ChurchTracFormSection)
+    | ({
+        _key: string;
       } & TeamSection)
     | ({
         _key: string;
@@ -620,6 +623,33 @@ export type TeamSection = {
     _type: 'teamMember';
     _key: string;
   }>;
+};
+
+export type ChurchTracFormReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'churchTracForm';
+};
+
+export type ChurchTracFormSection = {
+  _type: 'churchTracFormSection';
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+  form?: ChurchTracFormReference;
+  anchor?: Slug;
+};
+
+export type ChurchTracForm = {
+  _id: string;
+  _type: 'churchTracForm';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  embed?: string;
+  size?: 'short' | 'medium' | 'long';
 };
 
 export type LetterSection = {
@@ -1412,6 +1442,9 @@ export type Page = {
     | ({
         _key: string;
       } & LetterSection)
+    | ({
+        _key: string;
+      } & ChurchTracFormSection)
   >;
   addToMainNav?: boolean;
   navGroup?: 'top' | 'services' | 'resources';
@@ -1730,6 +1763,9 @@ export type JournalPage = {
     | ({
         _key: string;
       } & LetterSection)
+    | ({
+        _key: string;
+      } & ChurchTracFormSection)
   >;
 };
 
@@ -1818,6 +1854,9 @@ export type HomePage = {
     | ({
         _key: string;
       } & LetterSection)
+    | ({
+        _key: string;
+      } & ChurchTracFormSection)
     | ({
         _key: string;
       } & TeamSection)
@@ -1970,6 +2009,9 @@ export type AllSanitySchemaTypes =
   | NavLink
   | DynamicListSection
   | TeamSection
+  | ChurchTracFormReference
+  | ChurchTracFormSection
+  | ChurchTracForm
   | LetterSection
   | PledgeSection
   | GoalsSection

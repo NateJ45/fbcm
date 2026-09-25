@@ -438,6 +438,77 @@ export const guides: Guide[] = [
     ],
   },
 
+  // Church Trac forms (2026-09-25). Field titles match
+  // src/sanity/schemaTypes/churchTracForm.ts and the churchTracFormSection band
+  // in churchSections.ts; what a paste may contain is src/lib/church-trac-form.ts.
+  {
+    slug: 'church-trac-forms',
+    category: 'Sundays and notices',
+    title: 'Put a Church Trac form on a page',
+    icon: 'edit',
+    lead: 'A form you built in Church Trac, like the connection card or giving, can sit on any page so visitors fill it in without leaving the site.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'path',
+        items: ['Church Trac forms'],
+        link: { pane: 'churchTracForm' },
+      },
+      { kind: 'h', text: 'First, get the embed code from Church Trac' },
+      {
+        kind: 'steps',
+        items: [
+          'In Church Trac, open `Church Connect` and choose the form.',
+          'Press `Show Additional Options` and scroll to `Form/Giving Embed Domain`.',
+          'Type this website’s address there and save. Church Trac only lets the form open on the address you type here.',
+          'Copy the code Church Trac gives you. It starts with `<iframe`.',
+          'For online giving the code is in a different place: `Connect Setup`, then `Connect Settings / Users`, then `Online Giving`, then `Embed`. Pick the colours there before you copy it.',
+        ],
+      },
+      { kind: 'h', text: 'Then add the form here, once' },
+      {
+        kind: 'steps',
+        items: [
+          'Open `Church Trac forms` in the menu on the left and press the pencil to make a new one.',
+          'Give it a `Form name`, like "Connection card".',
+          'Paste the code into `Embed code from Church Trac`. If the box turns red, read the message under it: it is usually the wrong code copied.',
+          'Pick a `Form size`, then Publish.',
+        ],
+      },
+      { kind: 'h', text: 'Then put it on a page' },
+      {
+        kind: 'steps',
+        items: [
+          'Open the page in `Presentation`, or under `Pages`.',
+          'Add a section and choose `Church Trac form` from the `Church` group.',
+          'Type a `Heading`, and a few words beside the form if you like, then pick the form under `Form`.',
+          'Publish. The form appears on the page after the rebuild.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'positive',
+        title: 'One form, as many pages as you like.',
+        text: 'Change a form’s code under `Church Trac forms` and every page that shows it changes with it.',
+      },
+      {
+        kind: 'callout',
+        tone: 'caution',
+        title: 'If the form is too short or has its own scroll bar',
+        text: 'Change its `Form size` to the next size up and publish. Church Trac’s forms do not tell the page how tall they are, so the size is yours to choose.',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          'Only Church Trac forms can go in this box. Code from anywhere else is refused, so nothing unexpected can end up on the site.',
+          'Under every form there is a link to open it in a new tab, for anyone whose browser will not show it on the page.',
+          '_When the site moves to fbcmuncie.org, each form’s `Form/Giving Embed Domain` in Church Trac has to change to the new address, or the forms stop showing._',
+        ],
+      },
+      { kind: 'seealso', items: ['Links to giving, forms and sermons'] },
+    ],
+  },
+
   // ── Blog, staff and ministries ────────────────────────────────────────────
   {
     slug: 'blog-post',

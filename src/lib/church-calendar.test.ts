@@ -260,7 +260,7 @@ test('words: times, ranges and days', () => {
 
 test('the calendar code comes from Site settings when it is a Church Trac calendar', () => {
   assert.equal(calendarCode('https://www.churchtrac.com/public_calendar?ui=ABC123'), 'ABC123');
-  assert.equal(calendarCode('https://www.churchtrac.com/ical?ui=0C7B1090​'), '0C7B1090');
+  assert.equal(calendarCode('https://www.churchtrac.com/ical?ui=0C7B1090\u200B'), '0C7B1090');
   assert.equal(calendarCode('https://evil.example/public_calendar?ui=ABC123'), null);
   assert.equal(
     codeFor({ calendarUrl: 'https://www.churchtrac.com/public_calendar?ui=ABC123' }),

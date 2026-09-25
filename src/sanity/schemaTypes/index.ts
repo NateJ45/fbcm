@@ -3,6 +3,7 @@
 
 import { announcement } from './announcement';
 import { businessInfo } from './businessInfo';
+import { churchTracForm } from './churchTracForm'; // scaffold: church
 import { ctaBlock } from './ctaBlock';
 import { homePage } from './homePage';
 import { journalCategory } from './journalCategory'; // scaffold: journal
@@ -49,6 +50,7 @@ export const schemaTypes = [
   journalEntry, // scaffold: journal
   ministry, // church ministries/programs. No sermon/event type: see Task 7 brief.
   staffMember, // church staff directory.
+  churchTracForm, // scaffold: church -- a Church Trac form, shown by churchTracFormSection
   // Custom pages built from the section library (multi-instance, not a singleton)
   page,
   // One saved section, kept for reuse on other pages. Not content: nothing

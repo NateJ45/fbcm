@@ -40,7 +40,7 @@ export const FEED_TIMEOUT_MS = 8000;
 /** The Church Trac calendar code in an address, or null. */
 export function calendarCode(url: string | null | undefined): string | null {
   const raw = String(url ?? '')
-    .replace(/[​-‍﻿]/g, '')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
     .trim();
   if (!raw) return null;
   try {
@@ -56,7 +56,7 @@ export function calendarCode(url: string | null | undefined): string | null {
 /** Is this address some other calendar than a Church Trac one (and not Church Center's)? */
 function isOtherCalendar(url: string | null | undefined): boolean {
   const raw = String(url ?? '')
-    .replace(/[​-‍﻿]/g, '')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
     .trim();
   if (!raw || calendarCode(raw)) return false;
   // Church Center's calendar is what the box held before the switch, and a
