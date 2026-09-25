@@ -141,9 +141,12 @@ export function fbcmRedirects(): FbcmRedirect[] {
     },
     {
       from: '/publications',
-      to: '/blog#publications',
+      // /visitor since 2026-09-24 (feat/the-visitor). The live redirect
+      // document is moved by scripts/set-visitor-redirect.mjs (backup first,
+      // dry by default), after the /visitor page is published.
+      to: '/visitor',
       permanent: true,
-      note: 'Newsletters moved into the archive',
+      note: 'The Visitor has its own page',
     },
     {
       from: '/church-app',

@@ -118,6 +118,7 @@ const NAV_ORDER = [
   'give',
   'contact',
   'blog',
+  'visitor',
   'privacy',
   'not-found',
 ];
