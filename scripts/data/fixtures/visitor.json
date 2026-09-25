@@ -1,0 +1,823 @@
+{
+  "_generatedBy": "scripts/page-fixture.mjs visitor",
+  "title": "The Visitor",
+  "pageBuilder": [
+    {
+      "_type": "documentListSection",
+      "_key": "visitor-issues",
+      "anchor": {
+        "_type": "slug",
+        "current": "issues"
+      },
+      "eyebrow": "Our church newsletter since 1946",
+      "heading": "The Visitor",
+      "docs": [
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2026-09",
+          "title": "September",
+          "year": 2026,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-de132347204944b39b114a243047446336c93c8a-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 28937033,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/de132347204944b39b114a243047446336c93c8a.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/de132347204944b39b114a243047446336c93c8a.pdf",
+          "fileSize": 28937033
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2026-06",
+          "title": "June",
+          "year": 2026,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-ae5ca2978bab7968a6eb9aff676456afd37e4e5a-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 52073988,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/ae5ca2978bab7968a6eb9aff676456afd37e4e5a.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/ae5ca2978bab7968a6eb9aff676456afd37e4e5a.pdf",
+          "fileSize": 52073988
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2026-03",
+          "title": "March",
+          "year": 2026,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-9a3c09c92f6a1b4fde0200c90757d6eb525b85c8-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 14345786,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/9a3c09c92f6a1b4fde0200c90757d6eb525b85c8.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/9a3c09c92f6a1b4fde0200c90757d6eb525b85c8.pdf",
+          "fileSize": 14345786
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2025-12",
+          "title": "December",
+          "year": 2025,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-3fc2247399571fb766487dac70400aea09c1e1ef-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 6445215,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/3fc2247399571fb766487dac70400aea09c1e1ef.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/3fc2247399571fb766487dac70400aea09c1e1ef.pdf",
+          "fileSize": 6445215
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2025-09",
+          "title": "September",
+          "year": 2025,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-fd8f72273afc58bbc4040e7ad770de4a424fa353-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 62852659,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/fd8f72273afc58bbc4040e7ad770de4a424fa353.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/fd8f72273afc58bbc4040e7ad770de4a424fa353.pdf",
+          "fileSize": 62852659
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2025-06",
+          "title": "June",
+          "year": 2025,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-cbc882498958e09beb7ce506e741ed90f79d4aab-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 75197995,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/cbc882498958e09beb7ce506e741ed90f79d4aab.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/cbc882498958e09beb7ce506e741ed90f79d4aab.pdf",
+          "fileSize": 75197995
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2025-03",
+          "title": "March",
+          "year": 2025,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-e99edfa40e7c1f3a7289ab950d60f2beb22f254d-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 18610369,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/e99edfa40e7c1f3a7289ab950d60f2beb22f254d.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/e99edfa40e7c1f3a7289ab950d60f2beb22f254d.pdf",
+          "fileSize": 18610369
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2024-12",
+          "title": "December",
+          "year": 2024,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-089e419e13299f244141913139463af3bfbad817-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 32870425,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/089e419e13299f244141913139463af3bfbad817.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/089e419e13299f244141913139463af3bfbad817.pdf",
+          "fileSize": 32870425
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2024-09",
+          "title": "September",
+          "year": 2024,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-c0c21d2940bf971759877c3b93a143d8baa803e6-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 192827,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/c0c21d2940bf971759877c3b93a143d8baa803e6.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/c0c21d2940bf971759877c3b93a143d8baa803e6.pdf",
+          "fileSize": 192827
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2024-08",
+          "title": "August",
+          "year": 2024,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-899c8ea1e49d10697b76b703ae7c2ed2dd76ceaa-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 1284635,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/899c8ea1e49d10697b76b703ae7c2ed2dd76ceaa.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/899c8ea1e49d10697b76b703ae7c2ed2dd76ceaa.pdf",
+          "fileSize": 1284635
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2024-07",
+          "title": "July",
+          "year": 2024,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-4c114429d1938369bf1e0590117317f91b2ed031-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 37403156,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/4c114429d1938369bf1e0590117317f91b2ed031.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/4c114429d1938369bf1e0590117317f91b2ed031.pdf",
+          "fileSize": 37403156
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2024-06",
+          "title": "June",
+          "year": 2024,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-b1788068c6bbe742540eb5282402d1640028b2c5-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 65373580,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/b1788068c6bbe742540eb5282402d1640028b2c5.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/b1788068c6bbe742540eb5282402d1640028b2c5.pdf",
+          "fileSize": 65373580
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2024-03",
+          "title": "March",
+          "year": 2024,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-15d5fc0f3d453c0112eed4d4ebf2bb8381ae9fb3-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 1843555,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/15d5fc0f3d453c0112eed4d4ebf2bb8381ae9fb3.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/15d5fc0f3d453c0112eed4d4ebf2bb8381ae9fb3.pdf",
+          "fileSize": 1843555
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2023-12",
+          "title": "December",
+          "year": 2023,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-b4cb819cb515970e4206ec3da853432174b55543-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 1943876,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/b4cb819cb515970e4206ec3da853432174b55543.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/b4cb819cb515970e4206ec3da853432174b55543.pdf",
+          "fileSize": 1943876
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2023-09",
+          "title": "September",
+          "year": 2023,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-e9d4e7ab770a46fd7debab10fc6d8a194d9efaea-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 79285983,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/e9d4e7ab770a46fd7debab10fc6d8a194d9efaea.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/e9d4e7ab770a46fd7debab10fc6d8a194d9efaea.pdf",
+          "fileSize": 79285983
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2023-06",
+          "title": "June",
+          "year": 2023,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-eab8fbffc273ae192141c2f7b7ea68c090039412-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 29716525,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/eab8fbffc273ae192141c2f7b7ea68c090039412.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/eab8fbffc273ae192141c2f7b7ea68c090039412.pdf",
+          "fileSize": 29716525
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2023-03",
+          "title": "March",
+          "year": 2023,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-f383bdfab922c3b56d453549579be55b382d5a68-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 46111268,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/f383bdfab922c3b56d453549579be55b382d5a68.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/f383bdfab922c3b56d453549579be55b382d5a68.pdf",
+          "fileSize": 46111268
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2022-12",
+          "title": "December",
+          "year": 2022,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-13607ad3ac9d09c2d579d3c7585954873cd0b19a-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 12399680,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/13607ad3ac9d09c2d579d3c7585954873cd0b19a.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/13607ad3ac9d09c2d579d3c7585954873cd0b19a.pdf",
+          "fileSize": 12399680
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2022-09",
+          "title": "September",
+          "year": 2022,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-1a49a22734f6eb9748a0cabd3e7840c1fff84509-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 3811642,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/1a49a22734f6eb9748a0cabd3e7840c1fff84509.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/1a49a22734f6eb9748a0cabd3e7840c1fff84509.pdf",
+          "fileSize": 3811642
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2022-06",
+          "title": "June",
+          "year": 2022,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-4cf9f5fae6559cc979270f103ca722262402519e-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 11613542,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/4cf9f5fae6559cc979270f103ca722262402519e.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/4cf9f5fae6559cc979270f103ca722262402519e.pdf",
+          "fileSize": 11613542
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2022-03",
+          "title": "March",
+          "year": 2022,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-a4d52565bff21cf08cf2e8fe1983569c0e20fd97-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 10356136,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/a4d52565bff21cf08cf2e8fe1983569c0e20fd97.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/a4d52565bff21cf08cf2e8fe1983569c0e20fd97.pdf",
+          "fileSize": 10356136
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2021-12",
+          "title": "December",
+          "year": 2021,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-060a1a508396fecb9c2c96dbde9413921384eae3-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 7525241,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/060a1a508396fecb9c2c96dbde9413921384eae3.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/060a1a508396fecb9c2c96dbde9413921384eae3.pdf",
+          "fileSize": 7525241
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2021-09",
+          "title": "September",
+          "year": 2021,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-4e5795eca769bda139cf62a764fa17bcbc00e96f-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 8313354,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/4e5795eca769bda139cf62a764fa17bcbc00e96f.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/4e5795eca769bda139cf62a764fa17bcbc00e96f.pdf",
+          "fileSize": 8313354
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2021-06",
+          "title": "June",
+          "year": 2021,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-21bb6b7768d7ee6722a80ab763e534baec3bd592-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 7300450,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/21bb6b7768d7ee6722a80ab763e534baec3bd592.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/21bb6b7768d7ee6722a80ab763e534baec3bd592.pdf",
+          "fileSize": 7300450
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2021-03",
+          "title": "March",
+          "year": 2021,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-eee26d4c3df304ec844b8470158748f38dcf5bf5-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 497562,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/eee26d4c3df304ec844b8470158748f38dcf5bf5.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/eee26d4c3df304ec844b8470158748f38dcf5bf5.pdf",
+          "fileSize": 497562
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2021-02",
+          "title": "February",
+          "year": 2021,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-966b2d898cc14ed1fa82c9cc3981c4f4ccda5893-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 194246,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/966b2d898cc14ed1fa82c9cc3981c4f4ccda5893.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/966b2d898cc14ed1fa82c9cc3981c4f4ccda5893.pdf",
+          "fileSize": 194246
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2021-01",
+          "title": "January",
+          "year": 2021,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-035768ed97ba29645347aba342f6103df4ccbe0f-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 1133152,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/035768ed97ba29645347aba342f6103df4ccbe0f.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/035768ed97ba29645347aba342f6103df4ccbe0f.pdf",
+          "fileSize": 1133152
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-12",
+          "title": "December",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-0ed3cb40818aa940ca5c0f134228fe357fec2bc8-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 1082001,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/0ed3cb40818aa940ca5c0f134228fe357fec2bc8.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/0ed3cb40818aa940ca5c0f134228fe357fec2bc8.pdf",
+          "fileSize": 1082001
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-11",
+          "title": "November",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-2237cbda1eaeb7985039558d2cfc547c3a11aaaa-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 549328,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/2237cbda1eaeb7985039558d2cfc547c3a11aaaa.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/2237cbda1eaeb7985039558d2cfc547c3a11aaaa.pdf",
+          "fileSize": 549328
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-10",
+          "title": "October",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-f514f7d63effd2d365299bc6c674f79698422e7e-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 1156263,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/f514f7d63effd2d365299bc6c674f79698422e7e.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/f514f7d63effd2d365299bc6c674f79698422e7e.pdf",
+          "fileSize": 1156263
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-09",
+          "title": "September",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-2351202d43b56c2965dfdaf5b21dcee4468a5c0d-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 640545,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/2351202d43b56c2965dfdaf5b21dcee4468a5c0d.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/2351202d43b56c2965dfdaf5b21dcee4468a5c0d.pdf",
+          "fileSize": 640545
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-08",
+          "title": "August",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-4197d2e47a8d7d2c141753d002f9ff3a7cfae78f-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 1528155,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/4197d2e47a8d7d2c141753d002f9ff3a7cfae78f.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/4197d2e47a8d7d2c141753d002f9ff3a7cfae78f.pdf",
+          "fileSize": 1528155
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-07",
+          "title": "July",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-4799310feb961b3b2ef13bc48be5a78126aa149e-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 525214,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/4799310feb961b3b2ef13bc48be5a78126aa149e.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/4799310feb961b3b2ef13bc48be5a78126aa149e.pdf",
+          "fileSize": 525214
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-06",
+          "title": "June",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-3aed9bbafefa1a0f1b0c7a69ed6447939602b1e1-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 1188197,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/3aed9bbafefa1a0f1b0c7a69ed6447939602b1e1.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/3aed9bbafefa1a0f1b0c7a69ed6447939602b1e1.pdf",
+          "fileSize": 1188197
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-05",
+          "title": "May",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-f9360dd98c30f684d94b38a90c4af0ce3e4b5f5d-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 667119,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/f9360dd98c30f684d94b38a90c4af0ce3e4b5f5d.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/f9360dd98c30f684d94b38a90c4af0ce3e4b5f5d.pdf",
+          "fileSize": 667119
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-04",
+          "title": "April",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-3c57dedd828b2828210aa79159c27133a078a447-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 678659,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/3c57dedd828b2828210aa79159c27133a078a447.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/3c57dedd828b2828210aa79159c27133a078a447.pdf",
+          "fileSize": 678659
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-03",
+          "title": "March",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-6bcfc968954898c2710b027099761da408328634-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 571458,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/6bcfc968954898c2710b027099761da408328634.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/6bcfc968954898c2710b027099761da408328634.pdf",
+          "fileSize": 571458
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-02",
+          "title": "February",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-ee856dbe7433a0f115e685023d5fa60de58e4fb0-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 809783,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/ee856dbe7433a0f115e685023d5fa60de58e4fb0.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/ee856dbe7433a0f115e685023d5fa60de58e4fb0.pdf",
+          "fileSize": 809783
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "issue-2020-01",
+          "title": "January",
+          "year": 2020,
+          "file": {
+            "_type": "file",
+            "asset": {
+              "_id": "file-c77d3ddd5c0a1ed03e14e0b5f9059823819acbea-pdf",
+              "_type": "sanity.fileAsset",
+              "altText": null,
+              "metadata": null,
+              "size": 816616,
+              "url": "https://cdn.sanity.io/files/7jw947g5/production/c77d3ddd5c0a1ed03e14e0b5f9059823819acbea.pdf"
+            },
+            "alt": ""
+          },
+          "fileUrl": "https://cdn.sanity.io/files/7jw947g5/production/c77d3ddd5c0a1ed03e14e0b5f9059823819acbea.pdf",
+          "fileSize": 816616
+        }
+      ]
+    },
+    {
+      "_type": "documentListSection",
+      "_key": "visitor-books",
+      "anchor": {
+        "_type": "slug",
+        "current": "books"
+      },
+      "heading": "Two books",
+      "docs": [
+        {
+          "_type": "listedDocument",
+          "_key": "book-clay",
+          "title": "We Are the Clay: God Molding Lives at First Baptist Church",
+          "year": 2019,
+          "url": "https://www.amazon.com/We-Are-Clay-Molding-Baptist/dp/1087276802",
+          "note": "Testimonies written by church members, edited by Julie Downey Davis"
+        },
+        {
+          "_type": "listedDocument",
+          "_key": "book-journey",
+          "title": "Journey Down Jefferson Street: A History of the First Baptist Church of Muncie, Indiana",
+          "note": "By Dr. William G. Eidson. Several copies are in the church library"
+        }
+      ]
+    }
+  ]
+}

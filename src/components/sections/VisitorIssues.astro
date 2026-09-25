@@ -1,0 +1,296 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// The Visitor's page (2026-09-24, feat/the-visitor): the form DocumentList
+// takes when every document in the list is an issue of the newsletter (a
+// month, a year and a PDF; src/lib/visitor-issues.ts isIssueList). Nothing
+// chooses it but the list's own shape (CLAUDE.md rule 15).
+//
+// TWO GROUNDS, ONE BLOCK.
+//
+// 1. THE LATEST ISSUE, on the brand indigo that every document list stands on.
+//    The block's heading ("The Visitor") is the page's h1 when the list opens
+//    the page (SectionRenderer openingLevel), in the one church heading grammar
+//    (H2_DISPLAY, gold), with the editor's short line above it. Then the
+//    newest issue, which nothing stores: its cover large, "Latest issue", its
+//    name ("The Visitor, September 2026"), its own note when it has one, and
+//    the gold "Read this issue" button with the file's size beside it, because
+//    these are 15 to 75 MB files and a phone should know before it asks.
+//    A phone reads the heading, the cover, then the issue; a wide screen puts
+//    the cover in five twelfths at the left.
+//
+// 2. PAST ISSUES, on paper: a wall of covers, one row of years at a time,
+//    newest first, the year in Castoro Titling at the left from md, each cover
+//    labelled with its month and linking to its PDF. Every cover is a real
+//    image with a text alternative ("The Visitor, June 2026, cover"); the link
+//    around it is named for the issue and the file ("The Visitor, June 2026,
+//    PDF, 52 MB"), which contains the visible month, so a voice user can say
+//    what they see.
+//
+// Every PDF opens in the browser, in the same tab: Sanity serves the files
+// `Content-Disposition: inline`, and there is no `download` attribute (the
+// other document lists keep theirs, where a contract is meant to be saved).
+//
+// Each issue carries its anchor, #issue-2026-06, so a link can name one.
+import CtaLink from '@/components/CtaLink.astro';
+import IssueCover from '@/components/visitor/IssueCover.astro';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
+import {
+  MONTHS,
+  coverFor,
+  fileLine,
+  issuesOf,
+  yearGroups,
+  type IssueDoc,
+  type VisitorManifest,
+} from '@/lib/visitor-issues';
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  docs: IssueDoc[];
+  level?: 'h1' | 'h2';
+  headingId: string;
+}
+
+const { eyebrow, heading, docs, level = 'h2', headingId } = Astro.props as Props;
+
+// The build step's manifest (scripts/visitor-covers.mjs): which covers exist.
+// Absent on a fresh clone, and then every cover is typeset.
+const generated = import.meta.glob<VisitorManifest>('../../data/visitor.generated.json', {
+  eager: true,
+  import: 'default',
+});
+const covers = Object.values(generated)[0]?.covers ?? {};
+
+const issues = issuesOf(docs);
+const [latest, ...past] = issues;
+const groups = yearGroups(past);
+const Heading = level;
+const Sub = level === 'h1' ? 'h2' : 'h3';
+const YearHeading = level === 'h1' ? 'h3' : 'h4';
+const name = heading?.trim() ? heading : 'The Visitor';
+
+const read = latest
+  ? {
+      label: 'Read this issue',
+      linkType: 'external' as const,
+      externalUrl: latest.href,
+      openInNewTab: false,
+    }
+  : null;
+---
+
+{
+  latest && (
+    <section class="vi-lead bg-band-indigo text-bg" aria-labelledby={headingId}>
+      <div class="vi-grid mx-auto max-w-content px-gutter py-section-lg">
+        <div class="vi-head min-w-0">
+          {eyebrow && (
+            <p class="mb-4 font-ui text-ui font-semibold tracking-eyebrow text-gold uppercase">
+              {eyebrow}
+            </p>
+          )}
+          <Heading
+            id={headingId}
+            class:list={[H2_DISPLAY, 'm-0 h-fit text-gold']}
+            style={headingFit(name)}
+          >
+            <span class="h-fit-in">{name}</span>
+          </Heading>
+        </div>
+
+        <a href={latest.href} class="vi-lead-cover" id={latest.anchor}>
+          <IssueCover
+            issue={latest}
+            cover={coverFor(latest, covers)}
+            sizes="(min-width: 1440px) 440px, (min-width: 1024px) 30vw, min(calc(100vw - 40px), 360px)"
+            eager
+          />
+        </a>
+
+        <div class="vi-info min-w-0">
+          <p class="m-0 font-ui text-ui font-semibold tracking-eyebrow text-gold uppercase">
+            Latest issue
+          </p>
+          <Sub class="mt-3 mb-0 font-body text-h3 leading-[1.15] font-normal text-bg">
+            {latest.title}
+          </Sub>
+          {latest.note && (
+            <p class="mt-3 mb-0 max-w-[36rem] font-body text-lg text-band-taupe italic">
+              {latest.note}
+            </p>
+          )}
+          <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+            {read && <CtaLink cta={read} variant="gold" onDark />}
+            <span class="font-ui text-ui text-bg/80">{fileLine(latest)}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  groups.length > 0 && (
+    <section class="vi-past bg-bg text-indigo" aria-labelledby={`${headingId}-past`}>
+      <div class="mx-auto max-w-content px-gutter py-section-lg">
+        <Sub
+          id={`${headingId}-past`}
+          class:list={[H2_DISPLAY, 'm-0 h-fit text-indigo']}
+          style={headingFit('Past issues')}
+        >
+          <span class="h-fit-in">Past issues</span>
+        </Sub>
+        <div class="mt-[clamp(28px,4vw,56px)] border-t border-indigo/25">
+          {groups.map((group) => (
+            <div class="vi-year border-b border-indigo/15 py-[clamp(24px,3vw,36px)]">
+              <YearHeading class="m-0 font-display text-h3 leading-none font-normal text-gold-ink">
+                {group.year}
+              </YearHeading>
+              <ul class="vi-wall m-0 list-none p-0" role="list">
+                {group.issues.map((issue) => (
+                  <li id={issue.anchor} class="min-w-0">
+                    <a
+                      href={issue.href}
+                      class="vi-tile group"
+                      aria-label={`${issue.title}, ${fileLine(issue)}`}
+                    >
+                      <span class="vi-tile-frame">
+                        <IssueCover
+                          issue={issue}
+                          cover={coverFor(issue, covers)}
+                          sizes="(min-width: 1440px) 190px, (min-width: 1024px) 14vw, (min-width: 768px) 20vw, (min-width: 360px) 30vw, 44vw"
+                        />
+                      </span>
+                      <span class="vi-tile-month">{MONTHS[issue.month]}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  /* The opening band: heading, cover, issue on a phone; the cover in five
+     twelfths at the left of the heading and the issue on a wide screen. */
+  .vi-grid {
+    display: grid;
+    grid-template-areas: 'head' 'cover' 'info';
+    row-gap: clamp(28px, 5vw, 44px);
+  }
+  .vi-head {
+    grid-area: head;
+  }
+  .vi-info {
+    grid-area: info;
+  }
+  .vi-lead-cover {
+    grid-area: cover;
+    display: block;
+    width: min(100%, 360px);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-gold) 55%, transparent),
+      0 18px 40px -18px rgb(0 0 0 / 0.55);
+  }
+  .vi-lead-cover:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 4px;
+  }
+  @media (min-width: 1024px) {
+    .vi-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      /* The heading and the issue sit together at the cover's middle. */
+      grid-template-areas: 'cover .' 'cover head' 'cover info' 'cover .';
+      grid-template-rows: 1fr auto auto 1fr;
+      column-gap: clamp(40px, 5vw, 80px);
+      row-gap: 32px;
+    }
+    .vi-lead-cover {
+      width: 100%;
+      max-width: 440px;
+      align-self: start;
+    }
+  }
+
+  /* The wall: the year above its covers on a phone, beside them from md. */
+  .vi-year {
+    display: grid;
+    row-gap: 18px;
+  }
+  @media (min-width: 768px) {
+    .vi-year {
+      grid-template-columns: 8rem minmax(0, 1fr);
+      column-gap: clamp(20px, 3vw, 48px);
+      align-items: start;
+    }
+  }
+  .vi-wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 96px), 1fr));
+    gap: clamp(18px, 2.4vw, 32px) clamp(14px, 2vw, 28px);
+  }
+  @media (min-width: 1024px) {
+    .vi-wall {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+  }
+  .vi-tile {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+  .vi-tile-frame {
+    display: block;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-indigo) 18%, transparent),
+      0 10px 24px -14px rgb(28 27 58 / 0.45);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .vi-tile:hover .vi-tile-frame {
+    transform: translateY(-3px);
+    box-shadow:
+      0 0 0 1px var(--color-gold),
+      0 16px 30px -14px rgb(28 27 58 / 0.5);
+  }
+  .vi-tile:focus-visible {
+    outline: none;
+  }
+  .vi-tile:focus-visible .vi-tile-frame {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 4px;
+  }
+  .vi-tile-month {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-indigo);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 0.2s ease;
+  }
+  .vi-tile:hover .vi-tile-month,
+  .vi-tile:focus-visible .vi-tile-month {
+    text-decoration-color: var(--color-gold-ink);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vi-tile-frame,
+    .vi-tile-month {
+      transition: none;
+    }
+    .vi-tile:hover .vi-tile-frame {
+      transform: none;
+    }
+  }
+</style>

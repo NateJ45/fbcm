@@ -16,6 +16,10 @@ import LastSunday from '@/components/home/LastSunday.astro';
 import { loadFeedXml, loadLastSunday } from '@/lib/last-sunday';
 import { comingSunday, parseYoutubeFeed, upcomingBroadcast } from '@/lib/youtube-feed';
 import { thisSundaySermon } from '@/lib/this-sunday';
+// scaffold: church
+import VisitorBand from '@/components/home/VisitorBand.astro';
+import type { VisitorManifest } from '@/lib/visitor-issues';
+// scaffold:end
 // scaffold: journal
 import { getAllJournalEntries } from '@/lib/queries';
 import { previewForSunday, sermonForUpcomingSunday } from '@/lib/sunday-sermon';
@@ -75,6 +79,22 @@ let lastPreview: { href: string; title: string; reading: string } | null = null;
 if (lastSunday) lastPreview = previewForSunday(journal, lastSunday.sunday);
 // scaffold:end
 
+// THE VISITOR (2026-09-24, `feat/the-visitor`). The newest issue on the
+// /visitor page, found by the build step before Astro ran
+// (scripts/visitor-covers.mjs); null until that page is published, and then
+// the band is simply not drawn. The Playwright build reads the committed
+// fixture instead (VISITOR_FIXTURE=1).
+let visitor: VisitorManifest | null = null;
+// scaffold: church
+visitor =
+  Object.values(
+    import.meta.glob<VisitorManifest>('../data/visitor.generated.json', {
+      eager: true,
+      import: 'default',
+    }),
+  )[0] ?? null;
+// scaffold:end
+
 const title = page?.seoTitle ?? site.name;
 const description =
   page?.seoDescription ??
@@ -98,7 +118,9 @@ const overlayHeader = shouldOverlayHeader(sections as any);
   {
     /* The band sits before the Church Blog rows: after "Our Building" has
       ended in the present, and next to the journal whose sermon previews it
-      pairs with. Before the give band when the blog band is absent. */
+      pairs with. Before the give band when the blog band is absent. The
+      Visitor's slim band follows it in the same slot: the church's news,
+      between last Sunday and the blog. */
   }
   <SectionRenderer
     {sections}
@@ -117,5 +139,17 @@ const overlayHeader = shouldOverlayHeader(sections as any);
         />
       )
     }
+    {/* scaffold: church */}
+    {
+      visitor?.latest && visitor.listHref && (
+        <VisitorBand
+          slot="insert"
+          issue={visitor.latest}
+          covers={visitor.covers}
+          href={visitor.listHref}
+        />
+      )
+    }
+    {/* scaffold:end */}
   </SectionRenderer>
 </BaseLayout>

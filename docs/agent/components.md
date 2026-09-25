@@ -427,6 +427,54 @@ Indiana/Indianapolis` at Site settings' service time on the Sunday on or after t
   service time can be read (`hasSundayEvent()`). `icsEscape`/`icsFold` are named to fold into
   the general `src/lib/ics.ts` from `feat/scripture-text` when both land (PENDING).
 
+### The Visitor (2026-09-24, `feat/the-visitor`)
+
+The church newsletter gets a page of its own at `/visitor`, a band on Home and a place in the
+search. No schema changed; the page is two `documentListSection` blocks seeded by
+`scripts/pages/visitor.mjs`.
+
+- **What an issue is** (`src/lib/visitor-issues.ts`, unit-tested). A listed document whose
+  title is a month's name, with a year and an uploaded file. A list made only of issues is The
+  Visitor's (`isIssueList`), and `DocumentList.astro` hands it to `VisitorIssues.astro`; a mixed
+  list keeps the rows or register form. The latest issue is the newest one, never a flag, so an
+  editor adds an issue (month, year, PDF) and it leads the page. Every editor string is cleaned
+  through `splitStega` before it is compared.
+- **The page** (`src/components/sections/VisitorIssues.astro`). On indigo: the block heading as
+  the page's h1 (only this form takes `openingLevel`; the rows and register forms stay h2,
+  because a list appended to /blog sits at index 0 of that page's extra sections), the editor's
+  short line above it, the latest cover large, "Latest issue", "The Visitor, September 2026"
+  (h2), its own note if any, the gold "Read this issue" plate and "PDF, 29 MB" beside it. On
+  paper: "Past issues" and a wall of covers grouped by year, the year at the left from 768 px,
+  each cover a link named "The Visitor, June 2026, PDF, 52 MB" with its month under it. Every
+  PDF opens inline in the same tab (Sanity serves `Content-Disposition: inline`; no `download`
+  attribute). Each issue carries `#issue-YYYY-MM`. The books follow as a second list, two rows.
+- **Covers** (`src/components/visitor/IssueCover.astro`). Page 1 of each PDF, drawn at build
+  time at 240, 480, 720 and 960 px by `scripts/visitor-covers.mjs` (pdfjs-dist + @napi-rs/canvas
+  through `scripts/lib/pdf-pages.mjs`, WebP by sharp) into `public/visitor/covers/` (gitignored),
+  keyed by the file's asset id and cached in `node_modules/.cache/visitor/`. Alt text "The
+  Visitor, June 2026, cover". A cover the build could not draw is typeset instead (month and
+  year on indigo, sized in container units) with the same accessible name.
+- **The build step** (`npm run visitor`, inside `npm run build` before Astro). Reads the
+  /visitor page from Sanity (published, CDN) and the committed fixture; writes
+  `src/data/visitor.generated.json` (which covers exist, where the list lives, the newest issue)
+  and `node_modules/.cache/visitor/records.json` (each issue's text). Never fails the build.
+  `VISITOR_FIXTURE=1` (Playwright only) reads the fixture as the page.
+- **Home** (`src/components/home/VisitorBand.astro`). A slim paper band, "The Visitor ·
+  September 2026 issue · Read it" with the small cover, placed through SectionRenderer's
+  `insert` slot straight after Last Sunday. It links to `/visitor`, not the PDF, because the
+  files are 15 to 75 MB. It renders only once the /visitor page is published.
+- **Footer.** A page's "Show in the footer" switch (`addToFooter`, in the schema since the
+  starter and read by nothing until now) adds it to the first footer column
+  (`src/lib/footer-pages.ts`, one query per build via `getFooterPages()`). The Visitor's seed
+  sets it, so no Site settings write is needed. Not in the main menu (Nathan, 2026-09-24).
+- **Search.** `scripts/pagefind-index.mjs` adds one Pagefind custom record per issue: url = the
+  PDF, title "The Visitor, June 2026", date column "Newsletter", third column "PDF, 52 MB"
+  (`issueRecord()`). Custom records rather than one page per issue: no extra routes, sitemap
+  entries or parity baselines, and the words live in the file the row opens.
+- **Before the page exists.** `/styleguide/visitor` renders `scripts/data/fixtures/visitor.json`
+  (`node scripts/page-fixture.mjs visitor`) through SectionRenderer; delete both once `/visitor`
+  is published.
+
 ### Church identity (the Who We Are "alive" pass, 2026-09-23)
 
 Ported from the prototype at `docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html`. Every colour on these components is an identity token in globals.css `@theme` and `.dark` (`--color-band-indigo`, `-deep`, `-gold`, `-brown`, `-taupe`, `-ink`, `--color-gold-hover`, `--color-brown-ink`), each holding a value from the church's brand palette (the owner's ruling, 2026-09-23: no off-brand greens, mint, violet, red or purple), and every ink-on-ground pair is measured in both themes by `theme-tokens.test.ts` (`IDENTITY_PAIRS`, `THEMED_IDENTITY_PAIRS`). Geometry, masks and motion live in the `/* Church identity (2026-09-23) */` block of globals.css. No block carries a colour field (rule 9): colour comes from the block's type or the goal's position. Site owner decisions that bind all of them: no visible photo captions anywhere, and buttons are square with a gold rule (no arched head).

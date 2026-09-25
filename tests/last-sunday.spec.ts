@@ -90,12 +90,16 @@ test.describe('Home: Last Sunday', () => {
     expect(await img.getAttribute('src')).toBe('https://i.ytimg.com/vi/y435wOf6Tgc/mqdefault.jpg');
     await expect(page.locator('iframe')).toHaveCount(0);
 
-    // Its place: right after "Our Building", right before the blog rows.
+    // Its place: right after "Our Building", right before the blog rows. The
+    // Visitor's slim band (feat/the-visitor) shares the slot and follows it,
+    // so it is stepped over when present.
     const order = await page.evaluate(() => {
       const band = document.querySelector('section.ls-band');
+      let next = band?.nextElementSibling ?? null;
+      if (next?.matches('section.vb-band')) next = next.nextElementSibling;
       return {
         before: band?.previousElementSibling?.id ?? '',
-        after: band?.nextElementSibling?.querySelector('section')?.getAttribute('class') ?? '',
+        after: next?.querySelector('section')?.getAttribute('class') ?? '',
       };
     });
     expect(order.before).toMatch(/^home-\d+-band$/);

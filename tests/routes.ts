@@ -44,6 +44,10 @@ export const routes: string[] = [
   '/history',
   '/wedding',
   '/give',
+  // The Visitor's page, composed from its seed module and rendered from the
+  // committed fixture until /visitor is published (2026-09-24). Here it gets
+  // smoke, axe, contrast and reflow at 320 with and without real scrollbars.
+  '/styleguide/visitor', // scaffold: church
 ];
 
 /**

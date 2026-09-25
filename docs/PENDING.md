@@ -1394,6 +1394,62 @@ summary, location, rrule: 'FREQ=WEEKLY;BYDAY=SU' }] })`; `src/lib/worship-ics.ts
   their text is about 190 KB of JSON (1,037 verses) that would make a light register page heavy.
   Each row already links to its post, where the passage opens.
 
+### The Visitor: before the page is applied (2026-09-24, `feat/the-visitor`)
+
+- [ ] #nathan **Apply The Visitor, in this order, after the merge** (no schema changed, so no
+      deploy is needed first; each step is dry by default, backs up first, and was dry-run on
+      2026-09-24):
+  1. `npm run seed-pages -- --only visitor` then `--apply`: creates `page-visitor` (two
+     document lists, 39 issues and the two books, `addToFooter: true`). The PDFs are the assets
+     already uploaded for /blog; nothing uploads.
+  2. `npm run seed-pages -- --only blog` then `--apply`: replaces /blog's `additionalSections`
+     (the publications list) with the one pointer line, anchored `publications`.
+  3. `npm run seed-pages -- --only ministries` then `--apply`: the "The Visitor Quarterly" link
+     in "Stay updated" goes to `/visitor` instead of `/blog#publications` (block [10] only).
+  4. `node scripts/set-visitor-redirect.mjs` then `--apply`: the Wix `/publications` redirect
+     goes to `/visitor` (it refuses while `/visitor` is unpublished).
+  5. Rebuild (a publish or a push). The home band, the footer link and the search records
+     appear on that build, all read from the published page. Then look at `/visitor`, Home and a
+     search for "Messy Camp" in production, 1440 and 390.
+- [ ] #nathan **Approve the new copy** (the approval note, "/visitor" and "/blog"): "Latest
+      issue", "Read this issue", "Past issues", "Two books", the home band's "… issue · Read it",
+      /blog's pointer line, and the search description.
+- **Owner question: the issues' dates, and one disagreement.** Every issue is now dated from its
+  Wix button's month, the PDF's build date and the month and year printed on its cover
+  (`scripts/lib/visitor-dates.mjs`). Three results differ from the old /blog list: the file Wix
+  called "Download Latest Issue" (the "Current Visitor" row) prints **September 2026** on its
+  cover and is now the latest issue (Nathan's brief expected June 2026, the newest one the old
+  list gave a month); the June with no build date prints **June 2022**; and the file whose
+  button says **August** (2024) prints "September 2024" on page 1, next to a separate September
+  2024 issue. It stays August 2024 (the church's own label) until the church says otherwise.
+  Every other cover agrees with the old derivation.
+- **After the apply, delete the preview:** `src/pages/styleguide/visitor.astro`,
+  `scripts/data/fixtures/visitor.json` and the `/styleguide/visitor` line in `tests/routes.ts`,
+  and point `tests/visitor.spec.ts` and the `VISITOR_FIXTURE` seam at a fixture of their own
+  (the suite still needs fixed data) or keep the fixture for the suite only. Add
+  `http://localhost:4173/visitor/` to `lighthouserc.json` then, not before (it 404s until the
+  page exists).
+- **A cold build downloads every issue once.** About 630 MB from the Sanity CDN, 93 s on this
+  machine, then only the covers and text are kept (7 MB in `node_modules/.cache/visitor/`,
+  restored by ci.yml, deploy.yml, deploy-staging.yml and lighthouse.yml). A new issue costs one
+  download. If a file ever fails to draw, it is cached as failed (a typeset cover stands in);
+  delete its folder under the cache to retry.
+- **The search's no-match test word changed** from "zebrafinch" to "fqxzvw": Pagefind matches a
+  lone letter in the index against the start of a query, and The Visitor's text brought "Gen Z"
+  (June 2025). Letter-spaced mastheads are closed up before indexing (`unspace()`), which removed
+  the other lone letters; a real "Q:" or "Z" in prose stays.
+- **Text quality.** pdfjs splits some ligatures ("fi ve" for "five" in September 2025), so an
+  exact phrase across one can miss; single words still match. OCR is not attempted: every issue
+  since 2020 has a text layer (the shortest, July 2024, has 1,101 characters).
+- **The footer switch is now live for every page.** `addToFooter` ("Show in the footer") was in
+  the schema and read by nothing; `Footer.astro` now honours it (`src/lib/footer-pages.ts`). All
+  nine existing pages have it unset, so nothing else moved.
+- **Scaffold (rule 14):** the new site files carry `scaffold-file: church` (the issues lib and
+  test, `VisitorIssues`, `IssueCover`, `VisitorBand`, the styleguide page, the spec), the home
+  import and band are a marked block, and `/styleguide/visitor` in `tests/routes.ts` a marked
+  line. `scripts/visitor-covers.mjs` is unmarked on purpose: `npm run build` calls it, and it
+  skips itself when `src/lib/visitor-issues.ts` is gone, as `fetch-scripture.mjs` does.
+
 ### Beliefs identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** `scripts/pages/beliefs.mjs` uses no new

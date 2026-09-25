@@ -578,6 +578,7 @@ const wrapAttrs = (key: string | undefined) =>
             heading={s.heading}
             docs={s.docs ?? []}
             surface={surface ?? 'background'}
+            level={openingLevel(blockIndex)}
             headingId={headingId}
           />
         ) : /* scaffold-branch: church */ s._type === 'linkCardsSection' ? (

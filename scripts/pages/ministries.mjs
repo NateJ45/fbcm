@@ -123,7 +123,7 @@ export default {
     'Linked: "Our website has links to our building use policy here" had no link behind it on the Wix site. "here" now points at /wedding#building-use.',
     'Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band listing the whole Church Coordination Team.',
     'Reordered, so each reads as a class with its room: "Preschool - 2nd grade: Kickstart Children’s Church (102)" becomes "Kickstart Children’s Church (102): Preschool - 2nd grade", and "3rd - 5th grade: The Underground Children’s Church (B-03)" becomes "The Underground Children’s Church (B-03): 3rd - 5th grade" (what-to-expect.txt lines 65 and 69; the 10:45 row of the Sunday timeline). No word changes.',
-    'Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now follows that page’s own redirect to /blog#publications.',
+    'Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now links to The Visitor’s own page, /visitor (the Wix page’s redirect points there too since 2026-09-24).',
   ],
 
   // Facts this page had to force, because the church's own captures give two
@@ -458,7 +458,7 @@ export default {
       ...bullets(
         [
           `[${line('adult', 'Wednesday Weekly')}](https://fbcmuncie.churchcenter.com/pages/fbcs-wednesday-weekly)`,
-          `[${line('adult', 'The Visitor Quarterly')}](/blog#publications)`,
+          `[${line('adult', 'The Visitor Quarterly')}](/visitor)`,
           `[${line('adult', 'Our Church App.')}](${churchCenter})`,
         ],
         'su-b',

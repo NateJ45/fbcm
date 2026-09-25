@@ -99,3 +99,9 @@ src/data/og-cards.generated.json
 # of every `npm run build` (scripts/fetch-scripture.mjs), never committed. The
 # chapters themselves are cached in node_modules/.cache/scripture/.
 src/data/scripture.generated.json
+
+# The Visitor's covers and its manifest: drawn from the newsletter PDFs at the
+# start of every `npm run build` (scripts/visitor-covers.mjs), never committed.
+# Each issue's covers and text are cached in node_modules/.cache/visitor/.
+public/visitor/
+src/data/visitor.generated.json

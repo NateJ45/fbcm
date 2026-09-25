@@ -1,0 +1,132 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// One cover of The Visitor (2026-09-24, feat/the-visitor): page 1 of the
+// issue's PDF, drawn at build time by scripts/visitor-covers.mjs and served
+// from /visitor/covers/ at 240, 480, 720 and 960 pixels wide, with the page's own
+// proportions reserved so nothing moves when it loads.
+//
+// A TYPESET COVER STANDS IN when the build could not draw one (the file would
+// not download, or pdfjs could not open it): the month and the year on the
+// indigo ground in the site's own type, the newsletter's name above them,
+// sized off the cover's own width (container units), so it reads the same at
+// 120 pixels on the wall and at 400 on the page's opening band. It is exposed
+// as one image with the same text alternative a drawn cover has.
+//
+// The text alternative is "The Visitor, June 2026, cover". Where the cover
+// sits inside a link whose own words already name the issue (the home band),
+// the caller passes `decorative` and the image is not announced twice.
+import {
+  MONTHS,
+  NEWSLETTER,
+  coverAlt,
+  coverSrc,
+  coverSrcset,
+  type CoverInfo,
+  type Issue,
+} from '@/lib/visitor-issues';
+
+interface Props {
+  issue: Issue;
+  cover: CoverInfo | null;
+  /** The `sizes` attribute: how wide the cover is drawn at each breakpoint. */
+  sizes: string;
+  /** The page's largest picture: load it first. */
+  eager?: boolean;
+  decorative?: boolean;
+  class?: string;
+}
+
+const { issue, cover, sizes, eager = false, decorative = false, class: cls } = Astro.props;
+const alt = decorative ? '' : coverAlt(issue);
+const drawn = cover && issue.key ? cover : null;
+const fallbackWidth = drawn ? (drawn.widths.find((w) => w >= 480) ?? drawn.widths[0]) : 0;
+---
+
+{
+  drawn && issue.key ? (
+    <img
+      src={coverSrc(issue.key, fallbackWidth)}
+      srcset={coverSrcset(issue.key, drawn)}
+      {sizes}
+      width={drawn.w}
+      height={drawn.h}
+      {alt}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding={eager ? 'auto' : 'async'}
+      fetchpriority={eager ? 'high' : undefined}
+      class:list={['ic-img', cls]}
+      data-issue-cover="drawn"
+    />
+  ) : (
+    <span
+      class:list={['ic-set', cls]}
+      role={decorative ? undefined : 'img'}
+      aria-label={decorative ? undefined : alt}
+      aria-hidden={decorative ? 'true' : undefined}
+      data-issue-cover="typeset"
+    >
+      <span class="ic-set-in" aria-hidden="true">
+        <span class="ic-name">{NEWSLETTER}</span>
+        <span class="ic-rule" />
+        <span class="ic-month">{MONTHS[issue.month]}</span>
+        <span class="ic-year">{issue.year}</span>
+      </span>
+    </span>
+  )
+}
+
+<style>
+  .ic-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #fff;
+  }
+  /* The typeset cover: the proportions of a US Letter page, the brand indigo,
+     the name in the UI face, the month in Castoro Titling gold and the year in
+     paper, every size a share of the cover's own width. */
+  .ic-set {
+    display: block;
+    width: 100%;
+    aspect-ratio: 612 / 792;
+    container-type: inline-size;
+    background: var(--color-band-indigo);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-gold) 45%, transparent);
+  }
+  .ic-set-in {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 9cqw 9cqw 11cqw;
+  }
+  .ic-name {
+    font-family: var(--font-ui);
+    font-size: 7.5cqw;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-bg);
+  }
+  .ic-rule {
+    display: block;
+    height: max(1px, 0.6cqw);
+    margin: 4cqw 0 5cqw;
+    background: var(--color-gold);
+  }
+  .ic-month {
+    font-family: var(--font-display);
+    font-size: 12.5cqw;
+    line-height: 1;
+    color: var(--color-gold);
+    overflow-wrap: anywhere;
+  }
+  .ic-year {
+    margin-top: 2cqw;
+    font-family: var(--font-display);
+    font-size: 11cqw;
+    line-height: 1;
+    color: var(--color-bg);
+  }
+</style>

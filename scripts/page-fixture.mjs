@@ -116,7 +116,7 @@ const docRefs = new Set();
 const assets = new Map(
   (
     await client.fetch(
-      '*[_id in $ids]{_id, _type, url, altText, "metadata": metadata{dimensions, lqip}}',
+      '*[_id in $ids]{_id, _type, url, size, altText, "metadata": metadata{dimensions, lqip}}',
       { ids: [...imageRefs] },
     )
   ).map((a) => [a._id, a]),
@@ -137,8 +137,12 @@ function project(v) {
     out.asset = asset;
     out.alt = v.alt ?? asset.altText ?? '';
   }
-  // A listed document's file, as queries.ts projects it: `"fileUrl": file.asset->url`.
-  if (typeof out.file?.asset?.url === 'string') out.fileUrl = out.file.asset.url;
+  // A listed document's file, as queries.ts projects it: `"fileUrl": file.asset->url`
+  // and `"fileSize": file.asset->size`.
+  if (typeof out.file?.asset?.url === 'string') {
+    out.fileUrl = out.file.asset.url;
+    if (typeof out.file.asset.size === 'number') out.fileSize = out.file.asset.size;
+  }
   if (typeof v.internalLink?._ref === 'string') {
     const doc = docs.get(v.internalLink._ref);
     out.internalLink = doc ? { _type: doc._type, slug: doc.slug } : null;

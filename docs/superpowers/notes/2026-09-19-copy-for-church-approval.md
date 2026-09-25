@@ -151,7 +151,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Linked: "Our website has links to our building use policy here" had no link behind it on the Wix site. "here" now points at /wedding#building-use.
 - Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band listing the whole Church Coordination Team.
 - Reordered, so each reads as a class with its room: "Preschool - 2nd grade: Kickstart Children’s Church (102)" becomes "Kickstart Children’s Church (102): Preschool - 2nd grade", and "3rd - 5th grade: The Underground Children’s Church (B-03)" becomes "The Underground Children’s Church (B-03): 3rd - 5th grade" (what-to-expect.txt lines 65 and 69; the 10:45 row of the Sunday timeline). No word changes.
-- Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now follows that page’s own redirect to /blog#publications.
+- Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now links to The Visitor’s own page, /visitor (the Wix page’s redirect points there too since 2026-09-24).
 
 ### Facts to confirm from this page
 
@@ -302,20 +302,40 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - Writing from First Baptist. (hero headline)
 - Sermon previews for the coming Sunday, news from around the church, and longer pieces from the pastors. (hero subhead, one sentence)
-- The Visitor and two books (publications heading)
+- Looking for The Visitor? Every issue of the church newsletter is on its own page. (the one line where the publications list was, linking to /visitor)
 - Come and see for yourself. (closing band headline)
 - Sermon previews, church news and writing from the pastors of First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana. (search description, not shown on the page; 2026-09-24 local search pass)
 
 ### Edits to the church’s own text
 
-- Corrected: the two issues the Wix buttons label "Feburary" are seeded as "February". It is a typo in a button label, not a word of the church's own prose.
-- Renamed: the "Download Latest Issue" button becomes an issue row like the others, titled with its month, under the church's own heading for it ("Current Visitor") on publications.txt line 9. The old label described the button, not the issue.
-- Dropped: the "Other Updates" block from publications.txt (Church Connect sign-up and "see our Blog"). The first belongs on a page about the app and the second points at the page this list now lives on.
+- Moved: The Visitor and the two books are on their own page now, /visitor (scripts/pages/visitor.mjs carries their edits and the question about each issue's year).
 - Em-dash to comma (CLAUDE.md rule 2), in the post summary of "Justified by Faith, Empowered by the Spirit" (shown under its title and on /blog): "the Holy Spirit’s role in giving us up— Hope which does not put us to shame" now reads "...giving us up, Hope which...". No other word changes. The summary is a field on the post, not a sentence this module builds, so the change was made by scripts/fix-journal-gaps.mjs (backed up first). The Robert Frost quotation in the summary of "The Road Not Taken" keeps its dash, by decision.
+
+### Photos of children
+
+- (none)
+
+## /visitor
+
+### New sentences
+
+- Two books (heading of the books list)
+- Latest issue (label over the newest issue, drawn by the page, not stored)
+- Read this issue (the newest issue’s button, drawn by the page)
+- Past issues (heading over the wall of covers, drawn by the page)
+- The Visitor · September 2026 issue · Read it (the home page’s slim band, drawn by code from the newest issue; the month and year change with it)
+- The Visitor, the newsletter of First Baptist Church Muncie since 1946: features, church life, and articles from church members and pastoral staff. (search description, not shown on the page)
+
+### Edits to the church’s own text
+
+- Cut: the church’s introduction on the publications page ("Below you can find “The Visitor,” our church newsletter filled with features, information about church life, and articles from both church members and pastoral staff. It has been published since 1946.") is carried on the page as the short line over the heading, "Our church newsletter since 1946". The words are theirs; the rest of the paragraph is in the search description.
+- Corrected: the two issues the Wix buttons label "Feburary" are titled "February". It is a typo in a button label, not a word of the church’s own prose.
+- Dropped: the "Other Updates" block from publications.txt (Church Connect sign-up and "see our Blog"). The first belongs on a page about the app, and the blog links here, not the other way round.
+- Renamed: the "Download Latest Issue" button becomes an issue like the others, titled with the month and year printed on its own cover. The page labels whichever issue is newest "Latest issue".
 
 ### Facts to confirm from this page
 
-- Which year each issue of The Visitor belongs to. The Wix capture records the MONTH of each issue (the button read "December") but not the year: the years were headings in a Wix widget and the association did not survive the capture. Each year here is derived from the PDF's own creation date, snapped to the nearest occurrence of the named month (a December issue built on 2023-11-28 is December 2023; a January issue built on 2020-12-30 is January 2021). One June issue carries no creation date at all and is seeded undated. Please check the years on the list, and tell us the year of the undated June.
+- Which month and year each issue of The Visitor is. The Wix page gave each file a month but not a year. Each issue is now dated from three things the church made: the button’s month, the PDF’s own build date, and the month and year printed on its cover (scripts/lib/visitor-dates.mjs). Every cover agrees with the button except one: the file the button calls "August" (2024) prints "September 2024" on page 1, beside a separate September 2024 issue; it stays August 2024 until the church says otherwise. The file the Wix site called "Download Latest Issue" prints September 2026 on its cover, so it is now titled September 2026 and is the latest issue, and the June with no build date prints June 2022. Please check the years on the page.
 
 ### Photos of children
 

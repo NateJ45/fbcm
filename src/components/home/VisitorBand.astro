@@ -1,0 +1,129 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// The Visitor on the home page (2026-09-24, feat/the-visitor): one slim band,
+// "The Visitor · September 2026 issue · Read it", with the issue's small cover.
+//
+// NOT A PAGE-BUILDER BLOCK, like "Last Sunday": the home page is composed in
+// Sanity and adding a block there is a content write, so the band is drawn from
+// code and placed through SectionRenderer's `insert` slot, straight after Last
+// Sunday and before the Church Blog rows (src/pages/index.astro).
+//
+// EVERYTHING IS DERIVED (rule 15). The issue is the newest on the /visitor
+// page, read by the build step (scripts/visitor-covers.mjs) into
+// src/data/visitor.generated.json; the band updates itself the build after an
+// editor adds an issue. It renders only once that page is published (before,
+// there is nothing for it to point at), and in the Playwright build from the
+// committed fixture.
+//
+// IT LINKS TO /visitor, NOT TO THE PDF. The issues are 15 to 75 MB files; a
+// tap on the home page of a phone should not start one unannounced. /visitor
+// opens on the same issue, large, with its size beside the button, so the
+// newest issue is still one tap from the band and a second from the file,
+// and the archive is right under it.
+//
+// The ground is paper, between the indigo of Last Sunday above and the taupe
+// of the blog rows below, and it matches neither. The whole row is one link;
+// its words name it, so the cover inside it is decorative.
+import IssueCover from '@/components/visitor/IssueCover.astro';
+import { NEWSLETTER, coverFor, type Issue, type CoverInfo } from '@/lib/visitor-issues';
+
+interface Props {
+  issue: Issue;
+  covers: Record<string, CoverInfo>;
+  href: string;
+}
+
+const { issue, covers, href } = Astro.props as Props;
+---
+
+<section
+  class="vb-band border-y border-indigo/10 bg-bg text-indigo"
+  aria-label={NEWSLETTER}
+  data-visitor-band={issue.anchor}
+  data-pagefind-ignore
+>
+  <div class="mx-auto max-w-content px-gutter py-[clamp(24px,3.5vw,40px)]">
+    <a {href} class="vb-link group">
+      <span class="vb-cover">
+        <IssueCover issue={issue} cover={coverFor(issue, covers)} sizes="80px" decorative />
+      </span>
+      <span class="vb-words">
+        <span class="vb-name">{NEWSLETTER}</span>
+        <span class="vb-dot" aria-hidden="true">·</span>
+        <span class="vb-issue">{issue.label} issue</span>
+        <span class="vb-dot" aria-hidden="true">·</span>
+        <span class="vb-read">
+          Read it<span
+            aria-hidden="true"
+            class="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+            >&#8594;</span
+          >
+        </span>
+      </span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .vb-link {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 3vw, 32px);
+    color: inherit;
+    text-decoration: none;
+  }
+  .vb-link:focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 6px;
+  }
+  .vb-cover {
+    flex: none;
+    width: clamp(56px, 8vw, 80px);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-indigo) 18%, transparent),
+      0 8px 18px -12px rgb(28 27 58 / 0.5);
+  }
+  .vb-words {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.75rem;
+    row-gap: 0.25rem;
+  }
+  .vb-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+    line-height: 1.1;
+    color: var(--color-indigo);
+  }
+  .vb-issue {
+    font-family: var(--font-body);
+    font-size: clamp(1.0625rem, 1.8vw, 1.3125rem);
+    line-height: 1.3;
+  }
+  .vb-dot {
+    color: var(--color-gold-ink);
+  }
+  .vb-read {
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+  }
+  /* On a phone the three parts stack under the name, so the dots go. */
+  @media (max-width: 639.98px) {
+    .vb-words {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .vb-dot {
+      display: none;
+    }
+  }
+</style>

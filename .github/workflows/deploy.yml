@@ -143,6 +143,18 @@ jobs:
           key: scripture-${{ runner.os }}-${{ github.run_id }}
           restore-keys: scripture-${{ runner.os }}-
 
+      # The Visitor's covers and words (feat/the-visitor): scripts/visitor-covers.mjs
+      # draws each issue's cover and reads its text at the start of `npm run build`,
+      # keyed by the file's asset id. Without this a cold runner downloads every
+      # issue (about 630 MB) to redraw covers it drew last time; with it, only a
+      # new issue is fetched. The cache itself is about 7 MB.
+      - name: Restore The Visitor's covers
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/visitor
+          key: visitor-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: visitor-${{ runner.os }}-
+
       - name: Generate Sanity types
         run: npm run typegen
 

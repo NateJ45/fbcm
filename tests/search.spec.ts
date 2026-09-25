@@ -83,12 +83,15 @@ test.describe('desktop', () => {
     expect(results.violations, report).toEqual([]);
   });
 
+  // Pagefind matches a lone letter in the index against the start of a query,
+  // so the nonsense word must not begin with one that stands alone anywhere.
+  // "zebrafinch" served until The Visitor's text brought "Gen Z" (June 2025).
   test('a query with no match says so', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.keyboard.press('/');
     await expect(page.getByRole('dialog', { name: 'Search the site' })).toBeVisible();
-    await page.getByRole('searchbox').fill('zebrafinch');
-    await expect(page.locator('#ss-status')).toHaveText('Nothing found for “zebrafinch”.');
+    await page.getByRole('searchbox').fill('fqxzvw');
+    await expect(page.locator('#ss-status')).toHaveText('Nothing found for “fqxzvw”.');
     await expect(page.locator('.ss-row')).toHaveCount(0);
   });
 });
