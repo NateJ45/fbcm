@@ -1188,9 +1188,14 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       the Help guide opens, no "Remove field", no console errors. The Studio's Church Trac
       steps were wrong ("Show Additional Options"); corrected to Cards, the form's card, the
       Form tab.
-- [ ] #nathan **The only form in Church Trac is the Connection Card**
-      (`fbcmuncie.churchtrac.com/connectcard`, 4 submissions so far). Its embed-domain setting (Form/Giving Embed Domain) is empty, so Church Trac shows no embed code yet (one domain only: set
-      `fbcm-site.nathanjnixon86.workers.dev` now, `www.fbcmuncie.org` at the cutover).
+- [x] **The Connection Card is set up for the site (2026-09-25).** The only form in Church
+      Trac (`fbcmuncie.churchtrac.com/connectcard`, 4 submissions). Its Form/Giving Embed
+      Domain is now `fbcm-site.nathanjnixon86.workers.dev` (one domain only: change it to
+      `www.fbcmuncie.org` at the cutover). The real embed code is a plain iframe on
+      `fbcmuncie.churchtrac.com/form/<hash>`, which the reader accepts as written. Framed from
+      the allowed domain, its Submit button sits at 919 px (640 wide) and 1025 px (340 wide),
+      so it is saved as the Studio document "Connection card" (`churchTracForm-connection-card`)
+      at size Long. It is on no page yet: placing it (suggested: Visit) is a content decision.
 - [ ] #nathan **Urgent for the church: the Connection Card's `Notify User` is empty**, so
       nobody is emailed when a visitor fills it in (4 have). Someone should read Form
       Responses and set Notify User to the office.
@@ -1205,7 +1210,7 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       (`fbcmuncie.churchtrac.com/pray`). A hidden "Link to Our Sermon Podcast" card exists.
       No custom domain is set on Church Connect (correct: fbcmuncie.org is for this site).
 
-- [ ] #nathan **Deploy before anyone uses it (schema change, rule 1).** The branch adds the
+- [x] **Deploy before anyone uses it (schema change, rule 1).** Done 2026-09-25, see above. The branch adds the
       `churchTracForm` document and the `churchTracFormSection` band. Merge, deploy, open the
       live `/studio`, check `Church Trac forms` is in the menu on the left and nothing offers
       "Remove field". Nobody has seen it in a real Studio yet: the cloud container that built it
@@ -1217,7 +1222,8 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       Settings / Users, Online Giving, Embed (set its colours to the brand there). Then the
       Studio's Help guide "Put a Church Trac form on a page" walks the rest. Suggested first:
       the connection card on /visit and giving on /give once Church Trac giving is live.
-- [ ] #nathan **Check the first real embed code against the reader.** It was written from Church
+- [x] **Check the first real embed code against the reader.** Done 2026-09-25: an iframe,
+      accepted; the Connection Card fits Long. It was written from Church
       Trac's documentation, not from a real code: `src/lib/church-trac-form.ts` keeps the
       iframe's `src` when it is https on churchtrac.com. If Church Trac's code turns out to be a
       script, or points at another host, the Studio refuses it with a message and the reader
