@@ -10,6 +10,15 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-25 — Church Trac forms on the site (`claude/kind-heisenberg-jf34rt`)._
+
+**A reusable band for any form built in Church Trac.** Church Trac has no API, but it offers an iframe embed for every Form Card and for online giving. Staff add a form once under **Church Trac forms** in the Studio (a name, the embed code pasted from Church Trac, and a size), then place it on any page with the **Church Trac form** band from the Church group, which only points at it.
+
+- `src/lib/church-trac-form.ts` (tested): the pasted code is never rendered. Only the iframe's `src` survives, and only when it is https on churchtrac.com (no credentials, no other host, no script); a bare address works too; stega and zero-width marks are stripped. The same `checkPaste()` is the Studio's validation, with messages for staff. `formHeight()` maps short, medium and long to 560, 820 and 1180 px.
+- `src/sanity/schemaTypes/churchTracForm.ts` (document), `churchTracFormSection` in `churchSections.ts` (eyebrow, heading, a few words, the form reference, anchor), the Church insert group, a desk entry after Ministries, `embed` on `NON_STEGA_FIELDS`, the query dereference, `ProjectedChurchTracFormSection`, a CONTENT type in the cadence, and a Help guide ("Put a Church Trac form on a page").
+- `src/components/sections/ChurchTracForm.astro`: Last Sunday's split, the words sticky beside a long form, the frame under a gold rule on white with the form's name as its title, `loading="lazy"`, `allow="payment"`, a quarter taller on a phone, and "Open the form in a new tab" to the same address. No valid form, no band.
+- `/styleguide` shows the band with the public Church Trac calendar standing in; `tests/church-trac-form.spec.ts` checks the frame, its size on desktop and phone, the way out, axe and 320 px. The cutover plan gains step 5, the embed domains.
+
 _2026-09-25 — What's On: the Church Trac calendar at /events (`claude/kind-heisenberg-jf34rt`)._
 
 **The church calendar, drawn by the site.** Church Trac offered an iframe embed; an iframe cannot take the site's type or colours, is a fixed 500 px box on a phone and is invisible to search, so the site reads the same calendar's iCal feed (`https://www.churchtrac.com/ical?ui=0C7B1090`) at build time instead and draws it in the identity. Church Trac stays the one place an event is typed (rule 15): nothing is stored in Sanity.

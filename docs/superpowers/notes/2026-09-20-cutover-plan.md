@@ -176,6 +176,14 @@ Run these in order, the same morning.
    already say `https://www.fbcmuncie.org`. Verify that is still what you want
    after the decision above, and that the sitemap at
    `/sitemap-index.xml` lists that host and not the workers.dev one.
+5. **Church Trac's embed domains.** Every form shown through a "Church Trac
+   form" band, and the online giving embed, only opens on the address typed in
+   Church Trac's `Form/Giving Embed Domain` (per form, under Church Connect,
+   Show Additional Options; giving under Connect Setup, Connect Settings /
+   Users, Online Giving, Embed). Change each one to `www.fbcmuncie.org` (and
+   the apex too, if Church Trac takes more than one), then open each page with
+   a form and check the form draws. The Studio's `Church Trac forms` list is
+   the inventory of which forms to check.
 
 ---
 

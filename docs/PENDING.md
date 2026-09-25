@@ -1126,6 +1126,35 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   is allowed through, so a build there draws the "could not be read" state. The deploy runner
   and a laptop reach it. Use `CHURCH_CALENDAR_FIXTURE=1` to see the page there.
 
+### Church Trac forms on the site (2026-09-25, `claude/kind-heisenberg-jf34rt`)
+
+- [ ] #nathan **Deploy before anyone uses it (schema change, rule 1).** The branch adds the
+      `churchTracForm` document and the `churchTracFormSection` band. Merge, deploy, open the
+      live `/studio`, check `Church Trac forms` is in the menu on the left and nothing offers
+      "Remove field". Nobody has seen it in a real Studio yet: the cloud container that built it
+      could not reach Sanity (the Studio mounted to its "Couldn't reach the Sanity servers" page
+      with no errors of its own, and `npx sanity schema validate` passed with none).
+- [ ] #nathan **Get the embed codes from Church Trac and add the first forms.** For each form:
+      Church Connect, the form, Show Additional Options, `Form/Giving Embed Domain` =
+      `fbcm-site.nathanjnixon86.workers.dev` today; giving under Connect Setup, Connect
+      Settings / Users, Online Giving, Embed (set its colours to the brand there). Then the
+      Studio's Help guide "Put a Church Trac form on a page" walks the rest. Suggested first:
+      the connection card on /visit and giving on /give once Church Trac giving is live.
+- [ ] #nathan **Check the first real embed code against the reader.** It was written from Church
+      Trac's documentation, not from a real code: `src/lib/church-trac-form.ts` keeps the
+      iframe's `src` when it is https on churchtrac.com. If Church Trac's code turns out to be a
+      script, or points at another host, the Studio refuses it with a message and the reader
+      needs one more case. Also check a real form's height against the three sizes (560, 820
+      and 1180 px, a quarter more on a phone) and whether it scrolls inside its frame.
+- **The embed domain changes at the cutover.** Step 5 of "After the move" in the cutover plan.
+- **The frame does not size itself.** Church Trac's documentation says nothing of a resize
+  message, so the Studio's `Form size` sets the height. If Church Trac turns out to post its
+  height to the page, a small listener could replace the choice.
+- **`npm run scaffold -- --remove church --write` leaves 2 type errors, neither from this
+  branch:** `rich-ground.ts` imports `staff-band.ts` and `index.astro` names
+  `VisitorManifest` outside their church regions. The Church Trac form pieces all go cleanly
+  (checked on this branch, then discarded).
+
 ### Church links, for the move to Church Trac (2026-09-24, `feat/church-links`)
 
 - [ ] #nathan **Deploy, then run the migration.** The Church systems boxes are new schema
