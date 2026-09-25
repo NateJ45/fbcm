@@ -50,6 +50,7 @@ import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
 import type { SundaySermon } from '@/lib/live-sunday';
+import type { SundayPreacher } from '@/lib/preacher';
 import { insertIndex } from '@/lib/band-insert';
 
 interface Props {
@@ -98,6 +99,11 @@ interface Props {
    */
   sermon?: SundaySermon | null;
   /**
+   * This Sunday's preacher (2026-09-25), for the tall hero's facts row. Only
+   * the home route passes it (src/lib/preacher.ts); absent, nothing changes.
+   */
+  preacher?: SundayPreacher | null;
+  /**
    * A CODE-RENDERED BAND among the Sanity bands (2026-09-24, the home page's
    * "Last Sunday"). The route passes the band as the `insert` slot and names
    * the block types it goes before, in order of preference
@@ -126,6 +132,7 @@ const {
   editDoc,
   settings,
   sermon,
+  preacher,
   insertBefore,
   calendarHref,
 } = Astro.props as Props;
@@ -378,6 +385,7 @@ const wrapAttrs = (key: string | undefined) =>
             )}
             headingAccent={s.headingAccent ?? undefined}
             sermon={sermon}
+            preacher={preacher}
             calendarHref={calendarHref}
             headingId={headingId}
           />

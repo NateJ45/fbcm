@@ -1135,6 +1135,53 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       PostRow in `src/components/sections/DynamicList.astro`), but Home's rows then change
       markup, so parity moves with it. Side-by-side screenshots were taken on the branch.
 
+### This Sunday's preacher and the service's small line (2026-09-25, `feat/preacher-and-feel`)
+
+- [ ] #nathan **Deploy before applying: this branch adds a schema field.** `heroFact.note`
+      ("Small line under the value (optional)", `sections.ts`). Merge and deploy first, so
+      the Studio knows the field before the data carries it (rule 1), then
+      `npm run seed-pages -- --only home --apply`. The dry run on 2026-09-25 changes exactly
+      one field of the live `homePage`:
+      `pageBuilder[_key=="home-hero"].facts[_key=="fact-1"].note`, from nothing to
+      "Intergenerational, casual dress welcome". Apply only after the church approves it.
+- [ ] #nathan **Ask the church to approve the service line**, or to give its own two to
+      six words. Proposed: "Intergenerational, casual dress welcome", built only from two of
+      its statements: the Worship goal ("gathering to worship as the full, intergenerational
+      body of Christ", Who We Are) and the FAQ "What should I wear?" ("Casual dress is
+      welcome."). It is on the approval note. If the church would rather say what happens
+      in the service, the question to ask is: "In a few words, what is your 10:45 service
+      like: hymns, a praise band, both? And how long does it usually run?"
+- **"About an hour" is not the church's statement, and the livestreams disagree with it.**
+  Site settings' `serviceLength` is the schema's `initialValue`, seeded in plan 2a and never
+  confirmed; Visit's hero prints it under "How long", and the Church schema and the .ics
+  read it as 60 minutes. The YouTube replays run from about 10:40 to noon, which is why
+  `live-service.ts` holds "Live now" for 75 minutes. It was deliberately left out of the
+  proposed line; the question above asks the church for the real length.
+- **"Hymns" is not the church's word either.** No page of the church's says hymns; the only
+  sentence that does is Visit's hero lede, "...from the parking lot to the last hymn", which
+  is ours (plan 2b). The church says praise team, instruments "from the ukulele to the
+  organ" and a handbell choir (the Worship ministry).
+- **The preacher is not shown without JavaScript, on purpose.** The fact is server-rendered
+  `hidden` and shown by the upgrade script only while the Sunday the dated line names is
+  its Sunday. A name without a date cannot be dated by a visitor with no script, and a
+  stale page would otherwise name last week's preacher to them. Everyone with JavaScript
+  sees it from the build that finds it until Sunday night on their own calendar.
+- **With no feed, only a preview can name a preacher.** The deploy build's feed fetch has
+  been failing (the logging fix, `77cd5fa7`, will say why). Until it works there, the
+  fourth fact is absent on production (the row is the old three), unless a preview for the
+  Sunday names a person. Nothing extra renders when the feed is missing.
+- **A preview written by "FBC Muncie" names nobody** (11 of the 118 previews): the church's
+  own account is not a preacher, and the fact then falls through to the broadcast. The post
+  page still prints "Preaching: FBC Muncie" on those 11 previews, which is the same
+  question from the other side and is not changed here.
+- **The note is drawn only by the photo hero** (`Hero.astro`, the home page's layout). The
+  window and split heroes draw their facts through `HeroFacts.astro`, which does not read
+  `note` yet: Visit's hero was being edited on another branch the same day. If Visit wants
+  a small line too, it is a few lines in `HeroFacts.astro`.
+- **Parity on Home moves with the feed three times over now:** the hero line, the Last
+  Sunday band and the preacher fact (`data-sunday-fact`, the name). A diff confined to those
+  on a new week is content.
+
 ### This Sunday's sermon from YouTube (2026-09-24, `feat/this-sunday-youtube`)
 
 - **The title caps are width bands, measured once (`fix/sunday-title-length`).** 24

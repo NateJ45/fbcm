@@ -1249,6 +1249,7 @@ export type HeroSection = {
   facts?: Array<{
     label?: string;
     value?: string;
+    note?: string;
     _type: 'heroFact';
     _key: string;
   }>;

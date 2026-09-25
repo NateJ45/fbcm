@@ -359,6 +359,12 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         soon as the Sunday the line names is no longer the preview's (a site
         not rebuilt after Sunday). Same moment as the date: before first paint.
 
+        THIS SUNDAY'S PREACHER (2026-09-25). The hero's "Preaching" fact
+        carries data-sunday-fact (its Sunday) and is server-rendered HIDDEN;
+        this shows it only while the line's Sunday is that Sunday, so neither
+        a stale page nor a visitor without JavaScript is told last week's
+        name. Hero.astro calls this again right after the fact is parsed.
+
         The functions are hand-inlined copies of src/lib/live-sunday.ts,
         which is where the unit tests are (live-sunday-inline.test.ts is the
         drift gate). An is:inline script cannot import. Keep the two in step.
@@ -390,7 +396,17 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           var sermon = !!sermonSunday && lineSundayIso(now) === sermonSunday;
           return { text: formatLiveSunday(now, t, sermon), sermon: sermon };
         }
+        function sundayFactKept(now, sunday) {
+          return !!sunday && lineSundayIso(now) === sunday;
+        }
         function upgradeSunday() {
+          // This Sunday's preacher (2026-09-25): server-rendered hidden,
+          // shown only while the line's Sunday is the one it was named for.
+          var facts = document.querySelectorAll('[data-sunday-fact]');
+          for (var j = 0; j < facts.length; j++) {
+            var keep = sundayFactKept(new Date(), facts[j].getAttribute('data-sunday-fact'));
+            if (facts[j].hidden === keep) facts[j].hidden = !keep;
+          }
           var nodes = document.querySelectorAll('[data-live-sunday]');
           for (var i = 0; i < nodes.length; i++) {
             var t = nodes[i].getAttribute('data-live-sunday');

@@ -275,3 +275,15 @@ export function liveSundayLine(
   const sermon = sermonSunday !== '' && lineSundayIso(now) === sermonSunday;
   return { text: formatLiveSunday(now, serviceTime, sermon), sermon };
 }
+
+/**
+ * Whether a fact baked for the Sunday `sunday` (YYYY-MM-DD) still belongs on
+ * the page at `now` (2026-09-25, `feat/preacher-and-feel`): true only while
+ * the Sunday the dated line names is that Sunday. The hero's "Preaching" fact
+ * is server-rendered HIDDEN and shown by the upgrade script only when this
+ * holds, so a page that outlives its Sunday never names last week's preacher,
+ * with JavaScript or without.
+ */
+export function sundayFactKept(now: Date, sunday: string): boolean {
+  return sunday !== '' && lineSundayIso(now) === sunday;
+}
