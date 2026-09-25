@@ -231,3 +231,92 @@ export function thumbnailUrl(
     ? `https://i.ytimg.com/vi_webp/${videoId}/${size}.webp`
     : `https://i.ytimg.com/vi/${videoId}/${size}.jpg`;
 }
+
+// ── This Sunday's broadcast (2026-09-24, `feat/this-sunday-youtube`) ─────────
+// The coming Sunday's livestream is in the feed days early, and it is the
+// only place the church still names the sermon ahead of time (the previews
+// stopped in January 2026). The home hero's dated line names it when there is
+// no preview (src/lib/this-sunday.ts decides the order).
+//
+// WHAT THE FEED ACTUALLY CARRIES FOR IT (checked 2026-09-24 against the live
+// feed, 15 entries): nothing that says "scheduled". There is no
+// yt:liveBroadcastContent, no scheduled start time and no future-dated
+// <published>; the Atom feed has the same shape for every entry. What sets
+// the upcoming broadcast apart is:
+//
+//   1. media:statistics views="0". Every replay carries its live audience
+//      (26 to 47 views on the other fourteen). This is the signal relied on.
+//   2. It was published MIDWEEK, in the past: Wednesday 2026-09-23 18:03 UTC
+//      (2:03 pm church time) for Sunday September 27. A replay is published
+//      on the Sunday or, usually, just after midnight Monday.
+//   3. <updated> is two seconds after <published> (18:03:21 / 18:03:23); a
+//      replay's is an hour or more later. Noted, not relied on: nothing says
+//      YouTube keeps it that way.
+//
+// So the broadcast's Sunday is DERIVED from its publish day: the first Sunday
+// strictly after it, on the church's calendar (America/Indiana/Indianapolis,
+// DST included). "Strictly" means a zero-view upload made ON a Sunday is
+// taken to be for the next Sunday, never for that same day, which is the
+// reading that can only err towards naming no sermon. It must be the coming
+// Sunday as of the build, its title must split into sermon and reading, and
+// only one such broadcast may claim that Sunday. Anything else is null.
+
+/** The coming Sunday's scheduled broadcast, as the hero line names it. */
+export interface UpcomingBroadcast {
+  videoId: string;
+  /** YYYY-MM-DD on the church's calendar. */
+  sunday: string;
+  /** The sermon title, from the video title's first part. */
+  title: string;
+  /** The reading, from the video title; never '' (no reading, no broadcast). */
+  reading: string;
+  /** The series, or ''. */
+  series: string;
+  /** https://www.youtube.com/watch?v=<id>, where the stream plays live. */
+  watchUrl: string;
+}
+
+/** The Sunday a zero-view upload is scheduled for: the first Sunday after its publish day. */
+export function broadcastSunday(published: string): string | null {
+  const day = churchDay(new Date(published));
+  if (!day) return null;
+  return isoFromDayNumber(dayNumber(day.iso) + (7 - day.weekday));
+}
+
+/** The coming Sunday on the church's calendar as of `now`; today when today is Sunday. */
+export function comingSunday(now: Date): string | null {
+  const day = churchDay(now);
+  if (!day) return null;
+  return isoFromDayNumber(dayNumber(day.iso) + ((7 - day.weekday) % 7));
+}
+
+/**
+ * The scheduled broadcast for the coming Sunday, as of `now`, or null. Null
+ * when there is none, when its title does not split into a sermon and a
+ * reading, and when two different broadcasts claim the same Sunday (never
+ * guess which one the church meant).
+ */
+export function upcomingBroadcast(
+  entries: readonly FeedEntry[],
+  now: Date,
+): UpcomingBroadcast | null {
+  const target = comingSunday(now);
+  if (!target) return null;
+  const found: UpcomingBroadcast[] = [];
+  for (const e of entries) {
+    if (e.views !== 0) continue; // a replay, or a feed that stopped carrying views
+    if (Date.parse(e.published) > now.getTime()) continue;
+    if (broadcastSunday(e.published) !== target) continue;
+    const parts = splitVideoTitle(e.title);
+    if (!parts.title || !parts.reading) continue;
+    found.push({
+      videoId: e.videoId,
+      sunday: target,
+      ...parts,
+      watchUrl: `https://www.youtube.com/watch?v=${e.videoId}`,
+    });
+  }
+  const first = found[0];
+  if (!first) return null;
+  return found.every((b) => b.title === first.title && b.reading === first.reading) ? first : null;
+}

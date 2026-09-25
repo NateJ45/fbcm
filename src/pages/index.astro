@@ -13,7 +13,9 @@ import { DEFAULT_HOME_SECTIONS } from '@/data/defaultSections';
 import { shouldOverlayHeader } from '@/lib/heroOverlay';
 import type { SundaySermon } from '@/lib/live-sunday';
 import LastSunday from '@/components/home/LastSunday.astro';
-import { loadLastSunday } from '@/lib/last-sunday';
+import { loadFeedXml, loadLastSunday } from '@/lib/last-sunday';
+import { comingSunday, parseYoutubeFeed, upcomingBroadcast } from '@/lib/youtube-feed';
+import { thisSundaySermon } from '@/lib/this-sunday';
 // scaffold: journal
 import { getAllJournalEntries } from '@/lib/queries';
 import { previewForSunday, sermonForUpcomingSunday } from '@/lib/sunday-sermon';
@@ -22,40 +24,50 @@ import type { RegisterEntry } from '@/lib/blog-derive';
 
 const [page, siteSettings] = await Promise.all([getHomePage(), getSiteSettings()]);
 
-// THIS SUNDAY'S SERMON (2026-09-24). The build's "now", on the church's
-// calendar, picks the preview written for the coming Sunday, if the church has
-// posted one; the hero's dated line then names it. The upgrade script in
-// BaseLayout drops it again when the page outlives that Sunday.
-let sermon: SundaySermon | null = null;
-// scaffold: journal
-const journal = (await getAllJournalEntries()) as RegisterEntry[];
-sermon = sermonForUpcomingSunday(journal, new Date());
-// scaffold:end
-
-// LAST SUNDAY (2026-09-24, `feat/last-sunday`). The most recent Sunday
-// service recording, read at BUILD time from the channel's public feed
-// (src/lib/last-sunday.ts); null when the feed fails or holds no recording,
-// and then the band is simply not drawn. The deploy workflow rebuilds on
-// Sunday afternoon and Monday morning so the band keeps up (deploy.yml).
+// THE CHANNEL FEED, read ONCE at build time (src/lib/last-sunday.ts) and
+// shared by the hero's dated line and the "Last Sunday" band. null when it
+// fails, and then both simply go without it. The deploy workflow rebuilds on
+// a schedule so both keep up with the week (deploy.yml).
 //
 // The test seam: Playwright's build sets LAST_SUNDAY_FIXTURE=1 (the committed
 // feed in tests/fixtures/, read at LAST_SUNDAY_NOW) or =unavailable (no feed).
-// No deploy sets either.
+// No deploy sets either. LAST_SUNDAY_NOW is the build's "now" for the hero
+// line too, so both halves of the page are decided at one moment.
 const fixture = import.meta.env.LAST_SUNDAY_FIXTURE as string | undefined;
-const feedXml: string | null | undefined =
+const feedXml: string | null =
   fixture === '1'
     ? (await import('../../tests/fixtures/youtube-feed.xml?raw')).default
     : fixture === 'unavailable'
       ? null
-      : undefined;
-const feedNow = import.meta.env.LAST_SUNDAY_NOW
+      : await loadFeedXml(siteSettings);
+const buildNow = import.meta.env.LAST_SUNDAY_NOW
   ? new Date(import.meta.env.LAST_SUNDAY_NOW as string)
   : new Date();
-const lastSunday = await loadLastSunday(
-  siteSettings,
-  feedNow,
-  feedXml === undefined ? {} : { xml: feedXml },
+
+// THIS SUNDAY'S SERMON (2026-09-24). The build's "now", on the church's
+// calendar, picks the coming Sunday; the line names that Sunday's sermon
+// preview if the church posted one, else the sermon of the broadcast
+// scheduled for it on YouTube (src/lib/this-sunday.ts). The upgrade script in
+// BaseLayout drops it again when the page outlives that Sunday.
+let preview: SundaySermon | null = null;
+// scaffold: journal
+const journal = (await getAllJournalEntries()) as RegisterEntry[];
+preview = sermonForUpcomingSunday(journal, buildNow);
+// scaffold:end
+const sermon: SundaySermon | null = thisSundaySermon(
+  comingSunday(buildNow),
+  preview,
+  upcomingBroadcast(parseYoutubeFeed(feedXml), buildNow),
 );
+
+// LAST SUNDAY (2026-09-24, `feat/last-sunday`). The most recent Sunday
+// service recording in the same feed; null when the feed fails or holds no
+// recording, and then the band is simply not drawn. The scheduled broadcast
+// above is never it: a broadcast that has not happened has no views.
+const lastSunday = await loadLastSunday(siteSettings, buildNow, {
+  xml: feedXml,
+  checkThumbnail: fixture === undefined,
+});
 // When the church posted a sermon preview for that Sunday, the band pairs
 // with it (the post's title and reading, and a link to it).
 let lastPreview: { href: string; title: string; reading: string } | null = null;

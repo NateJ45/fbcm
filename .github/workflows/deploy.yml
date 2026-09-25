@@ -23,7 +23,7 @@ name: Deploy
 #                       webhook is a per-project setup step; see
 #                       docs/agent/deployment.md.
 # workflow_dispatch     a human, for when something needs pushing out now.
-# schedule              twice a week, for the parts of the site built from the
+# schedule              four times a week, for the parts of the site built from the
 #                       CLOCK rather than from a commit or a publish (added
 #                       2026-09-24, `feat/last-sunday`): the home page's "Last
 #                       Sunday" band reads the church's YouTube feed at build
@@ -37,8 +37,21 @@ name: Deploy
 #                         Monday 10:00 UTC = 6 am EDT / 5 am EST; catches the
 #                           usual replay, which this channel publishes just
 #                           after midnight Monday, church time.
+#                         Thursday 12:00 UTC = 8 am EDT / 7 am EST; catches
+#                           the coming Sunday's broadcast, which the church
+#                           schedules on YouTube midweek (Wednesday 2 pm for
+#                           September 27), so the hero line can name its
+#                           sermon (added 2026-09-24, `feat/this-sunday-
+#                           youtube`; src/lib/this-sunday.ts).
+#                         Saturday 12:00 UTC = 8 am EDT / 7 am EST; catches a
+#                           broadcast scheduled late in the week, or retitled.
+#                       Why not rely on Sanity publishes: they are the church
+#                       editing pages, not a weekly rhythm, and a quiet week
+#                       has none, so the line would miss the broadcast in
+#                       exactly the weeks nobody touched the site. Two more
+#                       builds a week are about eight minutes of runner time.
 #                       Cron is UTC only, so the Eastern times shift an hour in
-#                       winter; both still fall after the event they wait for.
+#                       winter; each still falls after the event it waits for.
 #                       GitHub pauses schedules in a repo with no activity for
 #                       60 days; a push re-arms them.
 #
@@ -71,6 +84,8 @@ on:
   schedule:
     - cron: '0 18 * * 0' # Sunday 2 pm EDT (1 pm EST): Last Sunday's replay, early
     - cron: '0 10 * * 1' # Monday 6 am EDT (5 am EST): Last Sunday's replay, usual
+    - cron: '0 12 * * 4' # Thursday 8 am EDT (7 am EST): this Sunday's broadcast, scheduled midweek
+    - cron: '0 12 * * 6' # Saturday 8 am EDT (7 am EST): this Sunday's broadcast, if late
 
 # Deploys queue rather than cancelling each other. cancel-in-progress would
 # abort a run mid `wrangler deploy`, and three spare minutes is a much better

@@ -155,6 +155,11 @@ test('quotes around a title are replaced, apostrophes are curled', () => {
   assert.equal(sermonParts('“Hope”', '')?.title, '‘Hope’');
 });
 
+test('a quoted word inside a title opens with ‘ and closes with ’', () => {
+  assert.equal(shortSermonTitle(`Let Your 'Yes' Be Yes`), 'Let Your ‘Yes’ Be Yes');
+  assert.equal(shortSermonTitle(`Your 'No,' No`), 'Your ‘No,’ No');
+});
+
 test('an empty title yields no sermon', () => {
   assert.equal(sermonParts('   ', 'John 3:16'), null);
 });

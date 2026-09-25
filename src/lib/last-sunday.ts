@@ -71,6 +71,15 @@ export interface LastSundayInput {
   livestreamUrl?: string | null;
 }
 
+/** The channel feed's XML for the church in Site settings, or null. */
+export async function loadFeedXml(
+  settings: LastSundayInput | null | undefined,
+  fetchImpl: Fetch = fetch,
+): Promise<string | null> {
+  const channelId = youtubeChannelId(settings?.youtubeUrl, settings?.livestreamUrl);
+  return channelId ? fetchFeed(channelId, fetchImpl) : null;
+}
+
 /**
  * Last Sunday's recording for the church in Site settings, as of `now`, or
  * null. `hasLarge` says whether the 640px thumbnail exists.
@@ -78,7 +87,7 @@ export interface LastSundayInput {
 export async function loadLastSunday(
   settings: LastSundayInput | null | undefined,
   now: Date,
-  opts: { fetchImpl?: Fetch; xml?: string | null } = {},
+  opts: { fetchImpl?: Fetch; xml?: string | null; checkThumbnail?: boolean } = {},
 ): Promise<(SundayRecording & { hasLarge: boolean }) | null> {
   const fetchImpl = opts.fetchImpl ?? fetch;
   let xml = opts.xml;
@@ -89,9 +98,12 @@ export async function loadLastSunday(
   }
   const rec = lastSundayRecording(parseYoutubeFeed(xml), now);
   if (!rec) return null;
-  const hasLarge =
-    opts.xml !== undefined
-      ? true
-      : await thumbnailExists(`https://i.ytimg.com/vi/${rec.videoId}/sddefault.jpg`, fetchImpl);
+  // The HEAD check runs for a fetched feed, and for handed-in XML only when
+  // asked (the home page fetches the feed once and shares it with the hero
+  // line, src/pages/index.astro); a fixture's thumbnails are never checked.
+  const check = opts.checkThumbnail ?? opts.xml === undefined;
+  const hasLarge = !check
+    ? true
+    : await thumbnailExists(`https://i.ytimg.com/vi/${rec.videoId}/sddefault.jpg`, fetchImpl);
   return { ...rec, hasLarge };
 }
