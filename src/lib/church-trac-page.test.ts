@@ -232,3 +232,16 @@ test("the Ministries page's Children and Youth bands link their newsletter", () 
   assert.equal(newsletterBlock('worship'), null);
   assert.equal(newsletterBlock(undefined), null);
 });
+
+// Church Trac answers 403 to `Accept-Language: *` (Node fetch's default).
+test('the page fetch sends a real Accept-Language, which Church Trac requires', async () => {
+  const churchTrac = async (_url: string, init?: RequestInit) => {
+    const h = new Headers(init?.headers);
+    const lang = h.get('accept-language');
+    return !h.get('user-agent') || !lang || lang.trim() === '*'
+      ? new Response('Forbidden', { status: 403 })
+      : new Response(fixture('children'));
+  };
+  const html = await fetchChurchTracPage('https://x/', churchTrac as typeof fetch, 1000, () => {});
+  assert.ok(html?.includes('page-card-body'));
+});

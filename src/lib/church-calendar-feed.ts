@@ -102,7 +102,15 @@ export async function fetchCalendar(
     try {
       const res = await fetchImpl(feedUrl(code), {
         signal: controller.signal,
-        headers: { Accept: 'text/calendar, */*;q=0.1' },
+        // Church Trac's servers answer 403 to a request with NO User-Agent
+        // (the build's workerd prerender sends none) and to
+        // `Accept-Language: *` (Node's fetch default). Both measured
+        // 2026-09-25 with curl; either one alone is refused.
+        headers: {
+          Accept: 'text/calendar, */*;q=0.1',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'User-Agent': 'Mozilla/5.0 (compatible; FBCM-website-build; +https://www.fbcmuncie.org)',
+        },
       });
       const text = await res.text();
       if (res.ok && /BEGIN:VCALENDAR/i.test(text)) return text;

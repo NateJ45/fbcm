@@ -348,3 +348,18 @@ test("Home's band: the next three dated rows, soonest first, or none", async () 
   // After the last dated event, nothing: the band is not drawn.
   assert.deepEqual(nextEvents(whatsOn(parseIcs(FIXTURE), new Date('2026-12-20T16:00:00Z'))), []);
 });
+
+// Church Trac answers 403 to `Accept-Language: *`, which Node's fetch sends by
+// default (2026-09-25: every real build got 403 until the header was set).
+// This stand-in server behaves the same way, so dropping the header fails here.
+test('the fetch sends a real Accept-Language, which Church Trac requires', async () => {
+  const churchTrac = async (_url: string, init?: RequestInit) => {
+    const h = new Headers(init?.headers);
+    const lang = h.get('accept-language');
+    return !h.get('user-agent') || !lang || lang.trim() === '*'
+      ? new Response('<html>403 Forbidden</html>', { status: 403 })
+      : new Response(FIXTURE, { status: 200 });
+  };
+  const text = await fetchCalendar('X', churchTrac as typeof fetch, 1000, () => {});
+  assert.ok(text?.startsWith('BEGIN:VCALENDAR'));
+});

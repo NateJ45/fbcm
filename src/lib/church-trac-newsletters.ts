@@ -109,7 +109,10 @@ export async function fetchChurchTracPage(
         signal: controller.signal,
         headers: {
           Accept: 'text/html',
-          // Church Trac's site answers a request with no browser name 403.
+          // Church Trac's servers answer 403 to a request with NO User-Agent
+          // (the build's workerd prerender sends none) and to
+          // `Accept-Language: *` (Node's fetch default); measured 2026-09-25.
+          'Accept-Language': 'en-US,en;q=0.9',
           'User-Agent': 'Mozilla/5.0 (compatible; FBCM-website-build; +https://www.fbcmuncie.org)',
         },
       });
