@@ -74,3 +74,7 @@ src/layouts/BaseLayout.astro
 # CI never sees them, which means the local gate fails while CI passes and the
 # gate gets ignored. Added 2026-09-18 after exactly that.
 .claude/worktrees/
+
+# Church Trac pages saved as served (2026-09-25), read by the newsletter
+# reader's tests. Byte snapshots of another site's HTML: never reformatted.
+tests/fixtures/churchtrac-*.html

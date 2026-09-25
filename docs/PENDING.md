@@ -1050,16 +1050,17 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
 
 ### This Sunday's sermon and a real "Live now" (2026-09-24, `feat/sunday`)
 
-- [ ] #nathan **Create a YouTube Data API key and set it as the Worker secret `YOUTUBE_API_KEY`.**
-      Until then "Live now" keeps its time window, exactly as today. Google Cloud Console, new
-      project, enable "YouTube Data API v3", Credentials, API key, restrict it to YouTube Data
-      API v3 (application restrictions: none). Then from the repo root run
-      `npx wrangler secret put YOUTUBE_API_KEY -c dist/server/wrangler.json`, or add it in the
-      dashboard (fbcm-site, Settings, Variables and Secrets, type Secret). On a Sunday between
-      9:30 am and 1:00 pm `/api/live-status` must not say `unknown`. Full steps and the quota
-      arithmetic (worst case 280 units per Cloudflare location per Sunday, of 10,000 a day):
-      `docs/agent/deployment.md`, "Live now: the YouTube check". Best done after the cutover:
-      the edge cache works only on a real zone, not on `workers.dev`.
+- **Done (2026-09-25): the Worker secret `YOUTUBE_API_KEY` is set on `fbcm-site`.** The key came
+  from Jonathan (the church's Google account); Nathan put it on the Worker. Setup steps and the
+  quota arithmetic (worst case 280 units per Cloudflare location per Sunday, of 10,000 a day) stay
+  in `docs/agent/deployment.md`, "Live now: the YouTube check". Until the cutover only the isolate
+  cache applies: the edge cache works only on a real zone, not on `workers.dev`.
+- [ ] #nathan **Check the live check on Sunday 2026-09-27, between 9:30 am and 1:00 pm.**
+      `https://fbcm-site.nathanjnixon86.workers.dev/api/live-status` must say `live` or
+      `not-live` with no `reason`, never `unknown`. `unknown` with `no-key` means the secret is
+      not reaching the Worker; `youtube-403-...` means the key's API restriction or the API itself
+      is not enabled. Also confirm the channel id Jonathan sent is `UCTm6q6Q7OJ6VrURz3YXVP6A`
+      (the id in `KNOWN_CHANNELS`, below); a different id means a different channel, to be added.
 - **The channel id is resolved once, in code.** `KNOWN_CHANNELS` in `src/lib/live-status.ts` maps
   `FbcmuncieOrg` to `UCTm6q6Q7OJ6VrURz3YXVP6A` (checked 2026-09-24). If the church changes channel,
   the endpoint answers `unknown` (`no-channel`) until the new id is added there or Site settings
@@ -1087,9 +1088,130 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   the dated line (the hero's, `live-sunday.ts`) would fix it everywhere at once; not done here
   because the hero shares the string.
 
+### What's On: the Church Trac calendar at /events (2026-09-25, `claude/kind-heisenberg-jf34rt`)
+
+- [x] **Local review, 2026-09-25 (main session, branch `review/cloud-whats-on`).** Every real
+      build got **403** from Church Trac for the calendar feed and the newsletter pages, so
+      /events and Home's What's On band built empty. Cause, measured with curl: Church Trac
+      refuses a request with NO User-Agent (the build's workerd prerender sends none) and one
+      with `Accept-Language: *` (Node fetch's default); either alone is refused. Fixed in both
+      fetchers (commit `b2ee5189`), with a stand-in-server test for each. After the fix: /events
+      has 4 dated events and 3 weekly ones, both newsletters build, no fetch failures in the log,
+      parity 176/176 on two builds, 1278 unit and 513 Playwright tests pass.
+- [x] **Not a bug: the "darker October" on /events** was the site's fixed paper-grain layer
+      (`body:before`, `position: fixed`), which a full-page screenshot paints over the first
+      viewport only. A visitor scrolling sees it everywhere.
+- [x] **Fixed: a newsletter section with no title card left its left column empty** at 1280
+      (/youth-news, "6th-12th Grade"). Its own heading now sits in that column (`.nl-side` in
+      `Newsletter.astro`); the words keep their one left edge, and phones are unchanged.
+- [x] **Decided 2026-09-25 (Nathan):** the Messiah Sing-In may show both on Home's blog rows and
+      in What's On; funerals on the public Church Trac calendar show on /events (the code has
+      no filter, and none is on the calendar today).
+- [ ] #nathan **The Kid's Corner still shows summer content** from Church Trac ("Summer Day
+      Camps", "Register for Water Wars" on July 11). The church edits that page in Church Trac.
+- [ ] **Church Trac's own calendar embed shows "No events to display"** on this site (the
+      /styleguide form-band sample). Use /events for the calendar, not the embed.
+- [ ] **The footer's "Elsewhere" column still says "Church Center: calendar and giving".**
+      Change it in Site settings when Church Center goes.
+
+- [ ] #nathan **Fix the time zone in Church Trac.** Every event in the feed says
+      `TZID=America/Halifax` (Atlantic time) while its times are Muncie's (Sunday School 9:30,
+      Worship 10:45). The site ignores the zone and reads the times as Muncie's clock, so
+      /events is right either way. But anyone who subscribes to the Church Trac feed on a
+      phone, or adds an event from Church Trac's own page, gets every event an hour early
+      (Halifax is one hour ahead). Change the account's time zone to Eastern (Indiana) in
+      Church Trac's settings. Nothing on the site needs changing afterwards.
+- [ ] #nathan **Merge, then add "What's On" to the navigation.** The header, footer and menu
+      are Site settings (Navigation) in the Studio: add a link to `/events`. The page exists on
+      the first deploy after the merge either way, and `/events` is now a reserved slug.
+- [ ] #nathan **Put the calendar in Site settings > Church systems > Events calendar**
+      (`https://www.churchtrac.com/public_calendar?ui=0C7B1090`, or
+      `https://fbcmuncie.churchtrac.com/upcoming_events`). Either works: the page reads the
+      calendar code from the box and falls back to the church's own (`FBCM_CALENDAR_CODE` in
+      `src/lib/church-calendar-feed.ts`) while the box holds Church Center, nothing, or a Church
+      Trac page with no code. Some other calendar in the box turns the list off.
+- [ ] #nathan **Ask the church about pastoral events on the public calendar.** On 2026-09-25 the
+      published feed carried a funeral and a visitation, with the name. They are past, so the
+      page does not show them, but the next one will appear on /events and in Google's event
+      listings while it is upcoming. The "Published" switch on each Church Trac event decides.
+- **Descriptions are cut at the source.** Church Trac stops each description at about 250
+  characters, mid-word. The page trims a cut one back to its last whole sentence (or its last
+  word and an ellipsis): Worship's and the Messiah Sing-In's read shorter than the church wrote
+  them. The full text is only in Church Trac.
+- **Home's What's On band (`src/components/home/WhatsOnBand.astro`)** shows the next three
+  dated events after The Visitor, in the insert slot, on the opposite ground to the band above
+  (The Visitor's rule). It repeats what the Church Blog rows below may carry for the same event
+  (today the Messiah Sing-In is both an FBCM Events post and a calendar event). If that reads as
+  a duplicate, the blog rows could drop an events post whose date is on the calendar.
+- **Playwright in the Claude cloud container** cannot check Home's band order or The Visitor's
+  covers: there is no Sanity project there (no blog rows, no /visit) and `cdn.sanity.io` is
+  refused. The calendar's own suite passes there; the full suite is CI's.
+- **Node's fetch in the Claude cloud container is refused `www.churchtrac.com`** even when curl
+  is allowed through, so a build there draws the "could not be read" state. The deploy runner
+  and a laptop reach it. Use `CHURCH_CALENDAR_FIXTURE=1` to see the page there.
+
+### The ministry newsletters from Church Trac (2026-09-25, `claude/kind-heisenberg-jf34rt`)
+
+- [ ] #nathan **Tell the Youth Ministry about the template text in their banner.** The Moose's
+      Message's published banner in Church Trac still carries Church Trac's own "Add a Headline
+      and Paragraph for this section, or click "Use a Template"..." under "Jesus is the Answer".
+      The site leaves it out (`isTemplateText` in `src/lib/church-trac-page.ts`), but Church
+      Trac's page and the church app show it.
+- [ ] #nathan **Put the two newsletters in the menu.** The old site had "Children's Newsletter"
+      and "Youth Newsletter" in a header dropdown. The menu is Site settings > Navigation in the
+      Studio: link `/kids-corner` and `/youth-news` there. The footer's first column and the
+      Children and Youth bands on Ministries link them already (code, no Studio edit).
+- [ ] #nathan **Fill Site settings > Church systems > Church app** if it is empty, so the
+      newsletters' closing band shows "Get the church app".
+- [ ] #nathan **Approve the new sentences** (the approval note, "What's On, Church Trac forms and
+      the ministry newsletters").
+- **How it works and what can break.** Church Trac has no feed for these pages, so
+  `src/lib/church-trac-page.ts` reads their HTML (a small tokenizer, no new dependency),
+  keeps the banner's published sections and the body's `.page-card-section`s, and draws
+  headings, paragraphs (bold, italic, links), title cards, buttons and two-column schedules.
+  If Church Trac changes its page code, the read returns nothing and the page falls back to
+  "Read it on Church Trac", with `[church-trac-page]` in the deploy log. The two real pages of
+  2026-09-25 are the fixtures; a failing unit test after a Church Trac change means refresh
+  them and adjust the reader.
+- **The pictures are words.** Church Trac's images here are the mastheads and the section
+  title cards ("What's Happening", "Tip of the Month"), all 1500 x 600. The masthead is named
+  for a screen reader; the cards are decorative, since the build cannot read their lettering.
+  They are served from Church Trac (`cdn.churchtrac.com`), not copied.
+- **A third newsletter** is one entry in `NEWSLETTERS` (`src/lib/church-trac-newsletters.ts`),
+  one small page file, one reserved slug (both copies and the test) and one share card.
+
+### Church Trac forms on the site (2026-09-25, `claude/kind-heisenberg-jf34rt`)
+
+- [ ] #nathan **Deploy before anyone uses it (schema change, rule 1).** The branch adds the
+      `churchTracForm` document and the `churchTracFormSection` band. Merge, deploy, open the
+      live `/studio`, check `Church Trac forms` is in the menu on the left and nothing offers
+      "Remove field". Nobody has seen it in a real Studio yet: the cloud container that built it
+      could not reach Sanity (the Studio mounted to its "Couldn't reach the Sanity servers" page
+      with no errors of its own, and `npx sanity schema validate` passed with none).
+- [ ] #nathan **Get the embed codes from Church Trac and add the first forms.** For each form:
+      Church Connect, the form, Show Additional Options, `Form/Giving Embed Domain` =
+      `fbcm-site.nathanjnixon86.workers.dev` today; giving under Connect Setup, Connect
+      Settings / Users, Online Giving, Embed (set its colours to the brand there). Then the
+      Studio's Help guide "Put a Church Trac form on a page" walks the rest. Suggested first:
+      the connection card on /visit and giving on /give once Church Trac giving is live.
+- [ ] #nathan **Check the first real embed code against the reader.** It was written from Church
+      Trac's documentation, not from a real code: `src/lib/church-trac-form.ts` keeps the
+      iframe's `src` when it is https on churchtrac.com. If Church Trac's code turns out to be a
+      script, or points at another host, the Studio refuses it with a message and the reader
+      needs one more case. Also check a real form's height against the three sizes (560, 820
+      and 1180 px, a quarter more on a phone) and whether it scrolls inside its frame.
+- **The embed domain changes at the cutover.** Step 5 of "After the move" in the cutover plan.
+- **The frame does not size itself.** Church Trac's documentation says nothing of a resize
+  message, so the Studio's `Form size` sets the height. If Church Trac turns out to post its
+  height to the page, a small listener could replace the choice.
+- **`npm run scaffold -- --remove church --write` leaves 2 type errors, neither from this
+  branch:** `rich-ground.ts` imports `staff-band.ts` and `index.astro` names
+  `VisitorManifest` outside their church regions. The Church Trac form pieces all go cleanly
+  (checked on this branch, then discarded).
+
 ### Church links, for the move to Church Trac (2026-09-24, `feat/church-links`)
 
-- [ ] #nathan **Deploy, then run the migration.** The Church systems boxes are new schema
+- [x] **Done 2026-09-24 (commit `8ccde56`, backup `scripts/data/backups/church-links-2026-09-24.json`):** deployed, then `church-links.mjs --apply --deployed` with Nathan's OK; 113 links in 102 documents now read from Site settings > Church systems. Original entry: **Deploy, then run the migration.** The Church systems boxes are new schema
       fields (rule 1), so the order is: merge, deploy, open the live `/studio`, check Site
       settings shows the **Church systems** tab and nothing offers "Remove field", then
       `node scripts/church-links.mjs` (read the plan: 113 links in 102 documents, 6 boxes

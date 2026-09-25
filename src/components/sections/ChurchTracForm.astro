@@ -1,0 +1,185 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// Page-builder block: a Church Trac form on the page (2026-09-25). The form
+// the church built in Church Trac (a connection card, a prayer request,
+// online giving) in the site's own frame, with the heading and a few words
+// beside it, so the visitor fills it in without leaving the site.
+//
+// THE FORM IS A POINTER. The band stores the page's words (small line,
+// heading, a few words beside it) and a reference to a "Church Trac form"
+// document, where the embed code lives once (src/sanity/schemaTypes/
+// churchTracForm.ts). Two pages showing the connection card show one form.
+//
+// ONLY A CHURCH TRAC ADDRESS REACHES THE PAGE. The pasted code is never
+// rendered. src/lib/church-trac-form.ts takes the iframe's address out of
+// it, keeps it only when it is https on churchtrac.com, and this file draws
+// its own <iframe> with that address, the form's name as its title (what a
+// screen reader announces), and the Studio's "Form size" as its height, a
+// quarter taller on a phone (Church Trac's frame does not size itself to its
+// form). A band whose form
+// is missing or whose code is not a Church Trac form draws nothing on the
+// live site, never an empty frame.
+//
+// CHURCH TRAC CHECKS WHERE IT IS SHOWN. Its "Form/Giving Embed Domain"
+// setting only lets the form open on the address typed there, read from the
+// page's origin, which the site sends (Referrer-Policy strict-origin-when-
+// cross-origin in public/_headers). So that setting holds this site's
+// address, and it changes when fbcmuncie.org moves over (docs/PENDING.md).
+// `allow="payment"` lets the giving form use the browser's payment sheet.
+//
+// THE LOOK: one grammar with the other text-and-picture bands (rule 17). The
+// words in five twelfths at the left, the frame in seven at the right, the h2
+// in the shared heading grammar. The frame is the register's: a gold rule
+// over a hairline box, white inside, where Church Trac's own form sits. On a
+// phone: the heading and words, then the frame, then the "open in a new tab"
+// line. The band takes the cadence's paper (background or muted), like the
+// other content bands, and carries no colour field (rule 9).
+//
+// THE WAY OUT. Under the frame, "Open the form in a new tab" goes to the same
+// address (derived, rule 15), for a browser that blocks the frame or a
+// visitor who would rather have the whole screen.
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
+import { surfaceClass } from '@/lib/surfaces';
+import { formHeight, formSrc } from '@/lib/church-trac-form';
+import { splitStega } from '@/lib/preview-stega';
+import type { ProjectedChurchTracForm } from '@/lib/pageBuilder.types';
+
+interface Props {
+  eyebrow?: string | null;
+  heading?: string | null;
+  intro?: string | null;
+  form?: ProjectedChurchTracForm | null;
+  surface?: 'background' | 'muted';
+  headingId: string;
+}
+
+const { eyebrow, heading, intro, form, surface = 'background', headingId } = Astro.props as Props;
+
+const src = formSrc(form?.embed);
+const height = formHeight(form?.size);
+// The frame's accessible name: the form's own name, cleaned of the preview's
+// invisible markers (a title attribute is announced as it is).
+const formName = splitStega(String(form?.title ?? '')).cleaned.trim() || 'Church Trac form';
+const headingText = String(heading ?? '');
+const bg = surfaceClass(surface);
+---
+
+{
+  src && (
+    <section class:list={['ctf-band', bg]} aria-labelledby={headingId} data-church-trac-form>
+      <div class="ctf-grid mx-auto max-w-content px-gutter py-section-lg">
+        <div class="ctf-head min-w-0">
+          {eyebrow && (
+            <p class="mt-0 mb-4 font-ui text-ui font-semibold tracking-eyebrow text-gold-ink uppercase">
+              {eyebrow}
+            </p>
+          )}
+          <h2
+            id={headingId}
+            class:list={[H2_DISPLAY, 'h-fit text-indigo']}
+            style={headingFit(headingText)}
+          >
+            <span class="h-fit-in">{heading}</span>
+          </h2>
+          {intro && (
+            <p class="mt-6 mb-0 max-w-[36rem] font-body text-lg leading-relaxed whitespace-pre-line text-indigo">
+              {intro}
+            </p>
+          )}
+        </div>
+
+        <div class="ctf-form min-w-0">
+          <div class="ctf-frame">
+            <iframe
+              src={src}
+              title={formName}
+              loading="lazy"
+              allow="payment"
+              style={`--ctf-h:${height}px`}
+            />
+          </div>
+          <p class="ctf-out">
+            <a href={src} target="_blank" rel="noopener noreferrer">
+              Open the form in a new tab<span class="sr-only">: {formName}</span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  /* The phone reads the heading and words, then the form. A wide screen is
+     the text-and-picture split: five twelfths of words, seven of form. */
+  .ctf-grid {
+    display: grid;
+    row-gap: clamp(28px, 4vw, 40px);
+  }
+  @media (min-width: 1024px) {
+    .ctf-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: clamp(40px, 5vw, 72px);
+      align-items: start;
+    }
+    /* The words stay in view beside a long form. */
+    .ctf-head {
+      position: sticky;
+      top: calc(var(--header-offset, 96px) + 24px);
+    }
+  }
+
+  /* The frame: the register's gold rule over a hairline box, white inside,
+     where Church Trac's own form sits. */
+  .ctf-frame {
+    border-top: 2px solid var(--color-gold);
+    border-inline: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    background: var(--color-white-pure);
+  }
+  /* The Studio's size on a wide screen. On a phone a form's questions wrap,
+     so the same form is taller: a quarter more there. */
+  .ctf-frame iframe {
+    display: block;
+    width: 100%;
+    height: var(--ctf-h, 820px);
+    border: 0;
+  }
+  @media (max-width: 639px) {
+    .ctf-frame iframe {
+      height: calc(var(--ctf-h, 820px) * 1.25);
+    }
+  }
+
+  /* The way out: the UI face, underlined in gold, like "Add to calendar". */
+  .ctf-out {
+    margin: 14px 0 0;
+  }
+  .ctf-out a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--color-indigo);
+    text-decoration: none;
+    background: linear-gradient(var(--color-gold), var(--color-gold)) 0 calc(100% - 10px) / 100% 1px
+      no-repeat;
+  }
+  .ctf-out a::after {
+    content: '\2197';
+    margin-left: 0.4em;
+    color: var(--color-gold-ink);
+  }
+  .ctf-out a:hover,
+  .ctf-out a:focus-visible {
+    background-size: 100% 2px;
+  }
+  .ctf-out a:focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 2px;
+  }
+</style>

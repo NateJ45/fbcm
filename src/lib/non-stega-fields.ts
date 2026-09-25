@@ -94,6 +94,10 @@ const NON_STEGA_FIELDS = new Set([
   // so an encoded value would list the ministry under no goal, in the
   // preview only.
   'goal',
+  // churchTracForm.embed (2026-09-25) is pasted embed code the site PARSES for
+  // one address (src/lib/church-trac-form.ts): logic, never display text.
+  // Its `size` (short | medium | long) is already on the list above.
+  'embed',
   // scaffold:end
   // slug.current: an id or a URL segment, never display text. Added 2026-09-19
   // with anchorField(): the section anchor is written straight into `id=` and

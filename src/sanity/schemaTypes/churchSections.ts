@@ -1076,6 +1076,54 @@ export const letterSection = defineType({
   preview: { select: { title: 'heading', subtitle: 'signature' } },
 });
 
+// The Church Trac form band (2026-09-25). A form the church built in Church
+// Trac, shown on the page in the site's own frame, with a heading and a few
+// words beside it. Like the Ministry band it only POINTS at the form: the
+// embed code lives once, on the "Church Trac form" document, so a form shown
+// on two pages is changed in one place. What the frame may show is decided by
+// src/lib/church-trac-form.ts (a churchtrac.com address, nothing else).
+export const churchTracFormSection = defineType({
+  name: 'churchTracFormSection',
+  title: 'Church Trac form',
+  type: 'object',
+  description:
+    'A Church Trac form on this page. Add or change the form itself under Church Trac forms in the menu on the left.',
+  fields: [
+    defineField({
+      name: 'eyebrow',
+      title: 'Small line above the heading',
+      type: 'string',
+      description: 'Optional. Like "Let us know you are coming".',
+    }),
+    heading, // "Connection Card"
+    defineField({
+      name: 'intro',
+      title: 'A few words beside the form',
+      type: 'text',
+      rows: 3,
+      description: 'Optional. What the form is for and what happens after someone sends it.',
+    }),
+    defineField({
+      name: 'form',
+      title: 'Form',
+      type: 'reference',
+      to: [{ type: 'churchTracForm' }],
+      description:
+        'Pick one. To add a new one, open Church Trac forms in the menu on the left and paste the embed code from Church Trac.',
+      validation: (r) => r.required(),
+    }),
+    anchorField(),
+  ],
+  preview: {
+    select: { title: 'heading', form: 'form.title' },
+    // Strings only (audit:studio check 2).
+    prepare: ({ title, form }) => ({
+      title: typeof title === 'string' && title ? title : 'Church Trac form',
+      subtitle: typeof form === 'string' && form ? `Church Trac form: ${form}` : 'Church Trac form',
+    }),
+  },
+});
+
 export const CHURCH_SECTION_TYPES = [
   sundayTimesSection,
   timelineSection,
@@ -1092,5 +1140,6 @@ export const CHURCH_SECTION_TYPES = [
   goalsSection,
   pledgeSection,
   letterSection,
+  churchTracFormSection,
 ];
 // scaffold:end

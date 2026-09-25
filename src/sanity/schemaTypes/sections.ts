@@ -770,6 +770,7 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
         'goalsSection',
         'pledgeSection',
         'letterSection',
+        'churchTracFormSection',
       ],
     },
     // scaffold:end

@@ -1,0 +1,517 @@
+---
+// Safe to edit by hand for copy + structure changes.
+// "What's On" (2026-09-25, `feat/whats-on`): the church calendar, read from
+// Church Trac's iCal feed at build time and drawn in the church's own
+// identity. Church Trac is the ONE place an event is typed (CLAUDE.md rule
+// 15): nothing on this page is stored in Sanity, and a Church Trac edit shows
+// here on the next rebuild (deploy.yml rebuilds every morning). Only events
+// marked "Published" in Church Trac are in the feed.
+//
+// The reading of the feed (Muncie's clock, recurrences, the cut descriptions,
+// runs of the same event) is src/lib/church-calendar.ts, unit tested; the
+// fetch is src/lib/church-calendar-feed.ts; each row's calendar file is
+// src/pages/events/[file].ics.ts.
+//
+// The page, top to bottom:
+//   1. Opener on the indigo band (every page's opener): eyebrow, h1, a lede,
+//      and the full Church Trac calendar as the door on the right.
+//   2. Coming up, on paper: the dated events by month, in the register's
+//      grammar (the month where the register hangs its year, a gold rule,
+//      ruled rows). Each row: the date as a tile | the title, when and where,
+//      the description | Add to calendar.
+//   3. Every week, on the brown band (the hymn board's ground): the standing
+//      weekly gatherings, day and time on the left, what and where on the right.
+//   4. When the feed could not be read: one line and the Church Trac link,
+//      never an empty page.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getSiteSettings } from '@/lib/queries';
+import { breadcrumbSchema } from '@/lib/schemas';
+import { SITE_FACTS } from '@/lib/schemas';
+import { ldJson } from '@/lib/church-schema';
+import { site } from '@/data/site';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
+import { headlineScale, headlineClass } from '@/lib/headline-scale';
+import { codeFor, loadWhatsOn, publicCalendarUrl } from '@/lib/church-calendar-feed';
+import { calendarEventNode } from '@/lib/church-calendar-schema';
+import {
+  dateLabel,
+  dayOfMonth,
+  dayShort,
+  daysPlural,
+  monthShort,
+  timeRange,
+  whenLine,
+} from '@/lib/church-calendar';
+
+const siteSettings = await getSiteSettings();
+const on = await loadWhatsOn(siteSettings);
+
+// The full calendar on Church Trac: Site settings' Events calendar box when it
+// holds one, else the church's own calendar (church-calendar-feed.ts).
+const code = codeFor(siteSettings);
+const fullCalendar = code ? publicCalendarUrl(code) : siteSettings?.calendarUrl || null;
+
+const churchName = 'First Baptist Church';
+const pageUrl = `${site.url}/events`;
+const heading = "What's On";
+const scale = headlineScale(heading, { tall: false });
+const lede = 'Events, classes and gatherings at First Baptist, from the church calendar.';
+
+const title = `What's On | ${site.name}`;
+const description =
+  'Upcoming events and weekly gatherings at First Baptist Church Muncie: Sunday School, fellowship, concerts, classes and more.';
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: site.url },
+    { name: "What's On", url: pageUrl },
+  ]),
+  ...(on?.months ?? []).flatMap((m) =>
+    m.items.map((it) =>
+      ldJson(
+        calendarEventNode(it, {
+          site: SITE_FACTS,
+          pageUrl,
+          churchName,
+          address: siteSettings?.address,
+        }),
+      ),
+    ),
+  ),
+];
+
+// "Fellowship Hall" is worth saying; "First Baptist Church" on a church's own
+// calendar is not.
+const where = (loc: string) => (loc && loc !== churchName ? loc : '');
+const icsHref = (key: string) => `/events/${key}.ics`;
+---
+
+<BaseLayout {title} {description} {schemas} {siteSettings}>
+  <div class="bg-band-indigo text-white-pure">
+    <div class="mx-auto max-w-content px-gutter">
+      <div class="ev-open">
+        <div class="l">
+          <p class="font-ui text-ui font-medium text-gold">Church calendar</p>
+          <h1
+            id="events-heading"
+            class:list={['mt-5 text-white-pure', headlineClass(scale, { tall: false })]}
+          >
+            {heading}
+          </h1>
+          <p class="mt-6 max-w-[34em] font-body text-lede text-band-taupe italic">{lede}</p>
+        </div>
+        {
+          fullCalendar && (
+            <div class="r">
+              <p class="font-ui text-ui font-medium text-gold">The full calendar</p>
+              <p class="mt-3 font-body text-lg text-white-pure/85">
+                Every published event, month by month, on Church Trac.
+              </p>
+              <a class="ev-door" href={fullCalendar} target="_blank" rel="noopener noreferrer">
+                Open the calendar<span class="sr-only"> (opens in a new tab)</span>
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <section class="bg-background" aria-labelledby="coming-up">
+    <div class="mx-auto max-w-content px-gutter pt-section-md pb-section-lg">
+      <h2 id="coming-up" class:list={[H2_DISPLAY, 'text-indigo']}>Coming up</h2>
+
+      {
+        !on && (
+          <p class="mt-8 max-w-[62ch] font-body text-body text-brown-ink">
+            The calendar could not be read just now.{' '}
+            {fullCalendar && (
+              <>
+                See every event on <a href={fullCalendar}>the church calendar</a>.
+              </>
+            )}
+          </p>
+        )
+      }
+      {
+        on && on.count === 0 && (
+          <p class="mt-8 max-w-[62ch] font-body text-body text-brown-ink">
+            Nothing is on the calendar in the months ahead yet. Our weekly gatherings are below.
+          </p>
+        )
+      }
+
+      {
+        on?.months.map((m) => (
+          <div class="month">
+            <h3 class="month-h font-display" id={`m-${m.key}`}>
+              {m.label}
+            </h3>
+            <ol class="rows">
+              {m.items.map((it) => (
+                <li class="row" id={it.key}>
+                  <p class="tile" aria-hidden="true">
+                    <span class="tile-d">{dayShort(it.date)}</span>
+                    <span class="tile-n">{dayOfMonth(it.date)}</span>
+                    <span class="tile-m">{monthShort(it.date)}</span>
+                  </p>
+                  <div class="body">
+                    <h4 class="ev-title">{it.title}</h4>
+                    <p class="ev-when">
+                      <time datetime={it.date}>{whenLine(it)}</time>
+                      <span class="dot" aria-hidden="true">
+                        ·
+                      </span>
+                      <span>{timeRange(it.startMinutes, it.durationMinutes)}</span>
+                      {where(it.location) && (
+                        <>
+                          <span class="dot" aria-hidden="true">
+                            ·
+                          </span>
+                          <span>{where(it.location)}</span>
+                        </>
+                      )}
+                    </p>
+                    {it.description && <p class="ev-desc">{it.description}</p>}
+                  </div>
+                  {it.startMinutes !== null && (
+                    <a class="add" href={icsHref(it.key)} download>
+                      Add to calendar
+                      <span class="sr-only">
+                        : {it.title}, {dateLabel(it.date)}
+                      </span>
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    on && on.weekly.length > 0 && (
+      <section class="bg-band-brown text-bg" aria-labelledby="every-week">
+        <div class="mx-auto max-w-content px-gutter py-section-lg">
+          <h2 id="every-week" class:list={[H2_DISPLAY, 'text-bg']}>
+            Every week
+          </h2>
+          <ol class="weekly">
+            {on.weekly.map((w) => (
+              <li class="wk" id={w.key}>
+                <p class="wk-when">
+                  <span class="wk-day">{daysPlural(w.days)}</span>
+                  <span class="wk-time">{timeRange(w.startMinutes, w.durationMinutes)}</span>
+                </p>
+                <div class="min-w-0">
+                  <h3 class="wk-title">{w.title}</h3>
+                  {where(w.location) && <p class="wk-where">{where(w.location)}</p>}
+                  {w.description && <p class="wk-desc">{w.description}</p>}
+                  {w.startMinutes !== null && (
+                    <a class="add add-dark" href={icsHref(w.key)} download>
+                      Add to calendar
+                      <span class="sr-only">
+                        : {w.title}, {daysPlural(w.days)}
+                      </span>
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  /* The opener: the journal opener's grid (cols 1 to 7, the door in 9 to 12). */
+  .ev-open {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+    row-gap: 40px;
+    padding-block: clamp(48px, 7vw, 104px) clamp(48px, 6vw, 88px);
+  }
+  .ev-open .l {
+    grid-column: 1 / 8;
+    min-width: 0;
+  }
+  .ev-open .r {
+    grid-column: 9 / 13;
+    align-self: end;
+    border-top: 2px solid var(--color-gold);
+    padding-top: 18px;
+  }
+  @media (max-width: 1023px) {
+    .ev-open .l,
+    .ev-open .r {
+      grid-column: 1 / -1;
+    }
+  }
+  .ev-door {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 14px;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    text-decoration: none;
+    background: linear-gradient(var(--color-gold), var(--color-gold)) 0 calc(100% - 8px) / 100% 1px
+      no-repeat;
+    transition: color 0.2s;
+  }
+  .ev-door::after {
+    content: '\2197';
+    margin-left: 0.5em;
+  }
+  .ev-door:hover,
+  .ev-door:focus-visible {
+    color: var(--color-white-pure);
+  }
+  .ev-door:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 4px;
+  }
+
+  /* A month: the register's year group, with the month where the year hangs. */
+  .month {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+    border-top: 2px solid var(--color-gold);
+    padding-top: 18px;
+    margin-top: clamp(36px, 4.5vw, 56px);
+  }
+  .month-h {
+    grid-column: 1 / 4;
+    margin: 0;
+    font-weight: 400;
+    font-size: var(--text-h3);
+    line-height: 1.05;
+    color: var(--color-indigo);
+    scroll-margin-top: var(--header-offset, 96px);
+  }
+  .rows {
+    grid-column: 4 / 13;
+    min-width: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* A row: date tile | the event | Add to calendar, on the brown hairline. */
+  .row {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+    column-gap: clamp(18px, 2.6vw, 40px);
+    align-items: start;
+    padding: 20px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    scroll-margin-top: var(--header-offset, 96px);
+  }
+  .row:first-child {
+    padding-top: 4px;
+  }
+  .row:last-child {
+    border-bottom: 0;
+  }
+  .row:target {
+    background: color-mix(in srgb, var(--color-gold) 14%, transparent);
+  }
+  .tile {
+    display: grid;
+    justify-items: center;
+    margin: 0;
+    padding: 8px 0 10px;
+    border: 1px solid color-mix(in srgb, var(--color-brown-ink) 45%, transparent);
+    font-family: var(--font-ui);
+    font-variant-numeric: lining-nums;
+    line-height: 1;
+  }
+  .tile-d,
+  .tile-m {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gold-ink);
+  }
+  .tile-n {
+    margin: 6px 0 5px;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--color-indigo);
+  }
+  .body {
+    min-width: 0;
+  }
+  .ev-title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(1.1875rem, 1rem + 0.5vw, 1.4375rem);
+    line-height: 1.2;
+    color: var(--color-indigo);
+  }
+  .ev-when {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 10px;
+    margin: 6px 0 0;
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    font-variant-numeric: lining-nums;
+    color: var(--color-brown-ink);
+  }
+  .ev-desc {
+    max-width: 62ch;
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-foreground);
+    white-space: pre-line;
+  }
+
+  /* Add to calendar: the UI face, underlined on the baseline in gold. */
+  .add {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    color: var(--color-indigo);
+    text-decoration: none;
+    background: linear-gradient(var(--color-gold), var(--color-gold)) 0 calc(100% - 10px) / 100% 1px
+      no-repeat;
+  }
+  .add::before {
+    content: '+';
+    margin-right: 0.4em;
+    color: var(--color-gold-ink);
+  }
+  .add:hover,
+  .add:focus-visible {
+    background-size: 100% 2px;
+  }
+  .add:focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 1279px) {
+    .month {
+      display: block;
+    }
+    .month-h {
+      margin-bottom: 12px;
+    }
+  }
+  @media (max-width: 767px) {
+    .row {
+      grid-template-columns: 3.75rem minmax(0, 1fr);
+      row-gap: 4px;
+    }
+    .tile-n {
+      font-size: 1.625rem;
+    }
+    /* Date, time and room one to a line: a wrapped "·" would start a line. */
+    .ev-when {
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ev-when .dot {
+      display: none;
+    }
+    .add {
+      grid-column: 2;
+      justify-self: start;
+    }
+  }
+
+  /* Every week, on the brown band: the hymn board's ground. */
+  .weekly {
+    list-style: none;
+    margin: clamp(28px, 3vw, 40px) 0 0;
+    padding: 0;
+    border-top: 2px solid var(--color-gold);
+  }
+  .wk {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    column-gap: clamp(18px, 2.6vw, 40px);
+    padding: 22px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-taupe) 40%, transparent);
+    scroll-margin-top: var(--header-offset, 96px);
+  }
+  .wk:last-child {
+    border-bottom: 0;
+  }
+  .wk-when {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-variant-numeric: lining-nums;
+  }
+  .wk-day {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+  .wk-time {
+    display: block;
+    margin-top: 4px;
+    font-size: 1.0625rem;
+    color: var(--color-taupe);
+  }
+  .wk-title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(1.25rem, 1rem + 0.7vw, 1.625rem);
+    line-height: 1.2;
+    color: var(--color-bg);
+  }
+  .wk-where {
+    margin: 4px 0 0;
+    font-family: var(--font-ui);
+    color: var(--color-taupe);
+  }
+  .wk-desc {
+    max-width: 62ch;
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-bg) 88%, transparent);
+    white-space: pre-line;
+  }
+  .add-dark {
+    margin-top: 6px;
+    color: var(--color-bg);
+  }
+  .add-dark::before {
+    color: var(--color-gold);
+  }
+  .add-dark:focus-visible {
+    outline-color: var(--color-gold);
+  }
+  @media (max-width: 767px) {
+    .wk {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 8px;
+    }
+  }
+</style>

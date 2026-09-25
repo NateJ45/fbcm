@@ -207,6 +207,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       "ministry": ministry->{
         _id,
         title,
+        "slug": slug.current,
         eyebrow,
         headline,
         goal, // scaffold: church
@@ -231,6 +232,12 @@ export function sectionsProjection(field = 'pageBuilder'): string {
     _type == "letterSection" => {
       ...,
       portrait${IMAGE_PROJECTION}
+    },
+    // A Church Trac form band holds only a reference; the form's name, embed
+    // code and size are on the churchTracForm document (2026-09-25).
+    _type == "churchTracFormSection" => {
+      ...,
+      "form": form->{ _id, title, embed, size }
     }
     // scaffold:end
   }`;

@@ -60,6 +60,8 @@ export const CONTENT_TYPES = new Set([
   'documentListSection',
   'linkCardsSection',
   'hoursSection',
+  // A Church Trac form sits on the page's paper, in the alternating rhythm.
+  'churchTracFormSection',
   // scaffold:end
 ]);
 

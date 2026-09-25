@@ -62,6 +62,7 @@ import Hours from '@/components/sections/Hours.astro';
 // The Who We Are bands (Task 4, 2026-09-23).
 import WatchwordBand from '@/components/sections/WatchwordBand.astro';
 import PledgeReading from '@/components/sections/PledgeReading.astro';
+import ChurchTracForm from '@/components/sections/ChurchTracForm.astro';
 import PastorsLetter from '@/components/sections/PastorsLetter.astro';
 // The goals (Task 5, 2026-09-23).
 import GoalsBand from '@/components/sections/GoalsBand.astro';
@@ -678,6 +679,17 @@ const WATCHWORD_FIXTURE: ProjectedWatchwordSection = {
   ]),
   praise: 'That our purpose is worship, lifting up the name of God: Father, Son and Holy Spirit.',
   proclaim: 'That our joy is to share the Good News of Jesus with our neighbors and the world.',
+};
+
+// The Church Trac form band (2026-09-25). No form's embed code exists yet, so
+// the frame shows the church's public Church Trac calendar as a stand-in: a
+// real churchtrac.com page that proves the frame, its size and its way out.
+const CHURCH_TRAC_FORM_FIXTURE = {
+  _id: 'sg-church-trac-form',
+  title: 'Connection card (sample)',
+  embed:
+    '<iframe src="https://www.churchtrac.com/public_calendar?ui=0C7B1090&amp;view=listMonth"></iframe>',
+  size: 'medium',
 };
 
 const PLEDGE_FIXTURE: ProjectedPledgeSection = {
@@ -1676,6 +1688,16 @@ const JOURNAL_LIST_FIXTURE = {
     />
   </div>
   <PledgeReading block={PLEDGE_FIXTURE} headingId="styleguide-pledge" />
+  <div id="styleguide-church-trac-form">
+    <ChurchTracForm
+      eyebrow="Let us know you are coming"
+      heading="Connection Card"
+      intro="Tell us a little about yourself and a greeter will look out for you on Sunday. We read every card."
+      form={CHURCH_TRAC_FORM_FIXTURE}
+      surface="muted"
+      headingId="styleguide-church-trac-form-h"
+    />
+  </div>
   {/* And with no photographs: the words alone, one column. */}
   <div id="styleguide-hero-window-bare">
     <Hero

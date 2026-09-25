@@ -90,6 +90,7 @@ import { socialLinksOf, socialLinkLabel } from '@/lib/social-links';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
 import { getFooterPages } from '@/lib/queries';
 import { withFooterPages } from '@/lib/footer-pages';
+import { NEWSLETTERS } from '@/lib/church-trac-newsletters';
 import { telHref } from '@/lib/phone';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
 import { clockParts, staticSunday, timeOnly } from '@/lib/live-sunday';
@@ -250,7 +251,13 @@ const creditName = reattachStega(
 // Office column below always render, so the footer is never bare. A page whose
 // own "Show in the footer" switch is on joins the first column (The Visitor,
 // 2026-09-24; src/lib/footer-pages.ts).
-const sanityFooterColumns = withFooterPages(chrome.footerColumns, await getFooterPages());
+// The ministry newsletters drawn from Church Trac (2026-09-25) join it the
+// same way, after the switched-on pages: they are pages in code, not in the
+// Studio, so they have no switch of their own.
+const sanityFooterColumns = withFooterPages(chrome.footerColumns, [
+  ...(await getFooterPages()),
+  ...NEWSLETTERS.map((n) => ({ title: n.fallbackTitle, slug: n.slug })),
+]);
 
 // The small-print row at the very bottom. EMPTY means "keep the built-in
 // privacy link", which is rendered as its own markup below.
