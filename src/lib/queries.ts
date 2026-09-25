@@ -94,7 +94,11 @@ export function sectionsProjection(field = 'pageBuilder'): string {
           // post's featured image in a small lancet and print the author's
           // name as text beside the category. Never an author portrait.
           "coverImage": coverImage${IMAGE_PROJECTION},
-          author
+          author,
+          // The body as plain text, never displayed: src/lib/past-events.ts
+          // reads the date an FBCM Events post announces from it, so Home's
+          // rows can drop an event that is over (2026-09-25, rule 15).
+          "text": pt::text(body)
         },
         // scaffold:end
         // 2026-09-18: the trailing [] is the select's DEFAULT arm, and it is

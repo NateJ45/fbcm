@@ -37,6 +37,7 @@ import {
   rowDate,
   rowDateTime,
 } from '@/lib/blog-derive';
+import { withoutPastEvents } from '@/lib/past-events';
 // scaffold:end
 
 type Props = {
@@ -67,6 +68,12 @@ type Props = {
   /** How many cards across on a desktop. Three is what this grid always was. */
   columns?: number;
   headingId?: string;
+  /**
+   * The instant "past" is measured from (journal source). Unset, it is the
+   * build's own clock; the styleguide passes a fixed day so its wall of fixed
+   * data stays fixed.
+   */
+  now?: Date;
 };
 
 const {
@@ -80,6 +87,7 @@ const {
   cta,
   columns,
   headingId = 'dynamic-list-heading',
+  now = new Date(),
 } = Astro.props as Props;
 
 // scaffold: journal
@@ -90,9 +98,27 @@ const {
 // DERIVED from each post's category and the two piles are concatenated, so the
 // previews are still there, just behind the durable ones, and nothing about
 // this reads journalEntry.featured (CLAUDE.md rule 15).
+//
+// NO PAST EVENTS (2026-09-25, feat/visit-fixes). Before the split, an FBCM
+// Events post whose event is over is dropped (src/lib/past-events.ts reads the
+// date off the post; nothing is stored). The next posts in the batch move up
+// in their place, and when the batch runs out the band shows fewer rows
+// rather than a stale one. /blog is not touched and stays the complete
+// register.
 const durableFirst = (() => {
   if (source !== 'journal') return items;
-  const { durable, previews } = splitDurable(items as any[]);
+  const current = withoutPastEvents(
+    (items ?? []).map((item) => ({
+      item,
+      title: item.title,
+      excerpt: item.summary,
+      text: item.text,
+      publishedAt: item.meta,
+      categories: item.categories,
+    })),
+    now,
+  ).map((c) => c.item);
+  const { durable, previews } = splitDurable(current as any[]);
   return [...durable, ...previews] as typeof items;
 })();
 // scaffold:end
