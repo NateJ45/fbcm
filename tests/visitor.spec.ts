@@ -120,13 +120,23 @@ test.describe('at 320', () => {
 test.describe('home', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test('the band names the newest issue and leads to it', async ({ page }) => {
+  test('the band names the newest issue and leads to its page', async ({ page }) => {
     await page.goto('/');
     const band = page.locator('[data-visitor-band]');
     await expect(band).toHaveAttribute('data-visitor-band', 'issue-2026-09');
-    await expect(band).toContainText('The Visitor');
-    await expect(band).toContainText('September 2026 issue');
-    await expect(band.getByRole('link')).toHaveAttribute('href', PAGE);
+    await expect(band.getByRole('heading', { level: 2 })).toHaveText('The Visitor');
+    await expect(band).toContainText('The September 2026 issue');
+    // Both the button and the text link go to the newsletter's page, never
+    // to a 15 to 75 MB PDF (the fixture's page stands in for /visitor here).
+    const read = band.getByRole('link', { name: 'Read the latest issue' });
+    await expect(read).toHaveAttribute('href', PAGE);
+    const past = band.getByRole('link', { name: /^Past issues/ });
+    await expect(past).toHaveAttribute('href', PAGE);
+    for (const href of await band
+      .locator('a')
+      .evaluateAll((as) => as.map((a) => a.getAttribute('href')))) {
+      expect(href).toBe(PAGE);
+    }
     // Straight after Last Sunday, before the blog rows.
     const order = await page
       .locator('main section')
@@ -135,6 +145,83 @@ test.describe('home', () => {
       );
     const ls = order.indexOf('ls');
     if (ls >= 0) expect(order.indexOf('vb')).toBe(ls + 1);
+  });
+
+  test('the intro is the church’s own, and the age is derived from the /visitor page', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const band = page.locator('[data-visitor-band]');
+    await expect(band.locator('[data-visitor-intro]')).toHaveText(
+      'Our church newsletter, filled with features, information about church life, and articles from both church members and pastoral staff.',
+    );
+    // The fixture's eyebrow is "Our church newsletter since 1946", and the
+    // suite's build is dated 2026-09-24 (LAST_SUNDAY_NOW): 2026 - 1946 = 80.
+    await expect(band.locator('[data-visitor-eyebrow]')).toHaveText('Since 1946 · Quarterly');
+    await expect(band.locator('[data-visitor-age]')).toHaveText('80 years in print');
+    // No em-dash in anything the band says (CLAUDE.md rule 2).
+    expect(await band.innerText()).not.toContain(String.fromCharCode(0x2014));
+  });
+
+  test('the newest cover leads, the two before it behind, all lazy', async ({ page }) => {
+    await page.goto('/');
+    const band = page.locator('[data-visitor-band]');
+    const imgs = band.locator('img');
+    await expect(imgs).toHaveCount(3);
+    for (const img of await imgs.all()) await expect(img).toHaveAttribute('loading', 'lazy');
+    // Only the front cover is announced; the two behind it are decorative.
+    await expect(band.getByRole('img')).toHaveCount(1);
+    await expect(band.getByRole('img')).toHaveAttribute(
+      'alt',
+      'The Visitor, September 2026, cover',
+    );
+    // The pile is for the pointer: the button is the one keyboard stop for it.
+    await expect(band.locator('.vb-pile')).toHaveAttribute('tabindex', '-1');
+  });
+
+  test('its ground differs from the band above and the band below', async ({ page }) => {
+    await page.goto('/');
+    const grounds = await page.evaluate(() => {
+      const band = document.querySelector('section.vb-band') as HTMLElement;
+      const bg = (el: Element | null | undefined) =>
+        el ? getComputedStyle(el as Element).backgroundColor : '';
+      const prev = band.previousElementSibling;
+      const above = prev?.matches('section') ? prev : prev?.querySelector('section');
+      const below = band.nextElementSibling?.querySelector('section');
+      return { band: bg(band), above: bg(above), below: bg(below) };
+    });
+    expect(grounds.band).not.toBe(grounds.above);
+    expect(grounds.band).not.toBe(grounds.below);
+  });
+
+  test('Home passes axe with the band', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('[data-visitor-band]').scrollIntoViewIfNeeded();
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+      .analyze();
+    expect(results.violations).toEqual([]);
+  });
+});
+
+test.describe('home at 320', () => {
+  test.use({ viewport: { width: 320, height: 700 } });
+
+  test('the band and its fanned covers stay inside the viewport', async ({ page }) => {
+    await page.goto('/');
+    const band = page.locator('[data-visitor-band]');
+    await band.scrollIntoViewIfNeeded();
+    const m = await band.evaluate((b) => ({
+      over: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      right: Math.max(...[...b.querySelectorAll('*')].map((e) => e.getBoundingClientRect().right)),
+      width: document.documentElement.clientWidth,
+    }));
+    expect(m.over).toBeLessThanOrEqual(0);
+    expect(m.right).toBeLessThanOrEqual(m.width);
+    // The name, the pile, then the words: the order Last Sunday reads in.
+    const y = async (sel: string) => (await band.locator(sel).first().boundingBox())!.y;
+    expect(await y('h2')).toBeLessThan(await y('.vb-pile'));
+    expect(await y('.vb-pile')).toBeLessThan(await y('[data-visitor-intro]'));
   });
 });
 

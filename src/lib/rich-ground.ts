@@ -43,6 +43,15 @@ const BY_TYPE: Record<string, Family> = {
   giveBandSection: 'gold',
 };
 
+/**
+ * The colour family a church band of this type paints, by type alone, 'paper'
+ * for anything else. The Visitor's home band reads it to know whether the row
+ * above it is dark (visitor-band.ts), so the table stays in one place.
+ */
+export function bandFamilyOfType(type: string | null | undefined): Family {
+  return (type && BY_TYPE[type]) || 'paper';
+}
+
 interface Row {
   block: { _type?: string; group?: unknown; [k: string]: unknown };
   surface: 'background' | 'muted' | null;

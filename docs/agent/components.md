@@ -456,13 +456,40 @@ search. No schema changed; the page is two `documentListSection` blocks seeded b
   year on indigo, sized in container units) with the same accessible name.
 - **The build step** (`npm run visitor`, inside `npm run build` before Astro). Reads the
   /visitor page from Sanity (published, CDN) and the committed fixture; writes
-  `src/data/visitor.generated.json` (which covers exist, where the list lives, the newest issue)
+  `src/data/visitor.generated.json` (which covers exist, where the list lives, the newest issue,
+  the two before it and the year in the list's eyebrow)
   and `node_modules/.cache/visitor/records.json` (each issue's text). Never fails the build.
   `VISITOR_FIXTURE=1` (Playwright only) reads the fixture as the page.
-- **Home** (`src/components/home/VisitorBand.astro`). A slim paper band, "The Visitor ·
-  September 2026 issue · Read it" with the small cover, placed through SectionRenderer's
-  `insert` slot straight after Last Sunday. It links to `/visitor`, not the PDF, because the
-  files are 15 to 75 MB. It renders only once the /visitor page is published.
+- **Home** (`src/components/home/VisitorBand.astro`, enlarged 2026-09-25 in
+  `feat/visitor-band`). A full band placed through SectionRenderer's `insert` slot straight
+  after Last Sunday, in Last Sunday's split (words in 5/12 at the left, picture in 7/12 at the
+  right from 1024 px; on a phone the h2, the picture, then the words, the order Last Sunday
+  reads in). Words: the eyebrow "Since 1946 · Quarterly", the h2 "The Visitor" in the shared
+  grammar (`H2_DISPLAY` + `headingFit`), the church's own sentence from its publications page
+  ("Our church newsletter, filled with features, information about church life, and articles
+  from both church members and pastoral staff."), "The September 2026 issue" under a short gold
+  rule, the gold "Read the latest issue" plate and a "Past issues" text link. Picture: the
+  newest cover in front, the two issues before it fanned behind (3 and 6 degrees from the
+  bottom-left corner, the pile keeping 26% of its width free on the right so a turned cover
+  never crosses the column: rules 18 and 19), every cover a lazy `<img>`, only the front one
+  announced ("The Visitor, September 2026, cover"), and "80 years in print" under the pile.
+  The pile is a pointer-only link (`tabindex="-1"`); the button is the keyboard stop. Every
+  link goes to `/visitor`, never the PDF (15 to 75 MB). Rule 15, in `src/lib/visitor-band.ts`
+  (unit-tested): the year the newsletter began is read by the build step from the /visitor
+  issue list's own eyebrow, "Our church newsletter since 1946" (`sinceYear`, the digits after
+  "since"), and carried in the manifest as `since`, so it lives in one place, the page; the
+  age is the build's year on the church's clock minus it (`ageLine`; the page's build "now",
+  `LAST_SUNDAY_NOW` in the test build), so it goes up with the first build each January; the
+  intro is a code constant (`VISITOR_INTRO`) because the page carries no intro in the church's
+  words, and its edit is listed in `scripts/pages/visitor.mjs` for the approval note. A line
+  with no year drops the year and the age rather than guess. The manifest also carries
+  `previous` (the two issues after the newest). The ground is derived from the band above
+  (`visitorGround`): paper under a dark band, indigo (the colour of /visitor's opener) under a
+  light one. On Home that is paper under Last Sunday's indigo, and indigo under Our Building's
+  paper when the feed gave no recording; neither matches the taupe blog rows or the gold give
+  band below. The dark row types come from rich-ground's table (`bandFamilyOfType`), with the
+  heritage band counted as paper because only its /history opener is brown. It renders only
+  when the build found a latest issue.
 - **Footer.** A page's "Show in the footer" switch (`addToFooter`, in the schema since the
   starter and read by nothing until now) adds it to the first footer column
   (`src/lib/footer-pages.ts`, one query per build via `getFooterPages()`). The Visitor's seed

@@ -91,6 +91,14 @@ export interface VisitorManifest {
   listHref: string | null;
   /** The newest issue of that list, for the home band. */
   latest: Issue | null;
+  /** The two issues before it, newest first, drawn behind it on the home
+   * band (0 to 2 of them). Optional: a manifest written before 2026-09-25
+   * has none. */
+  previous?: Issue[];
+  /** The year The Visitor began, read from the list's own short line over its
+   * heading ("Our church newsletter since 1946", visitor-band.ts sinceYear);
+   * null when the line names none. */
+  since?: number | null;
   /** Every cover drawn, by asset id. */
   covers: Record<string, CoverInfo>;
 }

@@ -1,129 +1,274 @@
 ---
 // Safe to edit by hand
 // scaffold-file: church
-// The Visitor on the home page (2026-09-24, feat/the-visitor): one slim band,
-// "The Visitor · September 2026 issue · Read it", with the issue's small cover.
+// The Visitor on the home page (2026-09-24, feat/the-visitor; enlarged
+// 2026-09-25, feat/visitor-band): a full band with the newsletter's name, the
+// church's own description of it, its age, the newest issue named, and the
+// newest cover large with the two issues before it fanned behind, so the
+// picture reads as a long-running publication rather than one leaflet.
 //
 // NOT A PAGE-BUILDER BLOCK, like "Last Sunday": the home page is composed in
 // Sanity and adding a block there is a content write, so the band is drawn from
 // code and placed through SectionRenderer's `insert` slot, straight after Last
 // Sunday and before the Church Blog rows (src/pages/index.astro).
 //
-// EVERYTHING IS DERIVED (rule 15). The issue is the newest on the /visitor
-// page, read by the build step (scripts/visitor-covers.mjs) into
-// src/data/visitor.generated.json; the band updates itself the build after an
-// editor adds an issue. It renders only once that page is published (before,
-// there is nothing for it to point at), and in the Playwright build from the
-// committed fixture.
+// EVERYTHING IS DERIVED (rule 15). The issues are the newest three on the
+// /visitor page, read by the build step (scripts/visitor-covers.mjs) into
+// src/data/visitor.generated.json; the year the newsletter began is read from
+// that page's own short line, "Our church newsletter since 1946"; the age is
+// the build's year minus it; the intro is the church's own sentence
+// (src/lib/visitor-band.ts has all four rules). The band renders only when
+// there is a latest issue, and in the Playwright build from the committed
+// fixture.
+//
+// ONE GRAMMAR WITH THE BAND ABOVE (rule 17). The same split as Last Sunday:
+// the words in five twelfths at the left, the picture in seven at the right,
+// the h2 in the shared heading grammar (heading-grammar.ts H2_DISPLAY). A phone
+// reads the same order Last Sunday does: the name, the picture, then the
+// words and the buttons. The heading leads, as it does in every band on the
+// page, and the covers come before the intro so the band is recognisable
+// as the newsletter at a glance before a word of prose.
 //
 // IT LINKS TO /visitor, NOT TO THE PDF. The issues are 15 to 75 MB files; a
 // tap on the home page of a phone should not start one unannounced. /visitor
-// opens on the same issue, large, with its size beside the button, so the
-// newest issue is still one tap from the band and a second from the file,
-// and the archive is right under it.
+// opens on the same issue, large, with its size beside the button. The gold
+// button, "Past issues" and the pile all go there (the page opens on the
+// newest issue and the wall of past covers is right under it). The pile is a
+// second link for the pointer only (out of the tab order: the button is the
+// one keyboard users meet), and its front cover carries the issue's text
+// alternative; the two behind it are decorative.
 //
-// The ground is paper, between the indigo of Last Sunday above and the taupe
-// of the blog rows below, and it matches neither. The whole row is one link;
-// its words name it, so the cover inside it is decorative.
+// THE GROUND comes from the band above (visitor-band.ts visitorGround): paper
+// under a dark band, indigo under a light one. The covers are lazy and sit
+// several screens below the hero, so none is ever the page's largest paint.
 import IssueCover from '@/components/visitor/IssueCover.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { NEWSLETTER, coverFor, type Issue, type CoverInfo } from '@/lib/visitor-issues';
+import {
+  VISITOR_INTRO,
+  ageLine,
+  bandEyebrow,
+  issueLine,
+  type VisitorGround,
+} from '@/lib/visitor-band';
 
 interface Props {
   issue: Issue;
+  /** Up to two issues before it, newest first; drawn behind it. */
+  previous?: Issue[];
   covers: Record<string, CoverInfo>;
   href: string;
+  /** The year The Visitor began, from the /visitor page; null when unknown. */
+  since?: number | null;
+  /** The build's "now": the age is counted to its year. */
+  now: Date;
+  ground: VisitorGround;
+  headingId: string;
 }
 
-const { issue, covers, href } = Astro.props as Props;
+const {
+  issue,
+  previous = [],
+  covers,
+  href,
+  since = null,
+  now,
+  ground,
+  headingId,
+} = Astro.props as Props;
+
+const dark = ground === 'indigo';
+const age = ageLine(since, now);
+const behind = previous.slice(0, 2);
+// The front cover is 340px wide from 640px up, and 58% of the viewport on a
+// phone (the pile's width rule below); the ones behind are drawn the same size.
+const sizes = '(min-width: 640px) 340px, 58vw';
 ---
 
 <section
-  class="vb-band border-y border-indigo/10 bg-bg text-indigo"
-  aria-label={NEWSLETTER}
+  class:list={['vb-band', dark ? 'bg-band-indigo text-bg' : 'bg-bg text-indigo']}
+  aria-labelledby={headingId}
   data-visitor-band={issue.anchor}
+  data-ground={ground}
   data-pagefind-ignore
 >
-  <div class="mx-auto max-w-content px-gutter py-[clamp(24px,3.5vw,40px)]">
-    <a {href} class="vb-link group">
-      <span class="vb-cover">
-        <IssueCover issue={issue} cover={coverFor(issue, covers)} sizes="80px" decorative />
-      </span>
-      <span class="vb-words">
-        <span class="vb-name">{NEWSLETTER}</span>
-        <span class="vb-dot" aria-hidden="true">·</span>
-        <span class="vb-issue">{issue.label} issue</span>
-        <span class="vb-dot" aria-hidden="true">·</span>
-        <span class="vb-read">
-          Read it<span
-            aria-hidden="true"
-            class="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-            >&#8594;</span
-          >
+  <div class="vb-grid mx-auto max-w-content px-gutter py-section-lg">
+    <div class="vb-head min-w-0">
+      <p
+        class:list={[
+          'mt-0 mb-4 font-ui text-ui font-semibold tracking-eyebrow uppercase',
+          dark ? 'text-gold' : 'text-gold-ink',
+        ]}
+        data-visitor-eyebrow
+      >
+        {bandEyebrow(since)}
+      </p>
+      <h2
+        id={headingId}
+        class:list={[H2_DISPLAY, 'h-fit', dark ? 'text-bg' : 'text-indigo']}
+        style={headingFit(NEWSLETTER)}
+      >
+        <span class="h-fit-in">{NEWSLETTER}</span>
+      </h2>
+    </div>
+
+    <div class="vb-body min-w-0">
+      <p
+        class:list={[
+          'mt-0 mb-0 max-w-[36rem] font-body text-lg leading-relaxed',
+          dark ? 'text-bg/85' : 'text-indigo',
+        ]}
+        data-visitor-intro
+      >
+        {VISITOR_INTRO}
+      </p>
+      <p
+        class:list={[
+          'vb-issue mt-7 mb-0 font-body text-h3 leading-[1.15]',
+          dark && 'vb-issue-dark',
+        ]}
+      >
+        {issueLine(issue.label)}
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-x-7 gap-y-5">
+        <CtaLink
+          cta={{ label: 'Read the latest issue' }}
+          fallbackHref={href}
+          variant="gold"
+          onDark={dark}
+        />
+        <CtaLink cta={{ label: 'Past issues' }} fallbackHref={href} variant="link" onDark={dark} />
+      </div>
+    </div>
+
+    <figure class="vb-picture m-0 min-w-0">
+      <a {href} class="vb-pile group" tabindex="-1">
+        {
+          behind
+            .map((prev, i) => (
+              <span class:list={['vb-sheet', `vb-sheet-${i + 2}`]} aria-hidden="true">
+                <IssueCover issue={prev} cover={coverFor(prev, covers)} {sizes} decorative />
+              </span>
+            ))
+            .reverse()
+        }
+        <span class="vb-sheet vb-sheet-1">
+          <IssueCover issue={issue} cover={coverFor(issue, covers)} {sizes} />
         </span>
-      </span>
-    </a>
+      </a>
+      {
+        age && (
+          <figcaption
+            class:list={[
+              'mt-6 mb-0 font-ui text-ui font-semibold tracking-eyebrow uppercase',
+              dark ? 'text-gold' : 'text-gold-ink',
+            ]}
+            data-visitor-age
+          >
+            {age}
+          </figcaption>
+        )
+      }
+    </figure>
   </div>
 </section>
 
 <style>
-  .vb-link {
-    display: flex;
-    align-items: center;
-    gap: clamp(16px, 3vw, 32px);
-    color: inherit;
-    text-decoration: none;
+  /* The phone reads the name, the pile, then the words and the buttons. A
+     wide screen is Last Sunday's split: five twelfths of words at the left,
+     the heading over the body, and the pile in seven at the right. */
+  .vb-grid {
+    display: grid;
+    grid-template-areas: 'head' 'picture' 'body';
+    row-gap: clamp(28px, 4vw, 40px);
   }
-  .vb-link:focus-visible {
-    outline: 2px solid var(--color-indigo);
-    outline-offset: 6px;
+  .vb-head {
+    grid-area: head;
   }
-  .vb-cover {
-    flex: none;
-    width: clamp(56px, 8vw, 80px);
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--color-indigo) 18%, transparent),
-      0 8px 18px -12px rgb(28 27 58 / 0.5);
+  .vb-body {
+    grid-area: body;
   }
-  .vb-words {
-    display: flex;
-    min-width: 0;
-    flex-wrap: wrap;
-    align-items: baseline;
-    column-gap: 0.75rem;
-    row-gap: 0.25rem;
+  .vb-picture {
+    grid-area: picture;
   }
-  .vb-name {
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 2.4vw, 1.75rem);
-    line-height: 1.1;
-    color: var(--color-indigo);
-  }
-  .vb-issue {
-    font-family: var(--font-body);
-    font-size: clamp(1.0625rem, 1.8vw, 1.3125rem);
-    line-height: 1.3;
-  }
-  .vb-dot {
-    color: var(--color-gold-ink);
-  }
-  .vb-read {
-    font-family: var(--font-ui);
-    font-size: var(--text-ui);
-    font-weight: 600;
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    color: var(--color-gold-ink);
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 2px;
-  }
-  /* On a phone the three parts stack under the name, so the dots go. */
-  @media (max-width: 639.98px) {
-    .vb-words {
-      flex-direction: column;
-      align-items: flex-start;
+  @media (min-width: 1024px) {
+    .vb-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      grid-template-areas: 'head picture' 'body picture';
+      grid-template-rows: auto 1fr;
+      column-gap: clamp(40px, 5vw, 72px);
+      row-gap: 28px;
     }
-    .vb-dot {
-      display: none;
+    .vb-picture {
+      align-self: center;
+      justify-self: center;
+    }
+  }
+
+  /* The issue line under a short gold rule, the one ornament in the words. */
+  .vb-issue {
+    padding-top: 1.25rem;
+    background: linear-gradient(var(--color-gold-ink), var(--color-gold-ink)) top left / 48px 2px
+      no-repeat;
+  }
+  .vb-issue-dark {
+    background-image: linear-gradient(var(--color-gold), var(--color-gold));
+  }
+
+  /* THE PILE. The front cover sets the size; the two issues before it sit in
+     the same grid cell, turned a little from the bottom left corner, so they
+     fan out to the right. The pile keeps a quarter of its own width free on
+     that side (its padding), so a turned cover never reaches past the
+     column: transforms do not take layout room, and at 320px a cover that
+     did would scroll the page sideways (CLAUDE.md rules 18 and 19). */
+  .vb-pile {
+    display: grid;
+    width: min(100%, clamp(180px, 58vw, 340px) * 1.26);
+    padding-right: calc(clamp(180px, 58vw, 340px) * 0.26);
+    padding-top: 12px;
+    box-sizing: border-box;
+    color: inherit;
+  }
+  .vb-sheet {
+    grid-area: 1 / 1;
+    display: block;
+    transform-origin: 0% 100%;
+    box-shadow:
+      0 0 0 1px rgb(28 27 58 / 0.14),
+      0 14px 28px -18px rgb(28 27 58 / 0.55);
+    transition: transform 0.35s ease;
+  }
+  .vb-sheet-3 {
+    transform: rotate(6deg) translateX(10%);
+  }
+  .vb-sheet-2 {
+    transform: rotate(3deg) translateX(5%);
+  }
+  .vb-sheet-1 {
+    position: relative;
+  }
+  .vb-pile:hover .vb-sheet-1 {
+    transform: translateY(-4px);
+  }
+  .vb-pile:hover .vb-sheet-2 {
+    transform: rotate(4deg) translateX(7%);
+  }
+  .vb-pile:hover .vb-sheet-3 {
+    transform: rotate(7.5deg) translateX(13%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vb-sheet {
+      transition: none;
+    }
+    .vb-pile:hover .vb-sheet-1 {
+      transform: none;
+    }
+    .vb-pile:hover .vb-sheet-2 {
+      transform: rotate(3deg) translateX(5%);
+    }
+    .vb-pile:hover .vb-sheet-3 {
+      transform: rotate(6deg) translateX(10%);
     }
   }
 </style>

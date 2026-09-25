@@ -97,6 +97,7 @@ if (!existsSync(resolve(root, 'src/lib/visitor-issues.ts'))) {
 }
 const { COVER_WIDTHS, isIssueList, issuesOf, latestIssue, issueRecord } =
   await import('../src/lib/visitor-issues.ts');
+const { sinceYear } = await import('../src/lib/visitor-band.ts');
 const { loadEnv } = await import('./lib/loadEnv.mjs');
 const { pool } = await import('./lib/scripture-cache.mjs');
 
@@ -104,30 +105,37 @@ const env = { ...loadEnv(root), ...process.env };
 const fixtureMode = env.VISITOR_FIXTURE === '1';
 
 /** The first document list in a pageBuilder that is The Visitor's. */
-function issueListIn(pageBuilder) {
+function issueBlockIn(pageBuilder) {
   for (const block of Array.isArray(pageBuilder) ? pageBuilder : []) {
     if (block?._type !== 'documentListSection') continue;
     const docs = Array.isArray(block.docs) ? block.docs : [];
-    if (isIssueList(docs)) return docs;
+    if (isIssueList(docs)) return block;
   }
   return null;
 }
 
 // ---- 1. The issues --------------------------------------------------------------
 let fixtureDocs = null;
+let fixtureEyebrow = null;
 if (existsSync(fixturePath)) {
   try {
-    fixtureDocs = issueListIn(JSON.parse(readFileSync(fixturePath, 'utf8')).pageBuilder);
+    const block = issueBlockIn(JSON.parse(readFileSync(fixturePath, 'utf8')).pageBuilder);
+    fixtureDocs = block?.docs ?? null;
+    fixtureEyebrow = block?.eyebrow ?? null;
   } catch (err) {
     warn(`could not read ${fixturePath} (${err.message})`);
   }
 }
 
 let siteDocs = null;
+// The issue list's short line over its heading, "Our church newsletter since
+// 1946": the one place the year The Visitor began is kept (visitor-band.ts).
+let siteEyebrow = null;
 let source = null;
 let listHref = null;
 if (fixtureMode) {
   siteDocs = fixtureDocs;
+  siteEyebrow = fixtureEyebrow;
   source = fixtureDocs ? 'fixture' : null;
   listHref = fixtureDocs ? '/styleguide/visitor' : null;
 } else {
@@ -147,11 +155,14 @@ if (fixtureMode) {
         `*[_type == "page" && slug.current == "visitor" && archived != true][0]{
           pageBuilder[_type == "documentListSection"]{
             _type,
+            eyebrow,
             docs[]{ title, year, note, "fileUrl": file.asset->url, "fileSize": file.asset->size }
           }
         }`,
       );
-      siteDocs = page ? issueListIn(page.pageBuilder) : null;
+      const block = page ? issueBlockIn(page.pageBuilder) : null;
+      siteDocs = block?.docs ?? null;
+      siteEyebrow = block?.eyebrow ?? null;
       if (siteDocs) {
         source = 'visitor';
         listHref = '/visitor';
@@ -325,13 +336,19 @@ for (const issue of siteIssues) {
   if (record) records.push(record);
 }
 
-// The home band's issue. Its cover travels with it so the band needs nothing else.
+// The home band's issue. Its cover travels with it so the band needs nothing
+// else; the two before it are drawn behind it (feat/visitor-band, 2026-09-25),
+// and the year the newsletter began comes from the list's own short line.
 const latest = latestIssue(siteIssues);
+const previous = latest ? siteIssues.filter((i) => i !== latest).slice(0, 2) : [];
+const since = siteDocs ? sinceYear(siteEyebrow) : null;
 write(
   {
     source,
     listHref,
     latest,
+    previous,
+    since,
     covers,
   },
   records,

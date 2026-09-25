@@ -323,12 +323,15 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Latest issue (label over the newest issue, drawn by the page, not stored)
 - Read this issue (the newest issue’s button, drawn by the page)
 - Past issues (heading over the wall of covers, drawn by the page)
-- The Visitor · September 2026 issue · Read it (the home page’s slim band, drawn by code from the newest issue; the month and year change with it)
+- The September 2026 issue (the home page’s Visitor band names the newest issue, drawn by code; the month and year change with it)
+- Read the latest issue, and Past issues (the home band’s button and link, both to this page)
+- 80 years in print (under the covers on the home band; the number is counted at each build from the year in this page’s own line, "since 1946", and goes up every January)
 - The Visitor, the newsletter of First Baptist Church Muncie since 1946: features, church life, and articles from church members and pastoral staff. (search description, not shown on the page)
 
 ### Edits to the church’s own text
 
 - Cut: the church’s introduction on the publications page ("Below you can find “The Visitor,” our church newsletter filled with features, information about church life, and articles from both church members and pastoral staff. It has been published since 1946.") is carried on the page as the short line over the heading, "Our church newsletter since 1946". The words are theirs; the rest of the paragraph is in the search description.
+- Home band: the church’s introduction is carried in its own words, edited only for the web: "Our church newsletter, filled with features, information about church life, and articles from both church members and pastoral staff." Its last two sentences ("It has been published since 1946. It now publishes quarterly.") become the short line over the band’s heading, "Since 1946 · Quarterly", with the year read from this page’s own line so it is kept in one place.
 - Corrected: the two issues the Wix buttons label "Feburary" are titled "February". It is a typo in a button label, not a word of the church’s own prose.
 - Dropped: the "Other Updates" block from publications.txt (Church Connect sign-up and "see our Blog"). The first belongs on a page about the app, and the blog links here, not the other way round.
 - Renamed: the "Download Latest Issue" button becomes an issue like the others, titled with the month and year printed on its own cover. The page labels whichever issue is newest "Latest issue".
