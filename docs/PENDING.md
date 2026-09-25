@@ -1050,16 +1050,17 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
 
 ### This Sunday's sermon and a real "Live now" (2026-09-24, `feat/sunday`)
 
-- [ ] #nathan **Create a YouTube Data API key and set it as the Worker secret `YOUTUBE_API_KEY`.**
-      Until then "Live now" keeps its time window, exactly as today. Google Cloud Console, new
-      project, enable "YouTube Data API v3", Credentials, API key, restrict it to YouTube Data
-      API v3 (application restrictions: none). Then from the repo root run
-      `npx wrangler secret put YOUTUBE_API_KEY -c dist/server/wrangler.json`, or add it in the
-      dashboard (fbcm-site, Settings, Variables and Secrets, type Secret). On a Sunday between
-      9:30 am and 1:00 pm `/api/live-status` must not say `unknown`. Full steps and the quota
-      arithmetic (worst case 280 units per Cloudflare location per Sunday, of 10,000 a day):
-      `docs/agent/deployment.md`, "Live now: the YouTube check". Best done after the cutover:
-      the edge cache works only on a real zone, not on `workers.dev`.
+- **Done (2026-09-25): the Worker secret `YOUTUBE_API_KEY` is set on `fbcm-site`.** The key came
+  from Jonathan (the church's Google account); Nathan put it on the Worker. Setup steps and the
+  quota arithmetic (worst case 280 units per Cloudflare location per Sunday, of 10,000 a day) stay
+  in `docs/agent/deployment.md`, "Live now: the YouTube check". Until the cutover only the isolate
+  cache applies: the edge cache works only on a real zone, not on `workers.dev`.
+- [ ] #nathan **Check the live check on Sunday 2026-09-27, between 9:30 am and 1:00 pm.**
+      `https://fbcm-site.nathanjnixon86.workers.dev/api/live-status` must say `live` or
+      `not-live` with no `reason`, never `unknown`. `unknown` with `no-key` means the secret is
+      not reaching the Worker; `youtube-403-...` means the key's API restriction or the API itself
+      is not enabled. Also confirm the channel id Jonathan sent is `UCTm6q6Q7OJ6VrURz3YXVP6A`
+      (the id in `KNOWN_CHANNELS`, below); a different id means a different channel, to be added.
 - **The channel id is resolved once, in code.** `KNOWN_CHANNELS` in `src/lib/live-status.ts` maps
   `FbcmuncieOrg` to `UCTm6q6Q7OJ6VrURz3YXVP6A` (checked 2026-09-24). If the church changes channel,
   the endpoint answers `unknown` (`no-channel`) until the new id is added there or Site settings
