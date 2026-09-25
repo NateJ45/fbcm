@@ -208,3 +208,23 @@ test('sameAsOf is unchanged: it still keeps a path spelled in another case', () 
   });
   assert.equal(out.length, 2);
 });
+
+// Threads and Linktree (2026-09-25): the church's accounts from the Wix site,
+// threads.net/@fbcmuncie and linktr.ee/fbcmuncie.
+test('Threads and Linktree are recognised from their addresses and ordered after YouTube', () => {
+  assert.equal(platformOfUrl('https://www.threads.net/@fbcmuncie'), 'Threads');
+  assert.equal(platformOfUrl('https://threads.com/@fbcmuncie'), 'Threads');
+  assert.equal(platformOfUrl('https://linktr.ee/fbcmuncie'), 'Linktree');
+  const links = socialLinksOf({
+    socialLinks: [
+      { platform: 'Linktree', url: 'https://linktr.ee/fbcmuncie' },
+      { platform: 'Threads', url: 'https://www.threads.net/@fbcmuncie' },
+      { platform: 'Facebook', url: 'https://www.facebook.com/firstbaptistmuncie' },
+    ],
+    youtubeUrl: 'https://www.youtube.com/c/FbcmuncieOrg',
+  } as SocialSettings);
+  assert.deepEqual(
+    links.map((l) => l.platform),
+    ['Facebook', 'YouTube', 'Threads', 'Linktree'],
+  );
+});

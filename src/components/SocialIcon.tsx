@@ -13,7 +13,9 @@ import {
   IconBrandFacebook,
   IconBrandInstagram,
   IconBrandLinkedin,
+  IconBrandLinktree,
   IconBrandPinterest,
+  IconBrandThreads,
   IconBrandTiktok,
   IconBrandX,
   IconBrandYoutube,
@@ -43,6 +45,10 @@ function iconFor(platform: string) {
       return IconBrandTiktok;
     case 'X':
       return IconBrandX;
+    case 'Threads':
+      return IconBrandThreads;
+    case 'Linktree':
+      return IconBrandLinktree;
     // Tabler has no Houzz brand icon; the generic link icon covers it and
     // every "Other" entry.
     default:

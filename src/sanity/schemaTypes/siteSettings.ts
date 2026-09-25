@@ -535,6 +535,8 @@ export const siteSettings = defineType({
                   { title: 'YouTube', value: 'YouTube' },
                   { title: 'TikTok', value: 'TikTok' },
                   { title: 'X (Twitter)', value: 'X' },
+                  { title: 'Threads', value: 'Threads' },
+                  { title: 'Linktree', value: 'Linktree' },
                   { title: 'Houzz', value: 'Houzz' },
                   { title: 'Other', value: 'Other' },
                 ],

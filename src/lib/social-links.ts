@@ -17,7 +17,7 @@
 //      (a stored entry pointing at YouTube), the stored one wins and the
 //      derived one is not added.
 // Then de-duplicated by address, ignoring the scheme, `www.`, a trailing slash
-// and case, and ordered Facebook, Instagram, YouTube, then anything else in
+// and case, and ordered Facebook, Instagram, YouTube, Threads, Linktree, then anything else in
 // the order it was stored.
 //
 // STEGA. In /preview/** every string Sanity returns can carry an invisible
@@ -84,6 +84,8 @@ const HOSTS: Array<[RegExp, string]> = [
   [/(^|\.)pinterest\.com$/, 'Pinterest'],
   [/(^|\.)tiktok\.com$/, 'TikTok'],
   [/(^|\.)x\.com$|(^|\.)twitter\.com$/, 'X'],
+  [/(^|\.)threads\.(net|com)$/, 'Threads'],
+  [/(^|\.)linktr\.ee$/, 'Linktree'],
 ];
 
 const hostOf = (u: string): string => {
@@ -99,7 +101,7 @@ export function platformOfUrl(u: string): string {
 }
 
 /** Display order: these first, in this order, then everything else as stored. */
-const ORDER = ['Facebook', 'Instagram', 'YouTube'];
+const ORDER = ['Facebook', 'Instagram', 'YouTube', 'Threads', 'Linktree'];
 const rank = (platform: string): number => {
   const i = ORDER.indexOf(platform);
   return i === -1 ? ORDER.length : i;

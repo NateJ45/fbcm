@@ -494,6 +494,8 @@ export type SiteSettings = {
       | 'YouTube'
       | 'TikTok'
       | 'X'
+      | 'Threads'
+      | 'Linktree'
       | 'Houzz'
       | 'Other';
     url?: string;
