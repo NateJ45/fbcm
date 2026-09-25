@@ -18,6 +18,8 @@ import { sundayOnOrAfter } from '@/lib/church-schema';
 import { sanityFetch } from '@/lib/sanity';
 import { site } from '@/data/site';
 import { shouldOverlayHeader } from '@/lib/heroOverlay';
+import SundayWeather from '@/components/visit/SundayWeather.astro';
+import { hasSundayEvent } from '@/lib/sunday-ics';
 
 export async function getStaticPaths() {
   // Defined inside getStaticPaths, and it has to be: CLAUDE.md rule 10. Astro
@@ -89,6 +91,15 @@ if (slug === SERVICE_PAGE_SLUG) {
 let faq: string | null = null;
 faq = faqSchema((pageDoc as any).pageBuilder, `/${slug}`); // scaffold: church
 
+// VISIT'S SUNDAY EXTRAS (2026-09-24, `feat/last-sunday`): the hero's "Add
+// Sundays to your calendar" line, pointing at the calendar file built from
+// Site settings (src/pages/visit/sunday.ics.ts), shown only when the service
+// time can be read; and the Sunday weather line under "Find us" in the doors
+// band, filled in the browser (src/components/visit/SundayWeather.astro).
+const isVisit = slug === SERVICE_PAGE_SLUG;
+const calendarHref =
+  isVisit && hasSundayEvent(siteSettings?.serviceTime) ? '/visit/sunday.ics' : undefined;
+
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
@@ -113,5 +124,8 @@ const schemas = [
     sections={(pageDoc as any).pageBuilder}
     idPrefix="page"
     settings={siteSettings}
-  />
+    {calendarHref}
+  >
+    {isVisit && <SundayWeather slot="findus-extra" />}
+  </SectionRenderer>
 </BaseLayout>

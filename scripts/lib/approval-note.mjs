@@ -112,6 +112,19 @@ export const CHROME_SECTIONS = [
       'The calendar event a sermon preview’s "Add to calendar" makes: the title "Sunday worship at First Baptist Church Muncie", and the note "This Sunday’s sermon: <the post’s title> (<its reading>).", "Sermon preview: <the post’s address>" and "Watch live: <the livestream address>". The date, time, length and address come from the post and Site settings.',
     ],
   },
+  {
+    // src/components/home/LastSunday.astro, src/components/visit/SundayWeather.astro
+    // (with src/lib/sunday-weather.ts), HeroFacts.astro and src/lib/sunday-ics.ts.
+    // Code, not a page module: the recording, the forecast and the service time
+    // are all read, never typed.
+    heading: 'Last Sunday, Sunday weather and the Sunday calendar (2026-09-24, `feat/last-sunday`)',
+    newCopy: [
+      'Home: the band heading "Last Sunday"; the buttons "Watch on YouTube" and, when the church posted a sermon preview for that Sunday, "Read the sermon preview". The date ("Sunday, September 20"), the sermon title, the reading and the preacher are the YouTube video’s own title and description; the series name is followed by the word "series" ("Kingdom Come series").',
+      'Visit: "Add Sundays to your calendar" (under the hero’s Sundays, Where and How long).',
+      'Visit: the weather line, Wednesday to Sunday noon, "Sunday: 58°, light rain." (the forecast words are the National Weather Service’s own, in lower case; a chance of rain reads "45% chance of rain showers").',
+      'The calendar file: the event is named "Sunday worship, First Baptist Church Muncie" and its note reads "What to expect on Sunday: https://www.fbcmuncie.org/visit".',
+    ],
+  },
 ];
 
 /** `manifest[key].alt`, following `.same` chains, matching seed-pages.mjs's altFor. */

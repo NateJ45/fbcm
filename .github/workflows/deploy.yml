@@ -13,7 +13,7 @@ name: Deploy
 # only if somebody remembered, and a Sanity publish was live only if somebody
 # remembered twice.
 #
-# ── THE THREE WAYS IT FIRES ──────────────────────────────────────────────────
+# ── THE FOUR WAYS IT FIRES ──────────────────────────────────────────────────
 # push to main          a code change. Docs-only paths are ignored, see below.
 # repository_dispatch   an editor published in the Studio. A Sanity webhook
 #   (sanity-publish)    POSTs to GitHub's dispatches endpoint. This is the piece
@@ -23,6 +23,24 @@ name: Deploy
 #                       webhook is a per-project setup step; see
 #                       docs/agent/deployment.md.
 # workflow_dispatch     a human, for when something needs pushing out now.
+# schedule              twice a week, for the parts of the site built from the
+#                       CLOCK rather than from a commit or a publish (added
+#                       2026-09-24, `feat/last-sunday`): the home page's "Last
+#                       Sunday" band reads the church's YouTube feed at build
+#                       time, and the hero's "This Sunday" sermon line picks the
+#                       coming Sunday's preview at build time. Neither changes
+#                       on its own, and a quiet week has no push and no publish,
+#                       so without this the band would name a sermon weeks old.
+#                         Sunday 18:00 UTC = 2 pm EDT / 1 pm EST, after the
+#                           10:45 service; catches a replay YouTube publishes
+#                           straight after the stream (it did on July 5).
+#                         Monday 10:00 UTC = 6 am EDT / 5 am EST; catches the
+#                           usual replay, which this channel publishes just
+#                           after midnight Monday, church time.
+#                       Cron is UTC only, so the Eastern times shift an hour in
+#                       winter; both still fall after the event they wait for.
+#                       GitHub pauses schedules in a repo with no activity for
+#                       60 days; a push re-arms them.
 #
 # ── WHAT IT WILL NOT DO ─────────────────────────────────────────────────────
 # It will not deploy a build whose unit tests fail. They run in well under a
@@ -50,6 +68,9 @@ on:
   repository_dispatch:
     types: [sanity-publish]
   workflow_dispatch:
+  schedule:
+    - cron: '0 18 * * 0' # Sunday 2 pm EDT (1 pm EST): Last Sunday's replay, early
+    - cron: '0 10 * * 1' # Monday 6 am EDT (5 am EST): Last Sunday's replay, usual
 
 # Deploys queue rather than cancelling each other. cancel-in-progress would
 # abort a run mid `wrangler deploy`, and three spare minutes is a much better
@@ -234,6 +255,10 @@ jobs:
       # the key's path, so the step logs why and exits 0. continue-on-error,
       # because a search engine refusing a submission must never fail a deploy.
       # Detail in docs/agent/deployment.md, "IndexNow".
+      # Not on the schedule: a clock rebuild changes a band, not the set of
+      # URLs, and resubmitting the whole sitemap twice a week tells the
+      # engines nothing new.
       - name: IndexNow
+        if: github.event_name != 'schedule'
         continue-on-error: true
         run: npm run indexnow

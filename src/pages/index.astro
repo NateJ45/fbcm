@@ -12,9 +12,11 @@ import { site } from '@/data/site';
 import { DEFAULT_HOME_SECTIONS } from '@/data/defaultSections';
 import { shouldOverlayHeader } from '@/lib/heroOverlay';
 import type { SundaySermon } from '@/lib/live-sunday';
+import LastSunday from '@/components/home/LastSunday.astro';
+import { loadLastSunday } from '@/lib/last-sunday';
 // scaffold: journal
 import { getAllJournalEntries } from '@/lib/queries';
-import { sermonForUpcomingSunday } from '@/lib/sunday-sermon';
+import { previewForSunday, sermonForUpcomingSunday } from '@/lib/sunday-sermon';
 import type { RegisterEntry } from '@/lib/blog-derive';
 // scaffold:end
 
@@ -28,6 +30,37 @@ let sermon: SundaySermon | null = null;
 // scaffold: journal
 const journal = (await getAllJournalEntries()) as RegisterEntry[];
 sermon = sermonForUpcomingSunday(journal, new Date());
+// scaffold:end
+
+// LAST SUNDAY (2026-09-24, `feat/last-sunday`). The most recent Sunday
+// service recording, read at BUILD time from the channel's public feed
+// (src/lib/last-sunday.ts); null when the feed fails or holds no recording,
+// and then the band is simply not drawn. The deploy workflow rebuilds on
+// Sunday afternoon and Monday morning so the band keeps up (deploy.yml).
+//
+// The test seam: Playwright's build sets LAST_SUNDAY_FIXTURE=1 (the committed
+// feed in tests/fixtures/, read at LAST_SUNDAY_NOW) or =unavailable (no feed).
+// No deploy sets either.
+const fixture = import.meta.env.LAST_SUNDAY_FIXTURE as string | undefined;
+const feedXml: string | null | undefined =
+  fixture === '1'
+    ? (await import('../../tests/fixtures/youtube-feed.xml?raw')).default
+    : fixture === 'unavailable'
+      ? null
+      : undefined;
+const feedNow = import.meta.env.LAST_SUNDAY_NOW
+  ? new Date(import.meta.env.LAST_SUNDAY_NOW as string)
+  : new Date();
+const lastSunday = await loadLastSunday(
+  siteSettings,
+  feedNow,
+  feedXml === undefined ? {} : { xml: feedXml },
+);
+// When the church posted a sermon preview for that Sunday, the band pairs
+// with it (the post's title and reading, and a link to it).
+let lastPreview: { href: string; title: string; reading: string } | null = null;
+// scaffold: journal
+if (lastSunday) lastPreview = previewForSunday(journal, lastSunday.sunday);
 // scaffold:end
 
 const title = page?.seoTitle ?? site.name;
@@ -50,5 +83,27 @@ const overlayHeader = shouldOverlayHeader(sections as any);
   seoImage={page?.seoImage}
   searchBody
 >
-  <SectionRenderer {sections} idPrefix="home" settings={siteSettings} {sermon} />
+  {
+    /* The band sits before the Church Blog rows: after "Our Building" has
+      ended in the present, and next to the journal whose sermon previews it
+      pairs with. Before the give band when the blog band is absent. */
+  }
+  <SectionRenderer
+    {sections}
+    idPrefix="home"
+    settings={siteSettings}
+    {sermon}
+    insertBefore={['dynamicListSection', 'giveBandSection']}
+  >
+    {
+      lastSunday && (
+        <LastSunday
+          slot="insert"
+          recording={lastSunday}
+          preview={lastPreview}
+          headingId="home-last-sunday"
+        />
+      )
+    }
+  </SectionRenderer>
 </BaseLayout>

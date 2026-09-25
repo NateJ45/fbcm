@@ -50,6 +50,7 @@ import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
 import type { SundaySermon } from '@/lib/live-sunday';
+import { insertIndex } from '@/lib/band-insert';
 
 interface Props {
   sections?: unknown[];
@@ -96,9 +97,38 @@ interface Props {
    * nothing.
    */
   sermon?: SundaySermon | null;
+  /**
+   * A CODE-RENDERED BAND among the Sanity bands (2026-09-24, the home page's
+   * "Last Sunday"). The route passes the band as the `insert` slot and names
+   * the block types it goes before, in order of preference
+   * (src/lib/band-insert.ts); it renders once, before the first row of the
+   * first type present, or after the last row. It is outside the cadence, the
+   * spare-image pool and the heading numbering on purpose: it carries its own
+   * fixed ground and its own heading id, so every Sanity band renders exactly
+   * as it would without it. Absent (every other route), nothing changes.
+   */
+  insertBefore?: string[];
+  /**
+   * Visit's calendar file (2026-09-24), for the hero's "Add Sundays to your
+   * calendar" line under its facts. Only /visit passes it.
+   */
+  calendarHref?: string;
+  /*
+   * A `findus-extra` slot, when given, is passed into the FIRST Sunday-times
+   * band that has doors, under its "Find us" address (Visit's Sunday weather
+   * line). No other band sees it.
+   */
 }
 
-const { sections = [], idPrefix = 'section', editDoc, settings, sermon } = Astro.props as Props;
+const {
+  sections = [],
+  idPrefix = 'section',
+  editDoc,
+  settings,
+  sermon,
+  insertBefore,
+  calendarHref,
+} = Astro.props as Props;
 // A MINISTRY BAND IS RESOLVED FIRST (2026-09-22). A ministrySection only points
 // at a ministry document; src/lib/ministry-band.ts swaps it for the exact
 // imageTextSection (the ministry has a photo) or richTextSection (it has none)
@@ -295,6 +325,24 @@ const heritageYears = (() => {
 // the rows) and paint indigo or soft paper to suit. Gold is a light, fixed
 // ground that sits beside every band on the site, so nothing asks any more.
 
+// Where the `insert` slot renders: a row index, or -1 when there is no slot.
+const insertAt =
+  insertBefore && Astro.slots.has('insert')
+    ? insertIndex(
+        rows.map(({ block }) => (block as { _type?: string })._type ?? ''),
+        insertBefore,
+      )
+    : -1;
+
+// The Sunday-times band that receives the `findus-extra` slot: the first one
+// with doors (the Doors, parking and access band), or -1.
+const findUsExtraAt = Astro.slots.has('findus-extra')
+  ? rows.findIndex(({ block }) => {
+      const b = block as { _type?: string; doors?: unknown[] };
+      return b._type === 'sundayTimesSection' && Array.isArray(b.doors) && b.doors.length > 0;
+    })
+  : -1;
+
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
 ---
@@ -302,6 +350,7 @@ const wrapAttrs = (key: string | undefined) =>
 {
   rows.map(({ block: s, surface, insertDividerBefore, headingId }, blockIndex) => (
     <>
+      {blockIndex === insertAt && <slot name="insert" />}
       {insertDividerBefore && !afterFullBleed(blockIndex) && !besideBrandBand(blockIndex) && (
         <SectionDivider />
       )}
@@ -329,6 +378,7 @@ const wrapAttrs = (key: string | undefined) =>
             )}
             headingAccent={s.headingAccent ?? undefined}
             sermon={sermon}
+            calendarHref={calendarHref}
             headingId={headingId}
           />
         ) : s._type === 'ctaBandSection' ? (
@@ -450,7 +500,9 @@ const wrapAttrs = (key: string | undefined) =>
             frame={blockIndex === spares.doorIndex ? spares.door : null}
             headingId={headingId}
             settings={settings}
-          />
+          >
+            {blockIndex === findUsExtraAt && <slot name="findus-extra" slot="findus-after" />}
+          </SundayTimes>
         ) : /* scaffold-branch: church */ s._type === 'timelineSection' ? (
           <Timeline
             eyebrow={s.eyebrow}
@@ -579,3 +631,4 @@ const wrapAttrs = (key: string | undefined) =>
     </>
   ))
 }
+{insertAt >= 0 && insertAt === rows.length && <slot name="insert" />}

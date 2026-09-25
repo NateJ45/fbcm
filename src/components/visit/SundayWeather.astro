@@ -1,0 +1,65 @@
+---
+// Safe to edit by hand
+// Sunday's weather on Visit (2026-09-24, `feat/last-sunday`): one quiet line
+// under "Find us" in the Doors, parking and access band, e.g. "Sunday: 58°,
+// light rain." The words and every decision are src/lib/sunday-weather.ts;
+// this file is the markup and the few lines that fetch.
+//
+// RUN TIME, LAZY, VISIT ONLY. Nothing is fetched at build: the forecast is
+// read by the visitor's browser from api.weather.gov (free, no key, CORS
+// open), once, when the browser is idle after load, and only from Wednesday
+// to Sunday noon, church time. Any failure (network, status, an answer with
+// no Sunday in it) leaves the line hidden: nothing renders.
+//
+// NO LAYOUT SHIFT. The line is `hidden` in the markup, so it reserves no
+// space, and the script shows it only while its place is NOT on screen: this
+// band is thousands of pixels below the fold on every viewport, so on a
+// normal visit the words are in place long before anyone scrolls to them.
+// A visitor already looking at the spot when the answer lands simply does not
+// get the line (a shift in view is worse than a missing forecast); one who
+// has scrolled past it is kept steady by the browser's scroll anchoring.
+---
+
+<div class="sw" data-sunday-weather>
+  <p class="sw-line mt-3 mb-0 font-body text-[1.1875rem] text-gold" hidden>
+    <span data-sunday-weather-text></span>
+  </p>
+</div>
+
+<script>
+  import {
+    NWS_FORECAST_URL,
+    inWeatherWindow,
+    sundayPeriod,
+    weatherSentence,
+  } from '@/lib/sunday-weather';
+
+  const run = async () => {
+    const box = document.querySelector<HTMLElement>('[data-sunday-weather]');
+    const line = box?.querySelector<HTMLElement>('.sw-line');
+    const text = box?.querySelector<HTMLElement>('[data-sunday-weather-text]');
+    if (!box || !line || !text || !line.hidden) return;
+    if (!inWeatherWindow(new Date())) return;
+    try {
+      const res = await fetch(NWS_FORECAST_URL, { headers: { Accept: 'application/geo+json' } });
+      if (!res.ok) return;
+      const data: unknown = await res.json();
+      const periods = (data as { properties?: { periods?: unknown } } | null)?.properties?.periods;
+      const sentence = weatherSentence(sundayPeriod(periods, new Date()));
+      if (!sentence) return;
+      const top = box.getBoundingClientRect().top;
+      if (top >= 0 && top < window.innerHeight) return; // in view: no shift, no line
+      text.textContent = sentence;
+      line.hidden = false;
+    } catch {
+      // Offline, blocked or malformed: the line stays hidden.
+    }
+  };
+
+  const start = () => {
+    if ('requestIdleCallback' in window) window.requestIdleCallback(() => void run());
+    else setTimeout(() => void run(), 200);
+  };
+  if (document.readyState === 'complete') start();
+  else window.addEventListener('load', start, { once: true });
+</script>

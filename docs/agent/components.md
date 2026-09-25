@@ -359,6 +359,74 @@ All `journal` capability except `src/lib/ics.ts`, which is generic on purpose.
   character, TEXT escaping, CRLF, TZID plus the Indianapolis VTIMEZONE, a caller-supplied
   DTSTAMP (byte-stable builds) and an optional `rrule` for a weekly event.
 
+### Last Sunday, Sunday weather and the Sunday calendar (2026-09-24, `feat/last-sunday`)
+
+Three code-rendered pieces around the Sunday service. None is a page-builder block, none
+writes to Sanity, and none adds a schema field.
+
+- **"Last Sunday" on Home** (`src/components/home/LastSunday.astro`). The most recent Sunday
+  service recording on the church's YouTube channel: the h2 "Last Sunday" in the church band
+  grammar (`H2_DISPLAY` + `headingFit`), the date ("Sunday, September 20", gold furniture), the
+  sermon title (h3, Castoro), the reading and series, the preacher, a gold "Watch on YouTube"
+  plate, and the thumbnail in a 16:9 door arch with a gold play mark. When the church posted a
+  sermon preview for that Sunday (`previewForSunday()` in `src/lib/sunday-sermon.ts`, the
+  Sunday is the join), the title and reading are the post's own, the title links to it, and
+  an outline "Read the sermon preview" button follows. Fixed indigo ground (it sits between
+  the cream Our Building band and the taupe blog band and matches neither).
+  - **Data.** Read at BUILD time from the channel's public Atom feed
+    (`https://www.youtube.com/feeds/videos.xml?channel_id=UC...`, no key), the channel id
+    derived from Site settings by `youtubeChannelId()` (`live-status.ts`). `src/lib/last-sunday.ts`
+    fetches (8 s timeout; any failure is null and the band is not drawn, the build carries
+    on) and HEADs the 640 px thumbnail. `src/lib/youtube-feed.ts` is the pure half: the
+    parser, `splitVideoTitle()` ("Sermon - Reading - Series"), `preacherOf()` (the
+    description's "Preaching:" line) and `lastSundayRecording()`: an entry published on a
+    Sunday or a Monday, church time (the Sunday is that day or the day before; this channel's
+    replays publish just after midnight Monday), with at least one view (next Sunday's
+    scheduled broadcast is in the feed days early with none), not in the future, and not
+    older than 21 days. Unit-tested against `tests/fixtures/youtube-feed.xml`, a trimmed copy
+    of the real feed.
+  - **Placement.** `SectionRenderer` takes an `insert` slot and `insertBefore` (block types in
+    order of preference, `src/lib/band-insert.ts`); Home passes
+    `['dynamicListSection', 'giveBandSection']`, so the band renders before the Church Blog
+    rows, or before Give if the blog band is removed, or last. It is outside the cadence, the
+    spare-image pool and the heading numbering, so every Sanity band renders as before.
+  - **Facade, not embed.** `<picture>` with `i.ytimg.com` webp and jpg `srcset` (320, 480 and,
+    when it exists, 640 wide; the 4:3 sizes lose exactly their letterbox in the 16:9 frame),
+    `loading="lazy"`, `fetchpriority="low"`. The picture is a second link to the video,
+    `tabindex="-1"` and `aria-hidden`, so keyboard and screen-reader users meet one link, the
+    button. No iframe, no player script. `data-pagefind-ignore`.
+  - **Freshness.** `deploy.yml` rebuilds on a schedule (Sunday 18:00 UTC, Monday 10:00 UTC).
+  - **Test seam.** `LAST_SUNDAY_FIXTURE=1` (+ `LAST_SUNDAY_NOW`) makes the home route read the
+    committed feed; `=unavailable` gives no feed. Only `playwright.config.ts` sets them.
+    `/styleguide/last-sunday` (noindex, out of the sitemap) renders the band from the fixture
+    alone, paired, and with the feed unavailable.
+- **Sunday weather on Visit** (`src/components/visit/SundayWeather.astro`,
+  `src/lib/sunday-weather.ts`). One line under "Find us" in the Doors, parking and access
+  band, in gold: "Sunday: 58°, light rain." Fetched by the BROWSER from the National Weather
+  Service (`api.weather.gov`, no key, CORS open), once, at idle after load, only from
+  Wednesday 00:00 to Sunday 12:00 church time. One call: the church's gridpoint (IND 84,90,
+  from `/points/40.1917,-85.3841` on 2026-09-24) is cached in code as `NWS_FORECAST_URL`.
+  `sundayPeriod()` picks the daytime period on the coming Sunday (today's "Today" on a Sunday
+  morning); `weatherSentence()` writes the line (the first clause before "then", a "Chance"
+  forecast with its percentage). `sunday-weather.ts` imports NOTHING, on purpose: importing
+  `live-service.ts` made Vite split it into a shared chunk that every page's BaseLayout script
+  then fetched (Home 33 to 34 requests, mobile LCP 1,727 to 2,026 ms); a unit test fails on any
+  import. Any failure leaves the line `hidden`. It reserves no space and
+  is only revealed while its place is off screen, so it cannot shift what a visitor is reading.
+  It reaches the band through `SectionRenderer`'s `findus-extra` slot, forwarded into the
+  first Sunday-times band with doors (`SundayTimes.astro`'s `findus-after` slot). No rain or
+  snow note: Visit's own words never say the circular-drive entrance is covered.
+- **"Add Sundays to your calendar"** (`HeroFacts.astro` `calendarHref`, passed by
+  `[slug].astro` for `/visit` through `SectionRenderer` and `Hero.astro`). A line with a
+  calendar glyph under the hero's facts, beside "Sundays 10:45 am", linking
+  `/visit/sunday.ics` (`src/pages/visit/sunday.ics.ts`, prerendered). The file is
+  `src/lib/sunday-ics.ts`: one VEVENT, `RRULE:FREQ=WEEKLY;BYDAY=SU`, `DTSTART;TZID=America/
+Indiana/Indianapolis` at Site settings' service time on the Sunday on or after the build,
+  `DTEND` from the service length ("About an hour" -> 60 minutes), a VTIMEZONE block, the
+  address as LOCATION, `GEO` from `site.geo`, a stable UID. The link shows only when the
+  service time can be read (`hasSundayEvent()`). `icsEscape`/`icsFold` are named to fold into
+  the general `src/lib/ics.ts` from `feat/scripture-text` when both land (PENDING).
+
 ### Church identity (the Who We Are "alive" pass, 2026-09-23)
 
 Ported from the prototype at `docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html`. Every colour on these components is an identity token in globals.css `@theme` and `.dark` (`--color-band-indigo`, `-deep`, `-gold`, `-brown`, `-taupe`, `-ink`, `--color-gold-hover`, `--color-brown-ink`), each holding a value from the church's brand palette (the owner's ruling, 2026-09-23: no off-brand greens, mint, violet, red or purple), and every ink-on-ground pair is measured in both themes by `theme-tokens.test.ts` (`IDENTITY_PAIRS`, `THEMED_IDENTITY_PAIRS`). Geometry, masks and motion live in the `/* Church identity (2026-09-23) */` block of globals.css. No block carries a colour field (rule 9): colour comes from the block's type or the goal's position. Site owner decisions that bind all of them: no visible photo captions anywhere, and buttons are square with a gold rule (no arched head).

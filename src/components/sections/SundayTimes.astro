@@ -271,6 +271,9 @@ const objectPositionOf = (img: SanityImageObject): string => {
               </p>
               <div>
                 {findUs?.body && <p class="font-body text-[1.1875rem] text-bg/90">{findUs.body}</p>}
+                {/* Visit's Sunday weather line (SundayWeather.astro), passed
+                    through SectionRenderer; empty everywhere else. */}
+                <slot name="findus-after" />
                 {directionsCta && (
                   <CtaLink cta={directionsCta} variant="link" onDark class="mt-2.5" />
                 )}

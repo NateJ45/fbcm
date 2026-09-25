@@ -1,0 +1,57 @@
+---
+// Safe to edit by hand
+//
+// /styleguide/last-sunday: the home page's "Last Sunday" band on FIXED data
+// (2026-09-24, `feat/last-sunday`), for tests/last-sunday.spec.ts. The band
+// on / is read from the live YouTube feed at build time, so it changes every
+// week; this page renders the same component through the same loader
+// (src/lib/last-sunday.ts) from the committed feed in tests/fixtures/, at a
+// fixed moment, in the three states that matter:
+//
+//   1. the recording alone (the church posted no preview for that Sunday);
+//   2. paired with a sermon preview (the post's title and reading, two links);
+//   3. the feed unavailable: the loader returns null and nothing renders.
+//
+// Not for visitors: noindex, and under /styleguide, which astro.config.mjs
+// keeps out of the sitemap and src/lib/reservedSlugs.ts keeps from being
+// shadowed by a page. Not on the /styleguide wall itself, whose Linux pixel
+// baseline only CI can regenerate.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LastSunday from '@/components/home/LastSunday.astro';
+import { loadLastSunday } from '@/lib/last-sunday';
+import { site } from '@/data/site';
+import { getSiteSettings } from '@/lib/queries';
+import feed from '../../../tests/fixtures/youtube-feed.xml?raw';
+
+const siteSettings = await getSiteSettings().catch(() => null);
+const NOW = new Date('2026-09-24T16:00:00Z');
+const recording = await loadLastSunday(null, NOW, { xml: feed });
+const unavailable = await loadLastSunday(null, NOW, { xml: null });
+const preview = {
+  href: '/blog',
+  title: 'Unequal Opportunity Grace: the Workers in the Vineyard',
+  reading: 'Matthew 20:1-16',
+};
+---
+
+<BaseLayout
+  title={`Last Sunday, fixed data | ${site.name}`}
+  description="The home page's Last Sunday band on fixed data, for the test suite. Not for visitors."
+  {siteSettings}
+  noindex
+>
+  <h1 class="sr-only">Last Sunday, fixed data</h1>
+  <div data-state="recording">
+    {recording && <LastSunday recording={recording} headingId="sg-last-sunday-1" />}
+  </div>
+  <div data-state="paired">
+    {
+      recording && (
+        <LastSunday recording={recording} preview={preview} headingId="sg-last-sunday-2" />
+      )
+    }
+  </div>
+  <div data-state="unavailable">
+    {unavailable && <LastSunday recording={unavailable} headingId="sg-last-sunday-3" />}
+  </div>
+</BaseLayout>
