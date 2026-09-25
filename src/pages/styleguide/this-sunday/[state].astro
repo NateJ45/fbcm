@@ -1,0 +1,71 @@
+---
+// Safe to edit by hand
+//
+// /styleguide/this-sunday/<state>: the home hero's dated line on FIXED data
+// (2026-09-24, `feat/this-sunday-youtube`), for tests/this-sunday.spec.ts.
+// The line on / is decided from the live YouTube feed and the live posts at
+// build time, so it changes every week; this page renders the home page's own
+// first band (the tall hero) through the same SectionRenderer, with the
+// sermon picked by the same src/lib/this-sunday.ts from the committed feed in
+// tests/fixtures/, at a fixed Thursday, in the three states that matter:
+//
+//   youtube      no preview: the scheduled broadcast's sermon and reading,
+//                linking to the YouTube watch page;
+//   preview      a preview for the same Sunday: it wins, linking to the post;
+//   unparseable  the broadcast's title does not split into sermon and
+//                reading: no sermon, and the line reads as it always did.
+//
+// Not for visitors: noindex, and under /styleguide, which astro.config.mjs
+// keeps out of the sitemap and src/lib/reservedSlugs.ts keeps from being
+// shadowed by a page.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionRenderer from '@/components/SectionRenderer.astro';
+import { site } from '@/data/site';
+import { DEFAULT_HOME_SECTIONS } from '@/data/defaultSections';
+import { getHomePage, getSiteSettings } from '@/lib/queries';
+import { sermonParts, type SundaySermon } from '@/lib/live-sunday';
+import { thisSundaySermon } from '@/lib/this-sunday';
+import { comingSunday, parseYoutubeFeed, upcomingBroadcast } from '@/lib/youtube-feed';
+import { shouldOverlayHeader } from '@/lib/heroOverlay';
+import feed from '../../../../tests/fixtures/youtube-feed.xml?raw';
+
+export function getStaticPaths() {
+  return ['youtube', 'preview', 'unparseable'].map((state) => ({ params: { state } }));
+}
+
+const { state } = Astro.params as { state: 'youtube' | 'preview' | 'unparseable' };
+
+const NOW = new Date('2026-09-24T16:00:00Z');
+const sunday = comingSunday(NOW);
+const xml =
+  state === 'unparseable'
+    ? feed.replace(
+        /How to Let Your 'Yes' Be Yes and Your 'No,' No - Matthew 21:23-32 - Kingdom Come/g,
+        'Sunday Worship Service',
+      )
+    : feed;
+const parts = sermonParts('When God Shows Up', 'Jeremiah 29:10-12');
+const preview: SundaySermon | null =
+  state === 'preview' && sunday && parts ? { sunday, href: '/blog', ...parts } : null;
+const sermon = thisSundaySermon(sunday, preview, upcomingBroadcast(parseYoutubeFeed(xml), NOW));
+
+const [page, siteSettings] = await Promise.all([
+  getHomePage().catch(() => null),
+  getSiteSettings().catch(() => null),
+]);
+const all = page?.pageBuilder?.length ? page.pageBuilder : DEFAULT_HOME_SECTIONS;
+const sections = all.slice(0, 1);
+const overlayHeader = shouldOverlayHeader(sections as any);
+---
+
+<BaseLayout
+  title={`This Sunday, ${state} | ${site.name}`}
+  description="The home hero's dated line on fixed data, for the test suite. Not for visitors."
+  {siteSettings}
+  {overlayHeader}
+  noindex
+>
+  <div data-state={state}>
+    <SectionRenderer {sections} idPrefix="home" settings={siteSettings} {sermon} />
+  </div>
+</BaseLayout>

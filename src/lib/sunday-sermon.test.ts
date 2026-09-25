@@ -166,3 +166,14 @@ test('the paired title is the post’s own, whole and unquoted', () => {
     'Proclaim (The Way [Discipleship] Goal 2025-2026)',
   );
 });
+
+// The hero line picks a preview and a YouTube broadcast for ONE Sunday
+// (src/lib/this-sunday.ts), so the two "coming Sunday" functions must agree.
+test('upcomingSunday agrees with the feed’s comingSunday over five weeks of hours', async () => {
+  const { comingSunday } = await import('./youtube-feed.ts');
+  const t0 = Date.parse('2026-10-18T00:00:00Z'); // spans the November 1 fall-back
+  for (let h = 0; h < 35 * 24; h += 1) {
+    const now = new Date(t0 + h * 3_600_000);
+    assert.equal(comingSunday(now), upcomingSunday(now), now.toISOString());
+  }
+});

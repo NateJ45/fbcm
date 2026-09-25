@@ -113,7 +113,14 @@ const QUOTES = /^[\s'"‘’“”]+|[\s'"‘’“”]+$/g;
 
 /** The title as the line shows it, without its quotes: rules 1 and 2. */
 export function shortSermonTitle(raw: string, max: number = SERMON_TITLE_MAX): string {
-  let t = raw.replace(/\s+/g, ' ').replace(QUOTES, '').replace(/'/g, '’').trim();
+  // A straight quote that opens a word turns ‘ and every other one ’, so the
+  // YouTube title "How to Let Your 'Yes' Be Yes" reads ‘Yes’, not ’Yes’.
+  let t = raw
+    .replace(/\s+/g, ' ')
+    .replace(QUOTES, '')
+    .replace(/(^|[\s(["“])'/g, '$1‘')
+    .replace(/'/g, '’')
+    .trim();
   if (t.length > max) {
     const bare = t.replace(/\s*[([][^()[\]]*(?:\[[^\]]*\][^()[\]]*)*[)\]]\s*$/, '').trim();
     if (bare) t = bare;
