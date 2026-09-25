@@ -36,15 +36,30 @@
 // pairs. A file keeps the `download` attribute; a link to somebody else's
 // page opens in a new tab and never carries `download`, because you cannot
 // download a website.
+//
+// THE VISITOR (2026-09-24, feat/the-visitor): a list made ONLY of issues of
+// the newsletter (every document a month, a year and a PDF; isIssueList in
+// src/lib/visitor-issues.ts) is drawn by VisitorIssues.astro instead: the
+// latest issue large, then a wall of covers by year. The /visitor page is
+// that list. A mixed list (issues and books) keeps the forms above.
+//
+// The issues form's heading is the page's h1 when the list opens a page
+// (SectionRenderer's openingLevel: /visitor). The two older forms keep their
+// h2 whatever their place: a list appended to /blog sits at index 0 of that
+// page's extra sections, under the h1 the blog route draws itself, and
+// openingLevel cannot see that one.
 import { sortDocsByYearDesc, groupDocsByYear } from '@/lib/church-derive';
 import { docAction, documentForm } from '@/lib/document-doors';
 import { H2_DISPLAY } from '@/lib/heading-grammar';
+import { isIssueList } from '@/lib/visitor-issues';
+import VisitorIssues from '@/components/sections/VisitorIssues.astro';
 
 interface ListedDocument {
   _key?: string;
   title?: string | null;
   year?: number | null;
   fileUrl?: string | null;
+  fileSize?: number | null;
   url?: string | null;
   note?: string | null;
 }
@@ -54,16 +69,18 @@ interface Props {
   heading?: string;
   docs?: ListedDocument[];
   surface?: 'background' | 'muted';
+  level?: 'h1' | 'h2';
   headingId: string;
 }
 
-const { eyebrow, heading, docs = [], headingId } = Astro.props as Props;
+const { eyebrow, heading, docs = [], level = 'h2', headingId } = Astro.props as Props;
 
 // sortDocsByYearDesc needs a title on every row, so rows without one are
 // dropped first: a document nobody can name is not a row a visitor can use.
 const sorted = sortDocsByYearDesc(
   docs.filter((d): d is ListedDocument & { title: string } => !!d?.title),
 );
+const issues = isIssueList(sorted);
 const form = documentForm(sorted.length);
 const anyYear = sorted.some((d) => typeof d.year === 'number');
 const groups = form === 'register' ? groupDocsByYear(sorted) : [];
@@ -78,120 +95,124 @@ const ACTION_LINK =
 ---
 
 {
-  sorted.length > 0 && (
-    <section
-      class="bg-band-indigo text-white-pure"
-      aria-labelledby={heading ? headingId : undefined}
-    >
-      <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
-        {eyebrow && <p class="mb-4 font-ui text-ui text-gold">{eyebrow}</p>}
-        {heading && (
-          <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
-            {heading}
-          </h2>
-        )}
+  issues ? (
+    <VisitorIssues {eyebrow} {heading} docs={sorted} {level} {headingId} />
+  ) : (
+    sorted.length > 0 && (
+      <section
+        class="bg-band-indigo text-white-pure"
+        aria-labelledby={heading ? headingId : undefined}
+      >
+        <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
+          {eyebrow && <p class="mb-4 font-ui text-ui text-gold">{eyebrow}</p>}
+          {heading && (
+            <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
+              {heading}
+            </h2>
+          )}
 
-        {form === 'rows' ? (
-          <ol
-            class:list={[
-              'mt-[clamp(36px,4vw,64px)] border-t border-gold/35',
-              !anyYear && 'dl-no-years',
-            ]}
-            role="list"
-          >
-            {sorted.map((doc) => {
-              const action = docAction(doc);
-              const hasYear = typeof doc.year === 'number';
-              return (
-                <li class="dl-row border-b border-bg/20 py-[clamp(20px,2.5vw,28px)]">
-                  <span
-                    class:list={[
-                      'dl-row-year font-display text-h3 leading-none text-gold',
-                      !hasYear && 'dl-row-year-empty',
-                    ]}
-                  >
-                    {hasYear ? doc.year : ''}
-                  </span>
-                  <span class="dl-row-body min-w-0">
-                    <span class="block font-body text-xl leading-snug text-bg">{doc.title}</span>
-                    {doc.note && (
-                      <span class="mt-1 block text-base leading-[1.45] text-band-taupe italic">
-                        {doc.note}
-                      </span>
-                    )}
-                  </span>
-                  <span class="dl-row-action">
-                    {action && (
-                      <a
-                        href={action.href}
-                        download={action.kind === 'file' ? true : undefined}
-                        target={action.kind === 'link' ? '_blank' : undefined}
-                        rel={action.kind === 'link' ? 'noopener noreferrer' : undefined}
-                        class={ACTION_LINK}
-                      >
-                        {action.label}
-                        <span class="sr-only"> {doc.title}</span>
-                        <span
-                          aria-hidden="true"
-                          class="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-                        >
-                          &#8594;
+          {form === 'rows' ? (
+            <ol
+              class:list={[
+                'mt-[clamp(36px,4vw,64px)] border-t border-gold/35',
+                !anyYear && 'dl-no-years',
+              ]}
+              role="list"
+            >
+              {sorted.map((doc) => {
+                const action = docAction(doc);
+                const hasYear = typeof doc.year === 'number';
+                return (
+                  <li class="dl-row border-b border-bg/20 py-[clamp(20px,2.5vw,28px)]">
+                    <span
+                      class:list={[
+                        'dl-row-year font-display text-h3 leading-none text-gold',
+                        !hasYear && 'dl-row-year-empty',
+                      ]}
+                    >
+                      {hasYear ? doc.year : ''}
+                    </span>
+                    <span class="dl-row-body min-w-0">
+                      <span class="block font-body text-xl leading-snug text-bg">{doc.title}</span>
+                      {doc.note && (
+                        <span class="mt-1 block text-base leading-[1.45] text-band-taupe italic">
+                          {doc.note}
                         </span>
-                      </a>
-                    )}
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
-        ) : (
-          <div class="mt-[clamp(36px,4vw,64px)] border-t border-gold/35">
-            {groups.map((group) => (
-              <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] gap-y-4 border-b border-gold/35 py-7">
-                {group.heading && (
-                  <h3 class="col-span-12 m-0 font-display text-h3 leading-none font-normal text-gold md:col-span-2">
-                    {group.heading}
-                  </h3>
-                )}
-                <ul
-                  class:list={[
-                    'dl-run col-span-12',
-                    group.heading && 'md:col-span-10 md:col-start-3',
-                  ]}
-                  role="list"
-                >
-                  {group.docs.map((doc) => {
-                    const action = docAction(doc);
-                    return (
-                      <li>
-                        {action ? (
-                          <a
-                            href={action.href}
-                            download={action.kind === 'file' ? true : undefined}
-                            target={action.kind === 'link' ? '_blank' : undefined}
-                            rel={action.kind === 'link' ? 'noopener noreferrer' : undefined}
-                            class="font-body text-xl leading-snug text-bg underline decoration-gold/0 underline-offset-4 transition-colors hover:decoration-gold"
+                      )}
+                    </span>
+                    <span class="dl-row-action">
+                      {action && (
+                        <a
+                          href={action.href}
+                          download={action.kind === 'file' ? true : undefined}
+                          target={action.kind === 'link' ? '_blank' : undefined}
+                          rel={action.kind === 'link' ? 'noopener noreferrer' : undefined}
+                          class={ACTION_LINK}
+                        >
+                          {action.label}
+                          <span class="sr-only"> {doc.title}</span>
+                          <span
+                            aria-hidden="true"
+                            class="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
                           >
-                            {doc.title}
-                          </a>
-                        ) : (
-                          <span class="font-body text-xl leading-snug text-bg">{doc.title}</span>
-                        )}
-                        {doc.note && (
-                          <span class="mt-1 block text-base leading-[1.45] text-band-taupe">
-                            {doc.note}
+                            &#8594;
                           </span>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
+                        </a>
+                      )}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <div class="mt-[clamp(36px,4vw,64px)] border-t border-gold/35">
+              {groups.map((group) => (
+                <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)] gap-y-4 border-b border-gold/35 py-7">
+                  {group.heading && (
+                    <h3 class="col-span-12 m-0 font-display text-h3 leading-none font-normal text-gold md:col-span-2">
+                      {group.heading}
+                    </h3>
+                  )}
+                  <ul
+                    class:list={[
+                      'dl-run col-span-12',
+                      group.heading && 'md:col-span-10 md:col-start-3',
+                    ]}
+                    role="list"
+                  >
+                    {group.docs.map((doc) => {
+                      const action = docAction(doc);
+                      return (
+                        <li>
+                          {action ? (
+                            <a
+                              href={action.href}
+                              download={action.kind === 'file' ? true : undefined}
+                              target={action.kind === 'link' ? '_blank' : undefined}
+                              rel={action.kind === 'link' ? 'noopener noreferrer' : undefined}
+                              class="font-body text-xl leading-snug text-bg underline decoration-gold/0 underline-offset-4 transition-colors hover:decoration-gold"
+                            >
+                              {doc.title}
+                            </a>
+                          ) : (
+                            <span class="font-body text-xl leading-snug text-bg">{doc.title}</span>
+                          )}
+                          {doc.note && (
+                            <span class="mt-1 block text-base leading-[1.45] text-band-taupe">
+                              {doc.note}
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    )
   )
 }
 

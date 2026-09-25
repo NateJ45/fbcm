@@ -173,7 +173,10 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       ...,
       docs[]{
         ...,
-        "fileUrl": file.asset->url
+        "fileUrl": file.asset->url,
+        // The Visitor's page prints each issue's size ("PDF, 29 MB") so a
+        // phone knows what the button opens (src/lib/visitor-issues.ts).
+        "fileSize": file.asset->size
       }
     },
     // Each card owns a ctaBlock, so the reference inside it has to be resolved
