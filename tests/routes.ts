@@ -48,6 +48,9 @@ export const routes: string[] = [
   // committed fixture until /visitor is published (2026-09-24). Here it gets
   // smoke, axe, contrast and reflow at 320 with and without real scrollbars.
   '/styleguide/visitor', // scaffold: church
+  // The composed /visit (the visitor audit, 2026-09-25), rendered from the
+  // committed fixture until the page is applied; delete with the fixture.
+  '/styleguide/visit', // scaffold: church
 ];
 
 /**

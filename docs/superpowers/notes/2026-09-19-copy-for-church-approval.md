@@ -45,12 +45,28 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Nursery care is in room 104 and the family room is 105. (the Worship step: the spec’s ruling on the two rooms, and on the church’s confirm list)
 - Plan a visit | First Baptist Church Muncie, Indiana (search title, 2026-09-24 local search pass)
 - Worship is Sundays at 10:45 am at 309 East Adams Street, downtown Muncie. Park in the Adams Street lot. Casual dress, a nursery, and Children’s Church. (search description, not shown on the page; each fact is the page’s own: the parking lot "on the Adams Street side", "Casual dress is welcome", nursery in room 104, Children’s Church)
+- Let us know you’re coming (the hero’s gold button and the closing band’s button, both to the connection card in Site settings > Church systems; they replace "Fill in a visitor card", 2026-09-25)
+- If you let us know you’re coming, a greeter will look out for you. (hero, after the lead line; a promise the church has to be able to keep: who reads the connection card, and do they tell the greeters?)
+- A greeter will look out for you. (the closing gold band, after the service time and street)
+- Good to know (heading of the band of four questions answered in the open, 2026-09-25)
+- Your children (heading of the children’s safety band, 2026-09-25)
+- Check-in / Who cares for them / Pick-up / Ages and rooms (the four column heads in "Your children"; every sentence under them is the church’s own)
 
 ### Edits to the church’s own text
 
 - Joined: "At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have." The capture breaks the second sentence over two lines; it is one paragraph here. (Welcome and Check-In.)
 - Joined: the circular-drive door's directions are four of the accessibility page's sentences in two paragraphs, as on the plan 2b page; the "Entrance" label and "The sidewalk leads to the wheelchair-accessible entrance." are not used. (Doors, parking and access.)
 - Joined: "Donut [Semi-] Hour (Fellowship Hall)" is the capture's two lines on one. (Fellowship.)
+- Shortened question: "I don’t have a background in the Christian religion / I’m not sure what I believe. Will that be a problem if I want to visit?" is "I’m not sure what I believe. Will that be a problem?" in Good to know, and its answer keeps its first three sentences (the livestream and pastoral-staff sentences stay in the full FAQ below). (Good to know.)
+- Punctuation: "Am I allowed to take the Lord’s Supper (communion?)" is "(communion)?" in Good to know; the full FAQ keeps the church’s own. (Good to know.)
+- Cut: "Does my child need to bring a Bible?" keeps its first two sentences and its last; "In Sunday School and Children’s Church the kids will be looking over passages in the Bible." is cut. (Good to know.)
+- Rearranged: "Your children" takes whole sentences, unchanged, from the Children FAQ (the Ministries page’s "Questions parents ask"), the What to Expect FAQ and the Wix /children page, under four new heads: check-in (Children FAQ 1’s first sentence, and "Each child will be given a name tag." from What to Expect), who cares for them (Children FAQ 1’s last two sentences), pick-up (Children FAQ 2’s last sentence). Its opening sentence is /children’s own "To create a safe environment" sentence. (Your children.)
+- Reordered: the room lines "6 weeks - 3 years: Nursery (104)", "Preschool - 2nd grade: Kickstart Children’s Church (102)" and "3rd - 5th grade: The Underground Children’s Church (B-03)" read name first, as "Nursery (104): 6 weeks - 3 years." (Your children, Ages and rooms.)
+
+### Facts to confirm from this page
+
+- The Underground’s room: "3rd - 5th grade: The Underground Children’s Church (B-03)" (what-to-expect.txt:69) or "The Underground (Rm. B01) for 3rd through 5th graders." (children.txt, Worship and Children’s Church). /visit prints B-03, as the rest of the page does.
+- The nursery’s age range: "6 weeks - 3 years" (what-to-expect.txt:34) or "infants through 3 years old" (children.txt, Sunday School). /visit prints "6 weeks - 3 years".
 
 ### Photos of children
 

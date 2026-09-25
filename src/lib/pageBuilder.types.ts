@@ -281,6 +281,12 @@ export interface ProjectedDynamicListItem {
     title?: string | null;
     slug?: { current?: string | null } | null;
   }> | null;
+  /**
+   * journal source only: the body as plain text (GROQ `pt::text(body)`), read
+   * by src/lib/past-events.ts to find the date an FBCM Events post announces,
+   * so Home's rows can drop an event that is over. Never displayed.
+   */
+  text?: string | null;
   /** Reserved for a future source whose items carry a body/answer field. */
   answer?: any;
 }

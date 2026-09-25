@@ -1287,6 +1287,14 @@ const GOALS_CARDS_FIXTURE = {
 // without (the job listing has none), which draws the building glyph in the
 // arch. "A Light Wardrobe" is a sermon preview, so it sorts last and says
 // which week it is for.
+//
+// Since 2026-09-25 (feat/visit-fixes) the band drops an FBCM Events post whose
+// event is over (src/lib/past-events.ts), measured from JOURNAL_LIST_NOW, the
+// same fixed Thursday as the suite's LAST_SUNDAY_NOW. "Blue Christmas" carries
+// its own date line (9 December 2025), so it is past and the wall shows three
+// rows: that is the fixture tests/visit.spec.ts checks. The Messiah Sing-In
+// (11 December 2026) is still to come and stays.
+const JOURNAL_LIST_NOW = new Date('2026-09-24T16:00:00Z');
 const JOURNAL_LIST_FIXTURE = {
   headline: 'Church Blog',
   subhead: 'Read the latest from FBCM',
@@ -1305,6 +1313,7 @@ const JOURNAL_LIST_FIXTURE = {
       summary:
         'Some Christmas events invite you to sit back and listen, but Messiah Sing-In & Carols is a time to join in and be a participant in the music!',
       href: '/post/händel-s-messiah-sing-in-carols',
+      text: 'On Friday, December 11th, at 6:30 PM, the community is invited to gather.',
       author: 'Cynthia Smith',
       categories: [{ _id: 'c-events', title: 'FBCM Events' }],
       coverImage: {
@@ -1318,6 +1327,7 @@ const JOURNAL_LIST_FIXTURE = {
       title: 'Blue Christmas? Hope & Mental Health for the Holidays',
       meta: '2025-12-08T19:01:13.570Z',
       summary: 'If Christmas feels heavy this year, you are not alone.',
+      text: 'High Street United Methodist Church. December 9, 2025. 7:00 p.m.',
       href: '/post/blue-christmas-hope-mental-health-for-the-holidays',
       author: 'Kendall Ellis',
       categories: [{ _id: 'c-events', title: 'FBCM Events' }],
@@ -1838,6 +1848,7 @@ const JOURNAL_LIST_FIXTURE = {
     source="journal"
     items={JOURNAL_LIST_FIXTURE.items}
     limit={4}
+    now={JOURNAL_LIST_NOW}
     cta={JOURNAL_LIST_FIXTURE.cta}
     headingId="styleguide-journal"
   />

@@ -502,6 +502,45 @@ search. No schema changed; the page is two `documentListSection` blocks seeded b
   (`node scripts/page-fixture.mjs visitor`) through SectionRenderer; delete both once `/visitor`
   is published.
 
+### The visitor audit on /visit and Home (2026-09-25, `feat/visit-fixes`)
+
+A visitor audit (a family with children of 6 and 10, new to Muncie, on a phone) found four
+things. Three are content, composed in `scripts/pages/visit.mjs` from existing block types
+(no schema change); one is code.
+
+- **"Let us know you're coming"** is the Visit hero's gold button and the closing gold band's
+  button (they replace "Fill in a visitor card"). Both point at Site settings > Church systems >
+  connection card, stored as `{connect}`, and open in a new tab (`ctaExternal`). The promise
+  is in the hero's lead line ("If you let us know you're coming, a greeter will look out for
+  you.") and the closing band's subhead, NEW copy on the approval note.
+- **Good to know** is a Text block (`richTextSection`) straight under the hero: four of the
+  church's own FAQ questions as h3 heads, each with a short answer, which the Ledger draws as
+  four columns (`rich-shape.ts`: two or more h3 groups of prose only, each within
+  `columnWords`). Nothing is collapsed. The full FAQ stays further down.
+- **Your children** is a Text block straight after the morning path, anchored `#children`:
+  /children's own "To create a safe environment" sentence as the lede, then Check-in, Who cares
+  for them, Pick-up, and Ages and rooms. Every sentence is read off `faq-entries.json` (the
+  Children FAQ, the same answers Ministries prints as "Questions parents ask") and the
+  captures, and the module throws if one moves. **Keep each column one paragraph of 40 words
+  or fewer.** The Ledger sets a column of 40 words or fewer large and a longer one small, and
+  pulls a short last paragraph out as the band's foot line; the first cut mixed both and drew
+  two type sizes side by side with a stray foot.
+- **No past events on Home's Church Blog rows** (`src/lib/past-events.ts`, unit-tested against
+  the church's real 13 FBCM Events posts in `tests/fixtures/fbcm-events.json`). A post filed
+  under FBCM Events is dropped from Home's rows once its event is over. The end is the latest
+  date written in the title, excerpt or body (a year-less date takes the year no more than 90
+  days before publication; a dated year more than a year before publication is history and
+  ignored), else 31 January after a year in the title or excerpt, else 180 days after
+  publication. The event's own day still shows it; with no publication date the post is kept.
+  The journal projection in `queries.ts` carries `"text": pt::text(body)` for it, never
+  displayed. `DynamicList.astro` filters before the durable-first split and takes an optional
+  `now` (the styleguide passes a fixed day). The next posts in the batch move up; when the batch
+  runs out the band shows fewer rows. /blog and the archives are untouched. The build is the
+  clock, so a post drops at the next rebuild after its event (`deploy.yml` rebuilds four times a
+  week as well as on every publish).
+- `/styleguide/visit` renders the composed page from `scripts/data/fixtures/visit.json` until
+  the apply; `tests/visit.spec.ts` reads it.
+
 ### Church identity (the Who We Are "alive" pass, 2026-09-23)
 
 Ported from the prototype at `docs/superpowers/prototypes/2026-09-23-who-we-are/c-alive.html`. Every colour on these components is an identity token in globals.css `@theme` and `.dark` (`--color-band-indigo`, `-deep`, `-gold`, `-brown`, `-taupe`, `-ink`, `--color-gold-hover`, `--color-brown-ink`), each holding a value from the church's brand palette (the owner's ruling, 2026-09-23: no off-brand greens, mint, violet, red or purple), and every ink-on-ground pair is measured in both themes by `theme-tokens.test.ts` (`IDENTITY_PAIRS`, `THEMED_IDENTITY_PAIRS`). Geometry, masks and motion live in the `/* Church identity (2026-09-23) */` block of globals.css. No block carries a colour field (rule 9): colour comes from the block's type or the goal's position. Site owner decisions that bind all of them: no visible photo captions anywhere, and buttons are square with a gold rule (no arched head).

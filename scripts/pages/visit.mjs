@@ -9,16 +9,21 @@
 // the glass doors are the Adams Street circular-drive entrance; Our building
 // sits on cream beside the gold band. The page reads:
 //
-//   heroSection (window)  What to Expect / ON SUNDAY, three faces, the facts
+//   heroSection (window)  What to Expect / ON SUNDAY, three faces, the facts,
+//                         and "Let us know you’re coming" (the connection card)
+//   richTextSection       Good to know: four of the church's own questions,
+//                         answered in the open (2026-09-25)
 //   timelineSection       How the morning runs: four numbered door steps, and
 //                         Communion landing after them
+//   richTextSection       Your children: check-in, who cares for them,
+//                         pick-up, ages and rooms (2026-09-25)
 //   sundayTimesSection    Doors, parking and access (the doors path, brown)
 //   imageTextSection      Where the children go: a room board, two arched photos
 //   faqSection            Frequently asked questions (the deep indigo band)
 //   heritageBandSection   Our building, on cream, 1929 large
 //   ctaBandSection        Come as you are. (the gold band)
 //
-// Seven things about this file are deliberate.
+// Seven things about this file are deliberate (and an eighth, below them).
 //
 // 1. NOTHING IS RETYPED FROM SITE SETTINGS. The service time, the street, the
 //    service length, the visitor-card form and the livestream address are read
@@ -74,6 +79,22 @@
 //    (the photo Nathan said to keep), which is also Home's Worship goal card:
 //    the controller's ruling (2026-09-24) accepts that cross-page share over a
 //    same-page twin, until the photo morning.
+//
+// 8. THE VISITOR AUDIT (2026-09-25, feat/visit-fixes). A family new to Muncie,
+//    on a phone, could not find three things parents look for first, so three
+//    bands changed, all composed from existing block types (no schema change):
+//    - "Let us know you’re coming" is the hero's gold button and the closing
+//      band's, pointing at Site settings' connection card ({connect}), with a
+//      one-line promise that is NEW copy (newCopy, for the church to approve).
+//    - "Good to know" answers four of the church's own FAQ questions in the
+//      open, as Ledger columns (a Text block whose h3 heads each carry a short
+//      answer draws as columns, src/lib/rich-shape.ts). The full FAQ stays.
+//    - "Your children", straight after the morning path, carries the church's
+//      own safety facts: the Children FAQ (faq-entries.json, the same answers
+//      the Ministries page prints under "Questions parents ask") and the Wix
+//      /children page (children.txt). Every sentence is read off those files
+//      and THROWS if it moves; only the four column heads and the band's
+//      heading are new. Nothing is stated that the church has not written.
 
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -86,6 +107,9 @@ const FAQ_PATH = resolve(HERE, '..', 'data', 'pages', 'faq-entries.json');
 // (categories, first entry). The seven questions on this band are the ones
 // carrying this id.
 const WHAT_TO_EXPECT_CATEGORY = '6c034276-fcae-490d-b6ea-a222d2dfcbeb';
+// The "Children FAQ" category (Wix /children), the one ministries.mjs prints
+// as "Questions parents ask".
+const CHILDREN_FAQ_CATEGORY = '6c6a9707-a64e-46ec-ab90-92f48bf3359a';
 
 /** A hotspot centred on (x, y), kept inside the frame so the Studio accepts it. */
 function hotspot(x, y) {
@@ -106,6 +130,12 @@ export default {
     'Nursery care is in room 104 and the family room is 105. (the Worship step: the spec’s ruling on the two rooms, and on the church’s confirm list)',
     'Plan a visit | First Baptist Church Muncie, Indiana (search title, 2026-09-24 local search pass)',
     'Worship is Sundays at 10:45 am at 309 East Adams Street, downtown Muncie. Park in the Adams Street lot. Casual dress, a nursery, and Children’s Church. (search description, not shown on the page; each fact is the page’s own: the parking lot "on the Adams Street side", "Casual dress is welcome", nursery in room 104, Children’s Church)',
+    'Let us know you’re coming (the hero’s gold button and the closing band’s button, both to the connection card in Site settings > Church systems; they replace "Fill in a visitor card", 2026-09-25)',
+    'If you let us know you’re coming, a greeter will look out for you. (hero, after the lead line; a promise the church has to be able to keep: who reads the connection card, and do they tell the greeters?)',
+    'A greeter will look out for you. (the closing gold band, after the service time and street)',
+    'Good to know (heading of the band of four questions answered in the open, 2026-09-25)',
+    'Your children (heading of the children’s safety band, 2026-09-25)',
+    'Check-in / Who cares for them / Pick-up / Ages and rooms (the four column heads in "Your children"; every sentence under them is the church’s own)',
   ],
 
   // Edits to the church's own sentences. The words are still theirs.
@@ -113,10 +143,21 @@ export default {
     'Joined: "At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have." The capture breaks the second sentence over two lines; it is one paragraph here. (Welcome and Check-In.)',
     'Joined: the circular-drive door\'s directions are four of the accessibility page\'s sentences in two paragraphs, as on the plan 2b page; the "Entrance" label and "The sidewalk leads to the wheelchair-accessible entrance." are not used. (Doors, parking and access.)',
     'Joined: "Donut [Semi-] Hour (Fellowship Hall)" is the capture\'s two lines on one. (Fellowship.)',
+    'Shortened question: "I don’t have a background in the Christian religion / I’m not sure what I believe. Will that be a problem if I want to visit?" is "I’m not sure what I believe. Will that be a problem?" in Good to know, and its answer keeps its first three sentences (the livestream and pastoral-staff sentences stay in the full FAQ below). (Good to know.)',
+    'Punctuation: "Am I allowed to take the Lord’s Supper (communion?)" is "(communion)?" in Good to know; the full FAQ keeps the church’s own. (Good to know.)',
+    'Cut: "Does my child need to bring a Bible?" keeps its first two sentences and its last; "In Sunday School and Children’s Church the kids will be looking over passages in the Bible." is cut. (Good to know.)',
+    'Rearranged: "Your children" takes whole sentences, unchanged, from the Children FAQ (the Ministries page’s "Questions parents ask"), the What to Expect FAQ and the Wix /children page, under four new heads: check-in (Children FAQ 1’s first sentence, and "Each child will be given a name tag." from What to Expect), who cares for them (Children FAQ 1’s last two sentences), pick-up (Children FAQ 2’s last sentence). Its opening sentence is /children’s own "To create a safe environment" sentence. (Your children.)',
+    'Reordered: the room lines "6 weeks - 3 years: Nursery (104)", "Preschool - 2nd grade: Kickstart Children’s Church (102)" and "3rd - 5th grade: The Underground Children’s Church (B-03)" read name first, as "Nursery (104): 6 weeks - 3 years." (Your children, Ages and rooms.)',
   ],
 
   // Page-images manifest keys of the photos on this page that show an
   // identifiable child.
+  // Facts the church's own pages disagree about (2026-09-25, "Your children").
+  confirm: [
+    'The Underground’s room: "3rd - 5th grade: The Underground Children’s Church (B-03)" (what-to-expect.txt:69) or "The Underground (Rm. B01) for 3rd through 5th graders." (children.txt, Worship and Children’s Church). /visit prints B-03, as the rest of the page does.',
+    'The nursery’s age range: "6 weeks - 3 years" (what-to-expect.txt:34) or "infants through 3 years old" (children.txt, Sunday School). /visit prints "6 weeks - 3 years".',
+  ],
+
   photoConsent: [
     'visit-hero-dinner',
     'visit-step-welcome',
@@ -324,6 +365,107 @@ export default {
         .join(' '),
     ).trim();
 
+    // -- Good to know (2026-09-25) --------------------------------------------
+    // Four questions the church already answers, in its own words, drawn open
+    // as four Ledger columns: each h3 is the question, each answer a short
+    // paragraph (rich-shape.ts: two or more h3 groups of prose only, each under
+    // columnWords, draw as columns). The full FAQ further down keeps all seven.
+    const expectFaq = faqAnswers(WHAT_TO_EXPECT_CATEGORY);
+    const childrenFaq = faqAnswers(CHILDREN_FAQ_CATEGORY);
+    const goodToKnow = [
+      heading(expectFaq.question('What should I wear?'), 3, 'gk-h1'),
+      ...paragraphs(expectFaq.answer('What should I wear?'), 'gk-a1'),
+      // The church's question, shortened (listed in `edits`), and the first
+      // three sentences of its answer.
+      heading('I’m not sure what I believe. Will that be a problem?', 3, 'gk-h2'),
+      ...paragraphs(
+        [
+          expectFaq.sentence('not sure what I believe', 'It won’t be a problem at all!'),
+          expectFaq.sentence('not sure what I believe', 'Anyone is welcome to attend'),
+          expectFaq.sentence('not sure what I believe', 'You may participate'),
+        ].join(' '),
+        'gk-a2',
+      ),
+      // "(communion?)" punctuated as "(communion)?" (listed in `edits`).
+      heading(
+        expectFaq.question('the Lord’s Supper').replace('(communion?)', '(communion)?'),
+        3,
+        'gk-h3',
+      ),
+      ...paragraphs(expectFaq.answer('the Lord’s Supper'), 'gk-a3'),
+      heading(childrenFaq.question('bring a Bible'), 3, 'gk-h4'),
+      ...paragraphs(
+        [
+          childrenFaq.sentence('bring a Bible', 'No.'),
+          childrenFaq.sentence('bring a Bible', 'But they are welcome to'),
+          childrenFaq.sentence('bring a Bible', 'We will certainly provide a Bible'),
+        ].join(' '),
+        'gk-a4',
+      ),
+    ];
+
+    // -- Your children (2026-09-25) --------------------------------------------
+    // The safety facts, where parents look: after the morning path. The lead
+    // is /children's own sentence (children.txt, "Holistic and safe."); every
+    // column is whole sentences from the Children FAQ and /children, under a
+    // new head (newCopy). The ages and rooms are the ones the rest of this
+    // page uses (what-to-expect.txt lines 34 to 36, 67 and 69), name first.
+    //
+    // ONE PARAGRAPH OF 40 WORDS OR FEWER PER COLUMN, on purpose. rich-shape.ts
+    // sets a column of 40 words or fewer large and a longer one small, so a
+    // mix reads as two sizes side by side; and a short last paragraph after
+    // the columns is pulled out as the band's foot line. Measured on the
+    // 2026-09-25 render: the first cut (41, 45, 47 and three short lines)
+    // drew exactly that, so each column keeps only its load-bearing sentences.
+    const childrenSentence = (phrase) => {
+      const line = pick('children', phrase);
+      const hit = sentencesOf(line).find((x) => x.includes(phrase));
+      if (!hit) throw new Error(`visit.mjs: no sentence with "${phrase}" in children.txt`);
+      return hit;
+    };
+    const security = 'What security measures are in place?';
+    const checkIn = 'What does check-in involve?';
+    const nameFirst = (line) => {
+      // "Preschool - 2nd grade: Kickstart Children's Church (102)" ->
+      // "Kickstart Children's Church (102): Preschool - 2nd grade."
+      const m = /^(.+?):\s*(.+)$/.exec(line);
+      if (!m) throw new Error(`visit.mjs: "${line}" is not an "ages: room" line`);
+      return `${m[2]}: ${m[1]}.`;
+    };
+    const yourChildren = [
+      ...paragraphs(childrenSentence('To create a safe environment for our children'), 'yc-lead'),
+      heading('Check-in', 3, 'yc-h1'),
+      ...paragraphs(
+        [
+          childrenFaq.sentence(security, 'We have a check-in station'),
+          // The What to Expect FAQ's own short form of the name tag.
+          expectFaq.sentence('nursery care or children', 'Each child will be given a name tag.'),
+        ].join(' '),
+        'yc-a1',
+      ),
+      heading('Who cares for them', 3, 'yc-h2'),
+      ...paragraphs(
+        [
+          childrenFaq.sentence(security, 'Each classroom maintains at least two adults'),
+          childrenFaq.sentence(security, 'All Children'),
+        ].join(' '),
+        'yc-a2',
+      ),
+      heading('Pick-up', 3, 'yc-h3'),
+      ...paragraphs(childrenFaq.sentence(checkIn, 'Parents will get a security tag'), 'yc-a3'),
+      heading('Ages and rooms', 3, 'yc-h4'),
+      ...paragraphs(
+        [
+          // what-to-expect.txt lines 34 and 36: the room sits on its own line.
+          nameFirst(`${pick('what-to-expect', '6 weeks - 3 years: Nursery')} (104)`),
+          // lines 67 and 69.
+          nameFirst(pick('what-to-expect', 'Kickstart Children')),
+          nameFirst(pick('what-to-expect', 'The Underground Children')),
+        ].join(' '),
+        'yc-a4',
+      ),
+    ];
+
     return {
       title: 'Plan a visit',
       slug: { _type: 'slug', current: 'visit' },
@@ -342,8 +484,10 @@ export default {
           // what-to-expect.txt line 1.
           headline: pick('what-to-expect', 'What to Expect on Sunday'),
           headingAccent: 'on Sunday',
+          // The lead line, then the promise behind the gold button (NEW, both
+          // in newCopy).
           subhead:
-            'Here is what a Sunday morning looks like, from the parking lot to the last hymn.',
+            'Here is what a Sunday morning looks like, from the parking lot to the last hymn. If you let us know you’re coming, a greeter will look out for you.',
           frames: [
             { ...heroCongregation, _key: 'frame-1' },
             { ...heroDinner, _key: 'frame-2' },
@@ -354,8 +498,18 @@ export default {
             { _type: 'heroFact', _key: 'fact-2', label: 'Where', value: streetLine },
             { _type: 'heroFact', _key: 'fact-3', label: 'How long', value: serviceLength },
           ],
-          primaryCta: ctaExternal('Fill in a visitor card', settings.visitorFormUrl),
+          // Site settings > Church systems > connection card: seed-pages
+          // stores it as {connect}, so it follows the move to Church Trac.
+          primaryCta: ctaExternal('Let us know you’re coming', settings.visitorFormUrl),
           secondaryCta: ctaExternal('Watch a service', settings.livestreamUrl),
+        },
+
+        // 1a. Good to know: four of the church's own answers, in the open.
+        {
+          _type: 'richTextSection',
+          _key: 'visit-good-to-know',
+          heading: 'Good to know',
+          body: goodToKnow,
         },
 
         // 2. The morning, as numbered door steps; Communion lands after them.
@@ -412,6 +566,16 @@ export default {
               body: communion,
             },
           ],
+        },
+
+        // 2a. Your children: the church's own safety facts, where parents
+        //     look. This is where /visit#children lands.
+        {
+          _type: 'richTextSection',
+          _key: 'visit-your-children',
+          anchor: { _type: 'slug', current: 'children' },
+          heading: 'Your children',
+          body: yourChildren,
         },
 
         // 3. Doors, parking and access. This is where /visit#accessibility
@@ -512,8 +676,8 @@ export default {
           _type: 'ctaBandSection',
           _key: 'visit-cta',
           headline: 'Come as you are.',
-          subhead: `${settings.serviceTime}. ${streetLine}.`,
-          cta: ctaExternal('Fill in a visitor card', settings.visitorFormUrl),
+          subhead: `${settings.serviceTime}. ${streetLine}. A greeter will look out for you.`,
+          cta: ctaExternal('Let us know you’re coming', settings.visitorFormUrl),
           secondaryCta: ctaExternal('Watch live', settings.livestreamUrl),
         },
       ],
@@ -527,6 +691,44 @@ export default {
     };
   },
 };
+
+/** A paragraph's sentences, split after . ! or ? before a capital or a quote. */
+function sentencesOf(text) {
+  return String(text)
+    .split(/(?<=[.!?])\s+(?=[A-Z“"])/)
+    .map((x) => x.trim())
+    .filter(Boolean);
+}
+
+/**
+ * One FAQ category of scripts/data/pages/faq-entries.json, read by phrase:
+ * question(phrase) is the question containing it, answer(phrase) that
+ * question's whole answer, sentence(phrase, start) the one sentence of it
+ * starting with `start`. Every read THROWS when its phrase has moved, so a
+ * band never seeds a sentence the church did not write.
+ */
+function faqAnswers(categoryId) {
+  const data = JSON.parse(readFileSync(FAQ_PATH, 'utf8'));
+  const entries = (data.entries ?? []).filter((e) => e.categoryId === categoryId);
+  const entry = (phrase) => {
+    const hit = entries.find((e) => String(e.question).includes(phrase));
+    if (!hit) throw new Error(`visit.mjs: no question with "${phrase}" in faq-entries.json`);
+    return hit;
+  };
+  return {
+    question: (phrase) => String(entry(phrase).question).trim(),
+    answer: (phrase) => String(entry(phrase).answer).trim(),
+    sentence(phrase, start) {
+      const hit = sentencesOf(entry(phrase).answer).find((x) => x.startsWith(start));
+      if (!hit) {
+        throw new Error(
+          `visit.mjs: the answer to "${phrase}" has no sentence starting "${start}" in faq-entries.json`,
+        );
+      }
+      return hit;
+    },
+  };
+}
 
 /** The plain text of one portable-text block, for filtering. */
 function blockText(block) {

@@ -1450,6 +1450,44 @@ summary, location, rrule: 'FREQ=WEEKLY;BYDAY=SU' }] })`; `src/lib/worship-ics.ts
   line. `scripts/visitor-covers.mjs` is unmarked on purpose: `npm run build` calls it, and it
   skips itself when `src/lib/visitor-issues.ts` is gone, as `fetch-scripture.mjs` does.
 
+### Visitor audit: before /visit is applied (2026-09-25, `feat/visit-fixes`)
+
+- [ ] #nathan **Apply /visit after the merge.** No schema changed, so no deploy is needed first.
+      Run `npm run seed-pages -- --only visit`, read the plan, then `--apply` (it backs up
+      first). The dry run on 2026-09-25 said "would be replaced", `fields: pageBuilder`, and
+      the live document matched the old module exactly, so no editor edits are overwritten.
+      Keyed by block: the hero's button label ("Fill in a visitor card" to "Let us know you’re
+      coming") and its lead line (the promise added); two new blocks, `visit-good-to-know`
+      after the hero and `visit-your-children` (anchor `children`) after the morning path;
+      the closing band's button label and subhead (". A greeter will look out for you."
+      added); the other five blocks unchanged, only moved down. The button's link is still
+      `{connect}`. Then rebuild, and look at /visit in production at 1440 and 390.
+- **After the apply, delete the preview:** `src/pages/styleguide/visit.astro`,
+  `scripts/data/fixtures/visit.json`, the `/styleguide/visit` line in `tests/routes.ts` and its
+  parity baseline, and point `PAGE` in `tests/visit.spec.ts` at `/visit`.
+- **The styleguide's CI screenshot moves.** Its Church Blog band now shows three rows (Blue
+  Christmas, a past event, drops). Refresh `visual.yml`'s baseline with its `update` input the
+  first time it runs against this change.
+- [ ] #nathan **Approve the new copy** (the approval note, "/visit"): the button label, the
+      greeter promise in the hero and the closing band, "Good to know", "Your children" and its
+      four column heads. The promise needs an answer before it goes live: who reads the connection
+      card, and do they tell the greeters on Sunday?
+- **Owner questions, not stated on the site because the church has not written them:**
+  - "Will I be singled out?" Nothing on the Wix site says whether visitors are welcomed by name
+    from the front, asked to stand, or left alone. The nearest answer ("You may participate ...
+    as you wish") is in Good to know.
+  - "Do I have to give?" Nothing says a visitor is not expected to give. The only giving line is
+    the Children FAQ's "Can children bring an offering?"
+  - Can someone other than a parent or guardian (a grandparent, a named friend) collect a child
+    with the security tag? /children says "only ... a parent/guardian".
+  - Two room and age conflicts are on the approval note's confirm list: The Underground in B-03
+    or B01, and the nursery from 6 weeks or from birth ("infants").
+- **What Home's rows show now** (the build of 2026-09-25): the Messiah Sing-In (kept until 11
+  December 2026), then the Worship Arts Pastor job listing (September 2025) and the January 2026
+  Ecclesiastes sermon preview, which moved up when two past events dropped. Is the job still
+  open? If not, the listing is the next stale row, and the fix is to unpublish it or file it
+  differently; the event rule does not touch it.
+
 ### Beliefs identity: before the page is applied (2026-09-24)
 
 - **The page is composed but not applied.** `scripts/pages/beliefs.mjs` uses no new
