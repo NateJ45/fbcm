@@ -1942,3 +1942,5 @@ in `scripts/data/backups/journalEntry-bodies-2026-09-20.json`, and a second
   `/staff`, and `/blog/hashtags/{2,3,Barbenheimer}` -> `/blog`. They 404 on the
   deployed build until this branch merges and deploys; `verify-redirects` is
   49/49 OK against a local build.
+
+- **Flaky test (2026-09-24): `tests/motion.spec.ts` "reduced motion > nothing on the home page is animating" on webkit-iphone.** Failed once in two full runs on different branches (the last-sunday branch and the footer merge), each time while other agents were building on the same machine; passes 5/5 alone (`--repeat-each=5`). The failure lists running animations on glyph paths, `img.graded` and `span.h-fit-in` under reduced motion, so a transition is likely being caught between the stylesheet applying and the reduced-motion rule winning on a slow WebKit start. Fix the test to wait for `document.getAnimations()` to settle (or `load` plus a frame) before asserting, or find the transition that starts before the media query applies. Do not delete the test: it guards rule "motion only under no-preference".
