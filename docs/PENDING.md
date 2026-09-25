@@ -1076,6 +1076,17 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   to `SectionRenderer`; the preview route's hero reads as it did before. Worth wiring only if an
   editor asks.
 
+### The footer's sign-off in the poster (2026-09-24, `feat/footer-signoff`)
+
+- [ ] #nathan **Look at the new footer and merge.** The watchword and the bottom line sit beside
+      the Sunday poster from 1024 px up and follow Give on a phone; the sign-off band is gone.
+      Screenshots before and after at 1440, 1024 and 390 were taken on the branch. Nothing in
+      Sanity changes, so a merge and a push is the whole deploy.
+- **The poster's eyebrow wraps "10:45 AM" onto a line of its own at 390 px** ("THIS SUNDAY,
+  SEPTEMBER 27 · WORSHIP AT / 10:45 AM"). It did before this branch too. A shorter phone form of
+  the dated line (the hero's, `live-sunday.ts`) would fix it everywhere at once; not done here
+  because the hero shares the string.
+
 ### Church links, for the move to Church Trac (2026-09-24, `feat/church-links`)
 
 - [ ] #nathan **Deploy, then run the migration.** The Church systems boxes are new schema
