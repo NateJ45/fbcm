@@ -59,9 +59,15 @@ for (const route of ['/blog', '/blog/category/sermon-preview', '/blog/tag/advent
   });
 }
 
-test('home keeps the lancet on its blog rows', async ({ page }) => {
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
-  const rows = page.locator('li:has([data-vt-title])');
-  expect(await rows.count()).toBeGreaterThan(0);
-  expect(await rows.locator('[data-arch="lancet"]').count()).toBe(await rows.count());
-});
+// Plain everywhere since 2026-09-24 (Nathan chose one look across the site):
+// home's Church Blog band and a post's More from this series draw the same
+// plain pictures as the register.
+for (const route of ['/', '/post/a-light-wardrobe']) {
+  test(`${route} draws its blog rows as plain pictures, not arches`, async ({ page }) => {
+    await page.goto(route, { waitUntil: 'domcontentloaded' });
+    const rows = page.locator('li:has([data-vt-title])');
+    expect(await rows.count()).toBeGreaterThan(0);
+    expect(await rows.locator('[data-arch]').count()).toBe(0);
+    expect(await rows.locator('figure').count()).toBe(await rows.count());
+  });
+}

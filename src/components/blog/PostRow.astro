@@ -10,15 +10,17 @@
 //   date | the post's FEATURED image | title + excerpt | byline + meta
 //
 // Two frames for the picture (2026-09-24, feat/blog-flat):
-//   arch   a small lancet (ArchFrame): home's Church Blog band and a post's
-//          More from this series. The default, so those render unchanged.
-//   plain  a plain 9:7 rectangle with a hairline and the site's tiny radius:
-//          the register on /blog and the archives, where Nathan found the
-//          arches "look overdone and make it harder to see the images". The
+//   plain  THE DEFAULT, everywhere a row is drawn (home's Church Blog band,
+//          the register on /blog and the archives, a post's More from this
+//          series): a plain 9:7 rectangle with a hairline and the site's tiny
+//          radius. Nathan found the arches "look overdone and make it harder
+//          to see the images" on /blog (2026-09-24), then chose plain on Home
+//          and the post foot too, for one look across the site. The
 //          box is the covers' own shape; a cover far from it is shown whole
 //          rather than cropped (coverFit in src/lib/cover-fit.ts), because the
 //          covers are mostly series slides with lettering near the edges. The
 //          box is as tall as the lancet was and wider, so the slide reads.
+//   arch   a small lancet (ArchFrame). Kept as an option; nothing uses it now.
 //
 // The picture is always the post's own featured image, never an author
 // portrait; a post with none shows a building glyph in the arch, never an
@@ -75,7 +77,7 @@ const {
   meta,
   tone = 'taupe',
   level = 'h3',
-  frame = 'arch',
+  frame = 'plain',
 } = Astro.props as Props;
 
 const taupe = tone === 'taupe';
