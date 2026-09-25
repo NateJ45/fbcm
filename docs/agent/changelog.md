@@ -10,6 +10,15 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-25 — The ministry newsletters from Church Trac (`claude/kind-heisenberg-jf34rt`)._
+
+**The Kid's Corner and The Moose's Message, drawn by the site.** The old site's menu linked out to two Church Trac pages the Children's and Youth ministries write (`fbcmuncie.churchtrac.com/children` and `/youth`), which Church Trac also shows in the church app. They now have pages here, `/kids-corner` and `/youth-news`, read from Church Trac at every build and drawn in the identity; Church Trac stays where they are written (rule 15).
+
+- `src/lib/church-trac-page.ts` (tested against both real pages): a small HTML tokenizer and tree (no dependency), then the newsletter: the page's name (`input#title`), the banner's published sections, and the body's sections as headings (first per section h2, the rest h3), paragraphs with bold, italic and safe links, images (https only), buttons (http(s) and mailto only), two-column rows and rules. Church Trac's template text, hidden boxes, unpublished banner sections, empty lines, scripts and styles never reach the page; em-dashes become commas or go (rule 2).
+- `src/lib/church-trac-newsletters.ts`: the list (slug, Church Trac page, ministry, words), the Church Trac address from Site settings' Church Trac box, one logged fetch per page per build (a browser User-Agent, since Church Trac refuses a bare one), and the `CHURCH_TRAC_PAGES_FIXTURE` seam.
+- `src/components/newsletter/Newsletter.astro`: the indigo opener with the masthead, sections with the title card in five twelfths and the words in seven, and "About this newsletter" on the brown band; the fallback when Church Trac cannot be read.
+- Links: the Children and Youth Ministry bands gain a derived "Read <newsletter>" line (`newsletterBlock()` in `ministry-band.ts`, from the ministry's web address, now in the projection); the footer's first column lists both. Reserved slugs, share cards, `tests/newsletters.spec.ts`, and the fixtures excluded from prettier.
+
 _2026-09-25 — Church Trac forms on the site (`claude/kind-heisenberg-jf34rt`)._
 
 **A reusable band for any form built in Church Trac.** Church Trac has no API, but it offers an iframe embed for every Form Card and for online giving. Staff add a form once under **Church Trac forms** in the Studio (a name, the embed code pasted from Church Trac, and a size), then place it on any page with the **Church Trac form** band from the Church group, which only points at it.

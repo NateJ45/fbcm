@@ -207,6 +207,7 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       "ministry": ministry->{
         _id,
         title,
+        "slug": slug.current,
         eyebrow,
         headline,
         goal, // scaffold: church

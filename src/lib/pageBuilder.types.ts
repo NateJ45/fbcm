@@ -451,6 +451,8 @@ export interface ProjectedMinistryContact {
 export interface ProjectedMinistry {
   _id?: string;
   title?: string | null;
+  /** Its web address ("children"): picks the newsletter line (church-trac-newsletters.ts). */
+  slug?: string | null;
   eyebrow?: string | null;
   headline?: string | null;
   /** The goal it serves: 'worship' | 'the-way' | 'witness' | 'work' (ministry-goals.ts). */

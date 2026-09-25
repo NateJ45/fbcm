@@ -1,0 +1,455 @@
+---
+// Safe to edit by hand
+// A ministry newsletter written in Church Trac, drawn in the church's identity
+// (2026-09-25). Used by src/pages/kids-corner.astro and youth-news.astro; the
+// list of newsletters and the build-time read is src/lib/church-trac-newsletters.ts,
+// the reading of Church Trac's page is src/lib/church-trac-page.ts.
+//
+// NOTHING HERE IS TYPED TWICE (rule 15). The ministry writes the newsletter in
+// Church Trac, which also shows it in the church app; this page is drawn from
+// that page at every build (deploy.yml rebuilds each morning). When Church
+// Trac cannot be read, the page says so in one line and links to it there.
+//
+// THE PAGE, top to bottom:
+//   1. The opener on the indigo band (every page's opener): the small line,
+//      the newsletter's own name as the h1, who it is for, and its masthead
+//      (Church Trac's banner picture) framed at the right. A heading the
+//      ministry put on the banner reads under the name.
+//   2. The sections, on paper, each under a hairline: on a wide screen the
+//      ministry's title card for the section ("What's Happening", "Tip of the
+//      Month") in the left five twelfths, the words in the right seven, so
+//      every section's words start on one left edge (rule 17). A section with
+//      no card keeps its words in the same column. On a phone: card, words.
+//   3. "About this newsletter" on the brown band: where it is written, and the
+//      two ways to it outside the site (Church Trac and the church app).
+//
+// THE PICTURES. Church Trac's pictures here are words set as images: the
+// masthead and the section title cards. The masthead is named for a screen
+// reader (the newsletter's name and what it is); the title cards are
+// decorative (alt=""), because the words under them carry the section and
+// the card's lettering cannot be read by the build. Church Trac crops them all
+// to 1500 x 600, which the frames reserve so nothing jumps as they load.
+// They are served from Church Trac, lazy below the opener.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import { breadcrumbSchema } from '@/lib/schemas';
+import { site } from '@/data/site';
+import { headlineScale, headlineClass } from '@/lib/headline-scale';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
+import { churchTracPageUrl, loadNewsletter, type Newsletter } from '@/lib/church-trac-newsletters';
+import { pageText, type Block, type Inline } from '@/lib/church-trac-page';
+import { getSiteSettings } from '@/lib/queries';
+
+interface Props {
+  newsletter: Newsletter;
+}
+
+const { newsletter } = Astro.props as Props;
+const siteSettings = await getSiteSettings();
+const page = await loadNewsletter(newsletter, siteSettings?.churchTracUrl);
+const churchTracHref = churchTracPageUrl(newsletter, siteSettings?.churchTracUrl);
+const appHref = (siteSettings?.appUrl as string | undefined) || null;
+
+const name = page?.title || newsletter.fallbackTitle;
+const scale = headlineScale(name, { tall: false });
+const pageUrl = `${site.url}/${newsletter.slug}`;
+const title = `${name} | ${site.name}`;
+const summary = page
+  ? pageText(page)
+      .slice(0, 150)
+      .replace(/\s+\S*$/, '')
+  : '';
+const description = `${newsletter.lede}${summary ? ` ${summary}…` : ''}`;
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: site.url },
+    { name: 'Ministries', url: `${site.url}/ministries` },
+    { name, url: pageUrl },
+  ]),
+];
+
+// A section's leading picture is its title card; the rest are its words.
+const split = (blocks: Block[]) =>
+  blocks[0]?.kind === 'image'
+    ? { card: blocks[0].src, rest: blocks.slice(1) }
+    : { card: null as string | null, rest: blocks };
+
+// Consecutive buttons sit in one row.
+type Group = Block | { kind: 'buttons'; buttons: Extract<Block, { kind: 'button' }>[] };
+const grouped = (blocks: Block[]): Group[] => {
+  const out: Group[] = [];
+  for (const b of blocks) {
+    const prev = out[out.length - 1];
+    if (b.kind === 'button') {
+      if (prev && prev.kind === 'buttons') prev.buttons.push(b);
+      else out.push({ kind: 'buttons', buttons: [b] });
+    } else out.push(b);
+  }
+  return out;
+};
+const isBr = (r: Inline): r is { br: true } => 'br' in r;
+const external = (href: string) => !href.startsWith(site.url);
+const cta = (label: string, href: string) => ({
+  label,
+  linkType: 'external' as const,
+  externalUrl: href,
+  openInNewTab: external(href),
+});
+const mastheadAlt = `${name}, ${newsletter.eyebrow.toLowerCase()}`;
+---
+
+<BaseLayout {title} {description} {schemas} {siteSettings} searchBody>
+  <div class="bg-band-indigo text-white-pure">
+    <div class="mx-auto max-w-content px-gutter">
+      <div class="nl-open">
+        <div class="l min-w-0">
+          <p class="font-ui text-ui font-medium text-gold">{newsletter.eyebrow}</p>
+          <h1
+            id="newsletter-heading"
+            class:list={['mt-5 text-white-pure', headlineClass(scale, { tall: false })]}
+          >
+            {name}
+          </h1>
+          <p class="mt-6 max-w-[34em] font-body text-lede text-band-taupe italic">
+            {newsletter.lede}
+          </p>
+          {
+            page?.bannerBlocks
+              .filter((b) => b.kind === 'heading')
+              .map((b) => <p class="nl-banner-line">{b.kind === 'heading' && b.text}</p>)
+          }
+        </div>
+        {
+          page?.banner && (
+            <figure class="r m-0 min-w-0">
+              <img
+                src={page.banner}
+                alt={mastheadAlt}
+                width="1500"
+                height="600"
+                decoding="async"
+                fetchpriority="high"
+              />
+            </figure>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-background" data-newsletter={newsletter.slug}>
+    <div class="mx-auto max-w-content px-gutter pt-section-md pb-section-lg">
+      {
+        !page && (
+          <div class="nl-sec">
+            <div class="nl-words">
+              <p class="nl-p">
+                {name} could not be loaded here just now. It is always on Church Trac.
+              </p>
+              <div class="mt-6">
+                <CtaLink cta={cta(`Read ${name} on Church Trac`, churchTracHref)} variant="gold" />
+              </div>
+            </div>
+          </div>
+        )
+      }
+      {
+        page?.sections.map((blocks) => {
+          const { card, rest } = split(blocks);
+          return (
+            <section class="nl-sec">
+              {card && (
+                <figure class="nl-card m-0">
+                  <img
+                    src={card}
+                    alt=""
+                    width="1500"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+              )}
+              <div class="nl-words">
+                {grouped(rest).map((b) =>
+                  b.kind === 'heading' ? (
+                    b.level === 2 ? (
+                      <h2 class="nl-h2">{b.text}</h2>
+                    ) : (
+                      <h3 class="nl-h3">{b.text}</h3>
+                    )
+                  ) : b.kind === 'text' ? (
+                    <p class="nl-p">
+                      {b.inline.map((r) =>
+                        isBr(r) ? (
+                          <br />
+                        ) : r.href ? (
+                          <a
+                            href={r.href}
+                            target={external(r.href) ? '_blank' : undefined}
+                            rel={external(r.href) ? 'noopener noreferrer' : undefined}
+                            class:list={[r.bold && 'font-semibold', r.italic && 'italic']}
+                          >
+                            {r.text}
+                          </a>
+                        ) : r.bold && r.italic ? (
+                          <strong>
+                            <em>{r.text}</em>
+                          </strong>
+                        ) : r.bold ? (
+                          <strong>{r.text}</strong>
+                        ) : r.italic ? (
+                          <em>{r.text}</em>
+                        ) : (
+                          r.text
+                        ),
+                      )}
+                    </p>
+                  ) : b.kind === 'buttons' ? (
+                    <div class="nl-buttons">
+                      {b.buttons.map((btn, i) => (
+                        <CtaLink
+                          cta={cta(btn.label, btn.href)}
+                          variant={i === 0 ? 'gold' : 'outline'}
+                        />
+                      ))}
+                    </div>
+                  ) : b.kind === 'columns' ? (
+                    <div class="nl-cols">
+                      {b.columns.map((col) => (
+                        <div class="nl-col">
+                          {col.map((k) =>
+                            k.kind === 'heading' ? (
+                              <h3 class="nl-h3">{k.text}</h3>
+                            ) : k.kind === 'text' ? (
+                              <p class="nl-p nl-p-sm">
+                                {k.inline.map((r) =>
+                                  isBr(r) ? (
+                                    <br />
+                                  ) : r.bold ? (
+                                    <strong>{r.text}</strong>
+                                  ) : r.italic ? (
+                                    <em>{r.text}</em>
+                                  ) : (
+                                    r.text
+                                  ),
+                                )}
+                              </p>
+                            ) : k.kind === 'button' ? (
+                              <div class="nl-buttons">
+                                <CtaLink cta={cta(k.label, k.href)} variant="outline" />
+                              </div>
+                            ) : null,
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : b.kind === 'image' ? (
+                    <figure class="nl-inline-img m-0">
+                      <img
+                        src={b.src}
+                        alt=""
+                        width="1500"
+                        height="600"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </figure>
+                  ) : b.kind === 'rule' ? (
+                    <hr class="nl-rule" />
+                  ) : null,
+                )}
+              </div>
+            </section>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  <section class="bg-band-brown text-bg" aria-labelledby="newsletter-about" data-pagefind-ignore>
+    <div class="nl-about mx-auto max-w-content px-gutter py-section-lg">
+      <h2
+        id="newsletter-about"
+        class:list={[H2_DISPLAY, 'h-fit text-bg']}
+        style={headingFit('About this newsletter')}
+      >
+        <span class="h-fit-in">About this newsletter</span>
+      </h2>
+      <div class="min-w-0">
+        <p class="mt-0 mb-0 max-w-[36rem] font-body text-lg leading-relaxed text-bg/85">
+          {name} is written by the ministry in Church Trac, and this page follows it each day. It is in
+          the church app too.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <CtaLink cta={cta('Open it on Church Trac', churchTracHref)} variant="gold" onDark />
+          {appHref && <CtaLink cta={cta('Get the church app', appHref)} variant="outline" onDark />}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* The opener: the words in seven twelfths, the masthead in five. */
+  .nl-open {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+    row-gap: 36px;
+    padding-block: clamp(48px, 7vw, 104px) clamp(48px, 6vw, 88px);
+    align-items: center;
+  }
+  .nl-open .l {
+    grid-column: 1 / 8;
+  }
+  .nl-open .r {
+    grid-column: 8 / 13;
+    border-top: 2px solid var(--color-gold);
+    padding-top: 14px;
+  }
+  .nl-open img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (max-width: 1023px) {
+    .nl-open .l,
+    .nl-open .r {
+      grid-column: 1 / -1;
+    }
+  }
+  .nl-banner-line {
+    margin: 22px 0 0;
+    padding-top: 14px;
+    max-width: 34em;
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+    line-height: 1.15;
+    color: var(--color-white-pure);
+    background: linear-gradient(var(--color-gold), var(--color-gold)) top left / 48px 2px no-repeat;
+  }
+
+  /* A section: the title card in five twelfths, the words in seven. */
+  .nl-sec {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+    row-gap: 20px;
+    padding-block: clamp(32px, 4vw, 56px);
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+  }
+  .nl-sec:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .nl-card {
+    grid-column: 1 / 6;
+    align-self: start;
+  }
+  .nl-card img,
+  .nl-inline-img img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .nl-words {
+    grid-column: 6 / 13;
+    min-width: 0;
+  }
+  @media (max-width: 1023px) {
+    .nl-card,
+    .nl-words {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1024px) {
+    .nl-card {
+      position: sticky;
+      top: calc(var(--header-offset, 96px) + 24px);
+    }
+  }
+
+  .nl-h2 {
+    margin: 0 0 14px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-h3);
+    line-height: 1.15;
+    color: var(--color-indigo);
+  }
+  .nl-h3 {
+    margin: 22px 0 6px;
+    font-family: var(--font-ui);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--color-indigo);
+  }
+  .nl-h2 + .nl-h3,
+  .nl-col > .nl-h3:first-child {
+    margin-top: 0;
+  }
+  .nl-p {
+    max-width: 62ch;
+    margin: 0 0 12px;
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--color-foreground);
+    overflow-wrap: anywhere;
+  }
+  .nl-p-sm {
+    font-size: 1.0625rem;
+    margin-bottom: 6px;
+  }
+  .nl-p a {
+    color: var(--color-indigo);
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-underline-offset: 3px;
+  }
+  .nl-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 18px 0 16px;
+  }
+  .nl-cols {
+    display: grid;
+    gap: 24px 40px;
+    margin: 18px 0;
+  }
+  @media (min-width: 768px) {
+    .nl-cols {
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      grid-auto-flow: column;
+    }
+  }
+  .nl-col {
+    min-width: 0;
+    border-top: 2px solid var(--color-gold);
+    padding-top: 14px;
+  }
+  .nl-inline-img {
+    margin: 18px 0;
+  }
+  .nl-rule {
+    border: 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    margin: 18px 0;
+  }
+
+  /* About this newsletter: Last Sunday's split on the brown band. */
+  .nl-about {
+    display: grid;
+    row-gap: 28px;
+  }
+  @media (min-width: 1024px) {
+    .nl-about {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: clamp(40px, 5vw, 72px);
+      align-items: start;
+    }
+  }
+</style>

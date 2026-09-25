@@ -31,6 +31,9 @@ export const RESERVED_SLUGS = new Set([
   'privacy',
   // "What's On", the church calendar read from Church Trac (src/pages/events.astro).
   'events',
+  // The ministry newsletters, drawn from Church Trac (src/lib/church-trac-newsletters.ts).
+  'kids-corner',
+  'youth-news',
   // The fixed-data wall the visual-regression suite shoots (PORTS.md card 37).
   // noindex and out of the sitemap, but a real built route, so a custom page
   // must not be able to shadow it.

@@ -108,6 +108,10 @@ export default defineConfig({
       // Friday, not the live calendar (src/lib/church-calendar-feed.ts).
       CHURCH_CALENDAR_FIXTURE: '1',
       CHURCH_CALENDAR_NOW: '2026-09-25T16:00:00Z',
+      // The ministry newsletters (2026-09-25): /kids-corner and /youth-news read
+      // tests/fixtures/churchtrac-{children,youth}.html, the real Church Trac
+      // pages of that day, not the live ones (src/lib/church-trac-newsletters.ts).
+      CHURCH_TRAC_PAGES_FIXTURE: '1',
     },
     // A full build of a 400-page site takes 3 to 4 minutes on a CI runner;
     // 10 minutes is the floor for any repo in the family.

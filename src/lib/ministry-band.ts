@@ -41,6 +41,7 @@ import type {
 } from './pageBuilder.types';
 import { splitStega } from './preview-stega.ts';
 import { goalIndex } from './ministry-goals.ts';
+import { NEWSLETTERS } from './church-trac-newsletters.ts';
 
 /** The link a contact line ends on when the person has no email address. */
 export const CONTACT_OFFICE_LABEL = 'Contact the church office';
@@ -146,6 +147,36 @@ export function contactBlocks(
 }
 
 /**
+ * The ministry's newsletter line, when it has one (2026-09-25): "Read The
+ * Kid's Corner, the Children's Ministry newsletter." linking to its page on
+ * this site. Derived from the ministry's web address and the list in
+ * src/lib/church-trac-newsletters.ts, so nobody types it (rule 15). Null for a
+ * ministry with no newsletter.
+ */
+export function newsletterBlock(
+  slug: string | null | undefined,
+  key = 'newsletter',
+): ContactBlock | null {
+  const want = clean(slug)
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, '')
+    .toLowerCase();
+  const n = NEWSLETTERS.find((x) => x.ministry === want);
+  if (!want || !n) return null;
+  const link = `${key}l1`;
+  return {
+    _type: 'block',
+    _key: key,
+    style: 'normal',
+    markDefs: [{ _type: 'link', _key: link, href: `/${n.slug}` }],
+    children: [
+      { _type: 'span', _key: `${key}s1`, text: 'Read ', marks: [] },
+      { _type: 'span', _key: `${key}s2`, text: n.fallbackTitle, marks: [link] },
+      { _type: 'span', _key: `${key}s3`, text: `, the ${n.eyebrow.toLowerCase()}.`, marks: [] },
+    ],
+  };
+}
+
+/**
  * The block a ministrySection renders as, or null when it points at nothing
  * (no reference yet, or a ministry that is not published). A band with nothing
  * behind it draws nothing, rather than an empty heading over empty columns.
@@ -155,8 +186,10 @@ export function ministryBandAs(
 ): ProjectedImageTextSection | ProjectedRichTextSection | null {
   const ministry = section.ministry;
   if (!ministry) return null;
+  const newsletter = newsletterBlock(ministry.slug);
   const body = [
     ...(Array.isArray(ministry.body) ? ministry.body : []),
+    ...(newsletter ? [newsletter] : []),
     ...contactBlocks(ministry.contacts),
   ];
   // The headline is the band's heading; a ministry with none yet falls back

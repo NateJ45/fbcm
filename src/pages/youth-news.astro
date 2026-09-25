@@ -1,0 +1,14 @@
+---
+// Safe to edit by hand
+// The Youth Ministry's newsletter, drawn from its Church Trac page
+// (2026-09-25). Everything is in src/components/newsletter/Newsletter.astro and
+// src/lib/church-trac-newsletters.ts; this file only names which newsletter.
+import Newsletter from '@/components/newsletter/Newsletter.astro';
+import { newsletterBySlug } from '@/lib/church-trac-newsletters';
+
+const newsletter = newsletterBySlug('youth-news');
+if (!newsletter)
+  throw new Error('youth-news is missing from NEWSLETTERS in src/lib/church-trac-newsletters.ts');
+---
+
+<Newsletter {newsletter} />

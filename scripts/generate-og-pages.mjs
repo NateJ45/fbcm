@@ -350,6 +350,9 @@ for (const p of pages ?? []) {
 add('/privacy', { title: 'Privacy policy' });
 // The church calendar, drawn from Church Trac (src/pages/events.astro).
 add('/events', { title: "What's On", meta: 'Events and weekly gatherings at the church' });
+// The ministry newsletters drawn from Church Trac (src/lib/church-trac-newsletters.ts).
+add('/kids-corner', { eyebrow: 'Children’s newsletter', title: 'The Kid’s Corner' });
+add('/youth-news', { eyebrow: 'Youth newsletter', title: 'The Moose’s Message' });
 
 // scaffold: journal
 add('/blog', { title: 'Blog', meta: 'Sermon previews, news and writing from the church' });

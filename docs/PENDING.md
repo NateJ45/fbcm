@@ -1126,6 +1126,36 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   is allowed through, so a build there draws the "could not be read" state. The deploy runner
   and a laptop reach it. Use `CHURCH_CALENDAR_FIXTURE=1` to see the page there.
 
+### The ministry newsletters from Church Trac (2026-09-25, `claude/kind-heisenberg-jf34rt`)
+
+- [ ] #nathan **Tell the Youth Ministry about the template text in their banner.** The Moose's
+      Message's published banner in Church Trac still carries Church Trac's own "Add a Headline
+      and Paragraph for this section, or click "Use a Template"..." under "Jesus is the Answer".
+      The site leaves it out (`isTemplateText` in `src/lib/church-trac-page.ts`), but Church
+      Trac's page and the church app show it.
+- [ ] #nathan **Put the two newsletters in the menu.** The old site had "Children's Newsletter"
+      and "Youth Newsletter" in a header dropdown. The menu is Site settings > Navigation in the
+      Studio: link `/kids-corner` and `/youth-news` there. The footer's first column and the
+      Children and Youth bands on Ministries link them already (code, no Studio edit).
+- [ ] #nathan **Fill Site settings > Church systems > Church app** if it is empty, so the
+      newsletters' closing band shows "Get the church app".
+- [ ] #nathan **Approve the new sentences** (the approval note, "What's On, Church Trac forms and
+      the ministry newsletters").
+- **How it works and what can break.** Church Trac has no feed for these pages, so
+  `src/lib/church-trac-page.ts` reads their HTML (a small tokenizer, no new dependency),
+  keeps the banner's published sections and the body's `.page-card-section`s, and draws
+  headings, paragraphs (bold, italic, links), title cards, buttons and two-column schedules.
+  If Church Trac changes its page code, the read returns nothing and the page falls back to
+  "Read it on Church Trac", with `[church-trac-page]` in the deploy log. The two real pages of
+  2026-09-25 are the fixtures; a failing unit test after a Church Trac change means refresh
+  them and adjust the reader.
+- **The pictures are words.** Church Trac's images here are the mastheads and the section
+  title cards ("What's Happening", "Tip of the Month"), all 1500 x 600. The masthead is named
+  for a screen reader; the cards are decorative, since the build cannot read their lettering.
+  They are served from Church Trac (`cdn.churchtrac.com`), not copied.
+- **A third newsletter** is one entry in `NEWSLETTERS` (`src/lib/church-trac-newsletters.ts`),
+  one small page file, one reserved slug (both copies and the test) and one share card.
+
 ### Church Trac forms on the site (2026-09-25, `claude/kind-heisenberg-jf34rt`)
 
 - [ ] #nathan **Deploy before anyone uses it (schema change, rule 1).** The branch adds the
