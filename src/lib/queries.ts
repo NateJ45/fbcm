@@ -659,6 +659,25 @@ export async function getAllPageSlugs(): Promise<string[]> {
   return list.map((p) => p.slug).filter(Boolean);
 }
 
+// Pages whose "Show in the footer" switch is on (2026-09-24, feat/the-visitor).
+// The footer renders on every page, so the query runs ONCE per build (the
+// promise is kept) rather than four hundred times. A preview isolate keeps it
+// too, so a switch flipped in a draft shows in the preview's footer after the
+// next deploy, not live; the page itself previews as usual.
+let footerPages: Promise<{ title?: string; navLabel?: string; slug?: string }[]> | null = null;
+export function getFooterPages() {
+  footerPages ??= sanityFetch<{ title?: string; navLabel?: string; slug?: string }>(
+    `*[_type == "page" && defined(slug.current) && archived != true && addToFooter == true]|order(title asc){
+      title,
+      navLabel,
+      "slug": slug.current
+    }`,
+    {},
+    [],
+  );
+  return footerPages;
+}
+
 // Custom pages flagged to appear in the main nav and/or footer. Header.astro
 // and Footer.astro can inject these alongside the built-in links.
 //

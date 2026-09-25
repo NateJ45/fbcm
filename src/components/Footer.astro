@@ -88,6 +88,8 @@ import WatchwordMark from '@/components/church/WatchwordMark.astro';
 import SocialIcon from '@/components/SocialIcon';
 import { socialLinksOf, socialLinkLabel } from '@/lib/social-links';
 import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings';
+import { getFooterPages } from '@/lib/queries';
+import { withFooterPages } from '@/lib/footer-pages';
 import { telHref } from '@/lib/phone';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
 import { clockParts, staticSunday, timeOnly } from '@/lib/live-sunday';
@@ -245,8 +247,10 @@ const creditName = reattachStega(
 );
 
 // Editor-managed footer link columns. Empty is fine: the brand column and the
-// Office column below always render, so the footer is never bare.
-const sanityFooterColumns = chrome.footerColumns;
+// Office column below always render, so the footer is never bare. A page whose
+// own "Show in the footer" switch is on joins the first column (The Visitor,
+// 2026-09-24; src/lib/footer-pages.ts).
+const sanityFooterColumns = withFooterPages(chrome.footerColumns, await getFooterPages());
 
 // The small-print row at the very bottom. EMPTY means "keep the built-in
 // privacy link", which is rendered as its own markup below.
