@@ -93,7 +93,17 @@ export default defineConfig({
     // committed feed in tests/fixtures/youtube-feed.xml at a fixed Thursday
     // instead, offline and identical on every run (src/pages/index.astro).
     // Merged over process.env by Playwright; no deploy sets these.
-    env: { LAST_SUNDAY_FIXTURE: '1', LAST_SUNDAY_NOW: '2026-09-24T16:00:00Z' },
+    //
+    // The Visitor (2026-09-24): VISITOR_FIXTURE=1 makes the build step
+    // (scripts/visitor-covers.mjs) read the committed page fixture,
+    // scripts/data/fixtures/visitor.json, as the /visitor page, so Home's band
+    // and the search records come from fixed data and point at
+    // /styleguide/visitor, which renders that fixture (tests/visitor.spec.ts).
+    env: {
+      LAST_SUNDAY_FIXTURE: '1',
+      LAST_SUNDAY_NOW: '2026-09-24T16:00:00Z',
+      VISITOR_FIXTURE: '1',
+    },
     // A full build of a 400-page site takes 3 to 4 minutes on a CI runner;
     // 10 minutes is the floor for any repo in the family.
     timeout: 600_000,
