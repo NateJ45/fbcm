@@ -23,8 +23,11 @@ import { isDarkRow, visitorGround } from '@/lib/visitor-band';
 import { insertIndex } from '@/lib/band-insert';
 import WhatsOnBand from '@/components/home/WhatsOnBand.astro';
 import { loadWhatsOn } from '@/lib/church-calendar-feed';
-import { nextEvents, type DatedItem } from '@/lib/church-calendar';
+import { nextEvents } from '@/lib/church-calendar';
 // scaffold:end
+// Outside the church region: `upcoming` below is typed whether or not the
+// capability (and its band) is there.
+import type { DatedItem } from '@/lib/church-calendar';
 // scaffold: journal
 import { getAllJournalEntries } from '@/lib/queries';
 import { previewForSunday, sermonForUpcomingSunday } from '@/lib/sunday-sermon';
