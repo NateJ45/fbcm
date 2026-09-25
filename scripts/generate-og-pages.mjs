@@ -348,6 +348,8 @@ for (const p of pages ?? []) {
   add(`/${p.slug}`, { title: p.title, meta: p.slug === SERVICE_PAGE_SLUG ? whenWhere : '' });
 }
 add('/privacy', { title: 'Privacy policy' });
+// The church calendar, drawn from Church Trac (src/pages/events.astro).
+add('/events', { title: "What's On", meta: 'Events and weekly gatherings at the church' });
 
 // scaffold: journal
 add('/blog', { title: 'Blog', meta: 'Sermon previews, news and writing from the church' });

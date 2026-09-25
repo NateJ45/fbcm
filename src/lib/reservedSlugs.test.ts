@@ -57,6 +57,8 @@ test('every reserved slug is a route this repo serves, a scaffolded one, or a bu
     'blog',
     'post',
     'privacy',
+    // What's On, the church calendar from Church Trac (src/pages/events.astro).
+    'events',
     '404',
     // Served, but never for visitors: the fixed-data design-system wall the
     // visual suite screenshots. Reserved so a custom page cannot shadow it.

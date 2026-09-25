@@ -29,6 +29,8 @@ export const RESERVED_SLUGS = new Set([
   'blog', // scaffold: journal
   'post', // scaffold: journal
   'privacy',
+  // "What's On", the church calendar read from Church Trac (src/pages/events.astro).
+  'events',
   // The fixed-data wall the visual-regression suite shoots (PORTS.md card 37).
   // noindex and out of the sitemap, but a real built route, so a custom page
   // must not be able to shadow it.

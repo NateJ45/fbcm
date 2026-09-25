@@ -10,6 +10,15 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-25 — What's On: the Church Trac calendar at /events (`claude/kind-heisenberg-jf34rt`)._
+
+**The church calendar, drawn by the site.** Church Trac offered an iframe embed; an iframe cannot take the site's type or colours, is a fixed 500 px box on a phone and is invisible to search, so the site reads the same calendar's iCal feed (`https://www.churchtrac.com/ical?ui=0C7B1090`) at build time instead and draws it in the identity. Church Trac stays the one place an event is typed (rule 15): nothing is stored in Sanity.
+
+- `src/lib/church-calendar.ts` (pure, `church-calendar.test.ts`): unfolding, escaping, DTSTART as Muncie's wall clock whatever TZID it names (the feed says America/Halifax; a trailing Z is converted), RRULE for DAILY, WEEKLY (BYDAY, INTERVAL), MONTHLY (BYMONTHDAY, 2TH, -1FR) and YEARLY with UNTIL, COUNT and EXDATE (a rule it cannot read shows the event once, never invented dates), descriptions Church Trac cut mid-word trimmed to their last sentence, and `whatsOn()`: standing weekly rules as "Every week", everything else from today to 183 days out by month, the same dated event on three or more consecutive weeks as one row ("Sundays, July 26 to August 16", how Worship was entered).
+- `src/lib/church-calendar-feed.ts`: the calendar code from Site settings' Events calendar box, else the church's own; one fetch per build, two tries, every failure logged and null; `CHURCH_CALENDAR_FIXTURE` / `CHURCH_CALENDAR_NOW` read through `import.meta.env` (the prerender runs in workerd) with `tests/fixtures/churchtrac.ics`, the real feed of 2026-09-25 with names taken out.
+- `src/pages/events.astro`, "What's On": the indigo opener with the full Church Trac calendar as its door; Coming up on paper in the register's grammar (month, gold rule, ruled rows with a date tile); Every week on the brown band. Each row has Add to calendar, a static `/events/<key>.ics` (`src/pages/events/[file].ics.ts`, through `src/lib/ics.ts`), and each dated row is a schema.org Event (`src/lib/church-calendar-schema.ts`, validated by `schema-vocab`).
+- `events` is a reserved slug (both copies, and the test's served list); the share card is drawn by `generate-og-pages.mjs`; `deploy.yml` also rebuilds Tuesday, Wednesday and Friday mornings, so with the existing four runs the page is at most a day behind the calendar; `tests/events.spec.ts` covers the page, the .ics, the door, axe and 320 px.
+
 _2026-09-25 — The visitor audit on /visit and Home (`feat/visit-fixes`)._
 
 **Four fixes from a visitor audit** (a family with children of 6 and 10, new to Muncie, on a phone). Three are content in `scripts/pages/visit.mjs`, composed from existing block types with no schema change, and waiting on Nathan's apply; one is code.

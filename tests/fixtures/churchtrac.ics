@@ -1,0 +1,265 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ChurchTrac Software//ChurchTrac Online//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260712T093000
+DTEND;TZID=America/Halifax:20260712T101500
+DTSTAMP:20260712T093000Z
+UID:eviy90qggomib0qrkx6lgsv5sopgbk78@ctonline
+SUMMARY:Sunday School
+RRULE:FREQ=WEEKLY;UNTIL=20270725
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:Small group discipleship classes are available for all ages.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260712T101500
+DTEND;TZID=America/Halifax:20260712T104500
+DTSTAMP:20260712T101500Z
+UID:qb5bao4kdtci6ldy3h6w91ddul61haez@ctonline
+SUMMARY:Breakfast Fellowship
+RRULE:FREQ=WEEKLY;UNTIL=20270725
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:Fellowship Hall
+DESCRIPTION:As part of FBCM's Sunday gathering, each Sunday morning we break for a breakfast fellowship between Sunday School classes and Worship. Free donuts and drinks are provided weekly, though free-will offerings are accepted.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260726T104500
+DTEND;TZID=America/Halifax:20260726T120000
+DTSTAMP:20260726T104500Z
+UID:jnofr5tmibl5tzp1f64c9zowt12ejqmh@ctonline
+SUMMARY:Worship
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:FBCM offers a blended style of worship in a beautiful, historic sanctuary. Nursery care is available for children under 4. All other ages gather together for music and prayer, then children (pre-k through 5th grade) are dismissed prior to the sermon for G
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260802T104500
+DTEND;TZID=America/Halifax:20260802T120000
+DTSTAMP:20260802T104500Z
+UID:qpjlaf23x8eo8k12gblit4rvpyajjmsj@ctonline
+SUMMARY:Worship
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:FBCM offers a blended style of worship in a beautiful, historic sanctuary. Nursery care is available for children under 4. All other ages gather together for music and prayer, then children (pre-k through 5th grade) are dismissed prior to the sermon for G
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260809T104500
+DTEND;TZID=America/Halifax:20260809T120000
+DTSTAMP:20260809T104500Z
+UID:cdssczi3d9cvej1hbtups7xsbozhcco6@ctonline
+SUMMARY:Worship
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:FBCM offers a blended style of worship in a beautiful, historic sanctuary. Nursery care is available for children under 4. All other ages gather together for music and prayer, then children (pre-k through 5th grade) are dismissed prior to the sermon for G
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260816T104500
+DTEND;TZID=America/Halifax:20260816T120000
+DTSTAMP:20260816T104500Z
+UID:5617izf4ynjday5u15uvwijoyf700htd@ctonline
+SUMMARY:Worship
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:FBCM offers a blended style of worship in a beautiful, historic sanctuary. Nursery care is available for children under 4. All other ages gather together for music and prayer, then children (pre-k through 5th grade) are dismissed prior to the sermon for G
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260709T183000
+DTEND;TZID=America/Halifax:20260709T193000
+DTSTAMP:20260709T183000Z
+UID:n8wliz872b5by59avel2vwjvnsjsbjyy@ctonline
+SUMMARY:Praise Team Practice
+RRULE:FREQ=WEEKLY;UNTIL=20270728
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:Sanctuary
+DESCRIPTION:FBCM's Praise Team rehearses weekly on Thursdays at 6:30PM in the Sanctuary.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260813T183000
+DTEND;TZID=America/Halifax:20260813T200000
+DTSTAMP:20260813T183000Z
+UID:tdnkg3juq4x5psraviywfjbyl01t5o4f@ctonline
+SUMMARY:Snowbird Life Group
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:Snowbirds Life Group meets biweekly on 2nd and 4th Thursday evenings throughout the Summer Life Group season. Contact Cheryl (Adult Ministry Coordinator) to find a Life Group that is right for you.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260827T183000
+DTEND;TZID=America/Halifax:20260827T200000
+DTSTAMP:20260827T183000Z
+UID:oya7ayk60u1liixysewx3et7ojoovtot@ctonline
+SUMMARY:Snowbird Life Group
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:Snowbirds Life Group meets biweekly on 2nd and 4th Thursday evenings throughout the Summer Life Group season. Contact Cheryl (Adult Ministry Coordinator) to find a Life Group that is right for you.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260819T191700
+DTEND;TZID=America/Halifax:20260819T204500
+DTSTAMP:20260819T191700Z
+UID:z9e7gu0mulm7zcz17pizp64cymfqialn@ctonline
+SUMMARY:City Life Club Night
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:Free and open to any youth in grades 6-12. FBCM Youth Ministry partners with Youth for Christ to host Muncie Central's Club Night. Games at 6:30PM. Grub at 7:17PM. Groups at 8PM.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260826T191700
+DTEND;TZID=America/Halifax:20260826T204500
+DTSTAMP:20260826T191700Z
+UID:3l62xtm3xt5u20rtpz9rx332ledp6w53@ctonline
+SUMMARY:City Life Club Night
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:Free and open to any youth in grades 6-12. FBCM Youth Ministry partners with Youth for Christ to host Muncie Central's Club Night. Games at 6:30PM. Grub at 7:17PM. Groups at 8PM.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260902T191700
+DTEND;TZID=America/Halifax:20260902T204500
+DTSTAMP:20260902T191700Z
+UID:kt68w6gb02tgsycizxl90ou15ay08hwi@ctonline
+SUMMARY:City Life Club Night
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:Free and open to any youth in grades 6-12. FBCM Youth Ministry partners with Youth for Christ to host Muncie Central's Club Night. Games at 6:30PM. Grub at 7:17PM. Groups at 8PM.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260909T191700
+DTEND;TZID=America/Halifax:20260909T204500
+DTSTAMP:20260909T191700Z
+UID:mtlp7yn7n52riz1wy75udei2fn1xh5m5@ctonline
+SUMMARY:City Life Club Night
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:Free and open to any youth in grades 6-12. FBCM Youth Ministry partners with Youth for Christ to host Muncie Central's Club Night. Games at 6:30PM. Grub at 7:17PM. Groups at 8PM.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260731T120000
+DTEND;TZID=America/Halifax:20260731T140000
+DTSTAMP:20260731T120000Z
+UID:s1ief66j7qui0hifsuv0kujkk16f7bsw@ctonline
+SUMMARY:Funeral service
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+DESCRIPTION:A funeral service.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260731T100000
+DTEND;TZID=America/Halifax:20260731T115900
+DTSTAMP:20260731T100000Z
+UID:zhzcwfv0nni5h8ldupmr3346u1t6mwqe@ctonline
+SUMMARY:Visitation
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:Sanctuary
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20260913T130000
+DTEND;TZID=America/Halifax:20260913T143000
+DTSTAMP:20260913T130000Z
+UID:zqjy58ptsutid3htilbgfz8t3kpuj8i0@ctonline
+SUMMARY:Community Food Experience
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:First Baptist Church
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20261004T093000
+DTEND;TZID=America/Halifax:20261004T101500
+DTSTAMP:20261004T093000Z
+UID:onwprqj1m398gp4qjwkqvof8o09g70ut@ctonline
+SUMMARY:Membership Class - Week 1
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:Fellowship Hall
+DESCRIPTION:You Worship with FBCM on Sundays! Now what? The next step on your spiritual growth track is The Way. Along The Way, you connect to small group discipleship classes that grow your knowledge of scripture and faithfulness to God.   In October, the Deacons
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20261120T193000
+DTEND;TZID=America/Halifax:20261120T200000
+DTSTAMP:20261120T193000Z
+UID:kzuurpkl7y5z707hvrvaoy4n86kzvbv2@ctonline
+SUMMARY:Sam Pace Recital
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+LOCATION:Sanctuary
+DESCRIPTION:Recital performed by Sam Pace. For details, please contact the church office.
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20261207T193000
+DTEND;TZID=America/Halifax:20261207T200000
+DTSTAMP:20261207T193000Z
+UID:6jn7wgknnlv1pym2ba8k46wba7xgp9vp@ctonline
+SUMMARY:Amahl and the Night Visitors (BSU Opera)
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+DESCRIPTION:Doors Open at 7 PM. Event Begins at 7:30. Rehearsal for participants beforehand.  Come and Experience and American Opera fit for the Season!
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Halifax:20261211T183000
+DTEND;TZID=America/Halifax:20261211T203000
+DTSTAMP:20261211T183000Z
+UID:y6zgibx1w290bctw88i46n7whw3nfe88@ctonline
+SUMMARY:Messiah Sing-In
+CREATED:20260925T155502Z
+LAST-MODIFIED:20260925T155502Z
+DESCRIPTION:On Friday, December 11th, at 6:30 PM, the community is invited to gather for a Messiah Sing-In & Carols event filled with beloved music, powerful voices, the rich sound of the FBCM organ, and a curated art presentation curated by BSU School of Art stu
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR

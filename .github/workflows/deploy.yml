@@ -86,6 +86,11 @@ on:
     - cron: '0 10 * * 1' # Monday 6 am EDT (5 am EST): Last Sunday's replay, usual
     - cron: '0 12 * * 4' # Thursday 8 am EDT (7 am EST): this Sunday's broadcast, scheduled midweek
     - cron: '0 12 * * 6' # Saturday 8 am EDT (7 am EST): this Sunday's broadcast, if late
+    # What's On (/events) reads the Church Trac calendar at build time, so a
+    # new event appears on the next build. The four runs above already cover
+    # Sunday, Monday, Thursday and Saturday; this fills the other three days,
+    # so the page is never more than a day behind the calendar.
+    - cron: '0 10 * * 2,3,5' # Tuesday, Wednesday, Friday 6 am EDT (5 am EST)
 
 # Deploys queue rather than cancelling each other. cancel-in-progress would
 # abort a run mid `wrangler deploy`, and three spare minutes is a much better

@@ -1088,6 +1088,40 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   the dated line (the hero's, `live-sunday.ts`) would fix it everywhere at once; not done here
   because the hero shares the string.
 
+### What's On: the Church Trac calendar at /events (2026-09-25, `claude/kind-heisenberg-jf34rt`)
+
+- [ ] #nathan **Fix the time zone in Church Trac.** Every event in the feed says
+      `TZID=America/Halifax` (Atlantic time) while its times are Muncie's (Sunday School 9:30,
+      Worship 10:45). The site ignores the zone and reads the times as Muncie's clock, so
+      /events is right either way. But anyone who subscribes to the Church Trac feed on a
+      phone, or adds an event from Church Trac's own page, gets every event an hour early
+      (Halifax is one hour ahead). Change the account's time zone to Eastern (Indiana) in
+      Church Trac's settings. Nothing on the site needs changing afterwards.
+- [ ] #nathan **Merge, then add "What's On" to the navigation.** The header, footer and menu
+      are Site settings (Navigation) in the Studio: add a link to `/events`. The page exists on
+      the first deploy after the merge either way, and `/events` is now a reserved slug.
+- [ ] #nathan **Put the calendar in Site settings > Church systems > Events calendar**
+      (`https://www.churchtrac.com/public_calendar?ui=0C7B1090`, or
+      `https://fbcmuncie.churchtrac.com/upcoming_events`). Either works: the page reads the
+      calendar code from the box and falls back to the church's own (`FBCM_CALENDAR_CODE` in
+      `src/lib/church-calendar-feed.ts`) while the box holds Church Center, nothing, or a Church
+      Trac page with no code. Some other calendar in the box turns the list off.
+- [ ] #nathan **Ask the church about pastoral events on the public calendar.** On 2026-09-25 the
+      published feed carried a funeral and a visitation, with the name. They are past, so the
+      page does not show them, but the next one will appear on /events and in Google's event
+      listings while it is upcoming. The "Published" switch on each Church Trac event decides.
+- **Descriptions are cut at the source.** Church Trac stops each description at about 250
+  characters, mid-word. The page trims a cut one back to its last whole sentence (or its last
+  word and an ellipsis): Worship's and the Messiah Sing-In's read shorter than the church wrote
+  them. The full text is only in Church Trac.
+- **A Home band for the next few events was not built.** It needs a place in Home's insert
+  slot beside Last Sunday and The Visitor, and the Visitor band's ground is derived from the
+  band above it (`src/lib/visitor-band.ts`), so a third band there wants its own look first.
+  `loadWhatsOn()` is ready for it.
+- **Node's fetch in the Claude cloud container is refused `www.churchtrac.com`** even when curl
+  is allowed through, so a build there draws the "could not be read" state. The deploy runner
+  and a laptop reach it. Use `CHURCH_CALENDAR_FIXTURE=1` to see the page there.
+
 ### Church links, for the move to Church Trac (2026-09-24, `feat/church-links`)
 
 - [ ] #nathan **Deploy, then run the migration.** The Church systems boxes are new schema
