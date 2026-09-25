@@ -26,6 +26,15 @@
 //      and all), which is never what this site wants, so it stops with an
 //      error instead.
 //
+// THE VISITOR'S WORDS (2026-09-24, feat/the-visitor). Every issue of the
+// newsletter on the /visitor page is added as one custom record, its text read
+// out of the PDF at build time by scripts/visitor-covers.mjs and left in
+// node_modules/.cache/visitor/records.json. A record's url is the PDF itself
+// (the words are in the file, not on /visitor), its title "The Visitor, June
+// 2026", and its meta fills the same register row every result uses
+// (src/lib/visitor-issues.ts issueRecord). No file, no records: the step is
+// optional and never fails the index.
+//
 // The output is dist/client/pagefind/: pagefind.js, the WASM, and the index
 // fragments. The Worker serves it as static assets like everything else in
 // dist/client. Pagefind's default UI files are written too (the API cannot
@@ -84,6 +93,24 @@ if (added.errors.length) {
   console.error('pagefind: indexing failed:', added.errors);
   process.exit(1);
 }
+let issues = 0;
+const recordsFile = join(root, 'node_modules', '.cache', 'visitor', 'records.json');
+if (existsSync(recordsFile)) {
+  let records = [];
+  try {
+    records = JSON.parse(readFileSync(recordsFile, 'utf8'));
+  } catch (err) {
+    console.warn(`pagefind: could not read ${relative(root, recordsFile)} (${err.message})`);
+  }
+  for (const record of Array.isArray(records) ? records : []) {
+    const added = await index.addCustomRecord(record);
+    if (added.errors.length) {
+      console.warn(`pagefind: could not add ${record.meta?.title ?? record.url}:`, added.errors);
+    } else {
+      issues += 1;
+    }
+  }
+}
 const out = join(site, 'pagefind');
 const written = await index.writeFiles({ outputPath: out });
 if (written.errors.length) {
@@ -92,7 +119,7 @@ if (written.errors.length) {
 }
 await pagefind.close();
 console.log(
-  `pagefind: indexed ${added.page_count} pages (${marked} marked) into ${relative(root, out)} in ${
+  `pagefind: indexed ${added.page_count} pages (${marked} marked) and ${issues} issue(s) of The Visitor into ${relative(root, out)} in ${
     Date.now() - started
   } ms`,
 );
