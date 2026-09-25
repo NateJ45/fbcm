@@ -1098,11 +1098,15 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       fetchers (commit `b2ee5189`), with a stand-in-server test for each. After the fix: /events
       has 4 dated events and 3 weekly ones, both newsletters build, no fetch failures in the log,
       parity 176/176 on two builds, 1278 unit and 513 Playwright tests pass.
-- [ ] **/events: the October month group sits on a darker cream** than November and December
-      (seen at 1280 on the real data). Looks unintended; check the month-group ground rule.
-- [ ] **/youth-news at 1280: the "6th-12th Grade" style sections leave the whole left column
-      empty.** The Kid's Corner does not show it at 375. Check the Newsletter section layout
-      when a section has no image.
+- [x] **Not a bug: the "darker October" on /events** was the site's fixed paper-grain layer
+      (`body:before`, `position: fixed`), which a full-page screenshot paints over the first
+      viewport only. A visitor scrolling sees it everywhere.
+- [x] **Fixed: a newsletter section with no title card left its left column empty** at 1280
+      (/youth-news, "6th-12th Grade"). Its own heading now sits in that column (`.nl-side` in
+      `Newsletter.astro`); the words keep their one left edge, and phones are unchanged.
+- [x] **Decided 2026-09-25 (Nathan):** the Messiah Sing-In may show both on Home's blog rows and
+      in What's On; funerals on the public Church Trac calendar show on /events (the code has
+      no filter, and none is on the calendar today).
 - [ ] #nathan **The Kid's Corner still shows summer content** from Church Trac ("Summer Day
       Camps", "Register for Water Wars" on July 11). The church edits that page in Church Trac.
 - [ ] **Church Trac's own calendar embed shows "No events to display"** on this site (the

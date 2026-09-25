@@ -155,9 +155,23 @@ const mastheadAlt = `${name}, ${newsletter.eyebrow.toLowerCase()}`;
       }
       {
         page?.sections.map((blocks) => {
-          const { card, rest } = split(blocks);
+          const { card, rest: all } = split(blocks);
+          // No title card: the section's own heading takes the card's place in
+          // the left five twelfths, so a wide screen never shows an empty
+          // column (2026-09-25, /youth-news). The words keep their one edge.
+          const side = !card && all[0]?.kind === 'heading' ? all[0] : null;
+          const rest = side ? all.slice(1) : all;
           return (
             <section class="nl-sec">
+              {side && side.kind === 'heading' && (
+                <div class="nl-side">
+                  {side.level === 2 ? (
+                    <h2 class="nl-h2">{side.text}</h2>
+                  ) : (
+                    <h3 class="nl-h3">{side.text}</h3>
+                  )}
+                </div>
+              )}
               {card && (
                 <figure class="nl-card m-0">
                   <img
@@ -343,7 +357,8 @@ const mastheadAlt = `${name}, ${newsletter.eyebrow.toLowerCase()}`;
     border-top: 0;
     padding-top: 0;
   }
-  .nl-card {
+  .nl-card,
+  .nl-side {
     grid-column: 1 / 6;
     align-self: start;
   }
@@ -359,6 +374,7 @@ const mastheadAlt = `${name}, ${newsletter.eyebrow.toLowerCase()}`;
   }
   @media (max-width: 1023px) {
     .nl-card,
+    .nl-side,
     .nl-words {
       grid-column: 1 / -1;
     }
