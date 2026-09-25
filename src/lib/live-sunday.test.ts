@@ -16,9 +16,13 @@ import {
   sermonParts,
   sermonText,
   shortSermonTitle,
+  curlInnerQuotes,
+  sermonTitleSpans,
   staticSunday,
   SERMON_LINE_MAX,
   SERMON_TITLE_MAX,
+  SERMON_TITLE_MAX_SM,
+  SERMON_TITLE_MAX_LG,
 } from './live-sunday.ts';
 
 test('a weekday names the coming Sunday', () => {
@@ -100,7 +104,13 @@ test('the server names the day, true at any moment', () => {
 
 test('a short title and reading fit one phone line together', () => {
   const q = sermonParts('Laborers', 'Matthew 20:1-16');
-  assert.deepEqual(q, { title: '‘Laborers’', reading: 'Matthew 20:1-16', readingOnPhone: true });
+  assert.deepEqual(q, {
+    title: '‘Laborers’',
+    titleSm: '‘Laborers’',
+    titleLg: '‘Laborers’',
+    reading: 'Matthew 20:1-16',
+    readingOnPhone: true,
+  });
   assert.equal(sermonText(q!), '‘Laborers’ · Matthew 20:1-16');
   assert.ok(sermonText(q!).length <= SERMON_LINE_MAX);
 });
@@ -111,6 +121,8 @@ test('the reading drops on a phone before the title is ever shortened for it', (
   const p = sermonParts('When God Shows Up', 'Jeremiah 29:10-12');
   assert.deepEqual(p, {
     title: '‘When God Shows Up’',
+    titleSm: '‘When God Shows Up’',
+    titleLg: '‘When God Shows Up’',
     reading: 'Jeremiah 29:10-12',
     readingOnPhone: false,
   });
@@ -125,6 +137,8 @@ test('a title that already names its reading does not repeat it', () => {
 test('no reading at all', () => {
   assert.deepEqual(sermonParts('Hope', ''), {
     title: '‘Hope’',
+    titleSm: '‘Hope’',
+    titleLg: '‘Hope’',
     reading: '',
     readingOnPhone: false,
   });
@@ -155,9 +169,50 @@ test('quotes around a title are replaced, apostrophes are curled', () => {
   assert.equal(sermonParts('“Hope”', '')?.title, '‘Hope’');
 });
 
-test('a quoted word inside a title opens with ‘ and closes with ’', () => {
-  assert.equal(shortSermonTitle(`Let Your 'Yes' Be Yes`), 'Let Your ‘Yes’ Be Yes');
-  assert.equal(shortSermonTitle(`Your 'No,' No`), 'Your ‘No,’ No');
+test('a word quoted inside a title takes double quotes; an apostrophe stays one', () => {
+  // The line wraps the title in ‘…’, so the inner quotes are “…” (fix/sunday-title-length).
+  assert.equal(shortSermonTitle(`Let Your 'Yes' Be Yes`), 'Let Your “Yes” Be Yes');
+  assert.equal(shortSermonTitle(`Your 'No,' No`), 'Your “No,” No');
+  assert.equal(curlInnerQuotes(`God's 'Don't Worry' Word`), 'God’s “Don’t Worry” Word');
+  assert.equal(curlInnerQuotes(`The Disciples' Prayer`), 'The Disciples’ Prayer');
+  assert.equal(curlInnerQuotes(`Say "Amen" Twice`), 'Say “Amen” Twice');
+});
+
+test('the real YouTube title, at each width', () => {
+  const raw = `How to Let Your 'Yes' Be Yes and Your 'No,' No`;
+  const p = sermonParts(raw, 'Matthew 21:23-32');
+  assert.equal(p?.title, '‘How to Let Your “Yes”…’');
+  assert.equal(p?.titleSm, '‘How to Let Your “Yes” Be Yes and Your…’');
+  assert.equal(p?.titleLg, '‘How to Let Your “Yes” Be Yes and Your “No,” No’');
+  assert.ok((p?.titleSm.length ?? 0) - 2 <= SERMON_TITLE_MAX_SM);
+  assert.ok((p?.titleLg.length ?? 0) - 2 <= SERMON_TITLE_MAX_LG);
+});
+
+test('a cut never leaves an inner quote open', () => {
+  // Cut at 24 this would end "Pray “Thy Kingdom…"; it backs off to before the quote.
+  assert.equal(shortSermonTitle(`We Pray 'Thy Kingdom Come, Thy Will Be Done'`), 'We Pray…');
+});
+
+test('the title spans: one copy when every width agrees, else one per band', () => {
+  const one = sermonParts('Hope', '')!;
+  assert.deepEqual(sermonTitleSpans(one), [{ text: '‘Hope’', band: 'all' }]);
+  const three = sermonParts(`How to Let Your 'Yes' Be Yes and Your 'No,' No`, '')!;
+  assert.deepEqual(
+    sermonTitleSpans(three).map((s) => s.band),
+    ['phone', 'sm', 'lg'],
+  );
+  // 30 characters: cut on a phone, whole from 640.
+  const two = sermonParts('Faith, Hope and Love Abide Now', '')!;
+  assert.deepEqual(sermonTitleSpans(two), [
+    { text: '‘Faith, Hope and Love…’', band: 'phone' },
+    { text: '‘Faith, Hope and Love Abide Now’', band: 'smUp' },
+  ]);
+  // The phone and 640 cuts agree, only 1024 differs: two spans, split at lg.
+  const lgOnly = { title: '‘A’', titleSm: '‘A’', titleLg: '‘AB’' };
+  assert.deepEqual(
+    sermonTitleSpans(lgOnly).map((s) => s.band),
+    ['belowLg', 'lg'],
+  );
 });
 
 test('an empty title yields no sermon', () => {

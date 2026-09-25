@@ -34,10 +34,11 @@ test.describe('This Sunday: the sermon on the dated line', () => {
     await expect(link).toHaveAttribute('data-sermon-source', 'youtube');
     await expect(link).toHaveAttribute('target', '_blank');
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-    // The real title, shortened by the 320px length rules, with its own
-    // quoted word opened and closed properly; the reading beside it on a
-    // wide screen.
-    await expect(link).toContainText('‘How to Let Your ‘Yes’…’');
+    // The real title, whole on a wide screen, its own quoted words in double
+    // quotes inside the line's single ones; the reading beside it.
+    await expect(link.locator('[data-sermon-title="lg"]')).toHaveText(
+      '‘How to Let Your “Yes” Be Yes and Your “No,” No’',
+    );
     await expect(link).toContainText('Matthew 21:23-32');
   });
 
@@ -91,9 +92,50 @@ test.describe('This Sunday: the sermon on the dated line', () => {
     await expect(sermon(page)).toBeHidden();
   });
 
-  for (const path of ['/styleguide/this-sunday/youtube', '/']) {
-    test(`no horizontal overflow at 320px: ${path}`, async ({ page }) => {
-      await page.setViewportSize({ width: 320, height: 720 });
+  // The title at each width (fix/sunday-title-length): the phone's cut below
+  // 640, the 640 cap to 1023, the whole title from 1024. Every copy is in the
+  // HTML; CSS shows exactly one.
+  const TITLES: [number, string][] = [
+    [390, '‘How to Let Your “Yes”…’'],
+    [640, '‘How to Let Your “Yes” Be Yes and Your…’'],
+    [1024, '‘How to Let Your “Yes” Be Yes and Your “No,” No’'],
+  ];
+  for (const [width, title] of TITLES) {
+    test(`at ${width}px exactly one title shows: ${title}`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.clock.setFixedTime(THURSDAY);
+      await page.goto('/styleguide/this-sunday/youtube');
+      const shown = await page
+        .locator('[data-sunday-sermon] [data-sermon-title]')
+        .evaluateAll((els) =>
+          els.filter((e) => getComputedStyle(e).display !== 'none').map((e) => e.textContent),
+        );
+      expect(shown).toEqual([title]);
+    });
+  }
+
+  test('with JavaScript off the right title still shows (CSS alone picks it)', async ({
+    browser,
+  }) => {
+    const ctx = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 1024, height: 800 },
+    });
+    const page = await ctx.newPage();
+    await page.goto('/styleguide/this-sunday/youtube');
+    await expect(page.locator('[data-sermon-title="lg"]')).toBeVisible();
+    await expect(page.locator('[data-sermon-title="phone"]')).toBeHidden();
+    await ctx.close();
+  });
+
+  for (const [path, width] of [
+    ['/styleguide/this-sunday/youtube', 320],
+    ['/styleguide/this-sunday/youtube', 640],
+    ['/styleguide/this-sunday/youtube', 1024],
+    ['/', 320],
+  ] as const) {
+    test(`no horizontal overflow at ${width}px: ${path}`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 720 });
       await page.clock.setFixedTime(THURSDAY);
       await page.goto(path);
       await expect(sermonLink(page)).toBeVisible();
@@ -108,8 +150,9 @@ test.describe('This Sunday: the sermon on the dated line', () => {
         };
       });
       expect(m.scroll).toBeLessThanOrEqual(m.client);
-      expect(m.right).toBeLessThanOrEqual(320);
-      // The length rules keep the sermon to one line at 320 (13px capitals).
+      expect(m.right).toBeLessThanOrEqual(width);
+      // The length rules keep the sermon half to one line at every width
+      // (13px capitals, one line is 22px).
       expect(m.height).toBeLessThan(30);
     });
   }

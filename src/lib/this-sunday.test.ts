@@ -18,6 +18,8 @@ const preview: SundaySermon = {
   sunday: SUNDAY,
   href: '/post/when-god-shows-up',
   title: '‘When God Shows Up’',
+  titleSm: '‘When God Shows Up’',
+  titleLg: '‘When God Shows Up’',
   reading: 'Jeremiah 29:10-12',
   readingOnPhone: false,
 };
@@ -39,6 +41,8 @@ test('no preview: the broadcast, shaped by the same length rules, linking to You
     sunday: SUNDAY,
     href: 'https://www.youtube.com/watch?v=g33C2xE88cs',
     title: '‘Grace Enough’',
+    titleSm: '‘Grace Enough’',
+    titleLg: '‘Grace Enough’',
     reading: 'John 3:16',
     readingOnPhone: true,
   });
@@ -55,12 +59,14 @@ test('a source for another Sunday is ignored, never trusted', () => {
   assert.equal(thisSundaySermon(SUNDAY, null, { ...broadcast, sunday: '2026-10-04' }), null);
 });
 
-test('the real feed’s long title is shortened for the 320px line', () => {
+test('the real feed’s long title: cut for a phone, whole from 1024', () => {
   const s = sermonFromBroadcast(upcomingBroadcast(parseYoutubeFeed(FIXTURE), THURSDAY));
   assert.deepEqual(s, {
     sunday: SUNDAY,
     href: 'https://www.youtube.com/watch?v=g33C2xE88cs',
-    title: '‘How to Let Your ‘Yes’…’',
+    title: '‘How to Let Your “Yes”…’',
+    titleSm: '‘How to Let Your “Yes” Be Yes and Your…’',
+    titleLg: '‘How to Let Your “Yes” Be Yes and Your “No,” No’',
     reading: 'Matthew 21:23-32',
     readingOnPhone: false,
   });

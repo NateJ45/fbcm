@@ -46,6 +46,7 @@ import { splitStega } from '@/lib/preview-stega';
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
 import {
   datedSunday,
+  sermonTitleSpans,
   staticSunday,
   timeOnly,
   type SundaySermon,
@@ -223,6 +224,20 @@ const sundayLead = sundaySermon ? datedSunday(sundaySermon.sunday) : sundayStati
 // A sermon named from the YouTube broadcast (src/lib/this-sunday.ts) links to
 // the watch page, which opens in a new tab like the "Last Sunday" band's.
 const sermonExternal = sundaySermon ? sermonIsExternal(sundaySermon) : false;
+// The title at three widths (2026-09-24, `fix/sunday-title-length`): the
+// phone's 24-character cut below 640px, then the wider caps measured at 640
+// and 1024 (live-sunday.ts). Every copy is in the HTML and CSS shows one, so
+// the right one is there before any script runs and with none. A hidden copy
+// is display:none, so a screen reader meets one title, and the search index
+// takes only the widest.
+const sermonTitles = sundaySermon ? sermonTitleSpans(sundaySermon) : [];
+const TITLE_BAND = {
+  phone: 'sm:hidden',
+  sm: 'max-sm:hidden lg:hidden',
+  lg: 'max-lg:hidden',
+  smUp: 'max-sm:hidden',
+  belowLg: 'lg:hidden',
+} as const;
 
 // Subhead emphasis: parse markdown-style _word_ markers into <em> spans so
 // editors can italicize a key word in the Sanity subhead without HTML.
@@ -539,7 +554,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
               reading shows only when it fits beside the title there. */}
           {sundaySermon ? (
             <span class="min-w-0">
-              <span data-live-sunday={sundayTime} data-sermon-sunday={sundaySermon.sunday}>{sundayLead}</span><span data-sunday-sermon={sundaySermon.sunday}><span aria-hidden="true">&nbsp;·</span> <a href={sundaySermon.href} class="sunday-sermon inline-block max-w-full break-words" data-sermon-source={sermonExternal ? 'youtube' : 'preview'} {...(sermonExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{sundaySermon.title}{sundaySermon.reading && <span class:list={[!sundaySermon.readingOnPhone && 'max-sm:hidden']}> · {sundaySermon.reading}</span>}</a></span>
+              <span data-live-sunday={sundayTime} data-sermon-sunday={sundaySermon.sunday}>{sundayLead}</span><span data-sunday-sermon={sundaySermon.sunday}><span aria-hidden="true">&nbsp;·</span> <a href={sundaySermon.href} class="sunday-sermon inline-block max-w-full break-words" data-sermon-source={sermonExternal ? 'youtube' : 'preview'} {...(sermonExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{sermonTitles.map((t) => t.band === 'all' ? t.text : <span class={TITLE_BAND[t.band]} data-sermon-title={t.band} data-pagefind-ignore={t.band === 'lg' || t.band === 'smUp' ? undefined : ''}>{t.text}</span>)}{sundaySermon.reading && <span class:list={[!sundaySermon.readingOnPhone && 'max-sm:hidden']}> · {sundaySermon.reading}</span>}</a></span>
             </span>
           ) : (
             <span data-live-sunday={sundayTime}>{sundayStatic}</span>

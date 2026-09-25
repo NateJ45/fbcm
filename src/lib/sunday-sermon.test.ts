@@ -58,6 +58,8 @@ test("a preview written for the coming Sunday is this Sunday's sermon", () => {
     sunday: '2026-09-27',
     href: '/post/when-god-shows-up',
     title: '‘When God Shows Up’',
+    titleSm: '‘When God Shows Up’',
+    titleLg: '‘When God Shows Up’',
     reading: 'Jeremiah 29:10-12',
     readingOnPhone: false,
   });
@@ -124,6 +126,8 @@ test('stega-encoded title, slug, date and category are all read clean', () => {
     sunday: '2026-09-27',
     href: '/post/when-god-shows-up',
     title: '‘When God Shows Up’',
+    titleSm: '‘When God Shows Up’',
+    titleLg: '‘When God Shows Up’',
     reading: 'Jeremiah 29:10-12',
     readingOnPhone: false,
   });

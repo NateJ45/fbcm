@@ -1129,6 +1129,13 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
 
 ### This Sunday's sermon from YouTube (2026-09-24, `feat/this-sunday-youtube`)
 
+- **The title caps are width bands, measured once (`fix/sunday-title-length`).** 24
+  characters below 640 px, 40 from 640, 56 from 1024 (`live-sunday.ts`). They assume a
+  reading of about 20 characters. A longer reading ("Genesis 32:22-31; Romans 9:1-5") can
+  still wrap the sermon half onto a second line between 640 and about 700 px. That is a
+  wrap inside the column, never an overflow. If the hero's type size or tracking changes,
+  re-measure: the numbers are in the comment above the constants.
+
 - [ ] #nathan **Push, and the Thursday and Saturday builds start.** `deploy.yml` gains two
       more `schedule` crons (Thursday and Saturday 12:00 UTC, 8 am EDT / 7 am EST) so a
       broadcast the church schedules midweek (Wednesday 2 pm for September 27) reaches the

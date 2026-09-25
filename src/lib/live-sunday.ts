@@ -77,8 +77,12 @@ export interface SundaySermon {
   sunday: string;
   /** The preview post, e.g. /post/when-god-shows-up. */
   href: string;
-  /** The title as displayed: quoted, and shortened by the rules below. */
+  /** The title as displayed below 640px: quoted, and shortened by the rules below. */
   title: string;
+  /** The title from 640px to 1023px (SERMON_TITLE_MAX_SM); equal to `title` when it fits both. */
+  titleSm: string;
+  /** The title from 1024px (SERMON_TITLE_MAX_LG); usually the whole title. */
+  titleLg: string;
   /** The reading ("Jeremiah 29:10-12"), or '' when absent or already in the title. */
   reading: string;
   /** Whether the reading still fits beside the title on a 320px phone. */
@@ -109,18 +113,67 @@ export interface SundaySermon {
 export const SERMON_TITLE_MAX = 24;
 export const SERMON_LINE_MAX = 28;
 
+// THE WIDER CAPS (2026-09-24, `fix/sunday-title-length`). The 24-character
+// cap is a PHONE measurement, and applied at every width it cut "How to Let
+// Your 'Yes' Be Yes and Your 'No,' No" to four words on a 1440px screen. The
+// server now renders the title three times, one span per band of widths, and
+// CSS shows one (Hero.astro), so no script is involved. Measured in Chromium
+// with the real face (Sofia Sans Semi Condensed, 13px, 1.82px tracking,
+// uppercase): 8.1px per capital on a mixed title, 11.9px for a run of W and M,
+// the quotes 10px, "THIS SUNDAY, SEPTEMBER 27 · " 212px, " · MATTHEW 21:23-32"
+// 149px. The words beside the dash get 518px at 640 and 864px at 1024.
+//
+//   640 to 1023: the sermon half wraps under the date, so it must fit 518px
+//     on its own WITH the reading, which always shows from 640. A reading of
+//     20 characters and its dot are about 165px, the quotes 10px, leaving
+//     343px, 40 capitals at a cautious 8.5px.
+//   1024 and up: the whole line fits one row of 864px: the date half 212px,
+//     the reading 165px and the quotes 10px leave 477px, 56 capitals at 8.5px.
+//     A longer title (or reading) wraps, as a unit, under the date, where it
+//     has all 864px.
+export const SERMON_TITLE_MAX_SM = 40;
+export const SERMON_TITLE_MAX_LG = 56;
+
 const QUOTES = /^[\s'"‘’“”]+|[\s'"‘’“”]+$/g;
+
+/**
+ * Curly quotes inside a title. The title itself sits in single quotes on the
+ * line (‘…’), so a word quoted INSIDE it takes double quotes: ‘How to Let
+ * Your “Yes” Be Yes’. Doubles, because the line is set in capitals where an
+ * inner ‘YES’ is the same shape as the apostrophe in GOD’S and the outer
+ * quotes, and "YOUR ’NO,’ NO’" reads as three elisions; “NO,” cannot be
+ * mistaken for anything. A straight quote opens when it follows a space or an
+ * opening bracket and a letter follows it, and closes at the next quote that
+ * is not followed by a letter; every other single quote is an apostrophe (’).
+ */
+export function curlInnerQuotes(t: string): string {
+  let open = false;
+  let out = '';
+  for (let i = 0; i < t.length; i += 1) {
+    const c = t[i] ?? '';
+    if (c !== "'" && c !== '"') {
+      out += c;
+      continue;
+    }
+    const prev = t[i - 1] ?? ' ';
+    const next = t[i + 1] ?? ' ';
+    const letterNext = /[\p{L}\p{N}]/u.test(next);
+    if (!open && /[\s([“‘]/.test(prev) && letterNext) {
+      out += '“';
+      open = true;
+    } else if (open && !letterNext) {
+      out += '”';
+      open = false;
+    } else {
+      out += c === '"' ? '”' : '’';
+    }
+  }
+  return out;
+}
 
 /** The title as the line shows it, without its quotes: rules 1 and 2. */
 export function shortSermonTitle(raw: string, max: number = SERMON_TITLE_MAX): string {
-  // A straight quote that opens a word turns ‘ and every other one ’, so the
-  // YouTube title "How to Let Your 'Yes' Be Yes" reads ‘Yes’, not ’Yes’.
-  let t = raw
-    .replace(/\s+/g, ' ')
-    .replace(QUOTES, '')
-    .replace(/(^|[\s(["“])'/g, '$1‘')
-    .replace(/'/g, '’')
-    .trim();
+  let t = curlInnerQuotes(raw.replace(/\s+/g, ' ').replace(QUOTES, '').trim());
   if (t.length > max) {
     const bare = t.replace(/\s*[([][^()[\]]*(?:\[[^\]]*\][^()[\]]*)*[)\]]\s*$/, '').trim();
     if (bare) t = bare;
@@ -128,7 +181,12 @@ export function shortSermonTitle(raw: string, max: number = SERMON_TITLE_MAX): s
   if (t.length <= max) return t;
   const cut = t.slice(0, max); // leaves room for the ellipsis
   const at = cut.lastIndexOf(' ');
-  const head = (at > 0 ? cut.slice(0, at) : cut.slice(0, max - 1)).replace(/[\s\-–,:;&.]+$/, '');
+  let head = (at > 0 ? cut.slice(0, at) : cut.slice(0, max - 1)).replace(/[\s\-–,:;&.]+$/, '');
+  // Never leave an inner quote open: cut back to before it.
+  const opened = head.lastIndexOf('“');
+  if (opened > head.lastIndexOf('”') && opened > 0) {
+    head = head.slice(0, opened).replace(/[\s\-–,:;&.]+$/, '');
+  }
   return `${head}…`;
 }
 
@@ -140,14 +198,45 @@ export function shortSermonTitle(raw: string, max: number = SERMON_TITLE_MAX): s
 export function sermonParts(
   rawTitle: string,
   rawReading: string,
-): Pick<SundaySermon, 'title' | 'reading' | 'readingOnPhone'> | null {
+): Pick<SundaySermon, 'title' | 'titleSm' | 'titleLg' | 'reading' | 'readingOnPhone'> | null {
   const short = shortSermonTitle(rawTitle);
   if (!short) return null;
   const title = `‘${short}’`;
+  const titleSm = `‘${shortSermonTitle(rawTitle, SERMON_TITLE_MAX_SM)}’`;
+  const titleLg = `‘${shortSermonTitle(rawTitle, SERMON_TITLE_MAX_LG)}’`;
   let reading = rawReading.replace(/\s+/g, ' ').trim();
   if (reading && rawTitle.toLowerCase().includes(reading.toLowerCase())) reading = '';
   const readingOnPhone = reading !== '' && title.length + 3 + reading.length <= SERMON_LINE_MAX;
-  return { title, reading, readingOnPhone };
+  return { title, titleSm, titleLg, reading, readingOnPhone };
+}
+
+/**
+ * The spans the hero draws the title in, one per distinct string, each with
+ * the band of widths it shows at. A title that fits every cap is ONE span with
+ * no band, so the common case renders exactly one copy.
+ */
+export function sermonTitleSpans(
+  s: Pick<SundaySermon, 'title' | 'titleSm' | 'titleLg'>,
+): { text: string; band: 'all' | 'phone' | 'sm' | 'lg' | 'smUp' | 'belowLg' }[] {
+  const { title, titleSm, titleLg } = s;
+  if (title === titleSm && titleSm === titleLg) return [{ text: title, band: 'all' }];
+  if (title === titleSm) {
+    return [
+      { text: title, band: 'belowLg' },
+      { text: titleLg, band: 'lg' },
+    ];
+  }
+  if (titleSm === titleLg) {
+    return [
+      { text: title, band: 'phone' },
+      { text: titleSm, band: 'smUp' },
+    ];
+  }
+  return [
+    { text: title, band: 'phone' },
+    { text: titleSm, band: 'sm' },
+    { text: titleLg, band: 'lg' },
+  ];
 }
 
 /** The sermon half's text: "‘When God Shows Up’ · Jeremiah 29:10-12". */
