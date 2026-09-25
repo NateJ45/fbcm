@@ -19,6 +19,8 @@ import { thisSundaySermon } from '@/lib/this-sunday';
 // scaffold: church
 import VisitorBand from '@/components/home/VisitorBand.astro';
 import type { VisitorManifest } from '@/lib/visitor-issues';
+import { isDarkRow, visitorGround } from '@/lib/visitor-band';
+import { insertIndex } from '@/lib/band-insert';
 // scaffold:end
 // scaffold: journal
 import { getAllJournalEntries } from '@/lib/queries';
@@ -102,6 +104,23 @@ const description =
 
 const sections = page?.pageBuilder?.length ? page.pageBuilder : DEFAULT_HOME_SECTIONS;
 
+// Where the code-drawn bands go, once, so the slot and the Visitor's ground
+// read the same row (src/lib/band-insert.ts).
+const insertBefore = ['dynamicListSection', 'giveBandSection'];
+
+// scaffold: church
+// The Visitor's ground, from the band directly above it (visitor-band.ts):
+// Last Sunday's indigo when that band is drawn, otherwise the page-builder row
+// before the slot (the rows SectionRenderer places it among: every non-empty
+// block). Paper under a dark band, indigo under a light one.
+const rowTypes = (sections as unknown[])
+  .filter((s): s is { _type: string } => !!s && typeof s === 'object' && '_type' in s)
+  .map((s) => s._type);
+const visitorOn = visitorGround(
+  !!lastSunday || isDarkRow(rowTypes[insertIndex(rowTypes, insertBefore) - 1]),
+);
+// scaffold:end
+
 // The header sits ON the picture when this page opens with an image hero.
 // One predicate, shared with [slug].astro, so the two routes cannot disagree.
 const overlayHeader = shouldOverlayHeader(sections as any);
@@ -119,16 +138,10 @@ const overlayHeader = shouldOverlayHeader(sections as any);
     /* The band sits before the Church Blog rows: after "Our Building" has
       ended in the present, and next to the journal whose sermon previews it
       pairs with. Before the give band when the blog band is absent. The
-      Visitor's slim band follows it in the same slot: the church's news,
-      between last Sunday and the blog. */
+      Visitor's band follows it in the same slot: the church's news, between
+      last Sunday and the blog. */
   }
-  <SectionRenderer
-    {sections}
-    idPrefix="home"
-    settings={siteSettings}
-    {sermon}
-    insertBefore={['dynamicListSection', 'giveBandSection']}
-  >
+  <SectionRenderer {sections} idPrefix="home" settings={siteSettings} {sermon} {insertBefore}>
     {
       lastSunday && (
         <LastSunday
@@ -145,8 +158,13 @@ const overlayHeader = shouldOverlayHeader(sections as any);
         <VisitorBand
           slot="insert"
           issue={visitor.latest}
+          previous={visitor.previous ?? []}
           covers={visitor.covers}
           href={visitor.listHref}
+          since={visitor.since ?? null}
+          now={buildNow}
+          ground={visitorOn}
+          headingId="home-visitor"
         />
       )
     }

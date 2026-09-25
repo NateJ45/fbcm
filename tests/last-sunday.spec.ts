@@ -91,8 +91,8 @@ test.describe('Home: Last Sunday', () => {
     await expect(page.locator('iframe')).toHaveCount(0);
 
     // Its place: right after "Our Building", right before the blog rows. The
-    // Visitor's slim band (feat/the-visitor) shares the slot and follows it,
-    // so it is stepped over when present.
+    // Visitor band (feat/the-visitor, enlarged in feat/visitor-band) shares
+    // the slot and follows it, so it is stepped over when present.
     const order = await page.evaluate(() => {
       const band = document.querySelector('section.ls-band');
       let next = band?.nextElementSibling ?? null;
