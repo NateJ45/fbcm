@@ -458,11 +458,12 @@ export const guides: Guide[] = [
       {
         kind: 'steps',
         items: [
-          'In Church Trac, open `Church Connect` and choose the form.',
-          'Press `Show Additional Options` and scroll to `Form/Giving Embed Domain`.',
-          'Type this website’s address there and save. Church Trac only lets the form open on the address you type here.',
-          'Copy the code Church Trac gives you. It starts with `<iframe`.',
-          'For online giving the code is in a different place: `Connect Setup`, then `Connect Settings / Users`, then `Online Giving`, then `Embed`. Pick the colours there before you copy it.',
+          'In Church Trac, open `Church Connect`, then `Cards`, and click the form’s card (the connection card is a Form Card).',
+          'In the panel that opens, choose the `Form` tab and find `Form/Giving Embed Domain`.',
+          'Type this website’s address there and save. Church Trac only lets the form open on the address you type here, and until it is set the `Embed Form` code is not shown.',
+          'Copy the code under `Embed Form`. It starts with `<iframe`.',
+          'While you are on the `Form` tab, check `Notify User`: it names who is emailed when someone fills the form in. If it is empty, nobody is told.',
+          'For online giving the code is in a different place: `Connect Setup`, then `Online Giving`, once the church’s Stripe account is linked there.',
         ],
       },
       { kind: 'h', text: 'Then add the form here, once' },

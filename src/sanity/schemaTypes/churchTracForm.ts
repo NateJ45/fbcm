@@ -36,7 +36,7 @@ export const churchTracForm = defineType({
       type: 'text',
       rows: 4,
       description:
-        "In Church Trac: Church Connect, pick the form, Show Additional Options, then Form/Giving Embed Domain. Type this website's address there, save, and copy the code it gives you (it starts with <iframe). Paste it here. For online giving, the code is under Connect Setup, Connect Settings, Online Giving, Embed.",
+        "In Church Trac: Church Connect, Cards, click the form's card, then the Form tab. Type this website's address in Form/Giving Embed Domain, save, and copy the code under Embed Form (it starts with <iframe). Paste it here. For online giving, the code is under Connect Setup, Online Giving, once Stripe is linked.",
       validation: (r) => r.custom((value) => checkPaste(value)),
     }),
     defineField({

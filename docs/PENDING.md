@@ -1182,6 +1182,30 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
 
 ### Church Trac forms on the site (2026-09-25, `claude/kind-heisenberg-jf34rt`)
 
+- [x] **Checked in Church Trac's admin (2026-09-25, read-only, Nathan's Chrome as a Guest
+      user) and the live Studio after the deploy of `861ce3ca`.** Studio: "Church Trac forms"
+      in the desk, a new form opens with its three fields, Site settings shows its five tabs,
+      the Help guide opens, no "Remove field", no console errors. The Studio's Church Trac
+      steps were wrong ("Show Additional Options"); corrected to Cards, the form's card, the
+      Form tab.
+- [ ] #nathan **The only form in Church Trac is the Connection Card**
+      (`fbcmuncie.churchtrac.com/connectcard`, 4 submissions so far). Its `Form/Giving Embed
+    Domain` is empty, so Church Trac shows no embed code yet (one domain only: set
+      `fbcm-site.nathanjnixon86.workers.dev` now, `www.fbcmuncie.org` at the cutover).
+- [ ] #nathan **Urgent for the church: the Connection Card's `Notify User` is empty**, so
+      nobody is emailed when a visitor fills it in (4 have). Someone should read Form
+      Responses and set Notify User to the office.
+- [ ] #nathan **Online giving is not set up in Church Trac**: Connect Setup > Online Giving
+      asks for a Stripe account (2.9% + $0.30 per card gift, $0.25 per bank transfer, 2.2% +
+      $0.30 at Stripe's 501(c)(3) rate; Church Trac adds no fee). The treasurer's job.
+- [ ] #nathan **The Church Trac account time zone** (Halifax) is not visible to a Guest
+      user; it needs an admin login (Jonathan or the office).
+- [ ] **Church Connect's own pages, last 30 days:** 371 views; /pray 64, /youth 38,
+      /birthdays 37, /children 26, /connectcard 25, /upcoming_events 20; 8 app users. The
+      prayer list is the second most visited: worth the Prayer list box in Church systems
+      (`fbcmuncie.churchtrac.com/pray`). A hidden "Link to Our Sermon Podcast" card exists.
+      No custom domain is set on Church Connect (correct: fbcmuncie.org is for this site).
+
 - [ ] #nathan **Deploy before anyone uses it (schema change, rule 1).** The branch adds the
       `churchTracForm` document and the `churchTracFormSection` band. Merge, deploy, open the
       live `/studio`, check `Church Trac forms` is in the menu on the left and nothing offers
