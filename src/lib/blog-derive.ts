@@ -337,23 +337,6 @@ export function freshPreview<T extends BlogEntry>(entries: readonly T[], today: 
   return sunday && sunday.getTime() >= today.getTime() ? newest : null;
 }
 
-const entryKey = (e: BlogEntry) => e._id ?? `slug:${clean(e.slug?.current)}`;
-
-/**
- * "Worth coming back for": the newest `n` durable posts that are NOT already on
- * page 1 of the register, so the index never shows one post twice.
- */
-export function worthComingBackFor<T extends BlogEntry>(
-  entries: readonly T[],
-  page1: readonly BlogEntry[],
-  n = 4,
-): T[] {
-  const onPage1 = new Set((page1 ?? []).map(entryKey));
-  return splitDurable(entries)
-    .durable.filter((e) => !onPage1.has(entryKey(e)))
-    .slice(0, Math.max(0, n));
-}
-
 /** What one numbered page of a list covers. */
 export interface PageSpan {
   page: number;

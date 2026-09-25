@@ -11,17 +11,16 @@
 //      preview while its Sunday has not passed, else the latest post
 //      (Door.astro says how the visitor's clock gets the last word on a
 //      static page).
-//   2. Worth coming back for, on the taupe band: four durable posts NOT on
-//      page 1 below, as the home page's Church Blog rows.
-//   3. All posts, on paper: the heading, the category filters (text links
+//   2. All posts, on paper: the heading, the category filters (text links
 //      with derived counts), page 1 of the register grouped by year, and the
 //      pager. The filters moved down here from under the opener in the
 //      identity pass (2026-09-24), beside the list they filter.
-//   4. The singleton's additionalSections (the #publications list).
+//   3. The singleton's additionalSections (the #publications list).
 //
-// Which posts are durable is derived from the category every build
-// (splitDurable), never from a stored flag (CLAUDE.md rule 15). No closing CTA:
-// the footer follows the publications list.
+// "Worth coming back for" (four durable posts on the taupe band between the
+// opener and the register) came off on 2026-09-24 (feat/blog-flat, Nathan's
+// call): page 1 is now the plain register, newest first, like every page
+// after it. No closing CTA: the footer follows the publications list.
 //
 // The whole archive is static. There is no SSR outside /preview, so the
 // category filter is a ROUTE (/blog/category/<slug>/), not a querystring, and
@@ -38,7 +37,6 @@ import {
   tagIndex,
   categoryFilters,
   freshPreview,
-  worthComingBackFor,
   PER_PAGE,
   type RegisterEntry,
 } from '@/lib/blog-derive';
@@ -50,7 +48,6 @@ import SectionRenderer from '@/components/SectionRenderer.astro';
 import Opener from '@/components/blog/Opener.astro';
 import Door from '@/components/blog/Door.astro';
 import Filters from '@/components/blog/Filters.astro';
-import Worth from '@/components/blog/Worth.astro';
 import Register from '@/components/blog/Register.astro';
 import Pager from '@/components/blog/Pager.astro';
 
@@ -80,7 +77,6 @@ const firstPage = paginate(all, PER_PAGE, 1);
 const today = localDay(new Date().toISOString()) ?? new Date();
 const fresh = freshPreview(all, today);
 const latest = all[0] ?? null;
-const worth = worthComingBackFor(all, firstPage.items, 4);
 
 // The routes the redirect script below is allowed to send a visitor to. Both
 // lists are derived from the SAME data the two routes build from, so the script
@@ -141,10 +137,7 @@ const schemas = [
     {(fresh || latest) && <Door {fresh} {latest} />}
   </Opener>
 
-  {/* ------- 2. Worth coming back for ---------------------------------------- */}
-  <Worth entries={worth} />
-
-  {/* ------- 3. All posts: the filters and page 1 of the register ------------ */}
+  {/* ------- 2. All posts: the filters and page 1 of the register ------------ */}
   <section class="bg-background" aria-labelledby="blog-all-heading">
     <div class="mx-auto max-w-content px-gutter py-section-lg">
       <h2 id="blog-all-heading" class:list={[H2_DISPLAY, 'mb-8 text-indigo']}>All posts</h2>
@@ -157,7 +150,7 @@ const schemas = [
   </section>
 
   {
-    /* ------- 4. Extra sections from the Studio ------------------------------
+    /* ------- 3. Extra sections from the Studio ------------------------------
      The #publications document list (The Visitor, and the two books) is one of
      these, seeded by scripts/pages/blog.mjs. idPrefix keeps its generated
      heading ids from colliding with the bands drawn above. */
