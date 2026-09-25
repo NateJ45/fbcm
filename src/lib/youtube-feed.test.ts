@@ -6,7 +6,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
+  broadcastSunday,
   churchDay,
+  comingSunday,
   decodeXml,
   lastSundayRecording,
   parseYoutubeFeed,
@@ -15,6 +17,7 @@ import {
   splitVideoTitle,
   sundayLabel,
   thumbnailUrl,
+  upcomingBroadcast,
   type FeedEntry,
 } from './youtube-feed.ts';
 
@@ -195,4 +198,104 @@ test('labels and thumbnails', () => {
     thumbnailUrl('y435wOf6Tgc', 'sddefault', 'webp'),
     'https://i.ytimg.com/vi_webp/y435wOf6Tgc/sddefault.webp',
   );
+});
+
+// ── This Sunday's broadcast (2026-09-24, `feat/this-sunday-youtube`) ─────────
+
+const scheduled = (over: Partial<FeedEntry> = {}): FeedEntry => ({
+  videoId: 'ccccccccccc',
+  title: 'Next Week - John 3:16 - Series',
+  published: '2026-09-23T18:03:21Z', // Wednesday 2:03 pm church time
+  views: 0,
+  description: '',
+  ...over,
+});
+
+test('the real feed: the zero-view Wednesday upload is the September 27 broadcast', () => {
+  assert.deepEqual(upcomingBroadcast(parseYoutubeFeed(FIXTURE), THURSDAY), {
+    videoId: 'g33C2xE88cs',
+    sunday: '2026-09-27',
+    title: "How to Let Your 'Yes' Be Yes and Your 'No,' No",
+    reading: 'Matthew 21:23-32',
+    series: 'Kingdom Come',
+    watchUrl: 'https://www.youtube.com/watch?v=g33C2xE88cs',
+  });
+});
+
+test('the broadcast holds from its upload until the Sunday itself, and not after', () => {
+  const entries = parseYoutubeFeed(FIXTURE);
+  for (const at of [
+    '2026-09-23T18:30:00Z', // Wednesday, just after it was scheduled
+    '2026-09-27T03:30:00Z', // Saturday 11:30 pm church time (Sunday in UTC)
+    '2026-09-27T13:00:00Z', // Sunday 9 am church time
+  ]) {
+    assert.equal(upcomingBroadcast(entries, new Date(at))?.videoId, 'g33C2xE88cs', at);
+  }
+  // Monday: the coming Sunday is October 4, and nothing is scheduled for it.
+  assert.equal(upcomingBroadcast(entries, new Date('2026-09-28T14:00:00Z')), null);
+  // Before it was published it is not known.
+  assert.equal(upcomingBroadcast(entries, new Date('2026-09-23T12:00:00Z')), null);
+});
+
+test('a broadcast’s Sunday is the first Sunday after its upload day, church time', () => {
+  assert.equal(broadcastSunday('2026-09-23T18:03:21Z'), '2026-09-27'); // Wednesday
+  assert.equal(broadcastSunday('2026-09-21T15:00:00Z'), '2026-09-27'); // Monday
+  assert.equal(broadcastSunday('2026-09-26T23:00:00Z'), '2026-09-27'); // Saturday 7 pm
+  // Saturday 11 pm in Muncie is already Sunday in UTC: still for that Sunday.
+  assert.equal(broadcastSunday('2026-09-27T03:00:00Z'), '2026-09-27');
+  // Uploaded ON a Sunday: for the next Sunday, never the same day.
+  assert.equal(broadcastSunday('2026-09-27T20:00:00Z'), '2026-10-04');
+  // Daylight saving: fall back is Sunday November 1 2026, spring forward March 14 2027.
+  assert.equal(broadcastSunday('2026-10-29T18:00:00Z'), '2026-11-01');
+  assert.equal(broadcastSunday('2026-11-04T18:00:00Z'), '2026-11-08');
+  assert.equal(broadcastSunday('2027-03-10T18:00:00Z'), '2027-03-14');
+  assert.equal(broadcastSunday('not a date'), null);
+});
+
+test('the coming Sunday, church time, across midnight and daylight saving', () => {
+  assert.equal(comingSunday(THURSDAY), '2026-09-27');
+  assert.equal(comingSunday(new Date('2026-09-27T13:00:00Z')), '2026-09-27'); // Sunday 9 am
+  assert.equal(comingSunday(new Date('2026-09-28T03:30:00Z')), '2026-09-27'); // Sun 11:30 pm
+  assert.equal(comingSunday(new Date('2026-09-28T04:30:00Z')), '2026-10-04'); // Mon 12:30 am
+  assert.equal(comingSunday(new Date('2026-11-02T05:30:00Z')), '2026-11-08'); // Mon 12:30 am EST
+  assert.equal(comingSunday(new Date('nope')), null);
+});
+
+test('only zero views counts as scheduled: a replay, or a feed with no views, is not', () => {
+  assert.equal(upcomingBroadcast([scheduled({ views: 3 })], THURSDAY), null);
+  assert.equal(upcomingBroadcast([scheduled({ views: null })], THURSDAY), null);
+  assert.equal(upcomingBroadcast([scheduled()], THURSDAY)?.sunday, '2026-09-27');
+});
+
+test('a title that does not split into sermon and reading names no sermon', () => {
+  for (const title of ['Sunday Worship Service', 'Kingdom Come - Week 4', 'Live - September 27']) {
+    assert.equal(upcomingBroadcast([scheduled({ title })], THURSDAY), null, title);
+  }
+});
+
+test('a broadcast uploaded before last Sunday is not this Sunday’s', () => {
+  assert.equal(
+    upcomingBroadcast([scheduled({ published: '2026-09-16T18:00:00Z' })], THURSDAY),
+    null,
+  );
+});
+
+test('two different broadcasts for one Sunday: no guess', () => {
+  const a = scheduled();
+  const b = scheduled({ videoId: 'ddddddddddd', title: 'Other - Luke 1:1 - Series' });
+  assert.equal(upcomingBroadcast([a, b], THURSDAY), null);
+  // The same sermon scheduled twice is still that sermon.
+  const c = scheduled({ videoId: 'eeeeeeeeeee' });
+  assert.equal(upcomingBroadcast([a, c], THURSDAY)?.title, 'Next Week');
+});
+
+test('the Last Sunday band never picks the scheduled broadcast, at any hour of its week', () => {
+  const entries = parseYoutubeFeed(FIXTURE);
+  const t0 = Date.parse('2026-09-23T18:04:00Z');
+  for (let h = 0; h < 5 * 24; h += 1) {
+    const now = new Date(t0 + h * 3_600_000);
+    const rec = lastSundayRecording(entries, now);
+    assert.notEqual(rec?.videoId, 'g33C2xE88cs', now.toISOString());
+    assert.equal(rec?.videoId, 'y435wOf6Tgc', now.toISOString());
+  }
 });

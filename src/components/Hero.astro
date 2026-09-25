@@ -50,6 +50,7 @@ import {
   timeOnly,
   type SundaySermon,
 } from '@/lib/live-sunday';
+import { sermonIsExternal } from '@/lib/this-sunday';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import HeroFacts from '@/components/HeroFacts.astro';
 import { headingFit, longestWord, EM_BODY, EM_DISPLAY } from '@/lib/heading-grammar';
@@ -139,11 +140,12 @@ interface Props {
    */
   headingAccent?: string;
   /**
-   * This Sunday's sermon (2026-09-24), picked at build time from the sermon
-   * previews by src/lib/sunday-sermon.ts and passed down by SectionRenderer.
+   * This Sunday's sermon (2026-09-24), picked at build time by
+   * src/lib/this-sunday.ts (a sermon preview first, else the YouTube
+   * broadcast scheduled for that Sunday) and passed down by SectionRenderer.
    * Drawn only on the tall hero's dated line, after the date and in place of
-   * the service time; null (no preview for the coming Sunday) leaves the line
-   * exactly as it was.
+   * the service time; null (neither source for the coming Sunday) leaves the
+   * line exactly as it was.
    */
   sermon?: SundaySermon | null;
   /** Visit's calendar file, shown under the facts (HeroFacts.astro). */
@@ -218,6 +220,9 @@ const sundayTime = showLiveSunday ? timeOnly(serviceTimeClean) : '';
 // line), so the line is never rewritten after it is on screen.
 const sundaySermon = showLiveSunday && sermon ? sermon : null;
 const sundayLead = sundaySermon ? datedSunday(sundaySermon.sunday) : sundayStatic;
+// A sermon named from the YouTube broadcast (src/lib/this-sunday.ts) links to
+// the watch page, which opens in a new tab like the "Last Sunday" band's.
+const sermonExternal = sundaySermon ? sermonIsExternal(sundaySermon) : false;
 
 // Subhead emphasis: parse markdown-style _word_ markers into <em> spans so
 // editors can italicize a key word in the Sanity subhead without HTML.
@@ -534,7 +539,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
               reading shows only when it fits beside the title there. */}
           {sundaySermon ? (
             <span class="min-w-0">
-              <span data-live-sunday={sundayTime} data-sermon-sunday={sundaySermon.sunday}>{sundayLead}</span><span data-sunday-sermon={sundaySermon.sunday}><span aria-hidden="true">&nbsp;·</span> <a href={sundaySermon.href} class="sunday-sermon inline-block max-w-full break-words">{sundaySermon.title}{sundaySermon.reading && <span class:list={[!sundaySermon.readingOnPhone && 'max-sm:hidden']}> · {sundaySermon.reading}</span>}</a></span>
+              <span data-live-sunday={sundayTime} data-sermon-sunday={sundaySermon.sunday}>{sundayLead}</span><span data-sunday-sermon={sundaySermon.sunday}><span aria-hidden="true">&nbsp;·</span> <a href={sundaySermon.href} class="sunday-sermon inline-block max-w-full break-words" data-sermon-source={sermonExternal ? 'youtube' : 'preview'} {...(sermonExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{sundaySermon.title}{sundaySermon.reading && <span class:list={[!sundaySermon.readingOnPhone && 'max-sm:hidden']}> · {sundaySermon.reading}</span>}</a></span>
             </span>
           ) : (
             <span data-live-sunday={sundayTime}>{sundayStatic}</span>

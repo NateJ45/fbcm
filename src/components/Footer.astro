@@ -24,11 +24,17 @@
 // footer identity pass; rollout plan: "footer carries the Praise & Proclaim
 // mark and the four goals"):
 //   1. Optional newsletter signup (only when siteSettings.newsletter.enabled)
-//   2. THE POSTER ROW, the closing Sunday band: the live dated line, the
-//      service time at poster scale, the street line as the lede, and the gold
-//      Give button. The same promise the hero opens with, which is what makes
-//      the header and the footer read as one object. Because it gives the time,
-//      the street and Give on every page, nothing below repeats them.
+//   2. THE POSTER, the closing Sunday band: the live dated line, the service
+//      time at poster scale, the street line as the lede, and the gold Give
+//      button. The same promise the hero opens with, which is what makes the
+//      header and the footer read as one object. Because it gives the time,
+//      the street and Give on every page, nothing below repeats them. BESIDE
+//      it from lg (under it below lg), THE SIGN-OFF: the Praise & Proclaim
+//      mark (WatchwordMark) and the bottom line, "An American Baptist
+//      congregation in downtown Muncie since 1859", over the Hannaford
+//      rendering drawn as faint gold line art behind the poster's right side.
+//      (Until 2026-09-24, feat/footer-signoff, the sign-off was its own band
+//      at the foot of the footer, and the poster's right half was empty.)
 //   3. THE FOUR GOALS (GoalsRow): each goal's building glyph in gold, its name
 //      and its small line, linking to its band on Who We Are.
 //   4. Three columns on one left edge, sharing the max-w-content px-gutter
@@ -41,11 +47,7 @@
 //           address only when the poster row above did not print it. Then
 //           the church's accounts elsewhere as round icon buttons
 //           (socialLinksOf: Facebook, Instagram, YouTube).
-//   5. THE SIGN-OFF: the Praise & Proclaim mark (WatchwordMark) and the bottom
-//      line, "An American Baptist congregation in downtown Muncie since
-//      1859", over the Hannaford rendering drawn as faint gold line art along
-//      the bottom edge.
-//   6. Thin base rail: the wordmark (the footer's link home), auto-year
+//   5. Thin base rail: the wordmark (the footer's link home), auto-year
 //      copyright, small print (the theme control came off 2026-09-24: light-only)
 //
 // THE RENDERING. Samuel Hannaford and Sons' 1927 drawing of the building (the
@@ -54,7 +56,8 @@
 // (background divided out, levels, four alpha steps, edges faded), 952x452,
 // lossless WebP with alpha, ~31 KB. It is not an <img>: it is a CSS MASK on a
 // gold-filled box, so the drawing takes the brand gold token itself (no
-// colour in the file, no hex in the code) at low opacity. It is absolutely
+// colour in the file, no hex in the code) at low opacity, behind the
+// poster's right side where it frames the watchword. It is absolutely
 // positioned and aria-hidden, so it moves no layout and is never a candidate
 // for the page's largest paint.
 //
@@ -272,17 +275,6 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
 
 <footer class="relative isolate overflow-hidden bg-indigo-deep text-bg">
   {
-    /* The Hannaford rendering along the bottom edge: gold line art, masked
-       from the baked drawing. Decorative, hidden from the tree, and it takes
-       no space: absolutely positioned under everything else. It inks in,
-       slowly, the first time it scrolls into view (data-reveal="ink",
-       2026-09-24; still under prefers-reduced-motion). */
-  }
-  <div class="footer-rendering" aria-hidden="true" data-reveal="ink" style={renderingStyle}>
-    <div class="footer-rendering-ink"></div>
-  </div>
-
-  {
     /* Newsletter signup — renders only when siteSettings.newsletter.enabled is
        true. Island hydrates when scrolled into view. */
   }
@@ -297,45 +289,76 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
   }
 
   {
-    /* THE POSTER ROW. Not a heading: the page's own h1 already says what the
-       page is, and this line is a standing promise rather than a section of
-       content, so it is set as type without taking a heading level. */
+    /* THE POSTER, the closing Sunday band, with the sign-off beside it
+       (2026-09-24, feat/footer-signoff). Not a heading: the page's own h1
+       already says what the page is, and this is a standing promise rather
+       than a section of content, so it is set as type without a heading
+       level. From lg it is two columns on the link columns' own grid below
+       (2fr 1fr 1fr, gap l), so the watchword shares the Elsewhere column's
+       left edge: the Sunday on the left, the watchword and the bottom line
+       on the right, their tops level with the time. Below lg it stacks in
+       reading order. The Hannaford rendering sits behind the right side,
+       full bleed to the footer's right edge. */
   }
-  {
-    showPoster && (
-      <div class="relative mx-auto max-w-content px-gutter py-section-md">
-        <p class="font-ui text-ui text-gold" data-live-sunday={posterTime}>
-          {posterEyebrow}
-        </p>
-        <p class="mt-[clamp(10px,1.4vh,18px)] font-display text-[clamp(2rem,5.2vw,3.25rem)] leading-none font-normal tracking-[0.01em] uppercase">
-          {poster.clock}
-          {poster.meridiem && (
-            <span class="ml-[.14em] font-body text-[.42em] tracking-normal normal-case italic">
-              {poster.meridiem}
-            </span>
-          )}
-        </p>
-        {streetLine && (
-          <p class="mt-[clamp(12px,1.8vh,20px)] font-body text-lede font-normal text-bg/75 italic">
-            {streetLine}
+  <div class="relative">
+    {
+      /* The Hannaford rendering: gold line art, masked from the baked drawing.
+         Decorative, hidden from the tree, and it takes no space: absolutely
+         positioned under the poster's right side. It inks in, slowly, the
+         first time it scrolls into view (data-reveal="ink"; still under
+         prefers-reduced-motion). */
+    }
+    <div class="footer-rendering" aria-hidden="true" data-reveal="ink" style={renderingStyle}>
+      <div class="footer-rendering-ink"></div>
+    </div>
+    <div class="footer-poster relative mx-auto max-w-content px-gutter py-section-md">
+      {
+        showPoster && (
+          <p class="footer-poster-eyebrow font-ui text-ui text-gold" data-live-sunday={posterTime}>
+            {posterEyebrow}
           </p>
-        )}
-        {footerCta.show && (
-          <a
-            href={footerCta.href}
-            target={footerCtaIsExternal ? '_blank' : undefined}
-            rel={footerCtaIsExternal ? 'noopener noreferrer' : undefined}
-            class="press-tactile mt-[clamp(22px,3vh,34px)] inline-flex min-h-[44px] items-center justify-center rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-deep shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-deep)] hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-deep focus-visible:outline-none"
-          >
-            {footerCta.label}
-          </a>
-        )}
+        )
+      }
+      {
+        showPoster && (
+          <div class="footer-poster-sunday">
+            <p class="font-display text-[clamp(2rem,5.2vw,3.25rem)] leading-none font-normal tracking-[0.01em] uppercase">
+              {poster.clock}
+              {poster.meridiem && (
+                <span class="ml-[.14em] font-body text-[.42em] tracking-normal normal-case italic">
+                  {poster.meridiem}
+                </span>
+              )}
+            </p>
+            {streetLine && (
+              <p class="mt-[clamp(12px,1.8vh,20px)] font-body text-lede font-normal text-balance text-bg/75 italic">
+                {streetLine}
+              </p>
+            )}
+            {footerCta.show && (
+              <a
+                href={footerCta.href}
+                target={footerCtaIsExternal ? '_blank' : undefined}
+                rel={footerCtaIsExternal ? 'noopener noreferrer' : undefined}
+                class="press-tactile mt-[clamp(22px,3vh,34px)] inline-flex min-h-[44px] items-center justify-center rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-deep shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-deep)] hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-deep focus-visible:outline-none"
+              >
+                {footerCta.label}
+              </a>
+            )}
+          </div>
+        )
+      }
+      <div class="footer-signoff">
+        <WatchwordMark size="hero" />
+        <p class="mt-m max-w-[34ch] font-body text-lede font-normal text-bg/80 italic">
+          {bottomLine}
+        </p>
       </div>
-    )
-  }
+    </div>
+  </div>
 
   {/* THE FOUR GOALS, each to its own band on Who We Are. */}
-  <div class:list={['relative', showPoster && 'border-t border-bg/15']}>
+  <div class="relative border-t border-bg/15">
     <nav aria-label="Our goals" class="mx-auto max-w-content px-gutter py-l">
       <GoalsRow size="footer" />
     </nav>
@@ -443,19 +466,6 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
           }
         </div>
       </div>
-    </div>
-  </div>
-
-  {
-    /* THE SIGN-OFF: the watchword mark, and the bottom line under it, over
-       the rendering. */
-  }
-  <div class="relative">
-    <div class="footer-signoff mx-auto max-w-content px-gutter pt-l pb-section-md">
-      <WatchwordMark size="hero" />
-      <p class="mt-m max-w-[34ch] font-body text-lede font-normal text-bg/80 italic">
-        {bottomLine}
-      </p>
     </div>
   </div>
 
@@ -599,24 +609,74 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
     }
   }
 
-  /* The watchword mark, a size between the band and the hero. */
+  /* THE POSTER. One column, in reading order, below lg: the eyebrow, the
+     Sunday (time, street, Give), then the sign-off. From lg, two columns on
+     the link columns' own grid (.footer-cols: 2fr 1fr 1fr, gap l), so the
+     watchword's left edge is the Elsewhere column's left edge, and its top is
+     level with the time's (row 2, under the eyebrow). */
+  .footer-poster {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .footer-poster-sunday {
+    margin-top: clamp(10px, 1.4vh, 18px);
+  }
+  .footer-signoff {
+    margin-top: var(--spacing-section-md);
+  }
+  .footer-poster-eyebrow + .footer-poster-sunday + .footer-signoff {
+    margin-top: var(--spacing-l);
+  }
+  @media (min-width: 1024px) {
+    .footer-poster {
+      grid-template-columns: 2fr 1fr 1fr;
+      column-gap: var(--spacing-l);
+    }
+    .footer-poster-eyebrow,
+    .footer-poster-sunday {
+      grid-column: 1;
+    }
+    .footer-poster-eyebrow + .footer-poster-sunday + .footer-signoff {
+      grid-column: 2 / -1;
+      grid-row: 2;
+      align-self: start;
+      margin-top: clamp(10px, 1.4vh, 18px);
+    }
+  }
+  /* No service time set: no Sunday, and the sign-off is the whole band. */
+  .footer-poster > .footer-signoff:first-child {
+    margin-top: 0;
+  }
+
+  /* The watchword mark at the footer's own size, between the band and the
+     hero: sized to sit level with the 10:45 figure beside it rather than
+     over it. A scoped override, as before, so WatchwordMark keeps its two
+     sizes. */
   .footer-signoff :global(.watchword-mark) {
-    --mark-a: clamp(52px, 6.2vw, 96px);
-    --mark-b: clamp(30px, 4vw, 62px);
+    --mark-a: clamp(40px, 4.2vw, 62px);
+    --mark-b: clamp(24px, 2.6vw, 39px);
   }
 
   /* The rendering: the brand gold, cut to the drawing's lines by the mask,
-     right-aligned along the bottom edge and faint. The outer box is
-     content-visibility: auto, so the browser skips styling its contents
-     (and so fetching the mask) until the footer nears the viewport: measured
-     2026-09-24, the eager fetch cost the home page ~75 ms of simulated LCP. */
+     right-aligned along the poster's bottom edge, behind its right side, and
+     faint (0.16 of gold over indigo-deep: the worst case under a full-alpha
+     line still leaves gold text at 5.25:1, paper-white at 12.9:1). The outer
+     box is content-visibility: auto, so the browser skips styling its
+     contents (and so fetching the mask) until the footer nears the viewport:
+     measured 2026-09-24, the eager fetch cost the home page ~75 ms of
+     simulated LCP. */
   .footer-rendering {
     position: absolute;
     right: 0;
     bottom: 0;
-    width: min(100%, 72rem);
+    width: min(100%, 40rem);
     pointer-events: none;
     content-visibility: auto;
+  }
+  @media (min-width: 1024px) {
+    .footer-rendering {
+      width: min(58%, 56rem);
+    }
   }
   .footer-rendering-ink {
     width: 100%;

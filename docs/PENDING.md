@@ -1076,6 +1076,17 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   to `SectionRenderer`; the preview route's hero reads as it did before. Worth wiring only if an
   editor asks.
 
+### The footer's sign-off in the poster (2026-09-24, `feat/footer-signoff`)
+
+- [ ] #nathan **Look at the new footer and merge.** The watchword and the bottom line sit beside
+      the Sunday poster from 1024 px up and follow Give on a phone; the sign-off band is gone.
+      Screenshots before and after at 1440, 1024 and 390 were taken on the branch. Nothing in
+      Sanity changes, so a merge and a push is the whole deploy.
+- **The poster's eyebrow wraps "10:45 AM" onto a line of its own at 390 px** ("THIS SUNDAY,
+  SEPTEMBER 27 · WORSHIP AT / 10:45 AM"). It did before this branch too. A shorter phone form of
+  the dated line (the hero's, `live-sunday.ts`) would fix it everywhere at once; not done here
+  because the hero shares the string.
+
 ### Church links, for the move to Church Trac (2026-09-24, `feat/church-links`)
 
 - [ ] #nathan **Deploy, then run the migration.** The Church systems boxes are new schema
@@ -1115,6 +1126,40 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
   privacy schema is touched.
 - **Prayer list is blank on purpose.** Church Center has no prayer page, and nothing links
   to `{prayer}` yet.
+
+### This Sunday's sermon from YouTube (2026-09-24, `feat/this-sunday-youtube`)
+
+- [ ] #nathan **Push, and the Thursday and Saturday builds start.** `deploy.yml` gains two
+      more `schedule` crons (Thursday and Saturday 12:00 UTC, 8 am EDT / 7 am EST) so a
+      broadcast the church schedules midweek (Wednesday 2 pm for September 27) reaches the
+      hero line before Sunday. Scheduled workflows run from `main` only. **The 60-day pause
+      applies to all four crons:** GitHub disables a repo's schedules after 60 days with no
+      commit activity (the scheduled runs themselves do not count), and after the cutover
+      this repo may go that long untouched. When it happens the line and the Last Sunday
+      band quietly stop moving; GitHub emails the repo owner before it disables them, and
+      any push (or re-enabling the workflow in the Actions tab) re-arms them.
+- **The "scheduled" signal is views="0", nothing more explicit.** Checked on the live feed
+  on 2026-09-24: the Atom feed has no `yt:liveBroadcastContent`, no scheduled start time and
+  no future `<published>` for the upcoming broadcast; it differs from a replay only in
+  `views="0"`, a midweek `<published>` (2026-09-23 18:03 UTC) and an `<updated>` two
+  seconds later. The Sunday is derived as the first Sunday strictly after the publish day,
+  church time. What would fool it: a broadcast scheduled more than a week ahead (named a
+  week early, then dropped by the client stale check on the wrong Sunday's line; it cannot
+  happen with one scheduled per week), or a zero-view midweek upload that is not the
+  service but is titled "Sermon - Reading - Series" (none in the feed's history). A title
+  that does not split, and two different broadcasts for one Sunday, both give no sermon.
+- **The line drops the sermon on Sunday afternoon's rebuild.** By 18:00 UTC the stream has
+  views, so it is no longer "upcoming"; the line reads "Today · Worship at 10:45 am" for
+  the rest of the day, as it did before this branch. Harmless, since the service is over.
+- **Parity on Home now moves with the feed twice over.** The hero line (the sermon, its
+  reading and the video id) joins the Last Sunday band as weekly content in
+  `scripts/.parity/index.html`; a diff confined to those two places on a new week is
+  content, not a regression.
+- **Found and fixed: `CLAUDE.md` on `main` carried unresolved merge-conflict markers** from
+  the `feat/last-sunday` merge (`6e6a8683`), mangled by Prettier into `<<<<<<< HEAD`,
+  `\=======` and `> > > > > > > feat/last-sunday` around the test:unit, parity and
+  `npm test` bullets. Resolved here by keeping main's text and adding the last-sunday
+  additions to it.
 
 ### Last Sunday, Sunday weather and the Sunday calendar (2026-09-24, `feat/last-sunday`)
 
