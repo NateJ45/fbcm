@@ -8,9 +8,13 @@
 // [data-vt-title]) to that row's post, the row's heading and the post's h1
 // (.p2-title) are given ONE view-transition-name for that navigation only, so
 // the title moves from the row into the masthead while the page cross-fades
-// (globals.css, "View transitions"). Nothing carries the name in markup: a page
-// can list the same post twice (the register and "Worth coming back for"), and
-// two elements with one name make the browser skip the whole transition.
+// (globals.css, "View transitions"). Nothing carries the name in markup: every
+// row on a list page carries [data-vt-title], and two elements with one name
+// make the browser skip the whole transition, so only the row that was
+// followed is named, and only for that navigation. (Until 2026-09-24 /blog also
+// listed some posts twice, in the register and "Worth coming back for"; that
+// band is gone, but the one-name rule above is why the naming stays per
+// navigation.)
 //
 // When the pairing happens is decided by src/lib/shared-title.ts (unit tested):
 // forward only, from a row title at least half on screen, to a page that has a

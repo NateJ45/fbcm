@@ -3,11 +3,22 @@
 // Safe to edit by hand
 // ONE journal row (2026-09-24, the journal identity pass). Lifted out of the
 // home page's Church Blog band (DynamicList.astro, the Home identity pass) so
-// the home rows, "Worth coming back for" and the register on /blog, and "More
-// from this series" on a post are the same row, and a visitor who follows a
-// post from the home page into the journal meets the same language:
+// the home rows, the register on /blog and the archives, and "More from this
+// series" on a post are the same row, and a visitor who follows a post from the
+// home page into the journal meets the same language:
 //
-//   date | the post's FEATURED image in a small lancet | title + excerpt | byline + meta
+//   date | the post's FEATURED image | title + excerpt | byline + meta
+//
+// Two frames for the picture (2026-09-24, feat/blog-flat):
+//   arch   a small lancet (ArchFrame): home's Church Blog band and a post's
+//          More from this series. The default, so those render unchanged.
+//   plain  a plain 9:7 rectangle with a hairline and the site's tiny radius:
+//          the register on /blog and the archives, where Nathan found the
+//          arches "look overdone and make it harder to see the images". The
+//          box is the covers' own shape; a cover far from it is shown whole
+//          rather than cropped (coverFit in src/lib/cover-fit.ts), because the
+//          covers are mostly series slides with lettering near the edges. The
+//          box is as tall as the lancet was and wider, so the slide reads.
 //
 // The picture is always the post's own featured image, never an author
 // portrait; a post with none shows a building glyph in the arch, never an
@@ -15,7 +26,7 @@
 // (the whole row is one link, so a screen reader would hear the title twice).
 //
 // Two tones, one geometry:
-//   taupe  the fixed taupe band (home, Worth, the post foot): band inks, brown
+//   taupe  the fixed taupe band (home, the post foot): band inks, brown
 //          rules and mould, the indigo underline. Holds in both themes.
 //   paper  the page's own ground (the register): the themed brand inks
 //          (--color-indigo, --color-brown-ink, both measured on the paper in
@@ -29,7 +40,10 @@
 // (src/components/transitions/shared-title.ts). An attribute and nothing else:
 // the name itself is only set for the navigation that needs it.
 import ArchFrame from '@/components/church/ArchFrame.astro';
+import SanityImage from '@/components/SanityImage.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { splitStega } from '@/lib/preview-stega';
+import { coverFit } from '@/lib/cover-fit';
 
 interface Props {
   href: string;
@@ -47,6 +61,8 @@ interface Props {
   tone?: 'taupe' | 'paper';
   /** h3 under a band's h2; h4 under a register year. */
   level?: 'h3' | 'h4';
+  /** The picture's frame: a lancet, or a plain rectangle (see the header). */
+  frame?: 'arch' | 'plain';
 }
 const {
   href,
@@ -59,10 +75,12 @@ const {
   meta,
   tone = 'taupe',
   level = 'h3',
+  frame = 'arch',
 } = Astro.props as Props;
 
 const taupe = tone === 'taupe';
 const Heading = level;
+const plain = frame === 'plain';
 
 // See the header: an alt that only repeats the title is dropped. Compared on
 // the stega-CLEANED strings, never the raw ones (the preview rules in CLAUDE.md).
@@ -98,9 +116,38 @@ const C = taupe
       b: 'font-semibold text-indigo md:block md:text-[1.0625rem]',
       arch: '--arch-ratio: 100 / 140;',
     };
+
+// The plain frame's wider picture column. Only the three column templates
+// change; every other class on the row is the tone's own. Each replacement is
+// written out in full so Tailwind finds it.
+const PLAIN_COLS: Record<string, string> = {
+  'grid-cols-[64px_minmax(0,1fr)]': 'grid-cols-[96px_minmax(0,1fr)]',
+  'md:grid-cols-[8em_76px_minmax(0,1fr)]': 'md:grid-cols-[8em_136px_minmax(0,1fr)]',
+  'lg:grid-cols-[9em_88px_minmax(0,1fr)_12em]': 'lg:grid-cols-[9em_160px_minmax(0,1fr)_12em]',
+};
+const li = plain
+  ? C.li
+      .split(' ')
+      .map((c) => PLAIN_COLS[c] ?? c)
+      .join(' ')
+  : C.li;
+const hasImage = !!image?.asset;
+const fit = coverFit(image);
+const hotspot = image?.hotspot;
+// The editor's hotspot places a filling crop, as ArchFrame does; a cover shown
+// whole is centred.
+const objectPosition =
+  fit === 'cover' && typeof hotspot?.x === 'number' && typeof hotspot?.y === 'number'
+    ? `${(hotspot.x * 100).toFixed(2)}% ${(hotspot.y * 100).toFixed(2)}%`
+    : '50% 50%';
+const plainBox =
+  'col-start-1 row-span-3 row-start-1 m-0 aspect-[9/7] self-start overflow-hidden rounded border md:col-start-2 md:row-span-2 md:self-center lg:row-span-1';
+const plainInk = taupe
+  ? 'border-band-brown/40 bg-band-brown/10'
+  : 'border-brown-ink/25 bg-brown-ink/[0.07]';
 ---
 
-<li class={C.li}>
+<li class={li}>
   {
     /* A sermon preview says which week it is for; everything else says its
       date (derived from the category, CLAUDE.md rule 15). */
@@ -109,16 +156,45 @@ const C = taupe
     {dateLabel}
   </time>
 
-  <ArchFrame
-    image={image}
-    glyph="window"
-    shape="lancet"
-    width={176}
-    sizes="(min-width: 1024px) 88px, (min-width: 768px) 76px, 64px"
-    alt={rowAlt(image?.alt, title)}
-    class="col-start-1 row-span-3 row-start-1 self-start md:col-start-2 md:row-span-2 md:self-center lg:row-span-1"
-    style={C.arch}
-  />
+  {
+    plain ? (
+      hasImage ? (
+        <figure class:list={[plainBox, plainInk]}>
+          <SanityImage
+            source={image}
+            width={320}
+            sizes="(min-width: 1024px) 160px, (min-width: 768px) 136px, 96px"
+            alt={rowAlt(image?.alt, title)}
+            class:list={[
+              'block h-full w-full',
+              fit === 'cover' ? 'object-cover' : 'object-contain',
+            ]}
+            style={`object-position: ${objectPosition};`}
+          />
+        </figure>
+      ) : (
+        <figure
+          class:list={[
+            plainBox,
+            'flex items-center justify-center border-band-indigo bg-band-indigo',
+          ]}
+        >
+          <BuildingGlyph name="window" class="h-[70%] w-auto text-gold" />
+        </figure>
+      )
+    ) : (
+      <ArchFrame
+        image={image}
+        glyph="window"
+        shape="lancet"
+        width={176}
+        sizes="(min-width: 1024px) 88px, (min-width: 768px) 76px, 64px"
+        alt={rowAlt(image?.alt, title)}
+        class="col-start-1 row-span-3 row-start-1 self-start md:col-start-2 md:row-span-2 md:self-center lg:row-span-1"
+        style={C.arch}
+      />
+    )
+  }
 
   <div
     class="col-start-2 row-start-2 min-w-0 md:col-start-3 md:row-start-1 md:self-end lg:self-center"

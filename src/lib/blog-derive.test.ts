@@ -23,7 +23,6 @@ import {
   categorySingular,
   categoryFilters,
   freshPreview,
-  worthComingBackFor,
   pageYearSpans,
   thinStateTags,
   groupByYear,
@@ -300,15 +299,6 @@ test('freshPreview: the newest preview while its Sunday has not passed', () => {
   assert.equal(freshPreview(entries, day('2024-01-22')), null);
   const { durable } = splitDurable(entries);
   assert.equal(freshPreview(durable, day('2024-01-18')), null);
-});
-
-test('worthComingBackFor never repeats a post that is already on page 1', () => {
-  const page1 = entries.slice(0, 2); // preview-3, winter
-  assert.deepEqual(titles(worthComingBackFor(entries, page1)), [
-    'A note about the organ',
-    'What we read in Advent',
-  ]);
-  assert.deepEqual(titles(worthComingBackFor(entries, [], 1)), ['Ruminations on a long winter']);
 });
 
 test('pageYearSpans says which years each page holds, with exact days in the title', () => {

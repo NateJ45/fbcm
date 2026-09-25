@@ -7,16 +7,19 @@
 // display face, and every post drawn as the SAME row the home page's Church
 // Blog band draws (PostRow.astro, paper tone):
 //
-//   year | date | featured image in a lancet | title + excerpt | byline + meta
+//   year | date | featured image | title + excerpt | byline + meta
 //
 // The byline and meta are derived (registerMeta in blog-derive.ts): a sermon
 // preview names its Sunday and its reading, anything else its category and
 // author. Until the identity pass the picture was a 4:3 "recognition plate";
-// it is now the lancet every journal row uses, with a building glyph when a
-// post has no featured image.
+// the identity pass put it in the lancet every journal row used, and since
+// 2026-09-24 (feat/blog-flat) the register draws it as a plain picture again
+// (PostRow's frame="plain": a 9:7 rectangle, the cover whole or filling it),
+// because the arches made the covers harder to see. Home and the post page
+// keep the lancet. A post with no featured image gets a building glyph.
 //
 // Phone (< 1024px): the year sits above its rows, and the row is the home
-// page's phone row (lancet left, date, title, byline).
+// page's phone row (picture left, date, title, byline).
 import PostRow from '@/components/blog/PostRow.astro';
 import { groupByYear, registerMeta, clean, type RegisterEntry } from '@/lib/blog-derive';
 
@@ -51,6 +54,7 @@ const groups = groupByYear(entries ?? []);
                   byline={m.preview ? m.key : author || m.key}
                   meta={m.preview ? m.value : author ? m.key : ''}
                   tone="paper"
+                  frame="plain"
                   level={g.year !== null ? 'h4' : 'h3'}
                 />
               );
