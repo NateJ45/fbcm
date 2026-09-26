@@ -1251,19 +1251,43 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       and `node scripts/church-links.mjs --apply --deployed`. It backs up first and writes one
       transaction. Nobody has seen the Church systems tab rendered yet: the local Studio stops
       at the CORS screen, because only ports 3333, 4321 and 8787 are on the CORS list.
-- [ ] #nathan **Switch each system in Site settings > Church systems**, in the order in
-      `OPERATIONS.md`, "Switching to Church Trac". Sermon recordings can go to YouTube at
-      once. Giving goes last: Church Trac giving is not set up yet.
-- [ ] #nathan **Decide the Wednesday page, the Notify-us form and the two wedding forms on
-      Church Trac.** The portal has a connection card, events, a prayer list, /children and
-      /youth, but nothing yet for those four.
-- **The words still name Church Center.** A box moves the link, not the sentence. There are 57
-  strings, listed in section 5 of the migration's dry run. The main ones are 42 posts
-  saying "on our Church Center Channel" beside the recordings link, `/give`'s "through
-  Church Center" (the body, the link text and the SEO description), the privacy policy's
-  Church Center line, and the footer's "Church Center: calendar and giving". The channel
-  wording wants a small backup-first script once the sermons box points at YouTube.
-  `churchCenterUrl` still feeds `sameAs` and `/llms.txt`: clear it when the account closes.
+- [x] **Done 2026-09-25 (code and content review, this session):** the words that named
+      Church Center are out of the render path and the code defaults (the header/GIVE
+      button and `/give` fall back to this site's own page rather than "Give through Church
+      Center"; the privacy policy and `/llms.txt` drop a service with no address rather than
+      naming a retired one; the footer's "Church Center: calendar and giving" link and the
+      Studio's field descriptions and guide are rewritten for Church Trac). Two backup-first,
+      dry-by-default scripts are ready and were run DRY ONLY this session, waiting on
+      `--apply` after review. `scripts/retire-church-center.mjs` clears `sermonsUrl` (falls
+      back to the YouTube live stream address already in Site settings), `givingUrl`,
+      `lifeEventFormUrl`, `weddingBookingUrl`, `weddingEnquiryUrl`, `wednesdayUrl` and
+      `churchCenterUrl`, and drops the footer's Church Center link.
+      `src/lib/church-links.ts`'s `linkFallback()` (new this session) gives each cleared
+      token an honest placeholder instead of a dead link: `{giving}` to `/give`, the two
+      wedding forms to the wedding office's own `mailto:` address, and `{wednesday}` /
+      `{contact-form}` hidden (the words stay, the link does not).
+      `scripts/retire-church-center-in-posts.mjs` rewords "Church Center Channel" (and its
+      few variants) to "YouTube channel" in the 43 posts where those words are the clickable
+      text of an already-tokenized `{sermons}` link. Scoped narrowly on purpose: it only
+      touches a span that is the text of a `{sermons}` link, never a past-event registration
+      sentence or unlinked prose.
+- [ ] #nathan **Run `scripts/retire-church-center.mjs --apply`** once ready to stop pointing
+      anyone at Church Center: this is the actual switch-off. After it, `/give` says online
+      giving is on its way (see the next item), the Wednesday page and the Notify-us form
+      links are hidden site-wide until Church Trac has them, and the two wedding form links
+      email the wedding office directly. Also run
+      `scripts/retire-church-center-in-posts.mjs --apply` in the same sitting, so old posts
+      stop naming Church Center once the sermons link no longer goes there.
+- [ ] #nathan **Give Church Trac the Wednesday page, the Notify-us form, the two wedding
+      forms, and set up online giving (Church Trac plus Stripe).** Until each is set up and
+      its Site settings box filled in, that link is hidden (Wednesday, Notify-us) or emails
+      the wedding office directly (the two wedding forms) or sends people to `/give`'s "on
+      its way" page (giving). The portal has a connection card, events, a prayer list,
+      /children and /youth, but nothing yet for those four.
+- **`churchCenterUrl` stays in the schema, cleared, not removed.** If the church ever keeps a
+  Church Center presence for something else, filling that one box brings it back into
+  `sameAs`, `/llms.txt` and the privacy policy's linked-services list (each already skips a
+  blank box rather than naming a service with no address).
 - **Past-event links, left as written** (13 in 8 posts). Checked in a real browser on
   2026-09-24: all 8 Church Center registration pages say "This signup is currently
   unavailable". The Good Friday 2023 calendar event still shows. The

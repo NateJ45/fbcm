@@ -85,19 +85,23 @@ const schemas = [
 // The fallback's facts, from Site settings (never typed here).
 const contactEmail = siteSettings?.email ?? `office@${site.domain}`;
 const contactPhone = siteSettings?.phone ?? null;
+// Only a service whose address is actually set: an unlinked name claiming its
+// own privacy policy would be misleading, and Church Center is retired here
+// (the church has moved to Church Trac) until and unless its box is filled
+// again.
 const services = [
+  { name: 'Church Center', url: siteSettings?.churchCenterUrl, does: 'holds some older records.' },
   {
-    name: 'Church Center',
-    url: siteSettings?.churchCenterUrl,
-    does: 'handles online giving and event registration.',
+    name: 'Church Trac',
+    url: siteSettings?.churchTracUrl,
+    does: 'holds the church calendar, the connection card, church records and the newsletters.',
   },
-  { name: 'Church Trac', url: siteSettings?.churchTracUrl, does: 'holds other church records.' },
   {
     name: 'YouTube',
     url: siteSettings?.youtubeUrl,
     does: 'hosts our livestream and sermon recordings.',
   },
-];
+].filter((s) => s.url);
 
 // Whether to use Sanity body content
 const hasSanityBody = Boolean(page?.body);

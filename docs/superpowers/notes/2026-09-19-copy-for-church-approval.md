@@ -278,10 +278,12 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - Support the work of this church. (give band heading)
 - Your gift keeps this church running and reaching Muncie. (give band body, one sentence)
-- You can give online through Church Center any time. (Ways to give, paragraph 1)
+- You can give online any time. (Ways to give, paragraph 1, when Online giving is set)
+- Online giving is on its way. In the meantime, you can give in person or by mail. (Ways to give, paragraph 1, when Online giving is blank; 2026-09-25, the Church Trac move)
 - You can also give in person during Sunday worship, when the offering is taken. (Ways to give, paragraph 2)
 - Or mail a check to the church office. (Ways to give, paragraph 3, lead-in to the mailing address)
-- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online through Church Center, in person on Sunday, or by mail. (search description, not shown on the page; 2026-09-24 local search pass)
+- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: in person on Sunday or by mail. (search description, when Online giving is blank; 2026-09-24 local search pass, reworded 2026-09-25)
+- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online, in person on Sunday, or by mail. (search description, when Online giving is set)
 
 ### Edits to the church’s own text
 
@@ -290,6 +292,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### Facts to confirm from this page
 
 - Give page copy in their words, and whether to state anything about tax status: neither who-we-are.txt nor outreach.txt says anything about tax deductibility, and spec 5.9 asks for nothing about it either, so this page currently says nothing. The three "Ways to give" paragraphs are net-new copy (declared above) standing in for stewardship words the church has not written yet.
+- Online giving is not live yet (Site settings > Church systems > Online giving is blank, 2026-09-25): the page says so plainly instead of linking to Church Center, which the church is leaving. Once online giving is set up (Church Trac plus Stripe) and the address is filled in, re-run this seed to restore the "give online" sentence and button.
 
 ### Photos of children
 
@@ -478,15 +481,6 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Home: the hero’s fourth fact "Preaching", with the name of the coming Sunday’s preacher (2026-09-25, `feat/preacher-and-feel`). The name is the church’s own: the sermon preview’s author when the church posted one for that Sunday, else the "Preaching:" line of the YouTube broadcast scheduled for it. It shows only until that Sunday has passed, and not at all when neither names anyone.
 - Visit: the weather line, Wednesday to Sunday noon, "Sunday: 58°, light rain." (the forecast words are the National Weather Service’s own, in lower case; a chance of rain reads "45% chance of rain showers").
 - The calendar file: the event is named "Sunday worship, First Baptist Church Muncie" and its note reads "What to expect on Sunday: https://www.fbcmuncie.org/visit".
-
-## What's On, Church Trac forms and the ministry newsletters (2026-09-25, `claude/kind-heisenberg-jf34rt`)
-
-### New sentences
-
-- /events: the page name "What's On", the small line "Church calendar", and "Events, classes and gatherings at First Baptist, from the church calendar." (also on Home's What's On band, under "Coming up"). The door "The full calendar: Every published event, month by month, on Church Trac. Open the calendar". The bands "Coming up" and "Every week", the button "Everything on the calendar" (Home), and "Add to calendar" on each event. When the calendar cannot be read: "The calendar could not be read just now. See every event on the church calendar." With nothing ahead: "Nothing is on the calendar in the months ahead yet. Our weekly gatherings are below." The events' own titles, times, rooms and descriptions are Church Trac's, as typed there.
-- The Church Trac form band: "Open the form in a new tab" under every form. The heading and the words beside a form are the staff's own, typed in the Studio.
-- /kids-corner and /youth-news: the small lines "Children’s newsletter" and "Youth newsletter"; under the name, "News from the Children’s Ministry, nursery through 5th grade." and "News from the Youth Ministry, 6th through 12th grade."; the closing band "About this newsletter": "<The newsletter’s name> is written by the ministry in Church Trac, and this page follows it each day. It is in the church app too.", with "Open it on Church Trac" and "Get the church app". When Church Trac cannot be read: "<name> could not be loaded here just now. It is always on Church Trac." and "Read <name> on Church Trac". Everything else on those pages is the ministry’s own newsletter, as published in Church Trac.
-- Ministries: under the Children and Youth bands, "Read The Kid's Corner, the children’s newsletter." and "Read The Moose's Message, the youth newsletter."
 
 ## Facts the church must confirm
 

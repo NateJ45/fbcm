@@ -40,6 +40,15 @@
 //    begin and end on the same band. The two "Ways to give" / "Where it goes"
 //    eyebrows came off: each named the heading under it a second time
 //    (rollout rule 11). Nothing else on the page changed.
+//
+// 5. NO GIVING ADDRESS YET (2026-09-25, the Church Trac move). Online giving
+//    needs Stripe, not set up yet, so Site settings' Online giving box is
+//    blank until it is. With no address there is no "give online" link to
+//    give: the first "Ways to give" paragraph says plainly that online
+//    giving is on its way instead, and the closing band's second button (an
+//    external link to the giving address) is dropped rather than pointing
+//    nowhere. Both branches read the SAME settings.givingUrl this file has
+//    always read; nothing here assumes it is empty forever.
 
 export default {
   id: 'page-give',
@@ -54,10 +63,12 @@ export default {
   newCopy: [
     'Support the work of this church. (give band heading)',
     'Your gift keeps this church running and reaching Muncie. (give band body, one sentence)',
-    'You can give online through Church Center any time. (Ways to give, paragraph 1)',
+    'You can give online any time. (Ways to give, paragraph 1, when Online giving is set)',
+    'Online giving is on its way. In the meantime, you can give in person or by mail. (Ways to give, paragraph 1, when Online giving is blank; 2026-09-25, the Church Trac move)',
     'You can also give in person during Sunday worship, when the offering is taken. (Ways to give, paragraph 2)',
     'Or mail a check to the church office. (Ways to give, paragraph 3, lead-in to the mailing address)',
-    'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online through Church Center, in person on Sunday, or by mail. (search description, not shown on the page; 2026-09-24 local search pass)',
+    'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: in person on Sunday or by mail. (search description, when Online giving is blank; 2026-09-24 local search pass, reworded 2026-09-25)',
+    'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online, in person on Sunday, or by mail. (search description, when Online giving is set)',
   ],
 
   // Edits to the church's own sentences (ruling P16). The words are still
@@ -78,6 +89,10 @@ export default {
       'for nothing about it either, so this page currently says nothing. The three "Ways to give" ' +
       'paragraphs are net-new copy (declared above) standing in for stewardship words the church ' +
       'has not written yet.',
+    'Online giving is not live yet (Site settings > Church systems > Online giving is blank, ' +
+      '2026-09-25): the page says so plainly instead of linking to Church Center, which the ' +
+      'church is leaving. Once online giving is set up (Church Trac plus Stripe) and the address ' +
+      'is filled in, re-run this seed to restore the "give online" sentence and button.',
   ],
 
   // No photograph on this page at all: the give band carries no image field
@@ -94,12 +109,10 @@ export default {
           'time and the address off it rather than retyping them (CLAUDE.md rule 15).',
       );
     }
-    if (!settings.givingUrl) {
-      throw new Error(
-        'give.mjs: siteSettings.givingUrl is not set. The give band, the "Ways to give" link and ' +
-          "the closing band's second button all depend on it.",
-      );
-    }
+    // No throw when blank (2026-09-25, the Church Trac move): Online giving
+    // has no address yet, so the page reads honestly instead of failing the
+    // whole run. See newCopy and confirm above.
+    const hasGiving = Boolean(settings.givingUrl);
 
     const addressLines = String(settings.address ?? '')
       .split(/\r?\n/)
@@ -167,7 +180,8 @@ export default {
         },
 
         // 2. Three ways to give, all new copy (declared above), each a short
-        //    paragraph. Online links to Church Center; in person names the
+        //    paragraph. Online either links out (once Online giving is set)
+        //    or says plainly that it is on its way; in person names the
         //    Sunday service time from settings; by post gives both lines of
         //    the church's own mailing address.
         {
@@ -176,7 +190,9 @@ export default {
           heading: 'Three ways to give',
           body: [
             ...paragraphs(
-              `You can give online through Church Center any time. [Give through Church Center](${settings.givingUrl})`,
+              hasGiving
+                ? `You can give online any time. [Give online](${settings.givingUrl})`
+                : 'Online giving is on its way. In the meantime, you can give in person or by mail.',
               'gw-online',
             ),
             ...paragraphs(
@@ -204,7 +220,8 @@ export default {
         },
 
         // 4. Closing band, subhead from Site settings rather than retyped,
-        //    second button straight to Church Center's giving page.
+        //    second button straight to the giving address once there is one;
+        //    dropped rather than pointing nowhere while there is not.
         {
           _type: 'ctaBandSection',
           _key: 'give-cta',
@@ -212,13 +229,14 @@ export default {
           headline: 'Ask the office.',
           subhead: `${settings.serviceTime}. ${streetLine}, ${cityLine}.`,
           cta: ctaInternal('Contact us', 'contact'),
-          secondaryCta: ctaExternal('Give online', settings.givingUrl),
+          ...(hasGiving ? { secondaryCta: ctaExternal('Give online', settings.givingUrl) } : {}),
         },
       ],
 
       seoTitle: 'Give | First Baptist Church Muncie',
-      seoDescription:
-        'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online through Church Center, in person on Sunday, or by mail.',
+      seoDescription: hasGiving
+        ? 'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online, in person on Sunday, or by mail.'
+        : 'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: in person on Sunday or by mail.',
     };
   },
 };

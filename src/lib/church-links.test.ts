@@ -4,10 +4,12 @@ import assert from 'node:assert/strict';
 import {
   CHURCH_LINKS,
   LINK_FALLBACK,
+  WEDDING_COORDINATOR_EMAIL,
   checkLinkBox,
   classifyChurchLink,
   isUnknownToken,
   isYouTubeUrl,
+  linkFallback,
   linkTokenOf,
   linkValues,
   skippedOnPurpose,
@@ -244,4 +246,27 @@ test('isYouTubeUrl', () => {
 
 test('the fallback is the church’s own contact page', () => {
   assert.equal(LINK_FALLBACK, '/contact');
+});
+
+test('linkFallback: most tokens fall back to /contact', () => {
+  assert.equal(linkFallback('{connect}'), '/contact');
+  assert.equal(linkFallback('{sermons}'), '/contact');
+  assert.equal(linkFallback('{calendar}'), '/contact');
+  assert.equal(linkFallback('{prayer}'), '/contact');
+  assert.equal(linkFallback('{app}'), '/contact');
+});
+
+test('linkFallback: {giving} falls back to the church’s own /give page', () => {
+  assert.equal(linkFallback('{giving}'), '/give');
+});
+
+test('linkFallback: the two wedding forms fall back to the wedding office’s own email', () => {
+  assert.equal(linkFallback('{wedding-enquiry}'), WEDDING_COORDINATOR_EMAIL);
+  assert.equal(linkFallback('{wedding-booking}'), WEDDING_COORDINATOR_EMAIL);
+  assert.match(WEDDING_COORDINATOR_EMAIL, /^mailto:/);
+});
+
+test('linkFallback: {wednesday} and {contact-form} are hidden, not a dead link', () => {
+  assert.equal(linkFallback('{wednesday}'), '');
+  assert.equal(linkFallback('{contact-form}'), '');
 });

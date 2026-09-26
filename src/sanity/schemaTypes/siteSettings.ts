@@ -111,7 +111,8 @@ export const siteSettings = defineType({
       title: 'Church Center address',
       type: 'url',
       group: 'church',
-      description: 'The web address of the Church Center home page.',
+      description:
+        'The web address of the Church Center home page, if the church still keeps one. The church is moving to Church Trac, so this is normally left blank.',
     }),
     defineField({
       name: 'churchTracUrl',
@@ -160,7 +161,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'Where the Give buttons send people, and every link written {giving}. Today the Church Center giving page.',
+        "Where the Give buttons send people, and every link written {giving}. Blank until online giving moves to Church Trac (it needs Stripe, not set up yet); until then, every {giving} link goes to the site's own /give page instead.",
     }),
     defineField({
       name: 'visitorFormUrl',
@@ -176,7 +177,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'The form for telling the church about a birth, a death, an anniversary, a hospital stay or a change of address. Every link written {contact-form}.',
+        'The form for telling the church about a birth, a death, an anniversary, a hospital stay or a change of address. Every link written {contact-form}. Blank until Church Trac has this form; the words stay, but the link is hidden until then.',
     }),
     defineField({
       name: 'sermonsUrl',
@@ -192,7 +193,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'The page about Wednesday nights (Wednesday Weekly). Every link written {wednesday}.',
+        'The page about Wednesday nights (Wednesday Weekly). Every link written {wednesday}. Blank until Church Trac has this page; the words stay, but the link is hidden until then.',
     }),
     defineField({
       name: 'calendarUrl',
@@ -222,7 +223,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'The wedding information form a couple fills in first. Every link written {wedding-enquiry}.',
+        'The wedding information form a couple fills in first. Every link written {wedding-enquiry}. Blank until Church Trac has this form; until then, every {wedding-enquiry} link emails the wedding office directly.',
     }),
     defineField({
       name: 'weddingBookingUrl',
@@ -230,7 +231,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'The form for asking to use the building, for a wedding or any other event. Every link written {wedding-booking}.',
+        'The form for asking to use the building, for a wedding or any other event. Every link written {wedding-booking}. Blank until Church Trac has this form; until then, every {wedding-booking} link emails the wedding office directly.',
     }),
 
     // ── Navigation ────────────────────────────────────────────────────────────

@@ -1,7 +1,7 @@
 // Ministry. Harvested from the archived ncs-church-starter and adapted for
 // FBCM: a ministry is a group or program the church runs (Children, Outreach,
 // Missions, and so on). No sermon type here (YouTube is the archive) and no
-// event type (Church Center holds the calendar) -- this schema only describes
+// event type (Church Trac holds the calendar) -- this schema only describes
 // what a ministry IS, not what it is doing this week.
 //
 // SINCE 2026-09-22 THIS DOCUMENT IS THE MINISTRY'S ONE HOME. The Ministries

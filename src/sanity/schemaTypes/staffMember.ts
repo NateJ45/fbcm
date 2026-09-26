@@ -1,6 +1,6 @@
 // Staff member. Harvested from the archived ncs-church-starter and adapted for
 // FBCM. No sermon type here (YouTube is the archive) and no event type
-// (Church Center holds the calendar) -- this schema only describes who is on
+// (Church Trac holds the calendar) -- this schema only describes who is on
 // staff, not what they preach or when things happen.
 //
 // Every field description says what to type. None explains why the field
