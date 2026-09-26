@@ -40,7 +40,8 @@ test.describe('the page', () => {
   test('the button opens the PDF in the browser, with its size beside it', async ({ page }) => {
     await page.goto(PAGE);
     const read = page.getByRole('link', { name: 'Read this issue' });
-    await expect(read).toHaveAttribute('href', /^https:\/\/cdn\.sanity\.io\/files\/.+\.pdf$/);
+    // Served from the site's own /files/ route since 2026-09-26 (src/lib/file-url.ts).
+    await expect(read).toHaveAttribute('href', /^\/files\/[a-f0-9]{40}\.pdf$/);
     expect(await read.getAttribute('download')).toBeNull();
     expect(await read.getAttribute('target')).toBeNull();
     await expect(page.locator('.vi-info')).toContainText(/PDF, \d+ MB/);

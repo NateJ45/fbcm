@@ -2312,18 +2312,19 @@ in `scripts/data/backups/journalEntry-bodies-2026-09-20.json`, and a second
 
 ## Sanity bandwidth (2026-09-26)
 
-- [ ] **Check the Sanity usage page on 2026-09-27 and 2026-09-28** (it updates daily). On
-      2026-09-25 bandwidth was 80.7 of 100 GB (18 GB on the 24th, 38 GB on the 25th), API CDN
-      requests 717.8k of 1m, and uncached API requests 343k of 250k (that overrun predates the
-      2026-09-23 always-CDN fix). Measured and ruled out: a build (754 reads, 29 MB), page
-      images (0.17 MB a page load), the Visitor PDFs in builds (cached everywhere), the link
-      checker. The cause left standing: the 46 PDFs (602 MiB) linked straight to
-      cdn.sanity.io, and /visitor went up on the 24th. Since `8ef0aeae`/`f0c6d3e1` they are served
-      from `/files/` (R2 bucket `fbcm-files`, filled from Sanity once per file). The daily
-      bandwidth should fall to a few GB; if it does not, the request log (usage page, Generate)
-      is the next measurement. The project is on a Growth Trial (23 days left on 2026-09-26);
-      quotas reset on 2026-10-01.
-- [ ] Each build still reads the full blog list 35 times (0.69 MB each, about 24 MB of a
-      29 MB build): memoise it per build.
-- [ ] `/styleguide/visitor` still links its fixture's PDFs at cdn.sanity.io (noindex; the
-      Visitor spec asserts those hrefs).
+- [ ] **Check the Sanity usage page on 2026-09-27 and 2026-09-28** (it updates daily);
+      quotas reset 2026-10-01, and the project is on a Growth Trial (23 days left on 2026-09-26).
+- [x] **Measured, from Sanity's request log for 2026-09-19..26 (74.5 GB, 1.67M requests).**
+      It was our own tooling, not visitors or crawlers: - PDFs 27.7 GB (27.6 GB on the 25th): the Visitor cover step re-downloading all 39 issues
+      on every cold cache (18 GitHub runners and cloud sessions, 11.2 GB; local and worktree
+      builds, 6.4 GB; a Google-hosted client in ranged chunks, 9.8 GB, in the cloud session's
+      hours). Fixed: the step downloads through the site's `/files/` (R2) first, Sanity last;
+      R2 was pre-filled with every issue on 2026-09-26 (628 MB, once). - API CDN 24.9 GB, 17.6 GB of it the full blog list, read 35 times a build. Fixed: identical
+      reads are memoised per build (`sanity.ts`); a build fell from 754 reads / 29.0 MB to 555
+      reads / 3.8 MB. - Images 13.1 GB, 533k requests from browsers: mostly Playwright runs (home and CI).
+      Still open, below. - Uncached API 8.9 GB, before the 2026-09-23 always-CDN fix.
+      Visitors' PDF downloads are served from R2 at `/files/` too (src/pages/files/[name].ts).
+- [ ] Playwright loads real Sanity images on every run (about 2 to 5 GB a heavy day). If
+      bandwidth stays high, serve cdn.sanity.io/images from a local disk cache in the test
+      runs (a shared fixture that routes those requests).
+- [x] `/styleguide/visitor` links `/files/` too (2026-09-26).

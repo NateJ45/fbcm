@@ -85,6 +85,13 @@ const write = (rawManifest, rawRecords) => {
   const project = env.PUBLIC_SANITY_PROJECT_ID ?? '';
   const dataset = env.PUBLIC_SANITY_DATASET || 'production';
   const manifest = rewriteFileUrls(rawManifest, project, dataset);
+  // Covers in key order: a cold run finishes them in parallel, and the file
+  // must not change just because the downloads finished in another order.
+  if (manifest?.covers) {
+    manifest.covers = Object.fromEntries(
+      Object.entries(manifest.covers).sort(([a], [b]) => a.localeCompare(b)),
+    );
+  }
   const records = rewriteFileUrls(rawRecords, project, dataset);
   mkdirSync(dirname(manifestPath), { recursive: true });
   const body = `${JSON.stringify(manifest, null, 1)}\n`;
@@ -215,6 +222,26 @@ const readMeta = (dir) => {
 };
 
 let drawn = 0;
+// WHERE A COLD CACHE DOWNLOADS FROM (2026-09-26). Sanity's request log for
+// 2026-09-19..26 showed this step, not visitors, spending the bandwidth: 27.6 GB
+// of PDFs on 2026-09-25 alone, every GitHub runner, cloud session and fresh
+// worktree that started without this cache pulling all 39 issues from
+// cdn.sanity.io. The site now serves every file from R2 at /files/<name>
+// (src/pages/files/[name].ts), where a download costs Sanity nothing after
+// the first. So this step asks the site first: the production domain (right
+// after the cutover; before it, Wix answers 404 and the next is tried), then
+// the Worker's own address, and Sanity itself only if both fail.
+const FILE_ORIGINS = ['https://www.fbcmuncie.org', 'https://fbcm-site.nathanjnixon86.workers.dev'];
+function downloadUrls(href) {
+  const name = /\/files\/(?:[^/]+\/[^/]+\/)?([a-f0-9]{40}\.pdf)(?:[?#].*)?$/.exec(
+    String(href),
+  )?.[1];
+  const sanity = name
+    ? `https://cdn.sanity.io/files/${env.PUBLIC_SANITY_PROJECT_ID}/${env.PUBLIC_SANITY_DATASET || 'production'}/${name}`
+    : href;
+  return name ? [...FILE_ORIGINS.map((o) => `${o}/files/${name}`), sanity] : [href];
+}
+
 let fromCache = 0;
 let failed = 0;
 let downloaded = 0;
@@ -227,15 +254,22 @@ async function processIssue(issue) {
     return cached;
   }
   let bytes;
-  try {
-    const res = await fetch(issue.href, { signal: AbortSignal.timeout(TIMEOUT_MS) });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    bytes = Buffer.from(await res.arrayBuffer());
-    downloaded += bytes.length;
-  } catch (err) {
+  const errors = [];
+  for (const url of downloadUrls(issue.href)) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      bytes = Buffer.from(await res.arrayBuffer());
+      downloaded += bytes.length;
+      break;
+    } catch (err) {
+      errors.push(`${url}: ${err.message}`);
+    }
+  }
+  if (!bytes) {
     // Not cached: the next build tries again.
     failed += 1;
-    warn(`${issue.label}: could not download ${issue.href} (${err.message}); no cover this build`);
+    warn(`${issue.label}: could not download it (${errors.join('; ')}); no cover this build`);
     return null;
   }
   const meta = { v: CACHE_VERSION, ok: false, w: 0, h: 0, widths: [], chars: 0 };

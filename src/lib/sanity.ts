@@ -182,7 +182,29 @@ export async function sanityFetch<T>(
 // used to publish a page as a redirect to /404 (2026-09-24: /ministries, caught
 // by parity). Two retries, 0.5 s then 1.5 s apart, ride out a blip; a real
 // outage still fails after about 2 s and the build stops.
+// ONE READ PER DISTINCT QUERY PER BUILD (2026-09-26). A build prerenders ~390
+// pages in one isolate, and many ask the same thing: the full blog list alone
+// was read 35 times a build (0.69 MB each, ~24 MB of a 29 MB build), counted
+// against the Sanity CDN's request and bandwidth quotas every time. Identical
+// query + params now share one fetch for ten minutes (longer than a build,
+// shorter than any content change matters: every publish redeploys, and the
+// one runtime caller, /api/live-status, already caches for ten minutes). Each
+// caller gets its OWN copy, so a component that sorts or edits a result in
+// place cannot leak into another page. A failed read is forgotten, never cached.
+const MEMO_MS = 10 * 60 * 1000;
+const memo = new Map<string, { at: number; value: Promise<unknown> }>();
+
 async function fetchWithRetry<T>(query: string, params: Record<string, unknown>): Promise<T> {
+  const key = `${query} ${JSON.stringify(params)}`;
+  const hit = memo.get(key);
+  if (hit && Date.now() - hit.at < MEMO_MS) return structuredClone((await hit.value) as T);
+  const value = fetchOnce<T>(query, params);
+  memo.set(key, { at: Date.now(), value });
+  value.catch(() => memo.delete(key));
+  return structuredClone(await value);
+}
+
+async function fetchOnce<T>(query: string, params: Record<string, unknown>): Promise<T> {
   const waits = [500, 1500];
   for (let attempt = 0; ; attempt++) {
     try {

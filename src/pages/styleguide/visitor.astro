@@ -25,10 +25,18 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionRenderer from '@/components/SectionRenderer.astro';
 import { getSiteSettings } from '@/lib/queries';
 import { site } from '@/data/site';
+import { rewriteFileUrls } from '@/lib/file-url';
 import fixture from '../../../scripts/data/fixtures/visitor.json';
 
 const siteSettings = await getSiteSettings().catch(() => null);
-const sections = fixture.pageBuilder as unknown[];
+// The fixture holds the Sanity file addresses as page-fixture.mjs captured
+// them; the live /visitor links /files/<name> (src/lib/file-url.ts), and so
+// does this copy, so a click here never downloads from Sanity's CDN either.
+const sections = rewriteFileUrls(
+  fixture.pageBuilder as unknown[],
+  import.meta.env.PUBLIC_SANITY_PROJECT_ID ?? '',
+  import.meta.env.PUBLIC_SANITY_DATASET || 'production',
+);
 ---
 
 <BaseLayout
