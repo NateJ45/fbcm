@@ -20,6 +20,11 @@
 // - `grade="warm"` applies the prototype's one shared photo grade.
 // - The crop follows the editor's hotspot, exactly as Hero.astro's split frame
 //   does; with no hotspot it keeps the top of the photograph, where faces are.
+//   A close portrait of people in a LANCET whose hotspot puts the face above
+//   the arch's springing is drawn lower, with headroom that fades into the
+//   arch (2026-09-25, src/lib/hero-frames.ts archPlacement): a portrait fills
+//   the arch's height, so no object-position can move its head clear of the
+//   point.
 // - `glyph` (2026-09-23, the Home blog rows): with no photograph the frame
 //   normally draws nothing, but a caller whose rows must line up (a post with
 //   no featured image) passes a building glyph, and the arch is drawn filled
@@ -28,6 +33,9 @@
 import SanityImage from '@/components/SanityImage.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
+import { archPlacement, type FrameCrop } from '@/lib/hero-frames';
+import { photoAspect } from '@/lib/photo-shape';
+import { photoSubject } from '@/lib/photo-subject';
 
 interface Props {
   image: SanityImageObject | null | undefined;
@@ -67,11 +75,22 @@ const hasImage = !!image?.asset;
 // No photograph and no glyph, no frame: an empty grey arch is not a designed state.
 if (!hasImage && !glyph) return null;
 
-const hotspot = image?.hotspot;
-const objectPosition =
-  typeof hotspot?.x === 'number' && typeof hotspot?.y === 'number'
-    ? `${(hotspot.x * 100).toFixed(2)}% ${(hotspot.y * 100).toFixed(2)}%`
-    : '50% 0%';
+// Where the photograph sits (src/lib/hero-frames.ts archPlacement): the
+// hotspot, mapped through any crop, else the top; and, for a close portrait of
+// people in a lancet whose face the hotspot puts above the arch's springing,
+// headroom, so the pointed head never cuts off hair and forehead. The alt is
+// read stega-cleaned (photoSubject cleans it itself).
+const { objectPosition, headroom } = archPlacement({
+  shape,
+  people: hasImage && photoSubject(alt) === 'people',
+  aspect: photoAspect(image as Parameters<typeof photoAspect>[0])?.a,
+  hotspot: image?.hotspot,
+  crop: (image as { crop?: FrameCrop | null } | null | undefined)?.crop,
+});
+const imgStyle =
+  headroom > 0
+    ? `object-position: ${objectPosition}; position: absolute; left: 0; bottom: 0; height: ${((1 - headroom) * 100).toFixed(2)}%; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6%); mask-image: linear-gradient(to bottom, transparent 0, #000 6%);`
+    : `object-position: ${objectPosition};`;
 
 // The outline path, in the same box as the mask, so the two always agree.
 const mould =
@@ -97,7 +116,7 @@ const mould =
           loading={loading}
           fetchpriority={fetchpriority}
           class:list={['h-full w-full object-cover', grade === 'warm' && 'graded']}
-          style={`object-position: ${objectPosition};`}
+          style={imgStyle}
         />
       </div>
     ) : (
