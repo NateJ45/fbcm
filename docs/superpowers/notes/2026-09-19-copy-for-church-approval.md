@@ -387,8 +387,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - This site runs no analytics at all. Visits are not counted, and nothing is stored on your device for measurement. (How visits are measured, when PUBLIC_CF_ANALYTICS_TOKEN is unset)
 - Page visits are counted with Cloudflare Web Analytics, which sets no cookies and does not identify individual visitors. (How visits are measured, when PUBLIC_CF_ANALYTICS_TOKEN is set)
 - This site links out to a few services the church uses for things this site itself does not do. (Links to other services, lead-in)
-- Church Center handles online giving and event registration. It has its own privacy policy, separate from this one. (Links to other services, Church Center)
-- Church Trac holds other church records. It has its own privacy policy, separate from this one. (Links to other services, Church Trac)
+- Church Trac holds the church’s records and runs its calendar, forms and app. It has its own privacy policy, separate from this one. (Links to other services, Church Trac; 2026-09-26, Church Center retired)
 - YouTube hosts our livestream and sermon recordings. It has its own privacy policy, separate from this one. (Links to other services, YouTube)
 - Questions about this policy, or about anything on this site, can go to the church office. (How to reach us, lead-in)
 

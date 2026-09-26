@@ -1,0 +1,285 @@
+{
+  "_createdAt": "2026-09-20T05:22:01Z",
+  "_id": "privacyPage",
+  "_rev": "Yg84KDHscU4NDc84ofNZaO",
+  "_type": "privacyPage",
+  "_updatedAt": "2026-09-23T03:32:35Z",
+  "body": [
+    {
+      "_key": "priv-intro-1",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-intro-1s1",
+          "_type": "span",
+          "marks": [],
+          "text": "This site is run by First Baptist Church Muncie to share what is happening at the church. This policy explains what the site itself does with information from anyone who visits it."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "priv-h-nodo",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-h-nodos1",
+          "_type": "span",
+          "marks": [],
+          "text": "What this site does not do"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_key": "priv-nodo-1",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-nodo-1s1",
+          "_type": "span",
+          "marks": [],
+          "text": "This site has no contact form, sign-up form or account system of its own."
+        }
+      ],
+      "level": 1,
+      "listItem": "bullet",
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "priv-nodo-2",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-nodo-2s1",
+          "_type": "span",
+          "marks": [],
+          "text": "It does not ask you to create an account or log in."
+        }
+      ],
+      "level": 1,
+      "listItem": "bullet",
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "priv-nodo-3",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-nodo-3s1",
+          "_type": "span",
+          "marks": [],
+          "text": "It does not set any cookies of its own."
+        }
+      ],
+      "level": 1,
+      "listItem": "bullet",
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "priv-h-analytics",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-h-analyticss1",
+          "_type": "span",
+          "marks": [],
+          "text": "How visits are measured"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_key": "priv-analytics-off-1",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-analytics-off-1s1",
+          "_type": "span",
+          "marks": [],
+          "text": "This site runs no analytics at all. Visits are not counted, and nothing is stored on your device for measurement."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "priv-h-links",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-h-linkss1",
+          "_type": "span",
+          "marks": [],
+          "text": "Links to other services"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_key": "priv-links-intro-1",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-links-intro-1s1",
+          "_type": "span",
+          "marks": [],
+          "text": "This site links out to a few services the church uses for things this site itself does not do."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_key": "priv-links-1",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-links-1s1",
+          "_type": "span",
+          "marks": [
+            "priv-links-1l1"
+          ],
+          "text": "Church Center"
+        },
+        {
+          "_key": "priv-links-1s2",
+          "_type": "span",
+          "marks": [],
+          "text": " handles online giving and event registration. It has its own privacy policy, separate from this one."
+        }
+      ],
+      "level": 1,
+      "listItem": "bullet",
+      "markDefs": [
+        {
+          "_key": "priv-links-1l1",
+          "_type": "link",
+          "href": "https://fbcmuncie.churchcenter.com/"
+        }
+      ],
+      "style": "normal"
+    },
+    {
+      "_key": "priv-links-2",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-links-2s1",
+          "_type": "span",
+          "marks": [
+            "priv-links-2l1"
+          ],
+          "text": "Church Trac"
+        },
+        {
+          "_key": "priv-links-2s2",
+          "_type": "span",
+          "marks": [],
+          "text": " holds other church records. It has its own privacy policy, separate from this one."
+        }
+      ],
+      "level": 1,
+      "listItem": "bullet",
+      "markDefs": [
+        {
+          "_key": "priv-links-2l1",
+          "_type": "link",
+          "href": "https://fbcmuncie.churchtrac.com/"
+        }
+      ],
+      "style": "normal"
+    },
+    {
+      "_key": "priv-links-3",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-links-3s1",
+          "_type": "span",
+          "marks": [
+            "priv-links-3l1"
+          ],
+          "text": "YouTube"
+        },
+        {
+          "_key": "priv-links-3s2",
+          "_type": "span",
+          "marks": [],
+          "text": " hosts our livestream and sermon recordings. It has its own privacy policy, separate from this one."
+        }
+      ],
+      "level": 1,
+      "listItem": "bullet",
+      "markDefs": [
+        {
+          "_key": "priv-links-3l1",
+          "_type": "link",
+          "href": "https://www.youtube.com/c/FbcmuncieOrg"
+        }
+      ],
+      "style": "normal"
+    },
+    {
+      "_key": "priv-h-contact",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-h-contacts1",
+          "_type": "span",
+          "marks": [],
+          "text": "How to reach us"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_key": "priv-contact-1",
+      "_type": "block",
+      "children": [
+        {
+          "_key": "priv-contact-1s1",
+          "_type": "span",
+          "marks": [],
+          "text": "Questions about this policy, or about anything on this site, can go to the church office. Email "
+        },
+        {
+          "_key": "priv-contact-1s2",
+          "_type": "span",
+          "marks": [
+            "priv-contact-1l1"
+          ],
+          "text": "{email}"
+        },
+        {
+          "_key": "priv-contact-1s3",
+          "_type": "span",
+          "marks": [],
+          "text": " or call {phone}."
+        }
+      ],
+      "markDefs": [
+        {
+          "_key": "priv-contact-1l1",
+          "_type": "link",
+          "href": "mailto:office@fbcmuncie.org"
+        }
+      ],
+      "style": "normal"
+    }
+  ],
+  "heroEyebrow": "This site, plainly.",
+  "heroHeadline": "Privacy Policy",
+  "heroSubhead": "",
+  "lastUpdated": "2026-09-20",
+  "seoDescription": "What this site does and does not do with your information, and where its linked services keep their own privacy policies.",
+  "seoTitle": "Privacy | First Baptist Church Muncie"
+}

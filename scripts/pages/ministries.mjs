@@ -485,22 +485,17 @@ export default {
     // to talk to. Two of its three links pointed at Wix pages that are being
     // retired; the hrefs are the church's own where the destination survives
     // (scripts/data/pages/adult.json, links, region "main") and the church's
-    // own Church Center address off Site settings where it does not.
-    const churchCenter = String(settings.churchCenterUrl ?? '').trim();
-    if (!churchCenter) {
-      throw new Error(
-        'ministries.mjs: siteSettings.churchCenterUrl is empty. The church app link on the ' +
-          '"Stay updated" band is read off it rather than retyped.',
-      );
-    }
+    // Site settings' link tokens where it does not: {wednesday} (hidden while
+    // Church Trac has no Wednesday page) and {app}, the church app (Church
+    // Trac's, 2026-09-26; it was Church Center's).
     const stayUpdated = [
       heading('Stay updated', 3, 'su-h1'),
       ...paragraphs(line('adult', 'many ways to get the latest information'), 'su-a'),
       ...bullets(
         [
-          `[${line('adult', 'Wednesday Weekly')}](https://fbcmuncie.churchcenter.com/pages/fbcs-wednesday-weekly)`,
+          `[${line('adult', 'Wednesday Weekly')}]({wednesday})`,
           `[${line('adult', 'The Visitor Quarterly')}](/visitor)`,
-          `[${line('adult', 'Our Church App.')}](${churchCenter})`,
+          `[${line('adult', 'Our Church App.')}]({app})`,
         ],
         'su-b',
       ),

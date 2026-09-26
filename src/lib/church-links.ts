@@ -141,8 +141,15 @@ const OWN_FALLBACK: Partial<Record<LinkToken, string>> = {
   '{wedding-booking}': WEDDING_COORDINATOR_EMAIL,
 };
 
-/** What an unfilled token becomes: its own fallback, '' (hidden), or LINK_FALLBACK. */
-export function linkFallback(token: LinkToken): string {
+/**
+ * What an unfilled token becomes: its own fallback, '' (hidden), or
+ * LINK_FALLBACK. {contact-form} ("Notify us" of a life update on /contact)
+ * becomes an email to the church office when Site settings has an email, so
+ * the sentence it ends still leads somewhere (2026-09-26: Church Trac has no
+ * such form yet, and the old Church Center one is retired).
+ */
+export function linkFallback(token: LinkToken, officeEmail = ''): string {
+  if (token === '{contact-form}' && officeEmail) return `mailto:${officeEmail}`;
   if (HIDDEN_TOKENS.has(token)) return '';
   return OWN_FALLBACK[token] ?? LINK_FALLBACK;
 }

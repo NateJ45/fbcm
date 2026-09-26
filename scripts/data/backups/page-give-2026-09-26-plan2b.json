@@ -1,0 +1,147 @@
+{
+  "_createdAt": "2026-09-20T03:42:25Z",
+  "_id": "page-give",
+  "_rev": "zQicUBX7lBDfMtKkf747mZ",
+  "_type": "page",
+  "_updatedAt": "2026-09-24T23:36:17Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "give-open",
+      "_type": "giveBandSection",
+      "body": "Your gift keeps this church running and reaching Muncie.",
+      "heading": "Support the work of this church."
+    },
+    {
+      "_key": "give-ways",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "gw-online-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gw-online-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "You can give online through Church Center any time. "
+            },
+            {
+              "_key": "gw-online-1s2",
+              "_type": "span",
+              "marks": [
+                "gw-online-1l1"
+              ],
+              "text": "Give through Church Center"
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "gw-online-1l1",
+              "_type": "link",
+              "href": "{giving}"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "gw-person-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gw-person-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "You can also give in person during Sunday worship, when the offering is taken. {service time}."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "gw-post-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gw-post-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Or mail a check to the church office: First Baptist Church, {address}, {city}."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "heading": "Three ways to give"
+    },
+    {
+      "_key": "give-where",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "gwh-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gwh-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "We give sacrificially to help those in need through regular offerings and donations."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "gwh-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gwh-b-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Special offerings and projects for disaster relief, mission work, and other needs."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "heading": "What your gift supports"
+    },
+    {
+      "_key": "give-cta",
+      "_type": "ctaBandSection",
+      "cta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-contact",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Contact us",
+        "linkType": "internal"
+      },
+      "eyebrow": "Questions?",
+      "headline": "Ask the office.",
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "{giving}",
+        "label": "Give online",
+        "linkType": "external",
+        "openInNewTab": true
+      },
+      "subhead": "{service time}. {address}, {city}."
+    }
+  ],
+  "seoDescription": "Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online through Church Center, in person on Sunday, or by mail.",
+  "seoTitle": "Give | First Baptist Church Muncie",
+  "slug": {
+    "_type": "slug",
+    "current": "give"
+  },
+  "title": "Give"
+}

@@ -162,7 +162,7 @@ function walk(
     if (token) {
       if (values[token]) return values[token];
       onUnfilled(token);
-      return linkFallback(token);
+      return linkFallback(token, values['{email}'] ?? '');
     }
     return inHref ? value : fillString(value, values);
   }

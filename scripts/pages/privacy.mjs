@@ -20,7 +20,7 @@
 //    never sets.
 //
 // 2. NOTHING IS RETYPED FROM SITE SETTINGS. The office email and phone, and
-//    the Church Center, Church Trac and YouTube addresses, are read off the
+//    the Church Trac and YouTube addresses, are read off the
 //    live siteSettings document. If any of those addresses change, the policy
 //    follows on the next seed rather than drifting from the footer.
 //
@@ -70,8 +70,7 @@ export default {
     'This site runs no analytics at all. Visits are not counted, and nothing is stored on your device for measurement. (How visits are measured, when PUBLIC_CF_ANALYTICS_TOKEN is unset)',
     'Page visits are counted with Cloudflare Web Analytics, which sets no cookies and does not identify individual visitors. (How visits are measured, when PUBLIC_CF_ANALYTICS_TOKEN is set)',
     'This site links out to a few services the church uses for things this site itself does not do. (Links to other services, lead-in)',
-    'Church Center handles online giving and event registration. It has its own privacy policy, separate from this one. (Links to other services, Church Center)',
-    'Church Trac holds other church records. It has its own privacy policy, separate from this one. (Links to other services, Church Trac)',
+    'Church Trac holds the church’s records and runs its calendar, forms and app. It has its own privacy policy, separate from this one. (Links to other services, Church Trac; 2026-09-26, Church Center retired)',
     'YouTube hosts our livestream and sermon recordings. It has its own privacy policy, separate from this one. (Links to other services, YouTube)',
     'Questions about this policy, or about anything on this site, can go to the church office. (How to reach us, lead-in)',
   ],
@@ -88,11 +87,11 @@ export default {
     if (!settings) {
       throw new Error(
         'privacy.mjs: siteSettings is not available. The policy reads the office email and ' +
-          'phone, and the Church Center, Church Trac and YouTube addresses, off it rather than ' +
+          'phone, and the Church Trac and YouTube addresses, off it rather than ' +
           'retyping them (CLAUDE.md rule 15).',
       );
     }
-    for (const field of ['churchCenterUrl', 'churchTracUrl', 'youtubeUrl', 'email']) {
+    for (const field of ['churchTracUrl', 'youtubeUrl', 'email']) {
       if (!settings[field]) {
         throw new Error(`privacy.mjs: siteSettings.${field} is not set.`);
       }
@@ -149,8 +148,7 @@ export default {
         ),
         ...bullets(
           [
-            `[Church Center](${settings.churchCenterUrl}) handles online giving and event registration. It has its own privacy policy, separate from this one.`,
-            `[Church Trac](${settings.churchTracUrl}) holds other church records. It has its own privacy policy, separate from this one.`,
+            `[Church Trac](${settings.churchTracUrl}) holds the church’s records and runs its calendar, forms and app. It has its own privacy policy, separate from this one.`,
             `[YouTube](${settings.youtubeUrl}) hosts our livestream and sermon recordings. It has its own privacy policy, separate from this one.`,
           ],
           'priv-links',

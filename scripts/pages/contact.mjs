@@ -110,7 +110,7 @@ export default {
           'retyped (CLAUDE.md rule 15).',
       );
     }
-    for (const field of ['phone', 'email', 'address', 'visitorFormUrl', 'lifeEventFormUrl']) {
+    for (const field of ['phone', 'email', 'address']) {
       if (!settings[field]) {
         throw new Error(
           `contact.mjs: siteSettings.${field} is not set, and the Contact page is the one page ` +
@@ -333,7 +333,11 @@ export default {
             ...paragraphs(line('contact', 'share something with the church'), 'lu-intro'),
             ...bullets(lifeEvents, 'lu'),
             ...paragraphs(
-              `Tell us and a member of the pastoral team will follow up. [${notifyLabel}](${settings.lifeEventFormUrl})`,
+              // The {contact-form} token, filled from Site settings at build time:
+              // the form's address once Church Trac has one, and until then an
+              // email to the office (church-links.ts linkFallback; 2026-09-26,
+              // the Church Center form it pointed at is retired).
+              `Tell us and a member of the pastoral team will follow up. [${notifyLabel}]({contact-form})`,
               'lu-follow',
             ),
           ],

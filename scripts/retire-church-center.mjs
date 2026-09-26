@@ -102,8 +102,9 @@ for (let n = 2; existsSync(file); n++) file = join(dir, `${stem}-${n}.json`);
 writeFileSync(file, JSON.stringify(doc, null, 2));
 console.log(`backup: ${file}`);
 
-let patch = client.patch('siteSettings');
-if (toUnset.length) patch = patch.unset(toUnset);
-if (ccLinkPath) patch = patch.unset([ccLinkPath]);
-await patch.commit();
+// ONE unset: the client's unset() replaces an earlier unset() on the same
+// patch rather than adding to it, so two calls cleared only the footer link
+// (caught in review on 2026-09-26, before the first --apply).
+const paths = [...toUnset, ...(ccLinkPath ? [ccLinkPath] : [])];
+await client.patch('siteSettings').unset(paths).commit();
 console.log('written.');

@@ -269,4 +269,10 @@ test('linkFallback: the two wedding forms fall back to the wedding office’s ow
 test('linkFallback: {wednesday} and {contact-form} are hidden, not a dead link', () => {
   assert.equal(linkFallback('{wednesday}'), '');
   assert.equal(linkFallback('{contact-form}'), '');
+  // With the office's email, "Notify us" writes to the office instead.
+  assert.equal(
+    linkFallback('{contact-form}', 'office@fbcmuncie.org'),
+    'mailto:office@fbcmuncie.org',
+  );
+  assert.equal(linkFallback('{wednesday}', 'office@fbcmuncie.org'), '');
 });

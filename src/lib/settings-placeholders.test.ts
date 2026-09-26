@@ -148,13 +148,19 @@ test('the two wedding forms fall back to the wedding office’s own email', () =
   });
 });
 
-test('{wednesday} and {contact-form} are hidden (empty string), not a dead link', () => {
+test('{wednesday} is hidden; {contact-form} writes to the office, or hides with no email', () => {
   const out = fillPlaceholders(
     { a: { href: '{wednesday}' }, b: { href: '{contact-form}' } },
     linked,
     () => {}, // both are expected to be unfilled here; nothing to assert on the callback
   );
-  assert.deepEqual(out, { a: { href: '' }, b: { href: '' } });
+  assert.deepEqual(out, { a: { href: '' }, b: { href: `mailto:${linked['{email}']}` } });
+  const noEmail = fillPlaceholders(
+    { b: { href: '{contact-form}' } },
+    { ...linked, '{email}': '' },
+    () => {},
+  );
+  assert.deepEqual(noEmail, { b: { href: '' } });
 });
 
 test('a link token inside a sentence is left as typed; text placeholders still skip hrefs', () => {
