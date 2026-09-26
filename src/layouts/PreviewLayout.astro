@@ -197,9 +197,8 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
       // So: same-origin links with a preview equivalent are remapped into
       // /preview/* (the visual-editing history adapter then reports the new
       // location, and Presentation resolves the document, so the navigator and
-      // the edit panel follow the click). Links with NO preview route (detail
-      // pages like /post/<slug>, /api, /studio, external origins) split by
-      // context:
+      // the edit panel follow the click). Links with NO preview route (other
+      // detail pages, /api, /studio, external origins) split by context:
       //  - EMBEDDED in the Studio: the navigation is SUPPRESSED entirely. A
       //    click on a card there is an EDIT gesture (the stega overlay already
       //    selects the right field and document), and a live tab popping open
@@ -217,7 +216,10 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
       // behind the blanket single-segment clause and had gone stale (it still
       // named `contact` after contact became a `page` document), so it was
       // deleted on 2026-09-20 rather than left as a registry that looks
-      // load-bearing and is not.
+      // load-bearing and is not. One two-segment path is previewable too: a
+      // blog post, /post/<slug>, has its own draft route since 2026-09-26
+      // (src/pages/preview/post/[slug].astro), so a door or a series row in a
+      // post preview opens that post's preview.
       const NEVER_REMAP = new Set(['api', 'studio', 'preview', '404']);
 
       document.addEventListener(
@@ -255,7 +257,8 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
           if (path === window.location.pathname && url.hash) return;
 
           const segments = path === '/' ? [] : path.slice(1).split('/');
-          const previewable = path === '/' || (segments.length === 1 && !NEVER_REMAP.has(first));
+          let previewable = path === '/' || (segments.length === 1 && !NEVER_REMAP.has(first));
+          if (segments.length === 2 && first === 'post') previewable = true; // scaffold: journal
 
           event.preventDefault();
           if (previewable) {

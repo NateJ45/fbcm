@@ -60,6 +60,12 @@ interface Props {
    * `style` otherwise, else the shape's default. Only the headroom reads it.
    */
   frameRatio?: number;
+  /**
+   * Preview only: a `data-sanity` value (src/lib/preview-edit-attr.ts), so a
+   * click on the picture in the Studio's Edit mode opens its field. Absent
+   * everywhere else, and then no attribute is rendered at all.
+   */
+  editAttr?: string;
 }
 
 const {
@@ -76,6 +82,7 @@ const {
   glyph,
   fetchpriority,
   frameRatio,
+  editAttr,
 } = Astro.props;
 
 const hasImage = !!image?.asset;
@@ -111,6 +118,7 @@ const mould =
   class:list={['relative m-0', extraClass]}
   data-reveal={reveal ? 'arch' : undefined}
   data-arch={shape}
+  data-sanity={editAttr}
   style={style}
 >
   {

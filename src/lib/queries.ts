@@ -469,7 +469,9 @@ export async function getAllProjects(): Promise<CoreProjectCard[]> {
 
 // scaffold: journal
 // Projection for a journal card (index page) — small surface, no body.
-const JOURNAL_CARD_PROJECTION = `{
+// Exported for the post draft preview (src/pages/preview/post/[slug].astro),
+// which reads the same list through the draft client.
+export const JOURNAL_CARD_PROJECTION = `{
   _id,
   title,
   slug,
@@ -535,20 +537,25 @@ export async function getAllJournalCategories() {
 // scaffold:end
 
 // scaffold: journal
-export async function getJournalEntryBySlug(slug: string) {
-  // Full doc including body. The body's inline image blocks get their asset
-  // resolved + alt fallback at the GROQ layer so the renderer doesn't have to
-  // chase asset refs for every block. Image gallery items + beforeAfter pairs
-  // + sourceCard images + inline images all get the same treatment.
-  return sanityFetch(
-    `*[_type == "journalEntry" && slug.current == $slug][0]{
+// The post page's two halves, exported so the draft preview
+// (src/pages/preview/post/[slug].astro) reads EXACTLY what the build reads.
+// The preview fetches them apart: the fields with stega on, so a click on the
+// title opens it in the Studio, and the body with stega off, because the
+// reading pass over the body (src/lib/post-body.ts) matches and measures its
+// words, which stega's invisible markers would break (docs/agent/preview.md).
+export const JOURNAL_ENTRY_FIELDS = `
       _id, title, slug, excerpt, author, publishedAt, updatedAt,
       tags,
       seoTitle, seoDescription,
       coverImage${IMAGE_PROJECTION},
       "categories": categories[]->{ _id, title, slug, description },
-      "relatedProject": relatedProject->{ _id, title, slug, location, year, heroImage${IMAGE_PROJECTION} },
-      body[]{
+      "relatedProject": relatedProject->{ _id, title, slug, location, year, heroImage${IMAGE_PROJECTION} }`;
+
+// The body's inline image blocks get their asset resolved + alt fallback at
+// the GROQ layer so the renderer doesn't have to chase asset refs for every
+// block. Image gallery items + beforeAfter pairs + sourceCard images + inline
+// images all get the same treatment.
+export const JOURNAL_BODY_PROJECTION = `body[]{
         ...,
         _type == "inlineImage" => ${IMAGE_PROJECTION},
         _type == "beforeAfter" => {
@@ -564,7 +571,18 @@ export async function getJournalEntryBySlug(slug: string) {
           ...,
           images[]${IMAGE_PROJECTION}
         }
-      }
+      }`;
+
+// The opening blocks of every post, for the reading a preview's door and
+// series row print (src/lib/post-foot.ts). The card projection carries no
+// body, and this is a dozen blocks each rather than 142 whole bodies.
+export const JOURNAL_HEADS_QUERY = `*[_type == "journalEntry"]{ _id, "head": body[_type == "block"][0...12]{ _type, style, listItem, children[]{ _type, text } } }`;
+
+export async function getJournalEntryBySlug(slug: string) {
+  // Full doc including body.
+  return sanityFetch(
+    `*[_type == "journalEntry" && slug.current == $slug][0]{${JOURNAL_ENTRY_FIELDS},
+      ${JOURNAL_BODY_PROJECTION}
       // NO relatedPosts HERE, deliberately (2026-09-20). This projection used
       // to coalesce the editor's explicit relatedPosts with an auto-pick of the
       // three most recent posts sharing a category: a whole second GROQ

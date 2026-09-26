@@ -105,6 +105,34 @@ domain and their mail.
 
 ## Known gaps, deliberately open
 
+### 1c. The preview routes check the draft cookie's presence, not its fingerprint (found 2026-09-26)
+
+Found while adding the post preview (`/preview/post/<slug>`). `src/pages/preview/[...slug].astro`,
+`src/pages/preview/post/[slug].astro` and `src/pages/preview/live.ts` all switch on draft mode
+with `Astro.cookies.has(perspectiveCookieName)`. `/api/draft-mode/enable` sets that cookie to an
+unforgeable fingerprint of `SANITY_TOKEN` (`src/lib/preview-auth.ts`), and `isStudioPreview()`
+there checks it, but nothing calls `isStudioPreview()`. So a request that sets
+`sanity-preview-perspective` to any value reads unpublished drafts through the server's token.
+docs/agent/preview.md claims the fingerprint protects the preview; today it does not.
+
+The fix is small (`draftMode = await isStudioPreview(Astro.cookies.get(perspectiveCookieName)?.value)`
+in the three places) but it touches the working preview path, so it wants one careful change to
+all three routes together, then a real Studio session to prove the Presentation tool still gets
+drafts (nothing in `@sanity/visual-editing` should rewrite the cookie, but that is the thing to
+confirm). The post route matched the existing routes rather than differing from them alone. The
+same code came from the starter, so check it there too.
+
+### 1d. `--remove journal` no longer leaves a building tree (found 2026-09-26)
+
+Proving the post preview's scaffold markers (rule 14): `npm run scaffold -- --remove journal
+--write`, then typegen and `astro check`, reports 6 errors, and `npm run build` fails prerendering
+`/` with "durableFirst is not defined". The SAME 6 errors appear on `7ebc6389` (before the post
+preview), so they predate it; the new files (`PostView.astro`, `post-foot.ts`, the preview route)
+and the new marked lines are all removed cleanly. The unmarked pieces: `DynamicList.astro` line
+89 uses `durableFirst` (from the journal's `blog-derive`), `src/lib/convert-body.ts` imports
+`../sanity/schemaTypes/journalEntry.ts`, and `src/lib/youtube-feed-api.test.ts` imports
+`./sermon-video.ts`. Each wants a marker, or the journal-only half moved out.
+
 ### 2. `npm run parity compare` is not a CI step
 
 The baselines in `scripts/.parity/` are captured on a developer machine, and nobody in

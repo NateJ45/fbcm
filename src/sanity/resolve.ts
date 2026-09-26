@@ -13,9 +13,10 @@
 //
 //  - `locations` (document -> URL): the reverse, so opening a document from the
 //    desk points the preview at the right page. Singletons map to their fixed
-//    preview path; `page` docs resolve from the slug. Collection docs
-//    (journalEntry, ...) have no dedicated draft-preview route, so they land
-//    on the page they appear on.
+//    preview path; `page` docs resolve from the slug, and so do blog posts
+//    (journalEntry), which have their own draft-preview route since
+//    2026-09-26 (/preview/post/<slug>, src/pages/preview/post/[slug].astro).
+//    Other collection docs have none, so they land on the page they appear on.
 //
 // The preview routes themselves live in the site app: src/pages/preview/.
 // SINGLETON_PREVIEW_PATHS is the SAME map as SINGLETON_BY_PATH in
@@ -56,6 +57,8 @@ export const resolve: PresentationPluginOptions['resolve'] = {
     ...Object.entries(SINGLETON_PREVIEW_PATHS)
       .filter(([type]) => type !== 'homePage')
       .map(([type, href]) => ({ route: href, filter: `_type == "${type}"` })),
+    // A blog post, drawn by the same component as its live page.
+    { route: '/preview/post/:slug', filter: '_type == "journalEntry" && slug.current == $slug' }, // scaffold: journal
     { route: '/preview/:slug', filter: '_type == "page" && slug.current == $slug' },
   ]),
   locations: {
@@ -68,14 +71,28 @@ export const resolve: PresentationPluginOptions['resolve'] = {
         return { locations: [{ title: doc?.title ?? slug, href: previewHref(slug) }] };
       },
     }),
-    // Collection docs have no draft-preview route of their own. Send each to
-    // the page it renders on, with a note when a detail page exists live.
+    // A blog post previews on its own page (/preview/post/<slug>), and the
+    // Blog page is listed too, since the post appears there.
     // scaffold: journal
-    journalEntry: {
-      locations: [{ title: 'Blog', href: '/preview/blog' }],
-      message: 'Post pages preview on the live site after publish.',
-    },
+    journalEntry: defineLocations({
+      select: { title: 'title', slug: 'slug.current' },
+      resolve: (doc) => {
+        const slug = doc?.slug;
+        const blog = { title: 'Blog', href: '/preview/blog' };
+        if (!slug) {
+          return {
+            locations: [blog],
+            message: 'Generate the Web address to see this post in the preview.',
+          };
+        }
+        return {
+          locations: [{ title: doc?.title ?? slug, href: `/preview/post/${slug}` }, blog],
+        };
+      },
+    }),
     // scaffold:end
+    // Other collection docs have no draft-preview route of their own. Send
+    // each to the page it renders on.
     journalCategory: { locations: [{ title: 'Blog', href: '/preview/blog' }] }, // scaffold: journal
     // A ministry is drawn on the Ministries page by its "Ministry" band
     // (ministrySection), so that is where opening one points the preview.

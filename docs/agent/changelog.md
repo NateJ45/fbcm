@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-26 — Draft preview for blog posts (`worktree-agent-ad954056cb0fc17ed`)._
+
+**A post can be seen in the design before it is published.** `/preview/post/<slug>` renders the post in the Studio's Presentation tool from the draft perspective, with click-to-edit on its own fields and on the body and cover. The post page's markup, derivations, print script and page-scoped styles moved into `src/components/blog/PostView.astro`, which the static route and the preview route both render, and each post's foot became one shared derivation (`src/lib/post-foot.ts`, 5 tests). `resolve.ts` points a post at its own preview (the Blog page second), the click interceptor treats `/post/<slug>` as previewable, and `previewFetch` gained `{ stega: false }` for the data a page derives from. `npm run parity compare` 175/175 across the move. Found on the way, not fixed: the preview routes check the draft cookie's presence rather than its fingerprint (`docs/PENDING.md` 1c).
+
 _2026-09-26 — Studio audit for the church staff (`worktree-agent-ad94dc735a18e1030`)._
 
 **Every editor-facing string rewritten for a church secretary, and the Studio faults a build passes.** Titles, descriptions, option labels, validation messages and previews across every schema, the desk and the Help guides now use one vocabulary: "section" (not band, block or hero), "Web address" for every slug, "Describe the photo" for every alt text, "Title in Google" / "Description in Google" under "Search and sharing", "Site settings", "Church systems", and no starter residue (Studio Name, Journal, Houzz, "Notes from the studio", "service pages", "Your ideal client"). Required fields carry a message that says what to do. Document type titles now match their desk items (a post is a "Post", not a "Journal Entry"). No field or type `name` changed, no field was added, and no data was written.
