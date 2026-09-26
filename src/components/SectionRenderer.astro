@@ -52,6 +52,7 @@ import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
 import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
+import type { LinkableBand } from '@/lib/hero-fact-links';
 import type { SundaySermon } from '@/lib/live-sunday';
 import type { SundayPreacher } from '@/lib/preacher';
 import { insertIndex } from '@/lib/band-insert';
@@ -417,6 +418,7 @@ const wrapAttrs = (key: string | undefined) =>
             sermon={sermon}
             preacher={preacher}
             calendarHref={calendarHref}
+            factBands={rows.map(({ block }) => block as LinkableBand)}
             headingId={headingId}
           />
         ) : s._type === 'ctaBandSection' ? (
