@@ -2309,3 +2309,21 @@ in `scripts/data/backups/journalEntry-bodies-2026-09-20.json`, and a second
       before the build: the Data API first when the key is set, then both public feed addresses
       in four rounds, then the last good copy (restored by `deploy.yml`, used up to 8 days). Until
       the secret exists the deploy build relies on the public feed and that copy.
+
+## Sanity bandwidth (2026-09-26)
+
+- [ ] **Check the Sanity usage page on 2026-09-27 and 2026-09-28** (it updates daily). On
+      2026-09-25 bandwidth was 80.7 of 100 GB (18 GB on the 24th, 38 GB on the 25th), API CDN
+      requests 717.8k of 1m, and uncached API requests 343k of 250k (that overrun predates the
+      2026-09-23 always-CDN fix). Measured and ruled out: a build (754 reads, 29 MB), page
+      images (0.17 MB a page load), the Visitor PDFs in builds (cached everywhere), the link
+      checker. The cause left standing: the 46 PDFs (602 MiB) linked straight to
+      cdn.sanity.io, and /visitor went up on the 24th. Since `8ef0aeae`/`f0c6d3e1` they are served
+      from `/files/` (R2 bucket `fbcm-files`, filled from Sanity once per file). The daily
+      bandwidth should fall to a few GB; if it does not, the request log (usage page, Generate)
+      is the next measurement. The project is on a Growth Trial (23 days left on 2026-09-26);
+      quotas reset on 2026-10-01.
+- [ ] Each build still reads the full blog list 35 times (0.69 MB each, about 24 MB of a
+      29 MB build): memoise it per build.
+- [ ] `/styleguide/visitor` still links its fixture's PDFs at cdn.sanity.io (noindex; the
+      Visitor spec asserts those hrefs).
