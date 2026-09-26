@@ -529,8 +529,10 @@ the newsletters' "Get the church app" button (`Newsletter.astro`) never rendered
   store buttons, and the install code as six tiles in the display capitals under a gold rule
   (one spelled-out `sr-only` string for a screen reader) with a line on when to type it. Art:
   a lancet arch (ArchFrame's lancet path) filled with the indigo band under a gold mould, a gold
-  phone with a paper screen standing on its sill showing the church's name, its Church Connect
-  motto "Love, Joy, Peace" and the four things the app is for; `aria-hidden`, because the list
+  phone with a paper screen standing on its sill showing the church's own wordmark
+  (`src/assets/logo-light.svg`, the header's), its watchword "Praise & Proclaim" (Nathan,
+  2026-09-26; the "Love, Joy, Peace" it first carried was Church Trac's loading-spinner text,
+  not the church's) and the four things the app is for; `aria-hidden`, because the list
   beside it says the same in words (What's On, Prayer List, Ministry news, Church updates, as
   What's On's rows). The ground follows What's On by The Visitor's rule (`visitorGround`,
   decided in `index.astro`). What the list promises is only what Church Trac's own pages say
