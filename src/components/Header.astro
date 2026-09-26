@@ -129,9 +129,11 @@ const logoSrcset = logo
       .join(', ')
   : undefined;
 
-// The church's Give button points at Church Center, which is somebody else's
-// site, so it opens in a new tab. An internal destination (the built-in
-// fallback, or an editor who repoints it at a page here) stays in this tab.
+// The church's Give button points wherever Site settings' Online giving box
+// says (an outside address, so it opens in a new tab) or, until that box is
+// filled again, at this site's own /give page (an internal destination, so it
+// stays in this tab, the same as the built-in fallback or an editor who
+// repoints it at a page here).
 const ctaIsExternal = /^https?:\/\//i.test(headerCta.href);
 
 // The two facts the mobile menu's foot states: when the church meets, and the

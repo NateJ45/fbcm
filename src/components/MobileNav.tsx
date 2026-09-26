@@ -239,8 +239,9 @@ export default function MobileNav({
   const isCurrent = (href: string) =>
     here !== undefined && normalizePath(here) === normalizePath(href);
 
-  // Church Center is somebody else's site, so the Give button opens in a new
-  // tab. An internal destination stays in this one.
+  // An outside address (Site settings' Online giving box, when it is filled)
+  // opens the Give button in a new tab. An internal destination, such as the
+  // /give fallback while that box is blank, stays in this one.
   const ctaIsExternal = /^https?:\/\//i.test(cta.href);
 
   const close = () => setOpen(false);

@@ -116,6 +116,37 @@ export function fieldOf(token: LinkToken): LinkField {
 // back into a page. Deliberately exact: only the church's own subdomain, and
 // only the addresses found in the dataset on 2026-09-24.
 
+// ── What a blank box becomes (2026-09-25, the Church Trac move) ─────────────
+// Most unfilled tokens become LINK_FALLBACK (/contact). Three read differently
+// because a plain "go ask at /contact" would be worse than the honest answer
+// the site already has: {giving} has its own page that says giving is coming
+// (WEDDING_COORDINATOR_EMAIL is the wedding office's known address, already on
+// the wedding page as "Email the wedding coordinator"). {wednesday} and
+// {contact-form} have no such stand-in, so a link with nowhere real to go is
+// hidden instead of drawn: fillPlaceholders() returns '' for these, and every
+// renderer that draws a markDefs link (PortableTextStatic.astro,
+// JournalPortableText.tsx) leaves the words as plain text when the href is ''
+// rather than link them nowhere.
+
+/** The wedding office's own address, already printed on /wedding as "Email the wedding coordinator". */
+export const WEDDING_COORDINATOR_EMAIL = 'mailto:wedding@fbcmuncie.org';
+
+/** Tokens whose blank box becomes '' (hidden) rather than any address. */
+const HIDDEN_TOKENS: ReadonlySet<LinkToken> = new Set(['{wednesday}', '{contact-form}']);
+
+/** Tokens whose blank box becomes something other than LINK_FALLBACK. */
+const OWN_FALLBACK: Partial<Record<LinkToken, string>> = {
+  '{giving}': '/give',
+  '{wedding-enquiry}': WEDDING_COORDINATOR_EMAIL,
+  '{wedding-booking}': WEDDING_COORDINATOR_EMAIL,
+};
+
+/** What an unfilled token becomes: its own fallback, '' (hidden), or LINK_FALLBACK. */
+export function linkFallback(token: LinkToken): string {
+  if (HIDDEN_TOKENS.has(token)) return '';
+  return OWN_FALLBACK[token] ?? LINK_FALLBACK;
+}
+
 export type Classified =
   | { kind: 'token'; token: LinkToken }
   | { kind: 'past-event' }

@@ -41,7 +41,17 @@
 //
 // The button goes to the block's own link when the editor typed one, and otherwise
 // to the giving address in Site settings, so the church can move its giving page in
-// one place. Church Center is somebody else's site, so the link opens in a new tab.
+// one place. An outside address is somebody else's site, so that link opens in a
+// new tab; the /give fallback below is this site's own page, so it stays in this tab.
+//
+// NO GIVING ADDRESS YET (2026-09-25, the Church Trac move). Online giving needs
+// Stripe, which is not set up, so Site settings' Online giving box is blank until
+// it is. An h2 band with no address falls back to /give, the page that explains
+// the ways to give that do exist today, labelled "Ways to give" rather than "Give
+// online" since there is nowhere to give online yet. The h1 path (the /give page's
+// own opener) shows no button at all in that case: a button that points at the
+// page it is already on would be pointless, and the page's own paragraphs say
+// what to do instead.
 import SectionHeading from '@/components/SectionHeading.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { headlineScale } from '@/lib/headline-scale';
@@ -87,14 +97,19 @@ const {
 
 const settings: SectionSiteSettings | null =
   settingsProp !== undefined ? settingsProp : await getSiteSettings();
-const href: string | undefined = buttonUrl || settings?.givingUrl || undefined;
+const explicitHref: string | undefined = buttonUrl || settings?.givingUrl || undefined;
+const isExternalHref = Boolean(explicitHref) && /^https?:\/\//i.test(explicitHref!);
+// The h1 opener IS /give: a button back to the page it is already on would be
+// pointless, so it shows one only when there is a real giving address to send
+// people to. The h2 band (Home, and anywhere else) falls back to /give itself.
+const href: string | undefined = explicitHref ?? (level === 'h2' ? '/give' : undefined);
 
 const giveCta = href
   ? {
-      label: buttonLabel || 'Give through Church Center',
+      label: buttonLabel || (explicitHref ? 'Give online' : 'Ways to give'),
       linkType: 'external' as const,
       externalUrl: href,
-      openInNewTab: true,
+      openInNewTab: isExternalHref,
     }
   : null;
 ---

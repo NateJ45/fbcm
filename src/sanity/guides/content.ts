@@ -421,13 +421,13 @@ export const guides: Guide[] = [
         kind: 'callout',
         tone: 'caution',
         title: 'Type the whole address box as the placeholder, curly brackets and all.',
-        text: 'A placeholder only works on its own in a link’s address box, not in the middle of a sentence. A misspelled one shows a red warning under the box. If its box in `Church systems` is empty, the link goes to this website’s Contact page until you fill it in, so nobody lands on a broken page.',
+        text: 'A placeholder only works on its own in a link’s address box, not in the middle of a sentence. A misspelled one shows a red warning under the box. Most empty boxes send the link to this website’s Contact page until you fill it in, so nobody lands on a broken page: `{giving}` goes to this site’s own `/give` page instead, `{wedding-enquiry}` and `{wedding-booking}` email the wedding office directly, and `{wednesday}` and `{contact-form}` are hidden (the words stay, the link does not) until their box is filled.',
       },
       {
         kind: 'callout',
         tone: 'default',
         title: 'Check the words around the link too.',
-        text: 'Some pages and posts say "through Church Center" or "on our Church Center Channel" in the sentence itself. Changing the box moves the link, not the words, so read the sentence after a switch and change the words where they name the old system.',
+        text: 'Some pages and posts still say "through Church Center" or "on our Church Center Channel" in the sentence itself, from before the move to Church Trac. Changing the box moves the link, not the words, so read the sentence after a switch and change the words where they name the old system.',
       },
       { kind: 'h', text: 'Sermon recordings' },
       {

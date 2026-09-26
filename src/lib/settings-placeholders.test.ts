@@ -121,12 +121,40 @@ test('a link token fills a link target: href, externalUrl, url, anywhere in the 
 test('an unfilled link token becomes /contact, never a broken link, and is reported', () => {
   const heard: string[] = [];
   const out = fillPlaceholders(
-    { a: { href: '{wedding-enquiry}' }, b: { externalUrl: '{prayer}' } },
+    { a: { href: '{calendar}' }, b: { externalUrl: '{prayer}' } },
     linked,
     (t) => heard.push(t),
   );
   assert.deepEqual(out, { a: { href: '/contact' }, b: { externalUrl: '/contact' } });
-  assert.deepEqual(heard, ['{wedding-enquiry}', '{prayer}']);
+  assert.deepEqual(heard, ['{calendar}', '{prayer}']);
+});
+
+test('{giving} with no giving address falls back to the church’s own /give page', () => {
+  const heard: string[] = [];
+  const unset = placeholderValues(settings); // no givingUrl at all
+  const out = fillPlaceholders({ href: '{giving}' }, unset, (t) => heard.push(t));
+  assert.deepEqual(out, { href: '/give' });
+  assert.deepEqual(heard, ['{giving}']);
+});
+
+test('the two wedding forms fall back to the wedding office’s own email', () => {
+  const out = fillPlaceholders(
+    { a: { url: '{wedding-enquiry}' }, b: { url: '{wedding-booking}' } },
+    linked,
+  );
+  assert.deepEqual(out, {
+    a: { url: 'mailto:wedding@fbcmuncie.org' },
+    b: { url: 'mailto:wedding@fbcmuncie.org' },
+  });
+});
+
+test('{wednesday} and {contact-form} are hidden (empty string), not a dead link', () => {
+  const out = fillPlaceholders(
+    { a: { href: '{wednesday}' }, b: { href: '{contact-form}' } },
+    linked,
+    () => {}, // both are expected to be unfilled here; nothing to assert on the callback
+  );
+  assert.deepEqual(out, { a: { href: '' }, b: { href: '' } });
 });
 
 test('a link token inside a sentence is left as typed; text placeholders still skip hrefs', () => {

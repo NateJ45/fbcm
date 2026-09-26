@@ -290,10 +290,12 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - Support the work of this church. (give band heading)
 - Your gift keeps this church running and reaching Muncie. (give band body, one sentence)
-- You can give online through Church Center any time. (Ways to give, paragraph 1)
+- You can give online any time. (Ways to give, paragraph 1, when Online giving is set)
+- Online giving is on its way. In the meantime, you can give in person or by mail. (Ways to give, paragraph 1, when Online giving is blank; 2026-09-25, the Church Trac move)
 - You can also give in person during Sunday worship, when the offering is taken. (Ways to give, paragraph 2)
 - Or mail a check to the church office. (Ways to give, paragraph 3, lead-in to the mailing address)
-- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online through Church Center, in person on Sunday, or by mail. (search description, not shown on the page; 2026-09-24 local search pass)
+- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: in person on Sunday or by mail. (search description, when Online giving is blank; 2026-09-24 local search pass, reworded 2026-09-25)
+- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online, in person on Sunday, or by mail. (search description, when Online giving is set)
 
 ### Edits to the church’s own text
 
@@ -302,6 +304,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### Facts to confirm from this page
 
 - Give page copy in their words, and whether to state anything about tax status: neither who-we-are.txt nor outreach.txt says anything about tax deductibility, and spec 5.9 asks for nothing about it either, so this page currently says nothing. The three "Ways to give" paragraphs are net-new copy (declared above) standing in for stewardship words the church has not written yet.
+- Online giving is not live yet (Site settings > Church systems > Online giving is blank, 2026-09-25): the page says so plainly instead of linking to Church Center, which the church is leaving. Once online giving is set up (Church Trac plus Stripe) and the address is filled in, re-run this seed to restore the "give online" sentence and button.
 
 ### Photos of children
 

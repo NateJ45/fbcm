@@ -21,7 +21,6 @@ const SETTINGS = {
     'https://www.google.com/maps/search/?api=1&query=309+East+Adams+Street+Muncie+IN+47305',
   livestreamUrl: 'https://www.youtube.com/@FbcmuncieOrg/streams',
   youtubeUrl: 'https://www.youtube.com/c/FbcmuncieOrg',
-  churchCenterUrl: 'https://fbcmuncie.churchcenter.com/',
   churchTracUrl: 'https://fbcmuncie.churchtrac.com/',
   givingUrl: 'https://fbcmuncie.churchcenter.com/giving',
 };
@@ -70,8 +69,11 @@ test('llmsText says who, where and when from Site settings, and lists the pages'
   assert.ok(text.includes('- [Home](https://www.fbcmuncie.org/): An American Baptist church'));
   assert.ok(text.includes('- [Give](https://www.fbcmuncie.org/give)\n'));
   assert.ok(
-    text.includes('- Church Trac (newsletters and the app): https://fbcmuncie.churchtrac.com/'),
+    text.includes(
+      '- Church Trac (the calendar, the connection card and the app): https://fbcmuncie.churchtrac.com/',
+    ),
   );
+  assert.ok(!text.includes('Church Center'), 'the church is leaving Church Center');
   assert.ok(text.includes('https://www.fbcmuncie.org/blog/rss.xml'));
   assert.ok(text.includes('https://www.fbcmuncie.org/llms-full.txt'));
   assert.ok(!text.includes('—'), 'no em-dash (CLAUDE.md rule 2)');
