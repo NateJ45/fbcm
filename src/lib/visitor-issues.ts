@@ -113,14 +113,18 @@ export function monthOf(title: string | null | undefined): number {
 
 /**
  * The asset id in a Sanity CDN file address:
- * https://cdn.sanity.io/files/<project>/<dataset>/<hash>.pdf gives <hash>.
+ * https://cdn.sanity.io/files/<project>/<dataset>/<hash>.pdf, or this site's
+ * /files/<hash>.pdf, gives <hash>.
  * Null for any other address (it has no stable id to key a cover by).
  */
 export function assetKey(fileUrl: string | null | undefined): string | null {
   const url = clean(fileUrl);
-  const m = url.match(
-    /^https:\/\/cdn\.sanity\.io\/files\/[^/]+\/[^/]+\/([0-9a-f]{16,64})\.[a-z0-9]+(?:[?#].*)?$/i,
-  );
+  // Also this site's own /files/<hash>.pdf, which every file address becomes
+  // on the way out of Sanity since 2026-09-26 (src/lib/file-url.ts).
+  const m =
+    url.match(
+      /^https:\/\/cdn\.sanity\.io\/files\/[^/]+\/[^/]+\/([0-9a-f]{16,64})\.[a-z0-9]+(?:[?#].*)?$/i,
+    ) ?? url.match(/^\/files\/([0-9a-f]{16,64})\.[a-z0-9]+(?:[?#].*)?$/i);
   return m ? m[1].toLowerCase() : null;
 }
 

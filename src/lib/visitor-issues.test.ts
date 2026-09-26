@@ -44,6 +44,12 @@ test('the asset id is the hash in the CDN address, or null', () => {
     assetKey(`${CDN}/de132347204944b39b114a243047446336c93c8a.pdf?dl=`),
     'de132347204944b39b114a243047446336c93c8a',
   );
+  // The site's own /files/ address (src/lib/file-url.ts) keys the same cover.
+  assert.equal(
+    assetKey('/files/de132347204944b39b114a243047446336c93c8a.pdf'),
+    'de132347204944b39b114a243047446336c93c8a',
+  );
+  assert.equal(assetKey('/files/../x.pdf'), null);
   assert.equal(assetKey('https://example.org/a.pdf'), null);
   assert.equal(assetKey(''), null);
 });

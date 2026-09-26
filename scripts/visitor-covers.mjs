@@ -76,7 +76,16 @@ const CACHE_VERSION = 1;
 const CONCURRENCY = 3;
 const TIMEOUT_MS = 180_000;
 
-const write = (manifest, records) => {
+const { rewriteFileUrls } = await import('../src/lib/file-url.ts');
+const write = (rawManifest, rawRecords) => {
+  // The site links PDFs through its own /files/ route (src/lib/file-url.ts,
+  // 2026-09-26: every direct cdn.sanity.io download was Sanity bandwidth).
+  // This step keeps the Sanity address internally, to download a new issue
+  // and draw its cover; only what it WRITES points at /files/.
+  const project = env.PUBLIC_SANITY_PROJECT_ID ?? '';
+  const dataset = env.PUBLIC_SANITY_DATASET || 'production';
+  const manifest = rewriteFileUrls(rawManifest, project, dataset);
+  const records = rewriteFileUrls(rawRecords, project, dataset);
   mkdirSync(dirname(manifestPath), { recursive: true });
   const body = `${JSON.stringify(manifest, null, 1)}\n`;
   // Unchanged content is not rewritten, so Vite sees no change on a warm build.

@@ -28,6 +28,7 @@
 //   works exactly as before.
 
 import { createClient, type SanityClient } from '@sanity/client';
+import { hasFileUrl, rewriteFileUrls } from './file-url.ts';
 import { createImageUrlBuilder } from '@sanity/image-url';
 // From the package ROOT, not the old `@sanity/image-url/lib/types/types` deep
 // path: v2 declares `exports` and only publishes `.`, `./signed` and
@@ -158,7 +159,13 @@ export async function sanityFetch<T>(
     // page, band and SEO field gets them without any component knowing. See
     // src/lib/settings-placeholders.ts. Most results carry none, and pay only
     // the cheap scan.
-    return hasPlaceholder(result) ? fillPlaceholders(result, await settingsValues()) : result;
+    const filled = hasPlaceholder(result)
+      ? fillPlaceholders(result, await settingsValues())
+      : result;
+    // Sanity FILE addresses (the PDFs) become this site's /files/<name>, so a
+    // download is served from R2 or Cloudflare's cache instead of costing
+    // Sanity bandwidth (src/lib/file-url.ts, 2026-09-26). Images untouched.
+    return hasFileUrl(filled) ? rewriteFileUrls(filled, projectId, dataset) : filled;
   } catch (err) {
     // A production build must not quietly ship placeholder content: if Sanity is
     // unreachable or refusing requests (a quota block, an outage), fail the
