@@ -1,0 +1,151 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// The church app's two store buttons (2026-09-25, `feat/church-app`), shared
+// by the Home band (src/components/home/ChurchAppBand.astro) and the footer's
+// Office column, so the two cannot drift apart.
+//
+// NOT APPLE'S OR GOOGLE'S BADGE. Both companies publish official badge
+// artwork and forbid imitations of it; until the official files are added to
+// the repo (docs/PENDING.md), these are plain buttons in the site's own
+// button family (CtaLink's outline plate: the inset double rule, the UI face,
+// a 44px floor) that NAME the store in words, with no store logo. The small
+// line says which phone, the large line which store.
+//
+// Where they go comes from src/lib/church-app.ts: the App Store listing, and
+// the Google Play listing with the church's install code as its referrer, so
+// an Android phone installs the app already linked to First Baptist.
+import type { ChurchApp } from '@/lib/church-app';
+
+interface Props {
+  app: ChurchApp;
+  /** On a dark ground (the indigo band, the footer). */
+  dark?: boolean;
+  /** The footer's smaller pair. */
+  compact?: boolean;
+  class?: string;
+}
+
+const { app, dark = false, compact = false, class: extraClass = '' } = Astro.props as Props;
+
+const stores = [
+  { href: app.appStore, device: 'For iPhone', store: 'App Store', key: 'app-store' },
+  { href: app.googlePlay, device: 'For Android', store: 'Google Play', key: 'google-play' },
+];
+---
+
+<ul
+  class:list={['app-buttons', dark && 'app-dark', compact && 'app-compact', extraClass]}
+  data-app-buttons
+>
+  {
+    stores.map((s) => (
+      <li>
+        <a
+          href={s.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="app-button press-tactile"
+          data-store={s.key}
+          aria-label={`Get the church app on ${s.store}, ${s.device.toLowerCase()} (opens in a new tab)`}
+        >
+          <span class="app-button-device">{s.device}</span>
+          <span class="app-button-store">{s.store}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .app-buttons {
+    --ab-ink: var(--color-indigo);
+    --ab-ring: var(--color-ring);
+    --ab-fill: var(--color-bg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .app-dark {
+    --ab-ink: var(--color-bg);
+    --ab-ring: var(--color-bg);
+  }
+  .app-buttons > li {
+    display: flex;
+    min-width: 0;
+  }
+  /* The outline plate of the button family, drawn with a pseudo-element rule
+     (as CtaLink's onDark outline is) so it reads on any ground. */
+  .app-button {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 44px;
+    width: 100%;
+    min-width: 13.5rem;
+    padding: 0.7em 1.4em 0.75em;
+    border: 1px solid var(--ab-ink);
+    border-radius: 2px;
+    color: var(--ab-ink);
+    font-family: var(--font-ui);
+    line-height: 1.1;
+    text-decoration: none;
+    transition:
+      background-color 0.2s,
+      transform 0.2s;
+  }
+  .app-button::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border: 1px solid currentColor;
+    border-radius: 1px;
+    pointer-events: none;
+  }
+  .app-button:hover {
+    background: color-mix(in srgb, var(--ab-ink) 10%, transparent);
+    transform: translateY(-1px);
+  }
+  .app-button:focus-visible {
+    outline: 2px solid var(--ab-ring);
+    outline-offset: 3px;
+  }
+  .app-button-device {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .app-button-store {
+    margin-top: 3px;
+    font-family: var(--font-display);
+    font-size: 1.3125rem;
+    letter-spacing: 0.02em;
+  }
+  /* The footer's pair: stacked, one width, the wider label's. */
+  .app-compact {
+    display: inline-grid;
+    grid-template-columns: max-content;
+    gap: 10px;
+  }
+  .app-compact .app-button {
+    min-width: 0;
+    padding: 0.55em 1.05em 0.6em;
+  }
+  .app-compact .app-button-device {
+    font-size: 0.6875rem;
+  }
+  .app-compact .app-button-store {
+    font-size: 1.0625rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .app-button:hover {
+      transform: none;
+    }
+  }
+</style>

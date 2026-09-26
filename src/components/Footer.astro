@@ -94,6 +94,10 @@ import { NEWSLETTERS } from '@/lib/church-trac-newsletters';
 import { telHref } from '@/lib/phone';
 import { splitStega, reattachStega } from '@/lib/preview-stega';
 import { clockParts, staticSunday, timeOnly } from '@/lib/live-sunday';
+// scaffold: church
+import AppButtons from '@/components/church/AppButtons.astro';
+import { churchApp } from '@/lib/church-app';
+// scaffold:end
 
 // Passed through Astro's pipeline for a cache-busted URL. No width variants and
 // no webp conversion: this is an SVG, so one file is sharp at every size and
@@ -131,6 +135,7 @@ interface Props {
         socialFacebook?: string;
         socialLinks?: { platform?: string; url?: string; label?: string }[] | null;
         youtubeUrl?: string;
+        appUrl?: string;
         tagline?: string;
         footerCredit?: string;
         footerCreditUrl?: string;
@@ -217,6 +222,13 @@ const footerCtaIsExternal = /^https?:\/\//i.test(footerCta.href);
 // is icon-only, so its accessible name says whose account it is: "First
 // Baptist Church Muncie on Facebook", not a bare "Facebook".
 const socialLinksToRender = chrome.showFooterSocials ? socialLinksOf(siteSettings) : [];
+
+// THE CHURCH APP (2026-09-25, feat/church-app): the two store buttons at the
+// foot of the Office column, the Home band's pair in small, from Site
+// settings' "Church app" link (src/lib/church-app.ts). No link, no buttons.
+// scaffold: church
+const footerApp = churchApp(siteSettings?.appUrl);
+// scaffold:end
 
 // Copyright auto-updates every build via new Date(). The credit line is a
 // SEPARATE concept that sits next to it in the thin bottom bar.
@@ -475,6 +487,24 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
               </ul>
             )
           }
+          {/* scaffold: church */}
+          {
+            footerApp && (
+              <div class="mt-l" data-footer-app>
+                <p class={columnHeading}>The church app</p>
+                <AppButtons app={footerApp} dark compact />
+                {footerApp.code && (
+                  <p class="mt-s font-ui text-[0.8125rem] text-bg/75">
+                    Install code{' '}
+                    <span class="font-display text-[1rem] tracking-[0.12em] text-bg">
+                      {footerApp.code}
+                    </span>
+                  </p>
+                )}
+              </div>
+            )
+          }
+          {/* scaffold:end */}
         </div>
       </div>
     </div>

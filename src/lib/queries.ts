@@ -313,6 +313,10 @@ export const SITE_SETTINGS_PROJECTION = `{
     // the post page upgrades {sermons} to one recording. The link tokens
     // themselves are filled at the fetch (src/lib/settings-placeholders.ts).
     sermonsUrl,
+    // The church app's share link: the Home band and the footer's store
+    // buttons read it, and the install code is derived from it
+    // (src/lib/church-app.ts).
+    appUrl,
     mapImage${IMAGE_PROJECTION},
     directionsUrl,
     // The street address, used by the sundayTimes block's fallback card when no

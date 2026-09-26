@@ -503,6 +503,55 @@ search. No schema changed; the page is two `documentListSection` blocks seeded b
   (`node scripts/page-fixture.mjs visitor`) through SectionRenderer; delete both once `/visitor`
   is published.
 
+### The church app (2026-09-25, `feat/church-app`)
+
+Church Trac's free member app, which Church Trac calls "Church Connect" and both stores list as
+"ChurchTrac Connect App" (ChurchTrac Software, Inc.). Everything is derived from Site settings'
+"Church app" link, `appUrl` (the church's share link, `https://open.churchtrac.com?code=8PG6ZJ`),
+through `src/lib/church-app.ts` (unit-tested, `church-app.test.ts`): `installCode()` reads the
+six-character `code` parameter from a churchtrac.com address (stega-cleaned first), and
+`churchApp()` returns the share link, the code and the two store links, or null when the box is
+empty or not an http(s) address, and then nothing is drawn anywhere. The store listings are code
+constants (`APP_STORE_URL`, `GOOGLE_PLAY_URL`), the same for every Church Trac church; the Google
+Play link carries `referrer=code%3D<code>`, derived, which is exactly where the share link sends
+an Android phone (so it installs already linked). Measured 2026-09-25: the share link 302s an
+iPhone to `itms-apps://apps.apple.com/us/app/id6737914083`, an Android phone to the Play listing
+with that referrer, and a desktop browser to the church's Church Connect site
+(`fbcmuncie.churchtrac.com/connect`), which shows both badges and the install code itself.
+`appUrl` was added to `SITE_SETTINGS_PROJECTION` for this; until then it was never fetched, so
+the newsletters' "Get the church app" button (`Newsletter.astro`) never rendered and now does.
+
+- **Home** (`src/components/home/ChurchAppBand.astro`), placed from code through
+  SectionRenderer's `insert` slot after What's On (the calendar and the news the app carries are
+  the two bands above it), before the Church Blog rows. What's On's split (words 5/12, art 7/12
+  from 1024 px), the h2 "The Church App" in the shared grammar, the eyebrow "Free for iPhone and
+  Android". Words: one sentence, the gold "Get the app" plate (the share link, new tab), the two
+  store buttons, and the install code as six tiles in the display capitals under a gold rule
+  (one spelled-out `sr-only` string for a screen reader) with a line on when to type it. Art:
+  a lancet arch (ArchFrame's lancet path) filled with the indigo band under a gold mould, a gold
+  phone with a paper screen standing on its sill showing the church's name, its Church Connect
+  motto "Love, Joy, Peace" and the four things the app is for; `aria-hidden`, because the list
+  beside it says the same in words (What's On, Prayer List, Ministry news, Church updates, as
+  What's On's rows). The ground follows What's On by The Visitor's rule (`visitorGround`,
+  decided in `index.astro`). What the list promises is only what Church Trac's own pages say
+  the app does AND what this church's Church Connect site shows it uses (upcoming events, the
+  Prayer List, The Kid's Corner and The Moose's Message, notifications); giving, the directory
+  and check-in are Church Trac features the church has not been seen to use, so they are left
+  out.
+- **The store buttons** (`src/components/church/AppButtons.astro`), shared by the band and the
+  footer. Not Apple's or Google's badge: both publish official artwork and forbid imitations,
+  so until the official files are added (docs/PENDING.md) these are outline plates in the
+  button family naming the store in words ("For iPhone / App Store", "For Android / Google
+  Play"), no logos, 44 px minimum, new tab.
+- **Footer.** The same pair, compact and stacked at one width, at the foot of the Office column
+  under "The church app", then "Install code 8PG6ZJ". Every page built from Site settings; the
+  styleguide pages have no settings and so no buttons. Not in the mobile menu: its foot is a
+  React island fed by Header props, and the footer is one scroll away on every page.
+- **Tests.** `tests/church-app.spec.ts`: the band's links, code and list, its place after What's
+  On, axe on the band and the footer, the footer pair on every route, no overflow and 44 px
+  targets at 320 on `/` and `/visit`. No QR code: none can be drawn at build time without a new
+  dependency.
+
 ### The visitor audit on /visit and Home (2026-09-25, `feat/visit-fixes`)
 
 A visitor audit (a family with children of 6 and 10, new to Muncie, on a phone) found four
