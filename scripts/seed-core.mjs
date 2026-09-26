@@ -647,7 +647,8 @@ docs.push({
       title: 'Add or remove a staff member',
       steps: [
         'Open "People" then "Staff members" from the left navigation.',
-        'Click "New" to add someone, or open an existing person to edit or remove them.',
+        'Click "New" to add someone, or open an existing person to change their details.',
+        'To take someone off the website, turn off "Show on the Staff page". Their details stay here, so you can turn it back on later.',
         'Set their group (Pastors, Church Coordination Team, or Support and volunteer roles).',
         'Click Publish.',
       ],
@@ -704,7 +705,7 @@ docs.push({
       _key: key(),
       heading: 'Edit on the page, not in a list of fields',
       tone: 'positive',
-      body: 'The Preview tool is the easiest way to work. You see the real page, click the thing you want to change, and the right field opens. You can also add, reorder, and remove whole sections without leaving the page. Everything you do there is a draft until you press Publish.',
+      body: 'The Presentation tab is the easiest way to work. You see the real page, click the thing you want to change, and the right field opens. You can also add, reorder, and remove whole sections without leaving the page. Everything you do there is a draft until you press Publish.',
     },
     {
       _type: 'tip',

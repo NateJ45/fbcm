@@ -1,0 +1,510 @@
+{
+  "studioNotes": {
+    "_createdAt": "2026-09-19T19:09:28Z",
+    "_id": "studioNotes",
+    "_rev": "76n5oA2VRzKOmE8UARB5hg",
+    "_type": "studioNotes",
+    "_updatedAt": "2026-09-19T19:09:28Z",
+    "businessSummary": "First Baptist Church Muncie, at 309 East Adams Street. Replace this with a short, plain description of the church for anyone writing for the site: who the congregation is, and what a visitor should know before their first Sunday.",
+    "idealClient": "Replace this with a description of who the church is writing for online: a longtime member checking the service time, or someone considering visiting for the first time. The more clearly this is described, the easier it is to write pages that speak to them.",
+    "voiceSummary": "Replace this with a description of the church’s voice in writing. Warm and plain-spoken? Formal? Pick a description in a sentence or two so anyone writing for the site sounds consistent.",
+    "wordsToAvoid": [
+      "transformative",
+      "curated",
+      "elevated",
+      "tailored",
+      "seamless",
+      "synergy"
+    ]
+  },
+  "siteSettings": {
+    "_createdAt": "2026-09-19T14:00:18Z",
+    "_id": "siteSettings",
+    "_rev": "Ys0n1JF87Egki86mmWhq1C",
+    "_type": "siteSettings",
+    "_updatedAt": "2026-09-26T01:32:49Z",
+    "address": "309 East Adams Street\nMuncie, IN 47305",
+    "appUrl": "https://open.churchtrac.com?code=8PG6ZJ",
+    "calendarUrl": "https://www.churchtrac.com/public_calendar?ui=0C7B1090",
+    "churchTracUrl": "https://fbcmuncie.churchtrac.com/",
+    "directionsUrl": "https://www.google.com/maps/search/?api=1&query=309+East+Adams+Street+Muncie+IN+47305",
+    "email": "office@fbcmuncie.org",
+    "footerColumns": [
+      {
+        "_key": "fcol-pages",
+        "_type": "footerColumn",
+        "links": [
+          {
+            "_key": "fcol-pages-visit",
+            "_type": "navLink",
+            "href": "/visit",
+            "label": "Visit"
+          },
+          {
+            "_key": "fcol-pages-who",
+            "_type": "navLink",
+            "href": "/who-we-are",
+            "label": "Who We Are"
+          },
+          {
+            "_key": "fcol-pages-beliefs",
+            "_type": "navLink",
+            "href": "/beliefs",
+            "label": "Beliefs"
+          },
+          {
+            "_key": "fcol-pages-ministries",
+            "_type": "navLink",
+            "href": "/ministries",
+            "label": "Ministries"
+          },
+          {
+            "_key": "fcol-pages-staff",
+            "_type": "navLink",
+            "href": "/staff",
+            "label": "Staff"
+          },
+          {
+            "_key": "fcol-pages-history",
+            "_type": "navLink",
+            "href": "/history",
+            "label": "History"
+          },
+          {
+            "_key": "fcol-pages-give",
+            "_type": "navLink",
+            "href": "/give",
+            "label": "Give"
+          },
+          {
+            "_key": "fcol-pages-blog",
+            "_type": "navLink",
+            "href": "/blog",
+            "label": "Blog"
+          },
+          {
+            "_key": "fcol-pages-wedding",
+            "_type": "navLink",
+            "href": "/wedding",
+            "label": "Weddings and Building Use"
+          },
+          {
+            "_key": "fcol-pages-contact",
+            "_type": "navLink",
+            "href": "/contact",
+            "label": "Contact"
+          }
+        ],
+        "title": "Pages"
+      },
+      {
+        "_key": "fcol-elsewhere",
+        "_type": "footerColumn",
+        "links": [
+          {
+            "_key": "fcol-elsewhere-ct",
+            "_type": "navLink",
+            "externalUrl": "https://fbcmuncie.churchtrac.com/",
+            "label": "Church Trac: newsletters and the app",
+            "linkType": "external"
+          },
+          {
+            "_key": "fcol-elsewhere-yt",
+            "_type": "navLink",
+            "externalUrl": "https://www.youtube.com/c/FbcmuncieOrg",
+            "label": "YouTube: every service",
+            "linkType": "external"
+          }
+        ],
+        "title": "Elsewhere"
+      }
+    ],
+    "headerCta": {
+      "label": "Give",
+      "link": {
+        "_type": "navLink",
+        "externalUrl": "{giving}",
+        "label": "Give",
+        "linkType": "external"
+      },
+      "show": true
+    },
+    "livestreamUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+    "navItems": [
+      {
+        "_key": "nav-visit",
+        "_type": "navLink",
+        "href": "/visit",
+        "label": "Visit"
+      },
+      {
+        "_key": "nav-group-who",
+        "_type": "navGroup",
+        "label": "Our Church",
+        "links": [
+          {
+            "_key": "sub-who",
+            "_type": "navSubLink",
+            "href": "/who-we-are",
+            "label": "Who We Are"
+          },
+          {
+            "_key": "sub-beliefs",
+            "_type": "navSubLink",
+            "href": "/beliefs",
+            "label": "Beliefs"
+          },
+          {
+            "_key": "sub-staff",
+            "_type": "navSubLink",
+            "href": "/staff",
+            "label": "Staff"
+          },
+          {
+            "_key": "sub-history",
+            "_type": "navSubLink",
+            "href": "/history",
+            "label": "History"
+          },
+          {
+            "_key": "sub-contact",
+            "_type": "navSubLink",
+            "href": "/contact",
+            "label": "Contact"
+          }
+        ]
+      },
+      {
+        "_key": "nav-ministries",
+        "_type": "navLink",
+        "href": "/ministries",
+        "label": "Ministries"
+      },
+      {
+        "_key": "nav-whats-on",
+        "_type": "navLink",
+        "href": "/events",
+        "label": "What's On"
+      },
+      {
+        "_key": "nav-weddings",
+        "_type": "navLink",
+        "href": "/wedding",
+        "label": "Weddings"
+      },
+      {
+        "_key": "nav-group-news",
+        "_type": "navGroup",
+        "label": "News",
+        "links": [
+          {
+            "_key": "sub-blog",
+            "_type": "navSubLink",
+            "href": "/blog",
+            "label": "Blog"
+          },
+          {
+            "_key": "sub-visitor",
+            "_type": "navSubLink",
+            "href": "/visitor",
+            "label": "The Visitor"
+          },
+          {
+            "_key": "sub-kids-corner",
+            "_type": "navSubLink",
+            "href": "/kids-corner",
+            "label": "The Kid's Corner"
+          },
+          {
+            "_key": "sub-youth-news",
+            "_type": "navSubLink",
+            "href": "/youth-news",
+            "label": "The Moose's Message"
+          }
+        ]
+      }
+    ],
+    "newsletter": {
+      "blurb": "Say what a subscriber gets and how often. Replace this line.",
+      "buttonLabel": "Subscribe",
+      "consentNote": "No spam. Unsubscribe anytime.",
+      "enabled": false,
+      "heading": "Your signup heading goes here.",
+      "successMessage": "You're in. Check your inbox."
+    },
+    "officeHours": [
+      {
+        "_key": "seed-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-2",
+            "_type": "span",
+            "marks": [],
+            "text": "Monday to Thursday: 9 am to 12 pm and 1 pm to 4 pm"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "seed-3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-4",
+            "_type": "span",
+            "marks": [],
+            "text": "Friday: 9 am to 12 pm"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "seed-5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-6",
+            "_type": "span",
+            "marks": [],
+            "text": "Sunday: 9 am to 12 pm"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "seed-7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-8",
+            "_type": "span",
+            "marks": [],
+            "text": "Hours may change on holidays."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "pastoralHours": [
+      {
+        "_key": "seed-9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-10",
+            "_type": "span",
+            "marks": [],
+            "text": "Tuesdays: 9 am to 12 pm and 1 pm to 5 pm"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "phone": "(765) 284-7749",
+    "prayerUrl": "https://fbcmuncie.churchtrac.com/pray",
+    "sectionVisibility": {
+      "showJournal": true
+    },
+    "serviceLength": "About an hour",
+    "serviceTime": "Sundays at 10:45 am",
+    "socialLinks": [
+      {
+        "_key": "k0",
+        "_type": "socialLink",
+        "platform": "Facebook",
+        "url": "https://www.facebook.com/firstbaptistmuncie"
+      },
+      {
+        "_key": "k1",
+        "_type": "socialLink",
+        "platform": "Instagram",
+        "url": "https://www.instagram.com/fbcmuncie/"
+      },
+      {
+        "_key": "social-threads",
+        "_type": "socialLink",
+        "platform": "Threads",
+        "url": "https://www.threads.net/@fbcmuncie"
+      },
+      {
+        "_key": "social-linktree",
+        "_type": "socialLink",
+        "platform": "Linktree",
+        "url": "https://linktr.ee/fbcmuncie"
+      }
+    ],
+    "tagline": "We're a Spirit-led people gathered to join Christ's presence in our community.",
+    "title": "First Baptist Church Muncie",
+    "visitorFormUrl": "https://fbcmuncie.churchtrac.com/connectcard",
+    "youtubeUrl": "https://www.youtube.com/c/FbcmuncieOrg"
+  },
+  "studioGuide": {
+    "_createdAt": "2026-09-19T19:09:27Z",
+    "_id": "studioGuide",
+    "_rev": "F5Duw02wR0YDcoTNSZSfTx",
+    "_type": "studioGuide",
+    "_updatedAt": "2026-09-19T19:09:27Z",
+    "guideIntro": "This guide walks you through where everything lives in the Studio and how to make changes to the website without breaking anything.",
+    "guideTitle": "How the website works",
+    "howTos": [
+      {
+        "_key": "seed-94",
+        "_type": "howTo",
+        "steps": [
+          "Open \"Blog\" then \"Posts\" from the left navigation.",
+          "Click \"New\" (or the plus button) to start a post.",
+          "Fill in the title and the text of the preview, and pick the category \"Sermon Preview\".",
+          "Click Publish."
+        ],
+        "title": "Post this week’s sermon preview"
+      },
+      {
+        "_key": "seed-95",
+        "_type": "howTo",
+        "steps": [
+          "Open \"Site settings\" from the left navigation.",
+          "Click the \"Church details\" tab at the top of the form.",
+          "Edit the service time or office hours field.",
+          "Click Publish."
+        ],
+        "title": "Change the service time or office hours"
+      },
+      {
+        "_key": "seed-96",
+        "_type": "howTo",
+        "steps": [
+          "Open \"People\" then \"Staff members\" from the left navigation.",
+          "Click \"New\" to add someone, or open an existing person to edit or remove them.",
+          "Set their group (Pastors, Church Coordination Team, or Support and volunteer roles).",
+          "Click Publish."
+        ],
+        "title": "Add or remove a staff member"
+      },
+      {
+        "_key": "seed-97",
+        "_type": "howTo",
+        "steps": [
+          "Open \"Pages\" then \"Home\" from the left navigation.",
+          "Open the first section at the top of the page layout.",
+          "Find the Photos field and upload the new image, or remove the old one.",
+          "Click Publish."
+        ],
+        "title": "Change a photo on the home page"
+      },
+      {
+        "_key": "seed-98",
+        "_type": "howTo",
+        "steps": [
+          "The site rebuilds itself in about two minutes.",
+          "Nobody needs to be called. The change appears on its own once the rebuild finishes."
+        ],
+        "title": "What happens when I press Publish"
+      },
+      {
+        "_key": "seed-99",
+        "_type": "howTo",
+        "steps": [
+          "\"Remove field\": it deletes that information from every page.",
+          "If you see it next to something, leave it alone and ask for help instead."
+        ],
+        "title": "The one button never to press"
+      },
+      {
+        "_key": "seed-100",
+        "_type": "howTo",
+        "steps": [
+          "Open the Media library and click Upload.",
+          "Photos of children need a signed consent form on file at the office before they go up."
+        ],
+        "title": "Add a photo to the Staff page or a blog post"
+      }
+    ],
+    "studioMap": [
+      {
+        "_key": "seed-87",
+        "_type": "mapRow",
+        "area": "Home page",
+        "description": "The sections on the front page of the site: the photo and headline at the top, and everything below it. Drag to reorder, or add and remove sections from the same screen."
+      },
+      {
+        "_key": "seed-88",
+        "_type": "mapRow",
+        "area": "Visit page",
+        "description": "What a first-time visitor needs to know before they come: service time, address, what to expect, and parking. Set once, changed rarely."
+      },
+      {
+        "_key": "seed-89",
+        "_type": "mapRow",
+        "area": "The other pages",
+        "description": "Who We Are, Beliefs, and History live under Pages too, built from the same section library as the home page."
+      },
+      {
+        "_key": "seed-90",
+        "_type": "mapRow",
+        "area": "Blog posts",
+        "description": "Sermon previews and church news. Each post has a title, a category, and the text of the post. New posts appear on the Blog page automatically."
+      },
+      {
+        "_key": "seed-91",
+        "_type": "mapRow",
+        "area": "Staff members",
+        "description": "Everyone on the Staff page: pastors, the coordination team, and support and volunteer roles. Each one has a name, role, photo, and short bio."
+      },
+      {
+        "_key": "seed-92",
+        "_type": "mapRow",
+        "area": "Ministries",
+        "description": "The church’s groups and programs, like Children or Outreach. Each one has a name, a short summary, and a longer description."
+      },
+      {
+        "_key": "seed-93",
+        "_type": "mapRow",
+        "area": "Site settings",
+        "description": "The church’s name, service time, office hours, address, and the links in the header and footer. Most of the site reads from here."
+      }
+    ],
+    "tips": [
+      {
+        "_key": "seed-101",
+        "_type": "tip",
+        "body": "Open Site settings first and check the service time, office hours, address, and contact details are correct. Most of the site reads from here.",
+        "heading": "Start with Site settings",
+        "tone": "primary"
+      },
+      {
+        "_key": "seed-102",
+        "_type": "tip",
+        "body": "The Preview tool is the easiest way to work. You see the real page, click the thing you want to change, and the right field opens. You can also add, reorder, and remove whole sections without leaving the page. Everything you do there is a draft until you press Publish.",
+        "heading": "Edit on the page, not in a list of fields",
+        "tone": "positive"
+      },
+      {
+        "_key": "seed-103",
+        "_type": "tip",
+        "body": "When you click Publish, the site rebuilds itself in about two minutes. There is no staging step and nobody needs to be called. If you want to draft something before it goes live, leave it as a draft and come back to it.",
+        "heading": "Publishing is not instant, but it is automatic",
+        "tone": "default"
+      },
+      {
+        "_key": "seed-104",
+        "_type": "tip",
+        "body": "Before adding a photo of a child to the Staff page or a blog post, check that a signed consent form is on file at the office.",
+        "heading": "Photos of children need a consent form on file first",
+        "tone": "caution"
+      },
+      {
+        "_key": "seed-105",
+        "_type": "tip",
+        "body": "If a screen looks wrong, or you see a \"Remove field\" button, stop and ask for help rather than guessing. Nothing else in the Studio can be broken by clicking around.",
+        "heading": "Stuck? Ask before you delete anything",
+        "tone": "caution"
+      }
+    ]
+  }
+}
