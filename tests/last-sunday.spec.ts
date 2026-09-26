@@ -93,12 +93,14 @@ test.describe('Home: Last Sunday', () => {
     // Its place: right after "Our Building", right before the blog rows. The
     // Visitor band (feat/the-visitor, enlarged in feat/visitor-band) and
     // What's On (the Church Trac calendar, 2026-09-25) share the slot and
-    // follow it, so they are stepped over when present.
+    // follow it, so they are stepped over when present, and so is the church
+    // app band after What's On (feat/church-app, 2026-09-25).
     const order = await page.evaluate(() => {
       const band = document.querySelector('section.ls-band');
       let next = band?.nextElementSibling ?? null;
       if (next?.matches('section.vb-band')) next = next.nextElementSibling;
       if (next?.matches('section.wo-band')) next = next.nextElementSibling;
+      if (next?.matches('section.ca-band')) next = next.nextElementSibling;
       return {
         before: band?.previousElementSibling?.id ?? '',
         after: next?.querySelector('section')?.getAttribute('class') ?? '',
