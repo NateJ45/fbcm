@@ -1,0 +1,552 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// THE CONTENTS BAR (2026-09-25, branch feat/history-contents). A sticky
+// indigo ribbon that follows a long timeline page down and jumps between its
+// parts. SectionRenderer renders it just before a timeline that is a table of
+// contents (src/lib/timeline-contents.ts derives the entries, the span and the
+// opt-in from the timeline block itself; nothing here is typed, rule 15). Only
+// /history qualifies today.
+//
+// WHY A RIBBON AND NOT A SIDE RAIL. The page's bands are full-bleed grounds
+// (indigo, brown, taupe, gold) whose photographs bleed to the viewport edge,
+// and the content column is 1400px wide, so up to 1544px there is no gutter a
+// rail could sit in without covering a photograph or narrowing every era band
+// into a column beside it. The ribbon is one bar across the top instead, in
+// the header's own brand furniture: indigo, with the gold rule of the GIVE
+// plate.
+//
+//   - Wide (>= 1024px): the timeline's heading, then one link per part as its
+//     year set in Castoro Titling, the part in view in gold with a gold rule
+//     under it, and its title in italics at the end of the bar.
+//   - Narrow: the part in view and a "Jump to" control, a <details> whose
+//     summary is the whole 48px bar (a thumb-sized target) and whose list
+//     drops over the page with each part a 48px row. <details> opens and
+//     closes with no script at all.
+//
+// STICKY, AND IN STEP WITH THE HEADER. The bar sits in #main before the
+// timeline and is `position: sticky`, so it needs no script to follow the page
+// (the links jump without one too). The site header is not always there: it
+// scrolls away going down and slides back in going up (globals.css, "Sticky
+// header behavior"), so the bar rides at the top of the window while the
+// header is away and below the header (--header-h) while it is pinned,
+// sliding with it. Every anchor under #main is given scroll-margin for the
+// header offset plus the bar, so a jump lands below both.
+//
+// THE PART IN VIEW is read by ONE IntersectionObserver whose root is a
+// one-pixel line just under where a jump lands, watching the bands between
+// the timeline and the end of the span: no scroll listener, no layout reads
+// while scrolling. Past the span (History's "Two books") the bar steps aside.
+import type { TimelineContents } from '@/lib/timeline-contents';
+
+interface Props {
+  contents: TimelineContents;
+  /** Wrapper id of the first band in the span (the timeline). */
+  fromId: string;
+  /** Wrapper id of the last band in the span. */
+  toId: string;
+}
+
+const { contents, fromId, toId } = Astro.props as Props;
+const { top, entries } = contents;
+---
+
+<nav class="hc-bar" aria-label="Contents" data-hc data-hc-from={fromId} data-hc-to={toId}>
+  <div class="hc-in mx-auto max-w-content px-gutter">
+    <ol class="hc-strip" role="list">
+      <li class="hc-top">
+        <a href={`#${top.id}`} data-hc-link={top.id}>{top.label}</a>
+      </li>
+      {
+        entries.map((e) => (
+          <li>
+            <a href={`#${e.id}`} data-hc-link={e.id} data-hc-title={e.title}>
+              <span class="hc-year">{e.year}</span>
+              {e.rest && <span class="sr-only">{e.rest}</span>}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="hc-now" aria-hidden="true" data-hc-now></p>
+
+    <details class="hc-jump">
+      <summary>
+        <span class="hc-cur">
+          <span class="hc-cur-when" data-hc-cur-when></span>
+          <span data-hc-cur-name>{top.label}</span>
+        </span>
+        <span class="hc-go">
+          Jump to
+          <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" focusable="false">
+            <path d="M1 1.5 6 6.5l5-5" fill="none" stroke="currentColor" stroke-width="1.8"></path>
+          </svg>
+        </span>
+      </summary>
+      <ol class="hc-list" role="list">
+        <li>
+          <a href={`#${top.id}`} data-hc-link={top.id}>
+            <span class="hc-l-when"></span>
+            <span class="hc-l-name">{top.label}</span>
+          </a>
+        </li>
+        {
+          entries.map((e) => (
+            <li>
+              <a href={`#${e.id}`} data-hc-link={e.id}>
+                <span class="hc-l-when">{e.marker}</span>
+                <span class="hc-l-name">{e.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </details>
+  </div>
+</nav>
+
+<script>
+  // One observer per page; torn down before a View Transitions swap.
+  let teardown: (() => void) | null = null;
+
+  function initContents() {
+    teardown?.();
+    teardown = null;
+    const nav = document.querySelector<HTMLElement>('[data-hc]');
+    const main = document.getElementById('main');
+    if (!nav || !main || !('IntersectionObserver' in window)) return;
+    const details = nav.querySelector<HTMLDetailsElement>('details');
+    const summary = details?.querySelector('summary') ?? null;
+    const links = [...nav.querySelectorAll<HTMLAnchorElement>('[data-hc-link]')];
+    const order = [...nav.querySelectorAll<HTMLAnchorElement>('.hc-strip [data-hc-link]')].map(
+      (a) => a.dataset.hcLink ?? '',
+    );
+    const nowEl = nav.querySelector<HTMLElement>('[data-hc-now]');
+    const curWhen = nav.querySelector<HTMLElement>('[data-hc-cur-when]');
+    const curName = nav.querySelector<HTMLElement>('[data-hc-cur-name]');
+    const topLabel = curName?.textContent ?? '';
+
+    // Each band wrapper in page order, mapped to the part it belongs to: the
+    // last entry at or before it inside the span, `null` above the span and
+    // 'past' below it.
+    const part = new Map<Element, string | null>();
+    let state: 'before' | 'in' | 'after' = 'before';
+    let current: string | null = null;
+    for (const el of Array.from(main.children)) {
+      if (el === nav || !el.id) continue;
+      if (el.id === nav.dataset.hcFrom) state = 'in';
+      if (state === 'in') {
+        if (order.includes(el.id)) current = el.id;
+        part.set(el, current);
+      } else {
+        part.set(el, state === 'before' ? null : 'past');
+      }
+      if (el.id === nav.dataset.hcTo) state = 'after';
+    }
+
+    let shown: string | null | undefined;
+    const show = (id: string | null) => {
+      if (id === shown) return;
+      shown = id;
+      const past = id === 'past';
+      nav.toggleAttribute('data-past', past);
+      if (past && details) details.open = false;
+      const active = past ? null : id;
+      let marker = '';
+      let title = '';
+      for (const a of links) {
+        const on = !!active && a.dataset.hcLink === active;
+        if (on) a.setAttribute('aria-current', 'location');
+        else a.removeAttribute('aria-current');
+        if (on && a.closest('.hc-list')) {
+          marker = a.querySelector('.hc-l-when')?.textContent ?? '';
+          title = a.querySelector('.hc-l-name')?.textContent ?? '';
+        }
+      }
+      const isTop = !active || active === order[0];
+      if (nowEl) nowEl.textContent = isTop ? '' : title;
+      if (curWhen) curWhen.textContent = isTop ? '' : marker;
+      if (curName) curName.textContent = isTop ? topLabel : title;
+    };
+
+    // The line sits 2px under where a jump lands (the scroll-margin every
+    // anchor under #main carries), so the part a link lands on is the part in
+    // view the moment it arrives.
+    const inView = new Set<Element>();
+    let io: IntersectionObserver | null = null;
+    const observe = () => {
+      io?.disconnect();
+      inView.clear();
+      const probe = document.getElementById(nav.dataset.hcFrom ?? '');
+      const margin = probe ? parseFloat(getComputedStyle(probe).scrollMarginTop) || 0 : 0;
+      const line = Math.round(margin + 2);
+      const below = Math.max(0, window.innerHeight - line - 1);
+      io = new IntersectionObserver(
+        (records) => {
+          for (const r of records) {
+            if (r.isIntersecting) inView.add(r.target);
+            else inView.delete(r.target);
+          }
+          // Between two bands (a divider, a hairline) nothing crosses the
+          // line: keep the part already shown.
+          const first = [...part.keys()].find((el) => inView.has(el));
+          if (first) show(part.get(first) ?? null);
+        },
+        { rootMargin: `-${line}px 0px -${below}px 0px` },
+      );
+      for (const el of part.keys()) io.observe(el);
+    };
+    observe();
+
+    // The line moves with the window's height and the header's breakpoint.
+    let resizeFrame = 0;
+    const onResize = () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(observe);
+    };
+    window.addEventListener('resize', onResize, { passive: true });
+
+    // The narrow list: a jump closes it, and so do Escape and a tap outside.
+    const onClick = (e: Event) => {
+      if (details?.open && (e.target as Element).closest('.hc-list a')) details.open = false;
+    };
+    const onDocClick = (e: Event) => {
+      if (details?.open && !nav.contains(e.target as Node)) details.open = false;
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && details?.open) {
+        details.open = false;
+        summary?.focus();
+      }
+    };
+    nav.addEventListener('click', onClick);
+    document.addEventListener('click', onDocClick);
+    nav.addEventListener('keydown', onKey);
+
+    // A JUMP DOWN THE PAGE LANDS UNDER THE BAR, NOT UNDER A HEADER THAT HAS
+    // GONE. The header leaves on a scroll down and comes back on a scroll up
+    // (BaseLayout's polish script), and a click is a gesture, so a jump down
+    // ends with the header away and a jump up ends with it pinned. The
+    // margin every anchor carries allows for the header, which on a jump down
+    // left a header-sized gap above the heading. So, in the capture phase of
+    // the click, before the browser's own jump reads it, the margin is set for
+    // the direction the page is about to move; it goes back to the default
+    // (header and bar, right for a fragment landing on load) once the jump is
+    // done. The browser still does the jump: the URL, Back and Forward and
+    // reduced motion are all its own.
+    const root = document.documentElement;
+    let resetTimer = 0;
+    const onJump = (e: Event) => {
+      const a = (e.target as Element | null)?.closest?.('a[href*="#"]') as HTMLAnchorElement | null;
+      if (!a) return;
+      const url = new URL(a.href, location.href);
+      const here = (p: string) => p.replace(/\/+$/, '');
+      if (here(url.pathname) !== here(location.pathname) || url.hash.length < 2) return;
+      let target: HTMLElement | null = null;
+      try {
+        target = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+      } catch {
+        return;
+      }
+      if (!target || !main.contains(target)) return;
+      const landing = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+      if (target.getBoundingClientRect().top > landing + 4) {
+        root.style.setProperty('--hc-land', 'var(--hc-land-down)');
+      } else {
+        root.style.removeProperty('--hc-land');
+      }
+      window.clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => root.style.removeProperty('--hc-land'), 1500);
+    };
+    document.addEventListener('click', onJump, true);
+
+    teardown = () => {
+      document.removeEventListener('click', onJump, true);
+      window.clearTimeout(resetTimer);
+      root.style.removeProperty('--hc-land');
+      io?.disconnect();
+      cancelAnimationFrame(resizeFrame);
+      window.removeEventListener('resize', onResize);
+      nav.removeEventListener('click', onClick);
+      document.removeEventListener('click', onDocClick);
+      nav.removeEventListener('keydown', onKey);
+    };
+  }
+
+  initContents();
+  document.addEventListener('astro:page-load', initContents);
+  document.addEventListener('astro:before-swap', () => {
+    teardown?.();
+    teardown = null;
+  });
+</script>
+
+<style is:global>
+  /* The contents bar (TimelineContents.astro). is:global because the scroll
+     margin reaches every anchor under #main, outside this component. */
+  :root {
+    --hc-h: 48px;
+    /* A jump down ends with the header away: the bar plus the same air
+       --header-offset leaves under the header. The script switches to it. */
+    --hc-land-down: calc(var(--hc-h) + var(--header-offset) - var(--header-h, 89px));
+  }
+  /* A jump lands below the header offset AND the bar. */
+  #main:has(> .hc-bar) [id] {
+    scroll-margin-top: var(--hc-land, calc(var(--header-offset) + var(--hc-h)));
+  }
+  .hc-bar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: var(--hc-h);
+    background: var(--color-band-indigo);
+    color: var(--color-bg);
+    border-bottom: 2px solid var(--color-gold);
+  }
+  /* The header is pinned: ride under it. */
+  :root:has(.site-header[data-scrolled]) .hc-bar {
+    top: var(--header-h, 89px);
+  }
+  /* Past the span the bar steps aside (script only). */
+  .hc-bar[data-past] {
+    visibility: hidden;
+    transform: translateY(-100%);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hc-bar {
+      transition:
+        top 360ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 240ms ease,
+        visibility 240ms;
+    }
+    .hc-strip a::after,
+    .hc-go svg {
+      transition: transform 200ms ease;
+    }
+  }
+  /* The header jumps instantly when a scroll was not a gesture (a fragment
+     landing, a restored position); the bar jumps with it. */
+  :root:has(.site-header[style*='transition: none']) .hc-bar {
+    transition: none;
+  }
+  .hc-in {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+  }
+
+  /* ---- Wide: the register of years ---------------------------------- */
+  .hc-strip {
+    display: none;
+    align-items: stretch;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hc-strip li {
+    display: flex;
+  }
+  .hc-strip a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    color: color-mix(in srgb, var(--color-bg) 84%, transparent);
+    text-decoration: none;
+  }
+  .hc-strip a::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: -2px;
+    height: 4px;
+    background: var(--color-gold);
+    transform: scaleX(0);
+  }
+  .hc-strip a:hover {
+    color: var(--color-bg);
+  }
+  .hc-strip a:hover::after {
+    transform: scaleX(0.5);
+  }
+  .hc-strip a[aria-current] {
+    color: var(--color-gold);
+  }
+  .hc-strip a[aria-current]::after {
+    transform: scaleX(1);
+  }
+  .hc-strip a:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: -6px;
+  }
+  .hc-top {
+    margin-right: 8px;
+    padding-right: 8px;
+    border-right: 1px solid color-mix(in srgb, var(--color-bg) 22%, transparent);
+  }
+  .hc-top a {
+    padding-left: 0;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .hc-top a::after {
+    left: 0;
+  }
+  .hc-year {
+    font-family: var(--font-display);
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    font-variant-numeric: lining-nums;
+  }
+  .hc-now {
+    display: none;
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0 0 0 16px;
+    align-self: center;
+    overflow: hidden;
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-style: italic;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--color-bg);
+  }
+
+  /* ---- Narrow: the part in view, and Jump to ------------------------- */
+  .hc-jump {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .hc-jump summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: calc(var(--hc-h) - 2px);
+    cursor: pointer;
+    list-style: none;
+  }
+  .hc-jump summary::-webkit-details-marker {
+    display: none;
+  }
+  .hc-jump summary:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: -4px;
+  }
+  .hc-cur {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    font-family: var(--font-body);
+    font-size: 17px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .hc-cur-when {
+    margin-right: 8px;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-gold);
+    font-variant-numeric: lining-nums;
+  }
+  .hc-cur-when:empty {
+    display: none;
+  }
+  .hc-go {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+  .hc-jump[open] .hc-go svg {
+    transform: rotate(180deg);
+  }
+  .hc-list {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 2px);
+    max-height: calc(100dvh - var(--header-h, 75px) - var(--hc-h) - 24px);
+    margin: 0;
+    padding: 4px var(--spacing-gutter) 8px;
+    overflow-y: auto;
+    list-style: none;
+    background: var(--background);
+    color: var(--color-foreground);
+    border-bottom: 3px solid var(--color-gold);
+    box-shadow: 0 18px 30px -18px rgb(23 21 31 / 0.45);
+  }
+  .hc-list li + li a {
+    border-top: 1px solid var(--hair);
+  }
+  .hc-list a {
+    display: grid;
+    grid-template-columns: 7.5em minmax(0, 1fr);
+    align-items: baseline;
+    gap: 4px 12px;
+    min-height: 48px;
+    padding: 12px 0 12px 12px;
+    text-decoration: none;
+    color: var(--color-foreground);
+  }
+  .hc-list a[aria-current] {
+    box-shadow: inset 4px 0 0 var(--color-gold);
+  }
+  .hc-list a:focus-visible {
+    outline: 3px solid var(--color-indigo);
+    outline-offset: -3px;
+  }
+  .hc-l-when {
+    font-family: var(--font-ui);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-brown-ink);
+    font-variant-numeric: lining-nums;
+  }
+  .hc-l-name {
+    font-family: var(--font-body);
+    font-size: 19px;
+    line-height: 1.25;
+    color: var(--color-indigo);
+  }
+  .hc-list a:hover .hc-l-name {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-underline-offset: 4px;
+  }
+
+  @media (min-width: 1024px) {
+    .hc-strip {
+      display: flex;
+    }
+    .hc-now {
+      display: block;
+    }
+    .hc-jump {
+      display: none;
+    }
+  }
+  @media (max-width: 380px) {
+    .hc-list a {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2px;
+    }
+  }
+</style>
