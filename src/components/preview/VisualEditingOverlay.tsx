@@ -13,6 +13,7 @@ import {
   shouldStart,
 } from '../../lib/preview-refresh.ts';
 import { isRedundantRender, morph } from '../../lib/preview-morph.ts';
+import { finishReveals } from '../../lib/preview-reveal.ts';
 
 // Studio-driven navigation (the navigator side panel, document locations, the
 // preview URL bar) reaches the iframe through this adapter. The DEFAULT is
@@ -114,6 +115,17 @@ interface Props {
 }
 
 export default function VisualEditingOverlay({ pageId }: Props) {
+  // REVEALS SHOW FINISHED (2026-09-26). The site's scroll reveals start hidden
+  // and wait for an observer the preview does not run, so every arch photo,
+  // drawn glyph and inked picture stayed hidden in the Studio (0 of 27 on
+  // /preview/staff). Mark them finished on load and after every refresh, which
+  // may bring in new ones. src/lib/preview-reveal.ts has the list.
+  useEffect(() => {
+    const finish = () => void finishReveals(document);
+    finish();
+    window.addEventListener(SOFT_REFRESH_EVENT, finish);
+    return () => window.removeEventListener(SOFT_REFRESH_EVENT, finish);
+  }, []);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   /** The scheduler's state. A ref, not React state: no render depends on it. */
   const schedule = useRef(createRefreshState());
