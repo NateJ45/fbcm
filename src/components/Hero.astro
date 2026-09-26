@@ -451,6 +451,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
               alt={frame?.alt ?? ''}
               loading="eager"
               class={i === middleIndex ? 'hw-mid' : 'hw-side'}
+              frameRatio={i === middleIndex ? 1.4 : 2.6}
             />
           ))}
         </div>
@@ -815,6 +816,8 @@ const windowDrops = dropInto && windowOrder.length > 0;
   width: 46%;
   justify-self: center;
 }
+/* The template passes these proportions to ArchFrame as frameRatio (2.6 and
+   1.4) for its portrait headroom; change both together. */
 .hw-side {
   --arch-ratio: 100 / 260;
 }

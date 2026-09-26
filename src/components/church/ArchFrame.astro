@@ -33,7 +33,7 @@
 import SanityImage from '@/components/SanityImage.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
-import { archPlacement, type FrameCrop } from '@/lib/hero-frames';
+import { archPlacement, archRatioFromStyle, type FrameCrop } from '@/lib/hero-frames';
 import { photoAspect } from '@/lib/photo-shape';
 import { photoSubject } from '@/lib/photo-subject';
 
@@ -54,6 +54,12 @@ interface Props {
   glyph?: 'window' | 'door' | 'rose' | 'basin';
   /** 'high' when this frame is the page's LCP image (a split hero's photo). */
   fetchpriority?: 'high' | 'auto';
+  /**
+   * The arch's height / width, for a caller whose --arch-ratio lives in its
+   * own CSS rather than in `style` (the window hero's lights). Read from
+   * `style` otherwise, else the shape's default. Only the headroom reads it.
+   */
+  frameRatio?: number;
 }
 
 const {
@@ -69,6 +75,7 @@ const {
   style,
   glyph,
   fetchpriority,
+  frameRatio,
 } = Astro.props;
 
 const hasImage = !!image?.asset;
@@ -84,6 +91,7 @@ const { objectPosition, headroom } = archPlacement({
   shape,
   people: hasImage && photoSubject(alt) === 'people',
   aspect: photoAspect(image as Parameters<typeof photoAspect>[0])?.a,
+  frameRatio: frameRatio ?? archRatioFromStyle(style) ?? (shape === 'lancet' ? 1.5 : 1.3),
   hotspot: image?.hotspot,
   crop: (image as { crop?: FrameCrop | null } | null | undefined)?.crop,
 });

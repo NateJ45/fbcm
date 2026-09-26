@@ -5,15 +5,18 @@ import {
   frameAnimationDelays,
   heroObjectPosition,
   heroSizes,
+  archRatioFromStyle,
   LANCET_FACE_LINE,
   MAX_HEADROOM,
 } from './hero-frames.ts';
 
 // ── archPlacement: a portrait in an arch (2026-09-25) ──────────────────────
+// The Staff hero's side lights: a square headshot in a 100 / 260 lancet.
 const staffHero = {
   shape: 'lancet' as const,
   people: true,
   aspect: 1,
+  frameRatio: 2.6,
   hotspot: { x: 0.5, y: 0.4 },
 };
 
@@ -33,6 +36,24 @@ test('with headroom, the hotspot lands exactly on the face line', () => {
 
 test('headroom is capped', () => {
   assert.equal(archPlacement({ ...staffHero, hotspot: { x: 0.5, y: 0 } }).headroom, MAX_HEADROOM);
+});
+
+test('no headroom when the arch is not tall enough to magnify the portrait', () => {
+  // History's opener: Pastor Carter, square, hotspot 0.4, in a 100 / 150 lancet.
+  assert.equal(archPlacement({ ...staffHero, frameRatio: 1.5 }).headroom, 0);
+  // No ratio given: the lancet's own 1.5.
+  assert.equal(archPlacement({ ...staffHero, frameRatio: null }).headroom, 0);
+  // The window hero's middle light (100 / 140) with a portrait: 1.4 x 0.68 < 2.
+  assert.equal(archPlacement({ ...staffHero, frameRatio: 1.4, aspect: 0.68 }).headroom, 0);
+  // Exactly twice as wide: headroom.
+  assert.ok(archPlacement({ ...staffHero, frameRatio: 2, aspect: 1 }).headroom > 0);
+});
+
+test('archRatioFromStyle reads --arch-ratio as height / width', () => {
+  assert.equal(archRatioFromStyle('--arch-ratio: 100 / 150; --arch-mould: red;'), 1.5);
+  assert.equal(archRatioFromStyle('--arch-ratio:160/112'), 0.7);
+  assert.equal(archRatioFromStyle('--arch-mould: red;'), null);
+  assert.equal(archRatioFromStyle(undefined), null);
 });
 
 test('no headroom for a door, a place, a landscape, a low face or no hotspot', () => {
