@@ -11,7 +11,6 @@
 //                          Co-Pastors in a two-light window, on indigo
 //   staffGridSection       Pastors & Staff, with the church's account of how
 //                          it is led beside the heading (gold band)
-//   richTextSection        A Note From Our Pastors, the whole letter (#letter)
 //   staffGridSection       Church Coordination Team, with the church's
 //                          definition of it beside the heading (brown band)
 //   imageTextSection       Deacons, beside the photograph, with "What are
@@ -22,9 +21,9 @@
 //   ctaBandSection         Ask the office.
 //
 // The staff bands' grounds are DERIVED from the group each one shows
-// (src/lib/staff-band.ts), which is why the page reads indigo, gold, the
-// paper (the letter), brown, the paper (Deacons), taupe, indigo-dark: the
-// Who We Are goals sequence with the page's own ground between the bands.
+// (src/lib/staff-band.ts), which is why the page reads indigo, gold, brown,
+// the paper (Deacons), taupe, indigo-dark: the Who We Are goals sequence with
+// the page's own ground between the bands.
 //
 // Nine things about this file are deliberate.
 //
@@ -55,17 +54,11 @@
 //    is an open question on /who-we-are's "Meet Our Staff" card; this page does
 //    not answer it and does not touch that card.
 //
-// 4. THE FULL LETTER STAYS HERE, WHOLE (fix round 1, 2026-09-24). Since the
-//    Who We Are identity pass the letter is also whole on /who-we-are#letter;
-//    whether it should appear on both pages is an owner question Nathan has
-//    not decided (docs/PENDING.md), so the content stays: all eight
-//    paragraphs, verbatim, in the church's own order, under the `letter`
-//    anchor, straight after the pastors who wrote it. It is a richTextSection,
-//    as before, not the Who We Are letterSection: that block is built around a
-//    portrait of the two pastors, and the only such photographs are already
-//    used (the joint one on /who-we-are's letter, the headshots in this page's
-//    window and grid). One punctuation edit: the em-dash in the Co-Pastors
-//    paragraph becomes a comma (CLAUDE.md rule 2).
+// 4. THE PASTORS' LETTER IS NOT ON THIS PAGE (2026-09-25, Nathan). "A Note
+//    From Our Pastors" was a richTextSection here, straight after the
+//    pastors, from fix round 1 (2026-09-24) until Nathan asked for the band to
+//    come off. The letter is whole on /who-we-are#letter, which is where it
+//    stays; nothing on the site linked to /staff#letter.
 //
 // 5. THE DEACON CHAIR GETS A REAL @. The Wix page writes the address as
 //    "deaconchair[at]fbcmuncie.org", which is a human-readable spam dodge that
@@ -130,7 +123,6 @@ export default {
     'Deacon chair address: "deaconchair[at]fbcmuncie.org" becomes a real mailto link to deaconchair@fbcmuncie.org, because a visitor cannot click "[at]". (Deacons band; spec 5.6 "Fixes".)',
     'Punctuation: "we also have a Worship Director. who coordinates and supports our worship leaders" becomes "...a Worship Director, who coordinates and supports our worship leaders". The full stop mid-sentence is a typo in scripts/data/pages/ministers.txt line 12; no word changes. (Pastors & Staff.)',
     'Em-dash to comma (CLAUDE.md rule 2), inside a verbatim scripture quotation: Kendall Ellis’s staff bio quotes Romans 8:17 (NIV) as “...then we are heirs—heirs of God and co-heirs with Christ...” and it now reads “...then we are heirs, heirs of God...”. No other word changes. The bio is a field on her staff document rather than a sentence this module builds, so the change was made by scripts/fix-bio-em-dashes.mjs (backed up first); it is declared here because this is one of the two pages that print it.',
-    'Em-dash to comma (site style): "...calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community." (A Note From Our Pastors.)',
     'Typography only: the curly quotation marks around 1 Corinthians 12:4-6 come off the stored verse because the scripture band draws them itself; the page shows the verse in quotation marks exactly as the Wix page did. (Every Member of this Church.)',
   ],
 
@@ -273,33 +265,6 @@ export default {
       ),
     ];
 
-    /** An em-dash between words becomes a comma (CLAUDE.md rule 2). Throws if there is none. */
-    const comma = (sentence) => {
-      if (!sentence.includes('—')) {
-        throw new Error(
-          `staff.mjs: expected an em-dash to fix in "${sentence.slice(0, 60)}..."; the capture no ` +
-            'longer has one, so drop this call.',
-        );
-      }
-      return sentence.replace(/\s*—\s*/g, ', ');
-    };
-
-    // 2b. The pastors' letter, whole (note 4). Eight paragraphs between their
-    //     sign-off line and the next section of the Who We Are capture.
-    const letterLines = linesBetween('who-we-are', 'Pastors Kendall & Jonathan', 'Sunday Worship');
-    const letterLine = (phrase) => pick(letterLines, phrase, 'who-we-are');
-    const letter = [
-      ...paragraphs(letterLine('If you'), 'lt-a'),
-      ...paragraphs(letterLine('Figure it all out'), 'lt-b'),
-      ...paragraphs(letterLine('Even so, we know people curious'), 'lt-c'),
-      ...paragraphs(letterLine('We love the Good News'), 'lt-d'),
-      ...paragraphs(letterLine('all about the church'), 'lt-e'),
-      // The one em-dash in the letter.
-      ...paragraphs(comma(letterLine('honored to serve as Co-Pastors')), 'lt-f'),
-      ...paragraphs(letterLine('We love to serve here'), 'lt-g'),
-      ...paragraphs(letterLine('Finally, we would love'), 'lt-h'),
-    ];
-
     // 3. What the Church Coordination Team IS: ministers.txt line 37, the
     //    church's own definition of the body whose eleven faces follow it.
     const whatTheCctIs = paragraphs(
@@ -411,17 +376,6 @@ export default {
           intro: howWeAreLed,
           group: 'pastors',
           showBios: true,
-        },
-
-        // 2b. Their letter, whole, on the page's own ground between the gold
-        //     and brown bands (note 4). The heading is the church's, as the
-        //     Who We Are capture's contents list spells it.
-        {
-          _type: 'richTextSection',
-          _key: 'st-letter',
-          anchor: { _type: 'slug', current: 'letter' },
-          heading: 'A Note From Our Pastors',
-          body: letter,
         },
 
         // 3. The Church Coordination Team, on the brown band, its definition

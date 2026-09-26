@@ -917,10 +917,22 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   10 -> 8, "would be replaced"; the live page matched the old module exactly, so no
   editor edits to carry over; re-read the plan in case one has been made since) and
   `--apply` (backup first). Then shoot /staff, /ministries and /beliefs in production.
-- **Owner question: the pastors' letter appears on both /who-we-are and /staff; keep
-  both or drop one?** Both pages carry all eight paragraphs (`/who-we-are#letter` as the
-  letterSection with the pastors' portrait, `/staff#letter` as a richTextSection after
-  Pastors & Staff). The content stays on both until Nathan decides.
+- [x] **Decided 2026-09-25 (Nathan): the pastors' letter comes off /staff.** It stays
+      whole on `/who-we-are#letter`. `scripts/pages/staff.mjs` no longer builds the "A Note
+      From Our Pastors" band (branch `worktree-agent-a432365ea207c703b`); the live page keeps
+      it until `npm run seed-pages -- --only staff --apply` (dry plan: `pageBuilder` length
+      8 -> 7). Nothing on the site linked to `/staff#letter`.
+- **Waits on deploy + apply (2026-09-25): Contact's pastor band shows both co-pastors.**
+  `scripts/pages/contact.mjs` now sets Jonathan Balmer's staff portrait as the band's
+  `detail`, and ImageText draws two people portraits as an equal pair of lancets
+  (`besideForm` in `src/lib/photo-shape.ts`). Deploy first (the pair is code), then
+  `npm run seed-pages -- --only contact --apply`. Until then /contact shows Kendall alone.
+- **The Staff hero's headshots are tight crops with no headroom.** Since 2026-09-25 a
+  close people portrait in a lancet whose hotspot is above the arch's springing is drawn
+  lower, fading into the arch (`archPlacement` in `src/lib/hero-frames.ts`), so the
+  pointed head no longer cuts off hair and forehead; the photos' own top edge now shows
+  as a soft line under the point. A pair of portraits with room above the head would
+  still read better (see the next item).
 - **The hero's two headshots are older photos** (Kendall and Jonathan outdoors by a
   brick wall, the Wix blog's author photos). They are the only unused photographs of
   the two Co-Pastors; the staff-document portraits are drawn in the Pastors band
