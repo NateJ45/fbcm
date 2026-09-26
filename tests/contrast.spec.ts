@@ -2,7 +2,7 @@
 // (PORTS.md card 43): the site is light-only, so the dark run below was
 // removed, and that is a site-specific change the family's canonical copy must
 // not carry. Read this as a divergent fork of the starter's copy.
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import { routes } from './routes';
 import { settle } from './helpers';

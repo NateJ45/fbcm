@@ -6,7 +6,7 @@
 // This gate visits every route at five widths and fails when any word in any
 // h1, h2 or h3 has its characters on two different lines. A break AFTER a
 // hyphen (or a dash) is a fair break and is ignored.
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { allRoutes as routes } from './routes';
 import { settle } from './helpers';
 

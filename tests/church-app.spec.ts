@@ -1,5 +1,5 @@
 // scaffold-file: church
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import { routes } from './routes';
 

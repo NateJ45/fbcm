@@ -1,5 +1,5 @@
 // scaffold-file: journal
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 // =============================================================================
 // The scripture index, /blog/scripture (2026-09-24, feat/scripture-search)

@@ -1,5 +1,5 @@
 // scaffold-file: journal
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './fixtures';
 
 // /blog as a plain register (2026-09-24, feat/blog-flat). Nathan took
 // "Worth coming back for" off /blog page 1, so page 1 is the register alone:

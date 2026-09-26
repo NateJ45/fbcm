@@ -1,5 +1,5 @@
 // scaffold-file: journal
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './fixtures';
 
 // =============================================================================
 // Client-side navigation keeps the page's state (feat/print-motion, 2026-09-24)

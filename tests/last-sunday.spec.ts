@@ -10,7 +10,7 @@
 //
 // The weather line is fetched by the BROWSER, so it is tested with route
 // interception on api.weather.gov and a fixed clock.
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import { settle } from './helpers';
 

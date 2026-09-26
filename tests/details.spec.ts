@@ -1,6 +1,6 @@
 // The craft-details pass (2026-09-24): the share cards, the JSON-LD and the
 // Visit page's "Which door?" sketch. Site-specific, so not PORTABLE.
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import { settle } from './helpers';
 

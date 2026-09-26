@@ -10,7 +10,7 @@
 // no views. /styleguide/this-sunday/<state> renders the home hero from the
 // same fixture in fixed states, so the order of sources is tested without
 // depending on which posts the live dataset holds.
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page, cacheSanityImages } from './fixtures';
 
 const THURSDAY = new Date('2026-09-24T16:00:00Z'); // noon, church time
 const SUNDAY_MORNING = new Date('2026-09-27T13:00:00Z'); // 9 am, church time
@@ -121,6 +121,7 @@ test.describe('This Sunday: the sermon on the dated line', () => {
       javaScriptEnabled: false,
       viewport: { width: 1024, height: 800 },
     });
+    await cacheSanityImages(ctx);
     const page = await ctx.newPage();
     await page.goto('/styleguide/this-sunday/youtube');
     await expect(page.locator('[data-sermon-title="lg"]')).toBeVisible();
@@ -238,6 +239,7 @@ test.describe('This Sunday: the preacher in the hero facts', () => {
     browser,
   }) => {
     const ctx = await browser.newContext({ javaScriptEnabled: false });
+    await cacheSanityImages(ctx);
     const page = await ctx.newPage();
     await page.goto('/styleguide/this-sunday/youtube');
     await expect(preacherFact(page)).toHaveCount(1);

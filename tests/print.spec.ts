@@ -1,5 +1,5 @@
 // scaffold-file: journal
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 // =============================================================================
 // A post prints as a bulletin (feat/print-motion, 2026-09-24)

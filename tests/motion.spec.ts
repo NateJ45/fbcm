@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 // =============================================================================
 // The motion pass (art-direction pass, task 12)

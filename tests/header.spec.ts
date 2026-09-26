@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
 // =============================================================================
 // The sticky header (art-direction pass, task 3, fix round 1)
