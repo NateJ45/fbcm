@@ -248,3 +248,26 @@ test('breadcrumbNode numbers its items and validates', () => {
 test('ldJson cannot close its own script tag', () => {
   assert.ok(!ldJson({ name: '</script><b>' }).includes('</script>'));
 });
+
+test('a calendar page may carry several Event blocks, but never the same event twice', async () => {
+  const { validatePage } = await import('./schema-vocab.ts');
+  const ev = (id: string, name: string) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    '@id': id,
+    name,
+  });
+  const second = (errs: string[]) => errs.filter((e) => e.includes('a second'));
+  assert.deepEqual(
+    second(validatePage([ev('https://x/events#a', 'A'), ev('https://x/events#b', 'B')])),
+    [],
+  );
+  assert.ok(
+    validatePage([ev('https://x/events#a', 'A'), ev('https://x/events#a', 'A')]).some((e) =>
+      e.includes('repeats'),
+    ),
+  );
+  // Any other type is still one per page.
+  const org = { '@context': 'https://schema.org', '@type': 'Church', name: 'C' };
+  assert.equal(second(validatePage([org, org])).length, 1);
+});
