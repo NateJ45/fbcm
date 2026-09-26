@@ -122,6 +122,17 @@ drafts (nothing in `@sanity/visual-editing` should rewrite the cookie, but that 
 confirm). The post route matched the existing routes rather than differing from them alone. The
 same code came from the starter, so check it there too.
 
+### 1d. `--remove journal` no longer leaves a building tree (found 2026-09-26)
+
+Proving the post preview's scaffold markers (rule 14): `npm run scaffold -- --remove journal
+--write`, then typegen and `astro check`, reports 6 errors, and `npm run build` fails prerendering
+`/` with "durableFirst is not defined". The SAME 6 errors appear on `7ebc6389` (before the post
+preview), so they predate it; the new files (`PostView.astro`, `post-foot.ts`, the preview route)
+and the new marked lines are all removed cleanly. The unmarked pieces: `DynamicList.astro` line
+89 uses `durableFirst` (from the journal's `blog-derive`), `src/lib/convert-body.ts` imports
+`../sanity/schemaTypes/journalEntry.ts`, and `src/lib/youtube-feed-api.test.ts` imports
+`./sermon-video.ts`. Each wants a marker, or the journal-only half moved out.
+
 ### 2. `npm run parity compare` is not a CI step
 
 The baselines in `scripts/.parity/` are captured on a developer machine, and nobody in
