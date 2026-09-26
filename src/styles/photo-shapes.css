@@ -158,6 +158,49 @@
   object-fit: cover;
   object-position: 50% 15%;
 }
+/* COMPACT and PAIR (2026-09-25, photo-shape.ts besideForm; ImageText note 6).
+   Compact takes the default beside split whatever the shape (words 1/7, the
+   portrait 8/13), the heading inside the words, the words centred on the
+   portrait, and the portrait no wider than 22rem so it stands about a third
+   taller than the words beside it. Pair takes the w6 row split: two lancets in
+   six columns, the words in five. */
+.ph-beside.is-compact .ph-text {
+  grid-column: 1 / 7;
+  align-self: center;
+}
+.ph-beside.is-compact .ph-fig {
+  grid-column: 8 / 13;
+}
+.ph-beside.is-compact.is-left .ph-fig {
+  grid-column: 1 / 6;
+}
+.ph-beside.is-compact.is-left .ph-text {
+  grid-column: 7 / 13;
+}
+.ph-beside.is-compact .it-arches {
+  width: min(100%, 22rem);
+  margin-inline: auto;
+}
+.ph-beside.is-compact .ph-text .rt-head {
+  margin-bottom: clamp(24px, 2.6vw, 36px);
+}
+.ph-beside.is-pair .ph-fig {
+  grid-column: 7 / 13;
+}
+.ph-beside.is-pair .ph-text {
+  grid-column: 1 / 6;
+}
+.ph-beside.is-pair.is-left .ph-fig {
+  grid-column: 1 / 7;
+}
+.ph-beside.is-pair.is-left .ph-text {
+  grid-column: 8 / 13;
+}
+.it-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 1.8vw, 24px);
+}
 /* GROUND. The literal #17151f (ink) and #f4efe6 (cream) below are a deliberate
    dark pin, like .bg-accent-dark: the band is always a dark photograph under
    cream text, whatever the reader's theme, so theme tokens would flip wrongly. */
@@ -270,6 +313,10 @@
   }
   .ph-plate {
     max-width: none;
+  }
+  .ph-beside.is-compact .it-arches {
+    width: min(78%, 19rem);
+    margin-inline: 0;
   }
   .ph-ground-fig {
     height: clamp(480px, 128cqw, 640px);
