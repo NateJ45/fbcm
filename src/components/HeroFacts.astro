@@ -13,6 +13,12 @@ interface Fact {
   _key?: string;
   label?: string | null;
   value?: string | null;
+  /**
+   * An in-page link (2026-09-25, the Ministries hero), derived by Hero.astro
+   * from the label (src/lib/hero-fact-links.ts). With one, the value is the
+   * link, with a small gold down arrow: the fact jumps to its band.
+   */
+  href?: string | null;
 }
 
 interface Props {
@@ -27,9 +33,13 @@ interface Props {
 
 const { facts, calendarHref } = Astro.props as Props;
 const rows = facts.map((f) => ({ ...f, read: readBig(f.value) }));
+// Facts that jump to their bands are an index of the page (the Ministries
+// hero: Children, Youth, Adults), so they are set as ruled rows, label beside
+// value, rather than the when/where row, whose short values sit side by side.
+const index = rows.some((f) => !!f.href);
 ---
 
-<dl class:list={['hero-facts', calendarHref && 'hf-with-cal']}>
+<dl class:list={['hero-facts', index && 'hf-index', calendarHref && 'hf-with-cal']}>
   {
     rows.map((f) => (
       <div>
@@ -43,6 +53,15 @@ const rows = facts.map((f) => ({ ...f, read: readBig(f.value) }));
                   {f.read.meridiem}
                 </span>
               )}
+            </dd>
+          ) : f.href ? (
+            <dd class="font-ui">
+              <a href={f.href} class="hf-jump">
+                {f.value}
+                <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
+                  <path d="M6 1.5v8.5M2.5 6.5 6 10l3.5-3.5" />
+                </svg>
+              </a>
             </dd>
           ) : (
             <dd class="font-ui">{f.value}</dd>
@@ -104,6 +123,56 @@ const rows = facts.map((f) => ({ ...f, read: readBig(f.value) }));
     font-weight: 400;
     line-height: 1;
     white-space: nowrap;
+  }
+  /* A fact that jumps to its band on the page (the Ministries hero): the
+     value in paper with the gold hairline under it, and a small gold down
+     arrow for "further down this page". */
+  .hero-facts .hf-jump {
+    display: inline;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+  }
+  .hero-facts .hf-jump:hover {
+    text-decoration-thickness: 2px;
+  }
+  .hero-facts .hf-jump:focus-visible {
+    outline: 2px solid var(--color-bg);
+    outline-offset: 3px;
+  }
+  .hero-facts .hf-jump svg {
+    display: inline-block;
+    margin-left: 0.4em;
+    vertical-align: -0.05em;
+    fill: none;
+    stroke: var(--color-gold);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  /* The index form: one ruled row per fact, the label in a fixed column
+     beside its value, gold hairlines above, between and below. */
+  .hero-facts.hf-index {
+    display: grid;
+    row-gap: 0;
+    max-width: 30rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 50%, transparent);
+  }
+  .hero-facts.hf-index > div,
+  .hero-facts.hf-index > div:last-child {
+    display: grid;
+    grid-template-columns: 5.5em minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 16px;
+    margin: 0;
+    padding: 11px 0;
+    border: 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 50%, transparent);
+  }
+  .hero-facts.hf-index dt {
+    margin: 0;
   }
   .hero-facts.hf-with-cal {
     margin-bottom: 16px;

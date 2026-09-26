@@ -151,7 +151,11 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - Every age has a place here. (hero headline)
 - Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and who to ask about each. (search description, not shown on the page; 2026-09-24 local search pass)
-- Contact the church office. (the end of a ministry’s contact line when the staff document for that role carries no email address, which today is only the children’s ministry; it links to the contact page)
+- Contact the church office. (the end of a ministry’s contact line when the staff document for that role carries no email address, which today is only the children’s ministry; it links to the contact page. Also the next step under "Help with children" in Get involved, 2026-09-25)
+- Get involved (the hero’s gold button, to the Get involved band; "Get Involved" is the heading all five source pages used) / What’s On (the hero’s second button, to /events; the calendar page’s own name) (2026-09-25)
+- Serve on Sunday / Sing and play / Help with children / Help with youth / Join a Life Group / Serve our community (the six column heads in Get involved, 2026-09-25; "Join a Life Group" and "Serve our community" lean on the church’s own "Life Groups" and "Ways You Can Connect With FBCM to serve our community")
+- Write to worship@fbcmuncie.org. (and the same "Write to" line for cynthia@, youth@ and outreach@: the next step under four Get involved columns, 2026-09-25)
+- To become a member, be baptized or speak with a pastor, use the connection card. (the last line of Get involved, linking to the connection card on /visit, 2026-09-25)
 
 ### Edits to the church’s own text
 
@@ -166,8 +170,17 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Cut as a repeat: "If you’re interested in joining a small group, or are seeking more information, contact adult[at]fbcmuncie.org". The adult band ends with the adult coordinator’s name, role and address, read off her staff document.
 - Em-dash to comma (site style): "join Christ where he is already at work in our world—in Muncie and across the globe" becomes "...in our world, in Muncie and across the globe".
 - Linked: "Our website has links to our building use policy here" had no link behind it on the Wix site. "here" now points at /wedding#building-use.
-- Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band listing the whole Church Coordination Team.
+- Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band of ways in (note 9); the Church Coordination Team is listed on /staff.
 - Reordered, so each reads as a class with its room: "Preschool - 2nd grade: Kickstart Children’s Church (102)" becomes "Kickstart Children’s Church (102): Preschool - 2nd grade", and "3rd - 5th grade: The Underground Children’s Church (B-03)" becomes "The Underground Children’s Church (B-03): 3rd - 5th grade" (what-to-expect.txt lines 65 and 69; the 10:45 row of the Sunday timeline). No word changes.
+- Hero lede (2026-09-25): "FBC Muncie believes that God created the church to be intergenerational." is the middle sentence of children.txt’s "Part of the life of the entire congregation." paragraph, on its own.
+- Hero facts (2026-09-25): "Nursery through fifth grade" and "Grades 6 to 12" are the Children and Youth ministry documents’ own headlines; "College and career to retirees" is adult.txt’s "From College and Career to Retirees", cut to the range and set in sentence case.
+- Get involved, the opening line (2026-09-25): worship.txt’s "If you wish to be a part of our ministry on Sunday mornings, contact us!" with "on Sunday mornings" cut, said once for every ministry.
+- Get involved, Serve on Sunday: worship.txt’s "When we gather, worship leaders help us by:" and four of its five list items (Greeting people as they enter, Supporting through technical arts (sound, slides, livestream, etc.), Leading in prayer & scripture reading, Serving communion) joined into one sentence, each item’s first letter lower-cased. "Singing and playing a variety of instruments" is left to the next column.
+- Get involved, Sing and play: worship.txt’s Praise Team sentence and its hand bell choir sentence, unchanged, side by side.
+- Get involved, Help with children: children.txt’s "To create a safe environment for our children, FBC Muncie requires that all Children’s Ministry volunteers be background checked and children can only be picked up by a parent/guardian with a matching security tag." cut after "background checked." (the pick-up half is in the children’s questions above).
+- Get involved, Help with youth: youth.txt’s "Pastor Jonathan and Kendall, alongside a youth volunteer, open up scripture and discuss how God’s work intersects with student’s lives." unchanged ("student’s" is the church’s own).
+- Get involved, Join a Life Group: adult.txt’s "We have several life groups..." sentence, and its "If you’re interested in joining a small group, or are seeking more information, contact adult[at]fbcmuncie.org" with the address restored and linked and a full stop added. (The adult band still does not repeat it.)
+- Get involved, Serve our community: outreach.txt’s "Volunteering with our partner organizations or at community events." and "Sewing Group (Rm 203) - A multi-aged, monthly group which sews pillowcases for those in need." with the hyphen made a colon and "A" lower-cased.
 - Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now links to The Visitor’s own page, /visitor (the Wix page’s redirect points there too since 2026-09-24).
 
 ### Facts to confirm from this page

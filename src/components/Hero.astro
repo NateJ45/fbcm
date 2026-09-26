@@ -55,6 +55,7 @@ import { sermonIsExternal } from '@/lib/this-sunday';
 import type { SundayPreacher } from '@/lib/preacher';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import HeroFacts from '@/components/HeroFacts.astro';
+import { heroFactLinks, type LinkableBand } from '@/lib/hero-fact-links';
 import { headingFit, longestWord, EM_BODY, EM_DISPLAY } from '@/lib/heading-grammar';
 import { photoSubject } from '@/lib/photo-subject';
 import { photoAspect } from '@/lib/photo-shape';
@@ -163,6 +164,13 @@ interface Props {
   preacher?: SundayPreacher | null;
   /** Visit's calendar file, shown under the facts (HeroFacts.astro). */
   calendarHref?: string;
+  /**
+   * The page's bands, in order (2026-09-25, the Ministries hero). A fact whose
+   * label names one of them links to it (src/lib/hero-fact-links.ts); drawn by
+   * the window and split heroes, whose facts are HeroFacts. Absent, or no
+   * label matching, and the facts render exactly as before.
+   */
+  factBands?: LinkableBand[];
 }
 
 const {
@@ -184,9 +192,14 @@ const {
   sermon,
   preacher,
   calendarHref,
+  factBands = [],
 } = Astro.props as Props;
 
 const heroFacts = (facts ?? []).filter((f) => f?.label || f?.value).slice(0, 3);
+// Each fact's in-page link, derived from the label (hero-fact-links.ts). Only
+// HeroFacts (the window and split heroes) draws it.
+const factHrefs = heroFactLinks(heroFacts, factBands);
+const linkedFacts = heroFacts.map((f, i) => ({ ...f, href: factHrefs[i] ?? null }));
 // A fact's note is display text, trimmed of stray space only (never measured,
 // so a stega payload in the preview is harmless).
 const noteOf = (f: HeroFact) => (f.note && splitStega(f.note).cleaned.trim() ? f.note : '');
@@ -412,7 +425,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
             {subheadParts.map((part) => (part.type === 'em' ? <em>{part.value}</em> : part.value))}
           </p>
         )}
-        {heroFacts.length > 0 && <HeroFacts facts={heroFacts} {calendarHref} />}
+        {heroFacts.length > 0 && <HeroFacts facts={linkedFacts} {calendarHref} />}
         {(primaryCta || secondaryCta) && (
           <div class="flex flex-wrap items-center gap-x-[34px] gap-y-[22px]">
             {primaryCta && <CtaLink cta={primaryCta} variant="gold" onDark />}
@@ -495,7 +508,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
           )}
           {heroFacts.length > 0 && (
             <div class="mt-[clamp(26px,4vh,40px)]">
-              <HeroFacts facts={heroFacts} {calendarHref} />
+              <HeroFacts facts={linkedFacts} {calendarHref} />
             </div>
           )}
           {(primaryCta || secondaryCta) && (
