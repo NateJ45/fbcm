@@ -1,0 +1,31 @@
+[
+  {
+    "_createdAt": "2026-09-26T16:34:56Z",
+    "_id": "drafts.33a559fe-ea72-4c2e-98bf-acc08fe54053",
+    "_rev": "99350b44-9020-4f39-ad34-0f3275dd8cd8",
+    "_type": "journalEntry",
+    "_updatedAt": "2026-09-26T16:35:06Z",
+    "body": [
+      {
+        "_key": "087c1c92c1ab",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1392df1e25d2",
+            "_type": "span",
+            "marks": [],
+            "text": "This is a throwaway draft to test the new post preview. It will be deleted."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "publishedAt": "2026-09-26T16:30:17.509Z",
+    "slug": {
+      "_type": "slug",
+      "current": "rehearsal-preview-test-post"
+    },
+    "title": "Rehearsal preview test post"
+  }
+]
