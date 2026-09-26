@@ -70,7 +70,20 @@ The core component set, by role. All in `src/components/` unless noted.
 ### Long-read layout (journal detail)
 
 `/post/[slug]` is the "P2 Bulletin" layout (journal polish, 2026-09-22; spec and prototype in
-`docs/superpowers/prototypes/2026-09-22-journal/`):
+`docs/superpowers/prototypes/2026-09-22-journal/`).
+
+**One component, two routes (2026-09-26).** The post is drawn by
+`src/components/blog/PostView.astro`: everything inside the page's layout, its frontmatter
+derivations, the print script and the page-scoped `<style is:global>` block. The static route
+`src/pages/post/[slug].astro` keeps only `getStaticPaths`, the build-time reads and the page's
+meta (title, description, share card, JSON-LD) around `BaseLayout`; the Studio's draft preview
+`src/pages/preview/post/[slug].astro` renders the same component inside `PreviewLayout`
+(docs/agent/preview.md). Each post's foot (the doors, the series rows, the reading's anchor on
+`/blog/scripture`) is one derivation both routes call, `src/lib/post-foot.ts`. Two details of
+the move are load-bearing for parity: the print script is held as a verbatim string
+(`PRINT_SCRIPT`, written with `set:html`) because an `is:inline` script prints with its source
+indentation, and `ArchFrame`'s `editAttr` and the body's `data-sanity` render nothing unless the
+preview passes `edit`. `npm run parity compare` stayed 175/175 across the move.
 
 1. **Masthead** -- category line, h1, excerpt lede (dropped when `ledeEchoes` finds it in the
    body) in columns 1 to 7; in columns 9 to 12 the ORDER, a ruled `dl`. A sermon preview gets
