@@ -7,17 +7,17 @@ import AxeBuilder from '@axe-core/playwright';
 // =============================================================================
 // A family new to Muncie, on a phone, could not find the children's safety
 // facts, the nervous questions, or a way to say "we're coming". The page that
-// fixes it is composed by scripts/pages/visit.mjs and waits on Nathan's apply,
-// so the suite reads the composition from its committed fixture,
-// /styleguide/visit (scripts/data/fixtures/visit.json). Point PAGE at /visit
-// once the page is applied and the styleguide copy is deleted.
+// fixes it is composed by scripts/pages/visit.mjs, applied 2026-09-25; the
+// /styleguide/visit copy the suite read until then is gone, so it reads /visit.
+// Since the same day the connection card is ON the page (a Church Trac form
+// band at #connect), and both "Let us know you're coming" buttons jump to it.
 //
 // Home's rows are checked on /styleguide's Church Blog band, whose fixed data
 // holds one past FBCM Events post (Blue Christmas, 9 December 2025) measured
 // from a fixed day (src/pages/styleguide.astro, JOURNAL_LIST_NOW).
 // =============================================================================
 
-const PAGE = '/styleguide/visit';
+const PAGE = '/visit';
 
 /** The band whose h2 is `name`. */
 const band = (page: Page, name: string): Locator =>
@@ -88,16 +88,23 @@ test.describe('the page', () => {
     expect(order.indexOf('Your children')).toBe(order.indexOf('How the morning runs') + 1);
   });
 
-  test('"Let us know you’re coming" opens the connection card in a new tab', async ({ page }) => {
+  test('"Let us know you’re coming" jumps to the connection card on the page', async ({ page }) => {
     await page.goto(PAGE);
     const buttons = page.getByRole('link', { name: 'Let us know you’re coming' });
-    // The hero's gold button and the closing band's.
+    // The hero's gold button and the closing band's, both to the card's band.
     await expect(buttons).toHaveCount(2);
     for (const b of await buttons.all()) {
-      await expect(b).toHaveAttribute('href', /^https:\/\/fbcmuncie\.church(center|trac)\.com\//);
-      await expect(b).toHaveAttribute('target', '_blank');
-      await expect(b).toHaveAttribute('rel', /noopener/);
+      await expect(b).toHaveAttribute('href', '/visit#connect');
+      await expect(b).not.toHaveAttribute('target', '_blank');
     }
+    // The band: its heading, and a Church Trac frame named for the form.
+    const card = page.locator('#connect');
+    await expect(card.getByRole('heading', { level: 2 })).toHaveText('Let us know you’re coming');
+    await expect(card.locator('iframe')).toHaveAttribute(
+      'src',
+      /^https:\/\/fbcmuncie\.churchtrac\.com\/form\//,
+    );
+    await expect(card.locator('iframe')).toHaveAttribute('title', 'Connection card');
     // The first is in the hero, above the fold, with its promise beside it.
     const hero = page.locator('section').first();
     await expect(hero.getByRole('link', { name: 'Let us know you’re coming' })).toBeInViewport();

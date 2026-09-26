@@ -1197,10 +1197,7 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       so it is saved as the Studio document "Connection card" (`churchTracForm-connection-card`)
       at size Long (now 1040 px, from that measurement). On Visit since 2026-09-25 (Nathan):
       a "Let us know you’re coming" band at `#connect` after the questions, and both of Visit's
-      buttons jump to it. Site settings' connection-card link still points at the old Church
-      Center form (159198), which Home and the rest of the site use: switch it to
-      `https://fbcmuncie.churchtrac.com/connectcard` when the church stops reading Church
-      Center's replies. And nobody is notified of a Church Trac reply until Notify User is set
+      buttons jump to it. Site settings' connection-card link (every `{connect}` link: Contact, Visit's FAQ, Who We Are) moved from the Church Center form (159198) to `https://fbcmuncie.churchtrac.com/connectcard` the same day (Nathan; `scripts/set-church-trac-settings.mjs`, backup committed). And nobody is notified of a Church Trac reply until Notify User is set
       (below), so that must happen before the cutover sends real visitors here.
 - [ ] #nathan **Urgent for the church: the Connection Card's `Notify User` is empty**, so
       nobody is emailed when a visitor fills it in (4 have). Someone should read Form
@@ -1666,9 +1663,9 @@ summary, location, rrule: 'FREQ=WEEKLY;BYDAY=SU' }] })`; `src/lib/worship-ics.ts
       the closing band's button label and subhead (". A greeter will look out for you."
       added); the other five blocks unchanged, only moved down. The button's link is still
       `{connect}`. Then rebuild, and look at /visit in production at 1440 and 390.
-- **After the apply, delete the preview:** `src/pages/styleguide/visit.astro`,
-  `scripts/data/fixtures/visit.json`, the `/styleguide/visit` line in `tests/routes.ts` and its
-  parity baseline, and point `PAGE` in `tests/visit.spec.ts` at `/visit`.
+- [x] **After the apply, delete the preview** (done 2026-09-25): `src/pages/styleguide/visit.astro`,
+      `scripts/data/fixtures/visit.json`, the `/styleguide/visit` line in `tests/routes.ts` and its
+      parity baseline, and point `PAGE` in `tests/visit.spec.ts` at `/visit`.
 - **The styleguide's CI screenshot moves.** Its Church Blog band now shows three rows (Blue
   Christmas, a past event, drops). Refresh `visual.yml`'s baseline with its `update` input the
   first time it runs against this change.

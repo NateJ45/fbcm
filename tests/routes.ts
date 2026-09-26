@@ -50,7 +50,6 @@ export const routes: string[] = [
   '/styleguide/visitor', // scaffold: church
   // The composed /visit (the visitor audit, 2026-09-25), rendered from the
   // committed fixture until the page is applied; delete with the fixture.
-  '/styleguide/visit', // scaffold: church
 ];
 
 /**

@@ -189,7 +189,7 @@ docs.push({
   churchTracUrl: CHURCH_TRAC_URL,
   youtubeUrl: YOUTUBE_URL,
   livestreamUrl: 'https://www.youtube.com/@FbcmuncieOrg/streams',
-  visitorFormUrl: 'https://fbcmuncie.churchcenter.com/people/forms/159198',
+  visitorFormUrl: 'https://fbcmuncie.churchtrac.com/connectcard',
   lifeEventFormUrl: 'https://fbcmuncie.churchcenter.com/people/forms/159897',
   directionsUrl:
     'https://www.google.com/maps/search/?api=1&query=309+East+Adams+Street+Muncie+IN+47305',

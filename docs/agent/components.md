@@ -539,8 +539,8 @@ things. Three are content, composed in `scripts/pages/visit.mjs` from existing b
   runs out the band shows fewer rows. /blog and the archives are untouched. The build is the
   clock, so a post drops at the next rebuild after its event (`deploy.yml` rebuilds four times a
   week as well as on every publish).
-- `/styleguide/visit` renders the composed page from `scripts/data/fixtures/visit.json` until
-  the apply; `tests/visit.spec.ts` reads it.
+- `/styleguide/visit` rendered the composed page until the apply; it was deleted on 2026-09-25
+  and `tests/visit.spec.ts` reads `/visit`.
 
 ### Church identity (the Who We Are "alive" pass, 2026-09-23)
 
@@ -596,7 +596,7 @@ Ported from the prototype at `docs/superpowers/prototypes/2026-09-23-who-we-are/
 - `sections/ScriptureBand.astro` (`scriptureBandSection`) -- **the Watchword's verse treatment** (2026-09-24, Staff): indigo-dark ground, the verse at the Watchword's size (`.ww-verse` and `.sb-verse` share one rule), in curly quotes with the opening one hung in the margin when the band has a `reference` (a band with none, Beliefs' common statement, is set plain), the `accentWord` in gold italic at EVERY whole-word occurrence (`highlightWords()`), the reference in gold beside it, and the optional `heading` (band grammar) and `intro` paragraph added in this pass. The menu-window texture is gone. Used on /staff and /beliefs.
 - `sections/TeamGrid.astro` (`teamSection`, not church-scaffolded) -- redrawn in the identity (2026-09-24): lancets in the staff bands' list layout, names in Castoro, roles in sentence case, the band grammar heading on paper. No page uses it today.
 
-**Seeing them without Sanity:** `/styleguide` carries a fixture of every one (the document list twice: doors and the register), and `/styleguide/who-we-are`, `/styleguide/home`, `/styleguide/visit`, `/styleguide/wedding`, `/styleguide/staff`, `/styleguide/give` and `/styleguide/contact` render the whole composed pages from `scripts/data/fixtures/<slug>.json`, which `node scripts/page-fixture.mjs <slug>` builds read-only from `scripts/pages/<slug>.mjs` (the home fixture borrows the live home page's blog rows, and the staff fixture each band's members from the live /staff page, which a fixture cannot query; a listed document's file is projected to `fileUrl` as `queries.ts` does). Both routes are temporary (see `docs/PENDING.md`).
+**Seeing them without Sanity:** `/styleguide` carries a fixture of every one (the document list twice: doors and the register), and `/styleguide/who-we-are`, `/styleguide/home`, `/styleguide/wedding`, `/styleguide/staff`, `/styleguide/give` and `/styleguide/contact` render the whole composed pages from `scripts/data/fixtures/<slug>.json`, which `node scripts/page-fixture.mjs <slug>` builds read-only from `scripts/pages/<slug>.mjs` (the home fixture borrows the live home page's blog rows, and the staff fixture each band's members from the live /staff page, which a fixture cannot query; a listed document's file is projected to `fileUrl` as `queries.ts` does). Both routes are temporary (see `docs/PENDING.md`).
 
 ### Church-system links (2026-09-24, `feat/church-links`)
 
