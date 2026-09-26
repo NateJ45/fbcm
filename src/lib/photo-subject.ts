@@ -11,6 +11,11 @@
 // rectangle. An empty alt is a place: the safe default, because a rectangle
 // never crops a face and an arch sometimes does.
 //
+// A person's ROLE is a person too (2026-09-25): a staff portrait's alt is
+// often only a name and a role ("Ella Mae Lemen, the church's wedding
+// coordinator"), so the roles the church's staff list uses, and "portrait"
+// and "headshot" themselves, read as people.
+//
 // A people word that NAMES A ROOM ("the family room", "the pastor's study",
 // "the children's wing", "the party room", "the youth center") is removed
 // before the test, so a room is not mistaken for the people it is named after.
@@ -19,10 +24,10 @@
 import { splitStega } from './preview-stega.ts';
 
 const PEOPLE =
-  /\b(?:people|person|persons|man|men|woman|women|lady|ladies|gentleman|girls?|boys?|child|children|kids?|bab(?:y|ies)|newborn|toddlers?|teens?|teenagers?|teenage|youth|famil(?:y|ies)|congregation|choir|couples?|bride|groom|pastors?|ministers?|members?|friends|volunteers|group|crowd|adults?|students?|deacons?|singers?|musicians?|guitarists?|pianist|team|guests?|party|parents?|mother|father|grandparents?|faces?|smil(?:e|es|ing)|laugh(?:s|ing)?|posed?|posing|hugs?|hugging)\b/i;
+  /\b(?:people|person|persons|man|men|woman|women|lady|ladies|gentleman|girls?|boys?|child|children|kids?|bab(?:y|ies)|newborn|toddlers?|teens?|teenagers?|teenage|youth|famil(?:y|ies)|congregation|choir|couples?|bride|groom|pastors?|ministers?|members?|friends|volunteers|group|crowd|adults?|students?|deacons?|singers?|musicians?|guitarists?|pianist|team|guests?|party|parents?|mother|father|grandparents?|coordinators?|directors?|secretar(?:y|ies)|interns?|leaders?|treasurers?|organists?|portraits?|headshots?|faces?|smil(?:e|es|ing)|laugh(?:s|ing)?|posed?|posing|hugs?|hugging)\b/i;
 
 const ROOM_AFTER =
-  /\b(?:people|person|man|men|woman|women|lady|ladies|girls?|boys?|child|children|kids?|bab(?:y|ies)|teens?|youth|famil(?:y|ies)|choir|couples?|bride|groom|pastors?|ministers?|members?|friends|volunteers|group|adults?|students?|deacons?|singers?|musicians?|team|guests?|party|parents?)(?:'s|s'|’s|s’)?\s+(?:room|study|wing|hall|suite|lounge|office|center|centre|building)s?\b/gi;
+  /\b(?:people|person|man|men|woman|women|lady|ladies|girls?|boys?|child|children|kids?|bab(?:y|ies)|teens?|youth|famil(?:y|ies)|choir|couples?|bride|groom|pastors?|ministers?|members?|friends|volunteers|group|adults?|students?|deacons?|singers?|musicians?|team|guests?|party|parents?|coordinators?|directors?|secretar(?:y|ies)|interns?|leaders?|treasurers?|organists?)(?:'s|s'|’s|s’)?\s+(?:room|study|wing|hall|suite|lounge|office|center|centre|building)s?\b/gi;
 
 export type PhotoSubject = 'people' | 'place';
 

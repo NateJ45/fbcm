@@ -6,6 +6,8 @@ import {
   findLegend,
   resolveLegend,
   assignPhotoShapes,
+  besideForm,
+  COMPACT_WORDS,
   type PhotoRow,
 } from './photo-shape.ts';
 import type { PtBlock } from './span-split.ts';
@@ -129,4 +131,68 @@ test('a wide sharp photo of PEOPLE is never a ground (people go in arches, 2026-
     { _type: 'richTextSection' },
   ];
   assert.equal(assignPhotoShapes(rows).get(0), 'row');
+});
+
+// ── besideForm (2026-09-25) ─────────────────────────────────────────────────
+const STEGA = '​​​​' + '‌‍﻿​'.repeat(40);
+const words = (k: number) => Array.from({ length: k }, (_, i) => `w${i}`).join(' ');
+const coordinator = {
+  shape: 'window' as const,
+  aspect: 3632 / 5448,
+  arched: true,
+  body: [p(words(32))],
+};
+
+test('besideForm: a portrait beside a few words is compact (Wedding coordinator)', () => {
+  assert.equal(besideForm(coordinator), 'compact');
+  assert.equal(besideForm({ ...coordinator, body: [p(words(COMPACT_WORDS))] }), 'compact');
+  assert.equal(besideForm({ ...coordinator, shape: 'frame', arched: false }), 'compact');
+});
+
+test('besideForm: many words, a small heading, a room board or no words stay standard', () => {
+  assert.equal(besideForm({ ...coordinator, body: [p(words(COMPACT_WORDS + 1))] }), 'standard');
+  assert.equal(
+    besideForm({ ...coordinator, body: [p(words(10)), { ...p('Business'), style: 'h3' }] }),
+    'standard',
+  );
+  assert.equal(besideForm({ ...coordinator, board: true }), 'standard');
+  assert.equal(besideForm({ ...coordinator, body: [] }), 'standard');
+});
+
+test('besideForm: a landscape, a ground or a legend is never compact', () => {
+  assert.equal(besideForm({ ...coordinator, aspect: 1.5, shape: 'row' }), 'standard');
+  assert.equal(besideForm({ ...coordinator, aspect: 0.9 }), 'standard');
+  assert.equal(besideForm({ ...coordinator, shape: 'ground' }), 'standard');
+  assert.equal(besideForm({ ...coordinator, shape: 'legend' }), 'standard');
+  assert.equal(besideForm({ ...coordinator, aspect: null }), 'standard');
+});
+
+test('besideForm: two portraits of people are a pair (Contact co-pastors), whatever the words', () => {
+  const pastors = {
+    ...coordinator,
+    detailAspect: 3354 / 5030,
+    detailPeople: true,
+    body: [p(words(120)), { ...p('Business'), style: 'h3' }],
+  };
+  assert.equal(besideForm(pastors), 'pair');
+  // A landscape detail, a detail of a place, or a main photo not in an arch
+  // keep the old small detail over the corner.
+  assert.equal(besideForm({ ...pastors, detailAspect: 1.5 }), 'standard');
+  assert.equal(besideForm({ ...pastors, detailPeople: false }), 'standard');
+  assert.equal(besideForm({ ...pastors, arched: false }), 'standard');
+});
+
+test('besideForm counts words and reads heading styles on the stega-cleaned text', () => {
+  const stegaWords = [
+    p(
+      words(40)
+        .split(' ')
+        .join(STEGA + ' ') + STEGA,
+    ),
+  ];
+  assert.equal(besideForm({ ...coordinator, body: stegaWords }), 'compact');
+  assert.equal(
+    besideForm({ ...coordinator, body: [p(words(5)), { ...p('x'), style: 'h4' + STEGA }] }),
+    'standard',
+  );
 });

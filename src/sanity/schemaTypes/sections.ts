@@ -305,7 +305,7 @@ export const imageTextSection = defineType({
       type: 'image',
       options: { hotspot: true },
       description:
-        'Shown small, in an arched window over the corner of the main photo, when the main photo shows people.',
+        'Shown small, in an arched window over the corner of the main photo, when the main photo shows people. When both photos are portraits of people (two pastors, say), they are shown side by side at the same size instead.',
       fields: [
         defineField({
           name: 'alt',
