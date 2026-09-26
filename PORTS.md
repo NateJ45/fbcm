@@ -2160,6 +2160,14 @@ refresh button until it does).
 **Canonical:** `src/lib/preview-morph.ts` (+ `.test.ts`).
 **Per-repo wiring:** the morph + fast-path branch in `VisualEditingOverlay.tsx`.
 
+**Update 2026-09-26 (fbcm), for the next sync:** `syncAttributes` now keeps the classes a
+page's own scripts add after load (`CLIENT_STATE_CLASSES`: `is-visible`, `is-drawn`,
+`is-revealed`, `is-staggered`) when the server's HTML lacks them. A plain class sync took
+them off on every refresh and each observer runs once, so revealed elements went back to
+their hidden start state for good: the FBCM Staff hero's arch portraits sat clipped to
+nothing (`clip-path: inset(100% 0 0)`) in the Studio preview after any draft edit. Any
+repo with scroll reveals has the same bug; port the function and its test.
+
 **The failure, measured in the deployed Studio.** The editor's words: the text
 "disappears for a second and then reappears after another second". The instrumentation
 around one keystroke found: a SINGLE keystroke produced TWO `#main` swaps about two
