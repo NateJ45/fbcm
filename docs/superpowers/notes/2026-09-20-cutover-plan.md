@@ -126,9 +126,16 @@ Nothing in this list is code. Each line is a person and a decision.
       invisible for weeks. Setting it also flips the privacy page from "this
       site runs no analytics" to the sentence about cookieless counting, so it
       is better set before the church reads that page on its own domain.
-- [ ] `#nathan` `PUBLIC_GA_ID`, only if the church actually had Google
-      Analytics on the Wix site. If they did not, skip it; do not add tracking
-      the church never asked for.
+- [ ] `#nathan` `PUBLIC_GA_ID` (the GA4 Measurement ID, `G-...`): Nathan
+      decided on 2026-09-26 to set up Google Analytics at go-live. Set it as a
+      Worker build variable and rebuild; the tag renders and /privacy switches
+      to its Google Analytics wording on its own (PrivacyDerived.astro reads the
+      same switch). In the GA property, keep **Google signals**, **ads
+      personalisation** and **data sharing with Google products** OFF: the
+      policy says the data "is not used for advertising" and "not shared beyond
+      Google's own processing", which is true only with those off. Then bump
+      `lastUpdated` in `scripts/pages/privacy.mjs` and apply it, since the policy
+      changed that day.
 - [ ] `#nathan` Verify the new host in Google Search Console, and write down
       what the old Wix property was reporting before it goes quiet, so there is
       a before number to compare against.

@@ -40,7 +40,7 @@ import { getPrivacyPage, getSiteSettings } from '@/lib/queries';
 // What this build ACTUALLY ships, read from the same module that decides whether
 // each tag renders. The fallback copy below branches on these rather than
 // asserting a fixed answer. See src/lib/analytics-config.ts.
-import { hasCfAnalytics, hasGa } from '@/lib/analytics-config';
+import PrivacyDerived from '@/components/privacy/PrivacyDerived.astro';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
 
@@ -137,7 +137,14 @@ const H2 = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground';
     <div class="mx-auto max-w-content px-gutter py-section-lg">
       {
         hasSanityBody ? (
-          <PortableTextStatic value={page!.body} className={`prose-friendly ${PROSE_MEASURE}`} />
+          <>
+            <PortableTextStatic value={page!.body} className={`prose-friendly ${PROSE_MEASURE}`} />
+            {/* Cookies, measurement, search and the contact line: derived at
+              build time, never stored in the document (PrivacyDerived.astro). */}
+            <div class={PROSE_MEASURE}>
+              <PrivacyDerived email={contactEmail} phone={contactPhone} />
+            </div>
+          </>
         ) : (
           <div class:list={['space-y-l', PROSE_MEASURE]}>
             <p>
@@ -150,43 +157,7 @@ const H2 = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground';
               <ul class="list-disc space-y-1 pl-6 marker:text-gold">
                 <li>This site has no contact form, sign-up form or account system of its own.</li>
                 <li>It does not ask you to create an account or log in.</li>
-                <li>It does not set any cookies of its own.</li>
               </ul>
-            </div>
-
-            {/*
-              Measurement, described from the build's real configuration rather
-              than asserted. Each branch says what that tool actually does,
-              including the cookie, because Google's own terms require a policy
-              that discloses the use of Analytics and of cookies.
-            */}
-            <div>
-              <h2 class={H2}>How visits are measured</h2>
-              {!hasGa && !hasCfAnalytics && (
-                <p>
-                  This site runs no analytics at all. Visits are not counted, and nothing is stored
-                  on your device for measurement.
-                </p>
-              )}
-              {hasCfAnalytics && (
-                <p>
-                  Page visits are counted with Cloudflare Web Analytics, which sets no cookies and
-                  does not identify individual visitors.
-                </p>
-              )}
-              {hasGa && (
-                <p class="mt-s">
-                  {/* "also" only reads right when the cookieless paragraph above it rendered. */}
-                  Page visits are {hasCfAnalytics ? 'also ' : ''}measured with Google Analytics,
-                  which does set cookies on your device (named <code>_ga</code> and{' '}
-                  <code>_ga_</code> followed by a stream id) so returning visits are recognised as
-                  the same session. It records which pages are opened, roughly where in the world
-                  the visit came from, and what kind of device was used. It is not used for
-                  advertising, and the data is not sold or shared beyond Google's own processing.
-                  You can block these cookies in your browser settings, or with any tracker-blocking
-                  extension, and the site will work exactly the same.
-                </p>
-              )}
             </div>
 
             <div>
@@ -214,20 +185,7 @@ const H2 = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground';
               </ul>
             </div>
 
-            <div>
-              <h2 class={H2}>How to reach us</h2>
-              <p>
-                Questions about this policy, or about anything on this site, can go to the church
-                office. Email{' '}
-                <a
-                  href={`mailto:${contactEmail}`}
-                  class="text-link underline underline-offset-2 hover:text-primary"
-                >
-                  {contactEmail}
-                </a>
-                {contactPhone ? ` or call ${contactPhone}` : ''}.
-              </p>
-            </div>
+            <PrivacyDerived email={contactEmail} phone={contactPhone} h2Class={H2} pClass="" />
           </div>
         )
       }

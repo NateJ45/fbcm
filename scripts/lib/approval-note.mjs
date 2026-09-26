@@ -152,6 +152,18 @@ export const CHROME_SECTIONS = [
       'Footer, every page: "The church app", the same two store buttons, and "Install code 8PG6ZJ" (the code is read from the app link in Site settings).',
     ],
   },
+  {
+    // src/components/privacy/PrivacyDerived.astro: derived at build time from
+    // src/lib/analytics-config.ts and Site settings, so only the sentences the
+    // current configuration selects are on the page.
+    heading: 'Privacy: cookies, measurement, Google Search and how to reach us (2026-09-26)',
+    newCopy: [
+      'Before Google Analytics is switched on: "This site sets no cookies and runs no analytics. Visits are not counted, and nothing is stored on your device for measurement."',
+      'Once Google Analytics is on (go-live): "Page visits are measured with Google Analytics. Google Analytics sets cookies on your device (named _ga and _ga_ followed by a stream id) so returning visits are recognised as the same session. It records which pages are opened, roughly where in the world the visit came from, and what kind of device was used. It is not used for advertising, and the data is not sold or shared beyond Google\'s own processing. These are the only cookies this site sets." and "You can block these cookies in your browser settings, with any tracker-blocking extension, or with Google\'s Analytics opt-out add-on, and the site will work exactly the same. Google explains how it uses information from sites that use its services."',
+      'Google Search: "The church uses Google Search Console to see how this site appears in Google search results: which searches show it and how often it is chosen. Search Console works from Google\'s own search data. It sets nothing on your device and adds nothing to this site."',
+      'How to reach us: "Questions about this policy, or about anything on this site, can go to the church office. Email <the office email> or call <the office phone>." (from Site settings)',
+    ],
+  },
 ];
 
 /** `manifest[key].alt`, following `.same` chains, matching seed-pages.mjs's altFor. */

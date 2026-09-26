@@ -104,7 +104,7 @@ test('the header section carries its edits fallback line', () => {
 });
 
 test('CHROME_SECTIONS is the single source of the chrome copy (no duplicate definition to drift)', () => {
-  assert.equal(CHROME_SECTIONS.length, 10);
+  assert.equal(CHROME_SECTIONS.length, 11);
   // The two moved out of the note by hand on 2026-09-26.
   assert.match(CHROME_SECTIONS[8].heading, /^What's On, Church Trac forms/);
   assert.match(CHROME_SECTIONS[9].heading, /^The church app/);

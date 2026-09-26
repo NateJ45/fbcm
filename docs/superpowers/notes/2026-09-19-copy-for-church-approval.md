@@ -383,13 +383,9 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - This site is run by First Baptist Church Muncie to share what is happening at the church. This policy explains what the site itself does with information from anyone who visits it. (intro)
 - This site has no contact form, sign-up form or account system of its own. (What this site does not do)
 - It does not ask you to create an account or log in. (What this site does not do)
-- It does not set any cookies of its own. (What this site does not do)
-- This site runs no analytics at all. Visits are not counted, and nothing is stored on your device for measurement. (How visits are measured, when PUBLIC_CF_ANALYTICS_TOKEN is unset)
-- Page visits are counted with Cloudflare Web Analytics, which sets no cookies and does not identify individual visitors. (How visits are measured, when PUBLIC_CF_ANALYTICS_TOKEN is set)
 - This site links out to a few services the church uses for things this site itself does not do. (Links to other services, lead-in)
 - Church Trac holds the church’s records and runs its calendar, forms and app. It has its own privacy policy, separate from this one. (Links to other services, Church Trac; 2026-09-26, Church Center retired)
 - YouTube hosts our livestream and sermon recordings. It has its own privacy policy, separate from this one. (Links to other services, YouTube)
-- Questions about this policy, or about anything on this site, can go to the church office. (How to reach us, lead-in)
 
 ### Edits to the church’s own text
 
@@ -509,6 +505,15 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Home, the band "The Church App": the small line "Free for iPhone and Android"; "Church Trac's free app keeps First Baptist on your phone: the calendar, the prayer list and news from the ministries."; the buttons "Get the app", "For iPhone / App Store" and "For Android / Google Play"; "Install code", and "Found the app in the store yourself? Enter this code when it asks, and it opens on First Baptist."
 - The four things the app is for: "What's On: The church calendar, and your own events once you sign in."; "Ministry news: The Kid's Corner and The Moose's Message, from the Children's and Youth ministries."; "Church updates: Notices from the church, sent straight to your phone." The fourth, "Prayer List: Seeking the Lord for and alongside your church family.", is the church's own line from its Church Connect site.
 - Footer, every page: "The church app", the same two store buttons, and "Install code 8PG6ZJ" (the code is read from the app link in Site settings).
+
+## Privacy: cookies, measurement, Google Search and how to reach us (2026-09-26)
+
+### New sentences
+
+- Before Google Analytics is switched on: "This site sets no cookies and runs no analytics. Visits are not counted, and nothing is stored on your device for measurement."
+- Once Google Analytics is on (go-live): "Page visits are measured with Google Analytics. Google Analytics sets cookies on your device (named _ga and _ga_ followed by a stream id) so returning visits are recognised as the same session. It records which pages are opened, roughly where in the world the visit came from, and what kind of device was used. It is not used for advertising, and the data is not sold or shared beyond Google's own processing. These are the only cookies this site sets." and "You can block these cookies in your browser settings, with any tracker-blocking extension, or with Google's Analytics opt-out add-on, and the site will work exactly the same. Google explains how it uses information from sites that use its services."
+- Google Search: "The church uses Google Search Console to see how this site appears in Google search results: which searches show it and how often it is chosen. Search Console works from Google's own search data. It sets nothing on your device and adds nothing to this site."
+- How to reach us: "Questions about this policy, or about anything on this site, can go to the church office. Email <the office email> or call <the office phone>." (from Site settings)
 
 ## Facts the church must confirm
 

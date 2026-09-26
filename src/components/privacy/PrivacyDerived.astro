@@ -1,0 +1,113 @@
+---
+// Safe to edit by hand
+// The privacy policy's DERIVED sections (2026-09-26): cookies and how visits
+// are measured, Google Search, and how to reach us. Rendered after the Sanity
+// body on /privacy, and in the no-singleton fallback, so both say the same.
+//
+// WHY THESE ARE CODE, NOT SANITY TEXT (CLAUDE.md rule 15). The measurement
+// paragraph used to be seeded into the privacyPage document, chosen when
+// seed-pages ran, beside a bullet saying "It does not set any cookies of its
+// own". The day PUBLIC_GA_ID is set at go-live, the Analytics tag would load
+// and set _ga cookies while the stored policy still denied them: a false
+// statement to visitors that nothing in the build would flag. So the cookie
+// and measurement wording is read from src/lib/analytics-config.ts, the same
+// booleans that decide whether each tag renders (src/components/Analytics.astro),
+// and the contact line from Site settings. Nobody retypes any of it.
+//
+// Google's Analytics terms require a policy that discloses the use of
+// Analytics and its cookies and says how Google uses data from sites that use
+// its services; the GA paragraph links Google's own page for that and its
+// opt-out add-on. The paragraph's "not used for advertising" and "not shared"
+// are true only while the property keeps Google signals, ads personalisation
+// and data sharing off (docs/PENDING.md, the go-live GA item).
+import { hasCfAnalytics, hasGa } from '@/lib/analytics-config';
+
+interface Props {
+  email: string;
+  phone?: string | null;
+  /** Each h2's classes. Defaults to PortableTextStatic's h2, so after the
+   *  Sanity body the derived sections read as one document with it. */
+  h2Class?: string;
+  /** Each paragraph's classes. Defaults to PortableTextStatic's normal block;
+   *  the fallback passes '' (its own spacing wraps them). */
+  pClass?: string;
+}
+
+const {
+  email,
+  phone,
+  h2Class = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground scroll-mt-24',
+  pClass = 'my-5 font-body text-body leading-[1.72] text-foreground/90',
+} = Astro.props as Props;
+const link = 'text-link underline underline-offset-2 hover:text-primary';
+---
+
+<div>
+  <h2 class={h2Class}>Cookies and how visits are measured</h2>
+  {
+    !hasGa && !hasCfAnalytics && (
+      <p class={pClass}>
+        This site sets no cookies and runs no analytics. Visits are not counted, and nothing is
+        stored on your device for measurement.
+      </p>
+    )
+  }
+  {
+    hasCfAnalytics && !hasGa && (
+      <p class={pClass}>
+        This site sets no cookies. Page visits are counted with Cloudflare Web Analytics, which does
+        not identify individual visitors.
+      </p>
+    )
+  }
+  {
+    hasGa && (
+      <>
+        <p class={pClass}>
+          {hasCfAnalytics
+            ? 'Page visits are counted with Cloudflare Web Analytics, which sets no cookies, and also measured with Google Analytics.'
+            : 'Page visits are measured with Google Analytics.'}{' '}
+          Google Analytics sets cookies on your device (named <code>_ga</code> and <code>_ga_</code>{' '}
+          followed by a stream id) so returning visits are recognised as the same session. It
+          records which pages are opened, roughly where in the world the visit came from, and what
+          kind of device was used. It is not used for advertising, and the data is not sold or
+          shared beyond Google's own processing. These are the only cookies this site sets.
+        </p>
+        <p class={pClass}>
+          You can block these cookies in your browser settings, with any tracker-blocking extension,
+          or with Google's{' '}
+          <a href="https://tools.google.com/dlpage/gaoptout" class={link}>
+            Analytics opt-out add-on
+          </a>
+          , and the site will work exactly the same. Google explains{' '}
+          <a href="https://policies.google.com/technologies/partner-sites" class={link}>
+            how it uses information from sites that use its services
+          </a>
+          .
+        </p>
+      </>
+    )
+  }
+</div>
+
+<div>
+  <h2 class={h2Class}>Google Search</h2>
+  <p class={pClass}>
+    The church uses Google Search Console to see how this site appears in Google search results:
+    which searches show it and how often it is chosen. Search Console works from Google's own search
+    data. It sets nothing on your device and adds nothing to this site.
+  </p>
+</div>
+
+<div>
+  <h2 class={h2Class}>How to reach us</h2>
+  <p class={pClass}>
+    Questions about this policy, or about anything on this site, can go to the church office. Email{
+      ' '
+    }
+    <a href={`mailto:${email}`} class={link}>
+      {email}
+    </a>
+    {phone ? ` or call ${phone}` : ''}.
+  </p>
+</div>
