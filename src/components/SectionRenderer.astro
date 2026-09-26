@@ -41,6 +41,8 @@ import GoalsBand from '@/components/sections/GoalsBand.astro';
 import MinistryGoals from '@/components/sections/MinistryGoals.astro';
 import ChurchTracForm from '@/components/sections/ChurchTracForm.astro';
 import { resolveMinistryBands } from '@/lib/ministry-band';
+import TimelineContentsBar from '@/components/church/TimelineContents.astro';
+import { timelineContents, type TimelineContents } from '@/lib/timeline-contents';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
 import { richGrounds, isBrandGround } from '@/lib/rich-ground';
@@ -50,6 +52,7 @@ import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
 import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
 import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
+import type { LinkableBand } from '@/lib/hero-fact-links';
 import type { SundaySermon } from '@/lib/live-sunday';
 import type { SundayPreacher } from '@/lib/preacher';
 import { insertIndex } from '@/lib/band-insert';
@@ -244,6 +247,24 @@ const uniqueAnchor = (block: unknown, headingId: string): string => {
   usedAnchors.add(id);
   return id;
 };
+// Computed once, in page order, before the template runs (2026-09-25): the
+// contents bar below needs every band's id up front. The same calls in the
+// same order, so every id is what the loop used to compute for itself.
+const anchors = rows.map(({ block, headingId }) => uniqueAnchor(block, headingId));
+
+// THE CONTENTS BAR (2026-09-25, src/lib/timeline-contents.ts). A timeline
+// whose rows link to at least three bands on this same page is a table of
+// contents, and gets a sticky bar that carries those links down the page
+// (only /history today). Derived from the timeline block, never typed.
+// scaffold: church
+const contents: TimelineContents | null = timelineContents(
+  rows.map(({ block }, i) => {
+    const b = block as { _type?: string; heading?: unknown; headline?: unknown; rows?: unknown };
+    return { type: b._type ?? '', id: anchors[i], heading: b.heading ?? b.headline, rows: b.rows };
+  }),
+  Astro.url.pathname,
+);
+// scaffold:end
 
 // A page that OPENS on a band rather than a hero has no other h1, so that
 // band carries the page's h1; everywhere else it is an h2, like every other
@@ -362,9 +383,18 @@ const wrapAttrs = (key: string | undefined) =>
       {insertDividerBefore && !afterFullBleed(blockIndex) && !besideBrandBand(blockIndex) && (
         <SectionDivider />
       )}
+      {/* scaffold: church */}
+      {contents && blockIndex === contents.from && (
+        <TimelineContentsBar
+          contents={contents}
+          fromId={anchors[contents.from]}
+          toId={anchors[contents.to]}
+        />
+      )}
+      {/* scaffold:end */}
 
       <Wrap
-        id={uniqueAnchor(s, headingId)}
+        id={anchors[blockIndex]}
         class="scroll-mt-[var(--header-offset)]"
         {...wrapAttrs((s as { _key?: string })._key)}
       >
@@ -388,6 +418,7 @@ const wrapAttrs = (key: string | undefined) =>
             sermon={sermon}
             preacher={preacher}
             calendarHref={calendarHref}
+            factBands={rows.map(({ block }) => block as LinkableBand)}
             headingId={headingId}
           />
         ) : s._type === 'ctaBandSection' ? (

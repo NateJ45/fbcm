@@ -1,6 +1,89 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { frameAnimationDelays, heroObjectPosition, heroSizes } from './hero-frames.ts';
+import {
+  archPlacement,
+  frameAnimationDelays,
+  heroObjectPosition,
+  heroSizes,
+  archRatioFromStyle,
+  LANCET_FACE_LINE,
+  MAX_HEADROOM,
+} from './hero-frames.ts';
+
+// ── archPlacement: a portrait in an arch (2026-09-25) ──────────────────────
+// The Staff hero's side lights: a square headshot in a 100 / 260 lancet.
+const staffHero = {
+  shape: 'lancet' as const,
+  people: true,
+  aspect: 1,
+  frameRatio: 2.6,
+  hotspot: { x: 0.5, y: 0.4 },
+};
+
+test('a close portrait in a lancet with its face above the line gets headroom', () => {
+  const p = archPlacement(staffHero);
+  assert.equal(p.objectPosition, '50.00% 40.00%');
+  // h = (0.5 - 0.4) / (1 - 0.4)
+  assert.equal(p.headroom, 0.1667);
+});
+
+test('with headroom, the hotspot lands exactly on the face line', () => {
+  for (const y of [0.1, 0.25, 0.4, 0.49]) {
+    const { headroom: h } = archPlacement({ ...staffHero, hotspot: { x: 0.5, y } });
+    if (h < MAX_HEADROOM) assert.ok(Math.abs(h + y * (1 - h) - LANCET_FACE_LINE) < 1e-3, `y=${y}`);
+  }
+});
+
+test('headroom is capped', () => {
+  assert.equal(archPlacement({ ...staffHero, hotspot: { x: 0.5, y: 0 } }).headroom, MAX_HEADROOM);
+});
+
+test('no headroom when the arch is not tall enough to magnify the portrait', () => {
+  // History's opener: Pastor Carter, square, hotspot 0.4, in a 100 / 150 lancet.
+  assert.equal(archPlacement({ ...staffHero, frameRatio: 1.5 }).headroom, 0);
+  // No ratio given: the lancet's own 1.5.
+  assert.equal(archPlacement({ ...staffHero, frameRatio: null }).headroom, 0);
+  // The window hero's middle light (100 / 140) with a portrait: 1.4 x 0.68 < 2.
+  assert.equal(archPlacement({ ...staffHero, frameRatio: 1.4, aspect: 0.68 }).headroom, 0);
+  // Exactly twice as wide: headroom.
+  assert.ok(archPlacement({ ...staffHero, frameRatio: 2, aspect: 1 }).headroom > 0);
+});
+
+test('archRatioFromStyle reads --arch-ratio as height / width', () => {
+  assert.equal(archRatioFromStyle('--arch-ratio: 100 / 150; --arch-mould: red;'), 1.5);
+  assert.equal(archRatioFromStyle('--arch-ratio:160/112'), 0.7);
+  assert.equal(archRatioFromStyle('--arch-mould: red;'), null);
+  assert.equal(archRatioFromStyle(undefined), null);
+});
+
+test('no headroom for a door, a place, a landscape, a low face or no hotspot', () => {
+  assert.equal(archPlacement({ ...staffHero, shape: 'door' }).headroom, 0);
+  assert.equal(archPlacement({ ...staffHero, people: false }).headroom, 0);
+  assert.equal(archPlacement({ ...staffHero, aspect: 1.5 }).headroom, 0);
+  assert.equal(archPlacement({ ...staffHero, hotspot: { x: 0.5, y: 0.55 } }).headroom, 0);
+  assert.equal(archPlacement({ ...staffHero, hotspot: { x: 0.5, y: 0.5 } }).headroom, 0);
+  const bare = archPlacement({ ...staffHero, hotspot: null });
+  assert.deepEqual(bare, { objectPosition: '50% 0%', headroom: 0 });
+  assert.equal(archPlacement({ ...staffHero, aspect: null }).headroom, 0);
+});
+
+test('the crop is honoured: aspect after the crop, hotspot inside it', () => {
+  // A landscape cropped to a square is a portrait now.
+  const cropped = archPlacement({
+    ...staffHero,
+    aspect: 1.5,
+    hotspot: { x: 0.5, y: 0.4 },
+    crop: { left: 0.1667, right: 0.1667, top: 0, bottom: 0 },
+  });
+  assert.equal(cropped.headroom, 0.1667);
+  // A crop off the bottom moves the face down inside the drawn picture.
+  const low = archPlacement({
+    ...staffHero,
+    crop: { top: 0, bottom: 0.3, left: 0.15, right: 0.15 },
+  });
+  assert.equal(low.headroom, 0);
+  assert.equal(low.objectPosition, '50.00% 57.14%');
+});
 
 test('frame delays step by the frame length and the first frame starts at zero', () => {
   assert.deepEqual(frameAnimationDelays(5, 8), [0, 8, 16, 24, 32]);

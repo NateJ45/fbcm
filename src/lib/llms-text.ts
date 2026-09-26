@@ -39,7 +39,6 @@ export interface LlmsSettings {
   directionsUrl?: string | null;
   livestreamUrl?: string | null;
   youtubeUrl?: string | null;
-  churchCenterUrl?: string | null;
   churchTracUrl?: string | null;
   givingUrl?: string | null;
 }
@@ -151,8 +150,7 @@ export function llmsText(input: LlmsInput): string {
 
   const elsewhere: Array<[string, string]> = [
     ['YouTube', httpUrl(s.youtubeUrl)],
-    ['Church Center (calendar and giving)', httpUrl(s.churchCenterUrl)],
-    ['Church Trac (newsletters and the app)', httpUrl(s.churchTracUrl)],
+    ['Church Trac (the calendar, the connection card and the app)', httpUrl(s.churchTracUrl)],
   ];
   if (elsewhere.some(([, u]) => u)) {
     out.push('## Elsewhere', '');

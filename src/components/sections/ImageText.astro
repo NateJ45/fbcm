@@ -43,6 +43,15 @@
 //    titling figures, the name beside it, the text under the name, and a
 //    bullet list as quatrefoil lines (roomBoard() in morning-path.ts).
 //
+// 6. THREE COMPOSITIONS OF A BESIDE BAND (2026-09-25, photo-shape.ts
+//    besideForm). STANDARD is everything above. COMPACT is a portrait beside
+//    a few words: the heading moves into the text column, the words are
+//    centred against the portrait, and the portrait is sized to them (it used
+//    to tower over four lines from the far edge, the heading alone on the row
+//    above). PAIR is two portraits of people, the photo and its `detail`,
+//    drawn as two equal lancets instead of a small one over a corner (two
+//    people who share one role, like Contact's co-pastors).
+//
 // 3. THE PICTURE IS ALSO THE PAGE'S SPARE, AND MAY NOT BE THIS ONE.
 //    src/lib/spare-images.ts reads `imageTextSection.image` into the pool the
 //    statement band and the Sunday band borrow from, and a band whose picture
@@ -61,7 +70,7 @@ import CtaLink from '@/components/CtaLink.astro';
 import RichBody from '@/components/sections/RichBody.astro';
 import Lancet from '@/components/sections/Lancet.astro';
 import { classifyRichText, isLedeParagraph } from '@/lib/rich-shape';
-import { photoAspect, resolveLegend, type PhotoShape } from '@/lib/photo-shape';
+import { besideForm, photoAspect, resolveLegend, type PhotoShape } from '@/lib/photo-shape';
 import { toPt, type PtBlock } from '@/lib/span-split';
 import { splitStega } from '@/lib/preview-stega';
 import ArchFrame from '@/components/church/ArchFrame.astro';
@@ -141,10 +150,25 @@ const arched = people && (shape === 'row' || shape === 'frame' || shape === 'win
 const lancet = (shape === 'frame' || shape === 'window') && !detail?.asset;
 const archRatio = lancet ? '100 / 150' : dims && dims.a >= 1.25 ? '160 / 124' : '100 / 130';
 const detailAlt = splitStega(detail?.alt ?? '').cleaned;
-const hasDetail = arched && !!detail?.asset;
-const rowBleed = shape === 'row' && !arched && !!dims && dims.a >= 1.15;
-// Note 5: a body written as rooms.
+// Note 6: the band's composition (photo-shape.ts besideForm). A pair draws the
+// photo and its detail as two equal lancets; compact puts the heading beside a
+// portrait with few words.
 const board = roomBoard(rest);
+const form = hasPicture
+  ? besideForm({
+      shape,
+      aspect: dims?.a,
+      arched,
+      detailAspect: detail?.asset ? photoAspect(detail)?.a : null,
+      detailPeople: !!detail?.asset && photoSubject(detailAlt) === 'people',
+      body: blocks,
+      board: !!board,
+    })
+  : 'standard';
+const pair = form === 'pair';
+const compact = form === 'compact';
+const hasDetail = arched && !!detail?.asset && !pair;
+const rowBleed = shape === 'row' && !arched && !!dims && dims.a >= 1.15;
 const QF =
   'M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z';
 ---
@@ -203,21 +227,24 @@ const QF =
             beside && hasPicture && 'ph-beside',
             hasPicture && `is-${shape}`,
             hasPicture && side === 'left' && 'is-left',
-            hasPicture && shape === 'row' && `w${rowWidth}`,
+            hasPicture && shape === 'row' && form === 'standard' && `w${rowWidth}`,
+            form !== 'standard' && `is-${form}`,
           ]}
         >
-          <header class="rt-head">
-            {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
-            {heading && (
-              <h2
-                id={headingId}
-                class:list={[H2_DISPLAY, 'h-fit max-w-[22ch] text-foreground']}
-                style={headingFit(heading)}
-              >
-                <span class="h-fit-in">{heading}</span>
-              </h2>
-            )}
-          </header>
+          {!compact && (
+            <header class="rt-head">
+              {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
+              {heading && (
+                <h2
+                  id={headingId}
+                  class:list={[H2_DISPLAY, 'h-fit max-w-[22ch] text-foreground']}
+                  style={headingFit(heading)}
+                >
+                  <span class="h-fit-in">{heading}</span>
+                </h2>
+              )}
+            </header>
+          )}
 
           {shape === 'legend' && hasPicture ? (
             <>
@@ -284,6 +311,23 @@ const QF =
                         />
                       </div>
                     </figure>
+                  ) : pair ? (
+                    <div class="it-pair">
+                      {[
+                        { img: image, a: alt },
+                        { img: detail, a: detailAlt },
+                      ].map(({ img, a }) => (
+                        <ArchFrame
+                          image={img}
+                          shape="lancet"
+                          width={900}
+                          sizes="(min-width: 1024px) 24vw, 46vw"
+                          alt={a}
+                          grade="warm"
+                          style="--arch-mould: var(--color-brown-ink);"
+                        />
+                      ))}
+                    </div>
                   ) : arched ? (
                     <div class:list={['it-arches relative', hasDetail && 'has-detail']}>
                       <ArchFrame
@@ -341,6 +385,20 @@ const QF =
               )}
               {hasPicture ? (
                 <div class="ph-text">
+                  {compact && (eyebrow || heading) && (
+                    <header class="rt-head">
+                      {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
+                      {heading && (
+                        <h2
+                          id={headingId}
+                          class:list={[H2_DISPLAY, 'h-fit max-w-[22ch] text-foreground']}
+                          style={headingFit(heading)}
+                        >
+                          <span class="h-fit-in">{heading}</span>
+                        </h2>
+                      )}
+                    </header>
+                  )}
                   {ledeBlock && (
                     <div class="rt-lede rt-v">
                       <PortableText value={toPt(ledeBlock)} variant="bare" />

@@ -151,7 +151,11 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - Every age has a place here. (hero headline)
 - Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and who to ask about each. (search description, not shown on the page; 2026-09-24 local search pass)
-- Contact the church office. (the end of a ministry’s contact line when the staff document for that role carries no email address, which today is only the children’s ministry; it links to the contact page)
+- Contact the church office. (the end of a ministry’s contact line when the staff document for that role carries no email address, which today is only the children’s ministry; it links to the contact page. Also the next step under "Help with children" in Get involved, 2026-09-25)
+- Get involved (the hero’s gold button, to the Get involved band; "Get Involved" is the heading all five source pages used) / What’s On (the hero’s second button, to /events; the calendar page’s own name) (2026-09-25)
+- Serve on Sunday / Sing and play / Help with children / Help with youth / Join a Life Group / Serve our community (the six column heads in Get involved, 2026-09-25; "Join a Life Group" and "Serve our community" lean on the church’s own "Life Groups" and "Ways You Can Connect With FBCM to serve our community")
+- Write to worship@fbcmuncie.org. (and the same "Write to" line for cynthia@, youth@ and outreach@: the next step under four Get involved columns, 2026-09-25)
+- To become a member, be baptized or speak with a pastor, use the connection card. (the last line of Get involved, linking to the connection card on /visit, 2026-09-25)
 
 ### Edits to the church’s own text
 
@@ -166,8 +170,17 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Cut as a repeat: "If you’re interested in joining a small group, or are seeking more information, contact adult[at]fbcmuncie.org". The adult band ends with the adult coordinator’s name, role and address, read off her staff document.
 - Em-dash to comma (site style): "join Christ where he is already at work in our world—in Muncie and across the globe" becomes "...in our world, in Muncie and across the globe".
 - Linked: "Our website has links to our building use policy here" had no link behind it on the Wix site. "here" now points at /wedding#building-use.
-- Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band listing the whole Church Coordination Team.
+- Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band of ways in (note 9); the Church Coordination Team is listed on /staff.
 - Reordered, so each reads as a class with its room: "Preschool - 2nd grade: Kickstart Children’s Church (102)" becomes "Kickstart Children’s Church (102): Preschool - 2nd grade", and "3rd - 5th grade: The Underground Children’s Church (B-03)" becomes "The Underground Children’s Church (B-03): 3rd - 5th grade" (what-to-expect.txt lines 65 and 69; the 10:45 row of the Sunday timeline). No word changes.
+- Hero lede (2026-09-25): "FBC Muncie believes that God created the church to be intergenerational." is the middle sentence of children.txt’s "Part of the life of the entire congregation." paragraph, on its own.
+- Hero facts (2026-09-25): "Nursery through fifth grade" and "Grades 6 to 12" are the Children and Youth ministry documents’ own headlines; "College and career to retirees" is adult.txt’s "From College and Career to Retirees", cut to the range and set in sentence case.
+- Get involved, the opening line (2026-09-25): worship.txt’s "If you wish to be a part of our ministry on Sunday mornings, contact us!" with "on Sunday mornings" cut, said once for every ministry.
+- Get involved, Serve on Sunday: worship.txt’s "When we gather, worship leaders help us by:" and four of its five list items (Greeting people as they enter, Supporting through technical arts (sound, slides, livestream, etc.), Leading in prayer & scripture reading, Serving communion) joined into one sentence, each item’s first letter lower-cased. "Singing and playing a variety of instruments" is left to the next column.
+- Get involved, Sing and play: worship.txt’s Praise Team sentence and its hand bell choir sentence, unchanged, side by side.
+- Get involved, Help with children: children.txt’s "To create a safe environment for our children, FBC Muncie requires that all Children’s Ministry volunteers be background checked and children can only be picked up by a parent/guardian with a matching security tag." cut after "background checked." (the pick-up half is in the children’s questions above).
+- Get involved, Help with youth: youth.txt’s "Pastor Jonathan and Kendall, alongside a youth volunteer, open up scripture and discuss how God’s work intersects with student’s lives." unchanged ("student’s" is the church’s own).
+- Get involved, Join a Life Group: adult.txt’s "We have several life groups..." sentence, and its "If you’re interested in joining a small group, or are seeking more information, contact adult[at]fbcmuncie.org" with the address restored and linked and a full stop added. (The adult band still does not repeat it.)
+- Get involved, Serve our community: outreach.txt’s "Volunteering with our partner organizations or at community events." and "Sewing Group (Rm 203) - A multi-aged, monthly group which sews pillowcases for those in need." with the hyphen made a colon and "A" lower-cased.
 - Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now links to The Visitor’s own page, /visitor (the Wix page’s redirect points there too since 2026-09-24).
 
 ### Facts to confirm from this page
@@ -196,7 +209,6 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Deacon chair address: "deaconchair[at]fbcmuncie.org" becomes a real mailto link to deaconchair@fbcmuncie.org, because a visitor cannot click "[at]". (Deacons band; spec 5.6 "Fixes".)
 - Punctuation: "we also have a Worship Director. who coordinates and supports our worship leaders" becomes "...a Worship Director, who coordinates and supports our worship leaders". The full stop mid-sentence is a typo in scripts/data/pages/ministers.txt line 12; no word changes. (Pastors & Staff.)
 - Em-dash to comma (CLAUDE.md rule 2), inside a verbatim scripture quotation: Kendall Ellis’s staff bio quotes Romans 8:17 (NIV) as “...then we are heirs—heirs of God and co-heirs with Christ...” and it now reads “...then we are heirs, heirs of God...”. No other word changes. The bio is a field on her staff document rather than a sentence this module builds, so the change was made by scripts/fix-bio-em-dashes.mjs (backed up first); it is declared here because this is one of the two pages that print it.
-- Em-dash to comma (site style): "...calling a married couple to be Co-Pastors, both of us preaching the word and shepherding God’s people in this community." (A Note From Our Pastors.)
 - Typography only: the curly quotation marks around 1 Corinthians 12:4-6 come off the stored verse because the scripture band draws them itself; the page shows the verse in quotation marks exactly as the Wix page did. (Every Member of this Church.)
 
 ### Photos of children
@@ -278,10 +290,12 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - Support the work of this church. (give band heading)
 - Your gift keeps this church running and reaching Muncie. (give band body, one sentence)
-- You can give online through Church Center any time. (Ways to give, paragraph 1)
+- You can give online any time. (Ways to give, paragraph 1, when Online giving is set)
+- Online giving is on its way. In the meantime, you can give in person or by mail. (Ways to give, paragraph 1, when Online giving is blank; 2026-09-25, the Church Trac move)
 - You can also give in person during Sunday worship, when the offering is taken. (Ways to give, paragraph 2)
 - Or mail a check to the church office. (Ways to give, paragraph 3, lead-in to the mailing address)
-- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online through Church Center, in person on Sunday, or by mail. (search description, not shown on the page; 2026-09-24 local search pass)
+- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: in person on Sunday or by mail. (search description, when Online giving is blank; 2026-09-24 local search pass, reworded 2026-09-25)
+- Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online, in person on Sunday, or by mail. (search description, when Online giving is set)
 
 ### Edits to the church’s own text
 
@@ -290,6 +304,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### Facts to confirm from this page
 
 - Give page copy in their words, and whether to state anything about tax status: neither who-we-are.txt nor outreach.txt says anything about tax deductibility, and spec 5.9 asks for nothing about it either, so this page currently says nothing. The three "Ways to give" paragraphs are net-new copy (declared above) standing in for stewardship words the church has not written yet.
+- Online giving is not live yet (Site settings > Church systems > Online giving is blank, 2026-09-25): the page says so plainly instead of linking to Church Center, which the church is leaving. Once online giving is set up (Church Trac plus Stripe) and the address is filled in, re-run this seed to restore the "give online" sentence and button.
 
 ### Photos of children
 
@@ -487,6 +502,14 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - The Church Trac form band: "Open the form in a new tab" under every form. The heading and the words beside a form are the staff's own, typed in the Studio.
 - /kids-corner and /youth-news: the small lines "Children’s newsletter" and "Youth newsletter"; under the name, "News from the Children’s Ministry, nursery through 5th grade." and "News from the Youth Ministry, 6th through 12th grade."; the closing band "About this newsletter": "<The newsletter’s name> is written by the ministry in Church Trac, and this page follows it each day. It is in the church app too.", with "Open it on Church Trac" and "Get the church app". When Church Trac cannot be read: "<name> could not be loaded here just now. It is always on Church Trac." and "Read <name> on Church Trac". Everything else on those pages is the ministry’s own newsletter, as published in Church Trac.
 - Ministries: under the Children and Youth bands, "Read The Kid's Corner, the children’s newsletter." and "Read The Moose's Message, the youth newsletter."
+
+## The church app (2026-09-25, `feat/church-app`)
+
+### New sentences
+
+- Home, the band "The Church App": the small line "Free for iPhone and Android"; "Church Trac's free app keeps First Baptist on your phone: the calendar, the prayer list and news from the ministries."; the buttons "Get the app", "For iPhone / App Store" and "For Android / Google Play"; "Install code", and "Found the app in the store yourself? Enter this code when it asks, and it opens on First Baptist."
+- The four things the app is for: "What's On: The church calendar, and your own events once you sign in."; "Ministry news: The Kid's Corner and The Moose's Message, from the Children's and Youth ministries."; "Church updates: Notices from the church, sent straight to your phone." The fourth, "Prayer List: Seeking the Lord for and alongside your church family.", is the church's own line from its Church Connect site.
+- Footer, every page: "The church app", the same two store buttons, and "Install code 8PG6ZJ" (the code is read from the app link in Site settings).
 
 ## Facts the church must confirm
 

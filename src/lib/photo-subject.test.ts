@@ -37,6 +37,14 @@ test('a description of the building or a room is a place', () => {
   assert.equal(photoSubject(undefined), 'place');
 });
 
+test('a name and a role is a person (a staff portrait, 2026-09-25)', () => {
+  assert.equal(photoSubject("Ella Mae Lemen, the church's wedding coordinator"), 'people');
+  assert.equal(photoSubject('Cynthia Smith, Worship Arts Director'), 'people');
+  assert.equal(photoSubject('A portrait of the church secretary'), 'people');
+  assert.equal(photoSubject("The director's office"), 'place');
+  assert.equal(photoSubject("The secretary's office, with the copier"), 'place');
+});
+
 test('a room word does not hide people who are really there', () => {
   assert.equal(photoSubject('Two girls laughing in the family room'), 'people');
   assert.equal(photoSubject("Children playing in the children's wing"), 'people');

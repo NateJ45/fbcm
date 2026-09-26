@@ -27,9 +27,9 @@
 
 import { timeOnly } from './live-sunday.ts';
 import {
-  LINK_FALLBACK,
   LINK_SETTINGS_FIELDS,
   fieldOf,
+  linkFallback,
   linkTokenOf,
   linkValues,
   type LinkSettings,
@@ -125,9 +125,12 @@ export function fillString(text: string, values: Record<PlaceholderToken, string
  * LINK TOKENS ({giving}, {sermons}...) are the other way round: they are
  * filled only when a string's WHOLE value is the token, which in practice is
  * a link target (a Portable Text link's `href`, a button's `externalUrl`, a
- * document's `url`). A token whose Site settings field is blank becomes
- * LINK_FALLBACK (the church's own /contact page), never a broken link, and
- * `onUnfilled` hears about it (the build logs a warning, once per token).
+ * document's `url`). A token whose Site settings field is blank becomes its
+ * own fallback (church-links.ts's `linkFallback()`: LINK_FALLBACK for most
+ * tokens, but /give for {giving}, the wedding office's own address for the
+ * two wedding forms, and '' — hidden, not a dead link — for {wednesday} and
+ * {contact-form}), never a broken link, and `onUnfilled` hears about it (the
+ * build logs a warning, once per token).
  */
 export function fillPlaceholders<T>(
   value: T,
@@ -141,8 +144,10 @@ const warned = new Set<string>();
 function warnUnfilled(token: LinkToken): void {
   if (warned.has(token)) return;
   warned.add(token);
+  const fallback = linkFallback(token);
+  const goesTo = fallback ? `Links to it go to ${fallback}` : 'Links to it are hidden';
   console.warn(
-    `[placeholders] ${token} has no address: Site settings > Church systems > ${fieldOf(token)} is empty. Links to it go to ${LINK_FALLBACK} until it is filled.`,
+    `[placeholders] ${token} has no address: Site settings > Church systems > ${fieldOf(token)} is empty. ${goesTo} until it is filled.`,
   );
 }
 
@@ -157,7 +162,7 @@ function walk(
     if (token) {
       if (values[token]) return values[token];
       onUnfilled(token);
-      return LINK_FALLBACK;
+      return linkFallback(token);
     }
     return inHref ? value : fillString(value, values);
   }

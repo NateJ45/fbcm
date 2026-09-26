@@ -126,6 +126,32 @@ export const CHROME_SECTIONS = [
       'The calendar file: the event is named "Sunday worship, First Baptist Church Muncie" and its note reads "What to expect on Sunday: https://www.fbcmuncie.org/visit".',
     ],
   },
+  // Two more typed into the note by hand on 2026-09-25 (the cloud What's On
+  // branch and feat/church-app), moved here word for word on 2026-09-26 before
+  // a seed-pages run could wipe them. approval-note.test.mjs now fails on any
+  // section in the note that this file does not produce.
+  {
+    // src/pages/events.astro, src/components/home/WhatsOnBand.astro, the Church Trac form band
+    // (src/components/sections/ChurchTracForm.astro) and src/components/newsletter/Newsletter.astro. Code, not page-module copy.
+    heading:
+      "What's On, Church Trac forms and the ministry newsletters (2026-09-25, `claude/kind-heisenberg-jf34rt`)",
+    newCopy: [
+      '/events: the page name "What\'s On", the small line "Church calendar", and "Events, classes and gatherings at First Baptist, from the church calendar." (also on Home\'s What\'s On band, under "Coming up"). The door "The full calendar: Every published event, month by month, on Church Trac. Open the calendar". The bands "Coming up" and "Every week", the button "Everything on the calendar" (Home), and "Add to calendar" on each event. When the calendar cannot be read: "The calendar could not be read just now. See every event on the church calendar." With nothing ahead: "Nothing is on the calendar in the months ahead yet. Our weekly gatherings are below." The events\' own titles, times, rooms and descriptions are Church Trac\'s, as typed there.',
+      'The Church Trac form band: "Open the form in a new tab" under every form. The heading and the words beside a form are the staff\'s own, typed in the Studio.',
+      '/kids-corner and /youth-news: the small lines "Children’s newsletter" and "Youth newsletter"; under the name, "News from the Children’s Ministry, nursery through 5th grade." and "News from the Youth Ministry, 6th through 12th grade."; the closing band "About this newsletter": "<The newsletter’s name> is written by the ministry in Church Trac, and this page follows it each day. It is in the church app too.", with "Open it on Church Trac" and "Get the church app". When Church Trac cannot be read: "<name> could not be loaded here just now. It is always on Church Trac." and "Read <name> on Church Trac". Everything else on those pages is the ministry’s own newsletter, as published in Church Trac.',
+      'Ministries: under the Children and Youth bands, "Read The Kid\'s Corner, the children’s newsletter." and "Read The Moose\'s Message, the youth newsletter."',
+    ],
+  },
+  {
+    // src/components/home/ChurchAppBand.astro, src/components/church/AppButtons.astro and the
+    // footer's app block. Code, not page-module copy.
+    heading: 'The church app (2026-09-25, `feat/church-app`)',
+    newCopy: [
+      'Home, the band "The Church App": the small line "Free for iPhone and Android"; "Church Trac\'s free app keeps First Baptist on your phone: the calendar, the prayer list and news from the ministries."; the buttons "Get the app", "For iPhone / App Store" and "For Android / Google Play"; "Install code", and "Found the app in the store yourself? Enter this code when it asks, and it opens on First Baptist."',
+      'The four things the app is for: "What\'s On: The church calendar, and your own events once you sign in."; "Ministry news: The Kid\'s Corner and The Moose\'s Message, from the Children\'s and Youth ministries."; "Church updates: Notices from the church, sent straight to your phone." The fourth, "Prayer List: Seeking the Lord for and alongside your church family.", is the church\'s own line from its Church Connect site.',
+      'Footer, every page: "The church app", the same two store buttons, and "Install code 8PG6ZJ" (the code is read from the app link in Site settings).',
+    ],
+  },
 ];
 
 /** `manifest[key].alt`, following `.same` chains, matching seed-pages.mjs's altFor. */

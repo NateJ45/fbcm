@@ -83,9 +83,12 @@ function renderSpans(spans: Span[] | undefined, markDefs: MarkDef[] | undefined)
         } else {
           // Reference mark — look up in markDefs
           const def = defsMap.get(mark);
-          if (def?._type === 'link') {
-            const href = escapeHtml(def.href ?? '#');
-            const isExternal = /^https?:\/\//.test(def.href ?? '');
+          // A link token with no address behind it (church-links.ts's
+          // linkFallback()) fills to '', not a dead link: the words stay
+          // plain text rather than linking nowhere.
+          if (def?._type === 'link' && def.href) {
+            const href = escapeHtml(def.href);
+            const isExternal = /^https?:\/\//.test(def.href);
             const newTab = def.openInNewTab || isExternal;
             const extras = newTab ? ` target="_blank" rel="noopener noreferrer"` : '';
             result = `<a href="${href}" class="text-link underline underline-offset-2 hover:text-primary transition-colors"${extras}>${result}</a>`;

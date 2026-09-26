@@ -51,6 +51,14 @@ test('a file downloads, a link opens, and nothing is no button', () => {
   assert.equal(docAction({ fileUrl: '  ', url: null }), null);
 });
 
+test('a mailto: address (the wedding forms hidden, church-links.ts linkFallback) becomes an email button', () => {
+  assert.deepEqual(docAction({ url: 'mailto:wedding@fbcmuncie.org' }), {
+    href: 'mailto:wedding@fbcmuncie.org',
+    kind: 'link',
+    label: 'Email',
+  });
+});
+
 test('a file wins over a link when a document has both', () => {
   const a = docAction({ fileUrl: 'https://cdn.sanity.io/files/p/d/a.pdf', url: 'https://x.org' });
   assert.equal(a?.kind, 'file');

@@ -24,17 +24,15 @@
 //    15). Not one name, role or address on this page is typed here. Each
 //    ministry band's contact lines are generated at BUILD time from the
 //    people its ministry document names (since 2026-09-22; before that they
-//    were typed here at seed time, see "The five ministry bands" below), and
-//    the "Get involved" band is a staffGridSection that is also derived LIVE
-//    at build time, so neither can go stale. This also
+//    were typed here at seed time, see "The five ministry bands" below). This also
 //    settles the children's-ministry name conflict the content map flagged:
 //    the Wix page said Jennifer Durke, the staff table says Jaden Johnson, and
 //    this page says whatever the staff document says, once.
 //
 // 3. "GET INVOLVED" APPEARS ONCE. It was on all five source pages, five times,
-//    with five different people under it. Here it is one band listing the
-//    whole Church Coordination Team, and each ministry band ends with the one
-//    person to talk to about that ministry.
+//    with five different people under it. Here it is one band of ways in
+//    (note 9), and each ministry band ends with the one person to talk to
+//    about that ministry.
 //
 // 4. CCT IS SPELLED OUT. The five source pages use it as a role prefix without
 //    ever saying what it is. The coordination roles come off the staff
@@ -80,6 +78,36 @@
 //     in front of the first Ministry band is derived from those at build time
 //     (src/lib/ministry-goals.ts). scripts/set-ministry-goals.mjs writes the
 //     answers the church's own words give; the rest wait for the church.
+//
+// 8. THE HERO CARRIES THE PAGE'S INDEX (2026-09-25, Nathan: the hero "feels a
+//    bit empty"). The lede is the church's own sentence off children.txt
+//    ("FBC Muncie believes that God created the church to be
+//    intergenerational."), under the headline it answers. The three facts are
+//    the age bands: each LABEL is a Ministry band's own small line (Children,
+//    Youth, Adults, read off the ministry documents) and each VALUE the age
+//    range the church states (the children's and youth documents' headlines;
+//    the adult range off adult.txt's "From College and Career to Retirees").
+//    No fact types a link: Hero derives it, because a fact named like a band
+//    on the page jumps to that band (src/lib/hero-fact-links.ts), and HeroFacts
+//    sets linked facts as ruled index rows. The two buttons became "Get
+//    involved" (the band below, #get-involved) and "What's On" (/events):
+//    Children and Adults are now two of the three facts.
+//
+// 9. "GET INVOLVED" IS WAYS IN, NOT A STAFF GRID (2026-09-25, Nathan: the
+//    whole Church Coordination Team, moderator and treasurer included, did
+//    not help someone who wants to get involved, and it is on /staff). It is
+//    a Text band last before the gold band: six h3 columns (rich-shape.ts
+//    columns, each at most 40 words so all six set at one size), each the
+//    church's own description of the work and ONE next step, the role
+//    address the church publishes for it. Every address is read off the
+//    capture that prints it and must also be on a Staff document, or the run
+//    throws. They are ROLE mailboxes (worship@, youth@...), which stay with
+//    the role when the person changes; a Staff page's address changing is
+//    the one case a re-seed is needed, and the throw says so. The children's
+//    coordinator has no address, so that step is the church office. A foot
+//    line sends membership, baptism and a pastor to the connection card on
+//    /visit (#connect). No ministry is invented: every column is a thing the
+//    church's own pages ask people to do.
 
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -103,7 +131,11 @@ export default {
   newCopy: [
     'Every age has a place here. (hero headline)',
     'Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at 10:45 am, and who to ask about each. (search description, not shown on the page; 2026-09-24 local search pass)',
-    'Contact the church office. (the end of a ministry’s contact line when the staff document for that role carries no email address, which today is only the children’s ministry; it links to the contact page)',
+    'Contact the church office. (the end of a ministry’s contact line when the staff document for that role carries no email address, which today is only the children’s ministry; it links to the contact page. Also the next step under "Help with children" in Get involved, 2026-09-25)',
+    'Get involved (the hero’s gold button, to the Get involved band; "Get Involved" is the heading all five source pages used) / What’s On (the hero’s second button, to /events; the calendar page’s own name) (2026-09-25)',
+    'Serve on Sunday / Sing and play / Help with children / Help with youth / Join a Life Group / Serve our community (the six column heads in Get involved, 2026-09-25; "Join a Life Group" and "Serve our community" lean on the church’s own "Life Groups" and "Ways You Can Connect With FBCM to serve our community")',
+    'Write to worship@fbcmuncie.org. (and the same "Write to" line for cynthia@, youth@ and outreach@: the next step under four Get involved columns, 2026-09-25)',
+    'To become a member, be baptized or speak with a pastor, use the connection card. (the last line of Get involved, linking to the connection card on /visit, 2026-09-25)',
   ],
 
   // Edits to the church's own sentences (ruling P16). Nothing is reworded: the
@@ -121,8 +153,17 @@ export default {
     'Cut as a repeat: "If you’re interested in joining a small group, or are seeking more information, contact adult[at]fbcmuncie.org". The adult band ends with the adult coordinator’s name, role and address, read off her staff document.',
     'Em-dash to comma (site style): "join Christ where he is already at work in our world—in Muncie and across the globe" becomes "...in our world, in Muncie and across the globe".',
     'Linked: "Our website has links to our building use policy here" had no link behind it on the Wix site. "here" now points at /wedding#building-use.',
-    'Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band listing the whole Church Coordination Team.',
+    'Cut, five times over: "Get Involved / If you wish to be a part of our ... ministry, contact us!" appeared once per source page. The page says it once, as the "Get involved" band of ways in (note 9); the Church Coordination Team is listed on /staff.',
     'Reordered, so each reads as a class with its room: "Preschool - 2nd grade: Kickstart Children’s Church (102)" becomes "Kickstart Children’s Church (102): Preschool - 2nd grade", and "3rd - 5th grade: The Underground Children’s Church (B-03)" becomes "The Underground Children’s Church (B-03): 3rd - 5th grade" (what-to-expect.txt lines 65 and 69; the 10:45 row of the Sunday timeline). No word changes.',
+    'Hero lede (2026-09-25): "FBC Muncie believes that God created the church to be intergenerational." is the middle sentence of children.txt’s "Part of the life of the entire congregation." paragraph, on its own.',
+    'Hero facts (2026-09-25): "Nursery through fifth grade" and "Grades 6 to 12" are the Children and Youth ministry documents’ own headlines; "College and career to retirees" is adult.txt’s "From College and Career to Retirees", cut to the range and set in sentence case.',
+    'Get involved, the opening line (2026-09-25): worship.txt’s "If you wish to be a part of our ministry on Sunday mornings, contact us!" with "on Sunday mornings" cut, said once for every ministry.',
+    'Get involved, Serve on Sunday: worship.txt’s "When we gather, worship leaders help us by:" and four of its five list items (Greeting people as they enter, Supporting through technical arts (sound, slides, livestream, etc.), Leading in prayer & scripture reading, Serving communion) joined into one sentence, each item’s first letter lower-cased. "Singing and playing a variety of instruments" is left to the next column.',
+    'Get involved, Sing and play: worship.txt’s Praise Team sentence and its hand bell choir sentence, unchanged, side by side.',
+    'Get involved, Help with children: children.txt’s "To create a safe environment for our children, FBC Muncie requires that all Children’s Ministry volunteers be background checked and children can only be picked up by a parent/guardian with a matching security tag." cut after "background checked." (the pick-up half is in the children’s questions above).',
+    'Get involved, Help with youth: youth.txt’s "Pastor Jonathan and Kendall, alongside a youth volunteer, open up scripture and discuss how God’s work intersects with student’s lives." unchanged ("student’s" is the church’s own).',
+    'Get involved, Join a Life Group: adult.txt’s "We have several life groups..." sentence, and its "If you’re interested in joining a small group, or are seeking more information, contact adult[at]fbcmuncie.org" with the address restored and linked and a full stop added. (The adult band still does not repeat it.)',
+    'Get involved, Serve our community: outreach.txt’s "Volunteering with our partner organizations or at community events." and "Sewing Group (Rm 203) - A multi-aged, monthly group which sews pillowcases for those in need." with the hyphen made a colon and "A" lower-cased.',
     'Re-pointed: "Our Church App." linked to a Wix page that is being retired and now links to the church’s Church Center; "The Visitor Quarterly" linked to the retired Wix publications page and now links to The Visitor’s own page, /visitor (the Wix page’s redirect points there too since 2026-09-24).',
   ],
 
@@ -150,7 +191,7 @@ export default {
   ],
 
   async build(ctx) {
-    const { images, copy, settings, ministries } = ctx;
+    const { images, copy, settings, ministries, staff } = ctx;
     const { linesBetween, paragraphs, bullets, heading, ctaAnchor, ctaInternal, decodeEntities } =
       copy;
 
@@ -465,6 +506,164 @@ export default {
       ),
     ];
 
+    // ── The hero's lede and facts (note 8) ──────────────────────────────────
+    /** The one sentence of `slug`.txt that contains `phrase`, throwing if it moved. */
+    const sentence = (slug, phrase) => {
+      const found = line(slug, phrase)
+        .split(/(?<=[.!?])\s+/)
+        .find((s) => s.includes(phrase));
+      if (!found) {
+        throw new Error(`ministries.mjs: no sentence with "${phrase}" in ${slug}.txt`);
+      }
+      return found.trim();
+    };
+    // children.txt, "Part of the life of the entire congregation." paragraph.
+    const heroLede = sentence('children', 'God created the church to be intergenerational');
+
+    /** A ministry document's own headline, the age range it states. */
+    const ministryHeadline = (id) => {
+      const doc = (ministries ?? []).find((m) => m._id === id);
+      const value = String(doc?.headline ?? '').trim();
+      if (!value) throw new Error(`ministries.mjs: ${id} has no headline for the hero's facts.`);
+      return value;
+    };
+    // adult.txt: "From College and Career to Retirees, FBCM's Adult Ministry ...".
+    // The adult document's headline names classes, not ages, so the age range
+    // is read off the church's own sentence and set in sentence case (`edits`).
+    const adultAges = (() => {
+      const m = sentence('adult', 'From College and Career to Retirees').match(
+        /^From (College and Career) to (Retirees),/,
+      );
+      if (!m) throw new Error('ministries.mjs: the adult age range has moved in adult.txt.');
+      return `${m[1][0]}${m[1].slice(1).toLowerCase()} to ${m[2].toLowerCase()}`;
+    })();
+    // Each label is the small line (eyebrow) of a Ministry band on this page:
+    // "Children", "Youth", "Adults". The link to the band is derived from it.
+    const eyebrowOf = (id) => {
+      const doc = (ministries ?? []).find((m) => m._id === id);
+      const value = String(doc?.eyebrow ?? '').trim();
+      if (!value) throw new Error(`ministries.mjs: ${id} has no small line to label its fact.`);
+      return value;
+    };
+    const heroFacts = [
+      ['ministry-children', ministryHeadline('ministry-children')],
+      ['ministry-youth', ministryHeadline('ministry-youth')],
+      ['ministry-adult', adultAges],
+    ].map(([id, value], i) => ({
+      _type: 'heroFact',
+      _key: `fact-${i + 1}`,
+      label: eyebrowOf(id),
+      value,
+    }));
+
+    // ── Get involved (note 9) ───────────────────────────────────────────────
+    // Six ways in, each the church's own description of the work and ONE next
+    // step. Every address is read off the capture that publishes it ("[at]"
+    // restored to "@") and must be on a Staff document too, or the run throws:
+    // a role address the Staff pages no longer carry must not be printed here.
+    const address = (slug, local) => {
+      const raw = line(slug, `${local}[at]fbcmuncie.org`);
+      const found = raw.match(new RegExp(`\\b${local}\\[at\\]fbcmuncie\\.org`));
+      if (!found) throw new Error(`ministries.mjs: ${local}[at] is not in ${slug}.txt`);
+      const email = found[0].replace('[at]', '@');
+      if (!(staff ?? []).some((p) => String(p.email ?? '').trim() === email)) {
+        throw new Error(
+          `ministries.mjs: ${email} (${slug}.txt) is on no Staff document; check who holds the role.`,
+        );
+      }
+      return email;
+    };
+    const writeTo = (email) => `Write to [${email}](mailto:${email}).`;
+    const lowerFirst = (s) => s.charAt(0).toLowerCase() + s.slice(1);
+
+    // worship.txt: "When we gather, worship leaders help us by:" and its list.
+    // "Singing and playing" is the next column's.
+    const sundayRoles = [
+      line('worship', 'Greeting people as they enter'),
+      line('worship', 'Supporting through technical arts'),
+      line('worship', 'Leading in prayer & scripture reading'),
+      line('worship', 'Serving communion'),
+    ].map(lowerFirst);
+    const serveOnSunday = `${line('worship', 'worship leaders help us by').replace(/:$/, '')} ${sundayRoles
+      .slice(0, -1)
+      .join(', ')} and ${sundayRoles.at(-1)}.`;
+
+    const children1 = swap(
+      sentence('children', 'volunteers be background checked'),
+      'be background checked and children can only be picked up by a parent/guardian with a matching security tag.',
+      'be background checked.',
+    );
+
+    const getInvolved = [
+      // worship.txt, the Get Involved line, said once for every ministry.
+      ...paragraphs(
+        swap(
+          line('worship', 'If you wish to be a part of our ministry'),
+          ' on Sunday mornings',
+          '',
+        ),
+        'gi-a',
+      ),
+      heading('Serve on Sunday', 3, 'gi-h1'),
+      ...paragraphs(serveOnSunday, 'gi-b'),
+      ...paragraphs(writeTo(address('worship', 'worship')), 'gi-c'),
+
+      heading('Sing and play', 3, 'gi-h2'),
+      ...paragraphs(
+        `${sentence('worship', 'Our Praise Team consists of')} ${sentence('worship', 'our hand bell choir, always looking for new members')}`,
+        'gi-d',
+      ),
+      ...paragraphs(writeTo(address('worship', 'cynthia')), 'gi-e'),
+
+      heading('Help with children', 3, 'gi-h3'),
+      ...paragraphs(
+        // One sentence, so the column stays at the others' size (rich-shape.ts
+        // sets a column in the large face only up to 40 words).
+        children1,
+        'gi-f',
+      ),
+      // The children's coordinator's Staff document has no address, so this
+      // is the one step that goes to the office (the same line the children's
+      // Ministry band ends with, already in newCopy).
+      ...paragraphs('[Contact the church office.](/contact)', 'gi-g'),
+
+      heading('Help with youth', 3, 'gi-h4'),
+      ...paragraphs(sentence('youth', 'alongside a youth volunteer'), 'gi-h'),
+      ...paragraphs(writeTo(address('youth', 'youth')), 'gi-i'),
+
+      heading('Join a Life Group', 3, 'gi-h5'),
+      ...paragraphs(sentence('adult', 'We have several life groups'), 'gi-j'),
+      ...paragraphs(
+        (() => {
+          const email = address('adult', 'adult');
+          return swap(
+            line('adult', 'interested in joining a small group'),
+            'contact adult[at]fbcmuncie.org',
+            `contact [${email}](mailto:${email}).`,
+          );
+        })(),
+        'gi-k',
+      ),
+
+      heading('Serve our community', 3, 'gi-h6'),
+      ...paragraphs(
+        `${line('outreach', 'Volunteering with our partner organizations')} ${swap(
+          line('outreach', 'Sewing Group (Rm 203)'),
+          'Sewing Group (Rm 203) - A multi-aged',
+          'Sewing Group (Rm 203): a multi-aged',
+        )}`,
+        'gi-l',
+      ),
+      ...paragraphs(writeTo(address('outreach', 'outreach')), 'gi-m'),
+
+      // The connection card (on /visit since 2026-09-25) for the steps no
+      // ministry owns. A short last line after the columns sets as the foot.
+      ...paragraphs(
+        'To become a member, be baptized or speak with a pastor, [use the connection card](/visit#connect).',
+        'gi-n',
+      ),
+    ];
+
     // ── The children's questions ────────────────────────────────────────────
     const childrenFaq = readChildrenFaq(copy);
 
@@ -483,13 +682,19 @@ export default {
           layout: 'window',
           size: 'short',
           headline: 'Every age has a place here.',
+          // The church's own sentence, off children.txt (note 8).
+          subhead: heroLede,
           frames: [
             { ...heroPalms, _key: 'frame-1' },
             { ...heroYouth, _key: 'frame-2' },
             { ...heroMusicians, _key: 'frame-3' },
           ],
-          primaryCta: ctaAnchor('Children', '/ministries#children'),
-          secondaryCta: ctaAnchor('Adults', '/ministries#adult'),
+          // Who each age band is for. Each label is the small line of a
+          // Ministry band on this page, so the fact links to that band at
+          // build time (src/lib/hero-fact-links.ts); nothing here types a link.
+          facts: heroFacts,
+          primaryCta: ctaAnchor('Get involved', '/ministries#get-involved'),
+          secondaryCta: ctaAnchor('What’s On', '/events'),
         },
 
         // 2. One Sunday, every age, in one place. The same capture /visit
@@ -562,24 +767,23 @@ export default {
         // 9. Outreach. Where /outreach lands. No photograph either.
         ministryBand('ministries-outreach', 'outreach', 'ministry-outreach'),
 
-        // 10. Get involved, once, for the whole Church Coordination Team. This
-        //    band is LIVE-derived: the query behind staffGridSection reads the
-        //    staffMember documents at build time, so a new coordinator appears
-        //    on the next deploy without this page being re-seeded at all.
-        {
-          _type: 'staffGridSection',
-          _key: 'ministries-team',
-          eyebrow: 'Get involved',
-          heading: 'The people to talk to',
-          group: 'coordination',
-          showBios: false,
-        },
-
-        // 11. The newsletters and the app, once, for every ministry.
+        // 10. The newsletters and the app, once, for every ministry.
         {
           _type: 'richTextSection',
           _key: 'ministries-stay-updated',
           body: stayUpdated,
+        },
+
+        // 11. Get involved: the ways in, each with one next step (note 9).
+        //    The Church Coordination Team grid that stood here is on /staff.
+        //    Last before the gold band, so the cadence draws it as a brand
+        //    band (src/lib/rich-ground.ts) and the page ends on the invitation.
+        {
+          _type: 'richTextSection',
+          _key: 'ministries-get-involved',
+          heading: 'Get involved',
+          body: getInvolved,
+          anchor: { _type: 'slug', current: 'get-involved' },
         },
 
         // 12. Closing band, both buttons, subhead built from Site settings.

@@ -1,0 +1,400 @@
+---
+// Safe to edit by hand
+// scaffold-file: church
+// "The Church App" on the home page (2026-09-25, `feat/church-app`): Church
+// Trac's free member app, what it gives a member of First Baptist, and how to
+// get it. Everything comes from Site settings' "Church app" link (`appUrl`)
+// through src/lib/church-app.ts: the "Get the app" button is that link, the
+// install code is read out of it, and the store buttons are code constants
+// (CLAUDE.md rule 15). An empty link means no band, never an empty one.
+//
+// NOT A PAGE-BUILDER BLOCK, like Last Sunday, The Visitor and What's On:
+// drawn from code and placed through SectionRenderer's `insert` slot, after
+// What's On (src/pages/index.astro). The order reads last Sunday, the
+// church's news, what is coming, then the app that carries the calendar and
+// the news in your pocket, then the writing.
+//
+// WHAT IT SAYS THE APP DOES is only what Church Trac's own pages say the app
+// does AND what this church has switched on in its Church Connect site
+// (fbcmuncie.churchtrac.com): the upcoming events, the Prayer List, the
+// Children's and Youth ministries' newsletters, and notifications. Sources are
+// in the branch report and docs/agent/components.md. Giving, the directory
+// and check-in are Church Trac features this church has not been seen to use,
+// so they are not promised here.
+//
+// ONE GRAMMAR WITH THE BANDS ABOVE (rule 17): the same five-to-seven split
+// as What's On, the h2 in the shared heading grammar, the buttons from the
+// one family. The art is the church's own: a lancet arch, drawn in the brand
+// band colours, with a phone standing in it whose screen shows the church's
+// name and the four things the app is for. It is decorative (aria-hidden);
+// the list beside it says the same four things in words.
+//
+// THE GROUND comes from the band above, by The Visitor's rule (paper under a
+// dark band, indigo under a light one), decided in src/pages/index.astro.
+import CtaLink from '@/components/CtaLink.astro';
+import AppButtons from '@/components/church/AppButtons.astro';
+import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
+import type { ChurchApp } from '@/lib/church-app';
+
+interface Props {
+  app: ChurchApp;
+  ground: 'indigo' | 'paper';
+  headingId: string;
+}
+
+const { app, ground, headingId } = Astro.props as Props;
+const dark = ground === 'indigo';
+const heading = 'The Church App';
+
+// What the app gives a member here. New sentences are listed for the church's
+// approval (docs/superpowers/notes/2026-09-19-copy-for-church-approval.md);
+// the Prayer List line is the church's own, from its Church Connect site.
+const points = [
+  {
+    title: "What's On",
+    line: 'The church calendar, and your own events once you sign in.',
+  },
+  {
+    title: 'Prayer List',
+    line: 'Seeking the Lord for and alongside your church family.',
+  },
+  {
+    title: 'Ministry news',
+    line: "The Kid's Corner and The Moose's Message, from the Children's and Youth ministries.",
+  },
+  {
+    title: 'Church updates',
+    line: 'Notices from the church, sent straight to your phone.',
+  },
+];
+const codeChars = app.code ? [...app.code] : [];
+---
+
+<section
+  class:list={['ca-band', dark ? 'ca-dark bg-band-indigo text-bg' : 'bg-bg text-indigo']}
+  aria-labelledby={headingId}
+  data-church-app-band
+  data-ground={ground}
+  data-pagefind-ignore
+>
+  <div class="ca-grid mx-auto max-w-content px-gutter py-section-lg">
+    <div class="ca-head min-w-0">
+      <p
+        class:list={[
+          'mt-0 mb-4 font-ui text-ui font-semibold tracking-eyebrow uppercase',
+          dark ? 'text-gold' : 'text-gold-ink',
+        ]}
+      >
+        Free for iPhone and Android
+      </p>
+      <h2
+        id={headingId}
+        class:list={[H2_DISPLAY, 'h-fit', dark ? 'text-bg' : 'text-indigo']}
+        style={headingFit(heading)}
+      >
+        <span class="h-fit-in">{heading}</span>
+      </h2>
+    </div>
+
+    <div class="ca-body min-w-0">
+      <p
+        class:list={[
+          'mt-0 mb-0 max-w-[36rem] font-body text-lg leading-relaxed',
+          dark ? 'text-bg/85' : 'text-indigo',
+        ]}
+      >
+        Church Trac's free app keeps First Baptist on your phone: the calendar, the prayer list and
+        news from the ministries.
+      </p>
+      <div class="mt-8">
+        <CtaLink
+          cta={{ label: 'Get the app', linkType: 'external', externalUrl: app.href }}
+          variant="gold"
+          onDark={dark}
+        />
+      </div>
+      <div class="mt-4"><AppButtons app={app} dark={dark} /></div>
+
+      {
+        app.code && (
+          <div class="ca-code" data-install-code={app.code}>
+            <p class="ca-code-label">Install code</p>
+            <p class="ca-code-tiles">
+              <span class="sr-only">{codeChars.join(' ')}</span>
+              {codeChars.map((c) => (
+                <span class="ca-tile" aria-hidden="true">
+                  {c}
+                </span>
+              ))}
+            </p>
+            <p class="ca-code-note">
+              Found the app in the store yourself? Enter this code when it asks, and it opens on
+              First Baptist.
+            </p>
+          </div>
+        )
+      }
+    </div>
+
+    <div class="ca-art min-w-0">
+      <div class="ca-figure" aria-hidden="true">
+        <svg class="ca-arch" viewBox="-4 -4 108 158" preserveAspectRatio="none">
+          <path class="ca-arch-fill" d="M0 154V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V154Z"
+          ></path>
+          <path
+            class="ca-arch-mould"
+            d="M-3 154V66.5A73 73 0 0 1 50 -3.4A73 73 0 0 1 103 66.5V154"
+            vector-effect="non-scaling-stroke"></path>
+        </svg>
+        <div class="ca-phone">
+          <div class="ca-screen">
+            <span class="ca-notch"></span>
+            <BuildingGlyph name="window" class="ca-glyph" />
+            <span class="ca-screen-name">First Baptist Church Muncie</span>
+            <span class="ca-screen-motto">Love, Joy, Peace</span>
+            {points.map((p) => <span class="ca-screen-row">{p.title}</span>)}
+          </div>
+        </div>
+      </div>
+
+      <ul class="ca-points">
+        {
+          points.map((p) => (
+            <li class="ca-point">
+              <h3 class="ca-point-title">{p.title}</h3>
+              <p class="ca-point-line">{p.line}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* The phone reads the name, the words and the buttons, then the art and
+     the list. A wide screen is What's On's split: five twelfths of words at
+     the left, and the arch with the list beside it in seven at the right. */
+  .ca-grid {
+    display: grid;
+    grid-template-areas: 'head' 'body' 'art';
+    row-gap: clamp(28px, 4vw, 40px);
+  }
+  .ca-head {
+    grid-area: head;
+  }
+  .ca-body {
+    grid-area: body;
+  }
+  .ca-art {
+    grid-area: art;
+  }
+  @media (min-width: 1024px) {
+    .ca-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      grid-template-areas: 'head art' 'body art';
+      grid-template-rows: auto 1fr;
+      column-gap: clamp(40px, 5vw, 72px);
+      row-gap: 28px;
+    }
+    .ca-art {
+      align-self: center;
+    }
+  }
+
+  /* Tokens for the two grounds. */
+  .ca-band {
+    --ca-ink: var(--color-indigo);
+    --ca-meta: var(--color-brown-ink);
+    --ca-rule: color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    --ca-accent: var(--color-gold-ink);
+    --ca-arch: var(--color-band-indigo);
+    --ca-mould: var(--color-gold);
+    --ca-tile: var(--color-cream);
+  }
+  .ca-dark {
+    --ca-ink: var(--color-bg);
+    --ca-meta: var(--color-taupe);
+    --ca-rule: color-mix(in srgb, var(--color-taupe) 40%, transparent);
+    --ca-accent: var(--color-gold);
+    --ca-arch: var(--color-band-deep);
+    --ca-tile: color-mix(in srgb, var(--color-bg) 8%, transparent);
+  }
+
+  /* THE INSTALL CODE, set as six tiles in the display capitals, like the
+     calendar's date tiles: the one thing a visitor has to copy by eye. */
+  .ca-code {
+    margin-top: clamp(28px, 4vw, 40px);
+    padding-top: 18px;
+    border-top: 2px solid var(--color-gold);
+  }
+  .ca-code-label {
+    margin: 0 0 10px;
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ca-accent);
+  }
+  .ca-code-tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+  }
+  .ca-tile {
+    display: inline-grid;
+    place-items: center;
+    width: clamp(2.5rem, 9vw, 3.25rem);
+    aspect-ratio: 4 / 5;
+    border: 1px solid var(--ca-rule);
+    background: var(--ca-tile);
+    font-family: var(--font-display);
+    font-size: clamp(1.625rem, 5vw, 2.125rem);
+    line-height: 1;
+    color: var(--ca-ink);
+    font-variant-numeric: lining-nums;
+  }
+  .ca-code-note {
+    margin: 12px 0 0;
+    max-width: 34rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--ca-meta);
+  }
+
+  /* THE ART: the arch with the phone standing in it, and the list beside it
+     from 640px (under it on a phone). */
+  .ca-art {
+    display: grid;
+    gap: clamp(28px, 4vw, 48px);
+    align-items: center;
+  }
+  @media (min-width: 640px) {
+    .ca-art {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    }
+  }
+  .ca-figure {
+    position: relative;
+    width: min(100%, 17rem);
+    aspect-ratio: 108 / 158;
+    margin-inline: auto;
+  }
+  .ca-arch {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .ca-arch-fill {
+    fill: var(--ca-arch);
+  }
+  .ca-arch-mould {
+    fill: none;
+    stroke: var(--ca-mould);
+    stroke-width: 1.5px;
+  }
+  /* The phone, a gold body with a paper screen, rising from the arch's sill. */
+  .ca-phone {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 62%;
+    aspect-ratio: 9 / 17.5;
+    translate: -50% 0;
+    padding: 7px;
+    border-radius: 26px 26px 0 0;
+    background: var(--color-band-gold);
+    box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.55);
+  }
+  .ca-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 14% 9% 0;
+    border-radius: 20px 20px 0 0;
+    background: var(--color-bg);
+    color: var(--color-indigo);
+    overflow: hidden;
+    text-align: center;
+  }
+  .ca-notch {
+    position: absolute;
+    top: 13px;
+    left: 50%;
+    width: 26%;
+    height: 5px;
+    translate: -50% 0;
+    border-radius: 3px;
+    background: var(--color-band-gold);
+  }
+  .ca-screen :global(.ca-glyph) {
+    width: 24%;
+    color: var(--color-gold-ink);
+  }
+  .ca-screen-name {
+    margin-top: 6%;
+    font-family: var(--font-display);
+    font-size: 0.6875rem;
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .ca-screen-motto {
+    margin: 3% 0 7%;
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-style: italic;
+    color: var(--color-brown-ink);
+  }
+  .ca-screen-row {
+    width: 100%;
+    margin-top: 5%;
+    padding: 6% 8%;
+    border: 1px solid color-mix(in srgb, var(--color-brown-ink) 30%, transparent);
+    border-left: 3px solid var(--color-gold);
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  /* The list: What's On's rows, without the date tiles, under a gold rule. */
+  .ca-points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--color-gold);
+  }
+  .ca-point {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--ca-rule);
+  }
+  .ca-point:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .ca-point-title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(1.1875rem, 1rem + 0.5vw, 1.4375rem);
+    line-height: 1.2;
+    color: var(--ca-ink);
+  }
+  .ca-point-line {
+    margin: 6px 0 0;
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    line-height: 1.45;
+    color: var(--ca-meta);
+  }
+</style>

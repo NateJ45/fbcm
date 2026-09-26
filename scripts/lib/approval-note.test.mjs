@@ -104,7 +104,10 @@ test('the header section carries its edits fallback line', () => {
 });
 
 test('CHROME_SECTIONS is the single source of the chrome copy (no duplicate definition to drift)', () => {
-  assert.equal(CHROME_SECTIONS.length, 8);
+  assert.equal(CHROME_SECTIONS.length, 10);
+  // The two moved out of the note by hand on 2026-09-26.
+  assert.match(CHROME_SECTIONS[8].heading, /^What's On, Church Trac forms/);
+  assert.match(CHROME_SECTIONS[9].heading, /^The church app/);
   assert.equal(CHROME_SECTIONS[0].heading, 'Site footer (every page)');
   assert.equal(CHROME_SECTIONS[1].heading, 'Header and mobile menu (every page)');
   // The two sections a seed-pages run wiped on 2026-09-24, now generated.
@@ -114,4 +117,27 @@ test('CHROME_SECTIONS is the single source of the chrome copy (no duplicate defi
   assert.match(CHROME_SECTIONS[5].heading, /^Social links/);
   assert.match(CHROME_SECTIONS[6].heading, /^Sermon previews: the passage/);
   assert.match(CHROME_SECTIONS[7].heading, /^Last Sunday, Sunday weather/);
+});
+
+// 2026-09-26: two more sections typed into the note by hand (What's On and the
+// church app) sat one seed-pages run away from being wiped, and an agent saw
+// the run drop them. Any section in the committed note must be one the
+// renderer produces: a page module's `## /<slug>`, a CHROME_SECTIONS heading,
+// or the facts list. Put new copy in CHROME_SECTIONS, never in the note.
+test('the committed note has no hand-typed section the renderer would wipe', async () => {
+  const { readFileSync } = await import('node:fs');
+  const note = readFileSync(
+    new URL('../../docs/superpowers/notes/2026-09-19-copy-for-church-approval.md', import.meta.url),
+    'utf8',
+  );
+  const known = new Set([
+    ...CHROME_SECTIONS.map((s) => s.heading),
+    'Facts the church must confirm',
+  ]);
+  const stray = note
+    .split('\n')
+    .filter((l) => l.startsWith('## '))
+    .map((l) => l.slice(3))
+    .filter((h) => !h.startsWith('/') && !known.has(h));
+  assert.deepEqual(stray, [], 'move these sections into CHROME_SECTIONS in approval-note.mjs');
 });

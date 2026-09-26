@@ -62,7 +62,7 @@
 //      keeps the pastors' two sentences and the two scheduling links.
 //    - THE ORDER. Hours, then the pastors (whose hours the band above just
 //      gave), then Notify Us, then Sunday: the taupe hours band and the
-//      pastor's portrait break the run of text, and the page still ends on
+//      pastors' portraits break the run of text, and the page still ends on
 //      the brown hymn board. The Worship row no longer repeats "Worship is at
 //      10:45 AM each Sunday." under a 10:45 numeral (the Visit pass made the
 //      same cut).
@@ -136,20 +136,26 @@ export default {
       throw new Error('contact.mjs: no photo in the manifest for "contact-exterior"');
     }
 
-    // The pastor band shows ONE portrait, because imageTextSection carries one
-    // `image` field and giving it a second would mean a new schema field for a
-    // single band. It is Kendall Ellis's, read off her staffMember document
-    // rather than held as a second copy (the same move staff.mjs makes for its
-    // hero), and the band's heading and body name BOTH co-pastors so a visitor
-    // is never left guessing who the other one is.
-    const kendall = (staff ?? []).find((s) => s?.slug?.current === 'kendall-ellis');
-    if (!kendall?.photo?.asset) {
-      throw new Error(
-        'contact.mjs: no staffMember document with slug "kendall-ellis" carrying a photo. The ' +
-          '"Meet with a pastor" band reads its portrait off that document.',
-      );
-    }
-    const pastorPhoto = { ...kendall.photo, alt: `${kendall.name}, ${kendall.role}` };
+    // The pastor band shows BOTH co-pastors (2026-09-25, Nathan: the band
+    // named two pastors and showed one). Each portrait is read off that
+    // pastor's own staffMember document rather than held as a second copy.
+    // Kendall's is the band's `image` and Jonathan's its `detail`, the small
+    // second photo imageTextSection already carries; when both are portraits
+    // of people, ImageText draws them as two equal lancets side by side
+    // (src/lib/photo-shape.ts besideForm, 'pair'), so no schema field was
+    // added. Kendall first, as the church lists her and as /staff's hero does.
+    const pastorPortrait = (slug) => {
+      const p = (staff ?? []).find((s) => s?.slug?.current === slug);
+      if (!p?.photo?.asset) {
+        throw new Error(
+          `contact.mjs: no staffMember document with slug "${slug}" carrying a photo. The ` +
+            '"Pastors’ Office Hours" band reads both portraits off the staff documents.',
+        );
+      }
+      return { ...p.photo, alt: `${p.name}, ${p.role}` };
+    };
+    const pastorPhoto = pastorPortrait('kendall-ellis');
+    const secondPastorPhoto = pastorPortrait('jonathan-balmer');
 
     // -- Readers over the captures -------------------------------------------
 
@@ -287,8 +293,8 @@ export default {
           heading: officeHeading,
         },
 
-        // 3. Pastors’ Office Hours. Kendall's portrait (see the note above on
-        //    why one and not two), both co-pastors named, and each one's own
+        // 3. Pastors’ Office Hours. Both co-pastors' portraits (see the note
+        //    above), both co-pastors named, and each one's own
         //    Google Calendar link. The business/billing heading goes under the
         //    same band because it is the same question asked a different way:
         //    who do I actually contact?
@@ -296,6 +302,7 @@ export default {
           _type: 'imageTextSection',
           _key: 'contact-pastors',
           image: pastorPhoto,
+          detail: secondPastorPhoto,
           imageSide: 'left',
           heading: pastorsHeading,
           body: [

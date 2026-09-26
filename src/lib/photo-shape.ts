@@ -71,6 +71,55 @@ export function resolveLegend(
   return legend ? { shape, legend } : { shape: 'row', legend: null };
 }
 
+/**
+ * HOW A BESIDE BAND IS COMPOSED (2026-09-25, the people-in-arches pass).
+ *
+ *   pair     two portraits of people (the photo and its `detail`), drawn as
+ *            two equal lancets, the way the Staff hero draws the co-pastors.
+ *            A small detail over a corner says "and this too"; two portraits
+ *            of the same size say "these two", which is what two people who
+ *            share one role need (Contact's co-pastors).
+ *   compact  a portrait beside a few words (at most COMPACT_WORDS, no small
+ *            headings, no room board): the heading moves into the text
+ *            column, the words sit centred against the portrait, and the
+ *            portrait is sized to them. Without it a short band hung a tall
+ *            portrait far from four lines of text, with the heading on a row
+ *            of its own above both (Wedding's coordinator, 2026-09-25).
+ *   standard everything else, as before.
+ *
+ * Portrait means aspect below 0.9, the ROW mapping's portrait line. Inputs are
+ * numbers and the body's cleaned words, so the answer never sees stega.
+ */
+export type BesideForm = 'standard' | 'compact' | 'pair';
+export const COMPACT_WORDS = 70;
+
+export function besideForm(opts: {
+  shape: PhotoShape;
+  /** The main photo's aspect (null: none, or unreadable). */
+  aspect: number | null | undefined;
+  /** The main photo is of people and drawn in an arch. */
+  arched: boolean;
+  /** The detail photo's aspect, and whether its alt names people. */
+  detailAspect?: number | null;
+  detailPeople?: boolean;
+  /** The body left after the lede, and the lede itself. */
+  body: PtBlock[];
+  /** The body is drawn as a room board (morning-path.ts roomBoard). */
+  board?: boolean;
+}): BesideForm {
+  const { shape, aspect, arched, detailAspect, detailPeople, body, board } = opts;
+  const beside = shape === 'row' || shape === 'window' || shape === 'frame' || shape === 'plate';
+  const portrait = (a: number | null | undefined) => typeof a === 'number' && a > 0 && a < 0.9;
+  if (!beside || !portrait(aspect)) return 'standard';
+  if (arched && detailPeople && portrait(detailAspect)) return 'pair';
+  if (board) return 'standard';
+  const blocks = Array.isArray(body) ? body : [];
+  const headed = blocks.some((b) => /^h[1-6]$/.test(clean(String(b?.style ?? ''))));
+  if (headed) return 'standard';
+  const words = blocks.reduce((n, b) => n + (blockText(b).trim().match(/\S+/g)?.length ?? 0), 0);
+  return words > 0 && words <= COMPACT_WORDS ? 'compact' : 'standard';
+}
+
 export function assignPhotoShapes(
   rows: PhotoRow[],
   opts: { heroHasPhoto?: boolean } = {},

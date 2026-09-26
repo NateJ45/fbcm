@@ -354,6 +354,9 @@ export function validateNode(node: Json, path = '$', root = true): string[] {
   return errors;
 }
 
+/** Block types a page may carry more than once. */
+const REPEATABLE_TYPES = new Set(['Event']);
+
 /**
  * The problems with a whole page's JSON-LD blocks: each block on its own, and
  * across them no two blocks of the same type or with the same @id.
@@ -365,7 +368,12 @@ export function validatePage(blocks: Json[]): string[] {
   blocks.forEach((b, i) => {
     errors.push(...validateNode(b, `block[${i}]`, true));
     const key = typesOf(b).sort().join('+');
-    if (seenTypes.has(key))
+    // A calendar page (/events, 2026-09-25) lists several events, each its own
+    // Event block; distinct events are right, and a repeated one is still
+    // caught by the @id check below.
+    if (REPEATABLE_TYPES.has(key)) {
+      // no one-per-page rule
+    } else if (seenTypes.has(key))
       errors.push(`block[${i}]: a second ${key} block (first is block[${seenTypes.get(key)}])`);
     else seenTypes.set(key, i);
     const id = typeof b['@id'] === 'string' ? b['@id'] : '';

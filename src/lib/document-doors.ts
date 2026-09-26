@@ -83,6 +83,9 @@ export function docAction(doc: DocLinks): DocAction | null {
   }
   const url = splitStega(doc.url ?? '').cleaned.trim();
   if (url) {
+    // A wedding form's own address hidden (church-links.ts's linkFallback())
+    // becomes the wedding office's mailto: address, not a web page.
+    if (/^mailto:/i.test(url)) return { href: url, kind: 'link', label: 'Email' };
     const host = linkHost(url);
     return { href: url, kind: 'link', label: host ? `Open on ${host}` : 'Open' };
   }
