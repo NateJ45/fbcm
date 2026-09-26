@@ -20,7 +20,7 @@
 // SSR like the other runtime routes (CLAUDE.md rule 8): prerender = false.
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { downloadName, upstreamFileUrl } from '@/lib/file-url';
+import { downloadName, fileType, upstreamFileUrl } from '@/lib/file-url';
 
 export const prerender = false;
 
@@ -54,20 +54,23 @@ interface R2Like {
   ): Promise<unknown>;
 }
 
-function typeOf(name: string, stored?: string): string {
-  if (stored) return stored;
-  return name.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream';
-}
-
 function baseHeaders(name: string, dl: string): Headers {
   const h = new Headers({
     'Cache-Control': `public, max-age=${MAX_AGE}`,
     'Accept-Ranges': 'bytes',
     'X-Content-Type-Options': 'nosniff',
+    // Served from the church's own origin, so nothing in a file may run:
+    // no script, no styles, no forms, no frames (security review, 2026-09-26).
+    // A PDF still renders in the browser's own viewer.
+    'Content-Security-Policy':
+      "sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:",
+    'Content-Type': fileType(name),
   });
   const safe = downloadName(dl === '' ? null : dl);
   if (safe) h.set('Content-Disposition', `attachment; filename="${safe}"`);
-  else h.set('Content-Disposition', `inline; filename="${name}"`);
+  // Only a PDF opens in the browser; any other document always downloads.
+  else if (name.endsWith('.pdf')) h.set('Content-Disposition', `inline; filename="${name}"`);
+  else h.set('Content-Disposition', `attachment; filename="${name}"`);
   return h;
 }
 
@@ -85,7 +88,7 @@ async function fromR2(
     if (!res.ok || !res.body)
       return new Response('Not found', { status: res.status === 404 ? 404 : 502 });
     const len = Number(res.headers.get('content-length'));
-    const type = res.headers.get('content-type') ?? undefined;
+    const type = fileType(name);
     const body =
       Number.isFinite(len) && len > 0 ? res.body.pipeThrough(new FixedLengthStream(len)) : res.body;
     await bucket.put(name, body, { httpMetadata: { contentType: type } });
@@ -93,7 +96,6 @@ async function fromR2(
     if (!meta) return new Response('Not found', { status: 502 });
   }
   const headers = baseHeaders(name, dl);
-  headers.set('Content-Type', typeOf(name, meta.httpMetadata?.contentType));
   headers.set('ETag', meta.httpEtag);
   if (request.method === 'HEAD') {
     headers.set('Content-Length', String(meta.size));
@@ -134,14 +136,8 @@ async function viaCache(
   if (!res.ok && res.status !== 206)
     return new Response('Not found', { status: res.status === 404 ? 404 : 502 });
   const headers = baseHeaders(name, dl);
-  for (const k of [
-    'content-type',
-    'content-length',
-    'content-range',
-    'etag',
-    'last-modified',
-    'cf-cache-status',
-  ]) {
+  // Never the upstream Content-Type: baseHeaders fixed it from the extension.
+  for (const k of ['content-length', 'content-range', 'etag', 'last-modified', 'cf-cache-status']) {
     const v = res.headers.get(k);
     if (v) headers.set(k, v);
   }

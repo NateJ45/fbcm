@@ -64,3 +64,14 @@ test('a download name is made safe for the header', () => {
   assert.equal(downloadName(null), '');
   assert.equal(downloadName('The Visitor "Spring".pdf\r\nX: y'), 'The Visitor _Spring_.pdf__X_ y');
 });
+
+test('only document types are served; a script-capable file is never rewritten or fetched', async () => {
+  const { fileType } = await import('./file-url.ts');
+  for (const ext of ['html', 'htm', 'svg', 'js', 'xml', 'xhtml']) {
+    const name = `0123456789abcdef0123456789abcdef01234567.${ext}`;
+    const url = `https://cdn.sanity.io/files/${P}/${D}/${name}`;
+    assert.equal(siteFileUrl(url, P, D), url, ext);
+    assert.equal(upstreamFileUrl(name, P, D), null, ext);
+  }
+  assert.equal(fileType(NAME), 'application/pdf');
+});

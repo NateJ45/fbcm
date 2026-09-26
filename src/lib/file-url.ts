@@ -16,8 +16,29 @@
 //
 // PURE: no Astro, no env; the project and dataset are passed in.
 
-/** A Sanity file's stored name: its sha1 and extension, as the CDN names it. */
-export const FILE_NAME = /^[a-f0-9]{40}\.[a-z0-9]{1,8}$/;
+/**
+ * A Sanity file's stored name (its sha1 and extension) of a DOCUMENT type.
+ * Only these are rewritten and served: /files/ answers from this site's own
+ * origin, so an HTML or SVG file in the media library would run as script on
+ * the church's domain (security review, 2026-09-26). The route also forces the
+ * type and sandboxes every response; this list is the first gate.
+ */
+export const FILE_NAME = /^[a-f0-9]{40}\.(pdf|docx?|xlsx?|pptx?)$/;
+
+/** The only Content-Type /files/ sends for each allowed extension. */
+export const FILE_TYPES: Record<string, string> = {
+  pdf: 'application/pdf',
+  doc: 'application/msword',
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  xls: 'application/vnd.ms-excel',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ppt: 'application/vnd.ms-powerpoint',
+  pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+};
+
+/** The Content-Type for an allowed file name. */
+export const fileType = (name: string): string =>
+  FILE_TYPES[name.slice(name.lastIndexOf('.') + 1)] ?? 'application/octet-stream';
 
 /**
  * This site's address for a Sanity file URL of THIS project and dataset, or
