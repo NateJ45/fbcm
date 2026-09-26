@@ -2155,7 +2155,7 @@ it was being undone.
 and every caller of the comlink `refresh` promise resolves (Presentation spins its
 refresh button until it does).
 
-## Card 29d: The preview cookie's value is checked, not its presence (2026-09-26, fbcm)
+## Card 57: The preview cookie's value is checked, not its presence (2026-09-26, fbcm)
 
 **Canonical:** `src/lib/preview-auth.ts` (unchanged) and its three callers:
 `src/pages/preview/[...slug].astro`, `src/pages/preview/live.ts`, and in fbcm
