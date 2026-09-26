@@ -33,7 +33,8 @@ test('DYNAMIC_LIST_MAX is a sane positive integer at or above the schema minimum
 test('the dynamicListSection "limit" field validates against the shared constant, not a literal', () => {
   const src = read('../sanity/schemaTypes/richSections.ts');
   const limitField = src.match(
-    /name:\s*'limit'[\s\S]*?validation:\s*\(R\)\s*=>\s*R\.required\(\)\.min\((\d+)\)\.max\(([^)]+)\)/,
+    // `\s*` between the calls: prettier breaks a long chain one call per line.
+    /name:\s*'limit'[\s\S]*?validation:\s*\(R\)\s*=>\s*R\.required\(\)\s*\.min\((\d+)\)\s*\.max\(([^)]+)\)/,
   );
   assert.ok(limitField, 'could not find the limit field validation in richSections.ts');
   const [, minLiteral, maxExpression] = limitField;

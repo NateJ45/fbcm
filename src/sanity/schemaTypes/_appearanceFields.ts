@@ -67,7 +67,7 @@ export function richTwin(name: string, title: string) {
     name,
     title,
     ...inlineRichBody,
-    description: 'You can bold or italicize here.',
+    description: 'You can use bold and italic here.',
   });
 }
 
@@ -87,10 +87,10 @@ export function hideWhenRich(twin: string) {
 export function headingAccentField() {
   return defineField({
     name: 'headingAccent',
-    title: 'Accent word in the heading',
+    title: 'Word to pick out in the heading',
     type: 'string',
     description:
-      'Optional. Type a word or short phrase from the heading above and it is set in the brand accent colour. Leave it blank for a plain heading, and leave it blank if you are already using the script accent.',
+      "Optional. Type a word or a few words from the heading, spelled as they are there, and they are set in the church's gold. Leave blank for a plain heading, or if the heading already has a handwritten accent word.",
   });
 }
 
@@ -107,7 +107,7 @@ export function columnsField(type: string) {
     name: 'columns',
     title: 'How many across',
     type: 'number',
-    description: 'On a phone this section always stacks, whichever you pick.',
+    description: 'On a phone they always sit one above the other, whichever you pick.',
     options: { list: columnOptions(type), layout: 'radio' },
     initialValue: columnFallback(type),
   });

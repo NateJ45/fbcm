@@ -24,14 +24,13 @@ import { RESERVED_SLUGS } from '../../lib/reservedSlugs';
 
 export const page = defineType({
   name: 'page',
-  title: 'Custom page',
+  title: 'Page',
   type: 'document',
   icon: DocumentsIcon,
   groups: [
-    { name: 'content', title: 'Content', default: true },
-    { name: 'extra', title: 'Extra sections' },
-    { name: 'menu', title: 'Menu placement' },
-    { name: 'seo', title: 'Search & sharing' },
+    { name: 'content', title: 'Page', default: true },
+    { name: 'menu', title: 'Footer and archive' },
+    { name: 'seo', title: 'Search and sharing' },
     PUBLISH_AT_GROUP,
   ],
   fields: [
@@ -41,8 +40,8 @@ export const page = defineType({
       type: 'string',
       group: 'content',
       description:
-        'The name of this page (used for the menu link and the browser tab unless you set an SEO title).',
-      validation: (Rule) => Rule.required(),
+        'The name of the page. It shows in the browser tab, unless "Title in Google" under Search and sharing says otherwise.',
+      validation: (Rule) => Rule.required().error('Give the page a title.'),
     }),
     defineField({
       name: 'slug',
@@ -50,15 +49,15 @@ export const page = defineType({
       type: 'slug',
       group: 'content',
       description:
-        'The end of the address, like "studio-tour" for example.com/studio-tour. Click Generate to make one from the title.',
+        "The end of the page's address, like visit for fbcmuncie.org/visit. Click Generate to make one from the title. Once the page is published, changing this files a forward from the old address for you.",
       options: { source: 'title', maxLength: 96 },
       validation: (Rule) =>
         Rule.required().custom((slug) => {
           const v = slug?.current;
-          if (!v) return 'Add a web address (click Generate).';
+          if (!v) return 'Click Generate to make the web address.';
           if (RESERVED_SLUGS.has(v))
-            return `"${v}" is already used by a built-in page. Pick a different address.`;
-          if (!/^[a-z0-9-]+$/.test(v)) return 'Use only lowercase letters, numbers, and dashes.';
+            return `"${v}" is already taken by a part of the website. Pick a different address.`;
+          if (!/^[a-z0-9-]+$/.test(v)) return 'Use only small letters, numbers and dashes.';
           return true;
         }),
     }),
@@ -67,46 +66,51 @@ export const page = defineType({
       title: 'Sections',
       type: 'array',
       group: 'content',
-      description: 'Build the page by adding sections. Drag to reorder. Add as many as you like.',
+      description:
+        'The sections of the page, top to bottom. Drag one by its handle to move it, click one to change its words, or use Add item to add a new one.',
       of: SECTION_TYPES,
       // Grouped + searchable insert menu, in the form AND in the preview canvas.
       options: sectionArrayOptions,
     }),
 
     // ── Menu placement ────────────────────────────────────────────────────────
+    // addToMainNav and navGroup are HIDDEN since the Studio audit (2026-09-26):
+    // nothing on the site reads them (getNavPages() in queries.ts has no
+    // caller; the header menu is Site settings > Menus), so the switch did
+    // nothing when an editor turned it on. Kept declared so no stored value is
+    // orphaned (rule 1); every page stores false.
     defineField({
       name: 'addToMainNav',
-      title: 'Show in the top menu',
+      title: 'Show in the top menu (not used)',
       type: 'boolean',
       group: 'menu',
       initialValue: false,
-      description:
-        'Off by default, so you can build and preview privately. Turn on when you want visitors to find it in the menu.',
+      hidden: true,
     }),
     defineField({
       name: 'navGroup',
-      title: 'Where in the top menu',
+      title: 'Where in the top menu (not used)',
       type: 'string',
       group: 'menu',
       initialValue: 'top',
-      hidden: ({ parent }) => !parent?.addToMainNav,
+      hidden: true,
       options: {
         list: [
           { title: 'Its own menu item', value: 'top' },
-          { title: 'Under "Services"', value: 'services' },
-          { title: 'Under "Resources"', value: 'resources' },
+          { title: 'In a dropdown', value: 'services' },
+          { title: 'In a second dropdown', value: 'resources' },
         ],
         layout: 'radio',
       },
     }),
     defineField({
       name: 'navLabel',
-      title: 'Menu label (optional)',
+      title: 'Words for the footer link (optional)',
       type: 'string',
       group: 'menu',
-      hidden: ({ parent }) => !parent?.addToMainNav,
+      hidden: ({ parent }) => !parent?.addToFooter,
       description:
-        'Shorter text for the menu, if the page title is long. Leave blank to use the title.',
+        'Shorter words for the link, if the page title is long. Leave blank to use the title.',
     }),
     defineField({
       name: 'addToFooter',
@@ -114,6 +118,8 @@ export const page = defineType({
       type: 'boolean',
       group: 'menu',
       initialValue: false,
+      description:
+        'Turn on to add a link to this page in the first column of links at the foot of every page. The top menu is set in Site settings, under Menus.',
     }),
 
     // ── Archived ──────────────────────────────────────────────────────────────
@@ -129,7 +135,7 @@ export const page = defineType({
       type: 'boolean',
       group: 'menu',
       description:
-        'Archived pages come off the site but are kept here so they can be restored. Publish after changing this.',
+        'An archived page comes off the website but stays here, so it can be put back. Use Archive and Restore in the menu beside Publish, then publish.',
     }),
 
     // ── Search & sharing ──────────────────────────────────────────────────────
@@ -142,38 +148,34 @@ export const page = defineType({
       reuse: {
         title: defineField({
           name: 'seoTitle',
-          title: 'SEO title',
+          title: 'Title in Google',
           type: 'string',
           group: 'seo',
           description:
-            'Browser tab and search result title. Aim for 50 to 60 characters. Leave blank to use the page title.',
+            "The title in the browser tab and in Google's results. About 50 to 60 letters. Leave blank to use the page title. A placeholder in curly brackets, like {time}, is filled in from Site settings.",
           validation: (Rule) =>
-            Rule.max(60).warning(
-              'Titles longer than about 60 characters get cut off in search results.',
-            ),
+            Rule.max(60).warning('Google cuts off titles longer than about 60 letters.'),
         }),
         description: defineField({
           name: 'seoDescription',
-          title: 'SEO description',
+          title: 'Description in Google',
           type: 'text',
           rows: 3,
           group: 'seo',
           description:
-            'The sentence under the title in search results. Aim for 150 to 160 characters.',
+            'The sentence under the title in Google\'s results. About 150 to 160 letters. A placeholder in curly brackets, like {service time}, is filled in from Site settings, so {service time} reads as "Sundays at 10:45 am".',
           validation: (Rule) =>
-            Rule.max(160).warning(
-              'Descriptions longer than about 160 characters get cut off in search results.',
-            ),
+            Rule.max(160).warning('Google cuts off descriptions longer than about 160 letters.'),
         }),
         image: defineField({
           name: 'seoImage',
-          title: 'Social share image',
+          title: 'Picture when shared',
           type: 'image',
           group: 'seo',
           description:
-            'Optional. Shown when this page is shared. Use a wide image, about 1200 by 630 pixels. Leave blank to use the site default.',
+            "Optional. The picture shown when someone shares this page on Facebook or in a text message. A wide picture, about 1200 by 630 pixels. Leave blank and the site draws one in the church's colours.",
           options: { hotspot: true },
-          fields: [defineField({ name: 'alt', title: 'Alt text', type: 'string' })],
+          fields: [defineField({ name: 'alt', title: 'Describe the picture', type: 'string' })],
         }),
       },
     }),
@@ -186,14 +188,14 @@ export const page = defineType({
     select: {
       title: 'title',
       slug: 'slug.current',
-      inNav: 'addToMainNav',
+      inFooter: 'addToFooter',
       archived: 'archived',
     },
-    prepare: ({ title, slug, inNav, archived }) => ({
-      title: title || 'Untitled page',
+    prepare: ({ title, slug, inFooter, archived }) => ({
+      title: title || '(no title yet)',
       subtitle: archived
         ? `Archived  ·  /${slug ?? '...'}`
-        : `/${slug ?? '...'}${inNav ? '  ·  in menu' : ''}`,
+        : `/${slug ?? '...'}${inFooter ? '  ·  in the footer' : ''}`,
     }),
   },
 });

@@ -33,10 +33,11 @@ const imageWithAlt = (name = 'image', title = 'Image') =>
     fields: [
       defineField({
         name: 'alt',
-        title: 'Alt text',
+        title: 'Describe the photo',
         type: 'string',
-        description: 'Describe the photo in a few words, for screen readers and search engines.',
-        validation: (R) => R.required(),
+        description: 'A few words saying what is in the photo, for people who cannot see it.',
+        validation: (R) =>
+          R.required().error('Describe the photo in a few words, for people who cannot see it.'),
       }),
     ],
   });
@@ -50,30 +51,40 @@ const imageWithAlt = (name = 'image', title = 'Image') =>
 // SELF_CONTAINED — manages its own bg-background surface.
 export const teamSection = defineType({
   name: 'teamSection',
-  title: 'Team grid',
+  title: 'People (typed in here)',
   type: 'object',
   icon: UsersIcon,
   fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
+    defineField({
+      name: 'eyebrow',
+      title: 'Small line above the heading',
+      type: 'string',
+      description: 'A few words. Leave blank for none.',
+    }),
     defineField({
       name: 'headline',
-      title: 'Headline',
+      title: 'Heading',
       type: 'string',
-      validation: (R) => R.required(),
+      validation: (R) => R.required().error('Type the heading.'),
     }),
     defineField({
       name: 'subhead',
-      title: 'Subhead (optional)',
+      title: 'Line under the heading (optional)',
       type: 'text',
       rows: 2,
       hidden: hideWhenRich('subheadRich'),
     }),
-    richTwin('subheadRich', 'Subhead'),
+    richTwin('subheadRich', 'Line under the heading (optional)'),
     defineField({
       name: 'members',
-      title: 'Team members',
+      title: 'People',
       type: 'array',
-      validation: (R) => R.min(1).max(12),
+      description:
+        'For staff members, use the Staff members section instead: it reads from People in the menu on the left and stays up to date by itself.',
+      validation: (R) => [
+        R.min(1).error('Add at least one person.'),
+        R.max(12).error('Twelve people at most.'),
+      ],
       of: [
         defineArrayMember({
           type: 'object',
@@ -83,14 +94,14 @@ export const teamSection = defineType({
               name: 'name',
               title: 'Name',
               type: 'string',
-              validation: (R) => R.required(),
+              validation: (R) => R.required().error('Type their name.'),
             }),
             defineField({ name: 'role', title: 'Role or title (optional)', type: 'string' }),
             imageWithAlt('photo', 'Photo (optional)'),
             defineField({ name: 'bio', title: 'Short bio (optional)', type: 'text', rows: 2 }),
             defineField({
               name: 'socialLinks',
-              title: 'Social links (optional)',
+              title: 'Their links (optional)',
               type: 'array',
               of: [
                 defineArrayMember({
@@ -99,16 +110,19 @@ export const teamSection = defineType({
                   fields: [
                     defineField({
                       name: 'label',
-                      title: 'Label',
+                      title: 'Words',
                       type: 'string',
-                      description: 'Examples: LinkedIn, Instagram, Website.',
-                      validation: (R) => R.required(),
+                      description: 'Like "Facebook" or "Website".',
+                      validation: (R) => R.required().error('Type the words for the link.'),
                     }),
                     defineField({
                       name: 'url',
-                      title: 'URL',
+                      title: 'Web address',
                       type: 'url',
-                      validation: (R) => R.required().uri({ scheme: ['http', 'https'] }),
+                      validation: (R) =>
+                        R.required()
+                          .uri({ scheme: ['http', 'https'] })
+                          .error('Paste the full address, starting with https://.'),
                     }),
                   ],
                   preview: { select: { title: 'label', subtitle: 'url' } },
@@ -119,7 +133,7 @@ export const teamSection = defineType({
           preview: {
             select: { title: 'name', subtitle: 'role', media: 'photo' },
             prepare: ({ title, subtitle, media }) => ({
-              title: title || 'Team member',
+              title: title || '(no name yet)',
               subtitle: subtitle || '',
               media,
             }),
@@ -131,8 +145,8 @@ export const teamSection = defineType({
   preview: {
     select: { title: 'headline', members: 'members' },
     prepare: ({ title, members }) => ({
-      title: title || 'Team grid',
-      subtitle: `Team${Array.isArray(members) ? ` (${members.length})` : ''}`,
+      title: title || 'People',
+      subtitle: `People${Array.isArray(members) ? ` (${members.length})` : ''}`,
     }),
   },
 });
@@ -163,40 +177,45 @@ export const teamSection = defineType({
 // The section renders the pre-fetched array; no client-side fetching occurs.
 export const dynamicListSection = defineType({
   name: 'dynamicListSection',
-  title: 'Auto list (latest content)',
+  title: 'Latest blog posts',
   type: 'object',
   icon: SyncIcon,
   description:
-    'Pulls the latest items from a collection automatically. Stays fresh on every rebuild without manual curation.',
+    'The newest posts from the Blog, filled in by themselves each time the site rebuilds.',
   fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
+    defineField({
+      name: 'eyebrow',
+      title: 'Small line above the heading',
+      type: 'string',
+      description: 'A few words. Leave blank for none.',
+    }),
     defineField({
       name: 'headline',
-      title: 'Headline',
+      title: 'Heading',
       type: 'string',
-      validation: (R) => R.required(),
+      validation: (R) => R.required().error('Type the heading.'),
     }),
     defineField({
       name: 'subhead',
-      title: 'Subhead (optional)',
+      title: 'Line under the heading (optional)',
       type: 'text',
       rows: 2,
       hidden: hideWhenRich('subheadRich'),
     }),
-    richTwin('subheadRich', 'Subhead'),
+    richTwin('subheadRich', 'Line under the heading (optional)'),
     columnsField('dynamicListSection'),
     defineField({
       name: 'source',
-      title: 'Show items from',
+      title: 'Show posts from',
       type: 'string',
       options: {
         list: [
-          { title: 'Journal (latest posts)', value: 'journal' }, // scaffold: journal
+          { title: 'The Blog (newest first)', value: 'journal' }, // scaffold: journal
         ],
         layout: 'radio',
       },
       initialValue: 'journal',
-      validation: (R) => R.required(),
+      validation: (R) => R.required().error('Choose where the posts come from.'),
     }),
     defineField({
       name: 'limit',
@@ -207,17 +226,21 @@ export const dynamicListSection = defineType({
       // GROQ slice bounds cannot be field references, so the query fetches a
       // fixed batch of this many candidates and the component trims to this
       // field's actual value. The two must share one constant or they drift.
-      validation: (R) => R.required().min(3).max(DYNAMIC_LIST_MAX),
-      description: `Between 3 and ${DYNAMIC_LIST_MAX} items. The section shows this many in a card grid.`,
+      validation: (R) =>
+        R.required()
+          .min(3)
+          .max(DYNAMIC_LIST_MAX)
+          .error(`Pick a number from 3 to ${DYNAMIC_LIST_MAX}.`),
+      description: `A number from 3 to ${DYNAMIC_LIST_MAX}.`,
     }),
-    defineField({ name: 'cta', title: 'Link button (optional)', type: 'ctaBlock' }),
+    defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
     anchorField(),
   ],
   preview: {
     select: { title: 'headline', source: 'source', limit: 'limit' },
-    prepare: ({ title, source, limit }) => ({
-      title: title || 'Auto list',
-      subtitle: `Auto list: ${source ?? ''}${limit ? ` (up to ${limit})` : ''}`,
+    prepare: ({ title, limit }) => ({
+      title: title || 'Latest blog posts',
+      subtitle: `Latest blog posts${typeof limit === 'number' ? ` (up to ${limit})` : ''}`,
     }),
   },
 });

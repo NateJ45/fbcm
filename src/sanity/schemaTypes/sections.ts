@@ -28,7 +28,7 @@ import {
 } from '@sanity/icons';
 import { columnsField, headingAccentField, hideWhenRich, richTwin } from './_appearanceFields';
 import { anchorField } from './_anchorField';
-import { linkRule } from './_linkRule.ts';
+import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 import { sideOptions } from '../../lib/layout-variants';
 // scaffold: church
 import { CHURCH_SECTION_TYPES } from './churchSections';
@@ -44,10 +44,11 @@ const imageWithAlt = (name = 'image', title = 'Image') =>
     fields: [
       defineField({
         name: 'alt',
-        title: 'Alt text',
+        title: 'Describe the photo',
         type: 'string',
-        description: 'Describe the photo in a few words, for screen readers and search engines.',
-        validation: (R) => R.required(),
+        description: 'A few words saying what is in the photo, for people who cannot see it.',
+        validation: (R) =>
+          R.required().error('Describe the photo in a few words, for people who cannot see it.'),
       }),
     ],
   });
@@ -85,8 +86,9 @@ const proseBody = (name = 'body', title = 'Text') =>
               fields: [
                 defineField({
                   name: 'href',
-                  title: 'URL',
+                  title: 'Web address',
                   type: 'url',
+                  description: `A page on this site like /visit, a full address, or mailto: and an email address. ${LINK_TOKEN_HINT}`,
                   // mailto: and tel: allowed, as ctaBlock already allows them. With
                   // the default (http/https only) every seeded contact line such
                   // as "worship@fbcmuncie.org" failed validation, and a page with
@@ -107,22 +109,34 @@ const proseBody = (name = 'body', title = 'Text') =>
 // ── 1. Hero ──────────────────────────────────────────────────────────────────
 export const heroSection = defineType({
   name: 'heroSection',
-  title: 'Hero (big page opener)',
+  title: 'Page opener',
   type: 'object',
   icon: ComponentIcon,
   fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (small line above)', type: 'string' }),
+    defineField({
+      name: 'eyebrow',
+      title: 'Small line above the heading',
+      type: 'string',
+      description: 'A few words. Leave blank for none.',
+    }),
     defineField({
       name: 'headline',
-      title: 'Headline',
+      title: 'Heading',
       type: 'string',
-      validation: (R) => R.required(),
+      description: 'The big words at the top of the page.',
+      validation: (R) => R.required().error('Type the heading.'),
     }),
     // The colour accent (2026-09-24, the Visit identity pass): on the window
     // layout the accent words close the headline in the gold capitals ("What
     // to Expect / ON SUNDAY"). Optional and additive, so no stored hero changes.
     headingAccentField(),
-    defineField({ name: 'subhead', title: 'Subhead', type: 'text', rows: 2 }),
+    defineField({
+      name: 'subhead',
+      title: 'Line under the heading',
+      type: 'text',
+      rows: 2,
+      description: 'A sentence or two. Leave blank for none.',
+    }),
     imageWithAlt('backgroundImage', 'Background photo (optional)'),
     defineField({
       name: 'layout',
@@ -133,11 +147,11 @@ export const heroSection = defineType({
         list: [
           { title: 'Photo behind the words', value: 'full' },
           { title: 'Words left, photo right', value: 'split' },
-          { title: 'Three arched photos (window)', value: 'window' },
+          { title: 'Three photos in arched windows', value: 'window' },
         ],
         layout: 'radio',
       },
-      description: 'Pick one.',
+      description: 'How the words and the photos are arranged.',
     }),
     defineField({
       name: 'frames',
@@ -154,16 +168,24 @@ export const heroSection = defineType({
               title: 'Describe the photo',
               type: 'string',
               description: 'A short sentence for people who cannot see it.',
+              // A warning, not an error: the home page's photos were set
+              // before this prompt, and an error would stop it publishing.
+              validation: (R) =>
+                R.custom((value, ctx) =>
+                  !value && (ctx.parent as { asset?: unknown } | undefined)?.asset
+                    ? 'Describe the photo in a few words, for people who cannot see it.'
+                    : true,
+                ).warning(),
             }),
           ],
         },
       ],
       description:
-        'One photo, or up to six. With more than one, the home page fades slowly between them; the first loads first, so put the best one first. Window layout: the first three photos, the middle one largest.',
+        'One photo, or up to six. With more than one, the home page fades slowly from one to the next; put the best one first. The arched windows layout uses the first three, the middle one largest.',
     }),
     defineField({
       name: 'facts',
-      title: 'Three facts',
+      title: 'Short facts',
       type: 'array',
       validation: (R) => R.max(3),
       of: [
@@ -199,14 +221,15 @@ export const heroSection = defineType({
           preview: { select: { title: 'value', subtitle: 'label' } },
         },
       ],
-      description: 'Up to three short facts under the words: when, where, online.',
+      description: 'Up to three short facts under the words, like when, where and online.',
     }),
-    defineField({ name: 'primaryCta', title: 'Main button', type: 'ctaBlock' }),
+    defineField({ name: 'primaryCta', title: 'Main button (optional)', type: 'ctaBlock' }),
     defineField({ name: 'secondaryCta', title: 'Second button (optional)', type: 'ctaBlock' }),
     defineField({
       name: 'size',
       title: 'Height',
       type: 'string',
+      description: 'Tall fills most of the screen. Short leaves room for what comes next.',
       initialValue: 'short',
       options: {
         list: [
@@ -219,24 +242,34 @@ export const heroSection = defineType({
   ],
   preview: {
     select: { title: 'headline', media: 'backgroundImage' },
-    prepare: ({ title, media }) => ({ title: title || 'Hero', subtitle: 'Hero', media }),
+    prepare: ({ title, media }) => ({
+      title: title || 'Page opener',
+      subtitle: 'Page opener',
+      media,
+    }),
   },
 });
 
 // ── 2. Rich text ───────────────────────────────────────────────────────────--
 export const richTextSection = defineType({
   name: 'richTextSection',
-  title: 'Text block',
+  title: 'Text',
   type: 'object',
   icon: BlockElementIcon,
   fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
+    defineField({
+      name: 'eyebrow',
+      title: 'Small line above the heading',
+      type: 'string',
+      description: 'A few words. Leave blank for none.',
+    }),
     defineField({ name: 'heading', title: 'Heading (optional)', type: 'string' }),
     defineField({
       name: 'scriptAccent',
       title: 'Handwritten accent word (optional)',
       type: 'string',
-      description: 'One word from the heading to render in the script font. Must match exactly.',
+      description:
+        'One word from the heading, spelled as it is there, set in handwriting. Leave blank for none.',
     }),
     headingAccentField(),
     proseBody('body', 'Text'),
@@ -248,7 +281,7 @@ export const richTextSection = defineType({
       options: {
         list: [
           { title: 'Normal', value: 'normal' },
-          { title: 'Narrow (easier reading)', value: 'narrow' },
+          { title: 'Narrow (easier to read)', value: 'narrow' },
         ],
         layout: 'radio',
       },
@@ -270,29 +303,34 @@ export const richTextSection = defineType({
   ],
   preview: {
     select: { title: 'heading', body: 'body' },
-    prepare: ({ title }) => ({ title: title || 'Text block', subtitle: 'Text' }),
+    prepare: ({ title }) => ({ title: title || 'Text', subtitle: 'Text' }),
   },
 });
 
 // ── 3. Image + text ──────────────────────────────────────────────────────────
 export const imageTextSection = defineType({
   name: 'imageTextSection',
-  title: 'Image + text (side by side)',
+  title: 'Photo and text side by side',
   type: 'object',
   icon: ImageIcon,
   fields: [
-    imageWithAlt('image', 'Image'),
+    imageWithAlt('image', 'Photo'),
     defineField({
       name: 'imageSide',
-      title: 'Which side is the image on?',
+      title: 'Which side is the photo on?',
       type: 'string',
       initialValue: 'left',
       // Wording only. The stored values and the default are unchanged; the
       // labels come from the shared registry so both halves of a media pair
       // read the same way. See src/lib/layout-variants.ts.
-      options: { list: sideOptions('Image'), layout: 'radio' },
+      options: { list: sideOptions('Photo'), layout: 'radio' },
     }),
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
+    defineField({
+      name: 'eyebrow',
+      title: 'Small line above the heading',
+      type: 'string',
+      description: 'A few words. Leave blank for none.',
+    }),
     defineField({ name: 'heading', title: 'Heading', type: 'string' }),
     proseBody('body', 'Text'),
     defineField({ name: 'cta', title: 'Button (optional)', type: 'ctaBlock' }),
@@ -309,10 +347,11 @@ export const imageTextSection = defineType({
       fields: [
         defineField({
           name: 'alt',
-          title: 'Alt text',
+          title: 'Describe the photo',
           type: 'string',
-          description: 'Describe the photo in a few words, for screen readers and search engines.',
-          validation: (R) => R.required(),
+          description: 'A few words saying what is in the photo, for people who cannot see it.',
+          validation: (R) =>
+            R.required().error('Describe the photo in a few words, for people who cannot see it.'),
         }),
       ],
     }),
@@ -321,8 +360,8 @@ export const imageTextSection = defineType({
   preview: {
     select: { title: 'heading', media: 'image' },
     prepare: ({ title, media }) => ({
-      title: title || 'Image + text',
-      subtitle: 'Image + text',
+      title: title || 'Photo and text',
+      subtitle: 'Photo and text',
       media,
     }),
   },
@@ -331,7 +370,7 @@ export const imageTextSection = defineType({
 // ── 4. Gallery ───────────────────────────────────────────────────────────────
 export const gallerySection = defineType({
   name: 'gallerySection',
-  title: 'Photo gallery (grid)',
+  title: 'Photo gallery',
   type: 'object',
   icon: ImagesIcon,
   fields: [
@@ -340,7 +379,7 @@ export const gallerySection = defineType({
       name: 'images',
       title: 'Photos',
       type: 'array',
-      validation: (R) => R.min(1),
+      validation: (R) => R.min(1).error('Add at least one photo.'),
       of: [
         defineArrayMember({
           type: 'image',
@@ -348,9 +387,12 @@ export const gallerySection = defineType({
           fields: [
             defineField({
               name: 'alt',
-              title: 'Alt text',
+              title: 'Describe the photo',
               type: 'string',
-              validation: (R) => R.required(),
+              validation: (R) =>
+                R.required().error(
+                  'Describe the photo in a few words, for people who cannot see it.',
+                ),
             }),
             defineField({
               name: 'caption',
@@ -379,7 +421,7 @@ export const gallerySection = defineType({
 // ── 5. Quote ─────────────────────────────────────────────────────────────────
 export const quoteSection = defineType({
   name: 'quoteSection',
-  title: 'Quote / pull-quote',
+  title: 'Quotation',
   type: 'object',
   icon: StarIcon,
   fields: [
@@ -388,14 +430,15 @@ export const quoteSection = defineType({
       title: 'Quote',
       type: 'text',
       rows: 3,
-      validation: (R) => R.required(),
+      description: 'The words, without quotation marks.',
+      validation: (R) => R.required().error('Type the quotation.'),
     }),
     defineField({ name: 'attribution', title: 'Who said it', type: 'string' }),
     defineField({
       name: 'detail',
-      title: 'Their detail (optional)',
+      title: 'About them (optional)',
       type: 'string',
-      description: 'Context that adds credibility. Example: "Location" or "Project type".',
+      description: 'A few words under their name, like "Member since 1972".',
     }),
     anchorField(),
   ],
@@ -411,7 +454,7 @@ export const quoteSection = defineType({
 // ── 6. Stat row ──────────────────────────────────────────────────────────────
 export const statSection = defineType({
   name: 'statSection',
-  title: 'Numbers row (stats)',
+  title: 'Row of numbers',
   type: 'object',
   icon: ThLargeIcon,
   fields: [
@@ -430,19 +473,20 @@ export const statSection = defineType({
               name: 'number',
               title: 'Number',
               type: 'number',
-              validation: (R) => R.required(),
+              validation: (R) => R.required().error('Type the number.'),
             }),
             defineField({
               name: 'suffix',
-              title: 'Suffix (optional)',
+              title: 'After the number (optional)',
               type: 'string',
-              description: 'Optional suffix after the number. Examples: "+", "%", "yrs".',
+              description: 'Like "+" or "years".',
             }),
             defineField({
               name: 'label',
-              title: 'Label',
+              title: 'What it counts',
               type: 'string',
-              validation: (R) => R.required(),
+              description: 'Like "Years on East Adams Street".',
+              validation: (R) => R.required().error('Say what the number counts.'),
             }),
           ],
           // The title is DERIVED, never selected straight from `number`.
@@ -461,38 +505,44 @@ export const statSection = defineType({
       ],
     }),
   ],
-  preview: { prepare: () => ({ title: 'Numbers row' }) },
+  preview: { prepare: () => ({ title: 'Row of numbers' }) },
 });
 
 // ── 7. CTA band ──────────────────────────────────────────────────────────────
 export const ctaBandSection = defineType({
   name: 'ctaBandSection',
-  title: 'Call-to-action band',
+  title: 'Invitation with a button',
   type: 'object',
   icon: BulbOutlineIcon,
   fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
+    defineField({
+      name: 'eyebrow',
+      title: 'Small line above the heading',
+      type: 'string',
+      description: 'A few words. Leave blank for none.',
+    }),
     defineField({
       name: 'headline',
-      title: 'Headline',
+      title: 'Heading',
       type: 'string',
-      validation: (R) => R.required(),
+      validation: (R) => R.required().error('Type the heading.'),
     }),
     defineField({
       name: 'scriptAccent',
       title: 'Handwritten accent word (optional)',
       type: 'string',
-      description: 'One word from the headline to render in the script font. Must match exactly.',
+      description:
+        'One word from the heading, spelled as it is there, set in handwriting. Leave blank for none.',
     }),
     headingAccentField(),
     defineField({
       name: 'subhead',
-      title: 'Subhead',
+      title: 'Line under the heading',
       type: 'text',
       rows: 2,
       hidden: hideWhenRich('subheadRich'),
     }),
-    richTwin('subheadRich', 'Subhead'),
+    richTwin('subheadRich', 'Line under the heading'),
     defineField({ name: 'cta', title: 'Button', type: 'ctaBlock' }),
     // The second button the band could always DRAW but could never be GIVEN:
     // FinalCta.astro has accepted a `secondaryCta` since it was written, and
@@ -505,8 +555,8 @@ export const ctaBandSection = defineType({
   preview: {
     select: { title: 'headline', media: 'backgroundImage' },
     prepare: ({ title, media }) => ({
-      title: title || 'Call to action',
-      subtitle: 'CTA band',
+      title: title || 'Invitation',
+      subtitle: 'Invitation with a button',
       media,
     }),
   },
@@ -523,8 +573,11 @@ export const videoSection = defineType({
       name: 'url',
       title: 'Video link (YouTube or Vimeo)',
       type: 'url',
-      validation: (R) => R.required().uri({ scheme: ['http', 'https'] }),
-      description: 'Paste the share link from YouTube or Vimeo.',
+      validation: (R) =>
+        R.required()
+          .uri({ scheme: ['http', 'https'] })
+          .error('Paste the address of the video, starting with https://.'),
+      description: 'Paste the Share link from YouTube or Vimeo.',
     }),
     defineField({ name: 'heading', title: 'Heading (optional)', type: 'string' }),
     defineField({ name: 'caption', title: 'Caption (optional)', type: 'string' }),
@@ -538,7 +591,7 @@ export const videoSection = defineType({
 // ── 9. Spacer / divider ──────────────────────────────────────────────────────
 export const spacerSection = defineType({
   name: 'spacerSection',
-  title: 'Spacer / divider',
+  title: 'Divider or space',
   type: 'object',
   icon: RemoveIcon,
   fields: [
@@ -549,38 +602,41 @@ export const spacerSection = defineType({
       initialValue: 'ornament',
       options: {
         list: [
-          { title: 'Accent ornament', value: 'ornament' },
-          { title: 'Plain line', value: 'line' },
-          { title: 'Just space (invisible)', value: 'space' },
+          { title: 'An ornament', value: 'ornament' },
+          { title: 'A plain line', value: 'line' },
+          { title: 'Just a space', value: 'space' },
         ],
         layout: 'radio',
       },
     }),
   ],
-  preview: { prepare: () => ({ title: 'Spacer / divider' }) },
+  preview: { prepare: () => ({ title: 'Divider or space' }) },
 });
 
 // ── 10. Logo strip ──────────────────────────────────────────────────────────
 // A row or grid of client/partner logos. SELF_CONTAINED — manages its own surface.
 export const logoStripSection = defineType({
   name: 'logoStripSection',
-  title: 'Logo strip (trusted by / as seen in)',
+  title: 'Row of logos',
   type: 'object',
   icon: EarthGlobeIcon,
   fields: [
     defineField({
       name: 'eyebrow',
-      title: 'Eyebrow (optional)',
+      title: 'Small line above the heading',
       type: 'string',
-      description: 'Examples: "Trusted by" or "As seen in".',
+      description: 'A few words, like "Our partners". Leave blank for none.',
     }),
-    defineField({ name: 'headline', title: 'Headline (optional)', type: 'string' }),
+    defineField({ name: 'headline', title: 'Heading (optional)', type: 'string' }),
     defineField({
       name: 'logos',
       title: 'Logos',
       type: 'array',
-      validation: (R) => R.min(2).max(12),
-      description: 'Add between 2 and 12 logos. Each needs an alt text for screen readers.',
+      validation: (R) => [
+        R.min(2).error('Add at least two logos.'),
+        R.max(12).error('Twelve logos at most.'),
+      ],
+      description: 'Between 2 and 12 logos, each with its name typed in.',
       of: [
         defineArrayMember({
           type: 'image',
@@ -588,10 +644,10 @@ export const logoStripSection = defineType({
           fields: [
             defineField({
               name: 'alt',
-              title: 'Alt text',
+              title: 'Name on the logo',
               type: 'string',
-              description: 'Company or outlet name, for screen readers and search engines.',
-              validation: (R) => R.required(),
+              description: 'The name the logo shows, for people who cannot see it.',
+              validation: (R) => R.required().error('Type the name on the logo.'),
             }),
           ],
         }),
@@ -604,8 +660,8 @@ export const logoStripSection = defineType({
       initialValue: 'row',
       options: {
         list: [
-          { title: 'Row (single line, scrollable on small screens)', value: 'row' },
-          { title: 'Grid (wraps across rows)', value: 'grid' },
+          { title: 'One row (swipe along it on a phone)', value: 'row' },
+          { title: 'Several rows', value: 'grid' },
         ],
         layout: 'radio',
       },
@@ -615,8 +671,8 @@ export const logoStripSection = defineType({
   preview: {
     select: { logos: 'logos', eyebrow: 'eyebrow', headline: 'headline' },
     prepare: ({ logos, eyebrow, headline }) => ({
-      title: headline || eyebrow || 'Logo strip',
-      subtitle: `Logo strip${Array.isArray(logos) ? ` (${logos.length})` : ''}`,
+      title: headline || eyebrow || 'Row of logos',
+      subtitle: `Row of logos${Array.isArray(logos) ? ` (${logos.length})` : ''}`,
       media: Array.isArray(logos) && logos[0] ? logos[0] : EarthGlobeIcon,
     }),
   },
@@ -631,34 +687,51 @@ export const logoStripSection = defineType({
 // in the CMS.
 export const embedSection = defineType({
   name: 'embedSection',
-  title: 'Embed (form, scheduler, or widget)',
+  title: 'Something from another website',
   type: 'object',
   icon: CodeBlockIcon,
-  description: 'Only paste embed code from providers you trust. It renders as-is on the live site.',
+  description:
+    'Shows a map, a calendar or a form from another website. For a Church Trac form, use the Church Trac form section instead. Ask before pasting code from anywhere else.',
   fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow (optional)', type: 'string' }),
-    defineField({ name: 'headline', title: 'Headline (optional)', type: 'string' }),
-    defineField({ name: 'subhead', title: 'Subhead (optional)', type: 'text', rows: 2 }),
+    defineField({
+      name: 'eyebrow',
+      title: 'Small line above the heading',
+      type: 'string',
+      description: 'A few words. Leave blank for none.',
+    }),
+    defineField({ name: 'headline', title: 'Heading (optional)', type: 'string' }),
+    defineField({
+      name: 'subhead',
+      title: 'Line under the heading (optional)',
+      type: 'text',
+      rows: 2,
+    }),
     defineField({
       name: 'embedUrl',
-      title: 'Embed URL',
+      title: 'Web address to show',
       type: 'url',
       description:
-        'Use for providers that embed via URL: Calendly, Cal.com, Tally, Google Forms. Paste the full URL.',
-      validation: (R) => R.uri({ scheme: ['http', 'https'] }),
+        'The address the other website gives you for showing it on a page, like a Google Form or a Google Map. Use this or the code box below, not both.',
+      validation: (R) =>
+        R.uri({ scheme: ['http', 'https'] }).error(
+          'Paste the full address, starting with https://.',
+        ),
     }),
     defineField({
       name: 'embedCode',
-      title: 'Embed code (raw iframe)',
+      title: 'Code to show',
       type: 'text',
       rows: 4,
       description:
-        'Use for providers that give a raw iframe snippet. Only paste from providers you trust.',
+        'Code the other website gives you, starting with <iframe. It goes on the page exactly as pasted, so only paste code from a website you trust, and ask first if you are not sure.',
+      // The sibling check reads `context.parent` (this section). It read
+      // `context.document` (the whole page) until the Studio audit, 2026-09-26,
+      // where `embedUrl` never is, so the "not both" rule never fired.
       validation: (R) =>
         R.custom((value, context) => {
-          const doc = context.document as Record<string, unknown> | undefined;
-          if (value && doc?.embedUrl) {
-            return 'Fill in either Embed URL or Embed code, not both.';
+          const section = context.parent as Record<string, unknown> | undefined;
+          if (value && section?.embedUrl) {
+            return 'Fill in the web address or the code, not both.';
           }
           return true;
         }),
@@ -670,9 +743,9 @@ export const embedSection = defineType({
       initialValue: 'medium',
       options: {
         list: [
-          { title: 'Short (around 400px)', value: 'short' },
-          { title: 'Medium (around 640px)', value: 'medium' },
-          { title: 'Tall (around 900px)', value: 'tall' },
+          { title: 'Short', value: 'short' },
+          { title: 'Medium', value: 'medium' },
+          { title: 'Tall', value: 'tall' },
         ],
         layout: 'radio',
       },
@@ -681,8 +754,11 @@ export const embedSection = defineType({
   preview: {
     select: { title: 'headline', eyebrow: 'eyebrow', url: 'embedUrl' },
     prepare: ({ title, eyebrow, url }) => ({
-      title: title || eyebrow || 'Embed',
-      subtitle: url ? `Embed: ${url.slice(0, 50)}` : 'Embed (code snippet)',
+      title: title || eyebrow || 'From another website',
+      subtitle:
+        typeof url === 'string' && url
+          ? `Shows ${url.slice(0, 50)}`
+          : 'From another website (code)',
     }),
   },
 });
@@ -737,17 +813,17 @@ export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
     },
     {
       name: 'proof',
-      title: 'Proof and trust',
+      title: 'Quotations and numbers',
       of: ['quoteSection', 'statSection', 'logoStripSection'],
     },
     {
       name: 'media',
-      title: 'Media',
+      title: 'Photos and video',
       of: ['gallerySection', 'videoSection', 'embedSection'],
     },
     {
       name: 'business',
-      title: 'About the business',
+      title: 'People, posts and invitations',
       of: ['teamSection', 'dynamicListSection', 'ctaBandSection'],
     },
     // scaffold: church
@@ -790,7 +866,7 @@ export const additionalSectionsField = defineField({
   type: 'array',
   group: 'extra',
   description:
-    'Optional. Add blocks from the library to the bottom of this page (a banner, a gallery, a call to action). Leave empty to keep the page exactly as it is.',
+    'Optional. Sections added at the bottom of this page, like a gallery or an invitation. Leave empty to keep the page as it is.',
   of: SECTION_TYPES,
   options: sectionArrayOptions,
 });

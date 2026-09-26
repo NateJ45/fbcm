@@ -25,9 +25,9 @@ import { defineField } from 'sanity';
 export const anchorField = () =>
   defineField({
     name: 'anchor',
-    title: 'Jump-to id (optional)',
+    title: 'Jump-to name (optional)',
     type: 'slug',
     description:
-      'A short id such as baptists so a link can jump to this section: /beliefs#baptists. Letters, numbers and hyphens.',
+      'A short name, like baptists, so a link can jump straight to this section: /beliefs#baptists. Small letters, numbers and dashes only. Once links use it, leave it alone.',
     options: { maxLength: 40 },
   });

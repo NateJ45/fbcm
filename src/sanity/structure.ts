@@ -42,7 +42,6 @@ import {
   HomeIcon,
   InfoOutlineIcon,
   LockIcon,
-  PinIcon,
   PresentationIcon,
   TagIcon,
   ThumbsUpIcon,
@@ -67,6 +66,11 @@ const SINGLETON_TYPES = [
   'studioGuide',
   'studioNotes',
 ] as const;
+
+// The API version every filtered document list queries with. Sanity warns,
+// once per list, when a list with a custom filter has none ("This will be
+// required in the future"). Kept equal to the default in src/lib/sanity.ts.
+const DESK_API_VERSION = '2026-05-01';
 
 const ORDERABLE_TYPES = [] as const;
 
@@ -123,7 +127,18 @@ function singletonWithPreview(S: StructureBuilder, schemaType: string, title: st
 // page whose slug isn't below (one plan 2b hasn't created yet, or a future
 // one added later) still shows up; it just sorts to the end until someone
 // gives it a nav slot.
-const NAV_PAGE_ORDER = ['visit', 'who-we-are', 'beliefs', 'history', 'contact'];
+const NAV_PAGE_ORDER = [
+  'visit',
+  'who-we-are',
+  'beliefs',
+  'history',
+  'staff',
+  'ministries',
+  'wedding',
+  'give',
+  'visitor',
+  'contact',
+];
 
 const NAV_PAGE_RANK = `select(${NAV_PAGE_ORDER.map(
   (slug, i) => `slug.current == "${slug}" => ${i}`,
@@ -131,11 +146,12 @@ const NAV_PAGE_RANK = `select(${NAV_PAGE_ORDER.map(
 
 function navOrderedPagesList(S: StructureBuilder) {
   return S.documentTypeListItem('page')
-    .title('Visit, Who We Are, Beliefs, History')
+    .title('All other pages')
     .icon(DocumentsIcon)
     .child(
       S.documentList()
-        .title('Pages')
+        .apiVersion(DESK_API_VERSION)
+        .title('All other pages')
         .filter('_type == "page"')
         .defaultOrdering([
           { field: NAV_PAGE_RANK, direction: 'asc' },
@@ -176,8 +192,8 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
 
               S.divider(),
 
-              singletonWithPreview(S, 'privacyPage', 'Privacy', LockIcon),
-              singletonWithPreview(S, 'notFoundPage', 'Not found (404)', DocumentTextIcon),
+              singletonWithPreview(S, 'privacyPage', 'Privacy policy', LockIcon),
+              singletonWithPreview(S, 'notFoundPage', 'Page not found (404)', DocumentTextIcon),
 
               S.divider(),
 
@@ -202,7 +218,7 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
           S.list()
             .title('Blog')
             .items([
-              singletonWithPreview(S, 'journalPage', 'Blog page (the /blog index)', BookIcon),
+              singletonWithPreview(S, 'journalPage', 'Blog page', BookIcon),
 
               S.divider(),
 
@@ -211,6 +227,7 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
                 .icon(EditIcon)
                 .child(
                   S.documentList()
+                    .apiVersion(DESK_API_VERSION)
                     .title('Posts')
                     .filter('_type == "journalEntry"')
                     .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
@@ -236,6 +253,7 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
                 .icon(UsersIcon)
                 .child(
                   S.documentList()
+                    .apiVersion(DESK_API_VERSION)
                     .title('Staff members')
                     .filter('_type == "staffMember"')
                     .defaultOrdering([
@@ -261,6 +279,7 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
         .icon(HeartIcon)
         .child(
           S.documentList()
+            .apiVersion(DESK_API_VERSION)
             .title('Ministries')
             .filter('_type == "ministry"')
             .defaultOrdering([
@@ -279,6 +298,7 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
         .icon(ClipboardIcon)
         .child(
           S.documentList()
+            .apiVersion(DESK_API_VERSION)
             .title('Church Trac forms')
             .filter('_type == "churchTracForm"')
             .defaultOrdering([{ field: 'title', direction: 'asc' }]),
@@ -296,7 +316,13 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
             .title('Site settings')
             .items([
               singletonWithPreview(S, 'siteSettings', 'Site settings', CogIcon),
-              singletonWithPreview(S, 'businessInfo', 'Location details', PinIcon),
+              // businessInfo ("Location details") came off the desk in the
+              // Studio audit (2026-09-26). The document does not exist in the
+              // dataset, and opening it created one carrying the starter's
+              // placeholders ("Your City", "XX"), which Sunday times and the
+              // pastors' letter print after the street address. The address
+              // lives whole in Site settings > Church details. The type stays
+              // registered and hidden (HIDDEN_FROM_DEFAULT) so nothing breaks.
 
               S.divider(),
 
@@ -310,7 +336,7 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
               // hand for an address that never existed on this site. A divider
               // with a title is the closest the desk builder has to a subtitle
               // on a list item, so the one-line description sits just above it.
-              S.divider().title('Old web addresses -- forwards visitors from a page that moved'),
+              S.divider().title('Old web addresses: forward visitors from a page that moved'),
               S.documentTypeListItem('redirect').title('Old web addresses').icon(ArrowRightIcon),
             ]),
         ),

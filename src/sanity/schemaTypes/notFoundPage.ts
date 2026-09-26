@@ -14,46 +14,42 @@ import { defineType, defineField } from 'sanity';
 
 export const notFoundPage = defineType({
   name: 'notFoundPage',
-  title: '404 Page',
+  title: 'Page not found (404)',
   type: 'document',
   options: { canvasApp: { exclude: true } },
   groups: [
-    { name: 'seo', title: 'SEO' },
-    { name: 'content', title: 'Content' },
-    { name: 'ctas', title: 'Doors' },
+    { name: 'seo', title: 'Search and sharing' },
+    { name: 'content', title: 'Words' },
+    { name: 'ctas', title: 'The four doors' },
   ],
   fields: [
     defineField({
       name: 'seoTitle',
-      title: 'SEO title',
+      title: 'Title in Google',
       type: 'string',
       group: 'seo',
       initialValue: 'Page not found',
       description:
-        'Browser tab and Google result title. Aim for 50 to 60 characters. Front-load the location or service.',
+        "The title in the browser tab and in Google's results. About 50 to 60 letters. Leave blank to use the page's own title.",
       validation: (Rule) =>
-        Rule.max(60).warning(
-          'Titles longer than about 60 characters get cut off in Google search results.',
-        ),
+        Rule.max(60).warning('Google cuts off titles longer than about 60 letters.'),
     }),
     defineField({
       name: 'seoDescription',
-      title: 'SEO description',
+      title: 'Description in Google',
       type: 'text',
       rows: 2,
       group: 'seo',
       initialValue: 'That page wandered off. Head back to the homepage or get in touch.',
       description:
-        'The sentence under the title in Google results. Aim for 150 to 160 characters. Write it for a person, not a search engine.',
+        "The sentence under the title in Google's results. About 150 to 160 letters. A placeholder in curly brackets, like {service time}, is filled in from Site settings.",
       validation: (Rule) =>
-        Rule.max(160).warning(
-          'Descriptions longer than about 160 characters get cut off in Google search results.',
-        ),
+        Rule.max(160).warning('Google cuts off descriptions longer than about 160 letters.'),
     }),
 
     defineField({
       name: 'eyebrow',
-      title: 'Eyebrow',
+      title: 'Small line above the heading',
       type: 'string',
       group: 'content',
       initialValue: '404',
@@ -67,27 +63,28 @@ export const notFoundPage = defineType({
     }),
     defineField({
       name: 'body',
-      title: 'Body copy',
+      title: 'Text',
       type: 'text',
       rows: 3,
       group: 'content',
       initialValue:
-        "It happens. Maybe a link is old, maybe the URL has a typo. Either way, here's where to head next.",
+        "It happens. Maybe a link is old, maybe the address has a typo. Either way, here's where to head next.",
     }),
     defineField({
       name: 'heroImage',
-      title: 'Photo',
+      title: 'Photo (not shown)',
       type: 'image',
       group: 'content',
-      description:
-        'Not shown on the page since 2026-09-24: the 404 draws the church door and four doors to the main pages instead. Leave it blank.',
+      // Not drawn since the utility identity pass (2026-09-24), and empty in the
+      // dataset. Hidden rather than removed so nothing stored is orphaned
+      // (rule 1); the alt is no longer required, so it cannot trap the document.
+      hidden: true,
       options: { hotspot: true },
       fields: [
         defineField({
           name: 'alt',
-          title: 'Alt text',
+          title: 'Describe the photo',
           type: 'string',
-          validation: (R) => R.required(),
         }),
         defineField({
           name: 'caption',
@@ -100,43 +97,43 @@ export const notFoundPage = defineType({
 
     defineField({
       name: 'primaryCtaLabel',
-      title: 'First door label',
+      title: 'First door: words',
       type: 'string',
       group: 'ctas',
       initialValue: 'Plan a visit',
     }),
     defineField({
       name: 'primaryCtaHref',
-      title: 'First door destination',
+      title: 'First door: where it goes',
       type: 'string',
       group: 'ctas',
       initialValue: '/visit',
-      description: 'Use a relative URL like "/" or "/contact". External URLs work too.',
+      description: 'A page on this site, like /visit.',
     }),
     defineField({
       name: 'secondaryCtaLabel',
-      title: 'Second door label',
+      title: 'Second door: words',
       type: 'string',
       group: 'ctas',
       initialValue: 'Who we are',
     }),
     defineField({
       name: 'secondaryCtaHref',
-      title: 'Second door destination',
+      title: 'Second door: where it goes',
       type: 'string',
       group: 'ctas',
       initialValue: '/who-we-are',
     }),
     defineField({
       name: 'tertiaryCtaLabel',
-      title: 'Third door label',
+      title: 'Third door: words',
       type: 'string',
       group: 'ctas',
       initialValue: 'Read the blog',
     }),
     defineField({
       name: 'tertiaryCtaHref',
-      title: 'Third door destination',
+      title: 'Third door: where it goes',
       type: 'string',
       group: 'ctas',
       initialValue: '/blog',
@@ -144,18 +141,18 @@ export const notFoundPage = defineType({
     // 2026-09-24: the fourth door. Optional; blank falls back to Give (/give).
     defineField({
       name: 'fourthCtaLabel',
-      title: 'Fourth door label',
+      title: 'Fourth door: words',
       type: 'string',
       group: 'ctas',
-      description: 'The fourth door on the 404 page. Blank shows "Give".',
+      description: 'Leave blank for "Give".',
     }),
     defineField({
       name: 'fourthCtaHref',
-      title: 'Fourth door destination',
+      title: 'Fourth door: where it goes',
       type: 'string',
       group: 'ctas',
-      description: 'Use a relative URL like "/give". Blank goes to /give.',
+      description: 'A page on this site. Leave blank for /give.',
     }),
   ],
-  preview: { prepare: () => ({ title: '404 Page' }) },
+  preview: { prepare: () => ({ title: 'Page not found (404)' }) },
 });

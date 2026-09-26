@@ -188,8 +188,17 @@ export default defineConfig({
     // append ours.
     badges: (prev) => [...prev, ...documentBadges],
     newDocumentOptions: (prev, { creationContext }) => {
-      if (creationContext.type === 'global') {
-        return prev.filter((option) => !SINGLETON_TYPES.has(option.templateId));
+      // 'document' is the "Create new" button inside a reference field. A
+      // button link can point at Home or the Blog page, so without this the
+      // link box offered "Create new Home page", which makes a second,
+      // orphaned copy of a singleton under a random id (Studio audit,
+      // 2026-09-26). Singletons are opened from the desk by their fixed id,
+      // which does not go through this menu.
+      if (creationContext.type === 'global' || creationContext.type === 'document') {
+        return prev.filter(
+          (option) =>
+            !SINGLETON_TYPES.has(option.templateId) && !CREATED_ELSEWHERE.has(option.templateId),
+        );
       }
       return prev;
     },
@@ -260,3 +269,10 @@ const SINGLETON_TYPES = new Set<string>([
   'studioGuide',
   'studioNotes',
 ]);
+
+// Types that are made from somewhere better than the global "Create" menu, so
+// they are left out of it. A saved section is made from a page's publish menu
+// ("Save a section as preset..."), which fills it in; one started blank from
+// the global menu is an empty shell. Its own list under Pages keeps its
+// create button for anyone who really wants one.
+const CREATED_ELSEWHERE = new Set<string>(['sectionPreset']);

@@ -17,23 +17,23 @@ import { sectionArrayOptions } from './sections';
 
 export const homePage = defineType({
   name: 'homePage',
-  title: 'Home Page',
+  title: 'Home page',
   type: 'document',
   // Marketing copy is locked and structural — edit fields directly in Studio, not Canvas.
   options: { canvasApp: { exclude: true } },
   groups: [
-    { name: 'pageBuilder', title: 'Page layout' },
-    { name: 'seo', title: 'SEO' },
+    { name: 'pageBuilder', title: 'Sections' },
+    { name: 'seo', title: 'Search and sharing' },
   ],
   fields: [
     // Page builder (primary editing surface — section-driven)
     defineField({
       name: 'pageBuilder',
-      title: 'Page layout',
+      title: 'Sections',
       type: 'array',
       group: 'pageBuilder',
       description:
-        "Sections on this page. Drag to reorder, remove a section to hide it, or add a new block from the library. Edit each section's content by clicking into it.",
+        'The sections of the home page, top to bottom. Drag one by its handle to move it, click one to change its words, or use Add item to add a new one.',
       of: HOME_SECTION_TYPES,
       // Grouped + searchable insert menu, in the form AND in the preview canvas.
       options: sectionArrayOptions,
@@ -42,39 +42,35 @@ export const homePage = defineType({
     // SEO
     defineField({
       name: 'seoTitle',
-      title: 'SEO title',
+      title: 'Title in Google',
       type: 'string',
       group: 'seo',
       description:
-        'Browser tab and Google result title. Aim for 50 to 60 characters. Front-load the location or service.',
+        "The title in the browser tab and in Google's results. About 50 to 60 letters. Leave blank to use the page's own title.",
       validation: (Rule) =>
-        Rule.max(60).warning(
-          'Titles longer than about 60 characters get cut off in Google search results.',
-        ),
+        Rule.max(60).warning('Google cuts off titles longer than about 60 letters.'),
     }),
     defineField({
       name: 'seoDescription',
-      title: 'SEO description',
+      title: 'Description in Google',
       type: 'text',
       rows: 3,
       group: 'seo',
       description:
-        'The sentence under the title in Google results. Aim for 150 to 160 characters. Write it for a person, not a search engine.',
+        "The sentence under the title in Google's results. About 150 to 160 letters. A placeholder in curly brackets, like {service time}, is filled in from Site settings.",
       validation: (Rule) =>
-        Rule.max(160).warning(
-          'Descriptions longer than about 160 characters get cut off in Google search results.',
-        ),
+        Rule.max(160).warning('Google cuts off descriptions longer than about 160 letters.'),
     }),
     defineField({
       name: 'seoImage',
-      title: 'Social share image (this page)',
+      title: 'Picture when shared',
       type: 'image',
       group: 'seo',
       description:
-        'Optional. The image shown when this page is shared on social media or in a text. Overrides the site default in Site Settings. Use a wide image, about 1200 by 630 pixels. Leave blank to use the site default.',
+        "Optional. The picture shown when someone shares this page on Facebook or in a text message. A wide picture, about 1200 by 630 pixels. Leave blank and the site draws one in the church's colours.",
       options: { hotspot: true },
-      fields: [defineField({ name: 'alt', title: 'Alt text', type: 'string' })],
+      fields: [defineField({ name: 'alt', title: 'Describe the picture', type: 'string' })],
     }),
   ],
-  preview: { prepare: () => ({ title: 'Home Page' }) },
+  preview: { prepare: () => ({ title: 'Home page' }) },
 });

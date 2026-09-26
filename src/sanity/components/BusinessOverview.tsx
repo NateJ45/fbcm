@@ -11,6 +11,10 @@
 // siteSettings.ts "Church details"). This panel still does real work for the
 // two things that survived: siteSettings (contact) and studioNotes (who you
 // are, your ideal client, your voice).
+// 2026-09-26 (Studio audit): the contact card read the two legacy social
+// fields (socialInstagram / socialFacebook), which are empty, so it never
+// showed the church's accounts. It now reads what the site draws: the service
+// time, the address and the socialLinks list. Headings speak of the church.
 
 import React, { useEffect, useState } from 'react';
 import { useClient } from 'sanity';
@@ -21,13 +25,18 @@ import { Box, Card, Container, Heading, Stack, Text } from '@sanity/ui';
 interface SiteSettingsData {
   email: string | null;
   phone: string | null;
-  socialInstagram: string | null;
-  socialFacebook: string | null;
+  serviceTime: string | null;
+  address: string | null;
+  socialLinks: Array<{
+    platform?: string | null;
+    url?: string | null;
+    label?: string | null;
+  }> | null;
 }
 
 // ─── Fetch ───────────────────────────────────────────────────────────────────
 
-const SETTINGS_QUERY = `*[_type=="siteSettings"][0]{email,phone,socialInstagram,socialFacebook}`;
+const SETTINGS_QUERY = `*[_id=="siteSettings"][0]{email,phone,serviceTime,address,socialLinks[]{platform,url,label}}`;
 
 interface NotesData {
   businessSummary: string | null;
@@ -63,7 +72,7 @@ function ErrorCard({ label }: { label: string }) {
   return (
     <Card padding={4} radius={2} shadow={1} tone="caution">
       <Text size={1}>
-        Could not load {label} right now. Open Site Settings or Content to see the current values.
+        Could not load {label} right now. Open Site settings to see what is there.
       </Text>
     </Card>
   );
@@ -104,8 +113,9 @@ export default function BusinessOverview() {
           </Heading>
           <Box marginTop={3}>
             <Text muted size={1}>
-              The live section below is pulled directly from your Site Settings, so it is always
-              current. To change anything, edit that document.
+              The first card is read from Site settings, so it is always up to date. To change it,
+              change Site settings. The notes below it are for anyone writing for the website;
+              change them in the Edit notes tab.
             </Text>
           </Box>
         </Box>
@@ -114,14 +124,14 @@ export default function BusinessOverview() {
         <Card padding={4} radius={2} shadow={1} tone="default">
           <Stack space={4}>
             <Heading as="h2" size={1}>
-              Contact (live)
+              Contact details (from Site settings)
             </Heading>
 
             {/* Loading */}
-            {settings === null && !settingsError && <LoadingCard label="site settings" />}
+            {settings === null && !settingsError && <LoadingCard label="Site settings" />}
 
             {/* Error */}
-            {settingsError && <ErrorCard label="site settings" />}
+            {settingsError && <ErrorCard label="Site settings" />}
 
             {/* Data */}
             {settings !== null && (
@@ -148,27 +158,40 @@ export default function BusinessOverview() {
                   </Box>
                 ) : null}
 
-                {settings.socialInstagram ? (
+                {settings.serviceTime ? (
                   <Box>
                     <Text size={1} weight="semibold">
-                      Instagram
+                      Service time
                     </Text>
                     <Box marginTop={1}>
-                      <Text size={1}>{settings.socialInstagram}</Text>
+                      <Text size={1}>{settings.serviceTime}</Text>
                     </Box>
                   </Box>
                 ) : null}
 
-                {settings.socialFacebook ? (
+                {settings.address ? (
                   <Box>
                     <Text size={1} weight="semibold">
-                      Facebook
+                      Address
                     </Text>
                     <Box marginTop={1}>
-                      <Text size={1}>{settings.socialFacebook}</Text>
+                      <Text size={1}>{settings.address.split('\n').join(', ')}</Text>
                     </Box>
                   </Box>
                 ) : null}
+
+                {(settings.socialLinks ?? [])
+                  .filter((link) => typeof link?.url === 'string' && link.url)
+                  .map((link) => (
+                    <Box key={link.url as string}>
+                      <Text size={1} weight="semibold">
+                        {link.label || link.platform || 'Social media'}
+                      </Text>
+                      <Box marginTop={1}>
+                        <Text size={1}>{link.url}</Text>
+                      </Box>
+                    </Box>
+                  ))}
               </Stack>
             )}
           </Stack>
@@ -179,7 +202,7 @@ export default function BusinessOverview() {
           <Card padding={4} radius={2} shadow={1} tone="default">
             <Stack space={3}>
               <Heading as="h2" size={1}>
-                Who you are
+                Who the church is
               </Heading>
               {paragraphs(notes.businessSummary).map((p, i) => (
                 <Text key={i} size={1}>
@@ -195,7 +218,7 @@ export default function BusinessOverview() {
           <Card padding={4} radius={2} shadow={1} tone="default">
             <Stack space={3}>
               <Heading as="h2" size={1}>
-                Your ideal client
+                Who we are writing for
               </Heading>
               {paragraphs(notes.idealClient).map((p, i) => (
                 <Text key={i} size={1}>
@@ -211,7 +234,7 @@ export default function BusinessOverview() {
           <Card padding={4} radius={2} shadow={1} tone="default">
             <Stack space={3}>
               <Heading as="h2" size={1}>
-                Your voice (how you sound in writing)
+                How the church sounds in writing
               </Heading>
               {paragraphs(notes?.voiceSummary).map((p, i) => (
                 <Text key={i} size={1}>
@@ -221,7 +244,7 @@ export default function BusinessOverview() {
               {notes?.wordsToAvoid && notes.wordsToAvoid.length > 0 && (
                 <>
                   <Text size={1} weight="semibold">
-                    Words to skip:
+                    Words to avoid:
                   </Text>
                   <Text size={1}>{notes.wordsToAvoid.join(', ')}.</Text>
                 </>

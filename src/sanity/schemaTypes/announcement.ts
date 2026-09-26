@@ -25,7 +25,7 @@ import { BellIcon } from '@sanity/icons';
 
 export const announcement = defineType({
   name: 'announcement',
-  title: 'Announcement',
+  title: 'Announcement banner',
   type: 'document',
   icon: BellIcon,
   fields: [
@@ -34,28 +34,30 @@ export const announcement = defineType({
       title: 'Internal name',
       type: 'string',
       description:
-        'For your reference in the Studio only. Not shown on the site. Example: "Summer hours notice".',
-      validation: (Rule) => Rule.required(),
+        'A name so you can find it in the list, like "Snow closing, January". Visitors never see it.',
+      validation: (Rule) => Rule.required().error('Give it a name so you can find it later.'),
     }),
     defineField({
       name: 'message',
       title: 'Message',
       type: 'string',
       description:
-        'The text shown in the banner. Keep it short (under 160 characters). Example: "We are closed 26 Dec through 1 Jan. Replies will be slower than usual."',
-      validation: (Rule) => Rule.required().max(160),
+        'What the banner says. One short sentence, like "No service this Sunday because of the snow."',
+      validation: (Rule) => [
+        Rule.required().error('Type what the banner should say.'),
+        Rule.max(160).error('Keep it to 160 letters or fewer.'),
+      ],
     }),
     defineField({
       name: 'style',
       title: 'Style',
       type: 'string',
-      description:
-        'Info = calm muted background (neutral updates). Highlight = brand primary (good news, promotions). Urgent = red (closures, important warnings).',
+      description: 'If more than one banner is on, the most urgent one shows.',
       options: {
         list: [
-          { title: 'Info (neutral, muted background)', value: 'info' },
-          { title: 'Highlight (brand primary, good news)', value: 'highlight' },
-          { title: 'Urgent (red, closures or warnings)', value: 'urgent' },
+          { title: 'Info (quiet, for everyday news)', value: 'info' },
+          { title: 'Highlight (the church colour, for good news)', value: 'highlight' },
+          { title: 'Urgent (red, for a closing or a warning)', value: 'urgent' },
         ],
         layout: 'radio',
       },
@@ -72,13 +74,20 @@ export const announcement = defineType({
           name: 'label',
           title: 'Link label',
           type: 'string',
-          description: 'The clickable text. Example: "See our holiday schedule".',
+          description: 'The words to click, like "See the Christmas services".',
         }),
         defineField({
           name: 'url',
-          title: 'URL',
+          title: 'Web address',
           type: 'string',
-          description: 'A page on this site like /contact, or a full https:// address.',
+          description:
+            'A page on this site like /contact, or a full address starting with https://.',
+          validation: (Rule) =>
+            Rule.custom((value) =>
+              !value || /^(\/|https?:\/\/)/.test(String(value).trim())
+                ? true
+                : 'Start with a slash, like /contact, or with https://.',
+            ),
         }),
       ],
     }),
@@ -87,21 +96,20 @@ export const announcement = defineType({
       title: 'Show from (optional)',
       type: 'datetime',
       description:
-        'Leave blank to show immediately when enabled. Set a date to schedule the banner ahead of time. Evaluated at build time -- set up a scheduled rebuild if you need precise timing.',
+        'Leave blank to show it as soon as it is published. Set a date to have it appear later. The website only checks the date when it rebuilds, which happens whenever anyone publishes, so it may appear a little late.',
     }),
     defineField({
       name: 'endDate',
       title: 'Hide after (optional)',
       type: 'datetime',
       description:
-        'Leave blank to keep showing until you disable it. Set a date to auto-expire the banner. Evaluated at build time -- a rebuild is needed for the banner to disappear.',
+        'Leave blank to keep it up until you switch it off. The website only checks the date when it rebuilds, so to be sure it has gone, switch "Show this banner" off and publish.',
     }),
     defineField({
       name: 'enabled',
-      title: 'Enabled',
+      title: 'Show this banner',
       type: 'boolean',
-      description:
-        'Master on/off switch. When off, this announcement never shows regardless of dates.',
+      description: 'When this is off, the banner never shows, whatever the dates say.',
       initialValue: true,
     }),
   ],
@@ -122,7 +130,11 @@ export const announcement = defineType({
         .join(' to ');
       return {
         title: message || 'Announcement',
-        subtitle: `${enabled ? '' : 'OFF: '}${style ?? 'info'}${window ? ` (${window})` : ''}`,
+        subtitle: `${enabled ? '' : 'Off. '}${
+          ({ info: 'Info', highlight: 'Highlight', urgent: 'Urgent' } as Record<string, string>)[
+            style as string
+          ] ?? 'Info'
+        }${window ? ` (${window})` : ''}`,
       };
     },
   },
