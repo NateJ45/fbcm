@@ -2155,6 +2155,23 @@ it was being undone.
 and every caller of the comlink `refresh` promise resolves (Presentation spins its
 refresh button until it does).
 
+## Card 29d: The preview cookie's value is checked, not its presence (2026-09-26, fbcm)
+
+**Canonical:** `src/lib/preview-auth.ts` (unchanged) and its three callers:
+`src/pages/preview/[...slug].astro`, `src/pages/preview/live.ts`, and in fbcm
+`src/pages/preview/post/[slug].astro`.
+
+**The gap, in the starter and every repo on it:** `/api/draft-mode/enable` writes a
+fingerprint of the server token into `sanity-preview-perspective`, and
+`isStudioPreview()` exists to check it, but every preview route only asked
+`cookies.has(...)`. Anyone who typed that cookie (any value) into a browser read drafts
+through the server's token, and could hold open `/preview/live` connections. fbcm now
+checks `await isStudioPreview(cookies.get(perspectiveCookieName)?.value)` in all three
+routes. Measured on `wrangler dev`: no cookie, `true` and `drafts` give published content
+and a 403 from `/preview/live`; the genuine fingerprint gives drafts and a 200. presacademy
+already gates `/api/stats` on the same check in production, so the Presentation tool does
+not overwrite the cookie. Port to the starter and every family repo.
+
 ## Card 29c: The preview morph (2026-08-28)
 
 **Canonical:** `src/lib/preview-morph.ts` (+ `.test.ts`).
