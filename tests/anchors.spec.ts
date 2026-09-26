@@ -32,9 +32,16 @@ async function measureAnchor(page: import('@playwright/test').Page, hash: string
     const header = document.querySelector('header.site-header');
     if (!target) throw new Error(`no element with id "${id}"`);
     if (!header) throw new Error('no header.site-header found');
+    // /history's contents bar (TimelineContents.astro, 2026-09-25) rides
+    // stuck under the header, so there the target must clear the bar too:
+    // "the header's bottom" is the lower of the two when the bar is stuck.
+    const headerBottom = header.getBoundingClientRect().bottom;
+    const bar = document.querySelector('.hc-bar:not([data-past])');
+    const barRect = bar?.getBoundingClientRect();
+    const barStuck = !!barRect && barRect.top <= headerBottom + 1;
     return {
       targetTop: target.getBoundingClientRect().top,
-      headerBottom: header.getBoundingClientRect().bottom,
+      headerBottom: barStuck ? Math.max(headerBottom, barRect.bottom) : headerBottom,
     };
   }, hash);
 }
