@@ -106,6 +106,8 @@ test.describe('with smooth scroll', () => {
 
   test('navigating away with the search open leaves the wheel working', async ({ page }) => {
     await page.goto('/', { waitUntil: 'load' });
+    // Blog is in the header's News dropdown since 2026-09-26.
+    await page.locator('header summary', { hasText: 'News' }).hover();
     await page.click('header a[href="/blog/"], header a[href="/blog"]');
     await expect(page).toHaveURL(/\/blog\/?$/);
     await page.getByRole('button', { name: 'Search the site' }).click();
