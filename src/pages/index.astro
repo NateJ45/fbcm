@@ -30,6 +30,8 @@ import { insertIndex } from '@/lib/band-insert';
 import WhatsOnBand from '@/components/home/WhatsOnBand.astro';
 import { loadWhatsOn } from '@/lib/church-calendar-feed';
 import { nextEvents } from '@/lib/church-calendar';
+import ChurchAppBand from '@/components/home/ChurchAppBand.astro';
+import { churchApp } from '@/lib/church-app';
 // scaffold:end
 // Outside the church region: `upcoming` below is typed whether or not the
 // capability (and its band) is there.
@@ -163,6 +165,17 @@ const visitorDrawn = !!(visitor?.latest && visitor.listHref);
 const whatsOnGround = visitorGround(
   visitorDrawn ? visitorOn === 'indigo' : !!lastSunday || aboveSlotIsDark,
 );
+// THE CHURCH APP (2026-09-25, feat/church-app) follows What's On by the same
+// rule: the calendar and the news it carries are the bands just above it.
+// Drawn only when Site settings' "Church app" link is set (church-app.ts).
+const app = churchApp(siteSettings?.appUrl);
+const appGround = visitorGround(
+  upcoming.length > 0
+    ? whatsOnGround === 'indigo'
+    : visitorDrawn
+      ? visitorOn === 'indigo'
+      : !!lastSunday || aboveSlotIsDark,
+);
 // scaffold:end
 
 // The header sits ON the picture when this page opens with an image hero.
@@ -229,6 +242,7 @@ const overlayHeader = shouldOverlayHeader(sections as any);
         />
       )
     }
+    {app && <ChurchAppBand slot="insert" {app} ground={appGround} headingId="home-church-app" />}
     {/* scaffold:end */}
   </SectionRenderer>
 </BaseLayout>

@@ -428,6 +428,15 @@ leaves open, with what closes each.
   footer and at the top of the phone menu. The church may replace it at any
   time in Site Settings -> Tagline.
 
+- [ ] **The official App Store and Google Play badges** (2026-09-25, `feat/church-app`). The
+      church app's store buttons (`src/components/church/AppButtons.astro`, on Home and in the
+      footer) are plain text plates naming the store, because the agent did not download the
+      official artwork. To use the real badges: download Apple's "Download on the App Store" SVG
+      from https://developer.apple.com/app-store/marketing/guidelines/ (Apple's badge tool) and
+      Google's "Get it on Google Play" badge from https://play.google.com/intl/en_us/badges/, add
+      them under `src/assets/`, and draw them unmodified at each company's minimum size and clear
+      space, with Apple's and Google's trademark lines on the page.
+
 ### Plan 2 must do
 
 - ~~**Post bodies are paragraphs only.**~~ Closed 2026-09-20 (task 16). See

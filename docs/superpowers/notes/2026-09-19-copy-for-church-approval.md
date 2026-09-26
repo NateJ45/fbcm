@@ -487,6 +487,14 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - /kids-corner and /youth-news: the small lines "Children’s newsletter" and "Youth newsletter"; under the name, "News from the Children’s Ministry, nursery through 5th grade." and "News from the Youth Ministry, 6th through 12th grade."; the closing band "About this newsletter": "<The newsletter’s name> is written by the ministry in Church Trac, and this page follows it each day. It is in the church app too.", with "Open it on Church Trac" and "Get the church app". When Church Trac cannot be read: "<name> could not be loaded here just now. It is always on Church Trac." and "Read <name> on Church Trac". Everything else on those pages is the ministry’s own newsletter, as published in Church Trac.
 - Ministries: under the Children and Youth bands, "Read The Kid's Corner, the children’s newsletter." and "Read The Moose's Message, the youth newsletter."
 
+## The church app (2026-09-25, `feat/church-app`)
+
+### New sentences
+
+- Home, the band "The Church App": the small line "Free for iPhone and Android"; "Church Trac's free app keeps First Baptist on your phone: the calendar, the prayer list and news from the ministries."; the buttons "Get the app", "For iPhone / App Store" and "For Android / Google Play"; "Install code", and "Found the app in the store yourself? Enter this code when it asks, and it opens on First Baptist."
+- The four things the app is for: "What's On: The church calendar, and your own events once you sign in."; "Ministry news: The Kid's Corner and The Moose's Message, from the Children's and Youth ministries."; "Church updates: Notices from the church, sent straight to your phone." The fourth, "Prayer List: Seeking the Lord for and alongside your church family.", is the church's own line from its Church Connect site.
+- Footer, every page: "The church app", the same two store buttons, and "Install code 8PG6ZJ" (the code is read from the app link in Site settings).
+
 ## Facts the church must confirm
 
 1. Nursery 104 / Family Room 105, or the reverse.
