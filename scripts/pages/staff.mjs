@@ -180,11 +180,22 @@ export default {
     };
 
     // The hero's two lights (note 3). Kendall first, as the church lists her.
-    // Both are square headshots in a tall lancet, so only x matters: each face
-    // sits at the middle of its photograph.
+    // Since 2026-09-26 they are the pastors' own staffMember portraits (the
+    // stained-glass pair Contact's office-hours band shows), read off the
+    // documents rather than the old square headshots: those were cropped
+    // tight to the hair, so a tall lancet's point cut the heads, and pushing
+    // them down left an empty cap in each arch. One portrait per pastor, used
+    // everywhere, the card, Contact and this hero agreeing (rule 15).
+    const portrait = (slug, _key) => {
+      const p = (staff ?? []).find((s) => s?.slug?.current === slug);
+      if (!p?.photo?.asset) {
+        throw new Error(`staff.mjs: no staffMember document with slug "${slug}" carrying a photo`);
+      }
+      return { ...p.photo, alt: `${p.name}, ${p.role}`, _key };
+    };
     const heroFrames = [
-      await photo('staff-hero-kendall', 0.5, 0.4, { _key: 'frame-1' }),
-      await photo('staff-hero-jonathan', 0.48, 0.4, { _key: 'frame-2' }),
+      portrait('kendall-ellis', 'frame-1'),
+      portrait('jonathan-balmer', 'frame-2'),
     ];
 
     // The deacons group photo: the church's caption names the five "left to
