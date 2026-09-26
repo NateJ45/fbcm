@@ -103,6 +103,275 @@ const { top, entries } = contents;
       </ol>
     </details>
   </div>
+  <style is:inline>
+    /* The contents bar. is:inline, inside the bar, so it ships ONLY on the page
+       that draws one: a bundled style would ride in every page builder page. */
+    :root {
+      --hc-h: 48px;
+      /* A jump down ends with the header away: the bar plus the same air
+         --header-offset leaves under the header. The script switches to it. */
+      --hc-land-down: calc(var(--hc-h) + var(--header-offset) - var(--header-h, 89px));
+    }
+    /* A jump lands below the header offset AND the bar. */
+    #main:has(> .hc-bar) [id] {
+      scroll-margin-top: var(--hc-land, calc(var(--header-offset) + var(--hc-h)));
+    }
+    .hc-bar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      height: var(--hc-h);
+      background: var(--color-band-indigo);
+      color: var(--color-bg);
+      border-bottom: 2px solid var(--color-gold);
+    }
+    /* The header is pinned: ride under it. */
+    :root:has(.site-header[data-scrolled]) .hc-bar {
+      top: var(--header-h, 89px);
+    }
+    /* Past the span the bar steps aside (script only). */
+    .hc-bar[data-past] {
+      visibility: hidden;
+      transform: translateY(-100%);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .hc-bar {
+        transition:
+          top 360ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 240ms ease,
+          visibility 240ms;
+      }
+      .hc-strip a::after,
+      .hc-go svg {
+        transition: transform 200ms ease;
+      }
+    }
+    /* The header jumps instantly when a scroll was not a gesture (a fragment
+       landing, a restored position); the bar jumps with it. */
+    :root:has(.site-header[style*='transition: none']) .hc-bar {
+      transition: none;
+    }
+    .hc-in {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+    }
+
+    /* ---- Wide: the register of years ---------------------------------- */
+    .hc-strip {
+      display: none;
+      align-items: stretch;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .hc-strip li {
+      display: flex;
+    }
+    .hc-strip a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: color-mix(in srgb, var(--color-bg) 84%, transparent);
+      text-decoration: none;
+    }
+    .hc-strip a::after {
+      content: '';
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: -2px;
+      height: 4px;
+      background: var(--color-gold);
+      transform: scaleX(0);
+    }
+    .hc-strip a:hover {
+      color: var(--color-bg);
+    }
+    .hc-strip a:hover::after {
+      transform: scaleX(0.5);
+    }
+    .hc-strip a[aria-current] {
+      color: var(--color-gold);
+    }
+    .hc-strip a[aria-current]::after {
+      transform: scaleX(1);
+    }
+    .hc-strip a:focus-visible {
+      outline: 2px solid var(--color-gold);
+      outline-offset: -6px;
+    }
+    .hc-top {
+      margin-right: 8px;
+      padding-right: 8px;
+      border-right: 1px solid color-mix(in srgb, var(--color-bg) 22%, transparent);
+    }
+    .hc-top a {
+      padding-left: 0;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .hc-top a::after {
+      left: 0;
+    }
+    .hc-year {
+      font-family: var(--font-display);
+      font-size: 18px;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      font-variant-numeric: lining-nums;
+    }
+    .hc-now {
+      display: none;
+      flex: 1 1 0;
+      min-width: 0;
+      margin: 0 0 0 16px;
+      align-self: center;
+      overflow: hidden;
+      font-family: var(--font-body);
+      font-size: 17px;
+      font-style: italic;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--color-bg);
+    }
+
+    /* ---- Narrow: the part in view, and Jump to ------------------------- */
+    .hc-jump {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .hc-jump summary {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: calc(var(--hc-h) - 2px);
+      cursor: pointer;
+      list-style: none;
+    }
+    .hc-jump summary::-webkit-details-marker {
+      display: none;
+    }
+    .hc-jump summary:focus-visible {
+      outline: 2px solid var(--color-gold);
+      outline-offset: -4px;
+    }
+    .hc-cur {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      font-family: var(--font-body);
+      font-size: 17px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .hc-cur-when {
+      margin-right: 8px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--color-gold);
+      font-variant-numeric: lining-nums;
+    }
+    .hc-cur-when:empty {
+      display: none;
+    }
+    .hc-go {
+      display: inline-flex;
+      flex: none;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+    }
+    .hc-jump[open] .hc-go svg {
+      transform: rotate(180deg);
+    }
+    .hc-list {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 2px);
+      max-height: calc(100dvh - var(--header-h, 75px) - var(--hc-h) - 24px);
+      margin: 0;
+      padding: 4px var(--spacing-gutter) 8px;
+      overflow-y: auto;
+      list-style: none;
+      background: var(--background);
+      color: var(--color-foreground);
+      border-bottom: 3px solid var(--color-gold);
+      box-shadow: 0 18px 30px -18px rgb(23 21 31 / 0.45);
+    }
+    .hc-list li + li a {
+      border-top: 1px solid var(--hair);
+    }
+    .hc-list a {
+      display: grid;
+      grid-template-columns: 7.5em minmax(0, 1fr);
+      align-items: baseline;
+      gap: 4px 12px;
+      min-height: 48px;
+      padding: 12px 0 12px 12px;
+      text-decoration: none;
+      color: var(--color-foreground);
+    }
+    .hc-list a[aria-current] {
+      box-shadow: inset 4px 0 0 var(--color-gold);
+    }
+    .hc-list a:focus-visible {
+      outline: 3px solid var(--color-indigo);
+      outline-offset: -3px;
+    }
+    .hc-l-when {
+      font-family: var(--font-ui);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-brown-ink);
+      font-variant-numeric: lining-nums;
+    }
+    .hc-l-name {
+      font-family: var(--font-body);
+      font-size: 19px;
+      line-height: 1.25;
+      color: var(--color-indigo);
+    }
+    .hc-list a:hover .hc-l-name {
+      text-decoration: underline;
+      text-decoration-color: var(--color-gold);
+      text-underline-offset: 4px;
+    }
+
+    @media (min-width: 1024px) {
+      .hc-strip {
+        display: flex;
+      }
+      .hc-now {
+        display: block;
+      }
+      .hc-jump {
+        display: none;
+      }
+    }
+    @media (max-width: 380px) {
+      .hc-list a {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2px;
+      }
+    }
+  </style>
 </nav>
 
 <script>
@@ -280,273 +549,3 @@ const { top, entries } = contents;
     teardown = null;
   });
 </script>
-
-<style is:global>
-  /* The contents bar (TimelineContents.astro). is:global because the scroll
-     margin reaches every anchor under #main, outside this component. */
-  :root {
-    --hc-h: 48px;
-    /* A jump down ends with the header away: the bar plus the same air
-       --header-offset leaves under the header. The script switches to it. */
-    --hc-land-down: calc(var(--hc-h) + var(--header-offset) - var(--header-h, 89px));
-  }
-  /* A jump lands below the header offset AND the bar. */
-  #main:has(> .hc-bar) [id] {
-    scroll-margin-top: var(--hc-land, calc(var(--header-offset) + var(--hc-h)));
-  }
-  .hc-bar {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    height: var(--hc-h);
-    background: var(--color-band-indigo);
-    color: var(--color-bg);
-    border-bottom: 2px solid var(--color-gold);
-  }
-  /* The header is pinned: ride under it. */
-  :root:has(.site-header[data-scrolled]) .hc-bar {
-    top: var(--header-h, 89px);
-  }
-  /* Past the span the bar steps aside (script only). */
-  .hc-bar[data-past] {
-    visibility: hidden;
-    transform: translateY(-100%);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .hc-bar {
-      transition:
-        top 360ms cubic-bezier(0.22, 1, 0.36, 1),
-        transform 240ms ease,
-        visibility 240ms;
-    }
-    .hc-strip a::after,
-    .hc-go svg {
-      transition: transform 200ms ease;
-    }
-  }
-  /* The header jumps instantly when a scroll was not a gesture (a fragment
-     landing, a restored position); the bar jumps with it. */
-  :root:has(.site-header[style*='transition: none']) .hc-bar {
-    transition: none;
-  }
-  .hc-in {
-    position: relative;
-    display: flex;
-    align-items: stretch;
-    height: 100%;
-  }
-
-  /* ---- Wide: the register of years ---------------------------------- */
-  .hc-strip {
-    display: none;
-    align-items: stretch;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .hc-strip li {
-    display: flex;
-  }
-  .hc-strip a {
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    color: color-mix(in srgb, var(--color-bg) 84%, transparent);
-    text-decoration: none;
-  }
-  .hc-strip a::after {
-    content: '';
-    position: absolute;
-    left: 12px;
-    right: 12px;
-    bottom: -2px;
-    height: 4px;
-    background: var(--color-gold);
-    transform: scaleX(0);
-  }
-  .hc-strip a:hover {
-    color: var(--color-bg);
-  }
-  .hc-strip a:hover::after {
-    transform: scaleX(0.5);
-  }
-  .hc-strip a[aria-current] {
-    color: var(--color-gold);
-  }
-  .hc-strip a[aria-current]::after {
-    transform: scaleX(1);
-  }
-  .hc-strip a:focus-visible {
-    outline: 2px solid var(--color-gold);
-    outline-offset: -6px;
-  }
-  .hc-top {
-    margin-right: 8px;
-    padding-right: 8px;
-    border-right: 1px solid color-mix(in srgb, var(--color-bg) 22%, transparent);
-  }
-  .hc-top a {
-    padding-left: 0;
-    font-family: var(--font-ui);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .hc-top a::after {
-    left: 0;
-  }
-  .hc-year {
-    font-family: var(--font-display);
-    font-size: 18px;
-    line-height: 1;
-    letter-spacing: 0.04em;
-    font-variant-numeric: lining-nums;
-  }
-  .hc-now {
-    display: none;
-    flex: 1 1 0;
-    min-width: 0;
-    margin: 0 0 0 16px;
-    align-self: center;
-    overflow: hidden;
-    font-family: var(--font-body);
-    font-size: 17px;
-    font-style: italic;
-    text-align: right;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--color-bg);
-  }
-
-  /* ---- Narrow: the part in view, and Jump to ------------------------- */
-  .hc-jump {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-  .hc-jump summary {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    height: calc(var(--hc-h) - 2px);
-    cursor: pointer;
-    list-style: none;
-  }
-  .hc-jump summary::-webkit-details-marker {
-    display: none;
-  }
-  .hc-jump summary:focus-visible {
-    outline: 2px solid var(--color-gold);
-    outline-offset: -4px;
-  }
-  .hc-cur {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow: hidden;
-    font-family: var(--font-body);
-    font-size: 17px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .hc-cur-when {
-    margin-right: 8px;
-    font-family: var(--font-ui);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--color-gold);
-    font-variant-numeric: lining-nums;
-  }
-  .hc-cur-when:empty {
-    display: none;
-  }
-  .hc-go {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-ui);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-gold);
-  }
-  .hc-jump[open] .hc-go svg {
-    transform: rotate(180deg);
-  }
-  .hc-list {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(100% + 2px);
-    max-height: calc(100dvh - var(--header-h, 75px) - var(--hc-h) - 24px);
-    margin: 0;
-    padding: 4px var(--spacing-gutter) 8px;
-    overflow-y: auto;
-    list-style: none;
-    background: var(--background);
-    color: var(--color-foreground);
-    border-bottom: 3px solid var(--color-gold);
-    box-shadow: 0 18px 30px -18px rgb(23 21 31 / 0.45);
-  }
-  .hc-list li + li a {
-    border-top: 1px solid var(--hair);
-  }
-  .hc-list a {
-    display: grid;
-    grid-template-columns: 7.5em minmax(0, 1fr);
-    align-items: baseline;
-    gap: 4px 12px;
-    min-height: 48px;
-    padding: 12px 0 12px 12px;
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  .hc-list a[aria-current] {
-    box-shadow: inset 4px 0 0 var(--color-gold);
-  }
-  .hc-list a:focus-visible {
-    outline: 3px solid var(--color-indigo);
-    outline-offset: -3px;
-  }
-  .hc-l-when {
-    font-family: var(--font-ui);
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--color-brown-ink);
-    font-variant-numeric: lining-nums;
-  }
-  .hc-l-name {
-    font-family: var(--font-body);
-    font-size: 19px;
-    line-height: 1.25;
-    color: var(--color-indigo);
-  }
-  .hc-list a:hover .hc-l-name {
-    text-decoration: underline;
-    text-decoration-color: var(--color-gold);
-    text-underline-offset: 4px;
-  }
-
-  @media (min-width: 1024px) {
-    .hc-strip {
-      display: flex;
-    }
-    .hc-now {
-      display: block;
-    }
-    .hc-jump {
-      display: none;
-    }
-  }
-  @media (max-width: 380px) {
-    .hc-list a {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 2px;
-    }
-  }
-</style>
