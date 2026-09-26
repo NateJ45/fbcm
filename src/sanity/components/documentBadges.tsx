@@ -73,8 +73,8 @@ const NeedsPhotoBadge: DocumentBadgeComponent = (props) => {
   const hasPhoto = Boolean(doc[field]?.asset?._ref);
   if (hasPhoto) return null;
   return {
-    label: 'Needs a photo',
-    title: 'No cover image set yet',
+    label: 'Needs a picture',
+    title: 'No cover picture yet',
     color: 'warning',
     icon: ImageIcon,
   };
@@ -89,7 +89,12 @@ const SeoBadge: DocumentBadgeComponent = (props) => {
   if (hasTitle && hasDescription) return null;
   const missing =
     !hasTitle && !hasDescription ? 'title and description' : !hasTitle ? 'title' : 'description';
-  return { label: 'Add SEO', title: `Missing SEO ${missing}`, color: 'warning', icon: SearchIcon };
+  return {
+    label: 'Add Google text',
+    title: `No ${missing} for Google yet, under Search and sharing`,
+    color: 'warning',
+    icon: SearchIcon,
+  };
 };
 
 // Order matters — badges render left to right in this order.

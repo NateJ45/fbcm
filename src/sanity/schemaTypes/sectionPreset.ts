@@ -41,6 +41,7 @@ import { defineType, defineField } from 'sanity';
 import { BlockElementIcon } from '@sanity/icons';
 import { SECTION_TYPES, sectionArrayOptions } from './sections';
 import { RICH_SECTION_TYPES } from './richSections';
+import { sectionTitle } from '../sectionTitles';
 
 export const sectionPreset = defineType({
   name: 'sectionPreset',
@@ -77,7 +78,7 @@ export const sectionPreset = defineType({
       title: 'Note (optional)',
       type: 'text',
       rows: 2,
-      description: 'A reminder for whoever finds this later, e.g. "service pages only".',
+      description: 'A reminder for whoever finds this later, like "for the Visit page".',
     }),
   ],
   preview: {
@@ -85,17 +86,10 @@ export const sectionPreset = defineType({
     prepare({ title, sectionType, note }) {
       return {
         title: title || '(unnamed saved section)',
-        subtitle: [sectionType ? prettySectionType(sectionType) : null, note]
+        subtitle: [typeof sectionType === 'string' ? sectionTitle(sectionType) : null, note]
           .filter(Boolean)
-          .join(' - '),
+          .join(', '),
       };
     },
   },
 });
-
-/** `imageTextSection` -> "Image text". Same rule as src/lib/page-checks.ts. */
-function prettySectionType(type: string): string {
-  const bare = type.replace(/^section(?=[A-Z])/, '').replace(/Section$|Object$/, '');
-  const words = bare.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase();
-  return words.charAt(0).toUpperCase() + words.slice(1);
-}

@@ -14,25 +14,29 @@ import { defineType, defineField } from 'sanity';
 
 export const journalCategory = defineType({
   name: 'journalCategory',
-  title: 'Journal Category',
+  title: 'Category',
   type: 'document',
   // Taxonomy, not content — exclude from Canvas's free-form writing UI.
   options: { canvasApp: { exclude: true } },
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Name',
       type: 'string',
-      description: 'Display name. Examples: "Project Stories", "Style Notes".',
-      validation: (Rule) => Rule.required().max(40),
+      description: 'The category name as visitors see it, like "Sermon Preview".',
+      validation: (Rule) => [
+        Rule.required().error('Give the category a name.'),
+        Rule.max(40).error('Keep the name to 40 letters or fewer.'),
+      ],
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'Web address',
       type: 'slug',
-      description: 'Used in URLs and as an HTML id. Auto-generated from title.',
+      description:
+        "The end of the category page's address, like sermon-preview for /blog/category/sermon-preview. Click Generate.",
       options: { source: 'title', maxLength: 64 },
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().error('Click Generate to make the web address.'),
     }),
     defineField({
       name: 'description',
@@ -40,8 +44,8 @@ export const journalCategory = defineType({
       type: 'text',
       rows: 2,
       description:
-        'Optional. A one-line description of what this category covers. Surfaces as a tooltip on the chip.',
-      validation: (Rule) => Rule.max(160),
+        "Optional. A sentence on what the category holds. It opens the category's own page, and Google shows it under the page's link.",
+      validation: (Rule) => Rule.max(160).error('Keep it to 160 letters or fewer.'),
     }),
   ],
   preview: {

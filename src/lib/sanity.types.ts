@@ -496,7 +496,6 @@ export type SiteSettings = {
       | 'X'
       | 'Threads'
       | 'Linktree'
-      | 'Houzz'
       | 'Other';
     url?: string;
     label?: string;

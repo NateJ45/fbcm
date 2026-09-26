@@ -29,7 +29,7 @@ const heading = defineField({
   title: 'Heading',
   type: 'string',
   description: 'One line.',
-  validation: (r) => r.required(),
+  validation: (r) => r.required().error('Type the heading.'),
 });
 
 export const sundayTimesSection = defineType({
@@ -52,9 +52,12 @@ export const sundayTimesSection = defineType({
       name: 'items',
       title: 'The times',
       type: 'array',
-      validation: (r) => r.min(1).max(3),
+      validation: (r) => [
+        r.min(1).error('Add at least one time.'),
+        r.max(3).error('Three times at most.'),
+      ],
       description:
-        'Up to three rows on the board. The big line is set in gold, and the row whose time matches the service time in Site settings is drawn largest.',
+        'Up to three rows. The big line is set in gold, and the row whose time matches the service time in Site settings is drawn largest.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -88,17 +91,17 @@ export const sundayTimesSection = defineType({
       name: 'notes',
       title: 'Notes',
       type: 'array',
-      validation: (r) => r.max(3),
-      description: 'Short lines under the photo, like the nursery or communion.',
+      validation: (r) => r.max(3).error('Three notes at most.'),
+      description: 'Up to three short lines under the photo, like the nursery or communion.',
       of: [defineArrayMember({ type: 'string' })],
     }),
     defineField({
       name: 'photos',
       title: 'Photos',
       type: 'array',
-      validation: (r) => r.max(2),
+      validation: (r) => r.max(2).error('Two photos at most.'),
       description:
-        "One or two photos. The first is the larger. Leave empty to use a photo from the page's spare pool.",
+        "One or two photos. The first is the larger. Leave empty and the site uses one of the church's photos.",
       of: [
         defineArrayMember({
           type: 'image',
@@ -108,7 +111,10 @@ export const sundayTimesSection = defineType({
               name: 'alt',
               title: 'Describe the photo',
               type: 'string',
-              validation: (r) => r.required(),
+              validation: (r) =>
+                r
+                  .required()
+                  .error('Describe the photo in a few words, for people who cannot see it.'),
             }),
           ],
         }),
@@ -119,7 +125,7 @@ export const sundayTimesSection = defineType({
       title: 'Button (optional)',
       type: 'ctaBlock',
       description:
-        'Like "What to expect", pointing at the Visit page. Leave empty and the band shows the directions button instead.',
+        'Like "What to expect", pointing at the Visit page. Leave empty and the section shows the directions button instead.',
     }),
     defineField({
       name: 'doors',
@@ -174,7 +180,7 @@ export const timelineSection = defineType({
       name: 'rows',
       title: 'Rows',
       type: 'array',
-      validation: (r) => r.min(1),
+      validation: (r) => r.min(1).error('Add at least one row.'),
       description: 'In order from top to bottom.',
       of: [
         defineArrayMember({
@@ -192,7 +198,7 @@ export const timelineSection = defineType({
               name: 'title',
               title: 'Title',
               type: 'string',
-              validation: (r) => r.required(),
+              validation: (r) => r.required().error('Give the row a title.'),
             }),
             defineField({
               name: 'body',
@@ -221,13 +227,16 @@ export const timelineSection = defineType({
                   name: 'alt',
                   title: 'Describe the photo',
                   type: 'string',
-                  validation: (r) => r.required(),
+                  validation: (r) =>
+                    r
+                      .required()
+                      .error('Describe the photo in a few words, for people who cannot see it.'),
                 }),
               ],
             }),
             defineField({
               name: 'anchor',
-              title: 'Link anchor',
+              title: 'Jump-to name (optional)',
               type: 'slug',
               options: { source: 'title' },
               description: 'Click Generate. Lets a link jump straight to this row.',
@@ -247,7 +256,7 @@ export const timelineSection = defineType({
 
 export const staffGridSection = defineType({
   name: 'staffGridSection',
-  title: 'Staff',
+  title: 'Staff members',
   type: 'object',
   fields: [
     eyebrow,
@@ -266,7 +275,7 @@ export const staffGridSection = defineType({
         ],
         layout: 'radio',
       },
-      description: 'Pick one. People are set to a group on their own Staff member page.',
+      description: "Pick one. Each person's group is set on their own page, under People.",
     }),
     // 2026-09-24, the Staff identity pass: the church's own paragraphs about
     // the people in the band (what a pastor is; what the Church Coordination
@@ -297,8 +306,17 @@ export const staffGridSection = defineType({
   preview: {
     select: { title: 'heading', group: 'group' },
     prepare: ({ title, group }) => ({
-      title: title || 'Staff',
-      subtitle: `Staff: ${group ?? 'all'}`,
+      title: title || 'Staff members',
+      subtitle: `Staff members: ${
+        (
+          {
+            all: 'everyone',
+            pastors: 'pastors',
+            coordination: 'Church Coordination Team',
+            support: 'support and volunteer roles',
+          } as Record<string, string>
+        )[group as string] ?? 'everyone'
+      }`,
     }),
   },
 });
@@ -314,7 +332,7 @@ export const faqSection = defineType({
       name: 'items',
       title: 'Questions',
       type: 'array',
-      validation: (r) => r.min(1),
+      validation: (r) => r.min(1).error('Add at least one question.'),
       of: [
         defineArrayMember({
           type: 'object',
@@ -324,14 +342,14 @@ export const faqSection = defineType({
               name: 'question',
               title: 'Question',
               type: 'string',
-              validation: (r) => r.required(),
+              validation: (r) => r.required().error('Type the question.'),
             }),
             defineField({
               name: 'answer',
               title: 'Answer',
               type: 'array',
               of: [{ type: 'block' }],
-              validation: (r) => r.required(),
+              validation: (r) => r.required().error('Type the answer.'),
             }),
           ],
           preview: { select: { title: 'question' } },
@@ -348,7 +366,7 @@ export const faqSection = defineType({
 
 export const scriptureBandSection = defineType({
   name: 'scriptureBandSection',
-  title: 'Scripture band',
+  title: 'Scripture verse',
   type: 'object',
   fields: [
     // 2026-09-24, the Staff identity pass: an optional heading over the verse
@@ -367,7 +385,7 @@ export const scriptureBandSection = defineType({
       title: 'The words',
       type: 'text',
       rows: 4,
-      validation: (r) => r.required(),
+      validation: (r) => r.required().error('Type the verse.'),
       description: 'The verse or quotation, without quotation marks and without the reference.',
     }),
     defineField({
@@ -400,7 +418,7 @@ export const scriptureBandSection = defineType({
 
 export const heritageBandSection = defineType({
   name: 'heritageBandSection',
-  title: 'Building band',
+  title: 'Building and history',
   type: 'object',
   fields: [
     eyebrow,
@@ -418,7 +436,7 @@ export const heritageBandSection = defineType({
       type: 'image',
       options: { hotspot: true },
       description:
-        'A photo of the building or the glass. When the band has dates, this is the large picture beside the heading, so a drawing of the building suits it best.',
+        'A photo of the building or the glass. When the section has dates, this is the large picture beside the heading, so a drawing of the building suits it best.',
       // SanityImage.astro reads `source.alt` for every image it draws, so this
       // block always intended to carry alt text; the field was simply never
       // declared. Without it the Studio renders a stored alt as "Unknown field
@@ -426,9 +444,19 @@ export const heritageBandSection = defineType({
       fields: [
         defineField({
           name: 'alt',
-          title: 'Alt text',
+          title: 'Describe the photo',
           type: 'string',
-          description: 'Describe the photo in a few words, for screen readers and search engines.',
+          description: 'A few words saying what is in the picture, for people who cannot see it.',
+          // A warning, not an error: set bands predate the prompt, and an
+          // error would stop those pages publishing.
+          validation: (r) =>
+            r
+              .custom((value, ctx) =>
+                !value && (ctx.parent as { asset?: unknown } | undefined)?.asset
+                  ? 'Describe the photo in a few words, for people who cannot see it.'
+                  : true,
+              )
+              .warning(),
         }),
       ],
     }),
@@ -446,13 +474,14 @@ export const heritageBandSection = defineType({
       // (HeritageOpener.astro) hangs this photograph in a lancet beside its
       // door arch. A description change only; the field is unchanged.
       description:
-        'An old photograph shown beside the dates. On a band that opens its page, a portrait shown in a pointed arch beside the photo.',
+        'An old photograph shown beside the dates. When this section opens its page, it is shown in a pointed arch beside the photo.',
       fields: [
         defineField({
           name: 'alt',
           title: 'Describe the photo',
           type: 'string',
-          validation: (r) => r.required(),
+          validation: (r) =>
+            r.required().error('Describe the photo in a few words, for people who cannot see it.'),
         }),
       ],
     }),
@@ -460,9 +489,9 @@ export const heritageBandSection = defineType({
       name: 'dates',
       title: 'Dates (optional)',
       type: 'array',
-      validation: (r) => r.max(6),
+      validation: (r) => r.max(6).error('Six dates at most.'),
       description:
-        "Dates in order. Tick 'This year' on the last one to show what the church is doing now: its year is filled in when the site is built.",
+        "Up to six, in order. Tick 'This year' on the last one to show what the church is doing now: its year is filled in for you.",
       of: [
         defineArrayMember({
           type: 'object',
@@ -475,7 +504,7 @@ export const heritageBandSection = defineType({
               type: 'boolean',
               initialValue: false,
               description:
-                'Tick for what the church is doing now. The year is filled in when the site is built.',
+                'Tick for what the church is doing now. The year is filled in for you, so it never goes out of date.',
             }),
             defineField({
               name: 'year',
@@ -511,8 +540,8 @@ export const heritageBandSection = defineType({
   preview: {
     select: { title: 'heading', media: 'image' },
     prepare: ({ title, media }) => ({
-      title: title || 'Building band',
-      subtitle: 'Building band',
+      title: title || 'The building',
+      subtitle: 'Building and history',
       media,
     }),
   },
@@ -520,7 +549,7 @@ export const heritageBandSection = defineType({
 
 export const giveBandSection = defineType({
   name: 'giveBandSection',
-  title: 'Give band',
+  title: 'Giving',
   type: 'object',
   fields: [
     heading,
@@ -543,14 +572,14 @@ export const giveBandSection = defineType({
       name: 'buttonUrl',
       title: 'Button link',
       type: 'url',
-      description: `Leave blank to use the giving address from Site settings. ${LINK_TOKEN_HINT}`,
+      description: `Leave blank to use Online giving from Site settings, Church systems. ${LINK_TOKEN_HINT}`,
       validation: linkRule({ absoluteOnly: true, scheme: ['http', 'https'] }),
     }),
     anchorField(),
   ],
   preview: {
     select: { title: 'heading' },
-    prepare: ({ title }) => ({ title: title || 'Give', subtitle: 'Give band' }),
+    prepare: ({ title }) => ({ title: title || 'Giving', subtitle: 'Giving' }),
   },
 });
 
@@ -560,14 +589,16 @@ export const giveBandSection = defineType({
 // disagree about when the office is open.
 export const hoursSection = defineType({
   name: 'hoursSection',
-  title: 'Hours',
+  title: 'Office hours',
   type: 'object',
+  description:
+    "The office and pastors' hours. Change the hours themselves in Site settings, Church details.",
   fields: [eyebrow, heading, anchorField()],
   preview: {
     select: { title: 'heading' },
     prepare: ({ title }) => ({
-      title: title || 'Hours',
-      subtitle: 'Hours (read from Site settings)',
+      title: title || 'Office hours',
+      subtitle: 'Office hours (from Site settings)',
     }),
   },
 });
@@ -583,7 +614,7 @@ export const documentListSection = defineType({
       name: 'docs',
       title: 'Documents',
       type: 'array',
-      validation: (r) => r.min(1),
+      validation: (r) => r.min(1).error('Add at least one document.'),
       of: [
         defineArrayMember({
           type: 'object',
@@ -593,19 +624,23 @@ export const documentListSection = defineType({
               name: 'title',
               title: 'Title',
               type: 'string',
-              validation: (r) => r.required(),
+              validation: (r) => r.required().error('Give the document a title.'),
             }),
             defineField({
               name: 'year',
               title: 'Year',
               type: 'number',
-              description: 'Four digits, like 2025. Newest shows first. Leave blank for undated.',
+              description:
+                'Four digits, like 2025. Newest shows first. Leave blank if it has no year.',
+              validation: (r) =>
+                r.integer().min(1800).max(2200).error('Type the year as four digits, like 2025.'),
             }),
             defineField({
               name: 'file',
               title: 'File',
               type: 'file',
-              description: 'Upload the PDF.',
+              description:
+                'Upload the PDF, or fill in the link below instead. With neither, the document is listed without a button, like a book kept in the church library.',
             }),
             defineField({
               name: 'url',
@@ -637,8 +672,7 @@ export const linkCardsSection = defineType({
   name: 'linkCardsSection',
   title: 'Link cards',
   type: 'object',
-  description:
-    'Two to four short cards, each a door into another part of the site. Use it for the "here are the three things you probably came for" band.',
+  description: 'Two to four short cards, each leading to another part of the site.',
   fields: [
     eyebrow,
     heading,
@@ -653,9 +687,11 @@ export const linkCardsSection = defineType({
       name: 'cards',
       title: 'Cards',
       type: 'array',
-      validation: (r) => r.min(2).max(4),
-      description:
-        'Two, three or four. The grid draws exactly as many columns as there are cards, so three cards is a row of three.',
+      validation: (r) => [
+        r.min(2).error('Add at least two cards.'),
+        r.max(4).error('Four cards at most.'),
+      ],
+      description: 'Two, three or four. They sit side by side, so three cards make a row of three.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -666,21 +702,21 @@ export const linkCardsSection = defineType({
               title: 'Title',
               type: 'string',
               description: 'A few words, like "What we believe".',
-              validation: (r) => r.required(),
+              validation: (r) => r.required().error('Give the card a title.'),
             }),
             defineField({
               name: 'body',
               title: 'Text',
               type: 'text',
               rows: 3,
-              description: 'One sentence. The card is a door, not the room.',
+              description: 'One sentence saying what is on the other side.',
             }),
             defineField({
               name: 'cta',
               title: 'Link',
               type: 'ctaBlock',
               description:
-                'Where the card goes. The whole card is the link: in the plain row the label draws as a text link, and when every card has a photo it draws as a button under the door.',
+                'Where the card goes. The whole card can be clicked. The button text shows as a link under the card, or as a button when every card has a photo.',
             }),
             // 2026-09-23 (Who We Are "alive", Task 5): optional. When EVERY card
             // has one, the band draws the cards as arched doors on green.
@@ -690,13 +726,16 @@ export const linkCardsSection = defineType({
               type: 'image',
               options: { hotspot: true },
               description:
-                'Optional. Give every card a photo and the band draws the cards as arched doors on green, each photo in its door. Leave all of them blank for the plain row.',
+                'Optional. Give every card a photo and the cards are drawn as arched doorways, each with its photo. Leave all of them blank for plain cards.',
               fields: [
                 defineField({
                   name: 'alt',
                   title: 'Describe the photo',
                   type: 'string',
-                  validation: (r) => r.required(),
+                  validation: (r) =>
+                    r
+                      .required()
+                      .error('Describe the photo in a few words, for people who cannot see it.'),
                 }),
               ],
             }),
@@ -715,7 +754,8 @@ export const linkCardsSection = defineType({
               name: 'glyph',
               title: 'Building drawing',
               type: 'string',
-              description: 'Optional. Give every card one to draw the goals band.',
+              description:
+                'Optional. Give every card a photo and a drawing and the cards are drawn as the four goals, as on the home page.',
               options: {
                 list: [
                   { title: 'Window', value: 'window' },
@@ -755,7 +795,7 @@ export const ministrySection = defineType({
   title: 'Ministry',
   type: 'object',
   description:
-    'One ministry, drawn from its own page under Ministries in the menu on the left. Change its words, photo and people there.',
+    'One ministry, shown from its own page under Ministries in the menu on the left. Change its words, photo and people there.',
   fields: [
     defineField({
       name: 'ministry',
@@ -764,7 +804,7 @@ export const ministrySection = defineType({
       to: [{ type: 'ministry' }],
       description:
         'Pick one. Its words, photo and the people to talk to come from the ministry itself, under Ministries in the menu on the left.',
-      validation: (r) => r.required(),
+      validation: (r) => r.required().error('Pick the ministry to show.'),
     }),
     defineField({
       name: 'imageSide',
@@ -772,7 +812,7 @@ export const ministrySection = defineType({
       type: 'string',
       initialValue: 'left',
       options: { list: sideOptions('Photo'), layout: 'radio' },
-      description: 'Which edge the photo runs off. A ministry with no photo ignores this.',
+      description: 'Which side the photo is on. A ministry with no photo ignores this.',
     }),
     anchorField(),
   ],
@@ -803,7 +843,7 @@ export const watchwordSection = defineType({
       title: 'Short introduction',
       type: 'text',
       rows: 3,
-      description: 'Two or three sentences shown beside the mark.',
+      description: 'Two or three sentences shown beside the watchword drawing.',
     }),
     defineField({
       name: 'more',
@@ -830,7 +870,13 @@ export const watchwordSection = defineType({
     defineField({ name: 'proclaim', title: 'What "Proclaim" means', type: 'text', rows: 2 }),
     anchorField(),
   ],
-  preview: { select: { title: 'heading', subtitle: 'reference' } },
+  preview: {
+    select: { title: 'heading', subtitle: 'reference' },
+    prepare: ({ title, subtitle }) => ({
+      title: typeof title === 'string' && title ? title : 'Watchword',
+      subtitle: typeof subtitle === 'string' && subtitle ? subtitle : 'Watchword',
+    }),
+  },
 });
 
 // One of the four goal bands (worship, discipleship, fellowship, service, in
@@ -851,7 +897,7 @@ const goal = defineArrayMember({
       title: 'Name',
       type: 'string',
       description: 'Like "Worship".',
-      validation: (r) => r.required(),
+      validation: (r) => r.required().error("Type the goal's name."),
     }),
     defineField({
       name: 'subtitle',
@@ -878,7 +924,7 @@ const goal = defineArrayMember({
         ],
         layout: 'radio',
       },
-      validation: (r) => r.required(),
+      validation: (r) => r.required().error('Pick a drawing for this goal.'),
     }),
     defineField({ name: 'summary', title: 'Opening sentence', type: 'text', rows: 3 }),
     defineField({
@@ -891,7 +937,7 @@ const goal = defineArrayMember({
       name: 'points',
       title: 'Points',
       type: 'array',
-      validation: (r) => r.max(4),
+      validation: (r) => r.max(4).error('Four points at most.'),
       of: [
         defineArrayMember({
           type: 'object',
@@ -901,7 +947,7 @@ const goal = defineArrayMember({
               name: 'title',
               title: 'Title',
               type: 'string',
-              validation: (r) => r.required(),
+              validation: (r) => r.required().error('Give the point a title.'),
             }),
             defineField({
               name: 'short',
@@ -920,8 +966,8 @@ const goal = defineArrayMember({
       name: 'photos',
       title: 'Photos',
       type: 'array',
-      validation: (r) => r.max(6),
-      description: 'People doing this. The first is the largest.',
+      validation: (r) => r.max(6).error('Six photos at most.'),
+      description: 'Up to six photos of people doing this. The first is the largest.',
       of: [
         defineArrayMember({
           type: 'image',
@@ -931,21 +977,31 @@ const goal = defineArrayMember({
               name: 'alt',
               title: 'Describe the photo',
               type: 'string',
-              validation: (r) => r.required(),
+              validation: (r) =>
+                r
+                  .required()
+                  .error('Describe the photo in a few words, for people who cannot see it.'),
             }),
           ],
         }),
       ],
     }),
   ],
-  preview: { select: { title: 'name', subtitle: 'subtitle' } },
+  preview: {
+    select: { title: 'name', subtitle: 'subtitle' },
+    prepare: ({ title, subtitle }) => ({
+      title: typeof title === 'string' && title ? title : 'Goal',
+      subtitle: typeof subtitle === 'string' ? subtitle : undefined,
+    }),
+  },
 });
 
 export const goalsSection = defineType({
   name: 'goalsSection',
-  title: 'Our goals (four bands)',
+  title: 'Our goals',
   type: 'object',
-  description: 'Each goal gets its own colour and layout, in order: green, gold, purple, brown.',
+  description:
+    'Up to four goals. Each gets its own colour and layout, in order: green, gold, purple, brown.',
   fields: [
     heading,
     defineField({ name: 'intro', title: 'Introduction', type: 'text', rows: 3 }),
@@ -954,11 +1010,20 @@ export const goalsSection = defineType({
       title: 'Goals',
       type: 'array',
       of: [goal],
-      validation: (r) => r.min(1).max(4),
+      validation: (r) => [
+        r.min(1).error('Add at least one goal.'),
+        r.max(4).error('Four goals at most.'),
+      ],
     }),
     anchorField(),
   ],
-  preview: { select: { title: 'heading' } },
+  preview: {
+    select: { title: 'heading' },
+    prepare: ({ title }) => ({
+      title: typeof title === 'string' && title ? title : 'Our goals',
+      subtitle: 'Our goals',
+    }),
+  },
 });
 
 export const pledgeSection = defineType({
@@ -984,7 +1049,10 @@ export const pledgeSection = defineType({
       name: 'lines',
       title: 'Lines said together',
       type: 'array',
-      validation: (r) => r.min(1).max(8),
+      validation: (r) => [
+        r.min(1).error('Add at least one line.'),
+        r.max(8).error('Eight lines at most.'),
+      ],
       of: [
         defineArrayMember({
           type: 'object',
@@ -994,7 +1062,7 @@ export const pledgeSection = defineType({
               name: 'text',
               title: 'Line',
               type: 'string',
-              validation: (r) => r.required(),
+              validation: (r) => r.required().error('Type the line.'),
             }),
             defineField({
               name: 'reference',
@@ -1023,13 +1091,20 @@ export const pledgeSection = defineType({
           name: 'alt',
           title: 'Describe the photo',
           type: 'string',
-          validation: (r) => r.required(),
+          validation: (r) =>
+            r.required().error('Describe the photo in a few words, for people who cannot see it.'),
         }),
       ],
     }),
     anchorField(),
   ],
-  preview: { select: { title: 'heading' } },
+  preview: {
+    select: { title: 'heading' },
+    prepare: ({ title }) => ({
+      title: typeof title === 'string' && title ? title : 'Pledge',
+      subtitle: 'Pledge (said together)',
+    }),
+  },
 });
 
 export const letterSection = defineType({
@@ -1043,7 +1118,7 @@ export const letterSection = defineType({
       title: 'Letter',
       type: 'array',
       of: [{ type: 'block' }],
-      validation: (r) => r.required(),
+      validation: (r) => r.required().error('The letter is empty. Type it here.'),
     }),
     defineField({
       name: 'signature',
@@ -1067,13 +1142,20 @@ export const letterSection = defineType({
           name: 'alt',
           title: 'Describe the photo',
           type: 'string',
-          validation: (r) => r.required(),
+          validation: (r) =>
+            r.required().error('Describe the photo in a few words, for people who cannot see it.'),
         }),
       ],
     }),
     anchorField(),
   ],
-  preview: { select: { title: 'heading', subtitle: 'signature' } },
+  preview: {
+    select: { title: 'heading', subtitle: 'signature' },
+    prepare: ({ title, subtitle }) => ({
+      title: typeof title === 'string' && title ? title : 'Letter',
+      subtitle: typeof subtitle === 'string' && subtitle ? subtitle : 'Letter',
+    }),
+  },
 });
 
 // The Church Trac form band (2026-09-25). A form the church built in Church
@@ -1110,7 +1192,7 @@ export const churchTracFormSection = defineType({
       to: [{ type: 'churchTracForm' }],
       description:
         'Pick one. To add a new one, open Church Trac forms in the menu on the left and paste the embed code from Church Trac.',
-      validation: (r) => r.required(),
+      validation: (r) => r.required().error('Pick the form to show.'),
     }),
     anchorField(),
   ],

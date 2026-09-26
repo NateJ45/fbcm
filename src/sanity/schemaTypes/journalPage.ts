@@ -7,141 +7,133 @@ import { additionalSectionsField } from './sections';
 
 export const journalPage = defineType({
   name: 'journalPage',
-  title: 'Journal Page',
+  title: 'Blog page',
   type: 'document',
   // Page singleton (hero + final CTA only) — structural, not free-form drafting.
   options: { canvasApp: { exclude: true } },
   groups: [
-    { name: 'seo', title: 'SEO' },
-    { name: 'hero', title: 'Hero' },
-    { name: 'final', title: 'Final CTA' },
-    { name: 'extra', title: 'Extra sections' },
+    { name: 'seo', title: 'Search and sharing' },
+    { name: 'hero', title: 'Top of the page' },
+    { name: 'extra', title: 'Sections under the posts' },
   ],
   fields: [
     defineField({
       name: 'seoTitle',
-      title: 'SEO title',
+      title: 'Title in Google',
       type: 'string',
       group: 'seo',
       description:
-        'Browser tab and Google result title. Aim for 50 to 60 characters. Front-load the location or service.',
+        "The title in the browser tab and in Google's results. About 50 to 60 letters. Leave blank to use the page's own title.",
       validation: (Rule) =>
-        Rule.max(60).warning(
-          'Titles longer than about 60 characters get cut off in Google search results.',
-        ),
+        Rule.max(60).warning('Google cuts off titles longer than about 60 letters.'),
     }),
     defineField({
       name: 'seoDescription',
-      title: 'SEO description',
+      title: 'Description in Google',
       type: 'text',
       rows: 3,
       group: 'seo',
       description:
-        'The sentence under the title in Google results. Aim for 150 to 160 characters. Write it for a person, not a search engine.',
+        "The sentence under the title in Google's results. About 150 to 160 letters. A placeholder in curly brackets, like {service time}, is filled in from Site settings.",
       validation: (Rule) =>
-        Rule.max(160).warning(
-          'Descriptions longer than about 160 characters get cut off in Google search results.',
-        ),
+        Rule.max(160).warning('Google cuts off descriptions longer than about 160 letters.'),
     }),
     defineField({
       name: 'seoImage',
-      title: 'Social share image (this page)',
+      title: 'Picture when shared',
       type: 'image',
       group: 'seo',
       description:
-        'Optional. The image shown when this page is shared on social media or in a text. Overrides the site default in Site Settings. Use a wide image, about 1200 by 630 pixels. Leave blank to use the site default.',
+        "Optional. The picture shown when someone shares this page on Facebook or in a text message. A wide picture, about 1200 by 630 pixels. Leave blank and the site draws one in the church's colours.",
       options: { hotspot: true },
-      fields: [defineField({ name: 'alt', title: 'Alt text', type: 'string' })],
+      fields: [defineField({ name: 'alt', title: 'Describe the picture', type: 'string' })],
     }),
 
     defineField({
       name: 'heroEyebrow',
-      title: 'Hero eyebrow',
+      title: 'Small line above the heading',
       type: 'string',
       group: 'hero',
-      initialValue: 'The Journal.',
+      description: 'A word or two, like "Blog".',
+      initialValue: 'Blog',
     }),
     defineField({
       name: 'heroHeadline',
-      title: 'Hero headline',
+      title: 'Heading',
       type: 'string',
       group: 'hero',
-      initialValue: 'Notes from the studio.',
+      initialValue: 'Writing from First Baptist.',
     }),
     defineField({
       name: 'heroSubhead',
-      title: 'Hero subhead',
+      title: 'Line under the heading',
       type: 'text',
       rows: 2,
       group: 'hero',
-      initialValue:
-        'Project walkthroughs, design thinking, and the occasional opinion. Written between projects.',
+      description: 'A sentence on what the blog holds.',
     }),
     defineField({
       name: 'heroImage',
-      title: 'Hero background image',
+      title: 'Background photo (not shown)',
       type: 'image',
       group: 'hero',
-      description:
-        'Full-bleed photo behind the hero text. Pick a landscape shot; the page applies a dark gradient over the bottom for readability.',
+      // Not drawn by src/pages/blog/index.astro (the opener is an indigo band).
+      // Hidden rather than removed so the stored photo is not orphaned (rule 1);
+      // the alt is no longer required, so a hidden box can never block Publish.
+      hidden: true,
       options: { hotspot: true },
-      fields: [
-        defineField({
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
-          validation: (R) => R.required(),
-        }),
-      ],
+      fields: [defineField({ name: 'alt', title: 'Describe the photo', type: 'string' })],
     }),
     defineField({
       name: 'heroScriptAccent',
-      title: 'Script-font accent word (optional)',
+      title: 'Handwritten accent word (not shown)',
       type: 'string',
       group: 'hero',
-      description:
-        'A single word from the headline to render in the handwritten script accent font. Must match exactly (case-sensitive). Leave blank to skip.',
+      // Not drawn by src/pages/blog/index.astro.
+      hidden: true,
     }),
     defineField({
       name: 'stickyCtaLabel',
-      title: 'Sticky CTA label (post detail pages)',
+      title: 'Floating button on every post',
       type: 'string',
       group: 'hero',
       description:
-        'Short label for the floating sticky CTA chip that appears on every journal post detail page after the visitor scrolls 50%. Example: "Got a question?". Leave blank to hide the chip on journal posts.',
+        'The words on the small button that appears on a blog post once a reader is halfway down, like "Got a question?". Leave blank to use "Got a question?".',
     }),
 
     defineField({
       name: 'finalCtaHeadline',
-      title: 'Final CTA headline',
+      title: 'Closing heading',
       type: 'string',
-      group: 'final',
-      initialValue: 'Got a project of your own?',
+      // The closing band is not drawn by src/pages/blog/index.astro. Every
+      // field in this group is hidden, not removed (rule 1).
+      hidden: true,
     }),
     defineField({
       name: 'finalCtaScriptAccent',
-      title: 'Final CTA heading script accent (optional)',
+      title: 'Closing heading accent word',
       type: 'string',
-      group: 'final',
-      description:
-        'Optional. One word or short phrase from the headline to render in the handwritten script accent font. Must match the headline text exactly (case-sensitive). Leave blank to skip. Use sparingly, one accent per heading.',
+      hidden: true,
     }),
     defineField({
       name: 'finalCtaSubhead',
-      title: 'Final CTA subhead',
+      title: 'Closing text',
       type: 'text',
       rows: 2,
-      group: 'final',
+      hidden: true,
     }),
-    defineField({ name: 'finalCta', title: 'Final CTA button', type: 'ctaBlock', group: 'final' }),
+    defineField({
+      name: 'finalCta',
+      title: 'Closing button',
+      type: 'ctaBlock',
+      hidden: true,
+    }),
     defineField({
       name: 'finalCtaBackgroundImage',
-      title: 'Final CTA background image (optional)',
+      title: 'Closing background photo',
       type: 'image',
-      group: 'final',
+      hidden: true,
       options: { hotspot: true },
-      description:
-        'Optional. A photo behind the closing call-to-action. The site automatically darkens it so the headline and button stay readable. Leave empty to keep the solid charcoal panel.',
     }),
     // Spread with its `name` written out rather than passed as a bare
     // identifier: scripts/audit-studio.mjs reads the schema as SOURCE and only
@@ -150,11 +142,17 @@ export const journalPage = defineType({
     // as "Remove field" bait (check 3, CLAUDE.md rule 1). The name here and the
     // one in sections.ts are the same string by construction: the spread would
     // overwrite a different one.
-    defineField({ ...additionalSectionsField, name: 'additionalSections' }),
+    defineField({
+      ...additionalSectionsField,
+      name: 'additionalSections',
+      title: 'Sections under the posts',
+      description:
+        'Sections shown below the list of posts. The Visitor and the two books are listed here, in "Publications".',
+    }),
   ],
   // The posts grid, the pager and the chips are all drawn in code from the
   // journalEntry documents; this array is the one editable zone on /blog, and
   // it is where the "#publications" document list (The Visitor and the two
   // books) lives. It renders between the archive grid and the closing CTA.
-  preview: { prepare: () => ({ title: 'Journal Page' }) },
+  preview: { prepare: () => ({ title: 'Blog page' }) },
 });

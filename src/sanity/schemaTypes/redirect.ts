@@ -21,7 +21,7 @@ import { ArrowRightIcon } from '@sanity/icons';
 
 export const redirect = defineType({
   name: 'redirect',
-  title: 'Redirect',
+  title: 'Old web address',
   type: 'document',
   icon: ArrowRightIcon,
   // Configuration-style document - keep Canvas AI writing tools away from it.
@@ -36,7 +36,7 @@ export const redirect = defineType({
       validation: (Rule) =>
         Rule.required()
           .custom((value) => {
-            if (typeof value !== 'string') return 'Required';
+            if (typeof value !== 'string') return 'Type the old address, starting with a slash.';
             if (!value.startsWith('/')) return 'Start with a slash, like "/old-page".';
             if (/\s/.test(value)) return 'No spaces. Use dashes, like "/open-house".';
             return true;
@@ -52,7 +52,7 @@ export const redirect = defineType({
       validation: (Rule) =>
         Rule.required()
           .custom((value, context) => {
-            if (typeof value !== 'string') return 'Required';
+            if (typeof value !== 'string') return 'Type where to send people.';
             const ok = value.startsWith('/') || /^https?:\/\//.test(value);
             if (!ok) return 'Use an address like "/contact" or a full https:// link.';
             const from = (context.document as { from?: string } | undefined)?.from;
@@ -67,19 +67,19 @@ export const redirect = defineType({
       type: 'boolean',
       initialValue: true,
       description:
-        'On (recommended): tells Google the page moved for good, so it carries the ranking over. Turn off only for a temporary forward.',
+        'Leave on: it tells Google the page has moved for good, so people searching still find it. Turn off only for a forward that lasts a few weeks.',
     }),
     defineField({
       name: 'note',
       title: 'Note (optional)',
       type: 'string',
-      description: 'A reminder to yourself of why this redirect exists.',
+      description: 'A reminder of why this forward is here. Only you see it.',
     }),
   ],
   preview: {
     select: { from: 'from', to: 'to', permanent: 'permanent' },
     prepare: ({ from, to, permanent }) => ({
-      title: `${from || '(no old address)'}  ->  ${to || '(no target)'}`,
+      title: `${from || '(no old address yet)'}  to  ${to || '(nowhere yet)'}`,
       subtitle: permanent === false ? 'Temporary' : 'Permanent',
     }),
   },

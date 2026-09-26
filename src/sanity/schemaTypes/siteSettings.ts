@@ -18,47 +18,61 @@ import { LinkIcon, ChevronDownIcon, ListIcon } from '@sanity/icons';
 
 export const siteSettings = defineType({
   name: 'siteSettings',
-  title: 'Site Settings',
+  title: 'Site settings',
   type: 'document',
   // Configuration, not prose — don't surface in Canvas's AI-assisted writing UI.
   options: { canvasApp: { exclude: true } },
   groups: [
-    { name: 'identity', title: 'Identity & contact' },
+    { name: 'identity', title: 'Name and contact' },
     { name: 'church', title: 'Church details' },
     { name: 'systems', title: 'Church systems' },
-    { name: 'navigation', title: 'Navigation (menus)' },
-    { name: 'visibility', title: 'Section visibility' },
-    { name: 'social', title: 'Social & footer' },
-    { name: 'newsletter', title: 'Newsletter' },
+    { name: 'navigation', title: 'Menus' },
+    { name: 'social', title: 'Social media and footer' },
+    { name: 'visibility', title: 'Blog switch' },
   ],
   fields: [
     defineField({
       name: 'title',
-      title: 'Site title',
+      title: 'Church name',
       type: 'string',
-      description: 'Used in the browser tab and search results.',
-      initialValue: 'Studio Name',
-      validation: (Rule) => Rule.required(),
+      group: 'identity',
+      description: "The church's name as the website shows it, in the browser tab and in Google.",
+      initialValue: 'First Baptist Church Muncie',
+      validation: (Rule) => Rule.required().error("Type the church's name."),
     }),
     defineField({
       name: 'tagline',
       title: 'Tagline',
       type: 'string',
-      description: 'Short tagline shown under the logo in the footer.',
-      validation: (Rule) => Rule.required().max(140),
+      group: 'identity',
+      description:
+        'One short sentence about the church, shown under its name at the foot of every page.',
+      validation: (Rule) => [
+        Rule.required().error('Type a short sentence about the church.'),
+        Rule.max(140).error('Keep it to 140 letters or fewer.'),
+      ],
     }),
     defineField({
       name: 'email',
-      title: 'Public email',
+      title: 'Church email',
       type: 'string',
-      description: 'Public email address shown on the Contact page.',
-      validation: (Rule) => Rule.required().regex(/.+@.+\..+/, { name: 'email', invert: false }),
+      group: 'identity',
+      description:
+        'The email address visitors see, on the Contact page and at the foot of every page. Any text that says {email} fills it in from here.',
+      validation: (Rule) => [
+        Rule.required().error("Type the church's email address."),
+        Rule.regex(/.+@.+\..+/, { name: 'email', invert: false }).error(
+          'That does not look like an email address.',
+        ),
+      ],
     }),
     defineField({
       name: 'phone',
-      title: 'Phone (optional)',
+      title: 'Church phone',
       type: 'string',
-      description: 'Public phone number, if you want one shown. Leave blank to hide.',
+      group: 'identity',
+      description:
+        'The phone number visitors see. Any text that says {phone} fills it in from here. Leave blank to show none.',
     }),
 
     // ── Church details ────────────────────────────────────────────────────────
@@ -79,7 +93,8 @@ export const siteSettings = defineType({
       title: 'How long the service runs',
       type: 'string',
       group: 'church',
-      description: 'A few words, like "About an hour".',
+      description:
+        'A few words, like "About an hour". Any text that says {service length} fills it in from here.',
       initialValue: 'About an hour',
     }),
     defineField({
@@ -88,7 +103,8 @@ export const siteSettings = defineType({
       type: 'text',
       rows: 2,
       group: 'church',
-      description: 'One line per line of the address, as it should print.',
+      description:
+        'As it should print, one line per line: the street on the first, then the city, state and ZIP. Any text that says {address} or {city} fills it in from here.',
     }),
     defineField({
       name: 'officeHours',
@@ -112,21 +128,23 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'church',
       description:
-        'The web address of the Church Center home page, if the church still keeps one. The church is moving to Church Trac, so this is normally left blank.',
+        "The address of the church's Church Center page, if it still has one. Normally left blank now the church uses Church Trac.",
     }),
     defineField({
       name: 'churchTracUrl',
       title: 'Church Trac address',
       type: 'url',
       group: 'church',
-      description: 'The web address of the Church Trac home page.',
+      description:
+        "The address of the church's own Church Trac site. The Children's and Youth newsletters are read from it.",
     }),
     defineField({
       name: 'youtubeUrl',
       title: 'YouTube channel',
       type: 'url',
       group: 'church',
-      description: 'The channel address.',
+      description:
+        "The address of the church's YouTube channel. The home page reads last Sunday's service and this Sunday's sermon title from it.",
     }),
     defineField({
       name: 'livestreamUrl',
@@ -140,7 +158,7 @@ export const siteSettings = defineType({
       title: 'Map picture',
       type: 'image',
       group: 'church',
-      description: 'A picture of the map around the church. Shown wherever the address appears.',
+      description: 'A picture of the streets around the church. Shown beside the address.',
       options: { hotspot: true },
     }),
     defineField({
@@ -148,7 +166,7 @@ export const siteSettings = defineType({
       title: 'Directions link',
       type: 'url',
       group: 'church',
-      description: 'Where the "Open in Google Maps" button goes.',
+      description: 'Where the directions button goes, normally a Google Maps link to the church.',
     }),
 
     // ── Church systems ────────────────────────────────────────────────────────
@@ -161,7 +179,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        "Where the Give buttons send people, and every link written {giving}. Blank until online giving moves to Church Trac (it needs Stripe, not set up yet); until then, every {giving} link goes to the site's own /give page instead.",
+        "Where the Give buttons send people, and every link written {giving}. While this is empty, those links go to the website's own Give page.",
     }),
     defineField({
       name: 'visitorFormUrl',
@@ -177,7 +195,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'The form for telling the church about a birth, a death, an anniversary, a hospital stay or a change of address. Every link written {contact-form}. Blank until Church Trac has this form; the words stay, but the link is hidden until then.',
+        'The form for telling the church about a birth, a death, an anniversary, a hospital stay or a change of address. Every link written {contact-form}. While this is empty, those words stay on the page but are not a link.',
     }),
     defineField({
       name: 'sermonsUrl',
@@ -185,7 +203,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'Where "listen to the sermon" links go, every link written {sermons}. Leave blank to use the Live stream address (the YouTube streams page). When this is on YouTube, a sermon preview links to its own recording once YouTube has it.',
+        'Where "listen to the sermon" links go, every link written {sermons}. Leave blank to use the Live stream address in Church details. While that is on YouTube, each sermon preview links to its own recording once YouTube has it.',
     }),
     defineField({
       name: 'wednesdayUrl',
@@ -193,14 +211,15 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'The page about Wednesday nights (Wednesday Weekly). Every link written {wednesday}. Blank until Church Trac has this page; the words stay, but the link is hidden until then.',
+        'The page about Wednesday nights (Wednesday Weekly). Every link written {wednesday}. While this is empty, those words stay on the page but are not a link.',
     }),
     defineField({
       name: 'calendarUrl',
       title: 'Events calendar',
       type: 'url',
       group: 'systems',
-      description: 'The list of upcoming church events. Every link written {calendar}.',
+      description:
+        "Church Trac's public calendar. Every link written {calendar}. The What's On page and the events on the home page are read from this calendar.",
     }),
     defineField({
       name: 'prayerUrl',
@@ -215,7 +234,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'Where "our church app" links go: the app download or sign-up link. Every link written {app}.',
+        'The share link for the church app from Church Trac, like https://open.churchtrac.com?code=... Every link written {app}. The app section on the home page and the app buttons at the foot of every page appear only while this is filled in.',
     }),
     defineField({
       name: 'weddingEnquiryUrl',
@@ -223,7 +242,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'The wedding information form a couple fills in first. Every link written {wedding-enquiry}. Blank until Church Trac has this form; until then, every {wedding-enquiry} link emails the wedding office directly.',
+        'The wedding information form a couple fills in first. Every link written {wedding-enquiry}. While this is empty, those links email the wedding office instead.',
     }),
     defineField({
       name: 'weddingBookingUrl',
@@ -231,7 +250,7 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'systems',
       description:
-        'The form for asking to use the building, for a wedding or any other event. Every link written {wedding-booking}. Blank until Church Trac has this form; until then, every {wedding-booking} link emails the wedding office directly.',
+        'The form for asking to use the building, for a wedding or any other event. Every link written {wedding-booking}. While this is empty, those links email the wedding office instead.',
     }),
 
     // ── Navigation ────────────────────────────────────────────────────────────
@@ -245,12 +264,12 @@ export const siteSettings = defineType({
     // has never touched these fields behaves byte-identically to before.
     defineField({
       name: 'navItems',
-      title: 'Top menu links (optional)',
+      title: 'Top menu',
       type: 'array',
       group: 'navigation',
       description:
-        'The links in the website header. Drag to reorder. Add a "Link" for a single page, or a "Dropdown" to group several links under one label. The header design fits at most seven, so keep the list short. Leave empty to use the built-in default menu. Once you add items here, they replace the whole menu, so include every link you want.',
-      validation: (Rule) => Rule.max(7),
+        'The links along the top of every page, in order. Drag to reorder. Add a "Link" for one page, or a "Dropdown" to put several links under one word. Seven at most, or the menu will not fit. If this list is ever emptied, the website falls back to a built-in menu.',
+      validation: (Rule) => Rule.max(7).error('The top menu fits seven items at most.'),
       of: [
         // The shared link object (./navLink.ts). Existing menu items already
         // carry _type "navLink", so they keep working unchanged and simply gain
@@ -264,14 +283,14 @@ export const siteSettings = defineType({
           fields: [
             defineField({
               name: 'label',
-              title: 'Menu label',
+              title: 'Word in the menu',
               type: 'string',
-              description: 'The dropdown heading, e.g. "About".',
-              validation: (Rule) => Rule.required(),
+              description: 'The word that opens the dropdown, like "Our Church".',
+              validation: (Rule) => Rule.required().error('Type the word for the dropdown.'),
             }),
             defineField({
               name: 'links',
-              title: 'Menu links',
+              title: 'Links in the dropdown',
               type: 'array',
               of: [
                 defineArrayMember({
@@ -282,29 +301,31 @@ export const siteSettings = defineType({
                   fields: [
                     defineField({
                       name: 'label',
-                      title: 'Label',
+                      title: 'Words',
                       type: 'string',
-                      validation: (Rule) => Rule.required(),
+                      validation: (Rule) => Rule.required().error('Type the words for the link.'),
                     }),
                     defineField({
                       name: 'href',
                       title: 'Address',
                       type: 'string',
-                      description: 'A page on this site like /process, or a full URL.',
-                      validation: (Rule) => Rule.required(),
+                      description:
+                        'A page on this site like /history, or a full address starting with https://.',
+                      validation: (Rule) => Rule.required().error('Type where the link goes.'),
                     }),
                   ],
                   preview: { select: { title: 'label', subtitle: 'href' } },
                 }),
               ],
-              validation: (Rule) => Rule.required().min(1),
+              validation: (Rule) =>
+                Rule.required().min(1).error('Add at least one link to the dropdown.'),
             }),
           ],
           preview: {
             select: { title: 'label', links: 'links' },
             prepare: ({ title, links }) => ({
-              title: title ?? '(no label)',
-              subtitle: `Dropdown: ${Array.isArray(links) ? links.length : 0} link(s)`,
+              title: title || '(no word yet)',
+              subtitle: `Dropdown with ${Array.isArray(links) ? links.length : 0} link(s)`,
             }),
           },
         }),
@@ -312,12 +333,12 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'footerColumns',
-      title: 'Footer link columns (optional)',
+      title: 'Footer link columns',
       type: 'array',
       group: 'navigation',
       description:
-        'The titled link columns in the footer. Leave empty to use the built-in default columns. The "Get in touch" column (email, phone, socials) always shows automatically. Aim for three or four columns so the footer grid stays balanced; four is the most that fits.',
-      validation: (Rule) => Rule.max(4),
+        "The columns of links at the foot of every page, each with a small heading. The church's address, email, phone and social media always show beside them. Four columns at most. If this list is ever emptied, the website falls back to built-in columns.",
+      validation: (Rule) => Rule.max(4).error('The footer fits four columns at most.'),
       of: [
         defineArrayMember({
           type: 'object',
@@ -329,8 +350,8 @@ export const siteSettings = defineType({
               name: 'title',
               title: 'Column heading',
               type: 'string',
-              description: 'The small heading above the links, e.g. "Services".',
-              validation: (Rule) => Rule.required(),
+              description: 'The small heading above the links, like "Pages".',
+              validation: (Rule) => Rule.required().error('Type a heading for the column.'),
             }),
             defineField({
               name: 'links',
@@ -349,29 +370,33 @@ export const siteSettings = defineType({
                   fields: [
                     defineField({
                       name: 'label',
-                      title: 'Label',
+                      title: 'Words',
                       type: 'string',
-                      validation: (Rule) => Rule.required(),
+                      validation: (Rule) => Rule.required().error('Type the words for the link.'),
                     }),
                     defineField({
                       name: 'href',
                       title: 'Address',
                       type: 'string',
-                      description: 'A page on this site like /contact, or a full URL.',
-                      validation: (Rule) => Rule.required(),
+                      description:
+                        'A page on this site like /contact, or a full address starting with https://.',
+                      validation: (Rule) => Rule.required().error('Type where the link goes.'),
                     }),
                   ],
                   preview: { select: { title: 'label', subtitle: 'href' } },
                 }),
               ],
-              validation: (Rule) => Rule.required().min(1).max(10),
+              validation: (Rule) => [
+                Rule.required().min(1).error('Add at least one link to the column.'),
+                Rule.max(10).error('A column fits ten links at most.'),
+              ],
             }),
           ],
           preview: {
             select: { title: 'title', links: 'links' },
             prepare: ({ title, links }) => ({
-              title: title ?? '(no heading)',
-              subtitle: `Column: ${Array.isArray(links) ? links.length : 0} link(s)`,
+              title: title || '(no heading yet)',
+              subtitle: `Column with ${Array.isArray(links) ? links.length : 0} link(s)`,
             }),
           },
         }),
@@ -388,27 +413,27 @@ export const siteSettings = defineType({
       type: 'object',
       group: 'navigation',
       description:
-        'The one button at the right of the header. On this site it is the Give button, whose link is written {giving} so it follows Online giving in the Church systems tab. Leave the boxes blank to keep the built-in "Contact us" button.',
+        'The one button at the right of the top menu. It is the Give button, and its link is written {giving} so it follows Online giving in Church systems. With its boxes empty it becomes a "Contact us" button.',
       options: { collapsible: true, collapsed: true },
       fields: [
         defineField({
           name: 'show',
           title: 'Show the header button',
           type: 'boolean',
-          description: 'Turn off to remove the button from the header and the phone menu.',
+          description: 'Turn off to take the button off the top menu and the phone menu.',
           initialValue: true,
         }),
         defineField({
           name: 'label',
           title: 'Button text',
           type: 'string',
-          description: 'Leave blank for "Contact us".',
+          description: 'Like "Give". Leave blank for "Contact us".',
         }),
         defineField({
           name: 'link',
           title: 'Where the button goes',
           type: 'navLink',
-          description: 'Leave blank to keep pointing at the Contact page.',
+          description: 'Leave blank to send people to the Contact page.',
         }),
       ],
       preview: {
@@ -425,41 +450,40 @@ export const siteSettings = defineType({
     // unchanged (the site reads a blank value as "yes").
     defineField({
       name: 'showEmail',
-      title: 'Show the email address in the menu',
+      title: 'Show the email address in the phone menu',
       type: 'boolean',
       group: 'navigation',
       description:
-        'The "Get in touch" email at the foot of the phone menu. On unless you turn it off.',
+        'The church email at the foot of the menu on a phone. On unless you turn it off.',
       initialValue: true,
     }),
     defineField({
       name: 'showSocials',
-      title: 'Show social buttons in the menu',
+      title: 'Show social media buttons in the menu',
       type: 'boolean',
       group: 'navigation',
       description:
-        'The Instagram and Facebook buttons in the header eyebrow strip and at the foot of the phone menu. On unless you turn it off.',
+        'The Facebook, Instagram and other buttons at the top of the page and at the foot of the phone menu. On unless you turn it off.',
       initialValue: true,
     }),
     defineField({
       name: 'showFooterSocials',
-      title: 'Show social buttons in the footer',
+      title: 'Show social media buttons in the footer',
       type: 'boolean',
       group: 'navigation',
-      description:
-        'The social buttons in the footer "Get in touch" column. On unless you turn it off.',
+      description: 'The social media buttons at the foot of every page. On unless you turn it off.',
       initialValue: true,
     }),
 
     // The small print row along the very bottom of the footer.
     defineField({
       name: 'legalNav',
-      title: 'Footer small-print links',
+      title: 'Small print links',
       type: 'array',
       group: 'navigation',
       description:
-        'The little links beside the copyright line at the very bottom, e.g. Privacy policy. Leave empty to keep the built-in privacy link.',
-      validation: (Rule) => Rule.max(6),
+        'The small links beside the copyright line at the very bottom, like the privacy policy. Leave empty to keep the privacy policy link.',
+      validation: (Rule) => Rule.max(6).error('Six small print links at most.'),
       of: [defineArrayMember({ type: 'navLink' })],
     }),
 
@@ -471,18 +495,19 @@ export const siteSettings = defineType({
       type: 'image',
       group: 'identity',
       description:
-        'A logo image for the top of every page. Leave blank and the site keeps the logo files that ship with the template. When set, this image replaces them and is scaled to the header height, so upload it with any spare space already trimmed off. One image is used in both light and dark mode.',
+        "Leave blank to keep the church's own logo at the top of every page. A picture uploaded here replaces it, sized to the top bar, so trim any empty space around it first.",
       options: { hotspot: true },
       fields: [
         defineField({
           name: 'alt',
-          title: 'Alt text',
+          title: 'What the logo says',
           type: 'string',
-          description: 'What the logo says, for screen readers. Example: "Studio Name".',
+          description:
+            'The words in the logo, like "First Baptist Church Muncie", for people who cannot see it.',
           validation: (Rule) =>
             Rule.custom((value, ctx: any) =>
               ctx.parent?.asset && !value
-                ? 'Add alt text so screen readers can read the logo'
+                ? 'Type the words in the logo, for people who cannot see it.'
                 : true,
             ),
         }),
@@ -512,11 +537,11 @@ export const siteSettings = defineType({
     // legacy socialInstagram / socialFacebook fields above.
     defineField({
       name: 'socialLinks',
-      title: 'Social links',
+      title: 'Social media accounts',
       type: 'array',
       group: 'social',
       description:
-        'Add one entry per platform. The footer renders these in order. Leave empty to fall back to the legacy Instagram/Facebook fields (for existing sites).',
+        "One entry for each of the church's accounts, in the order the buttons should appear. YouTube is added for you from the YouTube channel in Church details.",
       of: [
         defineArrayMember({
           type: 'object',
@@ -524,9 +549,8 @@ export const siteSettings = defineType({
           fields: [
             defineField({
               name: 'platform',
-              title: 'Platform',
+              title: 'Which site',
               type: 'string',
-              description: 'The social network or directory.',
               options: {
                 list: [
                   { title: 'Instagram', value: 'Instagram' },
@@ -538,26 +562,28 @@ export const siteSettings = defineType({
                   { title: 'X (Twitter)', value: 'X' },
                   { title: 'Threads', value: 'Threads' },
                   { title: 'Linktree', value: 'Linktree' },
-                  { title: 'Houzz', value: 'Houzz' },
                   { title: 'Other', value: 'Other' },
                 ],
                 layout: 'dropdown',
               },
-              validation: (Rule) => Rule.required(),
+              validation: (Rule) => Rule.required().error('Pick which site the account is on.'),
             }),
             defineField({
               name: 'url',
-              title: 'URL',
+              title: 'Web address',
               type: 'url',
-              description: 'Full URL including https://.',
-              validation: (Rule) => Rule.required().uri({ scheme: ['http', 'https'] }),
+              description: "The address of the church's page there, starting with https://.",
+              validation: (Rule) =>
+                Rule.required()
+                  .uri({ scheme: ['http', 'https'] })
+                  .error('Paste the full address, starting with https://.'),
             }),
             defineField({
               name: 'label',
-              title: 'Label (optional)',
+              title: 'Name (only for "Other")',
               type: 'string',
               description:
-                'Custom label for "Other" platforms. Used as the aria-label on the icon button.',
+                'For an "Other" site, its name, which is read out to people who cannot see the icon.',
             }),
           ],
           preview: {
@@ -572,25 +598,28 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'seoImage',
-      title: 'Default social share image',
+      title: 'Picture when a page is shared',
       type: 'image',
+      group: 'social',
       description:
-        'The image shown when any page of the site is shared on social media or in a text message (the Open Graph image). Use a wide image, about 1200 by 630 pixels. Individual pages can override this in their own SEO section. Leave blank to use the auto-generated branded cards.',
+        "Normally left blank: every page and post already shares with its own picture, drawn in the church's colours. This is only used for a page that has none. A wide picture, about 1200 by 630 pixels.",
       options: { hotspot: true },
-      fields: [defineField({ name: 'alt', title: 'Alt text', type: 'string' })],
+      fields: [defineField({ name: 'alt', title: 'Describe the picture', type: 'string' })],
     }),
     defineField({
       name: 'footerCredit',
-      title: 'Footer credit',
+      title: 'Website credit',
       type: 'string',
-      description: 'Optional credit line in the footer (e.g., "Site by Nixon Creative Studio").',
+      group: 'social',
+      description:
+        'The small line at the very bottom naming who built the website. Leave blank for the usual line.',
     }),
     defineField({
       name: 'footerCreditUrl',
-      title: 'Footer credit URL',
+      title: 'Website credit link',
       type: 'url',
-      description:
-        'Optional. When set, the footer credit becomes a link to this URL (opens in a new tab).',
+      group: 'social',
+      description: 'Where the credit line links to. Leave blank for the usual link.',
     }),
 
     // ── Newsletter ──────────────────────────────────────────────────────────
@@ -598,8 +627,12 @@ export const siteSettings = defineType({
       name: 'newsletter',
       title: 'Newsletter signup',
       type: 'object',
-      description:
-        'Connect an email provider (MailerLite, Buttondown, Mailchimp). Paste the embedded-form action URL and list ID; the secret key goes in env as NEWSLETTER_API_KEY.',
+      // HIDDEN since the Studio audit (2026-09-26). It needs a mail provider
+      // and a server secret set up by the developer, and the site draws no
+      // form of its own (CLAUDE.md): turned on by an editor, it would print
+      // the placeholder heading stored in the dataset. `enabled` is false and
+      // stays declared, so nothing stored is orphaned (rule 1).
+      hidden: true,
       fields: [
         defineField({
           name: 'enabled',
@@ -681,23 +714,23 @@ export const siteSettings = defineType({
     // journal is core.
     defineField({
       name: 'sectionVisibility',
-      title: 'Section visibility',
+      title: 'Blog switch',
       type: 'object',
       group: 'visibility',
-      description: 'Turn optional sections on or off. An unset toggle counts as ON.',
+      description: 'Leave this on.',
       fields: [
         defineField({
           name: 'showJournal',
-          title: 'Journal',
+          title: 'Show the blog',
           type: 'boolean',
           initialValue: true,
           description:
-            'When off, this section disappears from the menu, footer, homepage, and its own page (which redirects home). Your drafts stay safe. Turn it back on when ready.',
+            'Turned off, the whole blog comes off the website: the Blog page, every post and the posts on the home page. Nothing is deleted, and turning it back on brings it all back.',
         }),
       ],
     }),
   ],
   preview: {
-    prepare: () => ({ title: 'Site Settings' }),
+    prepare: () => ({ title: 'Site settings' }),
   },
 });

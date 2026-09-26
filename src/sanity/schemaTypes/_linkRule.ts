@@ -42,4 +42,4 @@ export function linkRule(
 
 /** The sentence every link box's description ends with. */
 export const LINK_TOKEN_HINT =
-  'You can also type a church link placeholder like {giving} or {connect}; see Help, "Links to giving, forms and sermons".';
+  'You can also type a link placeholder like {giving} or {connect}. The Help guide "Links to giving, forms and sermons" lists them.';

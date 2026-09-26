@@ -33,8 +33,8 @@ export const navLink = defineType({
       name: 'label',
       title: 'Label',
       type: 'string',
-      description: 'What visitors see, e.g. "Services".',
-      validation: (Rule) => Rule.required(),
+      description: 'The words visitors see, like "Visit".',
+      validation: (Rule) => Rule.required().error('Type the words for the link.'),
     }),
     defineField({
       name: 'linkType',
@@ -53,7 +53,7 @@ export const navLink = defineType({
       name: 'internalPage',
       title: 'Page to link to',
       type: 'reference',
-      description: 'Pick the page. The web address follows the page, so it can never go stale.',
+      description: "Pick the page. If the page's web address ever changes, this link follows it.",
       to: [
         // Page singletons — each resolves to a fixed route.
         { type: 'homePage' },
@@ -68,7 +68,7 @@ export const navLink = defineType({
       name: 'externalUrl',
       title: 'Web address',
       type: 'url',
-      description: `A full address like https://example.com. It opens in a new tab. ${LINK_TOKEN_HINT}`,
+      description: `A full address like https://example.org. It opens in a new tab. ${LINK_TOKEN_HINT}`,
       validation: linkRule({ absoluteOnly: true, scheme: ['http', 'https'] }),
       hidden: ({ parent }) => parent?.linkType !== 'external',
     }),
@@ -77,7 +77,7 @@ export const navLink = defineType({
       title: 'Address (typed by hand)',
       type: 'string',
       description:
-        'An older-style address like /services. It still works and it wins over the choices above. Clear it to use the page picker instead.',
+        'An address on this site like /visit. When this box is filled in, the link goes here, whatever is chosen above. Empty it to use the page picker instead.',
       // Shown on links that already carry one and on links with no choice made
       // yet; hidden once a link uses the picker.
       hidden: ({ parent }) => Boolean(parent?.linkType) && !parent?.href,
@@ -92,7 +92,7 @@ export const navLink = defineType({
       pageTitle: 'internalPage.title',
     },
     prepare: ({ title, href, externalUrl, linkType, pageTitle }) => ({
-      title: title || '(no label)',
+      title: title || '(no link text yet)',
       subtitle: href || (linkType === 'external' ? externalUrl : pageTitle) || 'No destination yet',
     }),
   },

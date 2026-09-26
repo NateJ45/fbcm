@@ -7,12 +7,20 @@
 // by the LocalBusiness structured data (src/lib/schemas.ts) and the map on
 // the Contact page.
 // One instance only (id 'businessInfo'); singleton enforcement is in sanity.config.ts.
+//
+// NOT IN THE DESK since the Studio audit (2026-09-26): the document does not
+// exist in the dataset, the church's whole address lives in Site settings >
+// Church details, and opening this created a document carrying the starter's
+// placeholder city and state, which the Sunday times and letter bands print
+// after the street address. The placeholder initial values are gone too, and
+// the titles below say what each box is in plain words, in case it ever comes
+// back.
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
 
 export const businessInfo = defineType({
   name: 'businessInfo',
-  title: 'Business info',
+  title: 'Location details',
   type: 'document',
   // Business facts, not prose — keep out of Canvas's AI-assisted writing UI.
   options: { canvasApp: { exclude: true } },
@@ -20,10 +28,9 @@ export const businessInfo = defineType({
     // Business model: controls which location fields apply and which are shown.
     defineField({
       name: 'businessModel',
-      title: 'Business model',
+      title: 'Where the church meets',
       type: 'string',
-      description:
-        'How you deliver your services. "In-person" shows all location, travel, and service area fields. "Remote" hides them (fully virtual businesses have no physical service area). "Hybrid" shows location fields but marks them optional.',
+      description: 'In person. The other choices hide the location boxes below.',
       options: {
         list: [
           { title: 'In-person', value: 'in-person' },
@@ -40,47 +47,41 @@ export const businessInfo = defineType({
     // Keep these matching your Google Business Profile exactly (NAP consistency).
     defineField({
       name: 'city',
-      title: 'Studio city',
+      title: 'City',
       type: 'string',
       description:
-        'Your home-base city. Shows in the footer and feeds the business listing data search engines read (LocalBusiness addressLocality). Must match your Google Business Profile exactly. Only change it if you relocate. Leave blank for fully remote businesses.',
-      initialValue: 'Your City',
+        'Leave blank. The address in Site settings already includes the city, and anything typed here is printed a second time after it.',
       hidden: ({ document }) => document?.businessModel === 'remote',
       // Optional for remote/hybrid — validation removed; leave blank is valid.
     }),
     defineField({
       name: 'state',
-      title: 'Studio state (2-letter code)',
+      title: 'State (two letters)',
       type: 'string',
-      description:
-        'Two-letter state code, like "IN". Feeds the business listing "addressRegion". Must match your Google Business Profile. Leave blank for fully remote businesses.',
-      initialValue: 'XX',
+      description: 'Leave blank, for the same reason as the city.',
       hidden: ({ document }) => document?.businessModel === 'remote',
       validation: (Rule) => Rule.length(2).warning('Use the 2-letter state code, like "IN".'),
     }),
     defineField({
       name: 'serviceRegion',
-      title: 'Service region phrase',
+      title: 'Area served',
       type: 'string',
-      description:
-        'The broader area you serve, shown as "Serving {this}" in the footer. Example: "Greater Metro Area". Leave blank for fully remote businesses.',
-      initialValue: 'Your Metro Area',
+      description: 'Not shown on the website.',
       hidden: ({ document }) => document?.businessModel === 'remote',
     }),
     defineField({
       name: 'geoLat',
-      title: 'Studio latitude',
+      title: 'Latitude',
       type: 'number',
       description:
-        'For local "near me" search. Your studio latitude coordinate. Find it in Google Maps by right-clicking your address. This feeds the business listing data that search engines read. Leave blank for fully remote businesses.',
+        'The church\'s map position, for "near me" searches. In Google Maps, right-click the church and click the first number shown.',
       hidden: ({ document }) => document?.businessModel === 'remote',
     }),
     defineField({
       name: 'geoLng',
-      title: 'Studio longitude',
+      title: 'Longitude',
       type: 'number',
-      description:
-        'For local "near me" search. Your studio longitude coordinate. Pairs with the latitude above. Leave blank for fully remote businesses.',
+      description: 'The second of the two map numbers, after the latitude.',
       hidden: ({ document }) => document?.businessModel === 'remote',
     }),
 
@@ -88,10 +89,9 @@ export const businessInfo = defineType({
     // Each entry can power a separate address in structured data.
     defineField({
       name: 'additionalLocations',
-      title: 'Additional locations',
+      title: 'Other locations',
       type: 'array',
-      description:
-        'For multi-location businesses: add secondary studio or office locations here. Each entry can appear in structured data alongside the primary address above.',
+      description: 'Not used by the church.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -133,6 +133,6 @@ export const businessInfo = defineType({
     }),
   ],
   preview: {
-    prepare: () => ({ title: 'Business info' }),
+    prepare: () => ({ title: 'Location details' }),
   },
 });

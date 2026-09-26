@@ -18,15 +18,16 @@ export const staffMember = defineType({
       title: 'Name',
       type: 'string',
       description: 'Their name as it should appear on the page.',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().error('Type their name.'),
     }),
     defineField({
       name: 'slug',
       title: 'Web address',
       type: 'slug',
       options: { source: 'name', maxLength: 96 },
-      description: 'Click Generate.',
-      validation: (Rule) => Rule.required(),
+      description:
+        'Click Generate. Links to this person on the Staff page use it, so leave it alone once it is set.',
+      validation: (Rule) => Rule.required().error('Click Generate to make the web address.'),
     }),
     defineField({
       name: 'role',
@@ -39,6 +40,12 @@ export const staffMember = defineType({
       title: 'Email address',
       type: 'string',
       description: 'Their church email address. Leave blank to show none.',
+      validation: (Rule) =>
+        Rule.custom((value) =>
+          !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim())
+            ? true
+            : 'That does not look like an email address.',
+        ),
     }),
     defineField({
       name: 'phone',
@@ -58,7 +65,8 @@ export const staffMember = defineType({
         ],
         layout: 'radio',
       },
-      description: 'Pick one. Pastors show first on the Staff page.',
+      description:
+        'Pick one. Pastors show first on the Staff page, then the Church Coordination Team, then everyone else.',
     }),
     defineField({
       name: 'showOnSite',
@@ -80,20 +88,21 @@ export const staffMember = defineType({
       title: 'Photo',
       type: 'image',
       options: { hotspot: true },
-      description: 'A head and shoulders photo.',
+      description:
+        'A head and shoulders photo. It needs no description: their name is printed beside it.',
     }),
     defineField({
       name: 'order',
       title: 'Position in the list',
       type: 'number',
-      description: 'A number. Lower numbers appear first.',
+      description: 'A number. Within their group, lower numbers appear first.',
     }),
   ],
   orderings: [{ title: 'List order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],
   preview: {
     select: { title: 'name', subtitle: 'role', media: 'photo', showOnSite: 'showOnSite' },
     prepare: ({ title, subtitle, media, showOnSite }) => ({
-      title: title ?? 'Untitled',
+      title: title || '(no name yet)',
       subtitle: showOnSite === false ? `${subtitle ? `${subtitle} ` : ''}(hidden)` : subtitle,
       media,
     }),

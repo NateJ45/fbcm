@@ -27,7 +27,7 @@ import {
 import { SINGLETON_PREVIEW_PATHS } from '../resolve';
 import { addSectionToPage, duplicatePage, setPageArchived, type PageOpsClient } from '../pageOps';
 import { SECTION_HOST_TYPES } from '../pageBuilderConfig';
-import { sectionLabel } from '../../lib/page-checks';
+import { sectionTitle } from '../sectionTitles';
 import { startNav, stepNav, toPreviewPath, type PendingNav } from '../../lib/preview-navigation';
 import { SHARE_LINK_TTL_PHRASE, useShareDraftLink } from './shareDraftLink';
 import { LiveDraftBridge } from './LiveDraftBridge';
@@ -74,7 +74,7 @@ const MAIN_PAGES: { type: string; label: string }[] = [
   { type: 'homePage', label: 'Home' },
   { type: 'journalPage', label: 'Blog' }, // scaffold: journal
   { type: 'privacyPage', label: 'Privacy' },
-  { type: 'notFoundPage', label: '404 page' },
+  { type: 'notFoundPage', label: 'Page not found' },
 ];
 
 // Live path per singleton (preview path minus the /preview prefix).
@@ -86,7 +86,7 @@ const livePathFor = (type: string) => {
 
 /** The list groups, in display order. Archived last: it is the drawer, not the
  *  desk. */
-const GROUPS = ['Main pages', 'Custom pages', 'Archived'] as const;
+const GROUPS = ['Main pages', 'All other pages', 'Archived'] as const;
 type Group = (typeof GROUPS)[number];
 
 interface NavRow {
@@ -196,7 +196,7 @@ async function fetchRows(client: ReturnType<typeof useClient>): Promise<NavRow[]
       hasDraft: draft,
       hasPublished: published,
       archived,
-      group: archived ? 'Archived' : 'Custom pages',
+      group: archived ? 'Archived' : 'All other pages',
     });
   }
   return rows;
@@ -679,7 +679,7 @@ export function PreviewNavigator() {
                             </Text>
                             {p.sectionType && (
                               <Text size={0} muted textOverflow="ellipsis">
-                                {sectionLabel(p.sectionType)}
+                                {sectionTitle(p.sectionType)}
                               </Text>
                             )}
                           </Stack>

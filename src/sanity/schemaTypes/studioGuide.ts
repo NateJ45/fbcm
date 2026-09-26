@@ -1,18 +1,18 @@
-// studioGuide singleton — drives the "How the website works" Start Here panel.
+// studioGuide singleton, drives the "How the website works" Help panel.
 // Plain text + simple arrays (no Portable Text) so editing stays dead-simple
 // and the Studio needs no extra renderer dependency.
 import { defineType, defineField, defineArrayMember } from 'sanity';
 
 const TONES = [
-  { title: 'Default', value: 'default' },
-  { title: 'Primary (highlight)', value: 'primary' },
-  { title: 'Caution (amber)', value: 'caution' },
-  { title: 'Positive (green)', value: 'positive' },
+  { title: 'Plain', value: 'default' },
+  { title: 'Blue (worth knowing)', value: 'primary' },
+  { title: 'Amber (take care)', value: 'caution' },
+  { title: 'Green (good news)', value: 'positive' },
 ];
 
 export const studioGuide = defineType({
   name: 'studioGuide',
-  title: 'Start Here Guide',
+  title: 'How the website works',
   type: 'document',
   options: { canvasApp: { exclude: true } },
   fields: [
@@ -27,11 +27,11 @@ export const studioGuide = defineType({
       title: 'Welcome line',
       type: 'text',
       rows: 3,
-      description: 'The friendly intro under the title.',
+      description: 'A sentence or two under the title.',
     }),
     defineField({
       name: 'studioMap',
-      title: 'The map: where everything lives',
+      title: 'Where everything lives',
       type: 'array',
       of: [
         defineArrayMember({
@@ -40,7 +40,7 @@ export const studioGuide = defineType({
           fields: [
             defineField({
               name: 'area',
-              title: 'Area',
+              title: 'Part of the Studio',
               type: 'string',
               validation: (R) => R.required(),
             }),
@@ -58,7 +58,7 @@ export const studioGuide = defineType({
     }),
     defineField({
       name: 'howTos',
-      title: 'Step-by-step how-tos',
+      title: 'Step-by-step instructions',
       type: 'array',
       of: [
         defineArrayMember({
@@ -67,7 +67,7 @@ export const studioGuide = defineType({
           fields: [
             defineField({
               name: 'title',
-              title: 'Task title',
+              title: 'What it helps with',
               type: 'string',
               validation: (R) => R.required(),
             }),
@@ -85,10 +85,9 @@ export const studioGuide = defineType({
     }),
     defineField({
       name: 'tips',
-      title: 'Tip cards',
+      title: 'Tips',
       type: 'array',
-      description:
-        'The colored callout cards: the most-important note, photo tips, launching in stages, scheduling, comments, SEO hints, and "stuck?".',
+      description: 'The coloured boxes at the end of the guide, one tip in each.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -102,14 +101,14 @@ export const studioGuide = defineType({
             }),
             defineField({
               name: 'tone',
-              title: 'Color tone',
+              title: 'Colour',
               type: 'string',
               options: { list: TONES },
               initialValue: 'default',
             }),
             defineField({
               name: 'body',
-              title: 'Body',
+              title: 'Text',
               type: 'text',
               rows: 5,
               validation: (R) => R.required(),
@@ -120,5 +119,5 @@ export const studioGuide = defineType({
       ],
     }),
   ],
-  preview: { prepare: () => ({ title: 'Start Here Guide' }) },
+  preview: { prepare: () => ({ title: 'How the website works' }) },
 });

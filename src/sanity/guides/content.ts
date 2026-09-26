@@ -150,11 +150,12 @@ export const guides: Guide[] = [
       {
         kind: 'bullets',
         items: [
-          '**Pages**: Home, and every other page of the site (Visit, Who We Are, Beliefs, Ministries, Staff, History, Wedding, Give, Contact).',
+          '**Pages**: Home, the Blog page, and under `All other pages` every other page of the site (Visit, Who We Are, Beliefs, History, Staff, Ministries, Wedding, Give, The Visitor, Contact).',
           '**Blog**: the posts, including the sermon previews, and their categories.',
           '**People**: the staff members shown on the Staff page.',
           '**Ministries**: each ministry’s words, photo and the people to talk to. The Ministries page reads from here.',
-          '**Site settings**: the service time, the address, office hours, the menus, the notice banner and old web addresses.',
+          '**Church Trac forms**: the forms from Church Trac that can sit on a page, like the connection card.',
+          '**Site settings**: the service time, the address, office hours, the links to Church Trac, the menus, the notice banner and old web addresses.',
           '**Help**: these guides.',
         ],
       },
@@ -175,13 +176,13 @@ export const guides: Guide[] = [
     category: 'Start here',
     title: 'Change a page: its words and its sections',
     icon: 'page',
-    lead: 'Every page is a stack of bands. You edit what is in each band, and the order they come in.',
+    lead: 'Every page is a stack of sections. You change what is in each section, and the order they come in.',
     diy: 'self',
     body: [
       { kind: 'h', text: 'How a page is built' },
       {
         kind: 'p',
-        text: 'Each page is a stack of **sections**, one band on top of the next: an opening band, a band of text beside a photo, a band of questions and answers, and so on. You choose what goes in each band. You do not choose colours or spacing: the design sets those from where the band sits on the page, which is why the site stays consistent whoever edits it.',
+        text: 'Each page is a stack of **sections**, one on top of the next: an opening section, a section of text beside a photo, a section of questions and answers, and so on. You choose what goes in each section. You do not choose colours or spacing: the design sets those from where the section sits on the page, which is why the site looks the same whoever edits it.',
       },
       { kind: 'h', text: 'The easy way: click the words on the page' },
       {
@@ -200,29 +201,29 @@ export const guides: Guide[] = [
         title: 'Presentation shows your draft, not the live site.',
         text: 'What you see there includes changes you have not published yet. That is the point: you see the page as it will be before anyone else does.',
       },
-      { kind: 'h', text: 'Moving, adding and removing bands' },
+      { kind: 'h', text: 'Moving, adding and removing sections' },
       {
         kind: 'path',
-        items: ['Pages', 'Visit, Who We Are, Beliefs, History', 'the page', 'Sections'],
+        items: ['Pages', 'All other pages', 'the page', 'Sections'],
       },
       {
         kind: 'bullets',
         items: [
-          'The bands are listed in the `Sections` box (on Home it is called `Page layout`). Drag a band by its handle on the left to move it up or down.',
-          'To add a band, click `Add item...` under the list and choose from the menu. There is a search box at the top of that menu. The `...` menu on a row also has `Add item before...` and `Add item after...`.',
-          'To take a band off, open the `...` menu on its row and choose `Remove`. `Duplicate` in the same menu makes a copy of the band right below it.',
+          'The sections are listed in the `Sections` box, top to bottom. Drag a section by its handle on the left to move it up or down.',
+          'To add a section, click `Add item...` under the list and choose from the menu. There is a search box at the top of that menu. The `...` menu on a row also has `Add item before...` and `Add item after...`.',
+          'To take a section off, open the `...` menu on its row and choose `Remove`. `Duplicate` in the same menu makes a copy of the section right below it.',
         ],
       },
       {
         kind: 'callout',
         tone: 'caution',
-        title: 'There is no switch to hide a band for a while.',
-        text: 'Taking a band off the page removes it. If you might want it back, save a copy first: click the `...` button beside `Publish`, choose `Save a section as preset...` and pick the band. It then waits under `Pages`, then `Saved sections`, and you can add it back from the `Saved sections` list in Presentation.',
+        title: 'There is no switch to hide a section for a while.',
+        text: 'Taking a section off the page removes it. If you might want it back, save a copy first: click the `...` button beside `Publish`, choose `Save a section as preset...` and pick the section. It then waits under `Pages`, then `Saved sections`, and you can add it back from the `Saved sections` list in Presentation.',
       },
-      { kind: 'h', text: 'The building band and its dates' },
+      { kind: 'h', text: 'The building section and its dates' },
       {
         kind: 'p',
-        text: 'The `Building band` is brown with a row of photos across the top. Give it `Dates` and it becomes the cream band from the home page instead: the first and last years large beside the heading, the `Photo` set straight onto the page (a drawing of the building suits it best), the `Old photograph` in an arched frame, and the dates listed underneath.',
+        text: 'The `Building and history` section is brown. Give it `Dates` and it becomes the cream section from the home page instead: the first and last years large beside the heading, the `Photo` set straight onto the page (a drawing of the building suits it best), the `Old photograph` in an arched frame, and the dates listed underneath.',
       },
       {
         kind: 'bullets',
@@ -234,7 +235,7 @@ export const guides: Guide[] = [
       { kind: 'h', text: 'Before you publish a big change' },
       {
         kind: 'p',
-        text: 'The `...` button beside `Publish` also has `Check this page...`. It looks for photos with no description, empty bands and links that look wrong. It never stops you publishing; it just tells you.',
+        text: 'The `...` button beside `Publish` also has `Check this page...`. It looks for photos with no description, empty sections and links that look wrong. It never stops you publishing; it just tells you.',
       },
       {
         kind: 'seealso',
@@ -270,12 +271,12 @@ export const guides: Guide[] = [
         kind: 'callout',
         tone: 'positive',
         title: 'That is the whole job.',
-        text: 'The time, the address, the phone number and the email are kept in one place, Site settings. Every page that mentions them fills them in from there when the site rebuilds: the top and bottom of every page, the Sunday columns, the timelines, the closing bands, even the lines Google shows. Change it once and the whole site agrees.',
+        text: 'The time, the address, the phone number and the email are kept in one place, Site settings. Every page that mentions them fills them in from there when the site rebuilds: the top and bottom of every page, the Sunday times, the timelines, the closing sections, even the lines Google shows. Change it once and the whole site agrees.',
       },
       { kind: 'h', text: 'Words the site fills in for you' },
       {
         kind: 'p',
-        text: 'Open a band that mentions the time and you will see something like `{time}` where the time goes. That is a **placeholder**: the site swaps it for the real value from Site settings. In `Presentation` you see the real value; in the box you see the placeholder. You can type these into any text box yourself:',
+        text: 'Open a section that mentions the time and you will see something like `{time}` where the time goes. That is a **placeholder**: the site swaps it for the real value from Site settings. In `Presentation` you see the real value; in the box you see the placeholder. The same goes for the `Title in Google` and `Description in Google` boxes under `Search and sharing`. You can type these into any text box yourself:',
       },
       {
         kind: 'bullets',
@@ -296,20 +297,20 @@ export const guides: Guide[] = [
       },
       {
         kind: 'p',
-        text: '_Two times are not settings and are still typed where they appear: Sunday school at 9:30 am, and the fellowship hour (10:15 to 10:45), in the Youth band on the Ministries page and in the What to Expect band on the home page. If either changes, change it in both places._',
+        text: '_Two times are not settings and are still typed where they appear: Sunday school at 9:30 am, and the fellowship hour (10:15 to 10:45), in the Youth section on the Ministries page and in the What to Expect section on the home page. If either changes, change it in both places._',
       },
-      { kind: 'h', text: 'The brown band with the Sunday times' },
+      { kind: 'h', text: 'The brown section with the Sunday times' },
       {
         kind: 'p',
-        text: 'The brown band that lists the Sunday times ("Doors, parking and access" on the Visit page, "Find us on Sunday" on the Contact page) is changed on its page in `Presentation`. Each row on it has a `Small label`, a `Big line` and a line of `Text`. The row whose time matches the `Service time` in Site settings is drawn largest, so it moves by itself when the time changes.',
+        text: 'The brown `Sunday times and location` section ("Doors, parking and access" on the Visit page, "Find us on Sunday" on the Contact page) is changed on its page in `Presentation`. Each row on it has a `Small label`, a `Big line` and a line of `Text`. The row whose time matches the `Service time` in Site settings is drawn largest, so it moves by itself when the time changes.',
       },
       {
         kind: 'bullets',
         items: [
           '`Introduction` is a sentence or two above the times.',
           '`Notes` are up to three short lines under the photo, like the nursery or communion.',
-          '`Photos` takes one or two photos. The first is the larger. Leave it empty and the band borrows a photo from elsewhere on the same page.',
-          '`Button (optional)` puts one button under the times. Leave it empty and the band shows the Google Maps directions button instead.',
+          '`Photos` takes one or two photos. The first is the larger. Leave it empty and the section uses one of the church’s photos.',
+          '`Button (optional)` puts one button under the times. Leave it empty and the section shows the directions button instead.',
         ],
       },
       {
@@ -319,6 +320,50 @@ export const guides: Guide[] = [
         text: 'For a single Sunday (a joint service, a snow day), leave the time alone and put a notice across the top of the site instead.',
       },
       { kind: 'seealso', items: ['Put a notice across the top of every page'] },
+    ],
+  },
+
+  // What the home page draws from code, not from its Sections list (Studio
+  // audit, 2026-09-26). Sources: src/pages/index.astro (LastSunday,
+  // VisitorBand, WhatsOnBand, ChurchAppBand, inserted before the latest blog
+  // posts), src/lib/this-sunday.ts and src/lib/preacher.ts.
+  {
+    slug: 'home-page',
+    category: 'Sundays and notices',
+    title: 'What the home page fills in by itself',
+    icon: 'page',
+    lead: 'Some of the home page is not in its Sections list. It is read from YouTube, Church Trac and Site settings each time the site rebuilds.',
+    diy: 'self',
+    body: [
+      { kind: 'h', text: 'Sections you will not find in the list' },
+      {
+        kind: 'p',
+        text: 'The home page’s `Sections` list holds the opening, the Sunday times, the goals, the building, the latest blog posts and giving. Between the building and the blog posts, the website adds up to four sections of its own. They have no boxes to fill in, because each one is read from somewhere else:',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          '**Last Sunday**: the most recent Sunday service on the church’s YouTube channel, the `YouTube channel` box in Site settings, `Church details`. It moves on after each Sunday by itself.',
+          '**The Visitor**: the newest issue of the church newsletter, from The Visitor page. Add an issue there and this section shows it.',
+          '**What’s On**: the next three dated events on the church calendar in Church Trac, the `Events calendar` box in Site settings, `Church systems`. Add or change an event in Church Trac, not here.',
+          '**The church app**: shown while the `Church app` box in Site settings, `Church systems`, holds the app’s share link from Church Trac. Empty the box and the section goes.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'positive',
+        title: 'They keep themselves up to date.',
+        text: 'The website rebuilds itself several times a week, and whenever anyone publishes. If one of these sections is missing, its source had nothing to show at the last rebuild, like no events ahead on the calendar.',
+      },
+      { kind: 'h', text: 'This Sunday, at the top of the page' },
+      {
+        kind: 'p',
+        text: 'Under the opening words, the home page names this Sunday’s sermon and who is preaching. Both come from the sermon preview for that Sunday if one is on the Blog (its title, and its `Author`), and otherwise from the service YouTube has scheduled for that Sunday (its title, and the "Preaching:" line in its description). To change them, change that post, or the scheduled broadcast on YouTube.',
+      },
+      {
+        kind: 'seealso',
+        items: ['Change a page: its words and its sections', 'Links to giving, forms and sermons'],
+      },
     ],
   },
 
@@ -338,12 +383,12 @@ export const guides: Guide[] = [
       {
         kind: 'steps',
         items: [
-          'Open `Site settings`, then `Announcement banner`, then the `+` button to start a new one.',
+          'Open `Site settings`, then `Announcement banner`, then click the pencil button at the top of the list to start a new one.',
           'Give it an `Internal name` so you can find it later, like "Snow closing, January". Visitors never see this.',
           'Type the `Message`. Keep it to one sentence.',
           'Pick a `Style`: `Info` for everyday news, `Highlight` for good news, `Urgent` (red) for a closing or a warning.',
           'If it should link somewhere, fill in `Link (optional)`.',
-          'Check `Enabled` is on, then Publish.',
+          'Check `Show this banner` is on, then Publish.',
         ],
       },
       {
@@ -355,7 +400,7 @@ export const guides: Guide[] = [
         kind: 'callout',
         tone: 'caution',
         title: 'The dates only take effect at the next rebuild.',
-        text: '`Show from (optional)` and `Hide after (optional)` are checked when the site rebuilds, and it rebuilds when anybody publishes anything. A notice whose date has passed can still be showing if nothing has been published since. To be sure it is gone, open it, switch `Enabled` off, and publish.',
+        text: '`Show from (optional)` and `Hide after (optional)` are checked when the site rebuilds, and it rebuilds when anybody publishes anything. A notice whose date has passed can still be showing if nothing has been published since. To be sure it is gone, open it, switch `Show this banner` off, and publish.',
       },
       { kind: 'seealso', items: ['Change the service time or the Sunday details'] },
     ],
@@ -400,7 +445,7 @@ export const guides: Guide[] = [
       { kind: 'h', text: 'Link placeholders' },
       {
         kind: 'p',
-        text: 'Open a link on a page or in a post and its address may read `{giving}` instead of a web address. That is a **link placeholder**: the site swaps it for the address in the matching box. Use one yourself whenever you link to one of these, by selecting the words, pressing `Link`, and typing the placeholder into the address box:',
+        text: 'Open a link on a page or in a post and its address may read `{giving}` instead of a web address. That is a **link placeholder**: the site swaps it for the address in the matching box. Use one yourself whenever you link to one of these, by selecting the words, pressing the link button in the toolbar, and typing the placeholder into the `Web address` box:',
       },
       {
         kind: 'bullets',
@@ -421,7 +466,7 @@ export const guides: Guide[] = [
         kind: 'callout',
         tone: 'caution',
         title: 'Type the whole address box as the placeholder, curly brackets and all.',
-        text: 'A placeholder only works on its own in a link’s address box, not in the middle of a sentence. A misspelled one shows a red warning under the box. Most empty boxes send the link to this website’s Contact page until you fill it in, so nobody lands on a broken page: `{giving}` goes to this site’s own `/give` page instead, `{wedding-enquiry}` and `{wedding-booking}` email the wedding office directly, and `{wednesday}` and `{contact-form}` are hidden (the words stay, the link does not) until their box is filled.',
+        text: 'A placeholder only works on its own in a link’s address box, not in the middle of a sentence. A misspelled one shows a red warning under the box. Most empty boxes send the link to this website’s Contact page until you fill it in, so nobody lands on a broken page: `{giving}` goes to this site’s own Give page instead, `{wedding-enquiry}` and `{wedding-booking}` email the wedding office directly, and `{wednesday}` and `{contact-form}` are hidden (the words stay, the link does not) until their box is filled.',
       },
       {
         kind: 'callout',
@@ -470,7 +515,7 @@ export const guides: Guide[] = [
       {
         kind: 'steps',
         items: [
-          'Open `Church Trac forms` in the menu on the left and press the pencil to make a new one.',
+          'Open `Church Trac forms` in the menu on the left and click the pencil button at the top of the list to make a new one.',
           'Give it a `Form name`, like "Connection card".',
           'Paste the code into `Embed code from Church Trac`. If the box turns red, read the message under it: it is usually the wrong code copied.',
           'Pick a `Form size`, then Publish.',
@@ -527,13 +572,13 @@ export const guides: Guide[] = [
       {
         kind: 'steps',
         items: [
-          'Open `Blog`, then `Posts`, then the `+` button at the top of the list.',
-          'Type the `Title`. Then click `Generate` beside `Slug` to make the post’s web address from the title.',
-          'Write a short `Excerpt`: one or two sentences that appear on the Blog page under the title.',
-          'Add a `Cover image` and fill in its `Alt text` (a sentence describing the picture).',
+          'Open `Blog`, then `Posts`, then click the pencil button at the top of the list.',
+          'Type the `Title`. Then click `Generate` beside `Web address` to make the post’s address from the title.',
+          'Write a `Short summary`: one or two sentences that appear on the Blog page under the title.',
+          'Add a `Cover picture` and fill in `Describe the picture` (a sentence saying what is in it).',
           'Under `Categories`, click `Add item` and choose one, like "Sermon Preview".',
           'Type the name of whoever wrote it in `Author`.',
-          'Write the post in `Body`, below the other boxes.',
+          'Write the post in `The post`, below the other boxes.',
           'Publish.',
         ],
       },
@@ -546,7 +591,7 @@ export const guides: Guide[] = [
       {
         kind: 'bullets',
         items: [
-          '`Published at` fills itself in with today. Change it only if the post belongs to another date.',
+          '`Date` fills itself in with today. Change it only if the post belongs to another date. A later date does not hold the post back: it goes live when you publish.',
           '`Tags` are optional short labels, like "Advent" or "Mark". Press Enter after each one.',
           'To see the post before you publish it, click `Presentation` at the top and open the post from there.',
         ],
@@ -577,7 +622,7 @@ export const guides: Guide[] = [
       {
         kind: 'steps',
         items: [
-          'Open `People`, then `Staff members`. Open a person to change them, or click `+` to add someone.',
+          'Open `People`, then `Staff members`. Open a person to change them, or click the pencil button at the top of the list to add someone.',
           'Fill in `Name`, then click `Generate` beside `Web address`.',
           'Type their `Role` the way it should read, like "Pastor" or "Church Clerk".',
           'Add their `Email address` and `Phone number` if they want them shown.',
@@ -594,7 +639,7 @@ export const guides: Guide[] = [
         kind: 'callout',
         tone: 'positive',
         title: 'Coordinators update the Ministries page too.',
-        text: 'The "The people to talk to" band on the Ministries page lists everyone in the `Church Coordination Team` group. Change a coordinator here and that band follows by itself.',
+        text: 'The "The people to talk to" section on the Ministries page lists everyone in the `Church Coordination Team` group. Change a coordinator here and that section follows by itself.',
       },
       { kind: 'h', text: 'When someone leaves, or is away for a while' },
       {
@@ -604,7 +649,7 @@ export const guides: Guide[] = [
       { kind: 'h', text: 'Deacons' },
       {
         kind: 'p',
-        text: 'The deacons are not staff members. They are listed in the "Our deacons" band on the Staff page, under the group photograph, with the deacon chair’s email. To change the list, open the Staff page in `Presentation`, click the names and type. If the photograph changes, keep the "left to right" order of the names matching it.',
+        text: 'The deacons are not staff members. They are listed in the "Our deacons" section on the Staff page, under the group photograph, with the deacon chair’s email. To change the list, open the Staff page in `Presentation`, click the names and type. If the photograph changes, keep the "left to right" order of the names matching it.',
       },
       {
         kind: 'seealso',
@@ -637,13 +682,13 @@ export const guides: Guide[] = [
       { kind: 'h', text: 'When a coordinator changes' },
       {
         kind: 'p',
-        text: 'Under `People to talk to`, remove the person who has stepped down and add the new one from the staff list. The line at the end of the ministry’s band ("Molly Flodder, Worship Coordinator, worship@fbcmuncie.org") is written from their staff details, so their name, role and email are always the ones on the Staff page.',
+        text: 'Under `People to talk to`, remove the person who has stepped down and add the new one from the staff list. The line at the end of the ministry’s section ("Molly Flodder, Worship Coordinator, worship@fbcmuncie.org") is written from their staff details, so their name, role and email are always the ones on the Staff page.',
       },
       {
         kind: 'bullets',
         items: [
           'Someone new has to be a staff member first. Add them under `People`, then `Staff members`, then pick them here.',
-          'The "The people to talk to" band near the foot of the Ministries page lists everyone in the `Church Coordination Team` group, and follows by itself too.',
+          'The "The people to talk to" section near the foot of the Ministries page lists everyone in the `Church Coordination Team` group, and follows by itself too.',
           '_The Studio will not let you delete a staff member who is still named on a ministry. Take them off the ministry first._',
         ],
       },
@@ -652,7 +697,7 @@ export const guides: Guide[] = [
         kind: 'bullets',
         items: [
           'A ministry with no `Photo` shows its text on its own, full width. Adult and Outreach are like that today.',
-          'Everything else on the Ministries page (the Sunday timeline, "Sunday, room by room", the parents’ questions) is ordinary page bands. Change those on the page in `Presentation`.',
+          'Everything else on the Ministries page (the Sunday timeline, "Sunday, room by room", the parents’ questions) is ordinary page sections. Change those on the page in `Presentation`.',
         ],
       },
       { kind: 'seealso', items: ['Add, change or remove a staff member'] },
@@ -664,27 +709,27 @@ export const guides: Guide[] = [
     category: 'Blog, staff and ministries',
     title: 'Update the Who We Are page',
     icon: 'heart',
-    lead: 'Four bands new to this page: the Watchword, Our goals, the Pledge, and the pastors’ letter.',
+    lead: 'Four sections made for this page: the Watchword, Our goals, the Pledge, and the pastors’ letter.',
     diy: 'self',
     body: [
       {
         kind: 'path',
-        items: ['Pages', 'Who We Are'],
+        items: ['Pages', 'All other pages', 'Who we are'],
         link: { pane: 'page' },
       },
       {
         kind: 'p',
-        text: 'Like every page, open it in `Presentation` and click the words to edit them, or open the page document and add one of these four bands from the `Church` group in the "Add item" menu.',
+        text: 'Like every page, open it in `Presentation` and click the words to change them, or open the page and add one of these four sections from the `Church` group in the `Add item...` menu.',
       },
       { kind: 'h', text: 'Watchword (Praise and Proclaim)' },
       {
         kind: 'p',
-        text: 'Our watchword: Isaiah 12:4, "Praise the Lord, proclaim his name." `Heading` is the band title ("Our Watchword"). `Short introduction` is two or three sentences shown beside the mark; `Read more` is the longer explanation, shown only when a visitor opens it. `Verse` is the verse itself, without quotation marks, and `Reference` is where it is from. The words **praise** and **proclaim** are highlighted in the verse automatically, so type them as ordinary words. `What "Praise" means` and `What "Proclaim" means` are one or two sentences each.',
+        text: 'Our watchword: Isaiah 12:4, "Praise the Lord, proclaim his name." `Heading` is the section’s title ("Our Watchword"). `Short introduction` is two or three sentences shown beside the mark; `Read more` is the longer explanation, shown only when a visitor opens it. `Verse` is the verse itself, without quotation marks, and `Reference` is where it is from. The words **praise** and **proclaim** are highlighted in the verse automatically, so type them as ordinary words. `What "Praise" means` and `What "Proclaim" means` are one or two sentences each.',
       },
-      { kind: 'h', text: 'Our goals (four bands)' },
+      { kind: 'h', text: 'Our goals' },
       {
         kind: 'p',
-        text: 'Up to four goals, each with its own colour: green, gold, purple, brown, in the order you list them. Each goal has a `Name` ("Worship"), a `Subtitle` ("Worshiping as the Body of Christ"), and an optional `In brackets` word ("Discipleship"). `Building drawing` picks which of the four goal drawings the band shows beside its words: window, door, lamp on a stand, or basin and towel. `Opening sentence` introduces the goal, and `Pull quote` is an optional short line shown large, normally on the second goal only.',
+        text: 'Up to four goals, each with its own colour: green, gold, purple, brown, in the order you list them. Each goal has a `Name` ("Worship"), a `Subtitle` ("Worshiping as the Body of Christ"), and an optional `In brackets` word ("Discipleship"). `Building drawing` picks which of the four goal drawings the goal shows beside its words: window, door, lamp on a stand, or basin and towel. `Opening sentence` introduces the goal, and `Pull quote` is an optional short line shown large, normally on the second goal only.',
       },
       {
         kind: 'p',
@@ -698,7 +743,7 @@ export const guides: Guide[] = [
       { kind: 'h', text: 'Letter' },
       {
         kind: 'p',
-        text: 'A note from the pastors. `Heading` is the band title ("A Note From Our Pastors"). `Letter` is the body, written as ordinary paragraphs. `Signed` is how they sign it ("Kendall & Jonathan") and `Under the signature` is the line below that ("Co-Pastors, First Baptist Church Muncie"). `Portrait` is optional.',
+        text: 'A note from the pastors. `Heading` is the section’s title ("A Note From Our Pastors"). `Letter` is the body, written as ordinary paragraphs. `Signed` is how they sign it ("Kendall & Jonathan") and `Under the signature` is the line below that ("Co-Pastors, First Baptist Church Muncie"). `Portrait` is optional.',
       },
       { kind: 'h', text: 'Where To Go Next (cards)' },
       {
@@ -726,7 +771,7 @@ export const guides: Guide[] = [
         items: [
           'Open the page, post or person that holds the photo.',
           'On an empty photo box, click `Upload` for a new picture, or `Select` to choose one the church already has. On a box that already has a photo, the same choices are in the small menu at the photo’s top right: `Upload`, or `Media` to choose from the library.',
-          'Fill in `Alt text`. See below.',
+          'Fill in `Describe the photo`. See below.',
           'Publish.',
         ],
       },
@@ -739,14 +784,14 @@ export const guides: Guide[] = [
         kind: 'p',
         text: '_The church’s older photographs are being added to the library with tags. Until they arrive, most of what is there is the photos already on the site._',
       },
-      { kind: 'h', text: 'What alt text is' },
+      { kind: 'h', text: 'Why every photo needs a description' },
       {
         kind: 'p',
-        text: '**Alt text** is one plain sentence saying what is in the picture, for somebody who cannot see it. Screen readers read it aloud, it shows if the photo fails to load, and search engines read it. Describe what is happening, not the file: "the choir singing at the Christmas Eve service" rather than "IMG_4471".',
+        text: 'The `Describe the photo` box (web designers call it **alt text**) takes one plain sentence saying what is in the picture, for somebody who cannot see it. Screen readers read it aloud, it shows if the photo fails to load, and search engines read it. Describe what is happening, not the file: "the choir singing at the Christmas Eve service" rather than "IMG_4471". Most photo boxes will not let you publish until it is filled in.',
       },
       {
         kind: 'p',
-        text: '_Staff photos have no alt text box. The person’s name, printed beside the photo, does that job._',
+        text: '_Staff photos have no description box. The person’s name, printed beside the photo, does that job._',
       },
       {
         kind: 'callout',
@@ -863,9 +908,9 @@ export const guides: Guide[] = [
         tone: 'caution',
         title: 'Leave "Publish automatically at" empty for now.',
         text:
-          'Pages have a `Publish automatically at` box under the `Publishing` tab, for publishing a page at a set time. It is being switched on, and until ' +
+          'Pages have a `Publish automatically at` box under the `Publishing` tab, for publishing a page at a set time. It does not work yet: a page set to publish itself stays a draft. Publish by hand until ' +
           SITE.contactName +
-          ' tells you it works, a page set to publish itself may stay a draft. Publish by hand until then.',
+          ' tells you it is ready.',
       },
       { kind: 'seealso', items: ['Start here: how this all works'] },
     ],

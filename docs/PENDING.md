@@ -641,6 +641,42 @@ changing the guide that mentions it in the same commit.
   shows today); the backup keeps them and the assets stay in the library.
   Writing it before the deploy would empty five bands on the live page.
 
+### Studio audit: seen, not changed (2026-09-26)
+
+The Studio audit rewrote every editor-facing string it owns and hid the dead
+controls (changelog, 2026-09-26). These it left, each for a stated reason:
+
+- **Strings in PORTABLE files** keep the starter's wording until a sync:
+  `_seoFields.ts` ("SEO title", "Alt text"; FBCM's page types pass their own
+  titles in, so editors mostly see the new ones), `slugRedirect.tsx` (the toast
+  says "under Redirects"; the desk calls them "Old web addresses"),
+  `UndoRedo.tsx` ("a colour you picked", which FBCM has no control for), and
+  `page-checks.ts`' `sectionLabel()`, which names sections from their type
+  ("Heritage band") in "Save a section as preset..." and "Check this page...".
+  FBCM's own list and navigator now use the schema titles
+  (`src/sanity/sectionTitles.ts`); the starter could adopt the same.
+- **The "How the website works" document is data, not code.** Its seven
+  how-tos and tips were seeded 2026-09-19 and say "Preview tool" and "Click
+  New"; the audit wrote nothing to the dataset. Edit them in the Studio (Help,
+  How the website works, Edit tab), or retire the panel now the Help guides
+  cover the same ground.
+- **"Church notes" (studioNotes) still holds the seed's "Replace this with..."
+  text.** Only the church can write it.
+- **The Blog page previews a closing band the live /blog does not draw.**
+  `src/pages/preview/[...slug].astro` renders `finalCta*` for every singleton;
+  the live page dropped it. The fields are hidden in the Studio now, so the
+  preview shows a band nobody can edit. A preview-stack change (read
+  `docs/agent/preview.md` first).
+- **Unused post blocks.** No post uses "Before and after photos",
+  "Recommended book or resource", "Tip box", "Pull quote", "Photo gallery",
+  "Divider", "Video" or the "Where this came from" mark (checked live: only
+  paragraphs and photos). They were retitled for a church; removing them from
+  the insert menu is a schema change for another day.
+- **"Something from another website" (embedSection) pastes raw code onto the
+  page.** Its description now tells staff to ask first; restricting it the way
+  the Church Trac form band is restricted is a design decision.
+- **`_pageSingleton.ts` is dead code**: nothing calls `definePageSingleton`.
+
 ### For ncs-astro-sanity-starter (the library of record), found on this fork
 
 - **Lenis is not worth shipping; and naming `<main>` makes view transitions slide (2026-09-24, `feat/print-motion`).** The starter ships Lenis in `BaseLayout`: FBCM measured 5.4 KB gzip per page, a rAF loop that never stops, a 1.5 to 2 s late start, and a dead wheel whenever something stops it across a router swap; it removed the package and uses the router's own scroll reset plus `html[data-smooth-scroll] { scroll-behavior: smooth }` set on the first press (plain `html { scroll-behavior: smooth }` makes Chrome glide its reload restoration and broke the header seed). Separately, the starter's `globals.css` names `main#main` (`main-content`) and `footer` (`site-footer`) as view-transition elements, and a named group animates from its old box to its new one, so a navigation from a scrolled page slides the whole page down the screen through the fade; FBCM names only the header and cross-fades the root. Both want a PORTS.md card and a sweep of every family repo. Also worth porting: the generic print block's reveal reset (an unscrolled `[data-reveal]` prints blank) and the `--k` screen-scale fix for any `pathLength` draw on a `non-scaling-stroke` path (`animation.md`, "The glyph draw").

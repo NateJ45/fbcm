@@ -28,7 +28,7 @@ export const churchTracForm = defineType({
       type: 'string',
       description:
         'What the form is, like "Connection card" or "Prayer request". Visitors see it as the frame\'s name, and you see it when you pick the form for a page.',
-      validation: (r) => r.required(),
+      validation: (r) => r.required().error('Give the form a name, like "Connection card".'),
     }),
     defineField({
       name: 'embed',

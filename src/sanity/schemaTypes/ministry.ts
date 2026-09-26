@@ -84,15 +84,15 @@ export const ministry = defineType({
       title: 'Name',
       type: 'string',
       description: 'The name people use for it, like "Children" or "Outreach".',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().error("Type the ministry's name."),
     }),
     defineField({
       name: 'slug',
       title: 'Web address',
       type: 'slug',
       options: { source: 'title', maxLength: 96 },
-      description: 'Click Generate. Only change it if you need a shorter address.',
-      validation: (Rule) => Rule.required(),
+      description: 'Click Generate.',
+      validation: (Rule) => Rule.required().error('Click Generate to make the web address.'),
     }),
     defineField({
       name: 'eyebrow',
@@ -117,11 +117,12 @@ export const ministry = defineType({
       fields: [
         defineField({
           name: 'alt',
-          title: 'Alt text',
+          title: 'Describe the photo',
           type: 'string',
           description:
-            'Describe the photo in a few words, for screen readers and search engines. It also shows as the caption under the photo.',
-          validation: (R) => R.required(),
+            'A few words saying what is in the photo, for people who cannot see it. It also shows as the caption under the photo.',
+          validation: (R) =>
+            R.required().error('Describe the photo in a few words, for people who cannot see it.'),
         }),
       ],
     }),
@@ -133,7 +134,7 @@ export const ministry = defineType({
       description:
         'Pick one or more people from Staff. Each gets a line at the end of the text with their name, role and email, and it changes by itself when their Staff page does.',
       of: [defineArrayMember({ type: 'reference', to: [{ type: 'staffMember' }] })],
-      validation: (R) => R.unique(),
+      validation: (R) => R.unique().error('That person is in the list twice.'),
     }),
     // scaffold: church
     // Which of the church's four goals (Who We Are, "Our Goals") this ministry
@@ -165,7 +166,12 @@ export const ministry = defineType({
       title: 'One-line summary',
       type: 'text',
       rows: 2,
-      description: 'One sentence about the ministry. Not shown on the website at the moment.',
+      // HIDDEN since the Studio audit (2026-09-26): nothing on the site reads
+      // it (the Ministry band's query in queries.ts does not project it), so a
+      // box staff could fill in that shows nowhere was only confusing. Kept
+      // declared so the stored summaries are not orphaned (rule 1); never
+      // required, so hiding it cannot trap a document.
+      hidden: true,
     }),
     defineField({
       name: 'order',
