@@ -593,7 +593,7 @@ export const guides: Guide[] = [
         items: [
           '`Date` fills itself in with today. Change it only if the post belongs to another date. A later date does not hold the post back: it goes live when you publish.',
           '`Tags` are optional short labels, like "Advent" or "Mark". Press Enter after each one.',
-          'To see the post before you publish it, click `Presentation` at the top and open the post from there.',
+          'To see the post in the site’s design before you publish it, click `Presentation` at the top and open the post from there. It needs its `Web address` first, and your changes show as you type.',
         ],
       },
       {

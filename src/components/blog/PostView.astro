@@ -1,0 +1,1585 @@
+---
+// scaffold-file: journal
+// Safe to edit by hand for copy + structure changes.
+// ONE POST, DRAWN: the "P2 Bulletin" (journal polish, 2026-09-22; the
+// prototype and its Rules drawer are
+// docs/superpowers/prototypes/2026-09-22-journal/index.html).
+//
+// Moved out of src/pages/post/[slug].astro on 2026-09-26 so the post is drawn
+// by ONE file in two places: the static route (/post/<slug>, inside
+// BaseLayout) and the Studio's draft preview (/preview/post/<slug>, inside
+// PreviewLayout, src/pages/preview/post/[slug].astro). The two cannot drift,
+// and `npm run parity compare` proved the move left every live post
+// byte-identical. The route owns the page's meta (title, description, share
+// card, JSON-LD) and the data; this owns everything the reader sees.
+//
+// THE THESIS. Three posts in four are a weekly sermon preview, and a sermon
+// preview is a bulletin: which Sunday, which reading, who is preaching, where
+// to listen. So the masthead carries the ORDER beside the title as a ruled
+// list, and the reading opens the body between two rules. Every other post
+// gets the same frame with its own facts (posted, written by, takes, filed
+// under). Every one of those facts is DERIVED from the post itself, its date,
+// category and opening text (src/lib/sermon-derive.ts, src/lib/post-body.ts);
+// none of them is a field an editor keeps true by hand (CLAUDE.md rule 15).
+//
+// Layout: title and body share one left edge in columns 1 to 7; columns 9 to
+// 12 hold the order, then (sticky) the cover as a matted PLATE and an "In this
+// post" list. A cover that is a real photograph (w >= 2000 and w/h >= 1.3; 2
+// of the 141 covers, the rest are series slides with their own lettering) is
+// laid as a full-bleed GROUND under the masthead instead. The foot is Tagged,
+// More from this series, and two doors. No closing CTA band: the footer's
+// poster already says it, and three bands saying one sentence was the audit's
+// finding 10.
+//
+// THE CHURCH IDENTITY PASS (2026-09-24) kept all of that and changed how it
+// is dressed: every ink is a brand token (--color-indigo for the text,
+// --color-brown-ink for the facts and meta, gold for the rules that carry
+// structure), the cover hangs in a DOOR ARCH with its gold mould and no
+// caption (a slide as a plate in the right column, a photograph as a wide door
+// across the measure), and the foot (More from this series and the two doors)
+// is the taupe band the home page's Church Blog rows sit on, with the same
+// rows (PostRow.astro) and the gold "All posts" plate.
+//
+// IN THE PREVIEW (the `edit` prop). The body arrives with stega OFF (the
+// reading pass matches and measures its words, docs/agent/preview.md), so the
+// body and the cover each carry a `data-sanity` attribute instead: in Edit
+// mode a click on either opens that field of the post. Both attributes are
+// absent when `edit` is not passed, so the live render is unchanged. Every
+// string compared or measured below goes through clean() first, because in
+// the preview the post's own fields (title, excerpt, author, tags, category
+// titles) carry stega.
+import { entryIsSermonPreview, weekOfEyebrow, clean, type BlogEntry } from '@/lib/blog-derive';
+import { readingTimeFromPortableText } from '@/lib/reading-time';
+import { sundayOf, localDay, formatDay, isoDay, readingOf, seriesOf } from '@/lib/sermon-derive';
+import {
+  prepareBody,
+  ledeEchoes,
+  openingText,
+  listenHref,
+  assetRefOf,
+  type BodyNode,
+} from '@/lib/post-body';
+import type { PostFoot } from '@/lib/post-foot';
+import { linkValues, isYouTubeUrl } from '@/lib/church-links';
+import { youtubeChannelId } from '@/lib/live-status';
+import { channelVideos } from '@/lib/sermon-feed';
+import { matchSermonVideo, retargetLinks, videoUrl } from '@/lib/sermon-video';
+import { slugify } from '@/lib/slugify';
+import { extractHeadings } from '@/lib/portable-text-headings';
+import { site } from '@/data/site';
+import { parseSanityAssetDimensions, type SanityResult } from '@/lib/sanity';
+import { docEditAttr } from '@/lib/preview-edit-attr';
+
+import ArchFrame from '@/components/church/ArchFrame.astro';
+import PostRow from '@/components/blog/PostRow.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import { H2_DISPLAY } from '@/lib/heading-grammar';
+import JournalBody from '@/components/JournalBody.astro';
+import ReadingProgress from '@/components/ReadingProgress.astro';
+import StickyCTAChip from '@/components/StickyCTAChip';
+import PostTools from '@/components/blog/PostTools.astro';
+import {
+  passageFor,
+  verseLabels,
+  TRANSLATIONS,
+  type ScriptureManifest,
+} from '@/lib/scripture-text';
+import type { JournalLection } from '@/lib/post-body';
+import { serviceMinutes, worshipIcsPath } from '@/lib/worship-ics';
+
+interface Props {
+  /** The post, as getJournalEntryBySlug projects it (body included). */
+  entry: SanityResult;
+  /** The URL slug: /post/<slug>. */
+  slug: string;
+  /** Site settings, the live projection (the recordings link, the service time, the address). */
+  siteSettings: SanityResult | null;
+  /** The Blog page, for the sticky chip's label. */
+  journalPage: { stickyCtaLabel?: string | null } | null;
+  /** The doors, the series rows and the reading's anchor (src/lib/post-foot.ts). */
+  foot: PostFoot;
+  /** Preview only: the post's id and type, for the body's and the cover's `data-sanity`. */
+  edit?: { id: string; type: string };
+}
+const { entry, slug, siteSettings, journalPage, foot, edit } = Astro.props as Props;
+const { doors, series, readingAnchor } = foot;
+
+// Preview only (see the header): click-to-edit targets for the parts that
+// carry no stega. `undefined` renders no attribute at all, so the live page
+// is byte-identical.
+const bodyEditAttr = edit ? docEditAttr(edit.id, edit.type, 'body') : undefined;
+const coverEditAttr = edit ? docEditAttr(edit.id, edit.type, 'coverImage') : undefined;
+
+// The passage text for every reading, fetched before the build by
+// scripts/fetch-scripture.mjs into src/data/scripture.generated.json
+// (gitignored). An EAGER glob, as BaseLayout reads the share-card manifest: a
+// missing file (a fresh clone, no Sanity project) reads as no passages, and
+// every reading then renders exactly as it did before the passages existed.
+// The preview route draws through this file too, so the same JSON is bundled
+// into the Worker at build time.
+const SCRIPTURE_FILES = import.meta.glob<ScriptureManifest>('../../data/scripture.generated.json', {
+  eager: true,
+  import: 'default',
+});
+const scripture = Object.values(SCRIPTURE_FILES)[0] ?? null;
+
+// ---- Derived -----------------------------------------------------------------
+const rawBody = (entry.body ?? []) as unknown as BodyNode[];
+const isPreview = entryIsSermonPreview(entry as unknown as BlogEntry);
+const primaryCategory = (entry.categories ?? [])[0] as
+  { title?: string | null; slug?: { current?: string | null } | null } | undefined;
+
+// THE EYEBROW. A weekly sermon preview says which week it is for; every other
+// post says its category. Derived from the category itself, never a flag.
+const eyebrowLabel = isPreview
+  ? weekOfEyebrow(entry.publishedAt)
+  : clean(primaryCategory?.title) || 'Blog';
+const categoryHref = primaryCategory?.slug?.current
+  ? `/blog/category/${clean(primaryCategory.slug.current)}/`
+  : '';
+
+// THE SERMON RECORDING (feat/church-links, 2026-09-24). A preview's links to
+// the recordings hold {sermons}, filled at the fetch with the Sermon
+// recordings setting (src/lib/church-links.ts). When that address is on
+// YouTube, the preview's own recording is looked up in the channel's public
+// feed by its Sunday and passage (src/lib/sermon-video.ts), and the post's
+// links to the recordings point at that one video instead. Derived at build
+// time (CLAUDE.md rule 15): nothing is stored, and a preview older than the
+// feed, or with no sure match, keeps the address from Site settings.
+const sermonsHref = linkValues(siteSettings)['{sermons}'];
+const sermonSunday = isPreview ? sundayOf(entry.publishedAt) : null;
+let sermonVideoHref = '';
+if (sermonSunday && isYouTubeUrl(sermonsHref) && listenHref(rawBody, sermonsHref) === sermonsHref) {
+  const videos = await channelVideos(
+    youtubeChannelId(siteSettings?.livestreamUrl, siteSettings?.youtubeUrl),
+  );
+  const video = matchSermonVideo(isoDay(sermonSunday), readingOf(openingText(rawBody)), videos);
+  if (video) sermonVideoHref = videoUrl(video);
+}
+const renderBody = sermonVideoHref ? retargetLinks(rawBody, sermonsHref, sermonVideoHref) : rawBody;
+
+// The body as the reader gets it: Wix residue repaired, tables, points, Q and
+// A, and a preview's reading found (src/lib/post-body.ts). Stored text is not
+// touched; this is a render pass.
+const prepared = prepareBody(renderBody, {
+  coverRef: assetRefOf(entry.coverImage),
+  preview: isPreview,
+});
+
+// THE PASSAGE (2026-09-24, feat/scripture-text). A preview's reading opens
+// into its own text: each "The reading" block gets the passage the build
+// fetched for its reference, as a <details> under the church's quotation
+// (JournalPortableText's LectionPassageText). A preview whose reading is only
+// in the masthead (no reading block in the body; 5 of 107) gets a reading
+// block of its own at the top of the body, holding just the disclosure. No
+// passage for a reading (not fetched, did not parse) leaves the markup as it
+// was. The text is derived from the reading, never stored (rule 15).
+const lectionPassage = (reference: string): JournalLection['passage'] | undefined => {
+  const p = isPreview ? passageFor(scripture, reference) : null;
+  if (!p) return undefined;
+  const labels = verseLabels(p.verses);
+  return {
+    verses: p.verses.map((v, i) => ({ label: labels[i], text: v.text })),
+    credit: TRANSLATIONS[p.translation].credit,
+    translation: p.translation,
+    ...(p.fums?.length ? { fums: p.fums } : {}),
+  };
+};
+const withPassages = prepared.map((node) => {
+  if (node._type !== 'journalLection') return node;
+  const lec = node as JournalLection;
+  const passage = lectionPassage(lec.reference);
+  return passage ? { ...lec, passage } : lec;
+});
+const mastReading = isPreview ? readingOf(openingText(rawBody)) : '';
+const mastPassage =
+  mastReading && !withPassages.some((n) => n._type === 'journalLection')
+    ? lectionPassage(mastReading)
+    : undefined;
+const body: BodyNode[] = mastPassage
+  ? [
+      {
+        _type: 'journalLection',
+        _key: 'reading-lection',
+        reference: mastReading,
+        blocks: [],
+        passage: mastPassage,
+      } satisfies JournalLection,
+      ...withPassages,
+    ]
+  : withPassages;
+
+// The lede is the excerpt, UNLESS the excerpt is the first paragraph again
+// (33 of 142 posts), in which case the reader would meet it twice in a screen.
+const showLede = !!entry.excerpt && !ledeEchoes(entry.excerpt, body);
+
+// "In this post": the section heads, numbered, only when there are three or
+// more. Ids from the same slugify the renderer uses, so every entry lands.
+const headings = extractHeadings(entry.body);
+const hasContents = headings.length >= 3;
+
+// THE ORDER (the ruled facts beside the title). Rows with no value are
+// omitted, never guessed.
+const opening = openingText(rawBody);
+const sunday = isPreview ? sundayOf(entry.publishedAt) : null;
+const postedDay = localDay(entry.publishedAt);
+const readMinutes = readingTimeFromPortableText(entry.body);
+const listen = isPreview ? sermonVideoHref || listenHref(rawBody, sermonsHref) : '';
+// "Add to calendar": a preview's Sunday, when Site settings' service time can
+// be read (the same check the .ics route makes, so the link never points at a
+// file that was not built).
+const icsHref =
+  isPreview && sunday && serviceMinutes(siteSettings?.serviceTime) !== null
+    ? worshipIcsPath(slug as string)
+    : undefined;
+// `meta` names the Pagefind metadata a fact carries into a search result row
+// (the site search, 2026-09-24): the date column and the reading.
+type Fact = {
+  label: string;
+  value: string;
+  href?: string;
+  datetime?: string;
+  big?: boolean;
+  meta?: 'date' | 'reading';
+};
+const facts: Fact[] = (
+  isPreview
+    ? [
+        {
+          label: 'Sunday',
+          value: sunday ? formatDay(sunday) : '',
+          datetime: sunday ? isoDay(sunday) : undefined,
+          big: true,
+          meta: 'date' as const,
+        },
+        {
+          label: 'Reading',
+          value: readingOf(opening),
+          // To this book on the scripture index (/blog/scripture), when the
+          // index lists this post.
+          href: readingAnchor ? `/blog/scripture/#${readingAnchor}` : undefined,
+          meta: 'reading' as const,
+        },
+        { label: 'Series', value: seriesOf(opening) },
+        { label: 'Preaching', value: clean(entry.author) },
+        { label: 'Listen', value: listen ? 'Livestream and recordings' : '', href: listen },
+      ]
+    : [
+        {
+          label: 'Posted',
+          value: postedDay ? formatDay(postedDay) : '',
+          datetime: postedDay ? isoDay(postedDay) : undefined,
+          meta: 'date' as const,
+        },
+        { label: 'Written by', value: clean(entry.author) },
+        {
+          label: 'Takes',
+          value: readMinutes > 0 ? `${readMinutes} minute${readMinutes === 1 ? '' : 's'}` : '',
+        },
+        {
+          label: 'Filed under',
+          value: clean(primaryCategory?.title),
+          href: categoryHref || undefined,
+        },
+      ]
+).filter((f) => f.value);
+
+// THE COVER'S SHAPE DECIDES ITS FRAME. A photograph (at least 2000px wide and
+// at least 1.3:1) is laid as the full-bleed ground; anything else, which is
+// the series slides with their own lettering on them, hangs as a plate in the
+// right column. A cover with no recorded dimensions is treated as a slide.
+const cover = entry.coverImage?.asset ? entry.coverImage : null;
+const coverDims = cover ? parseSanityAssetDimensions(cover) : null;
+const coverIsPhoto = coverDims
+  ? coverDims.width >= 2000 && coverDims.width / coverDims.height >= 1.3
+  : false;
+// NO CAPTION on the cover (2026-09-23, the owner: "the pictures speak for
+// themselves"; the identity rollout's rule 7). The plate used to print the
+// editor's caption, "The series slide" or the post title under the print. The
+// alt text stays on the <img> for screen readers, and is dropped only when it
+// merely repeats the title the reader has just met in the h1.
+const coverAlt = clean((cover as { alt?: string } | null)?.alt);
+const plateAlt =
+  coverAlt && coverAlt.toLowerCase() !== clean(entry.title).toLowerCase()
+    ? ((cover as { alt?: string }).alt ?? '')
+    : '';
+const hasPlate = !!cover && !coverIsPhoto;
+// A slide carries its own lettering, so it is never cropped to fit the door:
+// the frame is the slide's own proportion plus the door's head (the top 23%
+// of the arch, 30 of the mask's 130 units), the slide sits at the foot at its
+// full width, and the head above it is the indigo band (see .p2-plate).
+const plateRatio = coverDims
+  ? `${coverDims.width} / ${Math.round((coverDims.height * 130) / 100)}`
+  : '100 / 112';
+const titleIsLong = clean(entry.title).length > 34;
+
+// Tags, as text links at the foot. Each is a built page (/blog/tag/<slug>/),
+// with the same slugify() the tag route builds its paths with.
+const tagLinks = (((entry as { tags?: string[] }).tags ?? []) as string[])
+  .map((t) => clean(t).trim())
+  .filter(Boolean)
+  .map((label) => ({ label, slug: slugify(label) }))
+  .filter((t) => t.slug);
+
+// THE PRINTED FOOT (2026-09-24, feat/print-motion). One line under the body
+// on paper only: the church's name, its street address and this post's own
+// address. All three are derived (site.name, the Site settings address the
+// footer prints, and the canonical URL BaseLayout builds the same way), never
+// typed, so a printed bulletin always says where it came from.
+const addressLine = clean(typeof siteSettings?.address === 'string' ? siteSettings.address : '')
+  .split('\n')
+  .map((l) => l.trim())
+  .filter(Boolean)
+  .join(', ');
+const postUrl = decodeURI(new URL(`/post/${slug}`, site.url).toString());
+const printFoot = [site.name, addressLine, postUrl].filter(Boolean);
+
+// On paper, every picture in the body, and the reading's passage open. The
+// script is held here as a string, verbatim, and written with set:html: an
+// is:inline script is printed exactly as its source is indented, and this
+// one moved out of the page (inside BaseLayout, two spaces deeper) into this
+// component, so its source indentation is kept in the string to leave every
+// live post byte-identical (npm run parity compare).
+const PRINT_SCRIPT = `
+    // On paper, every picture in the body, and the reading's passage open (the
+    // CSS opens it where ::details-content is known; this covers the rest, and
+    // closes it again after). The figures are loading="lazy", and a
+    // browser prints a lazy image it has not fetched as an empty box. Printing
+    // flips them to eager first. Bound once for the session (the router keeps
+    // \`window\` across post pages) and read at print time, so it always sees the
+    // page that is actually being printed.
+    if (!window.__postPrintBound) {
+      window.__postPrintBound = true;
+      window.addEventListener('beforeprint', function () {
+        var imgs = document.querySelectorAll('.p2 img[loading="lazy"]');
+        for (var i = 0; i < imgs.length; i++) imgs[i].loading = 'eager';
+        var shut = document.querySelectorAll('.p2 details.pp-passage:not([open])');
+        for (var j = 0; j < shut.length; j++) {
+          shut[j].open = true;
+          shut[j].setAttribute('data-print-opened', '');
+        }
+      });
+      window.addEventListener('afterprint', function () {
+        var opened = document.querySelectorAll('.p2 details[data-print-opened]');
+        for (var k = 0; k < opened.length; k++) {
+          opened[k].open = false;
+          opened[k].removeAttribute('data-print-opened');
+        }
+      });
+    }
+  `;
+---
+
+{/* 2px gold hairline tracking scroll through the article. */}
+<ReadingProgress />
+
+{
+  /* data-pagefind-body: the site search indexes the article (the masthead,
+      its facts and the body) and nothing outside it, so the foot's series
+      rows and doors never turn up as a match for another post's words. */
+}
+<article class="p2" data-pagefind-body>
+  {/* ------- 1. Masthead: title left, the order right ------------------- */}
+  <header class="mx-auto max-w-content px-gutter">
+    <div class="p2-grid p2-mast">
+      <div class="p2-mast-l">
+        <p class="p2-cat font-ui text-ui text-gold-ink" data-pagefind-ignore>
+          <a href={isPreview || !categoryHref ? '/blog' : categoryHref}>{eyebrowLabel}</a>
+        </p>
+        <h1 class:list={['p2-title', { 'p2-title-long': titleIsLong }]}>{entry.title}</h1>
+        {showLede && <p class="p2-lede">{entry.excerpt}</p>}
+      </div>
+
+      <div class="p2-mast-r">
+        {
+          facts.length > 0 && (
+            <Fragment>
+              <p class="p2-order-h font-ui text-ui text-gold-ink" data-pagefind-ignore>
+                {isPreview ? 'This Sunday’s order' : 'About this post'}
+              </p>
+              <dl class="p2-facts">
+                {facts.map((f) => (
+                  <div>
+                    <dt class="font-ui text-ui">{f.label}</dt>
+                    <dd class:list={{ 'p2-big': f.big }} data-pagefind-meta={f.meta}>
+                      {f.href ? (
+                        <a href={f.href}>{f.value}</a>
+                      ) : f.datetime ? (
+                        <time datetime={f.datetime} class="oldstyle">
+                          {f.value}
+                        </time>
+                      ) : (
+                        f.value
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </Fragment>
+          )
+        }
+        {/* Listen, Share and (a preview) Add to calendar: one quiet row. */}
+        <PostTools
+          icsHref={icsHref}
+          sundayIso={sunday ? isoDay(sunday) : undefined}
+          sundayLabel={sunday ? formatDay(sunday, { month: 'long', day: 'numeric' }) : undefined}
+        />
+      </div>
+    </div>
+  </header>
+
+  {/* ------- 2. The ground: a photograph cover, full bleed ------------- */}
+  {
+    cover && coverIsPhoto && (
+      <div class="mx-auto max-w-content px-gutter">
+        <ArchFrame
+          image={cover}
+          shape="door"
+          width={2400}
+          sizes="(min-width: 1320px) 1240px, 94vw"
+          alt={plateAlt}
+          loading="eager"
+          reveal={false}
+          class="p2-ground"
+          editAttr={coverEditAttr}
+          style="--arch-ratio: 100 / 42;"
+        />
+      </div>
+    )
+  }
+
+  {/* ------- 3. Body left, plate and contents right --------------------- */}
+  <div class="mx-auto max-w-content px-gutter">
+    <div class="p2-grid p2-main">
+      <div class="p2-body" data-sanity={bodyEditAttr}>
+        {
+          /* Static HTML, built once: no JavaScript ships for the body. Only
+              a before/after slider, if a post ever has one, hydrates
+              (JournalBody.astro, 2026-09-24). */
+        }
+        <JournalBody value={body} class="post-prose" />
+
+        {
+          entry.relatedProject?.slug?.current && (
+            <aside class="p2-related">
+              <p class="font-ui text-ui text-gold-ink">Related project</p>
+              <a href={`/portfolio/${entry.relatedProject.slug.current}`}>
+                {entry.relatedProject.title}
+              </a>
+            </aside>
+          )
+        }
+
+        {
+          /* Tags, at the FOOT of the article, as text links: here a tag
+              means "more like the thing you just read", a question a reader
+              actually has once they have read it. */
+        }
+        {
+          tagLinks.length > 0 && (
+            <nav class="p2-tags" aria-label="Tags on this post" data-pagefind-ignore>
+              <span class="font-ui text-ui text-gold-ink">Tagged</span>
+              {tagLinks.map((tag, i) => (
+                <>
+                  <a href={`/blog/tag/${tag.slug}/`}>{tag.label}</a>
+                  {i < tagLinks.length - 1 && ', '}
+                </>
+              ))}
+            </nav>
+          )
+        }
+      </div>
+
+      {
+        (hasPlate || hasContents) && (
+          <aside class="p2-side" aria-label="About this post" data-pagefind-ignore>
+            <div class="p2-side-in">
+              {hasPlate && cover && (
+                <ArchFrame
+                  image={cover}
+                  shape="door"
+                  width={900}
+                  sizes="(min-width: 1024px) 28vw, 300px"
+                  alt={plateAlt}
+                  loading="eager"
+                  reveal={false}
+                  class="p2-plate"
+                  editAttr={coverEditAttr}
+                  style={`--arch-ratio: ${plateRatio};`}
+                />
+              )}
+              {hasContents && (
+                <nav class="p2-contents" aria-label="In this post">
+                  <span class="font-ui text-ui text-gold-ink">In this post</span>
+                  <ol>
+                    {headings.map((h, i) => (
+                      <li>
+                        <a href={`#${h.id}`}>
+                          <span class="p2-n">{String(i + 1).padStart(2, '0')}</span>
+                          <span>{h.text}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
+              )}
+            </div>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+</article>
+
+{
+  /* On paper only (display: none on screen, so no reader and no screen
+      reader meets it twice): where this bulletin came from. */
+}
+<p class="p2-print-foot" data-pagefind-ignore>
+  {printFoot.map((part, i) => (i === 0 ? part : <> · {part}</>))}
+</p>
+
+{
+  /* ------- 4. More from this series ---------------------------------------
+      The three posts sharing the most TAGS with this one (seriesByTag,
+      unchanged). It renders only when something really does share a tag:
+      nothing is better than a claim that is not true. A preview's row says
+      its Sunday and its reading, which is what a reader scans for. */
+}
+{
+  (series.length > 0 || doors.before || doors.after) && (
+    <section
+      class="p2-foot bg-band-taupe text-band-ink"
+      aria-labelledby={series.length > 0 ? 'post-series-heading' : undefined}
+      aria-label={series.length > 0 ? undefined : 'More posts'}
+    >
+      <div class="mx-auto max-w-content px-gutter py-section-lg">
+        {series.length > 0 && (
+          <Fragment>
+            <div class="mb-[clamp(36px,4vw,60px)] flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+              <h2 id="post-series-heading" class:list={[H2_DISPLAY, 'text-band-indigo']}>
+                More from this series
+              </h2>
+              <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
+            </div>
+            <ol class="m-0 list-none border-t border-band-brown/40 p-0">
+              {series.map((item) => (
+                <PostRow
+                  href={`/post/${item.slug}`}
+                  title={item.title}
+                  dateLabel={item.date}
+                  datetime={item.datetime || undefined}
+                  image={item.cover}
+                  excerpt={item.excerpt}
+                  byline={item.meta}
+                  tone="taupe"
+                />
+              ))}
+            </ol>
+          </Fragment>
+        )}
+
+        {/* The doors. A preview's are the Sunday before and after, among
+              previews; any other post's are Older / Newer by date
+              (src/lib/post-neighbours.ts). */}
+        {(doors.before || doors.after) && (
+          <nav class="p2-doors" aria-label="Older and newer posts">
+            {doors.before ? (
+              <a href={`/post/${doors.before.slug}`}>
+                <span class="p2-door-l font-ui text-ui">&larr; {doors.before.label}</span>
+                <span class="p2-door-t">{doors.before.title}</span>
+                {doors.before.sub && <span class="p2-door-s">{doors.before.sub}</span>}
+              </a>
+            ) : (
+              <span />
+            )}
+            {doors.after ? (
+              <a href={`/post/${doors.after.slug}`}>
+                <span class="p2-door-l font-ui text-ui">{doors.after.label} &rarr;</span>
+                <span class="p2-door-t">{doors.after.title}</span>
+                {doors.after.sub && <span class="p2-door-s">{doors.after.sub}</span>}
+              </a>
+            ) : (
+              <span />
+            )}
+          </nav>
+        )}
+        {series.length === 0 && (
+          <div class="mt-10">
+            <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+{
+  /* Sticky contextual CTA: appears past 50% scroll on long posts. Label is
+      Sanity-editable on journalPage; clearing the field hides the chip. */
+}
+{
+  journalPage?.stickyCtaLabel !== '' && (
+    <StickyCTAChip
+      client:idle
+      label={journalPage?.stickyCtaLabel ?? 'Got a question?'}
+      href="/contact"
+    />
+  )
+}
+
+<script is:inline set:html={PRINT_SCRIPT} />
+
+<style is:global>
+  /* The P2 Bulletin post page and its reading styles. PAGE-SCOPED on purpose:
+     this block ships only with /post/* pages, while a Tailwind utility added
+     for the same job would land in the one global stylesheet every page
+     inlines, and the journal pass must leave every other page byte-identical.
+     Global (not Astro-scoped) because the body is rendered by a React island
+     whose markup carries no Astro scope attribute. Tokens only: every colour
+     is a theme variable, so light and dark both hold. */
+
+  /* ---- The grid ----------------------------------------------------------- */
+  .p2-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2.5vw, 40px);
+  }
+  .p2-mast {
+    padding-top: var(--spacing-section-lg);
+    padding-bottom: clamp(40px, 5vw, 72px);
+    row-gap: 40px;
+  }
+  .p2-mast-l,
+  .p2-body {
+    grid-column: 1 / 8;
+    min-width: 0;
+  }
+  .p2-mast-r {
+    grid-column: 9 / 13;
+    align-self: end;
+  }
+  .p2-side {
+    grid-column: 9 / 13;
+  }
+  .p2-side-in {
+    position: sticky;
+    top: calc(var(--header-h, 88px) + 28px);
+  }
+  .p2-main {
+    padding-bottom: clamp(40px, 5vw, 64px);
+  }
+
+  /* ---- Masthead ----------------------------------------------------------- */
+  .p2-cat a {
+    text-decoration: none;
+  }
+  .p2-cat a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-underline-offset: 0.18em;
+  }
+  .p2-title {
+    margin-top: 20px;
+    max-width: 18ch;
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+    color: var(--color-indigo);
+  }
+  .p2-title-long {
+    font-size: clamp(2.1rem, 1rem + 4.2vw, 4.6rem);
+    max-width: 22ch;
+  }
+  .p2-lede {
+    margin-top: 24px;
+    max-width: 34em;
+    font-family: var(--font-body);
+    font-size: var(--text-lede);
+    font-style: italic;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--color-indigo) 88%, transparent);
+  }
+  .p2-order-h {
+    margin-bottom: 10px;
+  }
+  .p2-facts {
+    margin: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+  }
+  .p2-facts > div {
+    display: grid;
+    grid-template-columns: 7.5em minmax(0, 1fr);
+    gap: 12px;
+    align-items: baseline;
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    padding: 9px 0 10px;
+  }
+  .p2-facts > div:first-child {
+    border-top-color: color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
+  }
+  .p2-facts dt {
+    color: var(--color-brown-ink);
+  }
+  .p2-facts dd {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    color: var(--color-indigo);
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+  .p2-facts dd.p2-big {
+    font-size: 1.25rem;
+  }
+  .p2 a {
+    color: inherit;
+  }
+  .p2-facts dd a,
+  .p2-tags a,
+  .p2-related a {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    transition: color 0.2s;
+  }
+  .p2-facts dd a:hover,
+  .p2-tags a:hover,
+  .p2-related a:hover {
+    color: var(--color-gold-ink);
+  }
+
+  /* ---- The tools: Listen, Share, Add to calendar (2026-09-24) -------------
+     One row under the order, in the furniture face, each a 44px target and
+     divided by short gold hairlines. A tool the browser cannot use stays
+     `hidden` (PostTools.astro), and a hidden tool draws no divider. */
+  .p2-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    /* The first tool's text on the column's edge: every tool pads 14px each
+       side, and the row steps back by one padding. */
+    margin: 6px 0 0 -14px;
+  }
+  .p2-tool {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 0;
+    background: none;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-indigo);
+    cursor: pointer;
+  }
+  .p2-tool:not([hidden]) ~ .p2-tool:not([hidden])::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 1px;
+    height: 14px;
+    margin-top: -7px;
+    background: var(--color-gold);
+  }
+  .p2-tool:hover,
+  .p2-tool[aria-pressed='true'] {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+  }
+  .p2-tool[aria-pressed='true'] {
+    color: var(--color-gold-ink);
+  }
+  .p2-tool:focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 2px;
+  }
+  .p2-tool-status {
+    padding-left: 14px;
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    color: var(--color-brown-ink);
+  }
+  .p2-tool-status:empty {
+    display: none;
+  }
+
+  /* ---- The ground: a photograph cover as a wide door arch ---------------
+     Until the identity pass it bled to the viewport edge; it now stands in
+     the measure as a door (ArchFrame, shape="door"), its mould in gold, so
+     every cover on the journal is framed the same way. */
+  .p2-ground {
+    margin: 9px 9px clamp(48px, 6vw, 80px);
+  }
+
+  /* ---- The plate (a slide cover) and the contents -------------------------- */
+  /* The slide cover, in a door arch 9px inside the column so the gold mould
+     has room. No caption. */
+  .p2-plate {
+    margin: 9px 9px 0;
+  }
+  .p2-plate .arch {
+    background: var(--color-band-indigo);
+  }
+  .p2-plate .arch img {
+    object-fit: contain;
+    object-position: 50% 100% !important;
+  }
+  .p2-contents {
+    margin-top: 36px;
+  }
+  .p2-contents > span {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .p2-contents ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+  }
+  .p2-contents li {
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+  }
+  .p2-contents a {
+    display: grid;
+    grid-template-columns: 2.2em minmax(0, 1fr);
+    padding: 8px 0 9px;
+    font-family: var(--font-body);
+    font-size: 0.9875rem;
+    line-height: 1.35;
+    text-decoration: none;
+  }
+  .p2-contents .p2-n {
+    padding-top: 2px;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    letter-spacing: 0.1em;
+    color: var(--color-gold-ink);
+  }
+  .p2-contents a:hover span:last-child {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+  }
+
+  /* ---- Foot of the article -------------------------------------------------- */
+  .p2-tags,
+  .p2-related {
+    margin-top: 56px;
+    padding-top: 16px;
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+    color: var(--color-indigo);
+  }
+  .p2-tags > span:first-child {
+    margin-right: 10px;
+  }
+  .p2-tags a {
+    text-decoration-color: color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
+  }
+  .p2-tags a:hover {
+    text-decoration-color: var(--color-gold);
+  }
+  .p2-related > a {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+  }
+
+  /* The doors, on the taupe foot band: band inks, which hold in both themes. */
+  .p2-doors {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(16px, 2.5vw, 40px);
+    margin-top: clamp(48px, 6vw, 72px);
+    border-top: 2px solid var(--color-band-brown);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-band-brown) 40%, transparent);
+  }
+  .p2-foot .p2-doors:first-child {
+    margin-top: 0;
+  }
+  .p2-doors a {
+    display: block;
+    min-width: 0;
+    padding: 22px 0 26px;
+    text-decoration: none;
+    color: var(--color-band-ink);
+  }
+  .p2-doors a + a,
+  .p2-doors span + a {
+    text-align: right;
+    border-left: 1px solid color-mix(in srgb, var(--color-band-brown) 40%, transparent);
+    padding-left: clamp(16px, 2.5vw, 40px);
+  }
+  .p2-door-l {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--color-band-brown);
+  }
+  .p2-door-t {
+    display: inline;
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+    line-height: 1.2;
+    background: linear-gradient(var(--color-band-indigo), var(--color-band-indigo)) 0 100% / 0 2px
+      no-repeat;
+    transition: background-size 0.3s;
+  }
+  .p2-door-s {
+    display: block;
+    margin-top: 8px;
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-band-brown);
+  }
+  .p2-doors a:hover .p2-door-t,
+  .p2-doors a:focus-visible .p2-door-t {
+    background-size: 100% 2px;
+  }
+  .p2-doors a:focus-visible {
+    outline: 2px solid var(--color-band-ink);
+    outline-offset: 4px;
+  }
+
+  /* ---- The reading (the body, rendered by JournalBody) --------------------- */
+  .post-prose {
+    max-width: 62ch;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.72;
+    color: var(--color-indigo);
+  }
+  /* :where() keeps the spacing rule at zero specificity, so the element rules
+     below (headings, figures, the lection) set their own space above. */
+  :where(.post-prose) > :where(* + *) {
+    margin-top: 1em;
+  }
+  .post-prose p,
+  .post-prose ul,
+  .post-prose ol,
+  .post-prose figure,
+  .post-prose blockquote {
+    margin-bottom: 0;
+  }
+  .post-prose a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+  .post-prose a:hover {
+    color: var(--color-gold-ink);
+  }
+  /* Castoro has one weight: bold is a gold highlighter band, never faux bold. */
+  .post-prose strong {
+    font-weight: inherit;
+    box-shadow: inset 0 -0.34em 0 color-mix(in srgb, var(--color-gold) 20%, transparent);
+  }
+  .post-prose .pp-lead {
+    font-size: var(--text-lede);
+    font-style: italic;
+    line-height: 1.35;
+  }
+
+  /* One section head for h2, h3 and h4. */
+  .post-prose .pp-sh {
+    margin-top: 2.1em;
+    padding-top: 16px;
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+    font-weight: 400;
+    line-height: 1.15;
+    scroll-margin-top: calc(var(--header-h, 88px) + 24px);
+  }
+  .post-prose .pp-sh + * {
+    margin-top: 0.75em;
+  }
+
+  /* A quotation: italic at 1.125rem, the gold rule hung in the gutter. */
+  .post-prose blockquote {
+    position: relative;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    font-style: italic;
+    font-size: 1.125rem;
+    line-height: 1.62;
+  }
+  .post-prose blockquote::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * min(var(--spacing-gutter), 28px) + 4px);
+    top: 0.35em;
+    bottom: 0.35em;
+    width: 1px;
+    background: var(--color-gold);
+  }
+  .post-prose blockquote em {
+    font-style: normal;
+  }
+
+  /* Points and the Q and A. */
+  .post-prose .pp-point {
+    margin-top: 1.8em;
+    font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+    line-height: 1.3;
+  }
+  .post-prose .pp-pn {
+    display: block;
+    margin-bottom: 6px;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    letter-spacing: 0.14em;
+    color: var(--color-gold-ink);
+  }
+  .post-prose .pp-point + * {
+    margin-top: 0.6em;
+  }
+  .post-prose .pp-qa {
+    margin-top: 1.1em;
+    padding-top: 12px;
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+  }
+  .post-prose .pp-q {
+    font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+    line-height: 1.3;
+  }
+  .post-prose .pp-qa p + p {
+    margin-top: 0.4em;
+  }
+
+  /* Lists: a 12px gold rule for a bullet, an old-style gold numeral for a number. */
+  .post-prose ul,
+  .post-prose ol {
+    list-style: none;
+    padding: 0;
+  }
+  .post-prose ul > li {
+    position: relative;
+    padding-left: 1.6em;
+  }
+  .post-prose ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.86em;
+    width: 12px;
+    height: 1px;
+    background: var(--color-gold);
+  }
+  .post-prose ol {
+    counter-reset: pp-n;
+  }
+  .post-prose ol > li {
+    position: relative;
+    padding-left: 1.6em;
+    counter-increment: pp-n;
+  }
+  .post-prose ol > li::before {
+    content: counter(pp-n);
+    position: absolute;
+    left: 0;
+    font-variant-numeric: oldstyle-nums;
+    color: var(--color-gold-ink);
+  }
+  .post-prose li + li {
+    margin-top: 0.4em;
+  }
+  .post-prose li > ul,
+  .post-prose li > ol {
+    margin-top: 0.4em;
+  }
+
+  /* Figures: landscape in the measure, portrait capped at 360px. */
+  .post-prose .pp-fig {
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
+  .post-prose .pp-portrait {
+    max-width: min(100%, 360px);
+  }
+  .pp-cap {
+    margin-top: 14px;
+    max-width: 46ch;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--color-brown-ink);
+    overflow-wrap: break-word;
+  }
+  .pp-tick {
+    display: block;
+    width: 28px;
+    height: 1px;
+    margin-bottom: 9px;
+    background: var(--color-gold);
+  }
+
+  /* Tables (the two middot lists). */
+  .post-prose .pp-table {
+    margin-top: 1.6em;
+    margin-bottom: 1.6em;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .post-prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    line-height: 1.4;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+  }
+  .post-prose th {
+    padding: 0 12px 8px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-align: left;
+    text-transform: uppercase;
+    color: var(--color-brown-ink);
+  }
+  .post-prose td {
+    padding: 9px 12px 10px 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+    vertical-align: baseline;
+  }
+  .post-prose td.pp-num {
+    width: 2.4em;
+    white-space: nowrap;
+    font-variant-numeric: oldstyle-nums tabular-nums;
+    color: var(--color-gold-ink);
+  }
+  .post-prose td.pp-last {
+    font-style: italic;
+    color: var(--color-brown-ink);
+  }
+
+  /* The lection: a preview's reading, between two rules. */
+  .post-prose .pp-lection {
+    margin-bottom: 2em;
+    padding: 18px 0 20px;
+    border-top: 1px solid color-mix(in srgb, var(--color-brown-ink) 60%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brown-ink) 35%, transparent);
+  }
+  .post-prose .pp-lection .pp-lection-h {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    font-style: normal;
+    color: var(--color-gold-ink);
+  }
+  .post-prose .pp-lection p,
+  .post-prose .pp-lection blockquote {
+    margin: 0;
+    font-size: 1.1875rem;
+    font-style: italic;
+    line-height: 1.55;
+  }
+  .post-prose .pp-lection blockquote::before {
+    display: none;
+  }
+  .post-prose .pp-lection p + p,
+  .post-prose .pp-lection p + blockquote,
+  .post-prose .pp-lection blockquote + p {
+    margin-top: 0.7em;
+  }
+  .post-prose .pp-lection strong {
+    box-shadow: none;
+  }
+
+  /* The passage itself (2026-09-24, feat/scripture-text): a disclosure under
+     the church's quotation, "Read Romans 13:11-14" in the furniture face, the
+     text in the reading face (roman, so it never reads as the church's own
+     italic quotation), verse numbers as small gold superscripts, and the
+     translation's credit under it. */
+  .post-prose .pp-passage {
+    margin-top: 14px;
+  }
+  .post-prose .pp-lection-h + .pp-passage {
+    margin-top: 0;
+  }
+  .post-prose .pp-passage-s {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui);
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-indigo);
+  }
+  .post-prose .pp-passage-s::-webkit-details-marker {
+    display: none;
+  }
+  .post-prose .pp-passage-s::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    margin: 0 3px 2px 1px;
+    border-right: 1.5px solid var(--color-gold-ink);
+    border-bottom: 1.5px solid var(--color-gold-ink);
+    transform: rotate(-45deg);
+    transition: transform 0.2s;
+  }
+  .post-prose .pp-passage[open] > .pp-passage-s::before {
+    transform: rotate(45deg);
+  }
+  .post-prose .pp-passage-s:hover span {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold);
+    text-underline-offset: 0.35em;
+  }
+  .post-prose .pp-passage-s:focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 2px;
+  }
+  .post-prose .pp-lection .pp-passage-t p {
+    font-size: 1.0625rem;
+    font-style: normal;
+    line-height: 1.7;
+  }
+  .post-prose .pp-passage-t {
+    padding: 4px 0 2px;
+  }
+  .post-prose .pp-v {
+    margin-right: 0.22em;
+    font-family: var(--font-ui);
+    font-size: 0.66em;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    line-height: 0;
+    color: var(--color-gold-ink);
+  }
+  .post-prose .pp-lection .pp-passage-c {
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+    color: var(--color-brown-ink);
+  }
+
+  /* ---- Tablet and phone ------------------------------------------------------
+     One column. The order stays under the title; the plate (at most 300px)
+     comes up above the body; the contents list is dropped. */
+  @media (max-width: 1023px) {
+    .p2-mast-l,
+    .p2-mast-r,
+    .p2-body,
+    .p2-side {
+      grid-column: 1 / -1;
+    }
+    .p2-side {
+      order: -1;
+    }
+    .p2-side-in {
+      position: static;
+    }
+    .p2-contents {
+      display: none;
+    }
+    .p2-plate {
+      max-width: 260px;
+      margin-bottom: 44px;
+    }
+  }
+  @media (max-width: 640px) {
+    .p2-doors {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .p2-doors a + a,
+    .p2-doors span + a {
+      text-align: left;
+      border-left: 0;
+      padding-left: 0;
+      border-top: 1px solid color-mix(in srgb, var(--color-band-brown) 40%, transparent);
+    }
+    .post-prose blockquote::before {
+      left: -12px;
+    }
+  }
+
+  /* ---- On paper: the post prints as a bulletin (2026-09-24) ----------------
+     US Letter. The masthead (title, the lede, the order as a ruled list), a
+     photograph cover (a slide is lettering and stays on screen), the body in
+     the reading face at a print measure, and one derived line at the foot.
+     Everything that only makes sense on a screen goes: the site's header,
+     footer and menu, the reading bar, the sticky chip, back-to-top, the "In
+     this post" list, the tags, More from this series and the doors, and the
+     search dialog. Black ink on white; the brand gold survives only as thin
+     rules. Here rather than in globals.css so it ships with /post/* alone
+     (CLAUDE.md rule 20: the global sheet is the chunk every page inlines).
+     The generic print block in globals.css still applies underneath. */
+  .p2-print-foot {
+    display: none;
+  }
+  @media print {
+    @page {
+      size: letter;
+      margin: 0.7in 0.8in 0.75in;
+      @bottom-right {
+        content: counter(page) ' of ' counter(pages);
+        font-family: var(--font-ui);
+        font-size: 8pt;
+        letter-spacing: 0.08em;
+        color: #555;
+      }
+    }
+    body::after,
+    .p2-foot,
+    .p2-side,
+    .p2-tools,
+    .p2-tags,
+    .p2-related,
+    main > astro-island,
+    dialog {
+      display: none !important;
+    }
+    .p2,
+    .p2 *,
+    .p2-print-foot {
+      color: #000 !important;
+    }
+    .p2 .max-w-content {
+      max-width: none;
+      padding: 0;
+    }
+    .p2-grid {
+      display: block;
+    }
+    .p2-mast {
+      padding: 0 0 18pt;
+    }
+    .p2-cat {
+      font-size: 8.5pt;
+    }
+    .p2-title,
+    .p2-title-long {
+      margin-top: 8pt;
+      max-width: none;
+      font-size: 26pt;
+      line-height: 1.05;
+    }
+    .p2-lede {
+      margin-top: 10pt;
+      font-size: 13pt;
+    }
+    .p2-mast-r {
+      margin-top: 16pt;
+      break-inside: avoid;
+    }
+    .p2-order-h {
+      margin-bottom: 4pt;
+      font-size: 8.5pt;
+    }
+    .p2-facts,
+    .p2-facts > div,
+    .p2-facts > div:first-child {
+      border-color: var(--color-gold);
+    }
+    .p2-facts > div {
+      grid-template-columns: 7em minmax(0, 1fr);
+      padding: 4pt 0 5pt;
+    }
+    .p2-facts dt {
+      font-size: 8.5pt;
+      color: #444 !important;
+    }
+    .p2-facts dd,
+    .p2-facts dd.p2-big {
+      font-size: 11pt;
+    }
+    .p2 a {
+      text-decoration: none;
+    }
+    /* A photograph cover, kept whole and short enough to leave the body room. */
+    .p2-ground {
+      margin: 0 0 18pt;
+      max-width: 5in;
+      break-inside: avoid;
+    }
+    /* The door arch is a CSS mask, which a print without background graphics
+       drops while keeping the gold mould, so on paper the photograph is a
+       plain rectangle and the mould goes. */
+    .p2-ground .arch {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .p2-ground .arch-mould {
+      display: none;
+    }
+    /* The body: the reading face at a print measure. */
+    .p2-body {
+      max-width: none;
+    }
+    .post-prose {
+      max-width: 5.9in;
+      font-size: 11pt;
+      line-height: 1.5;
+      orphans: 3;
+      widows: 3;
+    }
+    .post-prose a {
+      text-decoration: underline;
+      text-decoration-color: var(--color-gold);
+      text-decoration-thickness: 0.5pt;
+    }
+    /* The external address after a link, never after one of the site's own. */
+    .p2 a[href^='http']::after {
+      content: ' (' attr(href) ')';
+      font-family: var(--font-ui);
+      font-size: 8pt;
+      letter-spacing: 0.02em;
+      color: #444;
+      overflow-wrap: anywhere;
+    }
+    .post-prose strong {
+      box-shadow: none;
+      text-decoration: underline;
+      text-decoration-color: var(--color-gold);
+      text-decoration-thickness: 0.5pt;
+      text-underline-offset: 0.2em;
+    }
+    .post-prose .pp-sh {
+      margin-top: 1.6em;
+      padding-top: 6pt;
+      border-top: 0.5pt solid var(--color-gold);
+      font-size: 14pt;
+      break-after: avoid;
+      break-inside: avoid;
+    }
+    .post-prose .pp-point,
+    .post-prose .pp-q {
+      font-size: 12.5pt;
+      break-after: avoid;
+    }
+    .post-prose .pp-qa,
+    .post-prose .pp-lection,
+    .post-prose blockquote,
+    .post-prose li,
+    .post-prose tr {
+      break-inside: avoid;
+    }
+    .post-prose .pp-qa,
+    .post-prose .pp-lection,
+    .post-prose table,
+    .post-prose th,
+    .post-prose td {
+      border-color: var(--color-gold);
+    }
+    /* A background does not print by default, so the gold rules drawn as
+       backgrounds on screen (the bullet, the caption tick) become borders. */
+    .post-prose ul > li::before,
+    .pp-tick {
+      height: 0;
+      background: none;
+      border-top: 1px solid var(--color-gold);
+    }
+    .post-prose .pp-lection p,
+    .post-prose .pp-lection blockquote {
+      font-size: 12pt;
+    }
+    /* The passage prints open (the paper bulletin carries the whole reading)
+       and without its "Read ..." line, which the reading's own header already
+       names. A long passage may cross a page, so its block may break. */
+    .post-prose .pp-lection:has(.pp-passage) {
+      break-inside: auto;
+    }
+    .post-prose .pp-passage-s {
+      display: none;
+    }
+    .post-prose .pp-lection .pp-passage-t p {
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+    .post-prose .pp-lection .pp-passage-c {
+      font-size: 8pt;
+      color: #444 !important;
+    }
+    .post-prose .pp-lection-h,
+    .post-prose .pp-pn,
+    .post-prose th {
+      font-size: 8pt;
+    }
+    .post-prose .pp-table {
+      overflow: visible;
+    }
+    .post-prose thead {
+      display: table-header-group;
+    }
+    .post-prose table {
+      font-size: 10pt;
+    }
+    .post-prose .pp-fig {
+      margin: 14pt 0;
+      break-inside: avoid;
+    }
+    .post-prose img {
+      max-height: 3in;
+      width: auto;
+      max-width: 100%;
+    }
+    .pp-cap {
+      margin-top: 6pt;
+      font-size: 9pt;
+      color: #444 !important;
+    }
+    .p2-print-foot {
+      display: block;
+      margin-top: 24pt;
+      padding-top: 6pt;
+      border-top: 0.5pt solid var(--color-gold);
+      font-family: var(--font-ui);
+      font-size: 8.5pt;
+      letter-spacing: 0.02em;
+      break-inside: avoid;
+    }
+  }
+
+  /* On paper the passage is open even where no script ran to open it: the
+     details' content box is made visible by CSS. Its own rule, so a browser
+     that does not know ::details-content drops only this rule (the
+     beforeprint script opens it there instead). */
+  @media print {
+    .post-prose .pp-passage::details-content {
+      content-visibility: visible;
+      display: block;
+    }
+  }
+</style>

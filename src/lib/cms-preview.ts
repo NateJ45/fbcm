@@ -105,14 +105,25 @@ export function getPreviewClient(draftMode: boolean): SanityClient {
   });
 }
 
-/** Run a GROQ query with the draft-aware preview client. */
+/**
+ * Run a GROQ query with the draft-aware preview client.
+ *
+ * `options.stega: false` reads in the same perspective with NO stega: for
+ * data a page derives from rather than displays (the post preview's body,
+ * which the reading pass matches and measures, and the lists it compares by
+ * id and tag). Everything else leaves it out and gets click-to-edit.
+ */
 export async function previewFetch<T>(
   draftMode: boolean,
   query: string,
   params: Record<string, unknown> = {},
+  options: { stega?: false } = {},
 ): Promise<T> {
   const client = getPreviewClient(draftMode);
-  const result = await client.fetch<T>(query, params);
+  const result =
+    options.stega === false
+      ? await client.fetch<T>(query, params, { stega: false })
+      : await client.fetch<T>(query, params);
   if (!hasPlaceholder(result)) return result;
   // Site settings placeholders ({time}, {address}...), filled the same way the
   // build fills them (src/lib/settings-placeholders.ts), so the preview shows

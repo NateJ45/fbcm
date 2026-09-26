@@ -1,0 +1,121 @@
+---
+// scaffold-file: journal
+/* ============================================================================
+   Post preview - one blog post, draft-aware, for the Studio Presentation tool
+   ============================================================================
+   Added 2026-09-26. Until then a post could only be seen in the design after
+   it was published: the Studio pointed a post at the Blog page with "Post
+   pages preview on the live site after publish", and /preview/post/<slug>
+   fell through to the catch-all route, which answered 404.
+
+   The post is drawn by src/components/blog/PostView.astro, the SAME component
+   the static route (src/pages/post/[slug].astro) draws it with, inside
+   PreviewLayout instead of BaseLayout. Everything the live page reads at build
+   time is read here per request with the draft client
+   (src/lib/cms-preview.ts), so an unpublished post, or an unpublished edit to
+   a published one, shows as it will look:
+
+   - the post's own fields (title, excerpt, author, cover, categories, tags)
+     with stega ON, so a click on the title or the lede opens that field;
+   - the post's body, every post in the list (for the doors and "More from
+     this series"), their opening blocks, Site settings and the Blog page, in
+     ONE query with stega OFF. The body is read by the reading pass
+     (src/lib/post-body.ts), which matches and measures its words, and the
+     list is compared by id and tag: stega's invisible markers would break
+     both, in the preview only (docs/agent/preview.md). The body and the cover
+     get a `data-sanity` attribute instead, through PostView's `edit` prop.
+
+   The scripture passages and the YouTube feed are the build's generated files
+   (src/data/*.generated.json), bundled into the Worker, exactly as the live
+   page reads them. A new post whose reading was never fetched shows the
+   reading without its passage until the next build, which is what the live
+   page would show too until then.
+
+   Preview route rules (docs/agent/preview.md): Cache-Control no-store,
+   noindex (PreviewLayout), fails closed with a 503 and no token, and a 404
+   naming the path when no post has that slug.
+   ============================================================================ */
+export const prerender = false;
+
+import { perspectiveCookieName } from '@sanity/preview-url-secret/constants';
+import PreviewLayout from '@/layouts/PreviewLayout.astro';
+import PostView from '@/components/blog/PostView.astro';
+import { previewFetch, previewConfig, previewUnconfiguredResponse } from '@/lib/cms-preview';
+import {
+  JOURNAL_BODY_PROJECTION,
+  JOURNAL_CARD_PROJECTION,
+  JOURNAL_ENTRY_FIELDS,
+  JOURNAL_HEADS_QUERY,
+  SITE_SETTINGS_PROJECTION,
+} from '@/lib/queries';
+import { clean, type BlogEntry } from '@/lib/blog-derive';
+import { postFeet, type PostHead } from '@/lib/post-foot';
+import type { SanityResult } from '@/lib/sanity';
+
+const config = previewConfig();
+if (!config.ok) {
+  return previewUnconfiguredResponse(config.missing);
+}
+
+const draftMode = Astro.cookies.has(perspectiveCookieName);
+
+// Never let a browser cache a preview page (see src/pages/preview/[...slug].astro).
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+const slug = (Astro.params.slug as string | undefined) || '';
+
+const [entry, rest] = await Promise.all([
+  // The post's own fields, stega on in draft mode.
+  previewFetch<SanityResult | null>(
+    draftMode,
+    `*[_type == "journalEntry" && slug.current == $slug][0]{${JOURNAL_ENTRY_FIELDS}}`,
+    { slug },
+  ),
+  // Everything the drawing derives from, stega off (see the header).
+  previewFetch<{
+    body: unknown[] | null;
+    all: BlogEntry[] | null;
+    heads: PostHead[] | null;
+    settings: SanityResult | null;
+    journalPage: { stickyCtaLabel?: string | null } | null;
+  }>(
+    draftMode,
+    `{
+      "body": *[_type == "journalEntry" && slug.current == $slug][0]{${JOURNAL_BODY_PROJECTION}}.body,
+      "all": *[_type == "journalEntry"] | order(publishedAt desc) ${JOURNAL_CARD_PROJECTION},
+      "heads": ${JOURNAL_HEADS_QUERY},
+      "settings": *[_type == "siteSettings"][0]${SITE_SETTINGS_PROJECTION},
+      "journalPage": *[_type == "journalPage"][0]{ stickyCtaLabel }
+    }`,
+    { slug },
+    { stega: false },
+  ),
+]);
+
+if (!entry) {
+  return new Response(
+    `No document found for "post/${slug}". Create it in the Studio, then reopen the preview.`,
+    { status: 404 },
+  );
+}
+
+const post = { ...entry, body: rest.body ?? [] };
+const all = rest.all ?? [];
+const foot = postFeet(all, rest.heads)(post as BlogEntry);
+
+// The id the overlay and /preview/live listen on. The draft perspective can
+// hand back the drafts. twin's id; strip it so the listen matches both.
+const pageId = String(entry._id).replace(/^drafts\./, '');
+const title = `${clean(entry.title) || slug} - Preview`;
+---
+
+<PreviewLayout {title} {draftMode} {pageId}>
+  <PostView
+    entry={post}
+    {slug}
+    siteSettings={rest.settings}
+    journalPage={rest.journalPage}
+    {foot}
+    edit={{ id: pageId, type: 'journalEntry' }}
+  />
+</PreviewLayout>
