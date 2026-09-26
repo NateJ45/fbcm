@@ -20,6 +20,16 @@ export function channelVideos(channelId: string | null | undefined): Promise<Fee
   if (!channelId || !/^UC[\w-]{22}$/.test(channelId)) return Promise.resolve([]);
   if (cache && cache.channel === channelId && Date.now() - cache.at < 600_000) return cache.videos;
   const videos = (async () => {
+    // The feed scripts/fetch-youtube-feed.mjs fetched before the build (the
+    // Data API, the public feed, or the last good copy; 2026-09-26), when it
+    // exists. Otherwise the old live fetch below.
+    const prefetched = Object.values(
+      import.meta.glob<{ xml: string | null }>('../data/youtube-feed.generated.json', {
+        eager: true,
+        import: 'default',
+      }),
+    )[0];
+    if (prefetched) return parseChannelFeed(prefetched.xml ?? '');
     try {
       const res = await fetch(FEED + channelId, { signal: AbortSignal.timeout(5000) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

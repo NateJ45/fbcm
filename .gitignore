@@ -105,3 +105,7 @@ src/data/scripture.generated.json
 # Each issue's covers and text are cached in node_modules/.cache/visitor/.
 public/visitor/
 src/data/visitor.generated.json
+
+# The church's YouTube uploads, fetched before every build by
+# scripts/fetch-youtube-feed.mjs (2026-09-26).
+src/data/youtube-feed.generated.json

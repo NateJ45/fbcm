@@ -98,12 +98,6 @@
 //    anchor phrase moves, so a band that would have seeded empty, or
 //    half-empty, fails the run instead of shipping a hole.
 
-/** A hotspot centred on (x, y), kept inside the frame so the Studio accepts it. */
-function hotspot(x, y) {
-  const size = Math.min(0.3, 2 * Math.min(x, 1 - x), 2 * Math.min(y, 1 - y));
-  return { _type: 'sanity.imageHotspot', x, y, width: size, height: size };
-}
-
 export default {
   id: 'page-staff',
   type: 'page',
@@ -172,13 +166,6 @@ export default {
     }
 
     // -- Photographs ---------------------------------------------------------
-    /** A manifest photo with a hotspot, throwing when the manifest lacks it. */
-    const photo = async (key, x, y, extra = {}) => {
-      const img = await images.image(key);
-      if (!img) throw new Error(`staff.mjs: no photo in the manifest for "${key}"`);
-      return { ...img, hotspot: hotspot(x, y), ...extra };
-    };
-
     // The hero's two lights (note 3). Kendall first, as the church lists her.
     // Since 2026-09-26 they are the pastors' own staffMember portraits (the
     // stained-glass pair Contact's office-hours band shows), read off the

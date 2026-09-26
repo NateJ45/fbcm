@@ -160,6 +160,15 @@ jobs:
           key: visitor-${{ runner.os }}-${{ github.run_id }}
           restore-keys: visitor-${{ runner.os }}-
 
+      # The last good YouTube feed (scripts/fetch-youtube-feed.mjs), used for
+      # up to 8 days when YouTube answers nothing. A few kilobytes.
+      - name: Restore the YouTube feed
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/youtube
+          key: youtube-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: youtube-${{ runner.os }}-
+
       - name: Generate Sanity types
         run: npm run typegen
 
@@ -191,6 +200,12 @@ jobs:
           # The NIV passages (src/lib/scripture-text.ts). Unset, every reading
           # uses the Berean Standard Bible; the build never fails for its absence.
           API_BIBLE_KEY: ${{ secrets.API_BIBLE_KEY }}
+          # The church's YouTube uploads (scripts/fetch-youtube-feed.mjs): the
+          # Data API first, since YouTube's public feed began failing on
+          # 2026-09-25 and took the hero's This Sunday line and the Last Sunday
+          # band with it. The same key as the Worker's live check. Unset, the
+          # step falls back to the public feed and then the cached copy.
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           # Analytics, and ONLY on this workflow. Do not "fix" the omission by
           # copying these into ci.yml, lighthouse.yml or deploy-staging.yml.
           # Lighthouse alone would file about eighteen localhost page views into

@@ -57,13 +57,28 @@ const [page, siteSettings] = await Promise.all([getHomePage(), getSiteSettings()
 // feed in tests/fixtures/, read at LAST_SUNDAY_NOW) or =unavailable (no feed).
 // No deploy sets either. LAST_SUNDAY_NOW is the build's "now" for the hero
 // line too, so both halves of the page are decided at one moment.
+//
+// Since 2026-09-26 the feed is fetched BEFORE the build by
+// scripts/fetch-youtube-feed.mjs (the Data API first, then the public feed's
+// two addresses, then the last good copy; YouTube's public feed began failing
+// on 2026-09-25 and every build lost the line and the band). This page reads
+// its output, and fetches for itself only when that file is missing (astro
+// build run on its own).
 const fixture = import.meta.env.LAST_SUNDAY_FIXTURE as string | undefined;
+const prefetched = Object.values(
+  import.meta.glob<{ xml: string | null }>('../data/youtube-feed.generated.json', {
+    eager: true,
+    import: 'default',
+  }),
+)[0];
 const feedXml: string | null =
   fixture === '1'
     ? (await import('../../tests/fixtures/youtube-feed.xml?raw')).default
     : fixture === 'unavailable'
       ? null
-      : await loadFeedXml(siteSettings);
+      : prefetched
+        ? prefetched.xml
+        : await loadFeedXml(siteSettings);
 const buildNow = import.meta.env.LAST_SUNDAY_NOW
   ? new Date(import.meta.env.LAST_SUNDAY_NOW as string)
   : new Date();

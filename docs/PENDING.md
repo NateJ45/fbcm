@@ -2299,3 +2299,13 @@ in `scripts/data/backups/journalEntry-bodies-2026-09-20.json`, and a second
   49/49 OK against a local build.
 
 - **Flaky test (2026-09-24): `tests/motion.spec.ts` "reduced motion > nothing on the home page is animating" on webkit-iphone.** Failed once in two full runs on different branches (the last-sunday branch and the footer merge), each time while other agents were building on the same machine; passes 5/5 alone (`--repeat-each=5`). The failure lists running animations on glyph paths, `img.graded` and `span.h-fit-in` under reduced motion, so a transition is likely being caught between the stylesheet applying and the reduced-motion rule winning on a slow WebKit start. Fix the test to wait for `document.getAnimations()` to settle (or `load` plus a frame) before asserting, or find the transition that starts before the media query applies. Do not delete the test: it guards rule "motion only under no-preference".
+
+## YouTube feed (2026-09-26)
+
+- [ ] #nathan **Add `YOUTUBE_API_KEY` as a GitHub Actions secret** (the same key the Worker's
+      live check uses). YouTube's public feed began failing on 2026-09-25 (the channel form 404
+      or 500 every try, the uploads-playlist form about two in five), and every build lost the
+      hero's This Sunday line and the Last Sunday band. `scripts/fetch-youtube-feed.mjs` now runs
+      before the build: the Data API first when the key is set, then both public feed addresses
+      in four rounds, then the last good copy (restored by `deploy.yml`, used up to 8 days). Until
+      the secret exists the deploy build relies on the public feed and that copy.
