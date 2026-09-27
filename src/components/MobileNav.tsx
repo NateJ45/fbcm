@@ -22,7 +22,7 @@
 //   |  10:45 am           Contact                |
 //   |  309 East Adams                            |
 //   |  (*) Watch live                            |
-//   |  [ GIVE ]                                  |
+//   |  [ GIVE ]                                  |   <- pinned until reached
 //   |  [win] [door] [rose] [basin]               |   <- the four goals
 //   |  (f) (ig) (yt)                              |   <- accounts elsewhere
 //   +-------------------------------------------+
@@ -54,9 +54,15 @@
 //      label ("Our Church") is set in the same display face and size as the
 //      top-level rows, is not a link, and carries a small gold caret. Its
 //      children are indented under it, one step smaller, with a thin gold
-//      rule down their left edge, always open (no accordion). It is a nested
-//      list named by the label (aria-labelledby), so a screen reader hears
-//      "Our Church, list, 4 items" and the focus order is the reading order.
+//      rule down their left edge. It is a nested list named by the label
+//      (aria-labelledby), so a screen reader hears "Our Church, list, 5
+//      items" and the focus order is the reading order.
+//      FOLDING (2026-09-27, Nathan: the menu had grown to about two screens
+//      of scrolling). The label is now a button (aria-expanded) that folds
+//      its pages away. A group starts open only when the visitor is on one
+//      of its pages, so on most pages the menu is its six main rows. The
+//      same day the rows went one type step smaller with less padding, and
+//      Give became sticky to the bottom of the sheet (see the button below).
 //   5. THE CURRENT PAGE ROW is marked aria-current="page", which locks
 //      .nav-underline drawn (globals.css). It is read from
 //      window.location.pathname at render, which is safe because the sheet's
@@ -161,17 +167,117 @@ const DEFAULT_CTA = { show: true, label: 'Contact us', href: '/contact' };
 
 /**
  * The stagger index for each top-level item, in reading order: a group's label
- * and each of its children count as a line, so the rows still rise one after
- * another straight down the sheet.
+ * counts as a line, and so do its children when the group starts open, so the
+ * rows that are on screen still rise one after another straight down the
+ * sheet. A folded group's children are not on screen, so they take no turn.
  */
-function staggerStarts(links: NavItem[]): number[] {
+function staggerStarts(links: NavItem[], isOpen: (item: DropdownNavGroup) => boolean): number[] {
   const starts: number[] = [];
   let i = 0;
   for (const item of links) {
     starts.push(i);
-    i += item.kind === 'flat' ? 1 : 1 + item.items.length;
+    i += item.kind === 'flat' ? 1 : 1 + (isOpen(item) ? item.items.length : 0);
   }
   return starts;
+}
+
+// The type sizes, shared so a group's label can never drift from a plain row.
+// Tightened on 2026-09-27 (Nathan: the menu had grown to about two screens):
+// one step smaller and less padding, so the rows and the Sundays block share
+// the first screen on a phone.
+const ROW_TYPE =
+  'font-display text-[clamp(1.5rem,5.6vw,2.25rem)] leading-none font-normal tracking-[0.02em] uppercase';
+const SUB_TYPE =
+  'font-display text-[clamp(1.2rem,4.4vw,1.75rem)] leading-none font-normal tracking-[0.02em] uppercase';
+
+interface MenuGroupProps {
+  item: DropdownNavGroup;
+  /** This group's stagger index (the label's turn in the rise). */
+  start: number;
+  /** Open when the sheet opens: true for the group holding the current page. */
+  startsOpen: boolean;
+  isCurrent: (href: string) => boolean;
+  onFollow: () => void;
+}
+
+/**
+ * One dropdown group (2026-09-27): its label is a button that folds its pages
+ * away and brings them back. It starts open only when the visitor is on one of
+ * its pages, so on most pages the menu is its six main rows and nothing else.
+ *
+ * It lives in its own component so its open state starts fresh every time the
+ * sheet opens: Radix mounts the sheet's body on open and unmounts it on close,
+ * and this component goes with it.
+ *
+ * The children rise the same way the rows do, but when a visitor unfolds a
+ * group they rise at once, a beat apart (--d), rather than waiting out the
+ * sheet's opening stagger. They are `hidden` while folded, so they are out of
+ * the tab order and out of the accessibility tree, and the label's
+ * aria-expanded says which state the group is in.
+ */
+function MenuGroup({ item, start, startsOpen, isCurrent, onFollow }: MenuGroupProps) {
+  const [expanded, setExpanded] = useState(startsOpen);
+  // Whether the visitor has pressed the label yet: until then the children
+  // keep the sheet's opening stagger; after it they rise straight away.
+  const [touched, setTouched] = useState(false);
+  const id = groupId(item.label);
+  const listId = `${id}-pages`;
+
+  return (
+    <li className="border-b border-bg/15">
+      {/* The label: the rows' own face and size, and the one control that
+          folds the group. The caret turns to show which way it will go. It
+          names the list below (aria-labelledby), so a screen reader hears
+          "Our Church, list, 5 items" once it is open. */}
+      <button
+        type="button"
+        id={id}
+        aria-expanded={expanded}
+        aria-controls={listId}
+        onClick={() => {
+          setTouched(true);
+          setExpanded((v) => !v);
+        }}
+        className={`menu-row flex min-h-[44px] w-full items-center gap-3 py-3 text-left ${ROW_TYPE}`}
+        style={{ '--i': start } as CSSProperties}
+      >
+        {item.label}
+        <span
+          aria-hidden
+          className={`text-[0.55em] text-gold transition-transform duration-200 motion-reduce:transition-none ${expanded ? '' : '-rotate-90'}`}
+        >
+          &#9662;
+        </span>
+      </button>
+      <ul
+        id={listId}
+        aria-labelledby={id}
+        hidden={!expanded}
+        className="m-0 mb-3 ml-1 list-none border-l border-gold/70 p-0 pl-5"
+      >
+        {item.items.map((sub, k) => (
+          <li
+            key={sub.href}
+            className="menu-row"
+            style={
+              touched
+                ? ({ '--i': 0, '--d': `${k * 40}ms` } as CSSProperties)
+                : ({ '--i': start + 1 + k } as CSSProperties)
+            }
+          >
+            <a
+              href={sub.href}
+              onClick={onFollow}
+              aria-current={isCurrent(sub.href) ? 'page' : undefined}
+              className="group flex min-h-[40px] items-center py-1.5"
+            >
+              <span className={`nav-underline ${SUB_TYPE}`}>{sub.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </li>
+  );
 }
 
 /** A stable id for a group's label, so its list can be named by it. */
@@ -222,7 +328,6 @@ export default function MobileNav({
   useEffect(() => setReady(true), []);
 
   const phone = siteSettings?.phone;
-  const starts = staggerStarts(links);
   // The sheet's body only renders in the browser, when it opens, so this reads
   // the visitor's clock at that moment against the church's service window,
   // and (since 2026-09-24) the last answer from /api/live-status that
@@ -238,6 +343,10 @@ export default function MobileNav({
   const here = currentPath();
   const isCurrent = (href: string) =>
     here !== undefined && normalizePath(here) === normalizePath(href);
+  // A group starts open when the visitor is on one of its pages, so they can
+  // see where they are; every other group starts folded.
+  const startsOpen = (item: DropdownNavGroup) => item.items.some((sub) => isCurrent(sub.href));
+  const starts = staggerStarts(links, startsOpen);
 
   // An outside address (Site settings' Online giving box, when it is filled)
   // opens the Give button in a new tab. An internal destination, such as the
@@ -354,7 +463,7 @@ export default function MobileNav({
 
             {/* The rows. A plain list: a menu is not a sequence, so it
                 carries no numbers (rollout plan rule 11). */}
-            <nav aria-label="Primary mobile" className="relative mt-10 flex-1">
+            <nav aria-label="Primary mobile" className="relative mt-6 flex-1">
               <ul className="m-0 list-none p-0">
                 {links.map((item, n) =>
                   item.kind === 'flat' ? (
@@ -367,51 +476,20 @@ export default function MobileNav({
                         href={item.href}
                         onClick={close}
                         aria-current={isCurrent(item.href) ? 'page' : undefined}
-                        className="group flex items-baseline py-4"
+                        className="group flex min-h-[44px] items-center py-3"
                       >
-                        <span className="nav-underline font-display text-[clamp(1.75rem,6.4vw,2.75rem)] leading-none font-normal tracking-[0.02em] uppercase">
-                          {item.label}
-                        </span>
+                        <span className={`nav-underline ${ROW_TYPE}`}>{item.label}</span>
                       </a>
                     </li>
                   ) : (
-                    <li key={`group-${item.label}`} className="border-b border-bg/15 pb-4">
-                      {/* The label: the rows' own face and size, not a link,
-                          with a small gold caret. It names the list below. */}
-                      <p
-                        id={groupId(item.label)}
-                        className="menu-row m-0 flex items-baseline gap-3 py-4 font-display text-[clamp(1.75rem,6.4vw,2.75rem)] leading-none font-normal tracking-[0.02em] uppercase"
-                        style={{ '--i': starts[n] } as CSSProperties}
-                      >
-                        {item.label}
-                        <span aria-hidden className="text-[0.55em] text-gold">
-                          &#9662;
-                        </span>
-                      </p>
-                      <ul
-                        aria-labelledby={groupId(item.label)}
-                        className="m-0 ml-1 list-none border-l border-gold/70 p-0 pl-5"
-                      >
-                        {item.items.map((sub, k) => (
-                          <li
-                            key={sub.href}
-                            className="menu-row"
-                            style={{ '--i': (starts[n] ?? 0) + 1 + k } as CSSProperties}
-                          >
-                            <a
-                              href={sub.href}
-                              onClick={close}
-                              aria-current={isCurrent(sub.href) ? 'page' : undefined}
-                              className="group flex items-baseline py-2.5"
-                            >
-                              <span className="nav-underline font-display text-[clamp(1.375rem,5vw,2.125rem)] leading-none font-normal tracking-[0.02em] uppercase">
-                                {sub.label}
-                              </span>
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
+                    <MenuGroup
+                      key={`group-${item.label}`}
+                      item={item}
+                      start={starts[n] ?? 0}
+                      startsOpen={startsOpen(item)}
+                      isCurrent={isCurrent}
+                      onFollow={close}
+                    />
                   ),
                 )}
               </ul>
@@ -429,7 +507,7 @@ export default function MobileNav({
                 window.dispatchEvent(new CustomEvent('site-search:open'));
               }}
               aria-haspopup="dialog"
-              className="relative mt-8 inline-flex min-h-[44px] items-center gap-3 self-start font-ui text-ui font-semibold tracking-[0.02em] text-bg underline-offset-4 hover:underline"
+              className="relative mt-6 inline-flex min-h-[44px] items-center gap-3 self-start font-ui text-ui font-semibold tracking-[0.02em] text-bg underline-offset-4 hover:underline"
             >
               <svg
                 width="18"
@@ -451,7 +529,7 @@ export default function MobileNav({
 
             {/* The foot: when the church meets and where, then the ways to
                 reach it. */}
-            <div className="relative mt-10 grid grid-cols-2 gap-6 border-t border-bg/15 pt-6 font-ui text-sm">
+            <div className="relative mt-6 grid grid-cols-2 gap-6 border-t border-bg/15 pt-6 font-ui text-sm">
               <div>
                 <p className="mb-2 text-ui tracking-[0.14em] text-gold uppercase">Sundays</p>
                 {/* The label above already says Sundays, so the value shows the
@@ -491,17 +569,29 @@ export default function MobileNav({
             {/* The one button, drawn exactly as the header's Give button and
                 the give band draw it: gold fill, indigo-FIELD label (not
                 text-indigo, which flips to paper under .dark), gold/indigo
-                inset keyline. */}
+                inset keyline.
+
+                PINNED (2026-09-27, Nathan): the button keeps its place in the
+                foot, but it is `sticky` to the bottom of the scrolling sheet,
+                so until a visitor has scrolled down to that place it waits on
+                the bottom edge of the screen, one tap away from anywhere in
+                the menu. Once its own place scrolls into view it simply sits
+                there and scrolls on with the foot; there is only ever one
+                Give. The wrapper's indigo fade keeps rows scrolling under it
+                from showing through around the button, and its bottom padding
+                clears the iPhone's home bar. */}
             {cta.show && (
-              <a
-                href={cta.href}
-                target={ctaIsExternal ? '_blank' : undefined}
-                rel={ctaIsExternal ? 'noopener noreferrer' : undefined}
-                onClick={close}
-                className="relative mt-6 block rounded-sm bg-gold px-[1.6em] py-[1.05em] text-center font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)]"
-              >
-                {cta.label}
-              </a>
+              <div className="menu-give sticky bottom-0 z-10 -mx-gutter mt-3 px-gutter pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+                <a
+                  href={cta.href}
+                  target={ctaIsExternal ? '_blank' : undefined}
+                  rel={ctaIsExternal ? 'noopener noreferrer' : undefined}
+                  onClick={close}
+                  className="relative block rounded-sm bg-gold px-[1.6em] py-[1.05em] text-center font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)]"
+                >
+                  {cta.label}
+                </a>
+              </div>
             )}
 
             {/* The four goals, each to its band on Who We Are. The click

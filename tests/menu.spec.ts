@@ -71,6 +71,9 @@ test('a dropdown group is one list, named by its label and indented under it', a
     const group = groups.nth(i);
     const label = dialog.locator(`[id="${await group.getAttribute('aria-labelledby')}"]`);
     await expect(label).toHaveCount(1);
+    // Groups fold (2026-09-27): unfold this one before measuring it.
+    if ((await label.getAttribute('aria-expanded')) === 'false') await label.click();
+    await expect(label).toHaveAttribute('aria-expanded', 'true');
     // The caret is aria-hidden, so the list's name is the label's words alone.
     const name = (await label.evaluate((el) => el.firstChild?.textContent ?? '')).trim();
     await expect(group).toHaveAccessibleName(name);
@@ -81,6 +84,64 @@ test('a dropdown group is one list, named by its label and indented under it', a
     const cx = (await links.first().boundingBox())?.x ?? 0;
     expect(cx - lx).toBeGreaterThanOrEqual(16);
   }
+});
+
+// Folding (2026-09-27, Nathan: the menu had grown to about two screens). A
+// group starts folded unless the visitor is on one of its pages, its label is
+// the button that unfolds it, and Give waits pinned on the bottom edge of the
+// screen until its own place in the foot scrolls into view.
+test('groups start folded, unfold from their label, and open on the current page', async ({
+  page,
+}) => {
+  await openMenu(page);
+  const dialog = page.getByRole('dialog');
+  const labels = dialog.locator('nav[aria-label="Primary mobile"] button[aria-expanded]');
+  const count = await labels.count();
+  test.skip(count === 0, 'the menu has no dropdown group today');
+  // On Home no group holds the current page, so every group is folded and
+  // its pages are out of the way (and out of the tab order).
+  for (let i = 0; i < count; i++) {
+    const label = labels.nth(i);
+    await expect(label).toHaveAttribute('aria-expanded', 'false');
+    const list = dialog.locator(`[id="${await label.getAttribute('aria-controls')}"]`);
+    await expect(list).toBeHidden();
+    await label.click();
+    await expect(label).toHaveAttribute('aria-expanded', 'true');
+    await expect(list).toBeVisible();
+    await label.click();
+    await expect(list).toBeHidden();
+  }
+
+  // On one of a group's pages, that group opens with the page marked current.
+  await labels.first().click();
+  const firstPage = dialog
+    .locator(`[id="${await labels.first().getAttribute('aria-controls')}"] a`)
+    .first();
+  const href = (await firstPage.getAttribute('href')) ?? '/';
+  await page.keyboard.press('Escape');
+  await openMenu(page, href);
+  const reopened = page.getByRole('dialog').locator(`a[href="${href}"][aria-current="page"]`);
+  await expect(reopened).toBeVisible();
+});
+
+test('Give waits on the bottom edge of the screen until it is reached', async ({ page }) => {
+  await openMenu(page);
+  const dialog = page.getByRole('dialog');
+  // Unfold every group so the sheet is at its longest and certainly scrolls.
+  const labels = dialog.locator('nav[aria-label="Primary mobile"] button[aria-expanded="false"]');
+  while ((await labels.count()) > 0) await labels.first().click();
+  const give = dialog.locator('.menu-give a');
+  await expect(give).toHaveCount(1);
+  const viewport = page.viewportSize()!;
+  const box = (await give.boundingBox())!;
+  // On screen at the top of the sheet, sitting on its bottom edge.
+  expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
+  expect(box.y + box.height).toBeGreaterThan(viewport.height - 80);
+  // Scrolled to the end, it has scrolled on with the foot: above the goals.
+  await dialog.evaluate((el) => el.scrollTo(0, el.scrollHeight));
+  const after = (await give.boundingBox())!;
+  const goals = (await dialog.locator('.goals-row').boundingBox())!;
+  expect(after.y + after.height).toBeLessThanOrEqual(goals.y);
 });
 
 test('Escape closes the menu; the rows carry no numbers; the goals link to Who We Are', async ({
