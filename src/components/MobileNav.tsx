@@ -5,7 +5,7 @@
 // in front of it. It is now a FULL-SCREEN indigo sheet that drops from the top,
 // and the trigger reads the word "Menu" beside two hairlines. The spec's
 // section 6 asks for the church's stained glass where the Stone Steps survey
-// had trail iconography, so a window photograph sits masked behind the top 40%
+// had trail iconography, so a window photograph sits masked behind the top
 // of the sheet and drifts very slowly, and the links are rows in the display
 // face that rise in sequence when the sheet opens. (They were numbered 01 to
 // 10 until 2026-09-24; the footer identity pass took the numbers off, because
@@ -414,14 +414,20 @@ export default function MobileNav({
               edge at the end of the scroll) and the rendering, which is
               pinned to this box's bottom, floated mid-sheet on a short phone. */}
           <div className="relative flex min-h-full shrink-0 flex-col px-gutter pt-4 pb-8">
-            {/* The church's own window, masked to the top 40% and drifting a
-                few pixels over 40 seconds. Decorative: it carries no meaning
-                the rows do not already carry, so it is aria-hidden and takes
-                no alt text. */}
+            {/* The church's own window, masked to the top of the sheet and
+                drifting a few pixels over 40 seconds. Decorative: it carries
+                no meaning the rows do not already carry, so it is aria-hidden
+                and takes no alt text.
+
+                FIXED HEIGHT (2026-09-27, Nathan): it used to be 40% of this
+                box, so unfolding a group made the sheet taller and the window
+                visibly grew with it. 24.5rem is what 40% measured on Home at
+                every phone width (about 390px), so the window looks the same
+                as before and now holds still behind the rows. */}
             {windowUrl && (
               <div
                 aria-hidden
-                className="menu-window pointer-events-none absolute inset-x-0 top-0 h-[40%]"
+                className="menu-window pointer-events-none absolute inset-x-0 top-0 h-[24.5rem]"
                 style={{ backgroundImage: `url(${windowUrl})` }}
               />
             )}

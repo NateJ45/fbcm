@@ -98,6 +98,11 @@ test('groups start folded, unfold from their label, and open on the current page
   const labels = dialog.locator('nav[aria-label="Primary mobile"] button[aria-expanded]');
   const count = await labels.count();
   test.skip(count === 0, 'the menu has no dropdown group today');
+  // The stained glass holds still: unfolding a group makes the sheet taller,
+  // and the window used to grow with it (a share of the sheet's height).
+  const windowHeight = () =>
+    dialog.locator('.menu-window').evaluate((el) => el.getBoundingClientRect().height);
+  const restingWindow = await windowHeight();
   // On Home no group holds the current page, so every group is folded and
   // its pages are out of the way (and out of the tab order).
   for (let i = 0; i < count; i++) {
@@ -108,6 +113,7 @@ test('groups start folded, unfold from their label, and open on the current page
     await label.click();
     await expect(label).toHaveAttribute('aria-expanded', 'true');
     await expect(list).toBeVisible();
+    expect(await windowHeight()).toBeCloseTo(restingWindow, 0);
     await label.click();
     await expect(list).toBeHidden();
   }
