@@ -3155,8 +3155,8 @@ body::before {
 
 /* The window texture behind the top of the sheet. Masked to nothing by the
    bottom of its own box so it never fights the rows for contrast, held at 22%
-   so the indigo stays the surface, and drifting 12px over 40 seconds so the
-   sheet is not dead still while a visitor reads it. */
+   so the indigo stays the surface. A layer of the sheet itself, outside the
+   scrolling rows, so it holds still (2026-09-27). */
 /* The Hannaford rendering along the foot of the mobile menu (2026-09-24): a
    pre-tinted gold copy of the footer's line art, drawn as a background image
    rather than a gold fill behind a mask. A masked fill reads to axe as a solid
@@ -3175,15 +3175,8 @@ body::before {
   opacity: 0.22;
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
-  animation: menu-drift 40s ease-in-out infinite alternate;
-}
-@keyframes menu-drift {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-12px, -6px, 0);
-  }
+  /* No drift since 2026-09-27 (Nathan wanted the window constant behind the
+     rows): it used to move 12px over 40s (menu-drift). */
 }
 
 /* Each row rises into place 70ms after the one above it. `forwards` is what
@@ -3229,9 +3222,6 @@ body::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .menu-window {
-    animation: none;
-  }
   .menu-row {
     animation: none;
     opacity: 1;
