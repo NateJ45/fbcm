@@ -569,6 +569,37 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
       };
       window.addEventListener('pointerdown', smoothScroll, { capture: true, passive: true });
       window.addEventListener('keydown', smoothScroll, { capture: true, passive: true });
+
+      // Back and Forward land where the visitor left, exactly (2026-09-27).
+      // Every page inlines its whole stylesheet, @font-face rules included, and
+      // that sheet differs page to page, so each swap replaces it and the
+      // browser rebuilds its fonts: for a few frames the incoming page is set
+      // in the fallback face, its paragraphs a line shorter. The router
+      // restores the saved position into that shorter page, the webfonts
+      // arrive (~80 ms), text above the reader rewraps, and Chrome's scroll
+      // anchoring then "helpfully" moves the view (measured on /blog: restored
+      // to 2159, anchored to 2219, the row 60px off where it was left). The
+      // saved position was taken in the finished layout, so the right move is
+      // to hold still while the fonts settle: anchoring is off from the swap
+      // until the fonts are ready, on a traverse only (a forward navigation
+      // lands at the top, where anchoring never acts).
+      let traversing = false;
+      document.addEventListener('astro:before-preparation', (event) => {
+        traversing = (event as unknown as { navigationType?: string }).navigationType === 'traverse';
+      });
+      document.addEventListener('astro:after-swap', () => {
+        if (!traversing) return;
+        const html = document.documentElement;
+        html.style.overflowAnchor = 'none';
+        // Two frames so layout has asked for the fonts, then wait for them.
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            void document.fonts.ready.then(() =>
+              requestAnimationFrame(() => html.style.removeProperty('overflow-anchor')),
+            );
+          }),
+        );
+      });
     </script>
 
     {/* Polish layer: scroll-triggered reveal observer + sticky-header

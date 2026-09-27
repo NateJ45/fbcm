@@ -80,6 +80,11 @@ export default defineConfig({
     command: `npm run build && npx http-server dist/client -p ${PORT} -s -c-1 --silent`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    // The webServer timeout covers the BUILD, not just the serve. 180 s was
+    // the family default; a site past ~250 pages (FBCM builds ~390 in about
+    // four minutes on a runner) times out before a single screenshot, and CI
+    // cannot reuse a server. 600 s matches playwright.config.ts (docs/PENDING.md,
+    // starter findings item 7).
+    timeout: 600_000,
   },
 });
