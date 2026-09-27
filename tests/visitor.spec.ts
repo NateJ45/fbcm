@@ -1,6 +1,7 @@
 // scaffold-file: church
 import { test, expect } from './fixtures';
 import AxeBuilder from '@axe-core/playwright';
+import { settle } from './helpers';
 
 // =============================================================================
 // The Visitor (2026-09-24, feat/the-visitor)
@@ -200,6 +201,11 @@ test.describe('home', () => {
   test('Home passes axe with the band', async ({ page }) => {
     await page.goto('/');
     await page.locator('[data-visitor-band]').scrollIntoViewIfNeeded();
+    // Settle first, as the axe sweep does: without it axe could measure the
+    // hero mid fade-in, its gold Visit button and indigo label both blended
+    // toward the ground (CI 2026-09-27: #544747 on #9e752e, 2.12:1, colours
+    // the page never rests at).
+    await settle(page);
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
       .analyze();
