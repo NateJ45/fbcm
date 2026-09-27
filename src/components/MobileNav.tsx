@@ -6,7 +6,8 @@
 // and the trigger reads the word "Menu" beside two hairlines. The spec's
 // section 6 asks for the church's stained glass where the Stone Steps survey
 // had trail iconography, so a window photograph sits masked behind the top
-// of the sheet and drifts very slowly, and the links are rows in the display
+// of the sheet, holding still while the rows scroll over it (2026-09-27; it
+// used to drift very slowly and scroll with them), and the links are rows in the display
 // face that rise in sequence when the sheet opens. (They were numbered 01 to
 // 10 until 2026-09-24; the footer identity pass took the numbers off, because
 // a menu is not a sequence: rollout plan rule 11.)
@@ -400,7 +401,7 @@ export default function MobileNav({
           side="top"
           showCloseButton={false}
           aria-describedby={undefined}
-          className="h-dvh w-full max-w-none gap-0 overflow-y-auto border-0 bg-indigo-field p-0 text-bg data-[side=top]:h-dvh data-[side=top]:border-0"
+          className="h-dvh w-full max-w-none gap-0 overflow-hidden border-0 bg-indigo-field p-0 text-bg data-[side=top]:h-dvh data-[side=top]:border-0"
         >
           {/* Radix needs a Title for the dialog's accessible name. The sheet
               says "Menu" on its trigger and reads as a menu on sight, so the
@@ -413,166 +414,171 @@ export default function MobileNav({
               the last row was lost (the last row sat on the screen's bottom
               edge at the end of the scroll) and the rendering, which is
               pinned to this box's bottom, floated mid-sheet on a short phone. */}
-          <div className="relative flex min-h-full shrink-0 flex-col px-gutter pt-4 pb-8">
-            {/* The church's own window, masked to the top of the sheet and
-                drifting a few pixels over 40 seconds. Decorative: it carries
-                no meaning the rows do not already carry, so it is aria-hidden
-                and takes no alt text.
+          {/* The church's own window behind the top of the screen. Decorative:
+              it carries no meaning the rows do not already carry, so it is
+              aria-hidden and takes no alt text.
 
-                FIXED HEIGHT (2026-09-27, Nathan): it used to be 40% of this
-                box, so unfolding a group made the sheet taller and the window
-                visibly grew with it. 24.5rem is what 40% measured on Home at
-                every phone width (about 390px), so the window looks the same
-                as before and now holds still behind the rows. */}
-            {windowUrl && (
-              <div
-                aria-hidden
-                className="menu-window pointer-events-none absolute inset-x-0 top-0 h-[24.5rem]"
-                style={{ backgroundImage: `url(${windowUrl})` }}
-              />
-            )}
+              IT STAYS PUT (2026-09-27, Nathan: "staying constant in the bg").
+              It used to sit inside the scrolling box: first at 40% of that
+              box's height, so unfolding a group made it grow, then at a fixed
+              height, but it still scrolled away and back with the rows. It is
+              now a layer of the sheet itself, which does not scroll (the rows
+              scroll in .menu-scroll above it), so it keeps the same size and
+              place however the groups open or the menu scrolls. The slow
+              drift it had came off the same day for the same reason. */}
+          {windowUrl && (
+            <div
+              aria-hidden
+              className="menu-window pointer-events-none absolute inset-x-0 top-0 h-[24.5rem]"
+              style={{ backgroundImage: `url(${windowUrl})` }}
+            />
+          )}
 
-            {/* The Hannaford rendering along the sheet's foot, the same faint
+          {/* The scrolling part of the sheet: everything but the window. The
+              pinned Give (below) is sticky to this box. */}
+          <div className="menu-scroll relative min-h-0 flex-1 overflow-y-auto">
+            <div className="relative flex min-h-full shrink-0 flex-col px-gutter pt-4 pb-8">
+              {/* The Hannaford rendering along the sheet's foot, the same faint
                 gold line art as the footer's (Nathan, 2026-09-24: the window
                 at the top, the building at the bottom). Decorative. */}
-            {renderingUrl && (
-              <div
-                aria-hidden
-                className="menu-rendering pointer-events-none absolute bottom-0 left-[-15%] w-[130%]"
-                style={{ ['--menu-rendering' as string]: `url(${renderingUrl})` }}
-              />
-            )}
-
-            {/* Top row: the wordmark, and the way out. The sheet is indigo in
-                both themes, so the DARK (paper-lettered) logo is right here
-                whatever the theme is. */}
-            <div className="relative flex h-[58px] items-center justify-between">
-              {logoDarkUrl && (
-                <img
-                  src={logoDarkUrl}
-                  alt={site.name}
-                  width={257}
-                  height={100}
-                  className="h-11 w-auto"
-                  decoding="async"
+              {renderingUrl && (
+                <div
+                  aria-hidden
+                  className="menu-rendering pointer-events-none absolute bottom-0 left-[-15%] w-[130%]"
+                  style={{ ['--menu-rendering' as string]: `url(${renderingUrl})` }}
                 />
               )}
-              <button
-                type="button"
-                onClick={close}
-                aria-label="Close menu"
-                className="inline-flex items-center gap-2 rounded-sm bg-bg px-3 py-2 font-ui text-ui font-semibold text-indigo-field"
-              >
-                Close <span aria-hidden>&times;</span>
-              </button>
-            </div>
 
-            {/* The rows. A plain list: a menu is not a sequence, so it
-                carries no numbers (rollout plan rule 11). */}
-            <nav aria-label="Primary mobile" className="relative mt-6 flex-1">
-              <ul className="m-0 list-none p-0">
-                {links.map((item, n) =>
-                  item.kind === 'flat' ? (
-                    <li
-                      key={item.href}
-                      className="menu-row border-b border-bg/15"
-                      style={{ '--i': starts[n] } as CSSProperties}
-                    >
-                      <a
-                        href={item.href}
-                        onClick={close}
-                        aria-current={isCurrent(item.href) ? 'page' : undefined}
-                        className="group flex min-h-[44px] items-center py-3"
-                      >
-                        <span className={`nav-underline ${ROW_TYPE}`}>{item.label}</span>
-                      </a>
-                    </li>
-                  ) : (
-                    <MenuGroup
-                      key={`group-${item.label}`}
-                      item={item}
-                      start={starts[n] ?? 0}
-                      startsOpen={startsOpen(item)}
-                      isCurrent={isCurrent}
-                      onFollow={close}
-                    />
-                  ),
+              {/* Top row: the wordmark, and the way out. The sheet is indigo in
+                both themes, so the DARK (paper-lettered) logo is right here
+                whatever the theme is. */}
+              <div className="relative flex h-[58px] items-center justify-between">
+                {logoDarkUrl && (
+                  <img
+                    src={logoDarkUrl}
+                    alt={site.name}
+                    width={257}
+                    height={100}
+                    className="h-11 w-auto"
+                    decoding="async"
+                  />
                 )}
-              </ul>
-            </nav>
+                <button
+                  type="button"
+                  onClick={close}
+                  aria-label="Close menu"
+                  className="inline-flex items-center gap-2 rounded-sm bg-bg px-3 py-2 font-ui text-ui font-semibold text-indigo-field"
+                >
+                  Close <span aria-hidden>&times;</span>
+                </button>
+              </div>
 
-            {/* scaffold: journal */}
-            {/* Search (2026-09-24), under the rows in the sheet's furniture
+              {/* The rows. A plain list: a menu is not a sequence, so it
+                carries no numbers (rollout plan rule 11). */}
+              <nav aria-label="Primary mobile" className="relative mt-6 flex-1">
+                <ul className="m-0 list-none p-0">
+                  {links.map((item, n) =>
+                    item.kind === 'flat' ? (
+                      <li
+                        key={item.href}
+                        className="menu-row border-b border-bg/15"
+                        style={{ '--i': starts[n] } as CSSProperties}
+                      >
+                        <a
+                          href={item.href}
+                          onClick={close}
+                          aria-current={isCurrent(item.href) ? 'page' : undefined}
+                          className="group flex min-h-[44px] items-center py-3"
+                        >
+                          <span className={`nav-underline ${ROW_TYPE}`}>{item.label}</span>
+                        </a>
+                      </li>
+                    ) : (
+                      <MenuGroup
+                        key={`group-${item.label}`}
+                        item={item}
+                        start={starts[n] ?? 0}
+                        startsOpen={startsOpen(item)}
+                        isCurrent={isCurrent}
+                        onFollow={close}
+                      />
+                    ),
+                  )}
+                </ul>
+              </nav>
+
+              {/* scaffold: journal */}
+              {/* Search (2026-09-24), under the rows in the sheet's furniture
                 face, a 44px tap target. The sheet closes first and hands its
                 focus back; the search dialog (search-dialog.ts) waits for that
                 before it opens, so the two never hold focus at once. */}
-            <button
-              type="button"
-              onClick={() => {
-                close();
-                window.dispatchEvent(new CustomEvent('site-search:open'));
-              }}
-              aria-haspopup="dialog"
-              className="relative mt-6 inline-flex min-h-[44px] items-center gap-3 self-start font-ui text-ui font-semibold tracking-[0.02em] text-bg underline-offset-4 hover:underline"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 20 20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                aria-hidden="true"
-                className="text-gold"
+              <button
+                type="button"
+                onClick={() => {
+                  close();
+                  window.dispatchEvent(new CustomEvent('site-search:open'));
+                }}
+                aria-haspopup="dialog"
+                className="relative mt-6 inline-flex min-h-[44px] items-center gap-3 self-start font-ui text-ui font-semibold tracking-[0.02em] text-bg underline-offset-4 hover:underline"
               >
-                <circle cx="8.5" cy="8.5" r="6" />
-                <path d="M13 13l5 5" />
-              </svg>
-              Search the site
-            </button>
-            {/* scaffold:end */}
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                  className="text-gold"
+                >
+                  <circle cx="8.5" cy="8.5" r="6" />
+                  <path d="M13 13l5 5" />
+                </svg>
+                Search the site
+              </button>
+              {/* scaffold:end */}
 
-            {/* The foot: when the church meets and where, then the ways to
+              {/* The foot: when the church meets and where, then the ways to
                 reach it. */}
-            <div className="relative mt-6 grid grid-cols-2 gap-6 border-t border-bg/15 pt-6 font-ui text-sm">
-              <div>
-                <p className="mb-2 text-ui tracking-[0.14em] text-gold uppercase">Sundays</p>
-                {/* The label above already says Sundays, so the value shows the
+              <div className="relative mt-6 grid grid-cols-2 gap-6 border-t border-bg/15 pt-6 font-ui text-sm">
+                <div>
+                  <p className="mb-2 text-ui tracking-[0.14em] text-gold uppercase">Sundays</p>
+                  {/* The label above already says Sundays, so the value shows the
                     time alone: "Sundays / 10:45 am", not "Sundays / Sundays at
                     10:45 am". timeOnly() is the same helper the hero's dated
                     line uses, so the two can never phrase it differently. */}
-                {serviceTime && <p>{timeOnly(serviceTime)}</p>}
-                {street && <p className="text-bg/70">{street}</p>}
+                  {serviceTime && <p>{timeOnly(serviceTime)}</p>}
+                  {street && <p className="text-bg/70">{street}</p>}
+                </div>
+                <div className="flex flex-col items-end gap-2">
+                  {phone && <a href={telHref(phone)}>{phone}</a>}
+                  <a href="/contact" onClick={close}>
+                    Contact
+                  </a>
+                </div>
               </div>
-              <div className="flex flex-col items-end gap-2">
-                {phone && <a href={telHref(phone)}>{phone}</a>}
-                <a href="/contact" onClick={close}>
-                  Contact
-                </a>
-              </div>
-            </div>
 
-            {/* Watch live, the desktop bar's quiet link in the sheet's
+              {/* Watch live, the desktop bar's quiet link in the sheet's
                 furniture face, above the one gold button. A 44px tap target.
                 Inside the service window it reads "Live now" with the pulsing
                 gold dot (data-live; the pulse stops under reduced motion).
                 The dot is decorative; the words carry the state. */}
-            {watchUrl && (
-              <a
-                href={liveHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={close}
-                data-live={live ? '' : undefined}
-                className="relative mt-6 inline-flex min-h-[44px] items-center gap-2 self-start font-ui text-ui font-semibold tracking-[0.02em] text-bg underline-offset-4 hover:underline"
-              >
-                <span className="live-dot" aria-hidden />
-                <span>{live ? 'Live now' : 'Watch live'}</span>
-              </a>
-            )}
+              {watchUrl && (
+                <a
+                  href={liveHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={close}
+                  data-live={live ? '' : undefined}
+                  className="relative mt-6 inline-flex min-h-[44px] items-center gap-2 self-start font-ui text-ui font-semibold tracking-[0.02em] text-bg underline-offset-4 hover:underline"
+                >
+                  <span className="live-dot" aria-hidden />
+                  <span>{live ? 'Live now' : 'Watch live'}</span>
+                </a>
+              )}
 
-            {/* The one button, drawn exactly as the header's Give button and
+              {/* The one button, drawn exactly as the header's Give button and
                 the give band draw it: gold fill, indigo-FIELD label (not
                 text-indigo, which flips to paper under .dark), gold/indigo
                 inset keyline.
@@ -586,60 +592,61 @@ export default function MobileNav({
                 Give. The wrapper's indigo fade keeps rows scrolling under it
                 from showing through around the button, and its bottom padding
                 clears the iPhone's home bar. */}
-            {cta.show && (
-              <div className="menu-give sticky bottom-0 z-10 -mx-gutter mt-3 px-gutter pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-                <a
-                  href={cta.href}
-                  target={ctaIsExternal ? '_blank' : undefined}
-                  rel={ctaIsExternal ? 'noopener noreferrer' : undefined}
-                  onClick={close}
-                  className="relative block rounded-sm bg-gold px-[1.6em] py-[1.05em] text-center font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)]"
-                >
-                  {cta.label}
-                </a>
-              </div>
-            )}
+              {cta.show && (
+                <div className="menu-give sticky bottom-0 z-10 -mx-gutter mt-3 px-gutter pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+                  <a
+                    href={cta.href}
+                    target={ctaIsExternal ? '_blank' : undefined}
+                    rel={ctaIsExternal ? 'noopener noreferrer' : undefined}
+                    onClick={close}
+                    className="relative block rounded-sm bg-gold px-[1.6em] py-[1.05em] text-center font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)]"
+                  >
+                    {cta.label}
+                  </a>
+                </div>
+              )}
 
-            {/* The four goals, each to its band on Who We Are. The click
+              {/* The four goals, each to its band on Who We Are. The click
                 listener is delegation only: the links inside are the
                 controls, and Enter on a link fires click too. */}
-            {children && (
-              <div
-                ref={drawGlyphs}
-                onClick={closeOnLink}
-                className="relative mt-8 border-t border-bg/15 pt-4"
-              >
-                {children}
-              </div>
-            )}
+              {children && (
+                <div
+                  ref={drawGlyphs}
+                  onClick={closeOnLink}
+                  className="relative mt-8 border-t border-bg/15 pt-4"
+                >
+                  {children}
+                </div>
+              )}
 
-            {/* The church's accounts elsewhere, the last row of the sheet: the
+              {/* The church's accounts elsewhere, the last row of the sheet: the
                 footer's round icon buttons in the sheet's hairline, 44px
                 targets. Icon-only, so each link's aria-label says whose
                 account it is; the list is named for a screen reader, which
                 hears "Follow along, list, 3 items" before them (the words the
                 Contact page's group prints). */}
-            {social && social.length > 0 && (
-              <ul
-                aria-label="Follow along"
-                className="relative m-0 mt-6 flex list-none gap-3 border-t border-bg/15 p-0 pt-6"
-              >
-                {social.map((link) => (
-                  <li key={link.url}>
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={link.label}
-                      onClick={close}
-                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-bg/30 text-bg transition-colors hover:border-gold hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-                    >
-                      <SocialIcon platform={link.platform} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
+              {social && social.length > 0 && (
+                <ul
+                  aria-label="Follow along"
+                  className="relative m-0 mt-6 flex list-none gap-3 border-t border-bg/15 p-0 pt-6"
+                >
+                  {social.map((link) => (
+                    <li key={link.url}>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={link.label}
+                        onClick={close}
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-bg/30 text-bg transition-colors hover:border-gold hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                      >
+                        <SocialIcon platform={link.platform} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </SheetContent>
       </Sheet>

@@ -4039,6 +4039,13 @@ file's PORTABLE marker came off deliberately (the same move as `playwright.confi
 card 35). Read FBCM's copy as a divergent fork, not a source to pull from. The canonical
 two-theme copy is unchanged.
 
+**FBCM, 2026-09-27 (general, for the next sync):** `playwright.visual.config.ts` (still
+PORTABLE here) raised `webServer.timeout` from 180 s to 600 s. The timeout covers the build,
+and FBCM's ~390-page build passed 180 s on a runner, so the job had timed out before its one
+screenshot on every run since 2026-09-25 and nobody saw the baseline go stale. Same fix and
+reason as `playwright.config.ts` (docs/PENDING.md, starter findings item 7). The canonical
+copy is still 180 s, so sync-check reports this file until the sync session takes it.
+
 **What it is.** A `/styleguide` route that renders the design system with every value
 hardcoded, plus a SEPARATE Playwright config that screenshot-diffs it in both themes.
 Proven on stonesteps-50k; the technique came from wcp-website. **Brought home

@@ -99,10 +99,14 @@ test('groups start folded, unfold from their label, and open on the current page
   const count = await labels.count();
   test.skip(count === 0, 'the menu has no dropdown group today');
   // The stained glass holds still: unfolding a group makes the sheet taller,
-  // and the window used to grow with it (a share of the sheet's height).
-  const windowHeight = () =>
-    dialog.locator('.menu-window').evaluate((el) => el.getBoundingClientRect().height);
-  const restingWindow = await windowHeight();
+  // and the window used to grow with it (a share of the sheet's height), then
+  // scroll with it. Its box on screen, top and height, never changes.
+  const windowBox = () =>
+    dialog.locator('.menu-window').evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return `${Math.round(r.top)}/${Math.round(r.height)}`;
+    });
+  const restingWindow = await windowBox();
   // On Home no group holds the current page, so every group is folded and
   // its pages are out of the way (and out of the tab order).
   for (let i = 0; i < count; i++) {
@@ -113,10 +117,15 @@ test('groups start folded, unfold from their label, and open on the current page
     await label.click();
     await expect(label).toHaveAttribute('aria-expanded', 'true');
     await expect(list).toBeVisible();
-    expect(await windowHeight()).toBeCloseTo(restingWindow, 0);
+    expect(await windowBox()).toBe(restingWindow);
     await label.click();
     await expect(list).toBeHidden();
   }
+  // Nor does it move when the menu scrolls: it is not in the scrolling box.
+  for (let i = 0; i < count; i++) await labels.nth(i).click();
+  await dialog.locator('.menu-scroll').evaluate((el) => el.scrollTo(0, el.scrollHeight));
+  expect(await windowBox()).toBe(restingWindow);
+  for (let i = 0; i < count; i++) await labels.nth(i).click();
 
   // On one of a group's pages, that group opens with the page marked current.
   await labels.first().click();
@@ -144,7 +153,7 @@ test('Give waits on the bottom edge of the screen until it is reached', async ({
   expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
   expect(box.y + box.height).toBeGreaterThan(viewport.height - 80);
   // Scrolled to the end, it has scrolled on with the foot: above the goals.
-  await dialog.evaluate((el) => el.scrollTo(0, el.scrollHeight));
+  await dialog.locator('.menu-scroll').evaluate((el) => el.scrollTo(0, el.scrollHeight));
   const after = (await give.boundingBox())!;
   const goals = (await dialog.locator('.goals-row').boundingBox())!;
   expect(after.y + after.height).toBeLessThanOrEqual(goals.y);
