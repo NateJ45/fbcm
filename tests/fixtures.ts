@@ -32,7 +32,18 @@ mkdirSync(DIR, { recursive: true });
 
 async function fromCache(route: Route): Promise<void> {
   const url = route.request().url();
-  const key = createHash('sha1').update(url).digest('hex');
+  // `auto=format` is content-negotiated: Sanity answers AVIF to a browser
+  // that accepts it (Chromium) and WebP to one that does not (Playwright's
+  // WebKit). Keyed on the URL alone, WebKit was handed Chromium's AVIF and got
+  // a broken image (found 2026-09-27: the hero slideshow's later frames never
+  // loaded on webkit-iphone). A browser without AVIF gets its own key; the
+  // AVIF key is the URL alone, as before, so no existing entry is refetched.
+  const accept = route.request().headers()['accept'] ?? '';
+  const variant =
+    url.includes('auto=format') && accept && !accept.includes('image/avif') ? '|no-avif' : '';
+  const key = createHash('sha1')
+    .update(url + variant)
+    .digest('hex');
   const body = join(DIR, `${key}.bin`);
   const meta = join(DIR, `${key}.json`);
   if (existsSync(body) && existsSync(meta)) {
