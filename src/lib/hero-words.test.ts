@@ -1,6 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { headlineSegments, heroWords, type HeroWord } from './hero-words.ts';
+import {
+  headlineSegments,
+  heroWords,
+  plainWords,
+  splitAtAccent,
+  type HeroWord,
+} from './hero-words.ts';
 import { splitHeadingAccent } from './heading-accent.ts';
 import { splitStega } from './preview-stega.ts';
 
@@ -97,4 +103,41 @@ test('the colour accent is used when there is no script accent, and the script a
 test('no accent found: the headline is one segment, untouched (stega kept)', () => {
   const raw = `Praise and proclaim.${STEGA}`;
   assert.deepEqual(headlineSegments(raw, splitHeadingAccent(raw, null)), [{ text: raw }]);
+});
+
+test('plainWords: a heading with no accent, with the same stega rule', () => {
+  assert.deepEqual(texts(plainWords("What's On")), ["What's", 'On']);
+  const words = plainWords(`The Kid's Corner${STEGA}`);
+  assert.deepEqual(texts(words), ['The', "Kid's", `Corner${STEGA}`]);
+  assert.ok(words.every((w) => w.pieces.every((p) => !p.accent)));
+  assert.deepEqual(plainWords(''), []);
+});
+
+test('splitAtAccent: the window sets a closing accent on its own line, counting on', () => {
+  const h = 'What to Expect on Sunday';
+  const colour = splitHeadingAccent(h, 'on Sunday');
+  const words = heroWords(headlineSegments(h, splitHeadingAccent(h, null), colour));
+  const { lead, close } = splitAtAccent(words, 'colour');
+  assert.deepEqual(texts(lead), ['What', 'to', 'Expect']);
+  assert.deepEqual(texts(close), ['on', 'Sunday']);
+  // Together they are every word, in order, so the indices continue.
+  assert.deepEqual([...lead, ...close], words);
+});
+
+test('splitAtAccent: a stega run stays on the last word of the closing line', () => {
+  const raw = `What to Expect on Sunday${STEGA}`;
+  const words = heroWords([
+    { text: 'What to Expect ' },
+    { text: 'on Sunday', accent: 'colour' },
+    { text: STEGA },
+  ]);
+  const { close } = splitAtAccent(words, 'colour');
+  assert.equal(text(close[close.length - 1]), `Sunday${STEGA}`);
+  assert.equal(texts(words).join(' '), raw);
+});
+
+test('splitAtAccent: no word with the accent leaves everything in the lead', () => {
+  const words = plainWords('Who We Are');
+  assert.deepEqual(splitAtAccent(words, 'colour'), { lead: words, close: [] });
+  assert.deepEqual(splitAtAccent([], 'script'), { lead: [], close: [] });
 });

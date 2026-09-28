@@ -1,0 +1,51 @@
+---
+// Safe to edit by hand
+// A page-opening headline's words, each rising out of its own clipped line
+// (2026-09-28, `feat/motion-openers`; the rise itself is the hero motion
+// pass's, 2026-09-27). Every page opener renders its h1's text through this
+// one component: the photo, split and window heroes, SectionHeading's h1 (the
+// text hero, /history, /give, the 404 and privacy), the journal Opener, What's
+// On, the ministry newsletters and The Visitor. The POST PAGE does not: its h1
+// is the far end of the shared title transition from a blog row
+// (src/lib/shared-title.ts), and two motions on one title would fight.
+//
+// Hand it the words from src/lib/hero-words.ts (heroWords, which splits the
+// stega-CLEANED text and puts any stega run back on the last word, so
+// click-to-edit survives), and it draws each as a `.hero-word` that clips
+// around a `.hero-word-in` that rises (globals.css: 800ms quint out, the first
+// at 150ms, 60ms apart, from --w, the word's index). Real spaces sit between
+// the words, so the h1 wraps between them, a word never breaks mid-word, and
+// the accessible name is the whole headline.
+//
+// - `start` offsets the index, for a headline drawn in two parts (the window
+//   hero's closing accent line continues the count of the words above it).
+// - `accents` says how an accent piece is drawn: the tag and class for the
+//   script accent and for the colour accent. A piece with no accent is text.
+//   `plain` draws every piece as text (the window's closing line, whose own
+//   element already carries the accent's look).
+//
+// The markup is written on ONE line on purpose: any whitespace between the
+// spans would be a visible space inside the headline.
+
+import type { HeroWord, WordAccent } from '@/lib/hero-words';
+
+interface AccentLook {
+  tag?: 'span' | 'em' | 'b';
+  class: string;
+}
+
+interface Props {
+  words: HeroWord[];
+  start?: number;
+  accents?: Partial<Record<WordAccent, AccentLook>>;
+  plain?: boolean;
+}
+
+const { words, start = 0, accents = {}, plain = false } = Astro.props as Props;
+const script: AccentLook = accents.script ?? { class: 'font-script' };
+const colour: AccentLook = accents.colour ?? { class: 'text-gold' };
+const ScriptTag = script.tag ?? 'span';
+const ColourTag = colour.tag ?? 'span';
+---
+
+{words.map((w, i) => (<>{i > 0 && ' '}<span class="hero-word" style={`--w:${start + i}`}><span class="hero-word-in">{w.pieces.map((p) => (plain || !p.accent ? p.text : p.accent === 'script' ? <ScriptTag class={script.class}>{p.text}</ScriptTag> : <ColourTag class={colour.class}>{p.text}</ColourTag>))}</span></span></>))}

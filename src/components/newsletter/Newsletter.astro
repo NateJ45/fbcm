@@ -35,6 +35,10 @@ import CtaLink from '@/components/CtaLink.astro';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
+// The h1's words rise like every page opener's (2026-09-28); nothing else in
+// the opener gains an entrance.
+import { plainWords } from '@/lib/hero-words';
+import RiseWords from '@/components/RiseWords.astro';
 import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { churchTracPageUrl, loadNewsletter, type Newsletter } from '@/lib/church-trac-newsletters';
 import { pageText, type Block, type Inline } from '@/lib/church-trac-page';
@@ -108,7 +112,7 @@ const mastheadAlt = `${name}, ${newsletter.eyebrow.toLowerCase()}`;
             id="newsletter-heading"
             class:list={['mt-5 text-white-pure', headlineClass(scale, { tall: false })]}
           >
-            {name}
+            <RiseWords words={plainWords(name)} />
           </h1>
           <p class="mt-6 max-w-[34em] font-body text-lede text-band-taupe italic">
             {newsletter.lede}

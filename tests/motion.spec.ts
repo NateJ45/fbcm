@@ -188,6 +188,216 @@ test.describe('slideshow, reduced motion', () => {
 });
 
 // =============================================================================
+// The page openers' word rise (feat/motion-openers, 2026-09-28)
+// =============================================================================
+// Every page-opening h1 rises word by word, as the home hero's does: the
+// window hero (Who We Are; Visit, whose closing accent is a line of its own),
+// the journal opener (/blog), What's On, and SectionHeading's h1 (/history).
+// The post page's h1 is the exception on purpose: it is the far end of the
+// shared title transition from a blog row, and two motions on one title would
+// fight. Only the words move: nothing else in these openers gains an entrance.
+
+const OPENERS = ['/who-we-are', '/visit', '/blog', '/events', '/history'];
+
+test.describe('page openers, no preference', () => {
+  test.use({ reducedMotion: 'no-preference' });
+
+  for (const route of OPENERS) {
+    test(`${route}: the h1 rises word by word and lands`, async ({ page }) => {
+      await page.goto(route, { waitUntil: 'domcontentloaded' });
+      const h1 = page.locator('main h1').first();
+      await h1.waitFor({ state: 'attached' });
+
+      const rise = await h1.evaluate((el) => {
+        const words = [...el.querySelectorAll('.hero-word-in')];
+        return {
+          words: words.map((w) => ({
+            text: (w.textContent ?? '').trim(),
+            delays: w.getAnimations().map((a) => {
+              const t = (a.effect as KeyframeEffect).getComputedTiming();
+              return { delay: Number(t.delay ?? 0), end: Number(t.endTime ?? 0) };
+            }),
+          })),
+          h1Anims: el.getAnimations().length,
+          h1Opacity: getComputedStyle(el).opacity,
+          text: (el.textContent ?? '').replace(/\s+/g, ' ').trim(),
+          // Nothing beside the h1 gains an entrance: its siblings and their
+          // descendants carry no animation at all (the window's rays are a
+          // scroll reveal, a transition, not an animation object).
+          siblingAnims: [...(el.parentElement?.children ?? [])]
+            .filter((c) => c !== el)
+            .flatMap((c) => [c, ...c.querySelectorAll('*')])
+            .reduce((n, c) => n + c.getAnimations().length, 0),
+        };
+      });
+
+      expect(rise.h1Anims, 'the h1 itself is animating').toBe(0);
+      expect(rise.h1Opacity).toBe('1');
+      expect(rise.words.length, 'the h1 was not split into words').toBeGreaterThan(1);
+      // The words ARE the headline, and its accessible name is the sentence.
+      expect(rise.words.map((w) => w.text).join(' ')).toBe(rise.text);
+      await expect(h1).toHaveAccessibleName(rise.text);
+      // Home's timing: 150ms, then 60ms apart, counting on across a closing
+      // accent line, and landed inside the 1.6s budget on its own clock.
+      rise.words.forEach((w, i) => {
+        expect(w.delays.length, `word ${i} ("${w.text}") does not rise`).toBe(1);
+        expect(w.delays[0].delay).toBeCloseTo(150 + i * 60, 0);
+      });
+      const landed = Math.max(...rise.words.map((w) => w.delays[0].end));
+      expect(landed, `the last word lands at ${landed}ms`).toBeCloseTo(
+        150 + (rise.words.length - 1) * 60 + 800,
+        0,
+      );
+      expect(rise.siblingAnims, 'something beside the h1 gained an entrance').toBe(0);
+
+      // Every word lands, in place.
+      await h1.evaluate((el) =>
+        Promise.all(
+          [...el.querySelectorAll('.hero-word-in')].flatMap((w) =>
+            w.getAnimations().map((a) => a.finished),
+          ),
+        ),
+      );
+      const transforms = await h1.evaluate((el) =>
+        [...el.querySelectorAll('.hero-word-in')].map((w) => getComputedStyle(w).transform),
+      );
+      for (const t of transforms) expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(t);
+    });
+  }
+
+  test('/visit: the closing accent line rises too, continuing the count', async ({ page }) => {
+    await page.goto('/visit', { waitUntil: 'domcontentloaded' });
+    const close = page.locator('main h1 .hw-close');
+    await expect(close).toHaveCount(1);
+    const indices = await page.locator('main h1 .hero-word').evaluateAll((els) =>
+      els.map((e) => ({
+        w: Number((e as HTMLElement).style.getPropertyValue('--w')),
+        inClose: !!e.closest('.hw-close'),
+      })),
+    );
+    expect(indices.map((x) => x.w)).toEqual(indices.map((_, i) => i));
+    expect(indices.some((x) => x.inClose)).toBe(true);
+    expect(indices.some((x) => !x.inClose)).toBe(true);
+  });
+
+  test('the post page h1 is NOT split: its title is the shared transition', async ({ page }) => {
+    await page.goto('/blog', { waitUntil: 'domcontentloaded' });
+    const href = await page.locator('main a[href^="/post/"]').first().getAttribute('href');
+    expect(href).toBeTruthy();
+    await page.goto(href!, { waitUntil: 'domcontentloaded' });
+    const h1 = page.locator('h1.p2-title');
+    await expect(h1).toHaveCount(1);
+    expect(await h1.locator('.hero-word, .hero-word-in').count()).toBe(0);
+    expect(
+      await h1.evaluate((el) =>
+        [el, ...el.querySelectorAll('*')].reduce((n, c) => n + c.getAnimations().length, 0),
+      ),
+    ).toBe(0);
+  });
+});
+
+test.describe('page openers, reduced motion', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  for (const route of OPENERS) {
+    test(`${route}: the h1's words stand in place, unanimated`, async ({ page }) => {
+      await page.goto(route, { waitUntil: 'load' });
+      const words = await page
+        .locator('main h1')
+        .first()
+        .evaluate((el) =>
+          [...el.querySelectorAll('.hero-word-in')].map((w) => ({
+            anims: w.getAnimations().length,
+            transform: getComputedStyle(w).transform,
+          })),
+        );
+      expect(words.length).toBeGreaterThan(1);
+      for (const w of words) expect(w).toEqual({ anims: 0, transform: 'none' });
+    });
+  }
+});
+
+// =============================================================================
+// The single-photo hero's one push-in (feat/motion-openers, 2026-09-28)
+// =============================================================================
+// One photograph gets no slideshow and no Pause: it pushes in once, 1 to 1.05
+// towards its hotspot over 5 s (inside WCAG 2.2.2's five seconds), ends and
+// stays. No page in the dataset draws this branch today, so the styleguide's
+// one-photo fixture (hotspot 60% 30%) is where it is tested.
+
+test.describe('single-photo hero, no preference', () => {
+  test.use({ reducedMotion: 'no-preference' });
+
+  test('the photo pushes in towards its hotspot, then ends and stays', async ({ page }) => {
+    await page.goto('/styleguide', { waitUntil: 'domcontentloaded' });
+    const img = page.locator('#styleguide-hero-one img.hero-still');
+    await expect(img).toHaveCount(1);
+    // Still the eager, high-priority LCP image, and never a slideshow.
+    await expect(img).toHaveAttribute('loading', 'eager');
+    await expect(img).toHaveAttribute('fetchpriority', 'high');
+    await expect(page.locator('#styleguide-hero-one [data-hero-pause]')).toHaveCount(0);
+
+    const timing = await img.evaluate((el) => {
+      const [a] = el.getAnimations();
+      const t = (a.effect as KeyframeEffect).getComputedTiming();
+      return {
+        count: el.getAnimations().length,
+        duration: Number(t.duration),
+        iterations: t.iterations,
+        fill: t.fill,
+        direction: t.direction,
+        origin: getComputedStyle(el).transformOrigin,
+        // The layout box, not the (already scaling) painted one.
+        size: [(el as HTMLElement).offsetWidth, (el as HTMLElement).offsetHeight],
+      };
+    });
+    expect(timing.count).toBe(1);
+    expect(timing.duration, 'longer than WCAG 2.2.2 five seconds').toBeLessThanOrEqual(5000);
+    expect(timing.iterations).toBe(1);
+    expect(timing.fill).toBe('forwards');
+    expect(timing.direction).toBe('normal');
+    // The origin is the hotspot (60% 30% of the photo's box).
+    const [w, h] = timing.size;
+    const [ox, oy] = timing.origin.split(' ').map(parseFloat);
+    expect(ox).toBeCloseTo(w * 0.6, 0);
+    expect(oy).toBeCloseTo(h * 0.3, 0);
+
+    // It moves...
+    const scale = () => img.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).a);
+    const a = await scale();
+    await page.waitForTimeout(400);
+    const b = await scale();
+    expect(b, 'the photo is not moving').toBeGreaterThan(a);
+    // ...then ends at 1.05 and stays there.
+    await img.evaluate((el) => Promise.all(el.getAnimations().map((x) => x.finished)));
+    expect(await scale()).toBeCloseTo(1.05, 3);
+    await page.waitForTimeout(500);
+    expect(await scale()).toBeCloseTo(1.05, 3);
+    expect(
+      await img.evaluate(
+        (el) => el.getAnimations().filter((x) => x.playState === 'running').length,
+      ),
+    ).toBe(0);
+    // The section clips the enlarged edge.
+    expect(
+      await img.evaluate((el) => getComputedStyle(el.closest('section') as Element).overflowX),
+    ).toBe('clip');
+  });
+});
+
+test.describe('single-photo hero, reduced motion', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  test('the photo stands still', async ({ page }) => {
+    await page.goto('/styleguide', { waitUntil: 'load' });
+    const img = page.locator('#styleguide-hero-one img.hero-still');
+    await expect(img).toHaveCount(1);
+    expect(await img.evaluate((el) => el.getAnimations().length)).toBe(0);
+    expect(await img.evaluate((el) => getComputedStyle(el).transform)).toBe('none');
+  });
+});
+
+// =============================================================================
 // The glyph draw (feat/print-motion, 2026-09-24)
 // =============================================================================
 // Every BuildingGlyph is on the reveal observer with the `draw` variant: its

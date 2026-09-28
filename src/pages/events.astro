@@ -31,6 +31,10 @@ import { ldJson } from '@/lib/church-schema';
 import { site } from '@/data/site';
 import { H2_DISPLAY } from '@/lib/heading-grammar';
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
+// The h1's words rise like every page opener's (2026-09-28); nothing else in
+// the opener gains an entrance.
+import { plainWords } from '@/lib/hero-words';
+import RiseWords from '@/components/RiseWords.astro';
 import { codeFor, loadWhatsOn, publicCalendarUrl } from '@/lib/church-calendar-feed';
 import { calendarEventNode } from '@/lib/church-calendar-schema';
 import {
@@ -96,7 +100,7 @@ const icsHref = (key: string) => `/events/${key}.ics`;
             id="events-heading"
             class:list={['mt-5 text-white-pure', headlineClass(scale, { tall: false })]}
           >
-            {heading}
+            <RiseWords words={plainWords(heading)} />
           </h1>
           <p class="mt-6 max-w-[34em] font-body text-lede text-band-taupe italic">{lede}</p>
         </div>

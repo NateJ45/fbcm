@@ -1785,6 +1785,23 @@ const JOURNAL_LIST_FIXTURE = {
     headingId="styleguide-hero-full"
   />
 
+  {
+    /* The photo hero with ONE photograph (2026-09-28, feat/motion-openers): no
+      slideshow and no Pause, one 5 s push-in towards the hotspot. No page in
+      the dataset draws this branch today, so this is where it is seen and
+      tested (tests/motion.spec.ts). */
+  }
+  <div id="styleguide-hero-one">
+    <Hero
+      eyebrow="One photograph"
+      headline="The photo hero with one picture"
+      backgroundImages={[HERO_FULL_FIXTURE.frames[3]]}
+      layout="full"
+      size="short"
+      headingId="styleguide-hero-single"
+    />
+  </div>
+
   <Hero
     eyebrow={HERO_SPLIT_FIXTURE.eyebrow}
     headline={HERO_SPLIT_FIXTURE.headline}

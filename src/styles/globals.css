@@ -1243,10 +1243,13 @@ a:focus-visible .zoom-img img,
   }
 }
 
-/* The hero headline's word rise (2026-09-27), after Highland Park
-   Presbyterian's hero (GSAP SplitText: yPercent 101 to 0, 0.8s, 0.06s apart,
-   quint out), in CSS. Hero.astro renders each word as a .hero-word that clips
-   around a .hero-word-in that rises from below it. The inner box carries
+/* The page opener's word rise (2026-09-27 on the hero; every page-opening h1
+   since 2026-09-28, `feat/motion-openers`, except the post page's, whose title
+   is a shared view transition), after Highland Park Presbyterian's hero (GSAP
+   SplitText: yPercent 101 to 0, 0.8s, 0.06s apart, quint out), in CSS.
+   RiseWords.astro, the one renderer every opener calls, draws each word as a
+   .hero-word that clips around a .hero-word-in that rises from below it. The
+   classes work in any h1: nothing here depends on the hero's wrapper. The inner box carries
    padding (0.2em above, 0.25em below, 0.06em each side) so the clip never
    cuts an ascender, a descender (g, y, p) or an italic overhang at rest, and
    the outer box takes the same amount back as negative margin, so the words
@@ -1448,6 +1451,28 @@ a:focus-visible .zoom-img img,
   z-index: 1;
   opacity: 1;
   transition: opacity 0.7s ease-in-out;
+}
+/* The single-photo hero's one push-in (2026-09-28, `feat/motion-openers`).
+   One frame gets no slideshow and no Pause control, so it moves once: from
+   scale 1 to 1.05 about its hotspot (--kb-origin, the centre with none) over
+   5 s, eased out (cubic out, so it slows into its rest), and it ends and stays
+   there (forwards, not infinite, not alternate). Five seconds keeps it inside
+   WCAG 2.2.2, which asks for a pause only when automatic motion beside other
+   content lasts more than five seconds. The hero section's overflow: clip
+   crops the enlarged edge. Reduced motion: no rule, the photo stands still. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-still {
+    transform-origin: var(--kb-origin, 50% 50%);
+    animation: hero-still-push 5s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+  }
+  @keyframes hero-still-push {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-frame.is-moving {

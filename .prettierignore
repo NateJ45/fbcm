@@ -68,6 +68,11 @@ src/components/Hero.astro
 src/components/HeroBackground.astro
 src/layouts/BaseLayout.astro
 
+# The word rise's one renderer (2026-09-28): its spans must sit on ONE line.
+# Prettier breaks the expression over several, and Astro keeps that whitespace,
+# which puts a space inside every rising word and between the word boxes.
+src/components/RiseWords.astro
+
 # Agent worktrees. `.claude/worktrees/<id>/` is a full checkout of this repo, so
 # without this line `npm run format:check` scans every file in it a second time
 # and reports failures for files nobody is editing. Git does not track them, so
