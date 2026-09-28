@@ -1333,6 +1333,50 @@ a:focus-visible .zoom-img img,
   }
 }
 
+/* ---- The words' own backing, on a slideshow hero (2026-09-27).
+   The overlay above is drawn for the frame: clear over the top half so the
+   sky stays sky. That holds for one chosen photograph, not for twelve that
+   change every few seconds behind words that stay put. Measured word by word
+   (tests/contrast.spec.ts's method: hide the text, shoot what is behind it,
+   95% of the pixels) over all twelve home frames at 1280, 1440 and 375, the
+   overlay alone failed 81 of 432 checks: the headline down to 1.47:1 over the
+   mission team, the dated line to 1.17:1 over the chancel steps on a phone.
+   With this backing: 0 of 432, the tightest at 1.12x its threshold on a
+   desktop and about 1.2x on a phone.
+
+   So the backing belongs to the WORDS, not to the frame: it is the content
+   wrapper's own ::before, so it is as tall as the words are on every screen
+   (a phone's stack starts a third of the way down; a desktop's at half),
+   feathers out above the dated line, and on a desktop fades out by 78% of
+   the width, so the faces the hotspots put on the right stay bright. On a
+   phone the words span the width, so it is flat, and lighter (54%): a
+   phone's frame is mostly words, and 50% still passed every check. It sits
+   behind the words and above the photographs (the wrapper isolates, so
+   z-index -1 stays inside it). Only on a slideshow hero (`.hero-fade` precedes the wrapper):
+   a single-photo hero keeps the photograph the editor chose it for. ---- */
+.hero-fade ~ .hero-entry-stagger {
+  isolation: isolate;
+}
+.hero-fade ~ .hero-entry-stagger::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -14vh 0 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgb(23 21 31 / 64%) 0%,
+    rgb(23 21 31 / 60%) 50%,
+    rgb(23 21 31 / 0%) 78%
+  );
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14vh);
+}
+@media (max-width: 767.98px) {
+  .hero-fade ~ .hero-entry-stagger::before {
+    background: rgb(23 21 31 / 54%);
+  }
+}
+
 /* ---- The home hero slideshow (2026-09-27, `feat/hero-motion`).
    HeroBackground.astro stacks 2-12 .hero-frame images in .hero-fade. Its
    sequencer script moves `is-current` along them on each frame's hold (5 s

@@ -841,18 +841,14 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
 - **There is no photo of preaching in the library yet.** Twelve frames of the church
   at work and none of a sermon. If the church sends one, it is one entry in
   `scripts/data/page-images.json` and one line in `home.mjs`.
-- **The photo hero's headline is below 3:1 over bright parts of some photographs.**
-  With the words split into their own boxes (the word rise), `tests/contrast.spec.ts`
-  measures each word against the pixels behind it instead of the whole heading's
-  average, and on `/styleguide` "the" sits at 2.67:1 over frame 1's stained-glass
-  window (large text needs 3:1). `/` passes. The pixels behind the words did not
-  change; the finer measurement found what the average hid, and a slideshow of twelve
-  photographs puts more of them behind the words. Measured per frame (1280 wide, the
-  brightest 5% behind each word): several words on several frames fall between 1.6
-  and 3.0. The fix is a design call for Nathan, not taken on the branch: deepen the
-  overlay's left gradient under the headline (it is 55% at the edge and clear by the
-  middle, where the longer words end), or choose frames and hotspots so the words sit
-  over darker picture.
+- **Done (2026-09-27): the headline's contrast over twelve frames.** With the words in
+  their own boxes, `tests/contrast.spec.ts` measured "the" on `/styleguide` at 2.67:1,
+  and a sweep of every hero text over all twelve home frames at 1280, 1440 and 375
+  (the spec's own method) failed 81 of 432 checks. Nathan chose to deepen the scrim
+  where the words sit: a slideshow hero's content wrapper now carries its own backing
+  (`.hero-fade ~ .hero-entry-stagger::before`, globals.css), 0 of 432 failures, the
+  tightest at 1.12x its threshold. Re-run that sweep if a frame is swapped for a much
+  brighter photograph.
 - The seven new hotspots were placed by eye on the faces from the archive originals;
   an editor can move any of them in the Studio's image tool, and a push-in follows.
 
