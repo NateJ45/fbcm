@@ -1436,6 +1436,13 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       one field of the live `homePage`:
       `pageBuilder[_key=="home-hero"].facts[_key=="fact-1"].note`, from nothing to
       "Intergenerational, casual dress welcome". Apply only after the church approves it.
+- **Applied by mistake and taken off, 2026-09-28.** The twelve-frame hero apply (hero
+  motion pass) wrote the whole hero, note included; its dry run named only
+  `pageBuilder[0] heroSection`, so nobody saw the note go. It was live for about an
+  hour, then unset with a backup (`scripts/data/backups/homePage-2026-09-28-note-off.json`).
+  `home.mjs` now writes it only when `SERVICE_NOTE_APPROVED` is true: flip that the
+  day the church approves, then `--only home --apply`. Lesson: a hero-level dry-run
+  line hides field changes inside the hero; diff the live section before applying.
 - [ ] #nathan **Ask the church to approve the service line**, or to give its own two to
       six words. Proposed: "Intergenerational, casual dress welcome", built only from two of
       its statements: the Worship goal ("gathering to worship as the full, intergenerational

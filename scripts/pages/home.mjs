@@ -97,6 +97,11 @@ const FAQ_PATH = resolve(
 // sentence that does, Visit's "to the last hymn", is ours). New copy: it is on
 // the approval note, and the build guards below throw if either source moved.
 export const SERVICE_NOTE = 'Intergenerational, casual dress welcome';
+// Off until the church approves the wording (docs/PENDING.md). It was applied
+// by mistake on 2026-09-28 with the twelve hero frames, whose dry run named
+// only the hero section, and taken off the same night (backups/homePage-
+// 2026-09-28-note-off.json). Flip it to true the day the church says yes.
+export const SERVICE_NOTE_APPROVED = false;
 
 /** A hotspot centred on (x, y), kept inside the frame so the Studio accepts it. */
 function hotspot(x, y) {
@@ -306,7 +311,7 @@ export default {
           _key: 'fact-1',
           label: 'Sundays',
           value: serviceTime,
-          note: SERVICE_NOTE,
+          ...(SERVICE_NOTE_APPROVED ? { note: SERVICE_NOTE } : {}),
         },
         { _type: 'heroFact', _key: 'fact-2', label: 'Where', value: streetLine },
         { _type: 'heroFact', _key: 'fact-3', label: 'Online', value: 'Live on YouTube' },
