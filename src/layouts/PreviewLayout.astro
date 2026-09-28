@@ -148,9 +148,10 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
         reveal and stagger entrances hide content at opacity 0 until it runs, so
         without this block the preview would render INVISIBLE sections. Keep it
         in step with the motion vocabulary in src/styles/globals.css: today that
-        is [data-reveal], [data-stagger-grid] and .hero-entry-stagger. Looping
-        keyframe effects (the Ken Burns hero) are left running: they need no JS
-        and reach a visible state on their own. */
+        is [data-reveal], [data-stagger-grid], .hero-entry-stagger and the
+        hero headline's word rise (.hero-word-in). The hero slideshow is left
+        running: its first frame is opaque without any script, and its own
+        script sequences the rest. */
     }
     <style is:global>
       [data-reveal] {
@@ -161,7 +162,8 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
         opacity: 1 !important;
         translate: 0 0 !important;
       }
-      .hero-entry-stagger > * {
+      .hero-entry-stagger > *,
+      .hero-word-in {
         opacity: 1 !important;
         animation: none !important;
         transform: none !important;

@@ -1188,16 +1188,19 @@ a:focus-visible .zoom-img img,
   }
 }
 
-/* Hero entry animation — staggered fade-up on page load for the eyebrow /
-   headline / subhead / CTAs inside an image-variant hero. Used by the
-   `.hero-entry-stagger` wrapper class on Hero.astro's content column. Each
-   direct child fades up with a small delay so the hero reads like a
-   considered editorial composition rather than a hard cut-in.
-   Reduced-motion users get the final state instantly — no animation, no
-   stagger, content visible at full opacity. */
-/* Retimed 2026-09-20 (plan 3, task 2): slower, further, and further apart, so
-   the hero resolves line by line the way a title sequence does rather than
-   arriving all at once with a small hop. */
+/* Hero entry animation: the photo and split heroes' content column
+   (`.hero-entry-stagger` on Hero.astro's wrapper) arrives in sequence on page
+   load, like a title sequence. Retimed 2026-09-27 (`feat/hero-motion`) around
+   the headline's word rise:
+     - the line above the headline fades up at 0ms (1000ms, from 22px);
+     - the headline itself never fades: its words rise (below), the first at
+       150ms and each next one 60ms later;
+     - the lede, the facts and the buttons fade up 120ms apart, starting when
+       the last word has mostly landed: 150ms + (words - 1) x 60ms + 360ms,
+       from --hero-words on the wrapper (counted up to six, so a long sentence
+       cannot push them past about 2s). "Praise and proclaim." puts the lede
+       at 630ms and the last button down at 1870ms.
+   Reduced-motion users get the final state instantly. */
 @keyframes hero-fade-up {
   from {
     opacity: 0;
@@ -1209,29 +1212,71 @@ a:focus-visible .zoom-img img,
   }
 }
 .hero-entry-stagger > * {
+  --after-words: calc(510ms + (min(var(--hero-words, 3), 6) - 1) * 60ms);
   opacity: 0;
   animation: hero-fade-up 1000ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
 }
 .hero-entry-stagger > *:nth-child(1) {
   animation-delay: 0ms;
 }
-.hero-entry-stagger > *:nth-child(2) {
-  animation-delay: 150ms;
+.hero-entry-stagger > .hero-rise {
+  opacity: 1;
+  animation: none;
 }
-.hero-entry-stagger > *:nth-child(3) {
-  animation-delay: 300ms;
+.hero-entry-stagger > .hero-rise + * {
+  animation-delay: var(--after-words);
 }
-.hero-entry-stagger > *:nth-child(4) {
-  animation-delay: 450ms;
+.hero-entry-stagger > .hero-rise + * + * {
+  animation-delay: calc(var(--after-words) + 120ms);
 }
-.hero-entry-stagger > *:nth-child(5) {
-  animation-delay: 600ms;
+.hero-entry-stagger > .hero-rise + * + * + * {
+  animation-delay: calc(var(--after-words) + 240ms);
+}
+.hero-entry-stagger > .hero-rise + * + * + * + * {
+  animation-delay: calc(var(--after-words) + 360ms);
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-entry-stagger > * {
     opacity: 1 !important;
     animation: none !important;
     transform: none !important;
+  }
+}
+
+/* The hero headline's word rise (2026-09-27), after Highland Park
+   Presbyterian's hero (GSAP SplitText: yPercent 101 to 0, 0.8s, 0.06s apart,
+   quint out), in CSS. Hero.astro renders each word as a .hero-word that clips
+   around a .hero-word-in that rises from below it. The inner box carries
+   padding (0.2em above, 0.25em below, 0.06em each side) so the clip never
+   cuts an ascender, a descender (g, y, p) or an italic overhang at rest, and
+   the outer box takes the same amount back as negative margin, so the words
+   set on exactly the lines plain text would. Top-aligned, not baseline:
+   an overflow-clipping inline-block's baseline would be its bottom edge.
+   Each word is an inline-block, so a word never breaks mid-word, and the real
+   spaces between them are where the line wraps (the .h-fit sizing is
+   unchanged). --w is the word's index. Reduced motion: words in place. */
+.hero-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  margin: -0.2em -0.06em -0.25em;
+}
+.hero-word-in {
+  display: inline-block;
+  padding: 0.2em 0.06em 0.25em;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-word-in {
+    animation: hero-word-rise 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(150ms + var(--w, 0) * 60ms);
+  }
+  @keyframes hero-word-rise {
+    from {
+      transform: translateY(101%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
 }
 
@@ -1288,73 +1333,90 @@ a:focus-visible .zoom-img img,
   }
 }
 
-/* ---- Home hero cross-fade. Pure CSS, no script driving the frames.
-   HeroBackground.astro stacks 2-6 .hero-frame images inside .hero-fade and
-   gives each one an --frames count, an 8-second --frame-s length, and an
-   animation-delay of index * 8s (frameAnimationDelays() in hero-frames.ts).
-   Every frame in a given hero runs the SAME crossfade keyframe (one of the
-   two below), so the delay alone is what staggers them into a slow
-   cross-fade instead of all fading in at once.
+/* ---- The words' own backing, on a slideshow hero (2026-09-27).
+   The overlay above is drawn for the frame: clear over the top half so the
+   sky stays sky. That holds for one chosen photograph, not for twelve that
+   change every few seconds behind words that stay put. Measured word by word
+   (tests/contrast.spec.ts's method: hide the text, shoot what is behind it,
+   95% of the pixels) over all twelve home frames at 1280, 1440 and 375, the
+   overlay alone failed 81 of 432 checks: the headline down to 1.47:1 over the
+   mission team, the dated line to 1.17:1 over the chancel steps on a phone.
+   With this backing: 0 of 432, the tightest at 1.12x its threshold on a
+   desktop and about 1.2x on a phone.
 
-   Keyframe arithmetic (why two keyframes, and not calc()):
-   calc() is not supported inside keyframe SELECTOR percentages, so the
-   breakpoints are fixed numbers rather than computed per frame count. The
-   frame slot (the gap between one frame's delay and the next's) is always a
-   fixed 8s, but the keyframe percentages are relative to the FULL cycle
-   (frames * 8s), so the same percentages land at a different fraction of the
-   cycle depending on frame count -- and one fixed set of percentages cannot
-   serve both ends of a 2-6 frame range without either leaving a visible gap
-   at the low end or blurring three photos together at the high end. So there
-   are two keyframes, and HeroBackground.astro picks which one a hero's
-   frames use (by adding the `few-frames` modifier class) based on the actual
-   frame count -- still pure CSS, just a server-computed choice of which
-   named animation to run, exactly like the --frames/--frame-s custom
-   properties are already a per-render choice.
+   So the backing belongs to the WORDS, not to the frame: it is the content
+   wrapper's own ::before, so it is as tall as the words are on every screen
+   (a phone's stack starts a third of the way down; a desktop's at half),
+   feathers out above the dated line, and on a desktop fades out by 78% of
+   the width, so the faces the hotspots put on the right stay bright. On a
+   phone the words span the width, so it is flat, and lighter (54%): a
+   phone's frame is mostly words, and 50% still passed every check. It sits
+   behind the words and above the photographs (the wrapper isolates, so
+   z-index -1 stays inside it). Only on a slideshow hero (`.hero-fade` precedes the wrapper):
+   a single-photo hero keeps the photograph the editor chose it for. ---- */
+.hero-fade ~ .hero-entry-stagger {
+  isolation: isolate;
+}
+.hero-fade ~ .hero-entry-stagger::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -14vh 0 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgb(23 21 31 / 64%) 0%,
+    rgb(23 21 31 / 60%) 50%,
+    rgb(23 21 31 / 0%) 78%
+  );
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14vh);
+}
+@media (max-width: 767.98px) {
+  .hero-fade ~ .hero-entry-stagger::before {
+    background: rgb(23 21 31 / 54%);
+  }
+}
 
-   `hero-crossfade` (4-6 frames, holds long, fades quickly -- a crisp
-   one-photo-at-a-time cross-fade):
-     - 4 frames: cycle = 32s. 8s (the next frame's start) = 25% of the cycle.
-       The hold ends at 20% (6.4s) and the fade-out finishes at 26% (8.32s),
-       so this frame is still ~17% opaque at the instant the next frame
-       starts ramping up from 0 -- no gap.
-     - 5 frames: cycle = 40s. 8s = 20% of the cycle, exactly the end of the
-       hold -- this frame is at full opacity right up to the next frame's
-       start (the brief's original worked example).
-     - 6 frames: cycle = 48s. 8s = 16.7% of the cycle, inside the hold
-       (4%-20%) -- this frame is still at full opacity when the next frame
-       starts, the most comfortable case of the three.
-   In every case (4, 5 or 6 frames) the outgoing frame has not reached
-   opacity 0 by the time the incoming frame starts brightening from 0.
+/* ---- The home hero slideshow (2026-09-27, `feat/hero-motion`).
+   HeroBackground.astro stacks 2-12 .hero-frame images in .hero-fade. Its
+   sequencer script moves `is-current` along them on each frame's hold (5 s
+   long, 3 s short, frameBeats() in src/lib/hero-frames.ts); the dissolve is
+   the opacity transition below, 0.7 s. The incoming frame is lifted above the
+   outgoing one and fades in over it while the outgoing stays opaque, then
+   drops out unseen, so the picture never dips towards the ground colour in
+   the middle of a dissolve. Frame 1 is server-rendered `is-current`: opaque
+   from the first paint, with or without JavaScript (it is the LCP image).
 
-   `hero-crossfade-few` (2-3 frames -- the same fixed percentages would leave
-   a real gap here: with only 2 frames, 8s is 50% of a 16s cycle, and
-   `hero-crossfade`'s fade-out is long finished (26% = 4.16s) by then, so
-   BOTH frames would sit at opacity 0 together for several seconds -- a
-   black/navy flash on the homepage hero, found by screenshotting this exact
-   fixture at exactly 10s in and seeing nothing rendered). `few` needs its
-   fade-out to survive past the 50% mark:
-     - 2 frames: cycle = 16s. 8s (next frame's start) = 50% of the cycle.
-       The fade-out here runs 40%-52%, finishing at 8.32s -- just past the
-       8s the next frame starts, so there is always some opacity on screen.
-     - 3 frames: cycle = 24s. 8s = 33.3% of the cycle, well inside the
-       40%-52% fade-out window (this frame is still above half-opacity),
-       comfortably before it reaches zero.
-   The wider fade-out window means 2-3 frames blend a little longer into each
-   other than 4-6 frames do; that is a softer cross-fade, not a gap, and
-   correctness (something always on screen) wins over crispness here.
+   THE MOVE. A frame with `is-moving` runs its .kb-* move for --kb-dur (its
+   hold plus the dissolve, so it is still moving while it dissolves out) on a
+   linear clock: an eased move would come to rest at both ends, and the brief
+   is that the picture is never still. Push-in and pull-out zoom between 1 and
+   1.13 about --kb-origin (the frame's hotspot, so a push-in heads for the
+   faces); the drifts pan 7% across at scale 1.1 about the centre, which keeps
+   1.5% of spare picture beyond each edge at the extremes. The sequencer
+   restarts a move by taking `is-moving` off and putting it back, and takes it
+   off a frame once it has dissolved out, so a hidden frame holds no layer.
 
-   Ken Burns zoom composes with the cross-fade for free: it is a second,
-   independent `animation` value (transform-only, comma-separated in the
-   `.hero-frame` rule) with its own duration, so pausing or fading opacity
-   never touches it and there is no script involved either way. Kept from the
-   original slideshow implementation rather than dropped.
+   THE PARALLAX. .hero-fade, the wrapper and never a moving frame (the two
+   transforms would fight), drifts down by a third of the hero's height as the
+   hero scrolls out (`exit` of its own view timeline), so the picture moves at
+   two thirds of the scroll speed. The strip it uncovers at the hero's top is
+   always above the viewport (a third of the distance scrolled is less than
+   the distance scrolled), and the section's overflow: clip clips the rest.
+   It is clip, not hidden, on purpose: overflow: hidden makes the section a
+   scroll container, view() then takes the section (which never scrolls) as
+   its scroller, and the parallax never moves (measured 2026-09-27).
 
-   Lives here (global), not in a scoped component <style>, because the frames
-   are rendered by the child SanityImage component and would not carry
-   HeroBackground's scope attribute. ---- */
+   Pause (.is-paused) and a hidden tab (.is-idle) hold every move where it is.
+   Everything that moves is inside `prefers-reduced-motion: no-preference`;
+   under reduce the sequencer never starts and frame 1 stands still. Global,
+   not scoped, because the frames are rendered by the child SanityImage. ---- */
 .hero-fade {
   position: absolute;
   inset: 0;
+  /* A stacking context of its own, so a current frame's z-index lifts it
+     above the other frames and never above the overlay or the words. */
+  isolation: isolate;
 }
 .hero-frame {
   position: absolute;
@@ -1363,162 +1425,90 @@ a:focus-visible .zoom-img img,
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transform-origin: center;
-  animation:
-    hero-crossfade calc(var(--frames, 1) * var(--frame-s, 8) * 1s) infinite,
-    hero-kb 16s ease-in-out infinite alternate;
-  will-change: opacity, transform;
+  transform-origin: var(--kb-origin, 50% 50%);
+  /* Going out: stay opaque under the incoming frame for the dissolve, then
+     drop out at once. */
+  transition: opacity 0s linear 0.7s;
 }
-@keyframes hero-crossfade {
-  0% {
-    opacity: 0;
-  }
-  4% {
-    opacity: 1;
-  }
-  20% {
-    opacity: 1;
-  }
-  26% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-/* 2-3 frame hero: see the arithmetic above for why this needs a longer hold
-   and a later, wider fade-out than the 4-6 frame keyframe. */
-@keyframes hero-crossfade-few {
-  0% {
-    opacity: 0;
-  }
-  8% {
-    opacity: 1;
-  }
-  40% {
-    opacity: 1;
-  }
-  52% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/* ---- The FIRST frame starts visible, because it is the LCP image.
-   Both keyframes above open at `0% { opacity: 0 }` and ramp in, which is right
-   for frames 2-6 (they arrive out of a cross-fade) and wrong for frame 1: an
-   element at opacity 0 is not a rendered LCP candidate, so the photo that
-   HeroBackground.astro loads eager + fetchpriority="high" was handing back on
-   the client exactly what it bought on the network. The ramp is 4% of the
-   cycle on `hero-crossfade` (1.28s at 4 frames, 1.60s at 5, 1.92s at 6) and 8%
-   on `hero-crossfade-few` (1.28s at 2 frames, 1.92s at 3).
-
-   The fix keeps every other breakpoint where it was and MOVES THE FADE-IN TO
-   THE END OF THE CYCLE, so the frame reaches opacity 1 at the instant the
-   cycle wraps rather than 4% (or 8%) after it:
-
-     hero-crossfade-first      0% = 1 (was 0)      hold to 20%, out by 26%
-                               96% = 0 -> 100% = 1   the same 4% ramp, moved
-     hero-crossfade-few-first  0% = 1 (was 0)      hold to 40%, out by 52%
-                               92% = 0 -> 100% = 1   the same 8% ramp, moved
-
-   Why moved rather than deleted: a keyframe that ended the cycle at 0 and
-   began the next at 1 would jump, and at 4 frames that jump is visible (the
-   outgoing frame is only ~17% opaque at the wrap, per the arithmetic above).
-   Ending the ramp exactly at 100% makes the loop continuous (100% == 0%), and
-   it can only ever put MORE on screen during the wrap, never less, so no frame
-   count can open a gap. The handoff to frame 2 is untouched: the hold and the
-   fade-out still sit at 20%/26% (and 40%/52%), so the cross-fade an editor
-   sees is the same one it was.
-
-   The reduced-motion rule at the bottom of this file already pins the first
-   frame to opacity 1 with no animation, and is unchanged. ---- */
-@keyframes hero-crossfade-first {
-  0% {
-    opacity: 1;
-  }
-  20% {
-    opacity: 1;
-  }
-  26% {
-    opacity: 0;
-  }
-  96% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-@keyframes hero-crossfade-few-first {
-  0% {
-    opacity: 1;
-  }
-  40% {
-    opacity: 1;
-  }
-  52% {
-    opacity: 0;
-  }
-  92% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-.hero-fade.few-frames .hero-frame {
-  /* Longhand override: only the crossfade half of the two-animation list
-     changes. Duration (from --frames/--frame-s), delay and the Ken Burns
-     animation itself come from the base .hero-frame rule and the inline
-     style untouched. */
-  animation-name: hero-crossfade-few, hero-kb;
-}
-/* Frame 1 only. Written after the few-frames rule above because it matches at
-   the same specificity; the few-frames first-child rule below carries one more
-   class and wins over both. */
-.hero-fade .hero-frame:first-child {
-  animation-name: hero-crossfade-first, hero-kb;
-  /* Belt and braces for the first painted frame: if the animation has not been
-     applied yet, the element still starts opaque rather than invisible. */
+.hero-frame.is-current {
+  z-index: 1;
   opacity: 1;
+  transition: opacity 0.7s ease-in-out;
 }
-.hero-fade.few-frames .hero-frame:first-child {
-  animation-name: hero-crossfade-few-first, hero-kb;
-}
-.hero-frame:nth-child(3n + 2) {
-  transform-origin: top left;
-  animation-duration: calc(var(--frames, 1) * var(--frame-s, 8) * 1s), 18s;
-}
-.hero-frame:nth-child(3n + 3) {
-  transform-origin: bottom right;
-  animation-duration: calc(var(--frames, 1) * var(--frame-s, 8) * 1s), 20s;
-}
-/* Until frames 2-6 are in the document (HeroBackground.astro releases them
-   from a <template> on window load, 2026-09-24 speed pass), hold the
-   cross-fade at its first keyframe, where frame 1 is fully opaque, and keep
-   only the Ken Burns zoom running. The two values follow the animation list:
-   crossfade, then zoom. Written before the hover/pause rule so that rule,
-   at the same specificity, still pauses both. */
-.hero-fade:not([data-frames-ready]) .hero-frame {
-  animation-play-state: paused, running;
-}
-.hero-fade:hover .hero-frame,
-.hero-fade:focus-within .hero-frame,
-.hero-fade.is-paused .hero-frame {
-  animation-play-state: paused;
+@media (prefers-reduced-motion: no-preference) {
+  .hero-frame.is-moving {
+    animation: var(--kb-dur, 5.7s) linear both;
+    will-change: transform;
+  }
+  .hero-frame.is-moving.kb-push-in {
+    animation-name: hero-kb-push-in;
+  }
+  .hero-frame.is-moving.kb-pull-out {
+    animation-name: hero-kb-pull-out;
+  }
+  .hero-frame.is-moving.kb-drift-left {
+    animation-name: hero-kb-drift-left;
+    transform-origin: 50% 50%;
+  }
+  .hero-frame.is-moving.kb-drift-right {
+    animation-name: hero-kb-drift-right;
+    transform-origin: 50% 50%;
+  }
+  .hero-fade.is-paused .hero-frame,
+  .hero-fade.is-idle .hero-frame {
+    animation-play-state: paused;
+  }
+  @keyframes hero-kb-push-in {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.13);
+    }
+  }
+  @keyframes hero-kb-pull-out {
+    from {
+      transform: scale(1.13);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes hero-kb-drift-left {
+    from {
+      transform: translateX(3.5%) scale(1.1);
+    }
+    to {
+      transform: translateX(-3.5%) scale(1.1);
+    }
+  }
+  @keyframes hero-kb-drift-right {
+    from {
+      transform: translateX(-3.5%) scale(1.1);
+    }
+    to {
+      transform: translateX(3.5%) scale(1.1);
+    }
+  }
+  @supports (animation-timeline: view()) {
+    .hero-fade {
+      animation: hero-parallax linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+    @keyframes hero-parallax {
+      from {
+        transform: translateY(0);
+      }
+      to {
+        transform: translateY(33.333%);
+      }
+    }
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-frame {
     transition: none;
-    animation: none;
-    transform: none;
-    opacity: 0;
-  }
-  .hero-frame:first-child {
-    opacity: 1;
   }
 }
 

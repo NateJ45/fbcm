@@ -1,6 +1,6 @@
 # Animation layer
 
-> Native scrolling and the scroll reset on navigation (Lenis was removed 2026-09-24), Motion integration, scroll-triggered reveals (including the glyph draw and the Hannaford ink-in), hero entry stagger, Ken Burns slideshow, the view-transition cross-fade and the post title that carries over, and the opt-in script accent.
+> Native scrolling and the scroll reset on navigation (Lenis was removed 2026-09-24), Motion integration, scroll-triggered reveals (including the glyph draw and the Hannaford ink-in), hero entry stagger and the headline word rise, the moving hero slideshow and its scroll parallax, the view-transition cross-fade and the post title that carries over, and the opt-in script accent.
 
 Non-animation polish (brand stripe, image zoom, surface-warm, reading-progress, sticky-header, paper-grain, print stylesheet) is covered in `polish-layer.md`.
 
@@ -72,9 +72,17 @@ A surface-colored panel (`color: var(--background)`) scales away from the top ed
 
 ---
 
-## Hero entry stagger (`.hero-entry-stagger`)
+## Hero entry stagger (`.hero-entry-stagger`) and the headline word rise
 
-The hero's content column wraps in `<div class="hero-entry-stagger">`. Each direct child fades up on first paint, in sequence. Retimed on 2026-09-20 to 1000ms on `cubic-bezier(.2,.7,.2,1)` from `translateY(22px)`, with delays of 0 / 150 / 300 / 450 / 600ms, so the hero resolves line by line the way a title sequence does. Animation lives in `globals.css`. Reduced-motion users get the final composition instantly via the global media-query reset.
+The photo and split heroes' content column wraps in `<div class="hero-entry-stagger">`, and it arrives in sequence on first paint, like a title sequence. Retimed on 2026-09-27 (`feat/hero-motion`) around the headline:
+
+- **The line above the headline** (the dated Sunday line or the eyebrow) fades up at 0ms: 1000ms on `cubic-bezier(.2,.7,.2,1)` from `translateY(22px)`.
+- **The headline itself never fades.** Its words rise, after Highland Park Presbyterian's hero (GSAP SplitText there; CSS here, server-rendered): each word is a `.hero-word` inline-block that clips (`overflow: hidden`) around a `.hero-word-in` that rises from `translateY(101%)` to 0 over 800ms on `cubic-bezier(0.22, 1, 0.36, 1)` (quint out), the first at 150ms and each next one 60ms later (`--w` is the word's index). The inner box carries padding (0.2em above, 0.25em below, 0.06em each side) so the clip never cuts an ascender, a descender or an italic overhang at rest; the outer box takes it back as negative margin, so the words set on exactly the lines plain text would. The boxes are top-aligned, because an overflow-clipping inline-block's baseline is its bottom edge.
+- **The lede, the facts and the buttons** fade up 120ms apart, starting when the last word has mostly landed: `150ms + (words - 1) x 60ms + 360ms`, from `--hero-words` on the wrapper, counted up to six so a long sentence cannot push the rest past about 2s. "Praise and proclaim." puts the lede at 630ms and the buttons down by 1870ms.
+
+**The words come from `src/lib/hero-words.ts`** (unit-tested). It splits the stega-CLEANED headline (the preview's U+FEFF matches `\s`, so a raw split would shatter the payload into fake words) and puts the stega run back on the last word, so click-to-edit survives. Each word keeps its accent (the script accent, and on the split hero the colour accent), an accent inside a word styles only its letters, and a no-break space holds two words together. Real spaces sit between the word boxes, so the h1 wraps between words, a word never breaks mid-word (it is one inline-block; `.h-fit` sizing is unchanged, `tests/headings.spec.ts` is its gate), and the h1's accessible name is the whole sentence. The window hero has no entrance choreography at all and keeps its headline as it was: its italic sentence with a closing accent on a block line of its own does not split cleanly into rising boxes, and it would bring load motion to interior pages that have none.
+
+Reduced-motion users get the final composition instantly (the word rise lives inside `prefers-reduced-motion: no-preference`, and the stagger's reset covers the rest). The preview shell (`PreviewLayout.astro`) forces both end states. `tests/motion.spec.ts` asserts the new truth: the h1 has no animation and full opacity, one rising box per word whose texts joined by spaces are the headline and its accessible name, the 150 + 60ms delays, the last word landed by 1.6s on its own clock, the lede starting after the last word, and every word landed in place.
 
 **The load choreography is hero-only.** Nothing else on the page animates on arrival; everything below the fold either paints or, if it is on the closed list above, reveals as it is scrolled to.
 
@@ -89,26 +97,25 @@ Two things make it work, and both are easy to undo by accident:
 
 The whole animation sits inside `@media (prefers-reduced-motion: no-preference)`, so a visitor who asked for stillness gets the static 94% initial value and no animation object at all. `tests/motion.spec.ts` asserts exactly that: under `reducedMotion: 'reduce'` nothing on `/` is in the `running` play state.
 
-Don't apply this class to other components -- the per-child delays are tuned for the hero's specific 4-5-element composition.
+Don't apply `.hero-entry-stagger` to other components: its delays are tuned to the hero's own composition (a line, the headline's words, then up to four more children).
 
 ---
 
 ## Home hero slideshow (`HeroBackground.astro`)
 
-The home hero can be a single static image (default) or a slow cross-fading slideshow with a subtle Ken Burns zoom. `homePage.heroImages` in Sanity controls this: one image renders the static hero, two or more render the slideshow.
+The photo hero renders one static photograph for one frame, or a moving slideshow for 2 to 12 (`heroSection.frames`, schema-capped at 12 since 2026-09-27). Rebuilt on 2026-09-27 (`feat/hero-motion`): until then it was a CSS-only cross-fade of 8-second frames whose Ken Burns keyframe (`hero-kb`) had been deleted on 2026-09-19, so the zoom had silently not run since.
 
-`HeroBackground.astro` owns the background markup (single `SanityImage` for 0-1 images, or stacked `.hero-slide` images for 2+) plus the readability overlays.
+- **The beat** is `frameBeats()` in `src/lib/hero-frames.ts` (unit-tested): each frame is LONG (5 s) or SHORT (3 s). Frame 1 is always long, then the pattern is long, short, short (a frame is long when its 0-based index is a multiple of three), and from four frames up the last is long too, so the loop closes on a held picture. Twelve frames are long on 1, 4, 7, 10 and 12; two are L S; three L S S; six L S S L S L.
+- **The move.** Frames cycle push-in, drift-left, pull-out, drift-right from frame 1 (`.kb-*` classes, keyframes `hero-kb-*` in `globals.css`). A move lasts the hold plus the 0.7 s dissolve (`--kb-dur`), on a linear clock, so a frame is still moving while it dissolves out and the picture is never still. Zooms run between 1 and 1.13 about `--kb-origin`, the frame's hotspot (the same percentages as its `object-position`, from `heroObjectPosition()`; the centre with none), so a push-in heads for the faces. Drifts pan from +3.5% to -3.5% (or back) at scale 1.1 about the centre, leaving 1.5% of spare picture beyond each edge at the extremes.
+- **The dissolve** is a CSS transition. The incoming frame (`.is-current`, `z-index: 1`) fades in over 0.7 s on top while the outgoing frame stays opaque beneath it and drops out at once after 0.7 s, so the picture never dips towards the ground colour mid-dissolve. `.hero-fade` is `isolation: isolate`, so the current frame's z-index never lifts it over the overlay or the words.
+- **The sequencer** is the one inline script in `HeroBackground.astro`. It moves `is-current` along the frames on each frame's `--hold`, restarts the incoming frame's move (class off, a style read, class on), and takes the move off a frame 0.8 s after it has dissolved out so a hidden frame holds no transform or layer. Frames 2..n stay in `<template data-hero-later>` and are inserted ONE AHEAD: frame 2 after `window` load, frame k+1 when frame k comes up. Before advancing it waits until the next image has loaded and `decode()`d; if the hold ends first it keeps the current frame, slows its move to a quarter speed so it is still moving, and advances when the image arrives; a frame whose image fails to load is skipped, so one missing photograph cannot stop the slideshow. After the first loop every frame is in the DOM. It pauses while the tab is hidden (`.is-idle` also holds the moves). It is bound idempotently: one instance in `window.__heroSeq`, stopped on `astro:before-swap`, a new one bound on `astro:page-load`, never two on one hero (`data-hero-bound`).
+- **Frame 1 is the LCP image**: `loading="eager" fetchpriority="high"`, server-rendered `is-current is-moving`, so it is opaque from the first paint and its push-in runs from CSS with no JavaScript at all. Without JavaScript that is all the visitor gets.
+- **The parallax** is CSS only. `.hero-fade`, the frames' wrapper and never a moving frame (two transforms on one element would fight), runs `hero-parallax` on its own view timeline (`animation-range: exit 0% exit 100%`) inside `@supports (animation-timeline: view())`: it drifts down by a third of the hero's height as the hero scrolls out, so the picture moves at two thirds of the scroll speed. The strip it uncovers at the hero's top is always above the viewport (a third of the distance scrolled is less than the distance scrolled), and the section clips its bottom, so no gap ever shows and the wrapper needs no extra height. The section is `overflow-clip`, NOT `overflow-hidden`: `overflow: hidden` makes it a scroll container, `view()` then takes the section (which never scrolls) as its scroller, and the parallax never moves (measured: the wrapper stayed at identity 400px down).
+- **The Pause control** (a WCAG 2.2.2 requirement: the slideshow moves for far longer than five seconds) stops the sequencer AND every move (`.is-paused` sets `animation-play-state: paused` on the frames); Play resumes both from where they were. Hover and focus-within no longer pause it (2026-09-27): a resting desktop cursor over a full-screen hero was freezing it.
+- **The words' backing.** The overlay is clear over the top half, which suits one chosen photograph and not twelve that change behind words that stay put. So a slideshow hero's content wrapper has its own dark backing (`.hero-fade ~ .hero-entry-stagger::before`, not animated): as tall as the words on every screen, feathered out above the dated line, fading out by 78% of the width on a desktop so the faces on the right stay bright, and flat at 54% on a phone. Measured with `tests/contrast.spec.ts`'s method over all twelve home frames at 1280, 1440 and 375: 81 of 432 checks failed on the overlay alone, 0 with the backing (tightest 1.12x its threshold). A single-photo hero does not get it.
+- **Reduced motion:** frame 1 only, still, no transform; the sequencer never starts, the template is never inflated, and the Pause button is hidden (`motion-reduce:hidden`). Every move and the parallax live inside `prefers-reduced-motion: no-preference`, and the dissolve transition is off under `reduce`.
 
-**Why the slide CSS lives in `globals.css` (not a scoped component style):** the slides are rendered by the child `SanityImage` component and would not inherit a scoped style. Same reasoning as `.img-zoom` and `.hero-entry-stagger`.
-
-Each slide is `position: absolute`, `opacity: 0` with a `1.5s` opacity transition; the active slide is `opacity: 1` and all slides run a gentle continuous Ken Burns (`scale(1)` to `scale(1.07)`, alternating origin and duration). A small `<script is:inline>` in HeroBackground advances the active slide every 4500ms (3s hold + 1.5s fade):
-
-- Uses a single `window`-scoped timer that is cleared on every re-init.
-- Pauses while the tab is hidden (`visibilitychange`).
-- Re-registers once on `astro:page-load` (guarded by a `window.__heroSlideshowBound` flag).
-- Never starts under `prefers-reduced-motion`.
-
-The first slide stays the eager `fetchpriority="high"` LCP image; the rest lazy-load. The first slide carries its descriptive alt; the additional slides use empty alt so they are decorative.
+The first frame carries its alt; the later frames have empty alt, since they are decorative. `tests/motion.spec.ts` covers it on Chromium and the WebKit iPhone: frame 1 current and moving from load, frame 2 taking over and moving, Pause holding both the frame and its transform for 3 s and Play resuming it, and under reduced motion one still frame, no frames inserted, and no Pause button.
 
 ---
 

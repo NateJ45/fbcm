@@ -32,6 +32,10 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - hero-teens: Teenagers laughing together over a card game, a Bible on the table
 - hero-chancel-steps: Children sit on the chancel steps around Kendall as she reads to them
+- hero-singers: Two teenage girls sing into microphones at the front of the church, ferns behind them
+- hero-kids-entrance: Four young children hold hands and smile outside the church's arched entrance
+- hero-mission-team: The mission team, adults and children together, holding up a Serve Your City t-shirt
+- hero-skit: Children sing with their hands raised on a desert stage set with paper cacti, a leader beside them at the microphone
 - home-expect-dinner: A group of girls of different ages seated around a round table set with a blue tablecloth, plates and cups, smiling for the camera.
 - home-expect-children: Two little girls smiling, cheek to cheek.
 - home-goal-way: Four teenagers reading open Bibles together around a table.

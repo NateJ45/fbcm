@@ -825,6 +825,34 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   is ImageText as it stands on main: its look follows the Visit branch's ImageText.
 - **Done (2026-09-24): the /wedding preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
+### Hero motion: before the twelve frames are applied (2026-09-27)
+
+- **Deploy, then `home.mjs --apply` for the 12 hero frames.** `feat/hero-motion` raised
+  the hero's photo cap from six to twelve (a validation change, so the deployed Studio
+  must have it before the data does, CLAUDE.md rule 1) and lists twelve frames in
+  `scripts/pages/home.mjs`. Deploy the branch first, then
+  `npm run seed-pages -- --only home` (the dry run of 2026-09-27 resolved all twelve
+  from the media library, uploaded nothing, and planned one change: `pageBuilder[0]`,
+  the hero) and `npm run seed-pages -- --only home --apply` (backup first). The motion
+  itself needs no apply: once deployed, the live five frames already move on the new
+  beat (long, short, short, long, long).
+- **Four of the seven new frames show identifiable children** (`hero-singers`,
+  `hero-kids-entrance`, `hero-mission-team`, `hero-skit`); they are in `photoConsent`
+  and in the approval note's photo list, and need the church's yes like the others.
+- **There is no photo of preaching in the library yet.** Twelve frames of the church
+  at work and none of a sermon. If the church sends one, it is one entry in
+  `scripts/data/page-images.json` and one line in `home.mjs`.
+- **Done (2026-09-27): the headline's contrast over twelve frames.** With the words in
+  their own boxes, `tests/contrast.spec.ts` measured "the" on `/styleguide` at 2.67:1,
+  and a sweep of every hero text over all twelve home frames at 1280, 1440 and 375
+  (the spec's own method) failed 81 of 432 checks. Nathan chose to deepen the scrim
+  where the words sit: a slideshow hero's content wrapper now carries its own backing
+  (`.hero-fade ~ .hero-entry-stagger::before`, globals.css), 0 of 432 failures, the
+  tightest at 1.12x its threshold. Re-run that sweep if a frame is swapped for a much
+  brighter photograph.
+- The seven new hotspots were placed by eye on the faces from the archive originals;
+  an editor can move any of them in the Studio's image tool, and a push-in follows.
+
 ### Home identity: before the page is applied (2026-09-23)
 
 - **The page is composed but not applied.** `scripts/pages/home.mjs` writes six bands

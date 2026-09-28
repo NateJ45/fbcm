@@ -1,34 +1,44 @@
 ---
 // Safe to edit by hand
 // The hero background layer. With 0-1 images it renders a single static photo
-// exactly as the hero always has. With 2-6 images it renders a slow
-// cross-fading slideshow with a subtle Ken Burns zoom, driven ENTIRELY by CSS
-// (see the .hero-fade / .hero-frame / hero-crossfade rules in globals.css) --
-// there is no interval timer advancing slides any more. Each frame gets its
-// own animation-delay from frameAnimationDelays() in src/lib/hero-frames.ts,
-// so the delay alone staggers the frames into a cross-fade.
+// exactly as the hero always has. With 2-12 it renders a moving slideshow
+// (2026-09-27, `feat/hero-motion`):
 //
-// The first slide is the LCP image (eager + high priority) and carries its alt,
-// like the single-image hero; the additional slides use empty alt so they are
-// decorative. Reduced-motion users get a single static image (the CSS
-// animation is disabled in that media query).
+//   - THE BEAT. Each frame holds for a long (5 s) or a short (3 s) beat and
+//     dissolves into the next over 0.7 s. frameBeats() in src/lib/hero-frames.ts
+//     is the plan (unit-tested); each frame carries its hold as `--hold`.
+//   - THE MOVE. Every frame's picture moves the whole time it is on screen: a
+//     push-in, a drift left, a pull-out or a drift right, lasting hold +
+//     dissolve and zooming towards the editor's hotspot (the .kb-* rules in
+//     globals.css).
+//   - THE SEQUENCER is the one script below. It moves `is-current` along the
+//     frames on their holds; the dissolve is a CSS transition. Frames 2..n
+//     wait in a <template> and are inserted ONE AHEAD (frame 2 after window
+//     load, frame k+1 when frame k comes up), and a frame is shown only once
+//     its image has loaded and decoded, so a slow connection lengthens a hold
+//     instead of dissolving into an empty frame.
+//   - THE PARALLAX is CSS only: .hero-fade drifts down at a third of the
+//     scroll speed as the hero leaves the screen (a scroll-driven animation in
+//     globals.css), on the wrapper, never on the moving frames.
 //
-// The dot indicators went with the art-direction pass (plan 3 task 6): the hero
-// is a photograph under a gradient, not a carousel with a position readout.
+// Frame 1 is the LCP image: eager, high priority, server-rendered `is-current`
+// (opaque from the first paint, with no JavaScript), and its move runs from
+// CSS alone. It carries the alt; the later frames have empty alt, since they
+// are decorative. Without JavaScript the visitor gets frame 1 and its one
+// move. Under reduced motion: frame 1, still, no sequencing, the template is
+// never inflated, and the Pause button is hidden.
 //
-// THE PAUSE CONTROL STAYS, and it is a WCAG requirement rather than a taste
-// call. A five-frame cross-fade auto-advances for far longer than five seconds
-// beside other content, so 2.2.2 (Pause, Stop, Hide) asks for a mechanism the
-// visitor can OPERATE. Hovering the frame pauses it and reduced-motion freezes
-// it, but neither is a control: one needs a pointer held still, the other is a
-// system preference. So the button came back in the new grammar, drawn as the
-// `link` CTA variant is (a rule under the label, no box, no icon) and sitting
-// on the hero's own bottom-right gutter. It renders only when there is more
-// than one frame, and it hides under reduced motion, where there is nothing
-// moving to stop. The script below is the only one in this file.
+// THE PAUSE CONTROL STAYS, and it is a WCAG requirement (2.2.2 Pause, Stop,
+// Hide): the slideshow moves for far longer than five seconds beside other
+// content. It pauses the sequencer AND every move (`.is-paused` sets
+// animation-play-state on the frames), and Play resumes both where they were.
+// Hovering or focusing the hero no longer pauses it (2026-09-27): a resting
+// desktop cursor over a full-screen hero froze it. It is drawn as the `link`
+// CTA variant is (a rule under the label, no box) on the hero's bottom-right
+// gutter, and renders only when there is more than one frame.
 
 import SanityImage from '@/components/SanityImage.astro';
-import { frameAnimationDelays, heroObjectPosition, heroSizes } from '@/lib/hero-frames';
+import { frameBeats, heroFrameStyle, heroObjectPosition, heroSizes } from '@/lib/hero-frames';
 import { photoAspect } from '@/lib/photo-shape';
 
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
@@ -45,50 +55,33 @@ const { images, heightFraction = 1 } = Astro.props as Props;
 const slides = (images ?? []).filter((img) => !!img?.asset);
 const isSlideshow = slides.length >= 2;
 const first = slides[0];
-
-// One frame every 8 seconds, per the brief. frameAnimationDelays() also
-// guards frame count to at least 1, though the schema already caps at 6.
-const SECONDS_PER_FRAME = 8;
-const delays = frameAnimationDelays(slides.length, SECONDS_PER_FRAME);
-
-// Which crossfade keyframe a hero's frames use. Fixed keyframe percentages
-// (calc() is not allowed in a keyframe selector) cannot serve the whole 2-6
-// frame range without either a visible gap at 2-3 frames or a blurry overlap
-// at 4-6, so there are two keyframes (globals.css) and this is the choice
-// between them: `few-frames` picks the wider hold/fade-out tuned for 2-3.
-const fewFrames = slides.length <= 3;
+const beats = frameBeats(slides.length);
 
 // FOCAL POINT AND SIZES, PER FRAME (2026-09-24, the hero people pass).
 // Each frame is cropped by object-fit: cover, so it honours its own Sanity
-// hotspot (an editor sets it in the Studio's image tool) through
-// object-position, and a frame with no hotspot keeps the centre it always had.
-// Its `sizes` is the width cover actually draws it at, which on a portrait
-// phone is the frame height times the photograph's aspect, not 100vw. Both
-// are pure and unit-tested in src/lib/hero-frames.test.ts; the hotspot is
-// numbers only, so stega never touches it.
-const frameStyle = (img: SanityImageObject) => {
-  const pos = heroObjectPosition(img.hotspot, img.crop);
-  return pos ? `object-position:${pos}` : '';
-};
+// hotspot through object-position (the centre with none), and the same point
+// is its move's transform-origin. Its `sizes` is the width cover actually
+// draws it at, which on a portrait phone is the frame height times the
+// photograph's aspect, not 100vw. All pure and unit-tested in
+// src/lib/hero-frames.test.ts; the hotspot is numbers only, so stega never
+// touches it.
+const position = (img: SanityImageObject) => heroObjectPosition(img.hotspot, img.crop);
+const frameClass = (i: number) => `hero-frame kb-${beats[i].move}`;
 const frameSizes = (img: SanityImageObject) =>
   heroSizes(photoAspect(img as Parameters<typeof photoAspect>[0])?.a ?? null, heightFraction);
+const firstPosition = first ? position(first) : null;
 ---
 
 {first && (
   <>
     {isSlideshow ? (
       <>
-        {/* Frame 1 only, in the document. Frames 2-6 wait in the <template>
-            below until the page has loaded (2026-09-24, the speed pass). They
-            are not on screen until 8 seconds in, but as <img loading="lazy">
-            inside the viewport they were fetched at once, alongside frame 1
-            and the fonts: on a phone that was four 2400px frames, about 780 KB,
-            competing with the first paint for a mobile connection. The
-            cross-fade is paused until they arrive (globals.css,
-            .hero-fade:not([data-frames-ready])), so a visitor without
-            JavaScript keeps frame 1 still, with its slow zoom, instead of
-            fading to an empty frame. */}
-        <div class:list={['hero-fade', { 'few-frames': fewFrames }]} data-hero-fade>
+        {/* Frame 1 only, in the document, current and moving from the first
+            paint. Frames 2..n wait in the <template> (the speed pass,
+            2026-09-24: fetched at once, they competed with the first paint
+            for a phone's connection) until the sequencer inserts them one
+            ahead. */}
+        <div class="hero-fade" data-hero-fade>
           <SanityImage
             source={first}
             width={2400}
@@ -96,13 +89,11 @@ const frameSizes = (img: SanityImageObject) =>
             loading="eager"
             fetchpriority="high"
             quality={70}
-            class="hero-frame"
-            style={`--frames:${slides.length}; --frame-s:${SECONDS_PER_FRAME}; animation-delay:${delays[0]}s${frameStyle(first) ? `; ${frameStyle(first)}` : ''}`}
+            class={`${frameClass(0)} is-current is-moving`}
+            style={heroFrameStyle(beats[0], firstPosition)}
           />
         </div>
-        {/* Outside .hero-fade on purpose: the frames' transform origins and
-            Ken Burns lengths are keyed on :nth-child, so nothing but frames
-            may sit inside it. */}
+        {/* Outside .hero-fade, so the wrapper holds frames and nothing else. */}
         <template data-hero-later>
           {slides.slice(1).map((img, j) => (
             <SanityImage
@@ -113,8 +104,8 @@ const frameSizes = (img: SanityImageObject) =>
               fetchpriority="low"
               quality={70}
               alt=""
-              class="hero-frame"
-              style={`--frames:${slides.length}; --frame-s:${SECONDS_PER_FRAME}; animation-delay:${delays[j + 1]}s${frameStyle(img) ? `; ${frameStyle(img)}` : ''}`}
+              class={frameClass(j + 1)}
+              style={heroFrameStyle(beats[j + 1], position(img))}
             />
           ))}
         </template>
@@ -128,7 +119,7 @@ const frameSizes = (img: SanityImageObject) =>
         fetchpriority="high"
         quality={70}
         class="absolute inset-0 w-full h-full object-cover"
-        style={frameStyle(first) || undefined}
+        style={firstPosition ? `object-position:${firstPosition}` : undefined}
       />
     )}
 
@@ -163,47 +154,183 @@ const frameSizes = (img: SanityImageObject) =>
 {isSlideshow && (
   <script is:inline>
     (function () {
-      // Toggles .is-paused on the [data-hero-fade] wrapper, which the CSS uses
-      // to pause BOTH animations at once (animation-play-state with no
-      // per-animation value stops every animation on the element). Bound the
-      // same idempotent way the site's other inline scripts are, so Astro View
-      // Transitions cannot double-bind it or leave it wired to a detached
-      // button.
-      function initHeroPause() {
-        var box = document.querySelector('[data-hero-fade]');
-        if (!box) return;
-        var button = document.querySelector('[data-hero-pause]');
-        if (!button || button.dataset.wired === '1') return;
-        button.dataset.wired = '1';
-        button.addEventListener('click', function () {
-          var paused = box.classList.toggle('is-paused');
-          button.setAttribute('aria-pressed', paused ? 'true' : 'false');
-          button.textContent = paused ? 'Play' : 'Pause';
-        });
+      // The slideshow's sequencer (2026-09-27). One instance at a time lives
+      // in window.__heroSeq; it is stopped on astro:before-swap and a new one
+      // is bound on the next page, so View Transitions can neither double-bind
+      // it nor leave its timers running against a detached hero.
+      function stop() {
+        var s = window.__heroSeq;
+        window.__heroSeq = null;
+        if (s) s.stop();
       }
-      // Frames 2-6 come out of their <template> once the page has loaded, and
-      // only then does the cross-fade start (the attribute releases the paused
-      // play state in globals.css). Under reduced motion they are never
-      // fetched: that rule shows frame 1 alone and hides every other frame.
-      function initHeroFrames() {
+      function init() {
         var box = document.querySelector('[data-hero-fade]');
         var tpl = document.querySelector('template[data-hero-later]');
-        if (!box || !tpl || box.hasAttribute('data-frames-ready')) return;
+        if (!box || !tpl || box.dataset.heroBound === '1') return;
+        // Reduced motion: frame 1 alone, still; the template is never inflated.
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        function release() {
-          if (box.hasAttribute('data-frames-ready') || !box.isConnected) return;
-          box.appendChild(tpl.content.cloneNode(true));
-          box.setAttribute('data-frames-ready', '');
+        stop();
+        box.dataset.heroBound = '1';
+        var button = document.querySelector('[data-hero-pause]');
+        var later = tpl.content.querySelectorAll('.hero-frame');
+        var frames = [box.querySelector('.hero-frame')];
+        var total = later.length + 1;
+        var cur = 0;
+        var timer = 0;
+        var cleanup = 0;
+        var due = 0;
+        var left = -1;
+        var waiting = false;
+        var loaded = document.readyState === 'complete';
+        var userPaused = false;
+        var hidden = document.hidden;
+        var stopped = false;
+
+        function holdMs(el) {
+          return (parseFloat(el.style.getPropertyValue('--hold')) || 5) * 1000;
         }
-        if (document.readyState === 'complete') release();
-        else window.addEventListener('load', release, { once: true });
+        // Frame i, inserted from the template the first time it is asked for,
+        // never before window load, so frame 2 cannot compete with frame 1.
+        function frame(i) {
+          if (!frames[i] && loaded) {
+            var el = document.importNode(later[i - 1], true);
+            var retry = function () {
+              if (waiting) advance();
+            };
+            el.addEventListener('load', retry);
+            el.addEventListener('error', retry);
+            box.appendChild(el);
+            frames[i] = el;
+          }
+          return frames[i];
+        }
+        function ready(el) {
+          return !!el && el.complete && el.naturalWidth > 0;
+        }
+        // An image that failed (complete, with no pixels) is skipped, so one
+        // missing photograph cannot stop the slideshow on the frame before it.
+        function broken(el) {
+          return !!el && el.complete && el.naturalWidth === 0;
+        }
+        function running() {
+          return !userPaused && !hidden && !stopped;
+        }
+        function schedule(ms) {
+          clearTimeout(timer);
+          left = -1;
+          due = Date.now() + ms;
+          timer = setTimeout(holdEnded, ms);
+        }
+        // The hold is over. Advance if the next frame is ready; if it is not,
+        // keep this one, slow its move so the picture is still moving, and
+        // advance when the next image arrives.
+        function holdEnded() {
+          timer = 0;
+          waiting = true;
+          var el = frames[cur];
+          if (el.getAnimations) {
+            el.getAnimations().forEach(function (a) {
+              if (a.updatePlaybackRate) a.updatePlaybackRate(0.25);
+            });
+          }
+          advance();
+        }
+        function advance() {
+          if (!waiting || !running()) return;
+          var n = cur;
+          var next = null;
+          for (var step = 1; step < total; step++) {
+            n = (cur + step) % total;
+            next = frame(n);
+            if (!broken(next)) break;
+          }
+          if (!ready(next)) return;
+          waiting = false;
+          var shown = function () {
+            if (stopped) return;
+            if (!running()) {
+              waiting = true;
+              return;
+            }
+            show(n);
+          };
+          if (next.decode) next.decode().then(shown, shown);
+          else shown();
+        }
+        function show(n) {
+          var prev = frames[cur];
+          var el = frames[n];
+          // Restart its move: off, a style read, on. It is at opacity 0 here.
+          el.classList.remove('is-moving');
+          void el.offsetWidth;
+          el.classList.add('is-moving', 'is-current');
+          prev.classList.remove('is-current');
+          cur = n;
+          // Once the previous frame has dissolved out, let its move go, so a
+          // hidden frame holds no transform and no compositor layer.
+          clearTimeout(cleanup);
+          cleanup = setTimeout(function () {
+            if (prev !== frames[cur]) prev.classList.remove('is-moving');
+          }, 800);
+          frame((n + 1) % total);
+          schedule(holdMs(el));
+        }
+        function pause() {
+          if (timer) {
+            clearTimeout(timer);
+            timer = 0;
+            left = Math.max(0, due - Date.now());
+          }
+        }
+        function resume() {
+          if (!running()) return;
+          if (waiting) advance();
+          else if (!timer) schedule(left >= 0 ? left : holdMs(frames[cur]));
+        }
+        function onVisibility() {
+          hidden = document.hidden;
+          box.classList.toggle('is-idle', hidden);
+          if (hidden) pause();
+          else resume();
+        }
+        function onLoad() {
+          loaded = true;
+          frame(1);
+        }
+        function onPress() {
+          userPaused = !userPaused;
+          box.classList.toggle('is-paused', userPaused);
+          button.setAttribute('aria-pressed', userPaused ? 'true' : 'false');
+          button.textContent = userPaused ? 'Play' : 'Pause';
+          if (userPaused) pause();
+          else resume();
+        }
+
+        if (button) button.addEventListener('click', onPress);
+        document.addEventListener('visibilitychange', onVisibility);
+        if (loaded) frame(1);
+        else window.addEventListener('load', onLoad, { once: true });
+        if (hidden) {
+          box.classList.add('is-idle');
+          left = holdMs(frames[0]);
+        } else schedule(holdMs(frames[0]));
+
+        window.__heroSeq = {
+          stop: function () {
+            stopped = true;
+            clearTimeout(timer);
+            clearTimeout(cleanup);
+            document.removeEventListener('visibilitychange', onVisibility);
+            window.removeEventListener('load', onLoad);
+            if (button) button.removeEventListener('click', onPress);
+          },
+        };
       }
-      initHeroPause();
-      initHeroFrames();
-      if (!window.__heroPauseBound) {
-        window.__heroPauseBound = true;
-        document.addEventListener('astro:page-load', initHeroPause);
-        document.addEventListener('astro:page-load', initHeroFrames);
+      init();
+      if (!window.__heroSeqBound) {
+        window.__heroSeqBound = true;
+        document.addEventListener('astro:page-load', init);
+        document.addEventListener('astro:before-swap', stop);
       }
     })();
   </script>

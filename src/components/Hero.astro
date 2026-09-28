@@ -42,6 +42,7 @@ import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { splitHeadingAccent } from '@/lib/heading-accent';
+import { headlineSegments, heroWords } from '@/lib/hero-words';
 import { splitStega } from '@/lib/preview-stega';
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
 import {
@@ -221,6 +222,17 @@ const colour = scriptFound
   ? { found: false, before: '', word: '', after: '', heading: headline }
   : splitHeadingAccent(headline, headingAccent);
 const colourCloses = colour.found && splitStega(colour.after).cleaned.trim() === '';
+// THE WORD RISE (2026-09-27, `feat/hero-motion`). The photo and split heroes
+// raise their headline a word at a time: each word clips, and the word inside
+// it rises from below (.hero-word in globals.css, CSS only, server-rendered).
+// hero-words.ts splits on the stega-CLEANED text and puts any stega run back
+// on the last word, so click-to-edit survives; each word keeps its accent.
+// Real spaces sit between the words, so the h1 still wraps between words and
+// reads to a screen reader as the one sentence it is. The photo hero draws
+// only the script accent (as it always has); the split hero draws either.
+const fullWords = heroWords(headlineSegments(headline, { found: scriptFound, before: scriptBefore, word: scriptWord, after: scriptAfter }));
+const splitWords = heroWords(headlineSegments(headline, { found: scriptFound, before: scriptBefore, word: scriptWord, after: scriptAfter }, colour));
+const ACCENT_CLASS = { script: 'font-script', colour: 'text-gold' } as const;
 // The window sentence is italic Castoro, but a closing accent is set in the
 // titling capitals, which are wider: fit whichever word needs more room.
 const windowFit = (() => {
@@ -485,21 +497,9 @@ const windowDrops = dropInto && windowOrder.length > 0;
         overlaid). One left edge with every band below (rule 17). */}
     <div class="hs-grid mx-auto grid max-w-content grid-cols-1 items-end px-gutter lg:grid-cols-12">
       <div class="order-2 lg:order-1 lg:col-span-7">
-        <div class="hero-entry-stagger max-w-2xl">
+        <div class="hero-entry-stagger max-w-2xl" style={`--hero-words:${splitWords.length}`}>
           {eyebrow && <p class="hw-label font-display text-gold uppercase">{eyebrow}</p>}
-          <h1 id={headingId} class:list={[displayHeadlineClass, 'h-fit text-white-pure']} style={headingFit(headline, scale === 'sentence' ? 'body' : 'display')}><span class="h-fit-in">
-            {scriptFound ? (
-              <>
-                {scriptBefore}<span class="font-script">{scriptWord}</span>{scriptAfter}
-              </>
-            ) : colour.found ? (
-              <>
-                {colour.before}<span class="text-gold">{colour.word}</span>{colour.after}
-              </>
-            ) : (
-              headline
-            )}
-          </span></h1>
+          <h1 id={headingId} class:list={[displayHeadlineClass, 'hero-rise h-fit text-white-pure']} style={headingFit(headline, scale === 'sentence' ? 'body' : 'display')}><span class="h-fit-in">{splitWords.map((w, i) => (<>{i > 0 && ' '}<span class="hero-word" style={`--w:${i}`}><span class="hero-word-in">{w.pieces.map((p) => (p.accent ? <span class={ACCENT_CLASS[p.accent]}>{p.text}</span> : p.text))}</span></span></>))}</span></h1>
           {subhead && (
             <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body text-lede font-normal text-bg/85 italic">
               {subheadParts.map((part) =>
@@ -556,21 +556,25 @@ const windowDrops = dropInto && windowOrder.length > 0;
 ) : hasImage ? (
   <section
     class:list={[
-      'relative isolate flex flex-col justify-end overflow-hidden bg-accent-dark text-bg',
+      'relative isolate flex flex-col justify-end overflow-clip bg-accent-dark text-bg',
       imageHeroHeight,
     ]}
     aria-labelledby={headingId}
   >
-    {/* Background: single static image or a cross-fading slideshow (2+ images),
-        plus the one readability gradient. See HeroBackground.astro. */}
+    {/* Background: single static image or the moving slideshow (2+ images),
+        plus the one readability gradient. See HeroBackground.astro. The
+        section is overflow-clip, NOT overflow-hidden: hidden would make it a
+        scroll container, and the slideshow's scroll parallax (a view()
+        timeline, globals.css) would then never move. */}
     <HeroBackground images={effectiveImages} heightFraction={size === 'tall' ? 1 : 0.72} />
 
     {/* Content sits at the bottom of the section thanks to justify-end on the
-        section itself. hero-entry-stagger rides on this wrapper, so its direct
-        children (the line, the headline, the lede, the facts, the buttons)
-        rise in sequence at 0/150/300/450/600ms. Reduced-motion users get the
-        final composition instantly. */}
-    <div class="hero-entry-stagger relative mx-auto w-full max-w-content px-gutter pt-[clamp(72px,12vh,128px)] pb-[clamp(40px,7vh,72px)]">
+        section itself. hero-entry-stagger rides on this wrapper: the line
+        fades up first, the headline's words rise from 150ms (the h1 itself
+        never fades), and the lede, the facts and the buttons fade up once the
+        last word has mostly landed, timed from --hero-words (globals.css).
+        Reduced-motion users get the final composition instantly. */}
+    <div class="hero-entry-stagger relative mx-auto w-full max-w-content px-gutter pt-[clamp(72px,12vh,128px)] pb-[clamp(40px,7vh,72px)]" style={`--hero-words:${fullWords.length}`}>
       {showLiveSunday ? (
         // The dated line, with the gold dash that marks it as the live one.
         // The server text carries no date; the upgrade script in BaseLayout
@@ -622,15 +626,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
           </p>
         )
       )}
-      <h1 id={headingId} class:list={[displayHeadlineClass, 'h-fit text-bg']} style={headingFit(headline, scale === 'sentence' ? 'body' : 'display')}><span class="h-fit-in">
-        {scriptFound ? (
-          <>
-            {scriptBefore}<span class="font-script">{scriptWord}</span>{scriptAfter}
-          </>
-        ) : (
-          headline
-        )}
-      </span></h1>
+      <h1 id={headingId} class:list={[displayHeadlineClass, 'hero-rise h-fit text-bg']} style={headingFit(headline, scale === 'sentence' ? 'body' : 'display')}><span class="h-fit-in">{fullWords.map((w, i) => (<>{i > 0 && ' '}<span class="hero-word" style={`--w:${i}`}><span class="hero-word-in">{w.pieces.map((p) => (p.accent ? <span class={ACCENT_CLASS[p.accent]}>{p.text}</span> : p.text))}</span></span></>))}</span></h1>
       {subhead && (
         <p class="lede mt-[clamp(18px,3vh,30px)] max-w-[34ch] font-body italic font-normal text-lede text-bg">
           {subheadParts.map((part) =>

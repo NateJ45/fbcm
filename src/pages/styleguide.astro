@@ -77,7 +77,7 @@ import type {
 // scaffold:end
 // Task 7: temporary hero fixtures (frames, layout, facts). No hero with frames
 // exists in the dataset yet (plan 2b seeds one) so these two calls are the
-// only way to see the cross-fade and the split layout render before content
+// only way to see the slideshow and the split layout render before content
 // lands. Remove once plan 2b's seeded hero gives the styleguide (and Playwright)
 // something real to shoot instead.
 import Hero from '@/components/Hero.astro';
@@ -404,9 +404,11 @@ const HERITAGE_RANGE_FIXTURE = {
   ],
 };
 
-// Task 7: temporary hero fixtures. Three real FBCM photos (from this
-// project's own asset library, same source as HERITAGE_FIXTURE above) for the
-// full-bleed cross-fade, and one for the split layout with three facts.
+// Task 7: temporary hero fixtures. Six real FBCM photos (from this project's
+// own asset library, same source as HERITAGE_FIXTURE above) for the full-bleed
+// slideshow, enough to see its beat (long, short, short, long, short, long)
+// and all four moves (2026-09-27, feat/hero-motion), and one for the split
+// layout with three facts.
 const HERO_FULL_FIXTURE = {
   eyebrow: 'Welcome home',
   headline: 'A church for the whole of Muncie',
@@ -423,6 +425,21 @@ const HERO_FULL_FIXTURE = {
     {
       asset: { _ref: 'image-4a5061d1625f61322237a6950c9bd2d6f819edba-1900x1400-jpg' },
       alt: 'A styleguide fixture photo of the church.',
+    },
+    {
+      asset: { _ref: 'image-651ea65b35de1790bec98a228f47452e964cd46c-2400x1600-jpg' },
+      hotspot: { x: 0.6, y: 0.3 },
+      alt: 'Two women and a man handle silver communion trays and a cloth at a table, preparing the elements.',
+    },
+    {
+      asset: { _ref: 'image-e7b7e945ad95143ef6a2513b12d3f48d90244b64-2400x1600-jpg' },
+      hotspot: { x: 0.55, y: 0.4 },
+      alt: 'Four young children hold hands and smile, posed together outside the church’s arched entrance.',
+    },
+    {
+      asset: { _ref: 'image-2f1ce4c6714c166672b1b80501b21e545ad14bc2-2400x1596-jpg' },
+      hotspot: { x: 0.55, y: 0.38 },
+      alt: 'Women of the church sit together at a round table set for a fellowship breakfast.',
     },
   ],
   // Buttons on both heroes, so the styleguide shows the church pair the way a

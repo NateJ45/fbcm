@@ -140,7 +140,7 @@ export type ProjectedHeroSection = { _key: string } & Omit<
   'backgroundImage' | 'frames' | 'primaryCta' | 'secondaryCta'
 > & {
     backgroundImage?: ProjectedImage | null;
-    /** Up to six photos (schema-capped). 2+ render the home hero's CSS cross-fade. */
+    /** Up to twelve photos (schema-capped). 2+ render the home hero slideshow. */
     frames?: ProjectedImage[] | null;
     primaryCta?: ProjectedCtaBlock | null;
     secondaryCta?: ProjectedCtaBlock | null;

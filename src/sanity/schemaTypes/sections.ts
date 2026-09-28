@@ -157,7 +157,7 @@ export const heroSection = defineType({
       name: 'frames',
       title: 'Photos',
       type: 'array',
-      validation: (R) => R.max(6),
+      validation: (R) => R.max(12),
       of: [
         {
           type: 'image',
@@ -181,7 +181,7 @@ export const heroSection = defineType({
         },
       ],
       description:
-        'One photo, or up to six. With more than one, the home page fades slowly from one to the next; put the best one first. The arched windows layout uses the first three, the middle one largest.',
+        'One photo, or up to twelve. With more than one, the photos take turns, each one moving slowly, and fade from one to the next; put the best one first. The arched windows layout uses the first three, the middle one largest.',
     }),
     defineField({
       name: 'facts',
