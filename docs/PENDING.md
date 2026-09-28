@@ -824,6 +824,38 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   is ImageText as it stands on main: its look follows the Visit branch's ImageText.
 - **Done (2026-09-24): the /wedding preview fixture is removed**, with the other nine, after the page's content was applied. `scripts/page-fixture.mjs` and the empty `scripts/data/fixtures/` folder stay for the next page composed ahead of its deploy.
 
+### Hero motion: before the twelve frames are applied (2026-09-27)
+
+- **Deploy, then `home.mjs --apply` for the 12 hero frames.** `feat/hero-motion` raised
+  the hero's photo cap from six to twelve (a validation change, so the deployed Studio
+  must have it before the data does, CLAUDE.md rule 1) and lists twelve frames in
+  `scripts/pages/home.mjs`. Deploy the branch first, then
+  `npm run seed-pages -- --only home` (the dry run of 2026-09-27 resolved all twelve
+  from the media library, uploaded nothing, and planned one change: `pageBuilder[0]`,
+  the hero) and `npm run seed-pages -- --only home --apply` (backup first). The motion
+  itself needs no apply: once deployed, the live five frames already move on the new
+  beat (long, short, short, long, long).
+- **Four of the seven new frames show identifiable children** (`hero-singers`,
+  `hero-kids-entrance`, `hero-mission-team`, `hero-skit`); they are in `photoConsent`
+  and in the approval note's photo list, and need the church's yes like the others.
+- **There is no photo of preaching in the library yet.** Twelve frames of the church
+  at work and none of a sermon. If the church sends one, it is one entry in
+  `scripts/data/page-images.json` and one line in `home.mjs`.
+- **The photo hero's headline is below 3:1 over bright parts of some photographs.**
+  With the words split into their own boxes (the word rise), `tests/contrast.spec.ts`
+  measures each word against the pixels behind it instead of the whole heading's
+  average, and on `/styleguide` "the" sits at 2.67:1 over frame 1's stained-glass
+  window (large text needs 3:1). `/` passes. The pixels behind the words did not
+  change; the finer measurement found what the average hid, and a slideshow of twelve
+  photographs puts more of them behind the words. Measured per frame (1280 wide, the
+  brightest 5% behind each word): several words on several frames fall between 1.6
+  and 3.0. The fix is a design call for Nathan, not taken on the branch: deepen the
+  overlay's left gradient under the headline (it is 55% at the edge and clear by the
+  middle, where the longer words end), or choose frames and hotspots so the words sit
+  over darker picture.
+- The seven new hotspots were placed by eye on the faces from the archive originals;
+  an editor can move any of them in the Studio's image tool, and a push-in follows.
+
 ### Home identity: before the page is applied (2026-09-23)
 
 - **The page is composed but not applied.** `scripts/pages/home.mjs` writes six bands
