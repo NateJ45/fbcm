@@ -847,8 +847,8 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
   and a sweep of every hero text over all twelve home frames at 1280, 1440 and 375
   (the spec's own method) failed 81 of 432 checks. Nathan chose to deepen the scrim
   where the words sit: a slideshow hero's content wrapper now carries its own backing
-  (`.hero-fade ~ .hero-entry-stagger::before`, globals.css), 0 of 432 failures, the
-  tightest at 1.12x its threshold. Re-run that sweep if a frame is swapped for a much
+  (`.hero-fade ~ .hero-entry-stagger::before`, globals.css), 0 of 432 failures (0 of 468
+  once the service line made the stack taller, the tightest at 1.06x its threshold). Re-run that sweep if a frame is swapped for a much
   brighter photograph.
 - The seven new hotspots were placed by eye on the faces from the archive originals;
   an editor can move any of them in the Studio's image tool, and a push-in follows.
