@@ -827,7 +827,8 @@ wedding` (the plan on 2026-09-24: `pageBuilder` 11 -> 12; the live page matched 
 
 ### Hero motion: before the twelve frames are applied (2026-09-27)
 
-- **Deploy, then `home.mjs --apply` for the 12 hero frames.** `feat/hero-motion` raised
+- **Done (2026-09-28): deployed, then `home.mjs --apply` for the 12 hero frames** (backup
+  `scripts/data/backups/homePage-2026-09-28-plan2b.json`; see the service line below). `feat/hero-motion` raised
   the hero's photo cap from six to twelve (a validation change, so the deployed Studio
   must have it before the data does, CLAUDE.md rule 1) and lists twelve frames in
   `scripts/pages/home.mjs`. Deploy the branch first, then
