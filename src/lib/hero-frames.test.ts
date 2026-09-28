@@ -2,8 +2,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   archPlacement,
-  frameAnimationDelays,
+  frameBeats,
+  heroFrameStyle,
   heroObjectPosition,
+  DISSOLVE_S,
+  HERO_MOVES,
+  LONG_HOLD_S,
+  SHORT_HOLD_S,
   heroSizes,
   archRatioFromStyle,
   LANCET_FACE_LINE,
@@ -85,13 +90,65 @@ test('the crop is honoured: aspect after the crop, hotspot inside it', () => {
   assert.equal(low.objectPosition, '50.00% 57.14%');
 });
 
-test('frame delays step by the frame length and the first frame starts at zero', () => {
-  assert.deepEqual(frameAnimationDelays(5, 8), [0, 8, 16, 24, 32]);
-  assert.deepEqual(frameAnimationDelays(1, 8), [0]);
+// ── frameBeats: the home hero's beat and moves (2026-09-27) ────────────────
+const longs = (n: number) =>
+  frameBeats(n)
+    .map((b, i) => (b.long ? i + 1 : 0))
+    .filter(Boolean);
+
+test("the home page's twelve frames are long on 1, 4, 7, 10 and 12", () => {
+  assert.deepEqual(longs(12), [1, 4, 7, 10, 12]);
 });
 
-test('a single frame produces no animation cycle', () => {
-  assert.equal(frameAnimationDelays(1, 8).length, 1);
+test('the beat generalises: first always long, then long-short-short, last long from four', () => {
+  assert.deepEqual(longs(1), [1]);
+  assert.deepEqual(longs(2), [1]);
+  assert.deepEqual(longs(3), [1]);
+  assert.deepEqual(longs(4), [1, 4]);
+  assert.deepEqual(longs(5), [1, 4, 5]);
+  assert.deepEqual(longs(6), [1, 4, 6]);
+  assert.deepEqual(longs(7), [1, 4, 7]);
+});
+
+test('a long beat holds 5 s and a short one 3 s, and every move outlasts its hold by the dissolve', () => {
+  for (const n of [1, 2, 3, 6, 12]) {
+    for (const b of frameBeats(n)) {
+      assert.equal(b.hold, b.long ? LONG_HOLD_S : SHORT_HOLD_S);
+      assert.equal(b.moveSeconds, b.hold + DISSOLVE_S);
+    }
+  }
+  assert.equal(DISSOLVE_S, 0.7);
+});
+
+test('the moves cycle push-in, drift-left, pull-out, drift-right from frame 1', () => {
+  assert.deepEqual(
+    frameBeats(6).map((b) => b.move),
+    ['push-in', 'drift-left', 'pull-out', 'drift-right', 'push-in', 'drift-left'],
+  );
+  const twelve = frameBeats(12);
+  twelve.forEach((b, i) => assert.equal(b.move, HERO_MOVES[i % 4]));
+  // Neighbours never share a move, including across the wrap from 12 to 1.
+  for (let i = 0; i < twelve.length; i++) {
+    assert.notEqual(twelve[i].move, twelve[(i + 1) % twelve.length].move);
+  }
+});
+
+test('a frame count that is not a positive whole number still gives one frame', () => {
+  assert.equal(frameBeats(0).length, 1);
+  assert.equal(frameBeats(-3).length, 1);
+  assert.equal(frameBeats(Number.NaN).length, 1);
+  assert.equal(frameBeats(2.9).length, 2);
+  assert.equal(frameBeats(1)[0].move, 'push-in');
+});
+
+test("a frame's style carries its hold, its move length, and the hotspot as origin and crop", () => {
+  const [first, second] = frameBeats(2);
+  assert.equal(
+    heroFrameStyle(first, '62.00% 40.00%'),
+    '--hold:5;--kb-dur:5.7s;--kb-origin:62.00% 40.00%;object-position:62.00% 40.00%',
+  );
+  // No hotspot: origin and crop stay at the CSS default, the centre.
+  assert.equal(heroFrameStyle(second, null), '--hold:3;--kb-dur:3.7s');
 });
 
 test('a hotspot becomes the object-position, in percentages', () => {

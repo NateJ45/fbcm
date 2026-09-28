@@ -31,8 +31,8 @@ interface Props {
   /** Provide explicit sizes attribute for responsive serving. Strongly recommended for any non-fixed-width image. */
   sizes?: string;
   class?: string;
-  /** Inline style passthrough. Used by the hero cross-fade to set each
-      frame's --frames/--frame-s custom properties and animation-delay. */
+  /** Inline style passthrough. Used by the hero slideshow to set each
+      frame's --hold, --kb-dur and --kb-origin and its object-position. */
   style?: string;
   /** Quality 0-100. Default 75 for content, drop to 65 for big hero photos. */
   quality?: number;

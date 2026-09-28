@@ -11,7 +11,7 @@
 // The rule, in full: the first block is a heroSection, it carries at least one
 // image, AND its layout puts that image BEHIND the words rather than beside
 // them. A hero stores its picture in either of two places, `backgroundImage`
-// or the `frames` array (the home page's slow cross-fade is `frames` with more
+// or the `frames` array (the home page's slideshow is `frames` with more
 // than one entry), so both count as an image.
 //
 // The layout half of that rule is not a nicety. heroSection's "Words left,

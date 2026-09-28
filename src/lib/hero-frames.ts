@@ -1,8 +1,71 @@
 // Safe to edit by hand
-// The home hero cross-fade is CSS-only. This computes each frame's animation-delay
-// so a 5-frame, 8-second hero cycles in 40s with frame 1 (the LCP image) first.
-export function frameAnimationDelays(frameCount: number, secondsPerFrame: number): number[] {
-  return Array.from({ length: Math.max(1, frameCount) }, (_, i) => i * secondsPerFrame);
+
+// ── The home hero's beat (2026-09-27, `feat/hero-motion`) ────────────────────
+// A slideshow hero (2+ frames) holds each photograph for a LONG or a SHORT beat
+// and moves the picture the whole time it is on screen. HeroBackground.astro
+// renders the plan below into each frame's style (--hold, --kb-dur and a move
+// class), and its sequencer script advances the frames on the holds.
+//
+// THE BEAT RULE. Frame 1 is always long (it is the LCP image, and the first
+// thing anyone sees). After it the pattern is long, short, short: a frame is
+// long when its 0-based index is a multiple of three. From four frames up the
+// LAST frame is long as well, so the loop closes on a held picture rather than
+// a quick one before it wraps to frame 1. For the home page's twelve that puts
+// the long beats on frames 1, 4, 7, 10 and 12. Two frames are long, short;
+// three are long, short, short; six are L S S L S L.
+//
+// THE MOVES cycle push-in, drift-left, pull-out, drift-right from frame 1, so
+// neighbours never repeat a move and a zoom always follows a drift. Each move
+// lasts hold + DISSOLVE_S, so a frame is still moving while it dissolves out
+// and the picture is never still.
+
+/** A frame's picture motion. */
+export type HeroMove = 'push-in' | 'drift-left' | 'pull-out' | 'drift-right';
+export const HERO_MOVES: readonly HeroMove[] = ['push-in', 'drift-left', 'pull-out', 'drift-right'];
+/** Seconds a long frame is the current one. */
+export const LONG_HOLD_S = 5;
+/** Seconds a short frame is the current one. */
+export const SHORT_HOLD_S = 3;
+/** Seconds one frame takes to dissolve into the next (the CSS transition). */
+export const DISSOLVE_S = 0.7;
+
+export interface FrameBeat {
+  /** True for a long beat. */
+  long: boolean;
+  /** Seconds this frame is the current one before the next begins to dissolve in. */
+  hold: number;
+  /** Seconds its move lasts: the hold plus the dissolve out. */
+  moveSeconds: number;
+  move: HeroMove;
+}
+
+/** The beat and the move of every frame of an `count`-frame hero (at least one). */
+export function frameBeats(count: number): FrameBeat[] {
+  const n = Math.max(1, Math.floor(Number.isFinite(count) ? count : 1));
+  return Array.from({ length: n }, (_, i) => {
+    const long = i % 3 === 0 || (n >= 4 && i === n - 1);
+    const hold = long ? LONG_HOLD_S : SHORT_HOLD_S;
+    return {
+      long,
+      hold,
+      moveSeconds: Math.round((hold + DISSOLVE_S) * 1000) / 1000,
+      move: HERO_MOVES[i % HERO_MOVES.length],
+    };
+  });
+}
+
+/**
+ * The inline style of a slideshow frame: its hold (read by the sequencer), the
+ * length of its move, the move's transform-origin and the crop. The origin is
+ * the frame's own object-position (heroObjectPosition, below), so a push-in
+ * heads for the faces the editor's hotspot marks; with no hotspot both stay at
+ * the CSS default, the centre. Numbers only, so stega never reaches it.
+ */
+export function heroFrameStyle(beat: FrameBeat, objectPosition: string | null): string {
+  const parts = [`--hold:${beat.hold}`, `--kb-dur:${beat.moveSeconds}s`];
+  if (objectPosition)
+    parts.push(`--kb-origin:${objectPosition}`, `object-position:${objectPosition}`);
+  return parts.join(';');
 }
 
 /** The parts of a Sanity image this module reads. Numbers only, so nothing here
