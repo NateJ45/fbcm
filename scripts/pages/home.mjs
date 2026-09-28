@@ -9,7 +9,7 @@
 // photos are not reused from Who We Are, the history list ends in the
 // present, no captions, brand colours only. The page reads:
 //
-//   heroSection          "Praise and proclaim." over five frames of people (2026-09-24)
+//   heroSection          "Praise and proclaim." over twelve frames of people (2026-09-24, twelve 2026-09-27)
 //   sundayTimesSection   What to Expect: the hymn board on brown
 //   linkCardsSection     Our Goals: the four goals as arched doors, with glyphs
 //   heritageBandSection  Our Building: the rendering, the dates, and today
@@ -139,11 +139,16 @@ export default {
   ],
 
   // Page-images manifest keys of the photos on this page that show an
-  // identifiable child. hero-teens and hero-chancel-steps are hero frames 2
-  // and 4.
+  // identifiable child. hero-teens, hero-chancel-steps, hero-singers,
+  // hero-kids-entrance, hero-mission-team and hero-skit are hero frames 2, 3,
+  // 5, 6, 10 and 11.
   photoConsent: [
     'hero-teens',
     'hero-chancel-steps',
+    'hero-singers',
+    'hero-kids-entrance',
+    'hero-mission-team',
+    'hero-skit',
     'home-expect-dinner',
     'home-expect-children',
     'home-goal-way',
@@ -236,22 +241,34 @@ export default {
       return { ...img, hotspot: hotspot(x, y), ...extra };
     };
 
-    // -- 1. Hero: people (2026-09-24) -------------------------------------------
-    // Five frames of the church at work, in Nathan's approved order: the
-    // worship team (frame 1, the LCP image), teenagers over cards, communion
-    // being prepared, children on the chancel steps with Kendall, and the
-    // congregation from the balcony. Each manifest entry carries its alt and
-    // its hotspot, placed so the faces land in the clear upper right while the
-    // words sit bottom left. The old frames' keys stay in the manifest: the
-    // tower feeds the 404, the sanctuary Wedding, the building Contact.
+    // -- 1. Hero: people (2026-09-24; twelve frames 2026-09-27) ---------------
+    // Twelve frames of the church at work, in Nathan's approved order
+    // (feat/hero-motion): the worship team (frame 1, the LCP image), teenagers
+    // over cards, children on the chancel steps with Kendall, the congregation
+    // from the balcony, two teenagers singing, four children outside the
+    // entrance, the pianist and the band, the deacons at the communion table,
+    // the women's fellowship breakfast, the mission team, the children's
+    // desert skit, and communion being prepared. The slideshow holds frames
+    // 1, 4, 7, 10 and 12 long and the rest short (frameBeats() in
+    // src/lib/hero-frames.ts). Each manifest entry carries its alt and a
+    // hotspot on the faces, which is also where its push-in heads. The old
+    // frames' keys stay in the manifest: the tower feeds the 404, the
+    // sanctuary Wedding, the building Contact.
     const frameKey = keyer('frame');
     const frames = [];
     for (const key of [
       'hero-worship',
       'hero-teens',
-      'hero-communion',
       'hero-chancel-steps',
       'hero-balcony',
+      'hero-singers',
+      'hero-kids-entrance',
+      'hero-musicians',
+      'hero-deacons',
+      'hero-breakfast',
+      'hero-mission-team',
+      'hero-skit',
+      'hero-communion',
     ]) {
       const img = await images.image(key);
       if (!img) throw new Error(`home.mjs: no photo in the manifest for "${key}"`);
@@ -271,7 +288,7 @@ export default {
       );
     }
 
-    // As on the plan 2b page: five frames cross-fade, the Sunday, the
+    // As on the plan 2b page: the frames take turns, the Sunday, the
     // street and the livestream as facts. Built first, so its two buttons keep
     // the keys the live page already has (cta-1, cta-2).
     const hero = {
