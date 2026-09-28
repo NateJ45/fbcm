@@ -1452,6 +1452,28 @@ a:focus-visible .zoom-img img,
   opacity: 1;
   transition: opacity 0.7s ease-in-out;
 }
+/* The single-photo hero's one push-in (2026-09-28, `feat/motion-openers`).
+   One frame gets no slideshow and no Pause control, so it moves once: from
+   scale 1 to 1.05 about its hotspot (--kb-origin, the centre with none) over
+   5 s, eased out (cubic out, so it slows into its rest), and it ends and stays
+   there (forwards, not infinite, not alternate). Five seconds keeps it inside
+   WCAG 2.2.2, which asks for a pause only when automatic motion beside other
+   content lasts more than five seconds. The hero section's overflow: clip
+   crops the enlarged edge. Reduced motion: no rule, the photo stands still. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-still {
+    transform-origin: var(--kb-origin, 50% 50%);
+    animation: hero-still-push 5s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+  }
+  @keyframes hero-still-push {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   .hero-frame.is-moving {
     animation: var(--kb-dur, 5.7s) linear both;

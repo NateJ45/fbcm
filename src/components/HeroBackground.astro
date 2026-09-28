@@ -28,6 +28,16 @@
 // move. Under reduced motion: frame 1, still, no sequencing, the template is
 // never inflated, and the Pause button is hidden.
 //
+// ONE PHOTO (2026-09-28, `feat/motion-openers`): the single photograph makes
+// ONE slow push-in on load, towards its hotspot (--kb-origin, the same point
+// as its object-position; the centre with none), and then stays put:
+// .hero-still in globals.css, scale 1 to 1.05 over 5 s, eased out, forwards,
+// inside `prefers-reduced-motion: no-preference`. Five seconds, not the
+// twelve first proposed, so it needs no Pause control: WCAG 2.2.2 asks for
+// one when motion that starts by itself lasts MORE than five seconds beside
+// other content. It stays the eager, high-priority LCP image, and the
+// section's overflow: clip crops the enlarged edge.
+//
 // THE PAUSE CONTROL STAYS, and it is a WCAG requirement (2.2.2 Pause, Stop,
 // Hide): the slideshow moves for far longer than five seconds beside other
 // content. It pauses the sequencer AND every move (`.is-paused` sets
@@ -118,8 +128,8 @@ const firstPosition = first ? position(first) : null;
         loading="eager"
         fetchpriority="high"
         quality={70}
-        class="absolute inset-0 w-full h-full object-cover"
-        style={firstPosition ? `object-position:${firstPosition}` : undefined}
+        class="hero-still absolute inset-0 w-full h-full object-cover"
+        style={firstPosition ? `object-position:${firstPosition};--kb-origin:${firstPosition}` : undefined}
       />
     )}
 
