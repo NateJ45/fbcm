@@ -35,6 +35,8 @@
 import CtaLink from '@/components/CtaLink.astro';
 import IssueCover from '@/components/visitor/IssueCover.astro';
 import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
+import { plainWords } from '@/lib/hero-words';
+import RiseWords from '@/components/RiseWords.astro';
 import {
   MONTHS,
   coverFor,
@@ -70,6 +72,9 @@ const Heading = level;
 const Sub = level === 'h1' ? 'h2' : 'h3';
 const YearHeading = level === 'h1' ? 'h3' : 'h4';
 const name = heading?.trim() ? heading : 'The Visitor';
+// As the page's h1 (/visitor), its words rise like every page opener's
+// (2026-09-28, RiseWords.astro); as a band's h2 it stays still.
+const nameWords = level === 'h1' ? plainWords(name) : [];
 
 const read = latest
   ? {
@@ -96,7 +101,7 @@ const read = latest
             class:list={[H2_DISPLAY, 'm-0 h-fit text-gold']}
             style={headingFit(name)}
           >
-            <span class="h-fit-in">{name}</span>
+            <span class="h-fit-in">{level === 'h1' ? <RiseWords words={nameWords} /> : name}</span>
           </Heading>
         </div>
 

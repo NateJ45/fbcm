@@ -149,9 +149,11 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
         without this block the preview would render INVISIBLE sections. Keep it
         in step with the motion vocabulary in src/styles/globals.css: today that
         is [data-reveal], [data-stagger-grid], .hero-entry-stagger and the
-        hero headline's word rise (.hero-word-in). The hero slideshow is left
-        running: its first frame is opaque without any script, and its own
-        script sequences the rest. */
+        page openers' word rise (.hero-word-in, every page-opening h1 since
+        2026-09-28). The hero slideshow is left running: its first frame is
+        opaque without any script, and its own script sequences the rest; so
+        is the single photo's one 5 s push-in (.hero-still), which never
+        hides anything. */
     }
     <style is:global>
       [data-reveal] {

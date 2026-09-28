@@ -101,3 +101,26 @@ export function headlineSegments(
   if (colour?.found) return around(colour, 'colour');
   return [{ text: headline ?? '' }];
 }
+
+/** A headline with no accent, as words (the journal, What's On and newsletter
+    openers, The Visitor). The same stega rule as heroWords. */
+export function plainWords(headline: string): HeroWord[] {
+  return heroWords([{ text: headline ?? '' }]);
+}
+
+/**
+ * The words split where an accent starts: the words before the first word
+ * that carries `accent` (`lead`), and that word and every one after it
+ * (`close`). The window hero sets a closing colour accent on a line of its
+ * own, so it draws `lead` in the sentence and `close` inside that line, with
+ * the close's indices continuing the lead's. No word carrying the accent:
+ * everything is `lead`.
+ */
+export function splitAtAccent(
+  words: HeroWord[],
+  accent: WordAccent,
+): { lead: HeroWord[]; close: HeroWord[] } {
+  const at = words.findIndex((w) => w.pieces.some((p) => p.accent === accent));
+  if (at < 0) return { lead: words, close: [] };
+  return { lead: words.slice(0, at), close: words.slice(at) };
+}

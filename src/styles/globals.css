@@ -1243,10 +1243,13 @@ a:focus-visible .zoom-img img,
   }
 }
 
-/* The hero headline's word rise (2026-09-27), after Highland Park
-   Presbyterian's hero (GSAP SplitText: yPercent 101 to 0, 0.8s, 0.06s apart,
-   quint out), in CSS. Hero.astro renders each word as a .hero-word that clips
-   around a .hero-word-in that rises from below it. The inner box carries
+/* The page opener's word rise (2026-09-27 on the hero; every page-opening h1
+   since 2026-09-28, `feat/motion-openers`, except the post page's, whose title
+   is a shared view transition), after Highland Park Presbyterian's hero (GSAP
+   SplitText: yPercent 101 to 0, 0.8s, 0.06s apart, quint out), in CSS.
+   RiseWords.astro, the one renderer every opener calls, draws each word as a
+   .hero-word that clips around a .hero-word-in that rises from below it. The
+   classes work in any h1: nothing here depends on the hero's wrapper. The inner box carries
    padding (0.2em above, 0.25em below, 0.06em each side) so the clip never
    cuts an ascender, a descender (g, y, p) or an italic overhang at rest, and
    the outer box takes the same amount back as negative margin, so the words

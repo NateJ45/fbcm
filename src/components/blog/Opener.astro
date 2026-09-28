@@ -12,6 +12,8 @@
 // (--color-band-indigo is redeclared under .dark). The filters sit under it on
 // the page's own paper, where the register they filter begins.
 import { headlineScale, headlineClass } from '@/lib/headline-scale';
+import { plainWords } from '@/lib/hero-words';
+import RiseWords from '@/components/RiseWords.astro';
 
 interface Props {
   eyebrow?: string;
@@ -25,6 +27,9 @@ const hasAside = Astro.slots.has('default');
 // (src/lib/headline-scale.ts). A category or tag name is usually a poster;
 // a long one steps down rather than breaking a word.
 const scale = headlineScale(heading, { tall: false });
+// The page opener's word rise (2026-09-28, RiseWords.astro): only the h1's
+// words move; the eyebrow, the lede and the aside arrive as they always have.
+const words = plainWords(heading);
 ---
 
 <div class="bg-band-indigo text-white-pure">
@@ -36,7 +41,7 @@ const scale = headlineScale(heading, { tall: false });
           id={headingId}
           class:list={['mt-5 text-white-pure', headlineClass(scale, { tall: false })]}
         >
-          {heading}
+          <RiseWords {words} />
         </h1>
         {lede && <p class="mt-6 max-w-[34em] font-body text-lede text-band-taupe italic">{lede}</p>}
       </div>

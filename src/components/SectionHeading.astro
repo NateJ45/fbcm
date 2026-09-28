@@ -85,6 +85,8 @@
 import { splitHeadingAccent } from '@/lib/heading-accent';
 import { hasInlineRich } from '@/lib/inline-rich';
 import InlineRich from '@/components/InlineRich.astro';
+import RiseWords from '@/components/RiseWords.astro';
+import { headlineSegments, heroWords } from '@/lib/hero-words';
 import { headlineClass, type HeadlineScale } from '@/lib/headline-scale';
 import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 
@@ -170,6 +172,23 @@ const colour = scriptFound
 
 const richSubhead = hasInlineRich(subheadRich);
 
+// THE H1 RISES (2026-09-28, `feat/motion-openers`). An h1 here always opens its
+// page (the text-only hero, /history's opener, /give, the 404, privacy), so its
+// words rise like every page opener's (RiseWords.astro; hero-words.ts splits
+// the stega-cleaned text and keeps each accent on its own letters). Only the
+// words move: nothing around the heading gains an entrance. h2 and h3 are
+// band headings further down the page and stay as they were.
+const h1Words =
+  level === 'h1'
+    ? heroWords(
+        headlineSegments(
+          headline ?? '',
+          { found: scriptFound, before: scriptBefore, word: scriptWord, after: scriptAfter },
+          colour,
+        ),
+      )
+    : [];
+
 // The art-direction heading system (2026-09-20, plan 3 task 2).
 // h1 is the TITLING face: Castoro Titling is capitals-only at one weight, so
 // the utility sets the casing rather than trusting the copy. h2 and h3 are
@@ -234,21 +253,7 @@ const toneSub =
       (level === 'h1' ? (
         <h1 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
           <span class="h-fit-in">
-            {scriptFound ? (
-              <>
-                {scriptBefore}
-                <span class="font-script">{scriptWord}</span>
-                {scriptAfter}
-              </>
-            ) : colour.found ? (
-              <>
-                {colour.before}
-                <span class="heading-accent">{colour.word}</span>
-                {colour.after}
-              </>
-            ) : (
-              headline
-            )}
+            <RiseWords words={h1Words} accents={{ colour: { class: 'heading-accent' } }} />
           </span>
         </h1>
       ) : level === 'h2' ? (
