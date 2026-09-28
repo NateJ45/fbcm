@@ -10,6 +10,14 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-28 — Every opener's headline rises; one photo pushes in once (`feat/motion-openers`)._
+
+**The home hero's word rise, carried to every page-opening h1.** Nathan approved two extensions of the hero motion pass, site-wide:
+
+- **The word rise on every page opener but the post page.** One renderer, `src/components/RiseWords.astro`, draws a headline's words from `src/lib/hero-words.ts` (which gained `plainWords` and `splitAtAccent`, unit-tested) with the hero's timing: the photo and split heroes (now through the component, their markup byte-identical), the window hero (whose closing accent line, Visit's "ON SUNDAY", rises inside its own `<b class="hw-close">` with the count continuing), SectionHeading's h1 (the text-only hero, /history, /give, the 404, privacy), the journal `Opener` (/blog, the archives, the scripture index), What's On, the ministry newsletters, and The Visitor as an h1. Only the words move: the hero keeps its stagger, and nothing else in any opener gains an entrance. The post page is left whole, because its h1 is the shared view transition's landing and two motions on one title would fight. LCP, measured before and after at mobile with a throttled CPU and network (medians of three): /blog 1316 to 1312 ms, /events 1168 to 1184, /kids-corner 3872 to 3892, /history 1280 to 1296, /who-we-are 3284 to 3328; all noise, no LCP element changed (the lede or a photograph is always larger than any one rising word).
+- **One slow push-in on a single-photo hero.** `.hero-still`: scale 1 to 1.05 about the hotspot over 5 s, eased out, `forwards`, reduced motion still. Five seconds rather than the twelve first proposed, so WCAG 2.2.2 needs no Pause control. The contrast gate freezes it at scale 1; the end state was checked once at 1.05 too. No page in the dataset draws this branch today, so `/styleguide` gained a one-photo hero fixture where it is seen and tested.
+- Tests: `tests/motion.spec.ts` covers the rise on /who-we-are, /visit, /blog, /events and /history (and still under reduced motion), the post page's h1 left whole, and the push-in (moves, ends at 1.05 and stays, about its hotspot, no animation under reduce).
+
 _2026-09-27 — The hero moves (`feat/hero-motion`)._
 
 **More scenes, faster, and the pictures really move.** The home hero was a CSS-only cross-fade of up to six frames at 8 s each, and every frame named a Ken Burns keyframe (`hero-kb`) that had been deleted on 2026-09-19, so the zoom had silently not run since. Nathan asked for more motion. Now:
