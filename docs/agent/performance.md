@@ -42,6 +42,10 @@ Use `<SanityImage />`'s `width` prop to drive these. **Never request larger than
 - **Exactly one font preload, in the body, on the home hero only** (`Hero.astro`, beside the dated line). It comes from a `?url` import, so it carries the same hashed `/_astro/` path the `@font-face` rule resolves to and cannot 404 (the old reason for having none). Why only that one, and why not in `<head>`: see the speed pass below. Do not add a font preload to `<head>` without measuring FCP on a post page first.
 - **Script accent font** (opt-in): no script font is loaded by default. To enable the `font-script` utility, add a `@fontsource` import in `globals.css` and point `--font-script` at the family. See `animation.md` for the full opt-in steps.
 
+### Inline scripts and layout shift
+
+- **No inline `<script>` inside a block whose painted size something else depends on** (2026-09-30). An inline script pauses the HTML parser, and a slow machine paints at that pause, so everything after the script is missing from that first frame. The home hero's two `__liveSunday()` calls sat inside `.hero-entry-stagger`; Lighthouse on CI sometimes painted the block holding only its dated line, the rest then arrived, and the wash behind it (`::before`, top 14vh above the block) jumped 472px: CLS 0.57 to 0.60 in about one run in four, 0.025 otherwise. It never showed on a fast machine. The call now sits right after the block closes, which still runs before the hero's first paint. If a pre-paint script is needed, put it after the element it measures or rewrites, not inside it. To find a shift like this, save the trace (`lighthouse --save-assets`) and read its `LayoutShift` events: `impacted_nodes` gives each moved node's old and new rect, and a `PaintImage` event with the same `nodeId` names it.
+
 ## The 2026-09-24 speed pass: what actually set mobile LCP
 
 Branch `perf/speed-audit`. Measured with Lighthouse 12.6.1 (the repo's own `node_modules/lighthouse`), mobile preset (simulated throttling, DPR 1.75), against `dist/client` served by `scripts/serve-dist.mjs` (brotli, the deploy's cache headers), 3 to 5 runs, medians.
