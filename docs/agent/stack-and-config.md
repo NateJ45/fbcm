@@ -33,6 +33,10 @@ A few `astro.config.mjs` levers that look tempting but break things -- left docu
 
 - **`crossorigin="anonymous"` on Sanity CDN images breaks them.** Sanity's CDN doesn't send `Access-Control-Allow-Origin` for credential-less image requests, so the browser refuses the response and the image fails to render. Lighthouse's third-party-cookie warning about `sanitySession` is a real cookie, but the only known fix would proxy every image through a Cloudflare Worker -- not worth the engineering for an unscored Best Practices flag.
 
+### `astro dev` on Windows: keep `fixSanityDedupeAlias()` (2026-09-29)
+
+`@sanity/astro`'s dev-only Vite plugin `sanity:module-dedupe` aliases `sanity` and `styled-components` with `require.resolve('<pkg>/package.json').replace(/\/package\.json$/, '')`. On Windows the path uses backslashes, the regex never matches, and `sanity` is aliased to its own `package.json`, so `astro dev` dies with `Build failed with N errors: [MISSING_EXPORT] "X" is not exported by "node_modules/sanity/package.json"`. `astro build` never loads the plugin, which is why only dev broke. The fix is the PORTABLE `src/lib/sanity-dedupe-alias.ts` (`fixSanityDedupeAlias()`, wired into `vite.plugins` in `astro.config.mjs`, tested by `sanity-dedupe-alias.test.ts`); it re-aliases with the separator stripped, does nothing in a build and nothing on macOS or Linux, and leaves the shipped bundle byte-identical. Keep it. **Never "fix" this with `SANITY_ASTRO_DISABLE_MODULE_DEDUPE=1`**: the alias exists so the Studio's React tree shares one `styled-components`, and without it the Studio fails to hydrate. Starter PORTS.md card 60 has the full story. Astro 7 also auto-backgrounds `astro dev` for AI agents; run `ASTRO_DEV_BACKGROUND=1 node node_modules/astro/bin/astro.mjs dev` to see the log. A cold first dev request can take 2 minutes while Vite pre-bundles the Studio.
+
 ### Build order: typegen before build
 
 `npm run build` runs `astro build` only. It does NOT chain typegen.
