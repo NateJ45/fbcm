@@ -609,14 +609,8 @@ const windowDrops = dropInto && windowOrder.length > 0;
           ) : (
             <span data-live-sunday={sundayTime}>{sundayStatic}</span>
           )}
-          {/* Date the line NOW, before the hero's first paint (2026-09-24, the
-              speed pass). The function is defined in BaseLayout's <head>;
-              rewriting the span later, after the hero had painted, made the
-              line a second LCP candidate and cost 2 s of mobile LCP. Inside
-              the <p> on purpose: a <script> as a direct child of
-              .hero-entry-stagger would take an nth-child slot and shift every
-              line's entry delay. */}
-          <script is:inline>if (window.__liveSunday) window.__liveSunday();</script>
+          {/* The line is dated by the ONE __liveSunday call after this block
+              closes (see there), not by a script in here. */}
         </p>
       ) : (
         eyebrow && (
@@ -656,15 +650,13 @@ const windowDrops = dropInto && windowOrder.length > 0;
           ))}
           {/* Hidden until the upgrade script (BaseLayout) has checked, before
               first paint, that the coming Sunday is still this fact's Sunday.
-              The inline call is inside the fact's <div>, where a <dl> allows
-              a script, so it takes no flex slot. */}
+              The check is the ONE __liveSunday call after this block closes. */}
           {sundayPreacher && (
             <div hidden data-sunday-fact={sundayPreacher.sunday} data-preacher-source={sundayPreacher.source} data-pagefind-ignore>
               <dt class="font-ui text-ui mb-1.5 text-bg/70">Preaching</dt>
               <dd class="font-body text-[clamp(1.25rem,1rem+.9vw,1.625rem)] leading-tight break-words">
                 {sundayPreacher.name}
               </dd>
-              <script is:inline>if (window.__liveSunday) window.__liveSunday();</script>
             </div>
           )}
         </dl>
@@ -678,6 +670,25 @@ const windowDrops = dropInto && windowOrder.length > 0;
         </div>
       )}
     </div>
+    {/* Date the live line and check the preacher's Sunday NOW, before the
+        hero's first paint (2026-09-24, the speed pass: rewriting the line
+        after the hero had painted made it a second LCP candidate and cost
+        2 s of mobile LCP). The function is defined in BaseLayout's <head>
+        and updates every [data-live-sunday] and [data-sunday-fact].
+
+        HERE, after the text block, and ONCE (2026-09-30). An inline script
+        pauses the HTML parser, and a slow machine paints at that pause. The
+        two calls used to sit INSIDE the block (in the dated line, and in the
+        preacher's fact), so Lighthouse on CI sometimes painted the block
+        holding only its first line; the rest then arrived, the block grew,
+        and the phone-width wash behind it (.hero-entry-stagger::before, its
+        top 14vh above the block) jumped 472px: CLS 0.52 to 0.60 in about one
+        run in four, read from the run's trace. Out here the whole block is
+        parsed before the pause. Not a child of .hero-entry-stagger, so it
+        takes no nth-child slot in the entrance stagger. */}
+    {(showLiveSunday || sundayPreacher) && (
+      <script is:inline>if (window.__liveSunday) window.__liveSunday();</script>
+    )}
   </section>
 ) : (
   <section class="bg-band-indigo text-white-pure" aria-labelledby={headingId}>
