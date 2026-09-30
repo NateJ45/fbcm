@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-09-29 — `npm run dev` works on Windows again (starter PORTS.md card 60)._
+
+`@sanity/astro`'s dev-only `sanity:module-dedupe` plugin built its aliases with a forward-slash regex, so on Windows `sanity` resolved to `node_modules/sanity/package.json` and `astro dev` died with `Build failed with 346 errors` (`[MISSING_EXPORT]`). Added the PORTABLE `src/lib/sanity-dedupe-alias.ts` (+ test) from the starter and wired `fixSanityDedupeAlias()` into `vite.plugins`. Verified: dev ready, `/` and `/studio/` return 200, the Studio hydrates, and a production build is byte-identical with and without the plugin. Do not use `SANITY_ASTRO_DISABLE_MODULE_DEDUPE=1` instead (the Studio then fails to hydrate). Notes in docs/agent/stack-and-config.md.
+
 _2026-09-28 — Every opener's headline rises; one photo pushes in once (`feat/motion-openers`)._
 
 **The home hero's word rise, carried to every page-opening h1.** Nathan approved two extensions of the hero motion pass, site-wide:
