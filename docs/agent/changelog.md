@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-01 — A rebuild the moment YouTube schedules Sunday's broadcast (`.github/workflows/this-sunday.yml`)._
+
+The hero's "This Sunday" line names the sermon of the broadcast scheduled on YouTube, but the page is built, so the line only appeared on the first build after the broadcast was posted. On 2026-09-30 the broadcast went up at 1:50 pm, after that day's last build, and Thursday's 8 am scheduled rebuild had not fired by 9 am (GitHub's scheduler is best-effort). The new workflow runs at :12 and :42 every hour Wednesday to Saturday: it fetches the feed (`scripts/fetch-youtube-feed.mjs`), finds the coming Sunday's broadcast with the same `upcomingBroadcast` the home page builds with, fetches the live home page, and starts `deploy.yml` only when the page's hero has no `data-sunday-sermon` for that Sunday (`scripts/check-this-sunday.mjs`, rule in `scripts/lib/this-sunday-check.mjs`, 5 tests). Guards: a fetch failure reads as not stale, and no deploy is started if one began in the last 90 minutes. It uses the workflow's own token (`actions: write`), so no secret was added. Set the `SITE_URL` repo variable at the cutover; until then it checks the workers.dev address.
+
 _2026-09-30 — CI green again: WebKit reduced motion, home CLS, visual baseline (PR #6)._
 
 All three red checks had been failing on `main` since the 2026-09-28 motion pass. None reproduced on a Windows machine, so each was diagnosed on a throwaway CI branch (since deleted) that printed what the runner actually saw.
