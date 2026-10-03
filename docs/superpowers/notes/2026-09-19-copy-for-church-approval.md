@@ -256,9 +256,8 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 ### New sentences
 
-- The "At a glance" labels: Architects; Builders; Stone; Plan; Completed; On the National Register. (Labels; their values are the church’s own words from architecture.txt and history.txt.)
 - The gallery heading "Four things to look for" and its four captions: The tower; Stained glass; The nave; The entry arch.
-- Caring for the building: "A limestone building from 1929 needs steady care, and the congregation pays for it. Gifts toward the building’s upkeep are one way to share in that."
+- The small heading "Caring for the building" and its paragraph: "A limestone building from 1929 needs steady care, and the congregation pays for it. Gifts toward the building’s upkeep are one way to share in that."
 - The closing band: "Come and see it." with the line "Gifts toward the building’s upkeep are welcome." and its two buttons.
 - Search description: "A Late Gothic Revival church of Indiana limestone, designed by Samuel Hannaford and Sons and completed in 1929 at 309 East Adams Street, Muncie. On the National Register of Historic Places since 1988." (not shown on the page)
 
@@ -266,7 +265,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - Corrected: "309 East Adams Streeet" in the old page’s last paragraph had three e’s. The address on this page is read from Site settings instead of retyped.
 - Dropped: "Our building today" and its sentence ("You can find us at 309 East Adams Street... Feel free to stop by!"). The closing band carries the address and the Sunday time from Site settings, and Visit is the page for finding the church.
-- Re-headed: the old page’s "Gothic Revival", "Completed in 1929" and "English Influence" were three sub-headings over one or two sentences each. "Completed in 1929" sat over the sentence "The number of new Gothic Revival buildings declined sharply after the 1930s.", which is about the style rather than the date, so it moves under the style’s own heading, "A style from England".
+- Merged: the old page’s "Gothic Revival", "Completed in 1929" and "English Influence" were three sub-headings over one or two sentences each. All four of their paragraphs now run together under one heading, "Late Gothic Revival", in the order a reader needs them (the building, the style, where it began, what became of it). The "At a glance" ledger was cut: it only repeated the opener and that paragraph.
 - Lifted, verbatim, from history.txt: the two paragraphs of the Fighting Parson era about the new building (the vision, the site, the fund-raising, May 12, 1929, the cost and the mortgage). The paragraphs about the pastor and the overflow crowds are not used.
 
 ### Facts to confirm from this page

@@ -1,0 +1,336 @@
+{
+  "_createdAt": "2026-10-03T15:43:00Z",
+  "_id": "page-architecture",
+  "_rev": "iy8BT8xgnKmkUeFnv9r7RT",
+  "_type": "page",
+  "_updatedAt": "2026-10-03T16:15:57Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "ar-open",
+      "_type": "heritageBandSection",
+      "archive": {
+        "_type": "image",
+        "alt": "Samuel Hannaford and Sons’ original rendering of the church, drawn in 1927: the tower on the corner and the long limestone wings, a car of the period parked out front.",
+        "asset": {
+          "_ref": "image-d85152a1d17899795a394cf04985a1731a15ad04-1000x605-jpg",
+          "_type": "reference"
+        },
+        "hotspot": {
+          "_type": "sanity.imageHotspot",
+          "height": 0.3,
+          "width": 0.3,
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "body": "First Baptist’s third, and most recent, building was completed in 1929. It has been on the National Register of Historic Places since 1988. For students and lovers of architecture it’s a striking work.",
+      "heading": "Our building",
+      "image": {
+        "_type": "image",
+        "alt": "A view straight up the church tower and stained glass window with the red entry doors at the base, against a partly cloudy sky.",
+        "asset": {
+          "_ref": "image-b198ae149324670a15b203c923b4f909b028cc2e-1138x2400-jpg",
+          "_type": "reference"
+        },
+        "hotspot": {
+          "_type": "sanity.imageHotspot",
+          "height": 0.3,
+          "width": 0.3,
+          "x": 0.5,
+          "y": 0.5
+        }
+      }
+    },
+    {
+      "_key": "ar-gothic",
+      "_type": "imageTextSection",
+      "body": [
+        {
+          "_key": "ar-g1-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-g1-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The Late Gothic Revival building was designed by Samuel Hannaford and Sons and was constructed by Morrow and Morrow. It is constructed of Indiana limestone and has a cruciform plan."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ar-g2-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-g2-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The Gothic style dictated the use of structural members in compression, leading to tall, buttressed buildings with interior columns of load-bearing masonry and tall, narrow windows."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ar-g3-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-g3-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Gothic Revival (also referred to as Victorian Gothic or neo-Gothic) is an architectural movement that began in the late 1740s in England."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ar-g4-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-g4-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "The number of new Gothic Revival buildings declined sharply after the 1930s."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        }
+      ],
+      "heading": "Late Gothic Revival",
+      "image": {
+        "_type": "image",
+        "alt": "The limestone church facade rises steeply with a large arched stained glass window and the bell tower above, against a clear blue sky.",
+        "asset": {
+          "_ref": "image-4a5061d1625f61322237a6950c9bd2d6f819edba-1900x1400-jpg",
+          "_type": "reference"
+        },
+        "hotspot": {
+          "_type": "sanity.imageHotspot",
+          "height": 0.3,
+          "width": 0.3,
+          "x": 0.5,
+          "y": 0.45
+        }
+      },
+      "imageSide": "right"
+    },
+    {
+      "_key": "ar-gallery",
+      "_type": "gallerySection",
+      "heading": "Four things to look for",
+      "images": [
+        {
+          "_key": "ar-p1",
+          "_type": "image",
+          "alt": "The limestone bell tower rises against a sky of scattered clouds, seen from a low angle.",
+          "asset": {
+            "_ref": "image-1a41db0a8944c3ca0243432d2e1f6e4930537aab-2400x1596-jpg",
+            "_type": "reference"
+          },
+          "caption": "The tower",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "_key": "ar-p2",
+          "_type": "image",
+          "alt": "A row of narrow arched stained glass windows glows above a doorway inside the church.",
+          "asset": {
+            "_ref": "image-2c0b159192549ac04b8daadef01ba132342895a9-2400x1600-jpg",
+            "_type": "reference"
+          },
+          "caption": "Stained glass",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "_key": "ar-p3",
+          "_type": "image",
+          "alt": "The empty sanctuary is seen down the center aisle toward the front, with a vaulted timber ceiling overhead.",
+          "asset": {
+            "_ref": "image-55a3965193cd3a39e469880887bf17b0b7b8f6e0-2400x1600-jpg",
+            "_type": "reference"
+          },
+          "caption": "The nave",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "_key": "ar-p4",
+          "_type": "image",
+          "alt": "A pair of glass entry doors sit beneath a carved stone archway at the church entrance.",
+          "asset": {
+            "_ref": "image-757257774b6266ab0784e8b7174e63fd1a355139-1138x2400-jpg",
+            "_type": "reference"
+          },
+          "caption": "The entry arch",
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "_key": "ar-built",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "ar-b1-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-b1-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Visualizing a beautiful new church is one thing; convincing the members that the time was at hand for constructing such a building was quite another matter; and raising the funds for such an undertaking was a staggering task. Yet, had Everson not pushed for the construction when he did, the building would not have been erected for many years to come. Certainly it would not have been constructed during the Depression, and with the United States entering World War II in 1941, it is quite possible the task would have been postponed at least until after 1945."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ar-b2-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-b2-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "After numerous delays and much indecision, a site was purchased and construction of the new building in downtown Muncie began. Everson was active in promoting numerous fund-raising programs, and finally on May 12, 1929, 1200 people marched from the old church to the new one on the corner of Jefferson and Adams streets. The new church cost $338,000. The congregation had raised enough funds that the mortgage on the new building was only $166,000. That was a large sum, larger than the members had hoped for; but given the church’s financial giving the past few years, the sum seemed very manageable."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ar-b3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-b3s1",
+              "_type": "span",
+              "marks": [
+                "ar-b3l1"
+              ],
+              "text": "The whole story is in our history"
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "ar-b3l1",
+              "_type": "link",
+              "href": "/history#building"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "ar-c0",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-c0s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Caring for the building"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "ar-c1-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-c1-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "A limestone building from 1929 needs steady care, and the congregation pays for it. Gifts toward the building’s upkeep are one way to share in that."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "ar-c2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "ar-c2s1",
+              "_type": "span",
+              "marks": [
+                "ar-c2l1"
+              ],
+              "text": "See what is on"
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "ar-c2l1",
+              "_type": "link",
+              "href": "/events"
+            }
+          ],
+          "style": "normal"
+        }
+      ],
+      "heading": "How it was built"
+    },
+    {
+      "_key": "ar-cta",
+      "_type": "ctaBandSection",
+      "cta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "externalUrl": "/give",
+        "label": "Give toward the upkeep",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "headline": "Come and see it.",
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "/visit",
+        "label": "Plan a visit",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "subhead": "{service time}. {address}. Gifts toward the building’s upkeep are welcome."
+    }
+  ],
+  "seoDescription": "A Late Gothic Revival church of Indiana limestone, designed by Samuel Hannaford and Sons and completed in 1929 at {address}, Muncie. On the National Register of Historic Places since 1988.",
+  "seoTitle": "Architecture of First Baptist Church Muncie | Gothic Revival, 1929",
+  "slug": {
+    "_type": "slug",
+    "current": "architecture"
+  },
+  "title": "Architecture"
+}

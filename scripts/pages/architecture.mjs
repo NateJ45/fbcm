@@ -8,8 +8,8 @@
 //
 // Five things about this file are deliberate.
 //
-// 1. A QUIET PAGE, NOT A NAVIGATION ITEM. `addToMainNav` is false and the
-//    page is not in the footer. It is reached from three places only: History's
+// 1. A QUIET PAGE, NOT A NAVIGATION ITEM. `addToMainNav` is false; the page
+//    is in the footer only (`addToFooter`). It is reached from three places only: History's
 //    1921 to 1929 band, the Give page ("What your gift supports") and, through
 //    Visit's own "Our building" band, the history link there. A first-time
 //    visitor is not asked to care about architecture; the people who do care
@@ -22,7 +22,7 @@
 //    history capture, where it already sits in the Fighting Parson era. Each
 //    quotation is read by anchor phrase and the run fails if it has moved.
 //
-// 3. NEW COPY IS LABELS AND ONE SHORT BAND. The "at a glance" labels, the four
+// 3. NEW COPY IS LABELS AND ONE SHORT BAND. The small "Caring for the building" heading, the four
 //    gallery captions and the closing "Caring for the building" paragraph are
 //    the only sentences the church did not write, all listed in `newCopy`
 //    for approval. Nothing is said about the building that the church's own
@@ -44,9 +44,8 @@ export default {
   slug: 'architecture',
 
   newCopy: [
-    'The "At a glance" labels: Architects; Builders; Stone; Plan; Completed; On the National Register. (Labels; their values are the church’s own words from architecture.txt and history.txt.)',
     'The gallery heading "Four things to look for" and its four captions: The tower; Stained glass; The nave; The entry arch.',
-    'Caring for the building: "A limestone building from 1929 needs steady care, and the congregation pays for it. Gifts toward the building’s upkeep are one way to share in that."',
+    'The small heading "Caring for the building" and its paragraph: "A limestone building from 1929 needs steady care, and the congregation pays for it. Gifts toward the building’s upkeep are one way to share in that."',
     'The closing band: "Come and see it." with the line "Gifts toward the building’s upkeep are welcome." and its two buttons.',
     'Search description: "A Late Gothic Revival church of Indiana limestone, designed by Samuel Hannaford and Sons and completed in 1929 at 309 East Adams Street, Muncie. On the National Register of Historic Places since 1988." (not shown on the page)',
   ],
@@ -54,7 +53,7 @@ export default {
   edits: [
     'Corrected: "309 East Adams Streeet" in the old page’s last paragraph had three e’s. The address on this page is read from Site settings instead of retyped.',
     'Dropped: "Our building today" and its sentence ("You can find us at 309 East Adams Street... Feel free to stop by!"). The closing band carries the address and the Sunday time from Site settings, and Visit is the page for finding the church.',
-    'Re-headed: the old page’s "Gothic Revival", "Completed in 1929" and "English Influence" were three sub-headings over one or two sentences each. "Completed in 1929" sat over the sentence "The number of new Gothic Revival buildings declined sharply after the 1930s.", which is about the style rather than the date, so it moves under the style’s own heading, "A style from England".',
+    'Merged: the old page’s "Gothic Revival", "Completed in 1929" and "English Influence" were three sub-headings over one or two sentences each. All four of their paragraphs now run together under one heading, "Late Gothic Revival", in the order a reader needs them (the building, the style, where it began, what became of it). The "At a glance" ledger was cut: it only repeated the opener and that paragraph.',
     'Lifted, verbatim, from history.txt: the two paragraphs of the Fighting Parson era about the new building (the vision, the site, the fund-raising, May 12, 1929, the cost and the mortgage). The paragraphs about the pastor and the overflow crowds are not used.',
   ],
 
@@ -137,6 +136,7 @@ export default {
     const glass = await photo('architecture-glass', [0.5, 0.5]);
     const nave = await photo('architecture-nave', [0.5, 0.5]);
     const arch1 = await photo('architecture-arch', [0.5, 0.5]);
+    const crowd = await photo('architecture-congregation', [0.5, 0.55]);
 
     /** A gallery photo, named, so the gallery draws as a row of arched doors. */
     const named = (img, caption, key) => ({ ...img, _key: key, caption });
@@ -144,8 +144,10 @@ export default {
     return {
       title: 'Architecture',
       slug: { _type: 'slug', current: 'architecture' },
-      // Out of the way on purpose: not in the main menu, not in the footer.
+      // Out of the way on purpose: not in the header menu. It is in the footer
+      // (2026-10-03, Nathan), through the page's own "Show in the footer" switch.
       addToMainNav: false,
+      addToFooter: true,
 
       pageBuilder: [
         // 1. The opener: the church's brown, the church's own heading and
@@ -167,27 +169,11 @@ export default {
           image: facade,
           imageSide: 'right',
           heading: 'Late Gothic Revival',
-          body: [...paragraphs(designedBy, 'ar-g1'), ...paragraphs(gothicStyle, 'ar-g2')],
-        },
-
-        // 3. At a glance. Labels are new; every value is the church's own.
-        {
-          _type: 'richTextSection',
-          _key: 'ar-glance',
-          heading: 'At a glance',
           body: [
-            heading('Architects', 3, 'ar-a1'),
-            ...paragraphs('Samuel Hannaford and Sons', 'ar-a1p'),
-            heading('Builders', 3, 'ar-a2'),
-            ...paragraphs('Morrow and Morrow', 'ar-a2p'),
-            heading('Stone', 3, 'ar-a3'),
-            ...paragraphs('Indiana limestone', 'ar-a3p'),
-            heading('Plan', 3, 'ar-a4'),
-            ...paragraphs('Cruciform', 'ar-a4p'),
-            heading('Completed', 3, 'ar-a5'),
-            ...paragraphs('1929', 'ar-a5p'),
-            heading('On the National Register', 3, 'ar-a7'),
-            ...paragraphs('Since 1988', 'ar-a7p'),
+            ...paragraphs(designedBy, 'ar-g1'),
+            ...paragraphs(gothicStyle, 'ar-g2'),
+            ...paragraphs(english, 'ar-g3'),
+            ...paragraphs(declined, 'ar-g4'),
           ],
         },
 
@@ -205,35 +191,20 @@ export default {
           ],
         },
 
-        // 5. Where the style comes from.
+        // 5. How it was built and how it is kept: one band. The two paragraphs
+        //    are the church's own, from its history; the short care paragraph
+        //    is new.
         {
-          _type: 'richTextSection',
-          _key: 'ar-style',
-          heading: 'A style from England',
-          width: 'narrow',
-          body: [...paragraphs(english, 'ar-s1'), ...paragraphs(declined, 'ar-s2')],
-        },
-
-        // 6. The building going up, from the church's own history.
-        {
-          _type: 'richTextSection',
+          _type: 'imageTextSection',
           _key: 'ar-built',
+          image: crowd,
+          imageSide: 'left',
           heading: 'How it was built',
-          width: 'narrow',
           body: [
             ...paragraphs(goingUp[0], 'ar-b1'),
             ...paragraphs(goingUp[1], 'ar-b2'),
             link('The whole story is in our history', '/history#building', 'ar-b3'),
-          ],
-        },
-
-        // 7. Caring for it: the appeal, said plainly.
-        {
-          _type: 'richTextSection',
-          _key: 'ar-care',
-          heading: 'Caring for the building',
-          width: 'narrow',
-          body: [
+            heading('Caring for the building', 3, 'ar-c0'),
             ...paragraphs(
               'A limestone building from 1929 needs steady care, and the congregation pays for it. Gifts toward the building’s upkeep are one way to share in that.',
               'ar-c1',
@@ -242,7 +213,7 @@ export default {
           ],
         },
 
-        // 8. Closing band: the street and the Sunday time off Site settings
+        // 6. Closing band: the street and the Sunday time off Site settings
         //    (rule 15), a way to give and a way to visit.
         {
           _type: 'ctaBandSection',
