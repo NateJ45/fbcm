@@ -10,6 +10,7 @@ import react from '@astrojs/react';
 import sanity from '@sanity/astro';
 
 import { buildRedirectMap } from './src/lib/redirects.ts';
+import { fixSanityDedupeAlias } from './src/lib/sanity-dedupe-alias.ts';
 
 // -----------------------------------------------------------------------------
 // Build-time reads from Sanity (redirects + pages kept out of search)
@@ -230,7 +231,13 @@ export default defineConfig({
     react(),
   ],
   vite: {
-    plugins: [tailwindcss()],
+    // fixSanityDedupeAlias() repairs @sanity/astro's dev-only alias, which is
+    // broken on Windows (it points `sanity` at a package.json FILE, so `astro
+    // dev` dies with MISSING_EXPORT). It does nothing in `astro build` and on
+    // macOS/Linux. Do not delete it, and do not "fix" this with
+    // SANITY_ASTRO_DISABLE_MODULE_DEDUPE=1 (the Studio then fails to hydrate).
+    // Full story: src/lib/sanity-dedupe-alias.ts and PORTS.md card 60.
+    plugins: [tailwindcss(), fixSanityDedupeAlias()],
     build: {
       // Drives Astro's `build.inlineStylesheets: 'auto'` above: a compiled
       // stylesheet is inlined only when its raw size is at or under this

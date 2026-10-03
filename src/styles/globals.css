@@ -3004,7 +3004,20 @@ body::before {
 
 /* ---------- Reduced motion -------------------------------------------- */
 /* Disables animations, transitions, and smooth scroll for users who
-   prefer reduced motion. */
+   prefer reduced motion.
+
+   Transitions are ZERO here, not the usual 0.01ms (2026-09-30). The 0.01ms
+   idiom exists so `transitionend` still fires, but it also gives every
+   element on the page a transition, because `transition-property` defaults to
+   `all`: any property that changes after load starts one. WebKit (Playwright's
+   iPhone profile on Linux, Safari 26.6) never advanced those 10-microsecond
+   transitions past progress 0, so they piled up (289 stuck `tab-size`
+   transitions on / two seconds after load) and each held its property at the
+   OLD value. motion.spec.ts's reduced-motion test caught it. With duration
+   AND delay at 0 no transition is created at all (the delay matters: a
+   staggered delay alone creates one). Safe because nothing in src/ waits on
+   `transitionend`. Animations keep 0.01ms: Radix waits on `animationend` for
+   exit animations, and animations finish correctly in WebKit. */
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -3012,7 +3025,8 @@ body::before {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
   html {

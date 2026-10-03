@@ -1,0 +1,103 @@
+# This Sunday's sermon: rebuild the site the moment YouTube has it
+# (added 2026-10-01).
+#
+# The home hero's "This Sunday" line names the sermon of the broadcast the
+# church schedules on YouTube, and the page is BUILT, so the line only appears
+# on the first build after the broadcast is posted. The scheduled rebuilds in
+# deploy.yml (Thursday and Saturday mornings) are best-effort and fixed in time:
+# on 2026-09-30 the broadcast went up at 1:50 pm, after that day's last build,
+# and the Thursday run had not fired by 9 am. This workflow closes the gap by
+# asking, every half hour from Wednesday to Saturday, whether the site is behind
+# YouTube, and starting a deploy only when it is.
+#
+# THE CHECK, in order, each step cheap:
+#   1. scripts/fetch-youtube-feed.mjs writes the channel's uploads (the Data API
+#      first, then the public feed, then the last good copy).
+#   2. scripts/check-this-sunday.mjs finds the broadcast scheduled for the
+#      coming Sunday and fetches the LIVE home page. Stale means YouTube has a
+#      broadcast and the page's hero shows no sermon for that Sunday
+#      (data-sunday-sermon). The rule is in scripts/lib/this-sunday-check.mjs.
+#   3. When stale, and no deploy was started in the last 90 minutes, it runs
+#      deploy.yml. The 90 minutes is the loop guard: if a deploy still cannot
+#      name the sermon (the feed failed inside that build), this retries about
+#      once an hour and a half, never every half hour.
+#
+# It starts a deploy with the workflow's own token (workflow_dispatch is the
+# one event a token may start), so there is no secret to add. A fetch failure
+# of any kind reads as "not stale": a network blip never deploys.
+#
+# GitHub's scheduler is best-effort and can run late, so this narrows the gap
+# rather than closing it to the minute. Run it by hand from the Actions tab
+# (Run workflow) to check right now.
+
+name: This Sunday
+
+on:
+  schedule:
+    # Wednesday to Saturday, twice an hour, off the top of the hour where the
+    # scheduler is busiest. UTC: Saturday evening in Muncie is already Sunday,
+    # and a broadcast scheduled that late is not worth a rebuild.
+    - cron: '12,42 * * * 3-6'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write # to start the Deploy workflow
+
+# One check at a time; a late one queues rather than racing.
+concurrency:
+  group: this-sunday
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The last good feed, so a YouTube outage still has something to read.
+      - name: Restore the YouTube feed
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/youtube
+          key: youtube-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: youtube-${{ runner.os }}-
+
+      - name: Fetch the YouTube feed
+        env:
+          PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+          PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: node scripts/fetch-youtube-feed.mjs
+
+      - name: Is the site behind YouTube?
+        id: check
+        env:
+          # The live origin. Before the cutover that is the workers.dev address;
+          # set the SITE_URL repo variable to https://www.fbcmuncie.org then.
+          SITE_URL: ${{ vars.SITE_URL || 'https://fbcm-site.nathanjnixon86.workers.dev' }}
+        run: node scripts/check-this-sunday.mjs
+
+      - name: Start a deploy
+        if: steps.check.outputs.stale == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Loop guard: skip if a deploy (any trigger) began in the last 90 minutes.
+          since=$(date -u -d '90 minutes ago' +%Y-%m-%dT%H:%M:%SZ)
+          recent=$(gh run list --workflow deploy.yml --limit 10 --json createdAt \
+            --jq "[.[] | select(.createdAt > \"$since\")] | length")
+          if [ "$recent" != "0" ]; then
+            echo "A deploy started in the last 90 minutes; not starting another."
+            exit 0
+          fi
+          gh workflow run deploy.yml --ref main
+          echo "Started a deploy."
