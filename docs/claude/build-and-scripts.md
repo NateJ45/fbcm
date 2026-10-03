@@ -1,0 +1,30 @@
+# Build pipeline and standalone scripts
+
+Moved out of CLAUDE.md. Read this before changing the build chain, running a seed or migration script, or when a build fails in a way the short command list in CLAUDE.md does not explain. The unit-test and Playwright inventories are in `docs/claude/test-inventory.md`; the parity harness and CI gate notes are in `.claude/rules/tests-and-gates.md`.
+
+## Build pipeline
+
+`npm run build` runs `npm run og:pages` (the share cards, below), then `npm run scripture` (the passage text for every sermon preview's reading, `scripts/fetch-scripture.mjs`, into the gitignored `src/data/scripture.generated.json`; it never fails the build), then `npm run visitor` (The Visitor's covers and text, `scripts/visitor-covers.mjs`, into the gitignored `public/visitor/covers/` and `src/data/visitor.generated.json`; it never fails the build, and a cold cache downloads every issue once, about 630 MB), then `node scripts/with-workerd.mjs astro build` (the Windows workerd shim, a no-op elsewhere), and then `node scripts/pagefind-index.mjs`, which writes the site search's Pagefind index to `dist/client/pagefind/` from the pages that carry `data-pagefind-body` (since 2026-09-24; see `docs/agent/components.md`, "Scripture index and site search"). It does NOT chain typegen.
+
+After any schema change, run `npm run typegen` first, then `npm run build`. Or use `npm run build:full` which chains both in one command: `npm run typegen && astro build`.
+
+`astro build` fetches content from Sanity at build time via the `sanityFetch` wrapper in `src/lib/sanity.ts`. When no Sanity project is configured, `sanityFetch` returns the provided fallback for every query, and the build still completes successfully with empty-state pages.
+
+`src/lib/sanity.types.ts` is committed to the repo so collaborators can see schema types in code without running typegen themselves.
+
+Standalone scripts:
+
+- `npm run typegen` to regenerate Sanity TypeScript types after editing schemas (run this after any schema change before testing locally).
+- `npm run og:pages` draws the share cards, one 1200x630 PNG per page and per post in the church identity, into `public/og/` (gitignored), cached by content hash; `npm run build` runs it first, so it never needs running by hand. No browser: opentype.js outlines from the site's own .woff files, rasterised by sharp. `npm run check:jsonld` (after a build) validates every JSON-LD block in `dist/client` offline and checks every card and image it names exists. Both are in `docs/agent/seo.md`.
+- `npm run og` to re-run `scripts/generate-og-default.mjs` and regenerate `public/og-default.png` (after changing brand colors, tagline, or the wordmark in the script's inputs block).
+- `npm run apply-brand` to deterministically rewrite `globals.css` tokens, `src/data/site.ts`, Studio theme inputs, font imports, and the OG image based on `brand/brand.config.json`. Idempotent -- safe to re-run.
+- `npm run seed-pages` runs the idempotent page modules under `scripts/pages/`: dry by default, backup-first, and it is how the eleven pages were composed. `npm run seed` (`scripts/seed-core.mjs`) is the starter's singleton seeder and still seeds placeholder copy by design (PORTS.md card 44); do not run it against this dataset expecting church content.
+- `npm run scaffold` runs `scripts/scaffold.mjs`, the capability remover. Its own flags need npm's `--` separator in front of them: `npm run scaffold` (or `-- --list`) prints what can go; `-- --remove <name>` prints the plan; `-- --remove <name> --write` applies it. It is DRY BY DEFAULT and never touches the Sanity dataset. Run `npm run typegen && npm run build && npm run test:unit` after a removal, which is what it prints. See rule 14 and the marker documentation at the top of the script.
+- `npm run audit:studio` runs `scripts/audit-studio.mjs`, a read-only audit of the seven Studio faults that a build, a type check and a test all pass: a field that is hidden AND required (permanently invalid document, error naming a field nowhere on screen), a preview title taken from a number (crashes the whole array field), a stored key the schema does not declare (puts the "Remove field" button in front of an editor, CLAUDE.md rule 1), a page slug on the reserved-route list, a collection whose "Used on" entry disagrees with the pages that render it, a required field blank in the live data, and money typed into prose beside a structured price field. Checks 1 and 2 read only the schema and run on a fresh clone; the rest need a configured project. Exits non-zero on a finding. PORTABLE, ported from the Stone Steps build.
+- `npm run sync-check` diffs this repo's PORTABLE-marked files against the starter's copies. See "PORTABLE files and the starter" below.
+- `npm run free-dist` kills a stale `wrangler dev` / `astro preview` still holding a handle on `dist/` (the cryptic `EPERM ... dist\client` on the next build). Windows only; no-ops elsewhere. Not wired as a `prebuild` hook here, so run it by hand when a build fails that way.
+- **There is no separate studio dev server or deploy.** `npm run dev` serves the Studio at `/studio`, and deploying the site deploys the Studio. For CLI work (`sanity dataset`, `sanity cors`, typegen) run `npx sanity ...` from the repo root; `sanity.cli.ts` configures it. Do **not** run `npx sanity deploy`: it would publish a separate hosted Studio that silently falls behind the embedded one.
+- `npm run preview` runs `wrangler dev -c dist/server/wrangler.json` against the last build. This is the only way to exercise the SSR routes (`/preview/**`, `/api/draft-mode/*`) and the real response headers locally; a static file server proves nothing about them.
+- A note on `npx sanity build`: it writes to `./dist` by default, which would clobber the Astro build. The Studio is built by `astro build`, so there is no `studio:build` script. If you ever need a standalone bundle, pass an output dir: `npx sanity build .studio-dist`.
+
+`public/og-default.png` is committed to the repo because it is a real asset shipped to visitors.
