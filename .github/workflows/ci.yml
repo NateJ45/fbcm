@@ -306,7 +306,22 @@ jobs:
           node-version: 22
           cache: npm
 
+      # node_modules cached by lockfile hash; `npm ci` only on a miss. Measured
+      # on this repo: the restore is 9-11s against 28-38s for `npm ci`, so about
+      # 25s off every shard. The .cache folder is excluded: it holds the
+      # per-run scripture, visitor and test-images caches, which have their own
+      # restore steps.
+      - name: Restore node_modules
+        id: nm
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            !node_modules/.cache
+          key: node-modules-${{ runner.os }}-node22-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.nm.outputs.cache-hit != 'true'
         run: npm ci --no-audit --no-fund
 
       - uses: actions/download-artifact@v8
@@ -371,6 +386,20 @@ jobs:
       - name: Run tests (smoke, a11y, reflow, page specs)
         env:
           PLAYWRIGHT_SKIP_BUILD: '1'
+          # Playwright's default --shard hands each shard a CONTIGUOUS block of
+          # an EQUAL NUMBER of tests, in project order (chromium, then
+          # chromium-scrollbars, then webkit-iphone). The tests are not equal:
+          # the 160 reflow tests are 45% of the suite's time and sit together,
+          # so the equal-count split ran 109s / 185s / 251s (measured, run
+          # 37157730786). PWTEST_SHARD_WEIGHTS (colon separated, one per shard,
+          # an internal Playwright variable) resizes the three blocks instead:
+          # 268 + 181 + 125 = 574 tests, 352s / 353s / 351s of summed test time.
+          # Every test still runs exactly once (the blocks always partition the
+          # whole list); a stale weight only unbalances the shards, it cannot
+          # drop a test. RE-MEASURE when tests are added in bulk: run with
+          # --reporter=json, sum duration per test in project-then-file order,
+          # and cut three blocks of equal summed time.
+          PWTEST_SHARD_WEIGHTS: '268:181:125'
         run: npm test -- --shard=${{ matrix.shard }}/3 --reporter=github,html
 
       # Only on failure: a green run has nothing worth the upload time.
