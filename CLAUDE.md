@@ -49,13 +49,17 @@ Full stack notes and the `astro.config.mjs` landmines are in `docs/agent/stack-a
 - **Default sections fallback:** `src/data/defaultSections.ts` holds code-defined default content arrays for each core page. When a page's `pageBuilder` array is absent (fresh clone, no Sanity project), the route uses the defaults, so the site always renders non-blank content.
 - **Brand reskin:** `brand/brand.config.json` is the single source of truth for identity + palette + fonts + logo paths. Running `npm run apply-brand` deterministically rewrites `globals.css` tokens, `src/data/site.ts`, the Studio theme's font stacks in `sanity.config.ts`, and the OG image. For a full rebrand orchestration (interview, font install, apply, contrast check, copy retone) use the `/reskin` skill at `.claude/skills/reskin/SKILL.md`.
 
-## Code conventions
+## Family conventions
 
-- TypeScript strict mode. No `any`.
-- Each component file starts with a header comment marking it `// Safe to edit by hand` or `// Foundation, edit with care`. Which files are which, and why, is in `docs/agent/file-map.md`. In short: tokens, copy, `src/data/*` and assets are safe to edit. `globals.css` beyond the tokens, the schemas, the Studio config, the preview stack, `SectionRenderer.astro`, `BaseLayout.astro`, `src/lib/sanity.ts` and `queries.ts` are foundation and need a planned change.
-- Astro components for static content; React islands only where interactivity is required. Use `<SanityImage />` for Sanity images and Astro `<Image />` / `<Picture />` for local ones.
-- Tailwind utilities inline; `@apply` only for a pattern repeated four or more times.
+Shared by every site repo in the family, so they live in one PORTABLE file imported here (it is expanded into context at launch, so this saves lines in this file, not tokens): the code conventions (strict TypeScript, header comments, Astro and React islands, images, Tailwind) and the working-with-Claude habits (desktop app, Plan Mode, confirm before installing, describe design in plain language, verify in a real browser).
+
+@docs/claude/family-conventions.md
+
+Repo-specific deltas:
+
+- Foundation vs safe to edit, file by file: `docs/agent/file-map.md`. Tokens, copy, `src/data/*` and assets are safe to edit. `globals.css` beyond the tokens, the schemas, the Studio config, the preview stack, `SectionRenderer.astro`, `BaseLayout.astro`, `src/lib/sanity.ts` and `queries.ts` are foundation and need a planned change.
 - Ask before installing a dependency (rule 8 is why).
+- FBCM is light-only, so UI verification is one theme (rule 3).
 
 ## Preview rules (stega) in short
 
@@ -120,6 +124,7 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 - Content data + Sanity integration: `docs/agent/sanity.md`
 - Deployment + env vars + rebuild model: `docs/agent/deployment.md`
 - Editor-driven vs hardcoded: `docs/agent/editor-vs-hardcoded.md`
+- Shared code conventions and Working-with-Claude habits (PORTABLE, imported above): `docs/claude/family-conventions.md`. Tracked deny rules for force-push and hard reset: `.claude/settings.json` (also PORTABLE; personal allow-lists go in `.claude/settings.local.json`).
 - Cross-repo shared improvements (port cards + applied-to matrix + drift check): `PORTS.md`
 - Change history (prose ledger; the checkable matrix lives in PORTS.md): `docs/agent/changelog.md`
 - New-project setup runbook + pre-launch checklist: `docs/bootstrap/NEW-PROJECT.md`, `docs/bootstrap/setup-checklist.md`

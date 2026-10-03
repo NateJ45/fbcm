@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-03 — Claude setup rollout (starter PORTS.md card 71, full adoption)._
+
+Added the two PORTABLE files from the starter, byte-identical: `.claude/settings.json` (tracked deny rules for force-push and `git reset --hard`) and `docs/claude/family-conventions.md` (shared code conventions plus Working-with-Claude habits). `CLAUDE.md`: the "Code conventions" section became "Family conventions", which imports the shared file and keeps three repo-specific deltas (the foundation vs safe-to-edit file list, the dependency rule 8 reference, light-only). This brings the Working-with-Claude habits (desktop app, Plan Mode, confirm before installing, plain-language design, real-browser verification) to this repo for the first time. `sync-check`: both new files SAME, the 16 drifted and 2 missing files are unchanged from before.
+
 _2026-10-03 — Combined CI speed-up (`exp/ci-combo`: link check job, weighted shards, node_modules cache in the shards)._
 
 Three of the five measured experiments paid and are combined here; see the entries below for the first two. The third: the `e2e` shards restore `node_modules` from `actions/cache` keyed on the lockfile hash and run `npm ci` only on a miss (restore 9-11s against 28-38s). Did NOT pay and are not in this change: the Astro/Vite build cache (the cache is 1.4 MB and the build step did not move), the Playwright container image (about 10s of setup saved per shard, the tests no faster) and Lighthouse reusing the CI build (about 220s less runner time but no wall-clock change, and it would audit the fixture build instead of the live-feed one).
