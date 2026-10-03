@@ -3,12 +3,47 @@
 # block, and the `url` list in lighthouserc.json names the pages a given repo
 # builds. The ASSERTIONS in lighthouserc.json are the part that must not
 # diverge. Copy the shape, not the bytes.
+#
+# ── WHEN IT RUNS (PORTS.md card 62) ─────────────────────────────────────────
+# Lighthouse was the slowest gate after Playwright (494s: 9 URLs x 3 runs) and
+# it ran on every PR, including ones that cannot move a score. It is NOT a
+# required status check, so it is free to be scheduled rather than blocking:
+#
+#   - pull_request, path-filtered to what can move a score (markup, styles,
+#     assets, the build chain, config), and audited on a SAMPLE of URLs, one per
+#     distinct template, via --collect.url flags below. The full list in
+#     lighthouserc.json is untouched.
+#   - push to main, same path filter, FULL url list: the post-merge record.
+#   - weekly schedule, FULL url list: catches drift nobody pushed (a font host
+#     change, a dependency bump that landed on a different path).
+#   - workflow_dispatch: a branch tip on demand, full list.
+#
+# A docs-only, content-only or workflow-only PR therefore runs no Lighthouse and
+# reports no check.
 name: Lighthouse
 
 on:
   push:
     branches: [main]
+    paths: &score-paths
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/serve-dist.mjs'
+      # The build chain: each of these writes into the pages Lighthouse audits.
+      - 'scripts/generate-og-pages.mjs'
+      - 'scripts/fetch-scripture.mjs'
+      - 'scripts/visitor-covers.mjs'
+      - 'scripts/fetch-youtube-feed.mjs'
+      - 'scripts/pagefind-index.mjs'
+      - 'lighthouserc.json'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/lighthouse.yml'
   pull_request:
+    paths: *score-paths
+  schedule:
+    - cron: '17 5 * * 1'
   # Dispatchable so a branch tip can be re-audited on demand, without pushing
   # an empty commit.
   workflow_dispatch:
@@ -32,7 +67,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       # The Visitor's covers and words (feat/the-visitor): scripts/visitor-covers.mjs
       # draws each issue's cover and reads its text at the start of `npm run build`,
@@ -62,5 +97,26 @@ jobs:
       # Accessibility is a hard gate (minScore 1) in lighthouserc.json, as are
       # LCP 4500ms and CLS 0.1; performance, best-practices and SEO are
       # warnings so normal CI variance does not block a PR.
-      - name: Lighthouse CI
+      #
+      # On a PR the URL list is overridden with ONE PAGE PER TEMPLATE. Passing
+      # --collect.url replaces the config's list, so the assertions and the
+      # median-of-3 stay exactly as the standard defines them; only the page set
+      # shrinks. The sample, by template (src/pages): / (index.astro), /visit/
+      # ([slug].astro, which also renders staff, history and contact: same page
+      # builder, different blocks), /blog/ (the listing), one post
+      # (post/[slug].astro, the non-ASCII slug), /privacy/ (privacy.astro) and
+      # the bespoke 404.
+      - name: Lighthouse CI (sample, pull request)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: >-
+          npx lhci autorun
+          --collect.url=http://localhost:4173/
+          --collect.url=http://localhost:4173/visit/
+          --collect.url=http://localhost:4173/blog/
+          --collect.url=http://localhost:4173/post/h%C3%A4ndel-s-messiah-sing-in-carols/
+          --collect.url=http://localhost:4173/privacy/
+          --collect.url=http://localhost:4173/404.html
+
+      - name: Lighthouse CI (full)
+        if: ${{ github.event_name != 'pull_request' }}
         run: npx lhci autorun
