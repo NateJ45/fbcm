@@ -10,6 +10,15 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-03 — The architecture page comes back (`feat/architecture-page`)._
+
+**`/architecture` is a page again, quietly.** Jonathan asked for the old Wix architecture page on the new site; the church is holding an event that takes donations for the building's upkeep, and the page is part of that appeal. Nathan's view is that a church should not lead with its architecture, so it is out of the way by design:
+
+- **Built from the page builder, no schema change.** `scripts/pages/architecture.mjs`: the brown heritage opener (the church's "Our building" and its own paragraph, the tower and red doors in the door arch, the 1927 Hannaford rendering in the lancet), the church's two Gothic Revival paragraphs beside the facade, an "At a glance" ledger, a gallery of four named photographs ("Four things to look for"), "A style from England", "How it was built" (two paragraphs lifted verbatim from the history capture, with the $338,000 cost and $166,000 mortgage), "Caring for the building", and a closing band whose line is Site settings placeholders. The Wix page was about 150 words; everything on it is kept, and the only new sentences are labels, captions and the short upkeep paragraph, all listed for the church's approval. Seven new `architecture-*` entries in `scripts/data/page-images.json` (all media-library photographs).
+- **The redirect came off.** `/architecture` had been a permanent redirect to `/visit#building`; it is removed from `src/lib/fbcm-redirects.ts` (49 to 48, test updated) so the page can answer. Visit's own "Our building" band is unchanged.
+- **Not in the nav or footer.** Linked from History's 1921 to 1929 band (a button) and from Give's "What your gift supports" (one sentence and a link). `scripts/link-architecture.mjs` made those two edits as a targeted, backup-first patch rather than re-running `history.mjs` and `give.mjs`, because a re-seed would overwrite those pages' live `{service time}` / `{address}` placeholders with literal text. (The modules carry the same edits, so a future full seed agrees.)
+- **No event is named yet.** The closing band points at `/events` and `/give`; name the event once the church gives its date.
+
 _2026-09-28 — Every opener's headline rises; one photo pushes in once (`feat/motion-openers`)._
 
 **The home hero's word rise, carried to every page-opening h1.** Nathan approved two extensions of the hero motion pass, site-wide:

@@ -67,6 +67,7 @@ export default {
     'Online giving is on its way. In the meantime, you can give in person or by mail. (Ways to give, paragraph 1, when Online giving is blank; 2026-09-25, the Church Trac move)',
     'You can also give in person during Sunday worship, when the offering is taken. (Ways to give, paragraph 2)',
     'Or mail a check to the church office. (Ways to give, paragraph 3, lead-in to the mailing address)',
+    'Part of that is the building itself, which needs steady care. (What your gift supports, last paragraph, with a link to /architecture; 2026-10-03)',
     'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: in person on Sunday or by mail. (search description, when Online giving is blank; 2026-09-24 local search pass, reworded 2026-09-25)',
     'Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online, in person on Sunday, or by mail. (search description, when Online giving is set)',
   ],
@@ -101,7 +102,7 @@ export default {
 
   async build(ctx) {
     const { copy, settings } = ctx;
-    const { paragraphs, decodeEntities, ctaInternal, ctaExternal } = copy;
+    const { paragraphs, decodeEntities, ctaInternal, ctaExternal, link } = copy;
 
     if (!settings) {
       throw new Error(
@@ -216,6 +217,9 @@ export default {
           body: [
             ...paragraphs(supportSentence, 'gwh-a'),
             ...paragraphs(specialOfferingsSentence, 'gwh-b'),
+            // 2026-10-03: the building's upkeep, with the page that tells its story.
+            ...paragraphs('Part of that is the building itself, which needs steady care.', 'gwh-c'),
+            link('The story of our building', '/architecture', 'gwh-d'),
           ],
         },
 

@@ -114,6 +114,7 @@ const NAV_ORDER = [
   'ministries',
   'staff',
   'history',
+  'architecture',
   'wedding',
   'give',
   'contact',

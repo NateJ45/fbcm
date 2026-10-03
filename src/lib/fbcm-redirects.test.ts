@@ -20,8 +20,9 @@ test('every from-path is a root-relative path', () => {
 test('the redirect set is the size it is meant to be', () => {
   // A count, so adding a rule is a deliberate act with a number attached.
   // 44 through plan 2c; 49 since task 16 added the five in-body URLs the
-  // restored post bodies revealed (see the test below).
-  assert.equal(fbcmRedirects().length, 49);
+  // restored post bodies revealed (see the test below); 48 since 2026-10-03,
+  // when /architecture became a page again and its redirect to /visit came off.
+  assert.equal(fbcmRedirects().length, 48);
 });
 
 test('the five URLs the restored post bodies link to are covered', () => {
