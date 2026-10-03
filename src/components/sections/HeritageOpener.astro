@@ -30,9 +30,21 @@
 //    text is on the <img> for screen readers. Both load eagerly, because they
 //    are the first pictures on the page.
 //
+// 5. THE DRAWING FORM (2026-10-03, /architecture). A band with NO photograph
+//    and no archive photograph draws Samuel Hannaford and Sons' 1927 rendering
+//    instead: the same baked line art the footer uses (src/assets/footer-
+//    rendering.webp), as a CSS mask on a gold-filled box, painted in from left
+//    to right over about nine seconds when the page loads. The look follows the
+//    content (CLAUDE.md rule 9): leave the photographs off and the drawing
+//    appears, put them on and the arches do. It is aria-hidden and decorative,
+//    carries no words, and under reduced motion simply stands drawn. The paint
+//    is a second mask layer (a moving soft edge) intersected with the drawing,
+//    driven by a registered custom property, so it costs no JavaScript.
+//
 // 4. NO STRIP AND NO NUMERAL ROW. The brown h2 band borrows two spare photos
 //    for a detail strip and sets three timeline numerals under its heading;
 //    as an opener those would repeat the timeline that follows it directly.
+import renderingAsset from '@/assets/footer-rendering.webp';
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
 import ArchFrame from '@/components/church/ArchFrame.astro';
@@ -63,13 +75,15 @@ const altOf = (img: unknown): string => {
 };
 const hasDoor = !!image?.asset;
 const hasLancet = !!archive?.asset;
+const hasDrawing = !hasDoor && !hasLancet;
+const drawingStyle = `--ho-drawing: url(${renderingAsset.src}); aspect-ratio: ${renderingAsset.width} / ${renderingAsset.height};`;
 ---
 
 <section class="bg-band-brown text-white-pure" aria-labelledby={heading ? headingId : undefined}>
   <div
     class="mx-auto grid max-w-content grid-cols-12 items-center gap-x-[clamp(16px,2.5vw,40px)] gap-y-10 px-gutter py-section-lg"
   >
-    <div class:list={['col-span-12', (hasDoor || hasLancet) && 'lg:col-span-6']}>
+    <div class:list={['col-span-12', 'lg:col-span-6']}>
       {
         span.length > 0 && (
           <p
@@ -115,6 +129,13 @@ const hasLancet = !!archive?.asset;
     </div>
 
     {
+      hasDrawing && (
+        <div class="ho-drawing col-span-12 lg:col-span-6" aria-hidden="true" style={drawingStyle}>
+          <div class="ho-drawing-ink" />
+        </div>
+      )
+    }
+    {
       (hasDoor || hasLancet) && (
         <div class:list={['ho-pics col-span-12 lg:col-span-6', hasDoor && hasLancet && 'ho-pair']}>
           {hasDoor && (
@@ -147,6 +168,51 @@ const hasLancet = !!archive?.asset;
 </section>
 
 <style>
+  /* The drawing: gold line art, painted in. --ho-paint is the soft edge's
+     position; registered so it can animate (a browser without @property shows
+     the finished drawing, because the animation then has nothing to tween
+     and the resting value is the end state). */
+  @property --ho-paint {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 120%;
+  }
+  .ho-drawing {
+    width: 100%;
+    pointer-events: none;
+  }
+  .ho-drawing-ink {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-gold);
+    opacity: 0.92;
+    --ho-paint: 120%;
+    -webkit-mask-image:
+      var(--ho-drawing),
+      linear-gradient(100deg, #000 var(--ho-paint), transparent calc(var(--ho-paint) + 16%));
+    mask-image:
+      var(--ho-drawing),
+      linear-gradient(100deg, #000 var(--ho-paint), transparent calc(var(--ho-paint) + 16%));
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ho-drawing-ink {
+      animation: ho-paint 9s cubic-bezier(0.45, 0.05, 0.35, 1) 0.5s both;
+    }
+  }
+  @keyframes ho-paint {
+    from {
+      --ho-paint: -16%;
+    }
+    to {
+      --ho-paint: 100%;
+    }
+  }
   /* The pair: the door stands in from the left, the lancet hangs over its
      lower-left corner and drops below it. Percentages of the column's width
      throughout, so the composition is the same at 320px and at 1440px. */
