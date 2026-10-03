@@ -23,25 +23,6 @@
 name: Lighthouse
 
 on:
-  push:
-    branches: [main]
-    paths: &score-paths
-      - 'src/**'
-      - 'public/**'
-      - 'scripts/serve-dist.mjs'
-      # The build chain: each of these writes into the pages Lighthouse audits.
-      - 'scripts/generate-og-pages.mjs'
-      - 'scripts/fetch-scripture.mjs'
-      - 'scripts/visitor-covers.mjs'
-      - 'scripts/fetch-youtube-feed.mjs'
-      - 'scripts/pagefind-index.mjs'
-      - 'lighthouserc.json'
-      - 'astro.config.mjs'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/lighthouse.yml'
-  pull_request:
-    paths: *score-paths
   schedule:
     - cron: '17 5 * * 1'
   # Dispatchable so a branch tip can be re-audited on demand, without pushing

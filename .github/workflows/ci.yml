@@ -243,6 +243,90 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
+  # ── Lighthouse, reusing the `site` build (experiment E) ─────────────────────
+  # NOT a required check and it must stay that way: it is skipped (not failed)
+  # on a PR that cannot move a score, and a required check that is skipped is
+  # fine but one that never reports is not. `build` and `test` do not list it.
+  # The job NAME stays `lighthouse`, as it was in lighthouse.yml, which now only
+  # carries the weekly schedule and manual dispatch (own build, full list).
+  #
+  # The path filter that used to sit on lighthouse.yml's triggers moves here as
+  # a job-level condition, because ci.yml itself must have NO workflow-level
+  # path filter (it carries the required checks). The list is the same one.
+  changes:
+    name: Which gates apply
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      score: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.score == 'true' }}
+    steps:
+      - uses: actions/checkout@v7
+        if: ${{ github.event_name != 'pull_request' }}
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        with:
+          filters: |
+            score:
+              - 'src/**'
+              - 'public/**'
+              - 'scripts/serve-dist.mjs'
+              - 'scripts/generate-og-pages.mjs'
+              - 'scripts/fetch-scripture.mjs'
+              - 'scripts/visitor-covers.mjs'
+              - 'scripts/fetch-youtube-feed.mjs'
+              - 'scripts/pagefind-index.mjs'
+              - 'lighthouserc.json'
+              - 'astro.config.mjs'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.github/workflows/ci.yml'
+              - '.github/workflows/lighthouse.yml'
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    needs: [site, changes]
+    if: ${{ needs.changes.outputs.score == 'true' }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      # @lhci/cli is a devDependency, so this still installs; it just no longer
+      # builds the site a second time.
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist-client
+          path: dist/client
+
+      # Accessibility is a hard gate (minScore 1) in lighthouserc.json, as are
+      # LCP 4500ms and CLS 0.1; performance, best-practices and SEO are
+      # warnings. On a PR the URL list is overridden with ONE PAGE PER TEMPLATE
+      # (see the history in lighthouse.yml); push and dispatch run the full list.
+      - name: Lighthouse CI (sample, pull request)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: >-
+          npx lhci autorun
+          --collect.url=http://localhost:4173/
+          --collect.url=http://localhost:4173/visit/
+          --collect.url=http://localhost:4173/blog/
+          --collect.url=http://localhost:4173/post/h%C3%A4ndel-s-messiah-sing-in-carols/
+          --collect.url=http://localhost:4173/privacy/
+          --collect.url=http://localhost:4173/404.html
+
+      - name: Lighthouse CI (full)
+        if: ${{ github.event_name != 'pull_request' }}
+        run: npx lhci autorun
+
   # Green only when both halves are green.
   build:
     name: build
