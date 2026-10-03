@@ -6,7 +6,7 @@
 
 **Read `docs/PENDING.md` early in a session.** It is the live registry of open loops. If you finish or discover one, update it in the same commit. Change history is in `docs/agent/changelog.md`, and the tactical runbook is `OPERATIONS.md`.
 
-**Path-scoped rules.** Extra rules load only when you touch matching files, from `.claude/rules/`: `preview.md`, `schema-and-data.md`, `dependencies-and-deploy.md`, `layout-and-css.md`, `theme-nav-scroll.md`, `brand-and-reskin.md`, `routes.md`, `copy-and-prose.md`, `tests-and-gates.md`. Rule numbers below (1 to 20, 8b) are stable: code comments cite them as "CLAUDE.md rule N".
+**Path-scoped rules.** Extra rules load only when you touch matching files, from `.claude/rules/`: `preview.md`, `schema-and-data.md`, `dependencies-and-deploy.md`, `layout-and-css.md`, `theme-nav-scroll.md`, `brand-and-reskin.md`, `routes.md`, `copy-and-prose.md`, `tests-and-gates.md`, `live-writes-and-handoff.md`. Rule numbers below (1 to 20, 8b) are stable: code comments cite them as "CLAUDE.md rule N".
 
 ## Commands
 
@@ -131,6 +131,7 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 - Unit-suite and Playwright inventories: `docs/claude/test-inventory.md`. Read before changing what a suite watches; add a line when you add a suite.
 - PORTABLE files and the starter, full notes: `docs/claude/ports-and-portable.md`. Read before editing a file whose first line says `PORTABLE: canonical copy`.
 - Path-scoped rules (load automatically when matching files are touched): `.claude/rules/*.md`. Routes summary table and rule 10: `.claude/rules/routes.md`. Copy and prose rules: `.claude/rules/copy-and-prose.md`. Parity harness and CI gates: `.claude/rules/tests-and-gates.md`.
+- Live writes (Sanity dataset, Cloudflare, deploys) are blocked by the auto-mode classifier even after a yes in chat: build the artifact, hand Nathan a numbered run list, verify read-only. Never route around a refusal. `.claude/rules/live-writes-and-handoff.md`.
 - Slash commands in `.claude/commands/` (`rebuild`, `sanity-audit`, `visual-verify`) and the `/reskin` skill in `.claude/skills/reskin/SKILL.md`.
 
 ## Vault (business context and decisions)
