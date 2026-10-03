@@ -276,7 +276,20 @@ jobs:
           node-version: 22
           cache: npm
 
+      # node_modules cached by lockfile hash; `npm ci` only on a miss. The
+      # .cache folder is excluded: it holds the per-run scripture, visitor and
+      # test-images caches, which have their own restore steps below.
+      - name: Restore node_modules
+        id: nm
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            !node_modules/.cache
+          key: node-modules-${{ runner.os }}-node22-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.nm.outputs.cache-hit != 'true'
         run: npm ci --no-audit --no-fund
 
       - uses: actions/download-artifact@v8
