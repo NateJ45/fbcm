@@ -137,7 +137,7 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 
 - Business context, decisions and the Work log live in `_vault/clients/first-baptist-muncie.md` at the Projects root (`C:\Users\natha\Documents\Claude\Projects\_vault`), never in this repo. Read its `## Current state` first. Rules: `_vault/README.md`.
 - Update the repo docs (this file, `.claude/rules/`, `docs/claude/`, README, OPERATIONS, `docs/PENDING.md`) in the same piece of work as any change to code, behaviour, setup or a decision, before calling it done.
-- Record decisions at the top of the note's Decision log, and tick or add `- [ ] #nathan` items. If the note's `plan` is paying, append a Work log row at session end, then commit and push the vault. (Currently `plan: none`: a volunteer build.)
+- Record decisions at the top of the note's Decision log, and tick or add `- [ ] #nathan` items. Work log: the note keeps a `## Work log`, so append a row (`- YYYY-MM-DD | ~Xh | summary`) at the end of each real-work session and commit and push `_vault/` (`_vault/README.md` rule 6), even though `plan` is `none`; append a row at session end, then commit and push the vault.
 
 ## Ports (the starter and the family)
 
