@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-03 — Sync of drifted PORTABLE files (`sync-portable-files`)._
+
+`sync-check` read 70 same, 16 drifted, 2 missing in starter. Two drifts were STALE and are now byte-identical to the starter: `src/components/analytics/GoogleAnalytics.astro` (card 58, GA4 fires only on the production hostname) and `scripts/check-live-links.mjs` (card 42 addendum, walks every published document). Result: 72 same, 14 drifted, 2 missing. The other 14 drifts and the two missing files are fbcm AHEAD or site-specific and were left alone on purpose; the per-file reasons are in `docs/claude/ports-and-portable.md` ("Known drift").
+
 _2026-10-03 — Claude setup rollout (starter PORTS.md card 71, full adoption)._
 
 Added the two PORTABLE files from the starter, byte-identical: `.claude/settings.json` (tracked deny rules for force-push and `git reset --hard`) and `docs/claude/family-conventions.md` (shared code conventions plus Working-with-Claude habits). `CLAUDE.md`: the "Code conventions" section became "Family conventions", which imports the shared file and keeps three repo-specific deltas (the foundation vs safe-to-edit file list, the dependency rule 8 reference, light-only). This brings the Working-with-Claude habits (desktop app, Plan Mode, confirm before installing, plain-language design, real-browser verification) to this repo for the first time. `sync-check`: both new files SAME, the 16 drifted and 2 missing files are unchanged from before.
