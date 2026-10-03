@@ -28,10 +28,11 @@
 //    for approval. Nothing is said about the building that the church's own
 //    text or the photographs do not already say.
 //
-// 4. THE 1927 RENDERING IS THIS PAGE'S PHOTOGRAPH. Home's Our Building band
-//    shows it too; the overnight rule against one photograph on two pages was
-//    written for the identity rollout, and this is the page the drawing
-//    belongs to, so it hangs here in the opener's lancet.
+// 4. THE OPENER IS THE DRAWING, NOT PHOTOGRAPHS. The heritage opener carries
+//    no photograph here, so it draws Samuel Hannaford and Sons' 1927 rendering
+//    as gold line art that paints in slowly from the left (the same art as the
+//    footer's; HeritageOpener.astro, "the drawing form"). Nathan's call, over
+//    the first cut's two framed photographs.
 //
 // 5. NO EVENT IS NAMED. The church is holding an event that takes donations
 //    for upkeep, but no date, name or amount has been given yet. The closing
@@ -129,8 +130,6 @@ export default {
       return at ? { ...img, hotspot: hotspot(at[0], at[1]) } : img;
     };
 
-    const open = await photo('architecture-open', [0.5, 0.5]);
-    const rendering = await photo('architecture-rendering', [0.5, 0.5]);
     const facade = await photo('architecture-facade', [0.5, 0.45]);
     const tower = await photo('architecture-tower', [0.5, 0.5]);
     const glass = await photo('architecture-glass', [0.5, 0.5]);
@@ -151,13 +150,10 @@ export default {
 
       pageBuilder: [
         // 1. The opener: the church's brown, the church's own heading and
-        //    paragraph, the building in a door arch and the 1927 drawing in a
-        //    lancet (HeritageOpener.astro).
+        //    paragraph, and the 1927 drawing painting itself in beside them.
         {
           _type: 'heritageBandSection',
           _key: 'ar-open',
-          image: open,
-          archive: rendering,
           heading: 'Our building',
           body: openerBody,
         },

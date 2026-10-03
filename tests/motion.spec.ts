@@ -476,3 +476,45 @@ test.describe('glyph draw, no preference', () => {
     expect(replay, 'the glyph drew again').toBe(false);
   });
 });
+
+// =============================================================================
+// The architecture opener's drawing (2026-10-03)
+// =============================================================================
+// /architecture opens on Hannaford's 1927 rendering as gold line art that
+// paints in from the left over about nine seconds (HeritageOpener.astro, the
+// drawing form). Opposite assertions again: it moves with motion allowed, and
+// it simply stands drawn (nothing animating, soft edge past the right end)
+// under reduced motion.
+test.describe('architecture drawing, no preference', () => {
+  test('paints in: the soft edge is moving and decorative', async ({ page }) => {
+    await page.goto('/architecture', { waitUntil: 'load' });
+    const ink = page.locator('.ho-drawing-ink');
+    await expect(ink).toHaveCount(1);
+    await expect(page.locator('.ho-drawing')).toHaveAttribute('aria-hidden', 'true');
+    const name = await ink.evaluate((el) => getComputedStyle(el).animationName);
+    expect(name).toContain('ho-paint');
+    const first = await ink.evaluate((el) =>
+      parseFloat(getComputedStyle(el).getPropertyValue('--ho-paint')),
+    );
+    await page.waitForTimeout(1500);
+    const later = await ink.evaluate((el) =>
+      parseFloat(getComputedStyle(el).getPropertyValue('--ho-paint')),
+    );
+    expect(later).toBeGreaterThan(first);
+  });
+});
+
+test.describe('architecture drawing, reduced motion', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  test('stands fully drawn and still', async ({ page }) => {
+    await page.goto('/architecture', { waitUntil: 'load' });
+    const ink = page.locator('.ho-drawing-ink');
+    const state = await ink.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return { name: cs.animationName, paint: parseFloat(cs.getPropertyValue('--ho-paint')) };
+    });
+    expect(state.name).toBe('none');
+    expect(state.paint).toBeGreaterThanOrEqual(100);
+  });
+});
