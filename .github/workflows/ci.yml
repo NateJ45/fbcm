@@ -18,7 +18,8 @@
 # test job 1056s. Now:
 #
 #   static ─┐                      (typegen, types, check, lint, format, unit)
-#   site ───┼─> build (aggregator)  (build once, link check, upload dist/client)
+#   site ───┼─> build (aggregator)  (build once, upload dist/client)
+#           ├─> links ─> build      (link check on the artifact, parallel with e2e)
 #           └─> e2e x3 shards ─> test (aggregator)  (reuse the uploaded build)
 #
 # `build` and `test` are the names this repo's CI is known by (CLAUDE.md, and
@@ -150,7 +151,7 @@ jobs:
       - name: Unit tests
         run: npm run test:unit
 
-  # Builds the site ONCE. Everything downstream reuses what this uploads.
+  # Builds the site ONCE and uploads it. Everything downstream reuses the upload.
   site:
     name: Build and links
     runs-on: ubuntu-latest
@@ -216,17 +217,6 @@ jobs:
           CHURCH_TRAC_PAGES_FIXTURE: '1'
         run: npm run build
 
-      # linkinator over dist/client. The skip pattern is
-      # `^https?://(?!(localhost|127[.]0[.]0[.]1)[:/])`, which excludes external
-      # links and NOTHING else. WCP's older `^(?!http://localhost)` also matched
-      # linkinator's own 127.0.0.1 seed, so every green run for months had
-      # scanned zero links. Read the log: it must say "scanned N links" with N
-      # greater than zero. The SSR-only routes (/studio, /preview/**,
-      # /api/draft-mode/*) are skipped in the script: they are not in
-      # dist/client and would report as broken for the wrong reason.
-      - name: Check internal links
-        run: npm run check:links
-
       # NOTE: `npm run parity compare` is deliberately NOT a CI step. The
       # baselines in scripts/.parity/ are captured on a developer machine and
       # the family has never verified that a Linux build reproduces them
@@ -243,16 +233,56 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
+  # The link check, OFF the critical path. It used to be the last step of
+  # `site`, 35-50s long, and the e2e shards `needs: [site]`, so they could not
+  # start until the links had been checked even though they only need the
+  # uploaded build. Now `site` ends at the upload, the shards start straight
+  # away, and this job checks the same artifact in parallel with them. It is
+  # still a gate: `build` needs it.
+  links:
+    name: Link check
+    needs: [site]
+    runs-on: ubuntu-latest
+    env:
+      PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+      PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist-client
+          path: dist/client
+
+      # linkinator over dist/client. The skip pattern is
+      # `^https?://(?!(localhost|127[.]0[.]0[.]1)[:/])`, which excludes external
+      # links and NOTHING else. WCP's older `^(?!http://localhost)` also matched
+      # linkinator's own 127.0.0.1 seed, so every green run for months had
+      # scanned zero links. Read the log: it must say "scanned N links" with N
+      # greater than zero. The SSR-only routes (/studio, /preview/**,
+      # /api/draft-mode/*) are skipped in the script: they are not in
+      # dist/client and would report as broken for the wrong reason.
+      - name: Check internal links
+        run: npm run check:links
+
   # Green only when both halves are green.
   build:
     name: build
     if: ${{ always() }}
-    needs: [static, site]
+    needs: [static, site, links]
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "static=${{ needs.static.result }} site=${{ needs.site.result }}"
-          [ "${{ needs.static.result }}" = "success" ] && [ "${{ needs.site.result }}" = "success" ]
+          echo "static=${{ needs.static.result }} site=${{ needs.site.result }} links=${{ needs.links.result }}"
+          [ "${{ needs.static.result }}" = "success" ] && [ "${{ needs.site.result }}" = "success" ] && [ "${{ needs.links.result }}" = "success" ]
 
   # The Playwright suite, sharded. fullyParallel is on in playwright.config.ts,
   # so --shard splits at TEST granularity and the shards come out even.
@@ -276,7 +306,22 @@ jobs:
           node-version: 22
           cache: npm
 
+      # node_modules cached by lockfile hash; `npm ci` only on a miss. Measured
+      # on this repo: the restore is 9-11s against 28-38s for `npm ci`, so about
+      # 25s off every shard. The .cache folder is excluded: it holds the
+      # per-run scripture, visitor and test-images caches, which have their own
+      # restore steps.
+      - name: Restore node_modules
+        id: nm
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            !node_modules/.cache
+          key: node-modules-${{ runner.os }}-node22-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.nm.outputs.cache-hit != 'true'
         run: npm ci --no-audit --no-fund
 
       - uses: actions/download-artifact@v8
@@ -341,6 +386,20 @@ jobs:
       - name: Run tests (smoke, a11y, reflow, page specs)
         env:
           PLAYWRIGHT_SKIP_BUILD: '1'
+          # Playwright's default --shard hands each shard a CONTIGUOUS block of
+          # an EQUAL NUMBER of tests, in project order (chromium, then
+          # chromium-scrollbars, then webkit-iphone). The tests are not equal:
+          # the 160 reflow tests are 45% of the suite's time and sit together,
+          # so the equal-count split ran 109s / 185s / 251s (measured, run
+          # 37157730786). PWTEST_SHARD_WEIGHTS (colon separated, one per shard,
+          # an internal Playwright variable) resizes the three blocks instead:
+          # 268 + 181 + 125 = 574 tests, 352s / 353s / 351s of summed test time.
+          # Every test still runs exactly once (the blocks always partition the
+          # whole list); a stale weight only unbalances the shards, it cannot
+          # drop a test. RE-MEASURE when tests are added in bulk: run with
+          # --reporter=json, sum duration per test in project-then-file order,
+          # and cut three blocks of equal summed time.
+          PWTEST_SHARD_WEIGHTS: '268:181:125'
         run: npm test -- --shard=${{ matrix.shard }}/3 --reporter=github,html
 
       # Only on failure: a green run has nothing worth the upload time.

@@ -10,6 +10,18 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-03 — Combined CI speed-up (`exp/ci-combo`: link check job, weighted shards, node_modules cache in the shards)._
+
+Three of the five measured experiments paid and are combined here; see the entries below for the first two. The third: the `e2e` shards restore `node_modules` from `actions/cache` keyed on the lockfile hash and run `npm ci` only on a miss (restore 9-11s against 28-38s). Did NOT pay and are not in this change: the Astro/Vite build cache (the cache is 1.4 MB and the build step did not move), the Playwright container image (about 10s of setup saved per shard, the tests no faster) and Lighthouse reusing the CI build (about 220s less runner time but no wall-clock change, and it would audit the fixture build instead of the live-feed one).
+
+_2026-10-03 — The link check leaves the critical path (`exp/ci-f`)._
+
+`site` used to end with the 35-50s link check, and the `e2e` shards `needs: [site]`, so no shard could start until the links had been checked even though they only need the uploaded `dist/client`. `site` now ends at the upload; a new `links` job (checkout, `npm ci`, download the artifact, `npm run check:links`) runs in parallel with the shards, and `build` needs `static` + `site` + `links`, so it is still a gate under the same required-check name. Measured on the experiment PR against unchanged `main` the same day: see the PR description.
+
+_2026-10-03 — The Playwright shards are balanced (`exp/ci-b`)._
+
+`--shard=N/3` gives each shard a contiguous block of an EQUAL NUMBER of tests, in project order (chromium, then chromium-scrollbars, then webkit-iphone), and the tests are not equal: the 160 reflow tests are 45% of the summed test time. Per-test timings from a CI run (`--reporter=json`) showed the three shards' test steps at 109s / 185s / 251s. `PWTEST_SHARD_WEIGHTS: '268:181:125'` (colon separated, an internal Playwright variable read in `cli/testActions.js`) resizes the blocks to 352s / 353s / 351s of summed test time with no test touched or removed; the blocks always partition the whole list, so a stale weight unbalances the shards but cannot drop a test. Measured test steps after: 179s / 166s / 184s and 180s / 180s / 167s. When many tests are added, re-run with `--reporter=json` and re-cut the blocks.
+
 _2026-10-03 — CI goes parallel and sharded (`ci/speedup`, PORTS.md card 70)._
 
 `ci.yml` was `build` (checks, then a build) and `test` (a 286s Playwright browser install, then Playwright whose webServer built the site a second time): 647s average, the `test` job 1056s. It is now `static` and `site` in parallel, `e2e` in three Playwright shards that download the `dist/client` artifact `site` uploads (`PLAYWRIGHT_SKIP_BUILD=1`, so `playwright.config.ts`'s webServer only serves) with the browsers cached by Playwright version, and two aggregator jobs named `build` and `test` so the check names are unchanged. Nothing in `deploy.yml` or the other workflows references a CI job name, so the production deploy is untouched. Two things to know: the `site` build now carries the fixture env the webServer used to set (so the shards see fixed YouTube, calendar and Church Trac data), which means the link check scans that fixture build rather than a live-feed one; and `lighthouse.yml` now runs only on a path filter (one URL per template on a PR: `/`, `/visit/`, `/blog/`, one post, `/privacy/`, `/404.html`; the full nine on push to `main`, a weekly Monday cron and dispatch), with `lighthouserc.json` assertions and `env` untouched. `visual.yml` gained the same `paths:` filter on `pull_request` as on `push`.
