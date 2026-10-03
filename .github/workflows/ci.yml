@@ -1,5 +1,5 @@
 # The family test standard's CI workflow (PORTS.md card 35, restructured for
-# speed by card 62). Deliberately NOT marked PORTABLE: it carries a per-site
+# speed by card 70). Deliberately NOT marked PORTABLE: it carries a per-site
 # `env:` block, so a byte-exact drift check would fail forever on every repo.
 # Copy the SHAPE from the starter, and keep the job ids, the step list, the
 # concurrency group and the linkinator skip identical.
@@ -12,7 +12,7 @@
 # zero posts.
 #
 # ── SHAPE (why it looks like this) ──────────────────────────────────────────
-# Before card 62 this was two serial-ish jobs: `build` (checks + a build) and
+# Before card 70 this was two serial-ish jobs: `build` (checks + a build) and
 # `test` (Playwright, which built the site a SECOND time inside the config's
 # webServer after a 286s browser download). Measured on this repo: 647s average,
 # test job 1056s. Now:
