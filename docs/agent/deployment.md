@@ -137,6 +137,15 @@ Added 2026-09-18. Until then nobody in the family had watched a message actually
 
 When you change a Sanity schema (`src/sanity/schemaTypes/**`), run `npm run typegen` and commit the regenerated types, then deploy the site. The Studio is embedded at `/studio` and ships with the site build, so deploying the site publishes the schema. There is no separate Studio deploy (and `npx sanity deploy` must NOT be run: it would create a standalone Studio that silently falls behind). Until the deploy lands, editors may see fields that don't match the current types, or miss newly added ones.
 
+### Dependabot
+
+`.github/dependabot.yml` (copied from the starter, PORTS.md card 62) opens one grouped minor-and-patch npm PR and one github-actions PR each Monday 07:00 America/New_York, max 5 open. Rules that matter:
+
+- It configures VERSION-update PRs only. Vulnerability alerts and automated security fixes are separate repo settings.
+- Dependabot runs get the Dependabot secrets store, not the Actions one. The CI jobs that run on pull requests read no secrets (the `secrets.*` references are in the deploy, publish-due, backup and this-sunday workflows), so nothing needs copying today. If a PR-time job ever reads a secret, set it again with `gh secret set NAME --app dependabot --repo NateJ45/fbcm`.
+- `main` is the only long-lived branch, so there is no `target-branch`.
+- The ignore list is the pinned stack (sanity, `@sanity/*`, `sanity-plugin-*`, react, react-dom, react-is, styled-components, the @astrojs/cloudflare + wrangler pair, typescript >=7). Those move together, by hand. Never merge a dependency PR whose CI is red.
+
 ### Security headers
 
 `public/_headers` ships with the deploy. Five site-wide headers Cloudflare applies to every route:
