@@ -27,7 +27,7 @@ Data and tooling scripts (all dry by default, backup-first; detail in `docs/clau
 
 ## Branches, CI and deploy
 
-- Feature work goes on a `feat/*` branch (or a worktree under `.claude/worktrees/`) and merges to `main`; a push to `main` deploys (`.github/workflows/deploy.yml`). Prose-only pushes (`docs/**`, root Markdown, `.github/**/*.md`, `.claude/**/*.md`) skip the deploy.
+- `main` is the only long-lived branch and is production (staging was abandoned 2026-10-03). Work on short-lived branches, PR into `main`, CI must be green (checks `build` and `test`), and the merge is the production deploy: a push to `main` deploys (`.github/workflows/deploy.yml`). Prose-only pushes (`docs/**`, root Markdown, `.github/**/*.md`, `.claude/**/*.md`) skip the deploy.
 - CI (`ci.yml`) runs on every push and PR in two parallel jobs: `npm run check`, `npm run format:check`, `npm run check:links`, `npm test`. `lighthouse.yml` runs `npx lhci autorun` separately. Parity is deliberately a local gate. The family test standard is PORTS.md card 35.
 - `deploy.yml` also runs on the Sanity publish webhook (rule 6) and on a schedule: Sunday afternoon, Monday, Thursday and Saturday mornings, for the Last Sunday replay and the coming Sunday's broadcast. Details in `docs/agent/deployment.md`.
 - Do not bump any pinned dependency in isolation, and never run `npm audit fix --force` (rule 8).

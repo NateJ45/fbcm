@@ -1780,7 +1780,7 @@ summary, location, rrule: 'FREQ=WEEKLY;BYDAY=SU' }] })`; `src/lib/worship-ics.ts
   page exists).
 - **A cold build downloads every issue once.** About 630 MB from the Sanity CDN, 93 s on this
   machine, then only the covers and text are kept (7 MB in `node_modules/.cache/visitor/`,
-  restored by ci.yml, deploy.yml, deploy-staging.yml and lighthouse.yml). A new issue costs one
+  restored by ci.yml, deploy.yml and lighthouse.yml). A new issue costs one
   download. If a file ever fails to draw, it is cached as failed (a typeset cover stands in);
   delete its folder under the cache to retry.
 - **The search's no-match test word changed** from "zebrafinch" to "fqxzvw": Pagefind matches a

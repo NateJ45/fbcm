@@ -95,12 +95,13 @@ The site is `output: 'static'` + `@astrojs/cloudflare` adapter. Two paths:
 
 ### Auto-deploy via GitHub → Cloudflare
 
-This is the normal path. Cloudflare watches `main` on GitHub.
+This is the normal path. Cloudflare watches `main` on GitHub. `main` is the only branch and is production (2026-10-03: staging abandoned; main is the only branch). Work on a short-lived branch, open a PR into `main`, wait for green CI, and merge; the merge is the deploy.
 
 ```bash
-git add -A
-git commit -m "..."
-git push origin main
+git switch -c feat/my-change
+git commit -am "..."
+git push -u origin feat/my-change
+gh pr create
 ```
 
 Cloudflare detects the push, runs `npm run build` in their CI, and deploys the resulting `dist/` to the Worker. Takes about 1 to 2 minutes. Watch in the Cloudflare dashboard under Workers → [your-worker-name] → Deployments.
