@@ -416,6 +416,8 @@ leaves open, with what closes each.
 
 ### Waiting on Nathan
 
+- **The /architecture page (applied 2026-10-03, branch `feat/architecture-page`): the church's approval and the upkeep event.** The page's new sentences are in `docs/superpowers/notes/2026-09-19-copy-for-church-approval.md` under /architecture (labels, four gallery captions, one paragraph, the closing line). Two facts to confirm: the name, date and purpose of the upkeep event (the page names none; once it is in Church Trac it appears on `/events`, and the "Caring for the building" paragraph should then name it), and whether to keep the church's own $338,000 cost and $166,000 mortgage on the page. The 1927 rendering is on Home and here, a deliberate second use. Live only after the branch is merged and deployed (the redirect it replaces is still in the deployed code until then).
+
 - ~~`CLOUDFLARE_API_TOKEN` as a GitHub Actions secret.~~ Done 2026-09-18. First CI
   deploy (run 35411176093) succeeded: gate green, 277 files uploaded, version
   `6d670311`, smoke passed against `vars.PRODUCTION_URL`. Deploys now happen on

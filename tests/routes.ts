@@ -44,6 +44,8 @@ export const routes: string[] = [
   '/history',
   '/wedding',
   '/give',
+  // The architecture page (2026-10-03): out of the menu, but a real page.
+  '/architecture',
   // The Visitor's page, composed from its seed module and rendered from the
   // committed fixture until /visitor is published (2026-09-24). Here it gets
   // smoke, axe, contrast and reflow at 320 with and without real scrollbars.

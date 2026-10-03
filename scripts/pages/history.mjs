@@ -472,7 +472,7 @@ export default {
     // heritage band, and it has to land on the heading and the photograph, not
     // three screens down in the tail prose). The richTextSection overflow band
     // therefore carries NO anchor of its own any more.
-    const eraBands = (n, { years, name, lead, rest, imageSide, imageAnchor }) => {
+    const eraBands = (n, { years, name, lead, rest, imageSide, imageAnchor, cta }) => {
       const bands = [
         {
           _type: 'imageTextSection',
@@ -483,6 +483,7 @@ export default {
           eyebrow: years,
           heading: name,
           body: lead,
+          ...(cta ? { cta } : {}),
         },
       ];
       if (rest && rest.length > 0) {
@@ -656,6 +657,9 @@ export default {
           rest: era4Rest,
           imageSide: 'left',
           imageAnchor: 'building',
+          // 2026-10-03: the architecture page, reached from here and from Give
+          // rather than from the menu (scripts/pages/architecture.mjs).
+          cta: ctaAnchor('The building’s architecture', '/architecture'),
         }),
         ...eraBands(5, {
           years: '1938 to 1939',

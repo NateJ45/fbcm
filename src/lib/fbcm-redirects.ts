@@ -110,7 +110,6 @@ export function fbcmRedirects(): FbcmRedirect[] {
       permanent: true,
       note: 'Merged into Visit',
     },
-    { from: '/architecture', to: '/visit#building', permanent: true, note: 'Merged into Visit' },
     {
       from: '/baptists',
       to: '/beliefs#baptists',

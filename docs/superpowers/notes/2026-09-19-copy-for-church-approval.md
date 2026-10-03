@@ -252,6 +252,32 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 - (none)
 
+## /architecture
+
+### New sentences
+
+- The "At a glance" labels: Architects; Builders; Stone; Plan; Completed; On the National Register. (Labels; their values are the church’s own words from architecture.txt and history.txt.)
+- The gallery heading "Four things to look for" and its four captions: The tower; Stained glass; The nave; The entry arch.
+- Caring for the building: "A limestone building from 1929 needs steady care, and the congregation pays for it. Gifts toward the building’s upkeep are one way to share in that."
+- The closing band: "Come and see it." with the line "Gifts toward the building’s upkeep are welcome." and its two buttons.
+- Search description: "A Late Gothic Revival church of Indiana limestone, designed by Samuel Hannaford and Sons and completed in 1929 at 309 East Adams Street, Muncie. On the National Register of Historic Places since 1988." (not shown on the page)
+
+### Edits to the church’s own text
+
+- Corrected: "309 East Adams Streeet" in the old page’s last paragraph had three e’s. The address on this page is read from Site settings instead of retyped.
+- Dropped: "Our building today" and its sentence ("You can find us at 309 East Adams Street... Feel free to stop by!"). The closing band carries the address and the Sunday time from Site settings, and Visit is the page for finding the church.
+- Re-headed: the old page’s "Gothic Revival", "Completed in 1929" and "English Influence" were three sub-headings over one or two sentences each. "Completed in 1929" sat over the sentence "The number of new Gothic Revival buildings declined sharply after the 1930s.", which is about the style rather than the date, so it moves under the style’s own heading, "A style from England".
+- Lifted, verbatim, from history.txt: the two paragraphs of the Fighting Parson era about the new building (the vision, the site, the fund-raising, May 12, 1929, the cost and the mortgage). The paragraphs about the pastor and the overflow crowds are not used.
+
+### Facts to confirm from this page
+
+- The upkeep event: name, date and what the donations are for. The page names no event; the closing band points at /events and /give. Once the church says, add it to Church Trac (it then appears on /events) and name it in the "Caring for the building" paragraph.
+- Whether to name the cost ($338,000) and the mortgage ($166,000) as the church’s history page does. They are the church’s own figures, kept here because they are the heart of the building’s story and of the appeal, but a donor reading them may want the 1929 figures set beside today’s needs.
+
+### Photos of children
+
+- (none)
+
 ## /wedding
 
 ### New sentences
@@ -298,6 +324,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 - Online giving is on its way. In the meantime, you can give in person or by mail. (Ways to give, paragraph 1, when Online giving is blank; 2026-09-25, the Church Trac move)
 - You can also give in person during Sunday worship, when the offering is taken. (Ways to give, paragraph 2)
 - Or mail a check to the church office. (Ways to give, paragraph 3, lead-in to the mailing address)
+- Part of that is the building itself, which needs steady care. (What your gift supports, last paragraph, with a link to /architecture; 2026-10-03)
 - Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: in person on Sunday or by mail. (search description, when Online giving is blank; 2026-09-24 local search pass, reworded 2026-09-25)
 - Give to First Baptist Church Muncie, an American Baptist church in downtown Muncie, Indiana: online, in person on Sunday, or by mail. (search description, when Online giving is set)
 
