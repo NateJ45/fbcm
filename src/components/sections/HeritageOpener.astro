@@ -34,7 +34,7 @@
 //    and no archive photograph draws Samuel Hannaford and Sons' 1927 rendering
 //    instead: the same baked line art the footer uses (src/assets/footer-
 //    rendering.webp), as a CSS mask on a gold-filled box, painted in from left
-//    to right over about nine seconds when the page loads. The look follows the
+//    to right over about eight seconds when the page loads. The look follows the
 //    content (CLAUDE.md rule 9): leave the photographs off and the drawing
 //    appears, put them on and the arches do. It is aria-hidden and decorative,
 //    carries no words, and under reduced motion simply stands drawn. The paint
@@ -202,12 +202,12 @@ const drawingStyle = `--ho-drawing: url(${renderingAsset.src}); aspect-ratio: ${
   }
   @media (prefers-reduced-motion: no-preference) {
     .ho-drawing-ink {
-      animation: ho-paint 9s cubic-bezier(0.45, 0.05, 0.35, 1) 0.5s both;
+      animation: ho-paint 8s cubic-bezier(0.2, 0.55, 0.4, 1) both;
     }
   }
   @keyframes ho-paint {
     from {
-      --ho-paint: -16%;
+      --ho-paint: 6%;
     }
     to {
       --ho-paint: 100%;
