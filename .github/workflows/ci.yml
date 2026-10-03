@@ -1,14 +1,34 @@
-# The family test standard's CI workflow (PORTS.md card 35). Deliberately NOT
-# marked PORTABLE: it carries a per-site `env:` block, so a byte-exact drift
-# check would fail forever on every repo. Copy the SHAPE from here, and keep
-# the step list, the concurrency group and the linkinator skip identical.
+# The family test standard's CI workflow (PORTS.md card 35, restructured for
+# speed by card 70). Deliberately NOT marked PORTABLE: it carries a per-site
+# `env:` block, so a byte-exact drift check would fail forever on every repo.
+# Copy the SHAPE from the starter, and keep the job ids, the step list, the
+# concurrency group and the linkinator skip identical.
 #
-# This repo DOES have a Sanity project, so both jobs carry a job-level `env:`
+# This repo DOES have a Sanity project, so every job carries a job-level `env:`
 # with the PUBLIC_SANITY_* identifiers (they are public, they appear in every
-# GROQ request URL) and build against the REAL content, which is what decides
+# GROQ request URL) and builds against the REAL content, which is what decides
 # whether a page is a real render or a hidden-section stub. Without them
 # `sanityFetch` takes the credential-less fallback path and the static build has
 # zero posts.
+#
+# ── SHAPE (why it looks like this) ──────────────────────────────────────────
+# Before card 70 this was two serial-ish jobs: `build` (checks + a build) and
+# `test` (Playwright, which built the site a SECOND time inside the config's
+# webServer after a 286s browser download). Measured on this repo: 647s average,
+# test job 1056s. Now:
+#
+#   static ─┐                      (typegen, types, check, lint, format, unit)
+#   site ───┼─> build (aggregator)  (build once, link check, upload dist/client)
+#           └─> e2e x3 shards ─> test (aggregator)  (reuse the uploaded build)
+#
+# `build` and `test` are the names this repo's CI is known by (CLAUDE.md, and
+# the required checks in the family's "main: PR + green CI" rulesets), so those
+# two names must keep existing and must fail when anything behind them fails.
+# They are aggregators now; the work runs in `static`, `site` and `e2e`. Do not
+# rename them, and do not put a path filter on this workflow: a required check
+# that never reports blocks the merge forever. deploy.yml does not `needs` or
+# reference any job here (it runs its own gate on the same push), so the split
+# cannot break the production deploy.
 name: CI
 
 on:
@@ -24,7 +44,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  # Everything that does not need a built site. Runs in parallel with `site`.
+  static:
+    name: Static checks
     runs-on: ubuntu-latest
     # Public identifiers (they ship in every image URL). Without them
     # `sanityFetch` returns fallbacks and the static build has zero posts,
@@ -42,33 +64,9 @@ jobs:
           cache: npm
 
       # ONE package since the Studio folded into the root on 2026-08-28, so
-      # there is no `npm ci --prefix studio` step and no separate Studio build:
-      # `npm run build` builds the embedded /studio along with the site.
+      # there is no `npm ci --prefix studio` step and no separate Studio build.
       - name: Install dependencies
-        run: npm ci
-
-      # The scripture chapters scripts/fetch-scripture.mjs fetches at the start
-      # of `npm run build` (feat/scripture-text). Restored AFTER npm ci, which
-      # deletes node_modules and the cache inside it. The key moves every run so
-      # a new chapter is saved; the prefix restores the last one.
-      - name: Restore the scripture cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules/.cache/scripture
-          key: scripture-${{ runner.os }}-${{ github.run_id }}
-          restore-keys: scripture-${{ runner.os }}-
-
-      # The Visitor's covers and words (feat/the-visitor): scripts/visitor-covers.mjs
-      # draws each issue's cover and reads its text at the start of `npm run build`,
-      # keyed by the file's asset id. Without this a cold runner downloads every
-      # issue (about 630 MB) to redraw covers it drew last time; with it, only a
-      # new issue is fetched. The cache itself is about 7 MB.
-      - name: Restore The Visitor's covers
-        uses: actions/cache@v4
-        with:
-          path: node_modules/.cache/visitor
-          key: visitor-${{ runner.os }}-${{ github.run_id }}
-          restore-keys: visitor-${{ runner.os }}-
+        run: npm ci --no-audit --no-fund
 
       # The library of record checks ITSELF: run from the starter, sync-check
       # resolves the starter to this repo root, so site and library are the
@@ -80,12 +78,6 @@ jobs:
       - name: Canonical files have not drifted (self-check)
         run: node scripts/sync-check.mjs
 
-      # NODE_OPTIONS raises the heap for this step only. `sanity schema extract`
-      # bundles the whole Studio config and its import graph, and on the hosted
-      # runners it intermittently dies with "Aborted (core dumped)" (exit 134)
-      # while the same command succeeds locally: the classic signature of a
-      # Linux CI box with less memory than the dev machine. It is runner flake,
-      # not a schema problem, so retry up to three times before calling it red.
       # What can a stranger read out of this site's dataset? Sanity's free plan
       # is "2 datasets (public only)", so a public dataset is world readable over
       # a plain URL with no token, and the project id ships in the page source.
@@ -105,6 +97,12 @@ jobs:
           PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
         run: node scripts/public-data-audit.mjs
 
+      # NODE_OPTIONS raises the heap for this step only. `sanity schema extract`
+      # bundles the whole Studio config and its import graph, and on the hosted
+      # runners it intermittently dies with "Aborted (core dumped)" (exit 134)
+      # while the same command succeeds locally: the classic signature of a
+      # Linux CI box with less memory than the dev machine. It is runner flake,
+      # not a schema problem, so retry up to three times before calling it red.
       - name: Generate Sanity types
         env:
           NODE_OPTIONS: --max-old-space-size=4096
@@ -152,37 +150,10 @@ jobs:
       - name: Unit tests
         run: npm run test:unit
 
-      # `astro build` builds the embedded Studio at /studio as part of the
-      # site, so there is no separate `sanity build` step. Do NOT add one back:
-      # `sanity build` writes to ./dist by default and would clobber the Astro
-      # output.
-      - name: Build (site + embedded Studio)
-        run: npm run build
-
-      # linkinator over dist/client. The skip pattern is
-      # `^https?://(?!(localhost|127[.]0[.]0[.]1)[:/])`, which excludes external
-      # links and NOTHING else. WCP's older `^(?!http://localhost)` also matched
-      # linkinator's own 127.0.0.1 seed, so every green run for months had
-      # scanned zero links. Read the log: it must say "scanned N links" with N
-      # greater than zero. The SSR-only routes (/studio, /preview/**,
-      # /api/draft-mode/*) are skipped in the script: they are not in
-      # dist/client and would report as broken for the wrong reason.
-      - name: Check internal links
-        run: npm run check:links
-
-      # NOTE: `npm run parity compare` is deliberately NOT a CI step. The
-      # baselines in scripts/.parity/ are captured on a developer machine and
-      # the family has never verified that a Linux build reproduces them
-      # byte-for-byte. Parity is a local gate, run by hand on any change that is
-      # meant to be render-neutral (PORTS.md card 3). Wire it in here only after
-      # proving a CI capture matches a local one.
-
-  test:
+  # Builds the site ONCE. Everything downstream reuses what this uploads.
+  site:
+    name: Build and links
     runs-on: ubuntu-latest
-    # Public identifiers (they ship in every image URL). Without them
-    # `sanityFetch` returns fallbacks and the static build has zero posts,
-    # which is why the non-ASCII slug smoke test 404'd on CI from plan 1
-    # (2026-09-19).
     env:
       PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
       PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
@@ -195,7 +166,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       # The scripture chapters scripts/fetch-scripture.mjs fetches at the start
       # of `npm run build` (feat/scripture-text). Restored AFTER npm ci, which
@@ -220,10 +191,104 @@ jobs:
           key: visitor-${{ runner.os }}-${{ github.run_id }}
           restore-keys: visitor-${{ runner.os }}-
 
+      # `astro build` builds the embedded Studio at /studio as part of the
+      # site, so there is no separate `sanity build` step. Do NOT add one back:
+      # `sanity build` writes to ./dist by default and would clobber the Astro
+      # output.
+      #
+      # THIS IS THE BUILD THE PLAYWRIGHT SHARDS SERVE, so it carries the same
+      # fixture variables playwright.config.ts puts on its webServer. Before the
+      # split the suite ran its own build with them; now the shards build
+      # nothing (PLAYWRIGHT_SKIP_BUILD), so the fixtures have to be baked in
+      # here or tests/last-sunday, this-sunday, visitor, events and newsletters
+      # would assert against the live YouTube feed, the live calendar and the
+      # live Church Trac pages. KEEP THESE IN STEP with the `webServer.env`
+      # block in playwright.config.ts. The cost: the link check below now scans
+      # the fixture build (Home's band points at /styleguide/visitor, not
+      # /visitor); the Sanity-backed routes it covers are identical.
+      - name: Build (site + embedded Studio)
+        env:
+          LAST_SUNDAY_FIXTURE: '1'
+          LAST_SUNDAY_NOW: '2026-09-24T16:00:00Z'
+          VISITOR_FIXTURE: '1'
+          CHURCH_CALENDAR_FIXTURE: '1'
+          CHURCH_CALENDAR_NOW: '2026-09-25T16:00:00Z'
+          CHURCH_TRAC_PAGES_FIXTURE: '1'
+        run: npm run build
+
+      # linkinator over dist/client. The skip pattern is
+      # `^https?://(?!(localhost|127[.]0[.]0[.]1)[:/])`, which excludes external
+      # links and NOTHING else. WCP's older `^(?!http://localhost)` also matched
+      # linkinator's own 127.0.0.1 seed, so every green run for months had
+      # scanned zero links. Read the log: it must say "scanned N links" with N
+      # greater than zero. The SSR-only routes (/studio, /preview/**,
+      # /api/draft-mode/*) are skipped in the script: they are not in
+      # dist/client and would report as broken for the wrong reason.
+      - name: Check internal links
+        run: npm run check:links
+
+      # NOTE: `npm run parity compare` is deliberately NOT a CI step. The
+      # baselines in scripts/.parity/ are captured on a developer machine and
+      # the family has never verified that a Linux build reproduces them
+      # byte-for-byte. Parity is a local gate, run by hand on any change that is
+      # meant to be render-neutral (PORTS.md card 3). Wire it in here only after
+      # proving a CI capture matches a local one.
+
+      # Only dist/client: that is all the Playwright shards serve. dist/server
+      # (the SSR bundle) is never exercised by the static suite.
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-client
+          path: dist/client
+          retention-days: 1
+          if-no-files-found: error
+
+  # Green only when both halves are green.
+  build:
+    name: build
+    if: ${{ always() }}
+    needs: [static, site]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "static=${{ needs.static.result }} site=${{ needs.site.result }}"
+          [ "${{ needs.static.result }}" = "success" ] && [ "${{ needs.site.result }}" = "success" ]
+
+  # The Playwright suite, sharded. fullyParallel is on in playwright.config.ts,
+  # so --shard splits at TEST granularity and the shards come out even.
+  e2e:
+    name: e2e (shard ${{ matrix.shard }}/3)
+    needs: [site]
+    runs-on: ubuntu-latest
+    # Public identifiers, as in the other jobs: the specs read them too.
+    env:
+      PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+      PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist-client
+          path: dist/client
+
       # Sanity's images for the Playwright run (tests/fixtures.ts): each is
       # fetched from Sanity once and served from disk after that. Sanity's
       # request log counted 13.1 GB of test-run image traffic in one week
-      # (2026-09-19..26). A few MB.
+      # (2026-09-19..26). A few MB. Restored AFTER npm ci, which deletes
+      # node_modules and the cache inside it.
       - name: Restore the test images
         uses: actions/cache@v4
         with:
@@ -231,33 +296,68 @@ jobs:
           key: test-images-${{ runner.os }}-${{ github.run_id }}
           restore-keys: test-images-${{ runner.os }}-
 
-      # Both projects in playwright.config.ts: chromium (desktop) AND
+      # The browser download is the slow part (286s on this repo), the apt
+      # libraries are not. Cache the browsers by Playwright version; on a hit
+      # install only the system libraries. Both projects in
+      # playwright.config.ts need a browser: chromium (desktop) AND
       # webkit-iphone (iPhone 14). Installing only chromium makes every webkit
       # test die with "Executable doesn't exist".
+      - name: Resolve Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v6
+        id: pw-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+
+      # `--with-deps` runs `apt-get update`, which fails outright when the
+      # runner's third-party Chrome/Microsoft apt sources are mid-sync and
+      # report a "Hash Sum mismatch" (that killed a WCP deploy 2026-09-09).
+      # Playwright's system libraries come from Ubuntu's own archive, so drop
+      # those sources first, then retry once for transient network failures.
       - name: Install Playwright browsers
-        # `--with-deps` runs `apt-get update`, which fails outright when the
-        # runner's third-party Chrome/Microsoft apt sources are mid-sync and
-        # report a "Hash Sum mismatch" (that killed a WCP deploy 2026-09-09).
-        # Playwright's system libraries come from Ubuntu's own archive, so drop
-        # those sources first, then retry once for transient network failures.
+        if: steps.pw-cache.outputs.cache-hit != 'true'
         run: |
           sudo rm -f /etc/apt/sources.list.d/google-chrome* /etc/apt/sources.list.d/microsoft*
           npx playwright install --with-deps chromium webkit ||
             npx playwright install --with-deps chromium webkit
 
+      - name: Install Playwright system libraries (browsers cached)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome* /etc/apt/sources.list.d/microsoft*
+          npx playwright install-deps chromium webkit ||
+            npx playwright install-deps chromium webkit
+
       # smoke (every route 200s and carries the site name in its title), axe in
-      # light, axe in dark as a separate sweep plus a focus-indicator check (a
-      # theme swap is a different resting DOM), and reflow at 320/768/1024/1440
-      # (WCAG 1.4.10 starts at 320, not 375). The config's webServer runs
-      # `npm run build` itself and serves dist/client. The html reporter is
+      # light, anchors, menu, motion, header, the fixture-backed pages, and
+      # reflow at 320/768/1024/1440 (WCAG 1.4.10 starts at 320, not 375).
+      # PLAYWRIGHT_SKIP_BUILD makes the config serve the downloaded dist/client
+      # instead of running `npm run build` a second time. The html reporter is
       # added on the command line so local runs keep the quiet `list` output
       # while CI still produces the report artifact below.
-      - name: Run tests (smoke, a11y light + dark, reflow)
-        run: npm test -- --reporter=github,html
+      - name: Run tests (smoke, a11y, reflow, page specs)
+        env:
+          PLAYWRIGHT_SKIP_BUILD: '1'
+        run: npm test -- --shard=${{ matrix.shard }}/3 --reporter=github,html
 
+      # Only on failure: a green run has nothing worth the upload time.
       - uses: actions/upload-artifact@v7
-        if: ${{ !cancelled() }}
+        if: failure()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}
           path: playwright-report/
           retention-days: 14
+
+  # Green only when every shard is green.
+  test:
+    name: test
+    if: ${{ always() }}
+    needs: [e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "e2e=${{ needs.e2e.result }}"
+          [ "${{ needs.e2e.result }}" = "success" ]

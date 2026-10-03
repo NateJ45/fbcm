@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-03 — CI goes parallel and sharded (`ci/speedup`, PORTS.md card 70)._
+
+`ci.yml` was `build` (checks, then a build) and `test` (a 286s Playwright browser install, then Playwright whose webServer built the site a second time): 647s average, the `test` job 1056s. It is now `static` and `site` in parallel, `e2e` in three Playwright shards that download the `dist/client` artifact `site` uploads (`PLAYWRIGHT_SKIP_BUILD=1`, so `playwright.config.ts`'s webServer only serves) with the browsers cached by Playwright version, and two aggregator jobs named `build` and `test` so the check names are unchanged. Nothing in `deploy.yml` or the other workflows references a CI job name, so the production deploy is untouched. Two things to know: the `site` build now carries the fixture env the webServer used to set (so the shards see fixed YouTube, calendar and Church Trac data), which means the link check scans that fixture build rather than a live-feed one; and `lighthouse.yml` now runs only on a path filter (one URL per template on a PR: `/`, `/visit/`, `/blog/`, one post, `/privacy/`, `/404.html`; the full nine on push to `main`, a weekly Monday cron and dispatch), with `lighthouserc.json` assertions and `env` untouched. `visual.yml` gained the same `paths:` filter on `pull_request` as on `push`.
+
 _2026-10-03 — The architecture page comes back (`feat/architecture-page`)._
 
 **`/architecture` is a page again, quietly.** Jonathan asked for the old Wix architecture page on the new site; the church is holding an event that takes donations for the building's upkeep, and the page is part of that appeal. Nathan's view is that a church should not lead with its architecture, so it is out of the way by design:

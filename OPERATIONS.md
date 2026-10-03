@@ -80,7 +80,8 @@ Any change to `src/sanity/schemaTypes/` must follow this sequence before committ
    `npm run check:full` is typegen, the build (which includes the embedded Studio) and
    the 432 unit tests. Add `npm run format:check`, `npm run check:links` and `npm test`
    (the Playwright suites: smoke, axe light, axe dark, reflow, on chromium and WebKit)
-   for the whole thing, which is exactly what CI runs. Fix any failures before
+   for the whole thing, which is what CI runs (as parallel `static`, `site` and sharded
+   `e2e` jobs, reporting through the `build` and `test` checks). Fix any failures before
    continuing. If the change could alter rendered markup, also run
    `npm run parity compare`.
    2b. If you added a dropdown/radio field whose exact value drives rendering, add its name to `NON_STEGA_FIELDS` in `src/lib/cms-preview.ts` in the same commit. Miss it and the block renders the wrong branch in the live preview only.
