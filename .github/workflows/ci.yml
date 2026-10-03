@@ -260,6 +260,15 @@ jobs:
     name: e2e (shard ${{ matrix.shard }}/3)
     needs: [site]
     runs-on: ubuntu-latest
+    # Browsers AND their system libraries are baked into the image, so there is
+    # no browser download, no apt-get and no install-deps. The tag must match the
+    # resolved @playwright/test version in package-lock.json (1.63.0): a browser
+    # build from another Playwright version fails with "Executable doesn't
+    # exist". --ipc=host is Playwright's documented requirement for Chromium in
+    # Docker (shared memory).
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-jammy
+      options: --ipc=host
     # Public identifiers, as in the other jobs: the specs read them too.
     env:
       PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
@@ -295,41 +304,6 @@ jobs:
           path: node_modules/.cache/test-images
           key: test-images-${{ runner.os }}-${{ github.run_id }}
           restore-keys: test-images-${{ runner.os }}-
-
-      # The browser download is the slow part (286s on this repo), the apt
-      # libraries are not. Cache the browsers by Playwright version; on a hit
-      # install only the system libraries. Both projects in
-      # playwright.config.ts need a browser: chromium (desktop) AND
-      # webkit-iphone (iPhone 14). Installing only chromium makes every webkit
-      # test die with "Executable doesn't exist".
-      - name: Resolve Playwright version
-        id: pw
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/cache@v6
-        id: pw-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
-
-      # `--with-deps` runs `apt-get update`, which fails outright when the
-      # runner's third-party Chrome/Microsoft apt sources are mid-sync and
-      # report a "Hash Sum mismatch" (that killed a WCP deploy 2026-09-09).
-      # Playwright's system libraries come from Ubuntu's own archive, so drop
-      # those sources first, then retry once for transient network failures.
-      - name: Install Playwright browsers
-        if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: |
-          sudo rm -f /etc/apt/sources.list.d/google-chrome* /etc/apt/sources.list.d/microsoft*
-          npx playwright install --with-deps chromium webkit ||
-            npx playwright install --with-deps chromium webkit
-
-      - name: Install Playwright system libraries (browsers cached)
-        if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: |
-          sudo rm -f /etc/apt/sources.list.d/google-chrome* /etc/apt/sources.list.d/microsoft*
-          npx playwright install-deps chromium webkit ||
-            npx playwright install-deps chromium webkit
 
       # smoke (every route 200s and carries the site name in its title), axe in
       # light, anchors, menu, motion, header, the fixture-backed pages, and
