@@ -191,6 +191,24 @@ jobs:
           key: visitor-${{ runner.os }}-${{ github.run_id }}
           restore-keys: visitor-${{ runner.os }}-
 
+      # Astro's asset cache (node_modules/.astro/assets: every optimised image,
+      # remote Sanity images included) and Vite's (node_modules/.vite). Restored
+      # AFTER npm ci, which deletes node_modules. The key carries the lockfile
+      # hash and a hash of the inputs; the restore-keys prefix falls back to the
+      # newest cache for the same lockfile, so a source change still reuses the
+      # images it did not touch. Cache entries are immutable, so the key has to
+      # change for a new one to be saved.
+      - name: Restore the Astro and Vite build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.astro
+            node_modules/.vite
+          key: astro-build-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**', 'public/**') }}
+          restore-keys: |
+            astro-build-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+            astro-build-${{ runner.os }}-
+
       # `astro build` builds the embedded Studio at /studio as part of the
       # site, so there is no separate `sanity build` step. Do NOT add one back:
       # `sanity build` writes to ./dist by default and would clobber the Astro
