@@ -1,5 +1,48 @@
 # First Baptist Church Muncie
 
+A fast, editable, content-rich website for a historic Indiana church, replacing its Wix site with Astro, Sanity and Cloudflare Workers.
+
+[![CI](https://github.com/NateJ45/fbcm/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/NateJ45/fbcm/actions/workflows/ci.yml)
+[![Preview](https://img.shields.io/badge/preview-fbcm--site.workers.dev-F6821F?logo=cloudflare&logoColor=white)](https://fbcm-site.nathanjnixon86.workers.dev)
+![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white)
+![Sanity](https://img.shields.io/badge/Sanity-F03E2F?logo=sanity&logoColor=white)
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare%20Workers-F6821F?logo=cloudflare&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?logo=tailwindcss&logoColor=white)
+
+![Home page at desktop width](docs/screenshots/home-desktop.webp)
+
+<p>
+  <img src="docs/screenshots/home-mobile.webp" alt="Home page at phone width" width="240">
+  <img src="docs/screenshots/architecture-mobile.webp" alt="Our Building page at phone width" width="240">
+</p>
+
+![Our Building page at desktop width](docs/screenshots/architecture-desktop.webp)
+
+## What it is
+
+The church's current site lives on Wix. This is the redesign: a static-first Astro site whose content lives in Sanity, so staff can edit pages on the page itself instead of fighting a site builder. It is built and deployed to a preview Worker at [fbcm-site.nathanjnixon86.workers.dev](https://fbcm-site.nathanjnixon86.workers.dev), with the cutover to the church's own domain pending the church. Until then, [www.fbcmuncie.org](https://www.fbcmuncie.org) is still the Wix site.
+
+## Highlights
+
+- **Full content migration.** 142 blog posts keep their original `/post/<slug>` URLs, alongside 17 staff, 5 ministries, a 138-photo library and 11 core pages, all moved into Sanity.
+- **Page builder.** Every page is composed from Sanity sections through one renderer, and the embedded Studio at `/studio` offers a live draft preview.
+- **Motion with restraint.** The Home hero is a slideshow of up to 12 photo frames, and headline words rise in one by one on page openers. Reduced-motion visitors get a still frame.
+- **Light-only identity.** A church-specific brand system (arched frames, hairline layouts, a three-typeface stack) built for one theme, so every page is checked in one.
+- **Church PDFs from R2.** The church's PDFs are fetched from Sanity once and cached in Cloudflare R2, so downloads stop costing CMS bandwidth.
+- **Navigation and search.** A News dropdown and an in-site Pagefind search, loaded only when opened.
+- **Quality gates in CI.** Type check, lint, Prettier, link check, Playwright (including axe accessibility runs) and Lighthouse on every change.
+
+## Stack
+
+Astro 7, TypeScript, Sanity v6, Tailwind 4, React 19 islands, Cloudflare Workers and R2, Playwright, Lighthouse CI.
+
+Built by [Nixon Creative Studio](https://nixoncreativestudio.com).
+
+---
+
+## Developing
+
 The website for First Baptist Church Muncie (309 East Adams Street, Muncie, IN 47305), built on **Astro + Sanity + Cloudflare Workers**. It was forked from [`ncs-astro-sanity-starter`](https://github.com/nixoncreativestudio) on 2026-09-18 and replaces the church's Wix site, carrying its 142 blog posts across at their original `/post/<slug>` URLs. The binding spec for the rebuild is `docs/superpowers/specs/2026-09-18-fbcm-rebuild-design.md`; read it before changing what the site is for.
 
 Everything below this paragraph is still the starter's own README and is rewritten in plan 2. Where it says "the starter", read "this site's foundation".
