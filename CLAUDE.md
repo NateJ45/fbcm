@@ -22,8 +22,9 @@ Build and run:
 Gates (what CI runs, see below):
 
 - `npm run check` (`astro check && npm run lint`), `npm run format:check`, `npm run check:links` (after a build), `npm run test:unit` (node --test, `src/lib/*.test.ts`), `npm run test:scripts` (`scripts/lib/*.test.mjs`), `npm test` (Playwright; `npm run test:ui` opens its UI; `PLAYWRIGHT_PORT` moves it off 4321). `npm run check:full` is `typegen`, build, `test:unit`, `test:scripts`.
-- `npm run parity:capture` / `npm run parity:compare` (and `npm run parity list | capture | compare [page]`): rendered-HTML parity, run after a build on any change meant to be render-neutral. It never builds. `npm run parity compare` is 170/170 PASS.
+- `npm run parity:capture` / `npm run parity:compare` (and `npm run parity list | capture | compare [page]`): rendered-HTML parity, run after a build on any change meant to be render-neutral. It never builds. `npm run parity compare` is 176/176 PASS (the baseline was recaptured 2026-10-03; it said 170 before the content grew).
 - `npm run sync-check` diffs PORTABLE-marked files against the starter.
+- `node scripts/measure-tap-targets.mjs <url> --width 390` counts links and buttons under 44px (PRODUCT.md promises none on Home, Visit and Staff); `impeccable detect --json src` is the design-system drift check, with its ignores in `.impeccable/config.json`. Neither is a CI gate.
 
 Data and tooling scripts (all dry by default, backup-first; detail in `docs/claude/build-and-scripts.md`): `npm run seed-pages`, `npm run scaffold` (flags after `--`), `npm run audit:studio`, `npm run apply-brand`, `npm run og:pages`, `npm run og`, `npm run check:jsonld`. Do not run `npm run seed` against this dataset.
 

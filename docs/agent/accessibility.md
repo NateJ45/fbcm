@@ -41,7 +41,7 @@ Target: WCAG 2.1 AA in both light and dark modes. Aim for 100 Lighthouse Accessi
 
 ### Touch targets and tap spacing
 
-All interactive elements get at least a 44x44 px hit area on mobile (WCAG 2.5.5 AAA, and table stakes on touch screens). For icon-only buttons, that means generous padding even if the icon glyph is 20 px. For inline links in body copy, ensure adequate line-height so adjacent links aren't fat-finger collisions.
+All interactive elements get at least a 44x44 px hit area on mobile (WCAG 2.5.5 AAA, and table stakes on touch screens). For icon-only buttons, that means generous padding even if the icon glyph is 20 px. A control whose box is smaller than that and cannot be padded without moving the design (a text link with an underline on the baseline, a footer link list, an email address under a name) takes the `hit-44` class plus `relative`: an invisible ::after centred on it, at least 44px square (`globals.css`, 2026-10-03). Check with `node scripts/measure-tap-targets.mjs <url> --width 390`, which lists everything still under 44px and flags any expanded area that steals a tap from a neighbour. The one exemption is a link inside a sentence (WCAG 2.5.8 Inline). For inline links in body copy, ensure adequate line-height so adjacent links aren't fat-finger collisions.
 
 Adjacent independent controls (two side-by-side icon buttons, two stacked nav links) get at least 8 px of clear space between them. The shadcn primitives generally handle this; verify any custom button or link adheres.
 

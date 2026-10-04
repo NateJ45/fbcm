@@ -104,7 +104,7 @@ const { objectPosition, headroom } = archPlacement({
 });
 const imgStyle =
   headroom > 0
-    ? `object-position: ${objectPosition}; position: absolute; left: 0; bottom: 0; height: ${((1 - headroom) * 100).toFixed(2)}%; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6%); mask-image: linear-gradient(to bottom, transparent 0, #000 6%);`
+    ? `object-position: ${objectPosition}; position: absolute; left: 0; bottom: 0; height: ${((1 - headroom) * 100).toFixed(2)}%; -webkit-mask-image: linear-gradient(to bottom, transparent 0, var(--color-foreground) 6%); mask-image: linear-gradient(to bottom, transparent 0, var(--color-foreground) 6%);`
     : `object-position: ${objectPosition};`;
 
 // The outline path, in the same box as the mask, so the two always agree.

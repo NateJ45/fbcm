@@ -1,0 +1,54 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [
+      "**/src/sanity/components/**",
+      "**/src/components/preview/overlay/**",
+      "**/src/lib/convert-body*.ts"
+    ],
+    "ignoreValues": [
+      {
+        "rule": "design-system-color",
+        "value": "#666",
+        "files": ["**/src/styles/globals.css"],
+        "createdAt": "2026-10-04T02:11:57.063Z",
+        "reason": "Print stylesheet only (@media print): print-safe greys and black, not screen styles"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#d4d4d4",
+        "files": ["**/src/styles/globals.css"],
+        "createdAt": "2026-10-04T02:11:57.236Z",
+        "reason": "Print stylesheet only (@media print): print-safe greys and black, not screen styles"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#000",
+        "files": ["**/src/styles/globals.css"],
+        "createdAt": "2026-10-04T02:11:57.390Z",
+        "reason": "Print stylesheet only (@media print): print-safe greys and black, not screen styles"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#555",
+        "files": ["**/src/components/blog/PostView.astro"],
+        "createdAt": "2026-10-04T02:11:57.538Z",
+        "reason": "Print stylesheet only (@media print): print-safe greys and black, not screen styles"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#444",
+        "files": ["**/src/components/blog/PostView.astro"],
+        "createdAt": "2026-10-04T02:11:57.707Z",
+        "reason": "Print stylesheet only (@media print): print-safe greys and black, not screen styles"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#000",
+        "files": ["**/src/components/blog/PostView.astro"],
+        "createdAt": "2026-10-04T02:11:57.852Z",
+        "reason": "Print stylesheet only (@media print): print-safe greys and black, not screen styles"
+      }
+    ]
+  }
+}

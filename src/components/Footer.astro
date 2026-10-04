@@ -276,9 +276,11 @@ const sanityFooterColumns = withFooterPages(chrome.footerColumns, [
 const LEGAL_LINKS = chrome.legalNav;
 
 // One class for every link inside the band, so the four columns cannot drift
-// apart. Paper-white at 85%, gold on hover, one focus ring.
+// apart. Paper-white at 85%, gold on hover, one focus ring. hit-44 (globals.css,
+// 2026-10-03) lifts each link's tappable area to 44px without moving the
+// text: the list rows are 47px apart, so the areas meet without crossing.
 const bandLink =
-  'text-bg/85 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm';
+  'hit-44 relative text-bg/85 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm';
 const columnHeading = 'mb-s font-ui text-[0.75rem] tracking-eyebrow text-gold uppercase';
 
 // The street address prints in the Office column only when the poster row did
@@ -522,17 +524,23 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
        5rem sits on the small-print row alone (2026-09-24, the designer
        credit): on a phone the credit is the rail's last line, which is
        exactly where the chip sits, so it wraps short of the chip instead of
-       under it, and the copyright line above keeps its full width. */
+       under it, and the copyright line above keeps its full width.
+
+       Below sm the rail's gaps are 13px (logo to small print) and 20px
+       (Privacy policy to the credit), not xs: the three links are 40, 22 and
+       26px tall and each carries a 44px tap area (hit-44), so those gaps are
+       what stops one link's area from covering the bottom of the next
+       (2026-10-03; scripts/measure-tap-targets.mjs hit-tests it). */
   }
   <div class="relative border-t border-bg/15">
     <div
-      class="mx-auto flex max-w-content flex-col gap-xs px-gutter py-m font-ui text-[0.8125rem] text-bg/70 sm:flex-row sm:items-center sm:justify-between sm:pr-20"
+      class="mx-auto flex max-w-content flex-col gap-[13px] px-gutter py-m font-ui text-[0.8125rem] text-bg/70 sm:flex-row sm:items-center sm:justify-between sm:gap-xs sm:pr-20"
     >
       <div class="flex items-center gap-m">
         <a
           href="/"
           aria-label={`${brandName} home`}
-          class="inline-block shrink-0 transition-opacity hover:opacity-80"
+          class="hit-44 relative inline-block shrink-0 transition-opacity hover:opacity-80"
         >
           {
             /* Sized by HEIGHT, with real width/height attributes at the
@@ -554,7 +562,7 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
         </a>
         <p>&copy; {currentYear} {brandName}</p>
       </div>
-      <div class="flex flex-wrap items-center gap-x-m gap-y-xs pr-20 sm:pr-0">
+      <div class="flex flex-wrap items-center gap-x-m gap-y-[20px] pr-20 sm:gap-y-xs sm:pr-0">
         {
           LEGAL_LINKS.length > 0 ? (
             LEGAL_LINKS.map((l) => (
@@ -581,7 +589,7 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
           href={creditUrl}
           target="_blank"
           rel="noopener"
-          class="footer-credit rounded-sm focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:outline-none"
+          class="footer-credit hit-44 relative rounded-sm focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:outline-none"
         >
           {
             creditPrefix && (

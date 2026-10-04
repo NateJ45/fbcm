@@ -502,10 +502,22 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
   .ob-drawing img {
     mix-blend-mode: multiply;
     filter: grayscale(1) contrast(1.12) brightness(1.1) sepia(0.14);
-    --ob-fade: linear-gradient(to right, transparent 2.5%, #000 11%, #000 89%, transparent 97.5%);
+    --ob-fade: linear-gradient(
+      to right,
+      transparent 2.5%,
+      var(--color-foreground) 11%,
+      var(--color-foreground) 89%,
+      transparent 97.5%
+    );
     mask-image:
       var(--ob-fade),
-      linear-gradient(to bottom, transparent 3.5%, #000 14%, #000 86%, transparent 96.5%);
+      linear-gradient(
+        to bottom,
+        transparent 3.5%,
+        var(--color-foreground) 14%,
+        var(--color-foreground) 86%,
+        transparent 96.5%
+      );
     mask-composite: intersect;
   }
   /* The ink-in (2026-09-24): until the drawing scrolls into view it is pale,

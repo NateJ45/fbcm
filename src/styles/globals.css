@@ -759,7 +759,7 @@
      that survived two rebrands untouched. The comment beside it still talked
      about bronze. */
   background: var(--color-primary-dark, #1c1b3a);
-  color: #ffffff;
+  color: var(--color-white-pure);
   text-decoration: none;
   font-weight: 600;
 }
@@ -1386,7 +1386,7 @@ a:focus-visible .zoom-img img,
     rgb(23 21 31 / 63%) calc(var(--l) + var(--w) * 0.5),
     rgb(23 21 31 / 0%) calc(var(--l) + var(--w) * 0.78)
   );
-  mask-image: linear-gradient(to bottom, transparent 0, #000 14vh);
+  mask-image: linear-gradient(to bottom, transparent 0, var(--color-foreground) 14vh);
 }
 @media (max-width: 767.98px) {
   .hero-fade ~ .hero-entry-stagger::before {
@@ -1741,7 +1741,7 @@ body::before {
 .arch {
   position: relative;
   overflow: hidden;
-  background: rgb(0 0 0 / 0.12);
+  background: color-mix(in srgb, var(--color-foreground) 12%, transparent);
   mask-image: var(--arch-mask);
   mask-size: 100% 100%;
 }
@@ -2065,14 +2065,14 @@ body::before {
   display: none;
 }
 .ww-pair {
-  border-top: 1px solid rgb(201 151 44 / 0.5);
+  border-top: 1px solid color-mix(in srgb, var(--color-gold) 50%, transparent);
 }
 .ww-pair > div {
   display: grid;
   gap: 8px 20px;
   align-items: baseline;
   padding: 22px 0;
-  border-bottom: 1px solid rgb(201 151 44 / 0.5);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 50%, transparent);
 }
 .ww-pair dt {
   font-size: 44px;
@@ -2120,6 +2120,26 @@ body::before {
   max-width: 36em;
   font-size: 19px;
   line-height: 1.55;
+}
+/* THE GOLD BAND IS NOT A READING GROUND (2026-10-03, the design audit).
+   DESIGN.md keeps gold to a fill, and a long account of how the church is led
+   set straight on it, beside an empty column, tired the eye and read as
+   unfinished. The pastors' introduction (the church's words, unchanged) now
+   sits on a panel of paper with an indigo rule across its top: gold stays the
+   band's colour, ink on paper is the 15.76:1 pair already gated. From 900px
+   the heading sits over the panel and the panel runs the container's width in
+   two columns (about 60 characters a line), which is what stops the left
+   column being a blank slab beside a short paragraph. The brown and taupe
+   bands keep heading-left, introduction-right, now top-aligned (the heading
+   used to sit at the foot of the row, leaving a gap above it). To revert,
+   delete this rule and the two .sg-gold rules in the 900px query below, and
+   put align-items back to end. */
+.sg-gold .sg-intro {
+  box-sizing: border-box;
+  padding: clamp(22px, 3vw, 40px);
+  border-top: 3px solid var(--color-band-ink);
+  background: var(--color-bg);
+  color: var(--color-foreground);
 }
 .sg-group + .sg-group {
   margin-top: clamp(56px, 7vw, 104px);
@@ -2199,7 +2219,15 @@ body::before {
 @media (min-width: 900px) {
   .sg-top {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
-    align-items: end;
+    align-items: start;
+  }
+  .sg-gold .sg-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sg-gold .sg-intro {
+    max-width: none;
+    column-count: 2;
+    column-gap: clamp(32px, 4vw, 64px);
   }
 }
 @media (min-width: 1024px) {
@@ -2435,7 +2463,7 @@ body::before {
 }
 .gl {
   background: var(--gl-bg);
-  color: var(--gl-ink, #fff);
+  color: var(--gl-ink, var(--color-white-pure));
 }
 .gx-top {
   padding-block: clamp(72px, 9vw, 140px) clamp(48px, 5vw, 80px);
@@ -2511,7 +2539,7 @@ body::before {
 .gl-also,
 .gl-pt-body,
 .gd-text {
-  color: var(--gl-soft, rgb(255 255 255 / 0.86));
+  color: var(--gl-soft, color-mix(in srgb, var(--color-white-pure) 86%, transparent));
 }
 .gl-title {
   margin-top: clamp(16px, 2vw, 26px);
@@ -2567,7 +2595,7 @@ body::before {
   position: relative;
   width: 100%;
   padding-block: clamp(120px, 14vw, 220px) var(--gn-tail);
-  color: #fff;
+  color: var(--color-white-pure);
   background: linear-gradient(
     transparent,
     var(--gn-scrim) clamp(96px, 11vw, 180px),
@@ -2624,7 +2652,7 @@ body::before {
   break-inside: avoid;
   margin-bottom: 28px;
   padding-top: 18px;
-  border-top: 1px solid var(--gl-rule, rgb(255 255 255 / 0.4));
+  border-top: 1px solid var(--gl-rule, color-mix(in srgb, var(--color-white-pure) 40%, transparent));
 }
 .gn-pics {
   display: grid;
@@ -3055,6 +3083,28 @@ body::before {
   }
 }
 
+/* ---------- Tap-target floor (2026-10-03, the design audit) -------------
+   PRODUCT.md promises 44px tap targets; 81 links and buttons across Home,
+   Visit and Staff measured under it at 390px. `.hit-44` grows the HIT AREA to
+   at least 44px each way without moving or resizing anything you can see: an
+   invisible ::after centred on the element, as wide and tall as the larger of
+   the element and 44px. The element must be positioned (`relative`, or already
+   absolute/fixed); callers add that class themselves so a positioned element
+   is never knocked back to relative. Rows that stack closer than 44px apart
+   (footer link lists) overlap by a few px at most, and the later row wins,
+   which is how any stacked list of links behaves. Scripted proof:
+   scripts/measure-tap-targets.mjs. Not used on a link inside a sentence, which
+   WCAG 2.5.8 exempts and which cannot be padded without breaking the line. */
+.hit-44::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
+
 /* ---------- Print stylesheet ------------------------------------------ */
 /* Realtors and builders sometimes print project pages to send to clients.
    The print sheet strips chrome (header, footer, sticky CTAs, BackToTop,
@@ -3216,7 +3266,7 @@ body::before {
   background-size: cover;
   background-position: 50% 45%;
   opacity: 0.22;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, var(--color-foreground) 0%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
   /* No drift since 2026-09-27 (Nathan wanted the window constant behind the
      rows): it used to move 12px over 40s (menu-drift). */

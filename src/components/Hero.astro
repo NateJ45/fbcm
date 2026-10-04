@@ -466,16 +466,18 @@ const windowDrops = dropInto && windowOrder.length > 0;
             <ArchFrame
               image={frame}
               shape="lancet"
-              width={i === middleIndex ? 900 : 600}
+              width={i === middleIndex || windowOrder.length === 2 ? 900 : 600}
               sizes={
                 i === middleIndex
                   ? '(min-width: 1440px) 420px, (min-width: 1200px) 29vw, (min-width: 901px) 26vw, 57vw'
-                  : '(min-width: 1440px) 180px, (min-width: 901px) 13vw, 22vw'
+                  : windowOrder.length === 2
+                    ? '(min-width: 1440px) 420px, (min-width: 1200px) 29vw, (min-width: 901px) 26vw, 45vw'
+                    : '(min-width: 1440px) 180px, (min-width: 901px) 13vw, 22vw'
               }
               alt={frame?.alt ?? ''}
               loading="eager"
               class={i === middleIndex ? 'hw-mid' : 'hw-side'}
-              frameRatio={i === middleIndex ? 1.4 : 2.6}
+              frameRatio={i === middleIndex ? 1.4 : windowOrder.length === 2 ? 1.5 : 2.6}
             />
           ))}
         </div>
@@ -604,7 +606,7 @@ const windowDrops = dropInto && windowOrder.length > 0;
               reading shows only when it fits beside the title there. */}
           {sundaySermon ? (
             <span class="min-w-0">
-              <span data-live-sunday={sundayTime} data-sermon-sunday={sundaySermon.sunday}>{sundayLead}</span><span data-sunday-sermon={sundaySermon.sunday}><span aria-hidden="true">&nbsp;·</span> <a href={sundaySermon.href} class="sunday-sermon inline-block max-w-full break-words" data-sermon-source={sermonExternal ? 'youtube' : 'preview'} {...(sermonExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{sermonTitles.map((t) => t.band === 'all' ? t.text : <span class={TITLE_BAND[t.band]} data-sermon-title={t.band} data-pagefind-ignore={t.band === 'lg' || t.band === 'smUp' ? undefined : ''}>{t.text}</span>)}{sundaySermon.reading && <span class:list={[!sundaySermon.readingOnPhone && 'max-sm:hidden']}> · {sundaySermon.reading}</span>}</a></span>
+              <span data-live-sunday={sundayTime} data-sermon-sunday={sundaySermon.sunday}>{sundayLead}</span><span data-sunday-sermon={sundaySermon.sunday}><span aria-hidden="true">&nbsp;·</span> <a href={sundaySermon.href} class="sunday-sermon hit-44 relative inline-block max-w-full break-words" data-sermon-source={sermonExternal ? 'youtube' : 'preview'} {...(sermonExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{sermonTitles.map((t) => t.band === 'all' ? t.text : <span class={TITLE_BAND[t.band]} data-sermon-title={t.band} data-pagefind-ignore={t.band === 'lg' || t.band === 'smUp' ? undefined : ''}>{t.text}</span>)}{sundaySermon.reading && <span class:list={[!sundaySermon.readingOnPhone && 'max-sm:hidden']}> · {sundaySermon.reading}</span>}</a></span>
             </span>
           ) : (
             <span data-live-sunday={sundayTime}>{sundayStatic}</span>
@@ -827,8 +829,18 @@ const windowDrops = dropInto && windowOrder.length > 0;
 }
 .hw-window[data-count='2'] {
   grid-template-columns: 1fr 1fr;
-  width: 70%;
+  width: 100%;
   justify-self: center;
+}
+/* A PAIR OF PORTRAITS (2026-10-03, the design audit: the Staff hero cut the
+   Co-Pastors' faces). With only two lights they are not the narrow side
+   lights of a triple window; at 100 / 260 each portrait was drawn 1.7 arches
+   wide and the pointed head took the hair and the sides of the faces. They
+   take the lancet's own 100 / 150, the proportion every staff portrait below
+   them is shot for, which shows the whole 2:3 photograph. The template
+   passes the same 1.5 to ArchFrame as frameRatio. */
+.hw-window[data-count='2'] .hw-side {
+  --arch-ratio: 100 / 150;
 }
 .hw-window[data-count='1'] {
   grid-template-columns: 1fr;
