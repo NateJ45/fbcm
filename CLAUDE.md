@@ -138,7 +138,7 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 - Unit-suite and Playwright inventories: `docs/claude/test-inventory.md`. Read before changing what a suite watches; add a line when you add a suite.
 - PORTABLE files and the starter, full notes: `docs/claude/ports-and-portable.md`. Read before editing a file whose first line says `PORTABLE: canonical copy`.
 - Path-scoped rules (load automatically when matching files are touched): `.claude/rules/*.md`. Routes summary table and rule 10: `.claude/rules/routes.md`. Copy and prose rules: `.claude/rules/copy-and-prose.md`. Parity harness and CI gates: `.claude/rules/tests-and-gates.md`.
-- Live writes (Sanity dataset, Cloudflare, deploys) are blocked by the auto-mode classifier even after a yes in chat: build the artifact, hand Nathan a numbered run list, verify read-only. Never route around a refusal. `.claude/rules/live-writes-and-handoff.md`.
+- Live writes (Sanity dataset, Cloudflare, deploys) are pre-approved (2026-10-03): run them yourself, backup first. Hand Nathan a run list only if the auto-mode classifier actually refuses; never route around a refusal. `.claude/rules/live-writes-and-handoff.md`.
 - Slash commands in `.claude/commands/` (`rebuild`, `sanity-audit`, `visual-verify`) and the `/reskin` skill in `.claude/skills/reskin/SKILL.md`.
 
 ## Vault (business context and decisions)
