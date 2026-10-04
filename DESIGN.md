@@ -17,6 +17,7 @@ colors:
   brown: '#39251E'
   brown-mid: '#724F43'
   taupe: '#B5ABA3'
+  white-pure: '#FFFFFF'
 typography:
   display:
     fontFamily: 'Castoro Titling, Georgia, serif'
@@ -43,8 +44,81 @@ typography:
     fontFamily: 'Sofia Sans Semi Condensed Variable, system-ui, sans-serif'
     fontSize: '0.8125rem'
     letterSpacing: '0.14em'
+  text-10:
+    fontSize: '0.625rem'
+  text-11:
+    fontSize: '0.6875rem'
+  text-12:
+    fontSize: '0.75rem'
+  text-14:
+    fontSize: '0.875rem'
+  text-15:
+    fontSize: '0.9375rem'
+  text-16:
+    fontSize: '1rem'
+  text-18:
+    fontSize: '1.125rem'
+  text-19:
+    fontSize: '1.1875rem'
+  text-20:
+    fontSize: '1.25rem'
+  text-21:
+    fontSize: '1.3125rem'
+  text-22:
+    fontSize: '1.375rem'
+  text-23:
+    fontSize: '1.4375rem'
+  text-24:
+    fontSize: '1.5rem'
+  text-25:
+    fontSize: '1.5625rem'
+  text-26:
+    fontSize: '1.625rem'
+  text-27:
+    fontSize: '1.6875rem'
+  text-28:
+    fontSize: '1.75rem'
+  display-30:
+    fontSize: '1.875rem'
+  display-32:
+    fontSize: '2rem'
+  display-34:
+    fontSize: '2.125rem'
+  display-35:
+    fontSize: '2.1875rem'
+  display-36:
+    fontSize: '2.25rem'
+  display-40:
+    fontSize: '2.5rem'
+  display-42:
+    fontSize: '2.625rem'
+  display-44:
+    fontSize: '2.75rem'
+  display-46:
+    fontSize: '2.875rem'
+  display-48:
+    fontSize: '3rem'
+  display-50:
+    fontSize: '3.125rem'
+  display-54:
+    fontSize: '3.375rem'
+  display-58:
+    fontSize: '3.625rem'
+  display-66:
+    fontSize: '4.125rem'
+  display-70:
+    fontSize: '4.375rem'
+  display-72:
+    fontSize: '4.5rem'
+  display-92:
+    fontSize: '5.75rem'
 rounded:
   sm: '2px'
+  keyline: '1px'
+  full: '9999px'
+  phone-notch: '3px'
+  phone-screen: '20px'
+  phone-body: '26px'
 spacing:
   gutter: 'clamp(20px, 5vw, 72px)'
   section-md: 'clamp(3rem, 6vw, 5rem)'
@@ -86,6 +160,7 @@ Roles, measured in `src/lib/theme-tokens.test.ts` (every pair asserted, forbidde
 - **Indigo** `#292854` (primary, headings accent, outline buttons), `#353351` field, `#1C1B3A` dark, `#1B1A3A` footer ground. Fixed dark bands: footer, watchword, mobile menu, pastors band. They use `--color-band-*` tokens so they do not flip in a theme change.
 - **Gold** `#D59B29`. A fill and an on-dark ink only. Gold on paper is 2.14 to 2.37:1 and is a FORBIDDEN text pair; white on gold fails too. Gold fills carry an indigo-field label (4.90:1). On paper, small gold-toned labels use **gold-ink** `#805709` (5.58:1 on paper, 5.06:1 on soft paper).
 - **Brown** `#39251E` for the heritage band surface, **brown-mid** `#724F43` for eyebrows and letter text on paper, **taupe** `#B5ABA3` for muted text on dark and brown bands only (it fails on paper).
+- **White.** `white-pure` `#FFFFFF` (`--color-white-pure`) is the ink on the fixed dark bands and the matte behind a loading cover; it is not a surface. Any other white, black or tint on a screen style is a token mixed with `color-mix()` (a gold hairline is `color-mix(in srgb, var(--color-gold) 50%, transparent)`), never a raw hex or `rgb()`; a mask only needs an opaque colour, so it takes `var(--color-foreground)`. Print rules (`@media print`) may use plain greys and black and are the one place raw hex stays, listed in `.impeccable/config.json` with that reason.
 - **Hairlines.** `--hair` ink at 16%, `--hair-strong` at 34%; every rule and divider uses them.
 - Headline accent word: `.heading-accent` in indigo on paper, pinned brand gold on the fixed dark band. The editor types the word; the colour is the brand's.
 
@@ -99,15 +174,18 @@ Three faces, installed as fontsource packages and applied through `brand/brand.c
 - **Castoro** (roman and italic, one weight): everything from h2 down, body at 17px/1.7, the italic **lede** standfirst under a heading, blockquotes (`.rt-quote`), captions in italic when used. Numerals use old-style figures.
 - **Sofia Sans Semi Condensed** (variable): nav, eyebrows, labels, buttons, dates. Always uppercase at `--text-ui` 0.8125rem with `0.14em` tracking.
 - Other scale tokens: `--text-title`, `--text-h3` to `--text-h6`, `--text-item` and `--text-dense` (the Ledger's two sizes for list rows and dense columns).
+- **The type steps in use (2026-10-03).** The front matter lists every font size the CSS sets, as `text-10` to `text-28` (labels, notes, list rows, names) and `display-30` to `display-92` (the endpoints of the bands' fluid `clamp()` headings), 34 steps in all. It is a record of what the code does, not a promise that 34 sizes are a good ramp: most bands tune their own fluid heading, which is why the set is wide. A new size goes into the front matter the day it enters the CSS, or the detector (`impeccable detect`) reports it; prefer an existing step. Seven odd values were folded into their neighbours that day (0.65rem, 0.96875rem, 0.9875rem, 18.5px, 1.3rem, 2.1rem, 4.6rem). Consolidating the display endpoints onto the named tokens above is a design pass of its own, not done.
 - Hierarchy is capitals against lowercase and size, not weight. Eyebrows are rare: page openers and a few orienting labels. A calligraphic script slot (`--font-script`) exists in the CSS but `fonts.script` is `null`.
 
 ## 4. Elevation
 
-Flat by design (see Overview). Surfaces separate by tone (paper, soft paper, fixed indigo, brown, gold, taupe bands) and by `--hair` rules. Photographs never get rounded corners or drop shadows; the only radius is `--radius: 0.125rem` (2px) on buttons and form fields. Hero text over photographs sits on a soft dark backing anchored to the words, not a darker photograph (2026-09-27 decision, checked by a 432-case contrast sweep).
+Flat by design (see Overview). Surfaces separate by tone (paper, soft paper, fixed indigo, brown, gold, taupe bands) and by `--hair` rules. Photographs never get rounded corners or drop shadows; the only radius is `--radius: 0.125rem` (2px) on buttons and form fields. Four documented exceptions: `keyline` 1px (the inner rule of the app-store buttons), `full` 9999px (the live dot and round social buttons) and `phone-body` 26px, `phone-screen` 20px and `phone-notch` 3px (the drawn phone on Home's church-app band, an illustration of a device, not a surface). Hero text over photographs sits on a soft dark backing anchored to the words, not a darker photograph (2026-09-27 decision, checked by a 432-case contrast sweep).
 
 ## 5. Components
 
-- **Buttons (`CtaLink.astro`).** One family: `gold` (gold fill, indigo-field label, inset double keyline), `outline` (indigo outline on paper, white on dark via `onDark`, band ink on gold via `onGold`), and `link` (underlined UI-face text with a trailing arrow that nudges 4px). `primary`, `secondary` and `rule` are aliases for the first two. Label in the UI face, em-based padding, 44px minimum tap target, 1px press on `:active`.
+- **Buttons (`CtaLink.astro`).** One family: `gold` (gold fill, indigo-field label, inset double keyline), `outline` (indigo outline on paper, white on dark via `onDark`, band ink on gold via `onGold`), and `link` (underlined UI-face text with a trailing arrow that nudges 4px). `primary`, `secondary` and `rule` are aliases for the first two. Label in the UI face, em-based padding, 44px minimum tap target, 1px press on `:active`. The `link` variant keeps a text-sized box so its underline sits on the baseline, and gets its 44px from `.hit-44` (below).
+- **Tap targets (2026-10-03).** Every link and button is at least 44px each way at 390px, except a link inside a sentence of body text (WCAG 2.5.8 exempts it, and padding it would break the line: the YouTube channel link on Visit and the deacon chair address on Staff). A small control gets there with `.hit-44` in `globals.css`: an invisible `::after` centred on the element and at least 44px square, so nothing you can see moves. The element must be positioned. `node scripts/measure-tap-targets.mjs <url>` counts what is left under 44px; the 2026-10-03 run took Home, Visit and Staff from 79 to 0 (plus the 2 exempt inline links).
+- **Staff bands (`StaffGrid.astro`).** The ground follows the group: the pastors on gold, the Church Coordination Team on brown, support and volunteers on taupe. The band heading sits top-left and the church's introduction beside it. On the gold band the introduction is set on a paper panel with an indigo top rule (gold is a fill, not a reading ground); on brown it stays on the band in paper-white. The window hero's portraits take the lancet's own 100 / 150 proportion when there are two of them, so the faces are not cropped by a tall narrow frame.
 - **Header (`Header.astro`).** One row, 74px (88px from `lg`), server-rendered desktop nav (rule 4), a single Give plate, Watch live link. Overlay mode over image heroes strips the ground and turns the lettering to paper. The mobile menu is a full-window drawing with Titling rows.
 - **Hero (`Hero.astro`).** `full` fills `100svh` on home (72svh interior) with a bottom-up and left-right ink gradient; home cross-fades twelve photo frames. Content sits bottom-left: a live dated line, headline at display or h1, italic lede, a facts row on a hairline, then a gold button and a text link. `split` bleeds the photo to the viewport edge.
 - **Photo frames.** `ArchFrame.astro` masks a photograph into the LANCET (tall pointed window, 2:3) or the DOOR (four-centred head, 10:13) with a thin gold mould outline; the crop follows the editor's hotspot. Bands break the container once at most, by an image bleeding to the edge (`.bleed-right` / `.bleed-left`, sized in `cqw`, never `vw`, rule 19).
@@ -134,3 +212,5 @@ Motion (part of the system, per `docs/agent/animation.md`): default interaction 
 - Don't round photo corners or add card shadows.
 - Don't write an em-dash in site copy (rule 2).
 - Don't put gold or taupe text on paper, or white text on gold.
+- Don't set a long passage of reading straight on the gold fill; put it on paper (see the Staff bands).
+- Don't use a coloured side stripe (`border-left` or `border-l-4` in an accent) to mark a callout or row; use a full outline, a top rule or a marker (2026-10-03: the church-app band's phone rows and the journal tip callout stopped doing it).

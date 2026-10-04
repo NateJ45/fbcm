@@ -324,7 +324,7 @@ const logo = await getImage({ src: logoAsset });
     padding: 7px;
     border-radius: 26px 26px 0 0;
     background: var(--color-band-gold);
-    box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.55);
+    box-shadow: 0 18px 40px -18px color-mix(in srgb, var(--color-foreground) 55%, transparent);
   }
   .ca-screen {
     display: flex;
@@ -369,7 +369,7 @@ const logo = await getImage({ src: logoAsset });
     margin-top: 5%;
     padding: 6% 8%;
     border: 1px solid color-mix(in srgb, var(--color-brown-ink) 30%, transparent);
-    border-left: 3px solid var(--color-gold);
+    border-top: 2px solid var(--color-gold);
     font-family: var(--font-ui);
     font-size: 0.625rem;
     font-weight: 600;

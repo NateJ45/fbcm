@@ -133,6 +133,10 @@ and the new marked lines are all removed cleanly. The unmarked pieces: `DynamicL
 `../sanity/schemaTypes/journalEntry.ts`, and `src/lib/youtube-feed-api.test.ts` imports
 `./sermon-video.ts`. Each wants a marker, or the journal-only half moved out.
 
+### 1e. Links under 44px on the pages the 2026-10-03 audit did not cover (found 2026-10-03)
+
+**Blocker: none, it is work.** The design audit fixed the tap targets on Home, Visit, Staff and the shared chrome (header, footer, the `CtaLink` text links, back-to-top): `node scripts/measure-tap-targets.mjs <url> --width 390` prints 0 under 44px there. Run over the other routes it still finds 36 (links inside a sentence are not counted): Ministries 14 (the age-group and ministry links in the intro and the pastors' list, plus rich-text address and page links), History 8 (seven "Read this era" links and "Ministers", 98x17), Blog 8 (the seven category chips are 28px tall and sit 5px apart, so they need real padding, because `hit-44` would make neighbours overlap; "Older" is 24px), Give 1, Contact 1, Architecture 2, Privacy 2. Most are a rich-text link that is a paragraph of its own: the likely fix is one rule in the portable-text renderer for a link that is the only child of its paragraph (`hit-44` plus `relative`), then padding on the chips. Until then PRODUCT.md says where the 44px promise holds.
+
 ### 2. `npm run parity compare` is not a CI step
 
 The baselines in `scripts/.parity/` are captured on a developer machine, and nobody in

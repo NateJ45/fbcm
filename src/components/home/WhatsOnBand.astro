@@ -105,7 +105,9 @@ const where = (loc: string) => (loc && loc !== 'First Baptist Church' ? loc : ''
             </p>
             <div class="min-w-0">
               <h3 class="wo-title">
-                <a href={`/events#${it.key}`}>{it.title}</a>
+                <a href={`/events#${it.key}`} class="hit-44 relative block">
+                  {it.title}
+                </a>
               </h3>
               <p class="wo-when">
                 <time datetime={it.date}>{whenLine(it)}</time>

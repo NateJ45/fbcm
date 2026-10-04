@@ -189,10 +189,18 @@ const drawingStyle = `--ho-drawing: url(${renderingAsset.src}); aspect-ratio: ${
     --ho-paint: 120%;
     -webkit-mask-image:
       var(--ho-drawing),
-      linear-gradient(100deg, #000 var(--ho-paint), transparent calc(var(--ho-paint) + 16%));
+      linear-gradient(
+        100deg,
+        var(--color-foreground) var(--ho-paint),
+        transparent calc(var(--ho-paint) + 16%)
+      );
     mask-image:
       var(--ho-drawing),
-      linear-gradient(100deg, #000 var(--ho-paint), transparent calc(var(--ho-paint) + 16%));
+      linear-gradient(
+        100deg,
+        var(--color-foreground) var(--ho-paint),
+        transparent calc(var(--ho-paint) + 16%)
+      );
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
     -webkit-mask-repeat: no-repeat;

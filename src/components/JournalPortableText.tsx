@@ -476,7 +476,7 @@ function makeComponents(seen: Map<string, number> = new Map()): PortableTextComp
         if (!value?.content) return null;
         return (
           <aside
-            className="my-section-md rounded-r-md border-l-4 border-tertiary bg-muted/70 p-l"
+            className="my-section-md rounded-sm border border-tertiary bg-muted/70 p-l"
             aria-label={value.label ?? 'Note'}
           >
             <p className="mb-s text-xs font-semibold tracking-widest text-foreground/80 uppercase">

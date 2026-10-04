@@ -121,8 +121,8 @@
   height: 84%;
   object-fit: cover;
   object-position: 50% 0%;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 7%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, var(--color-foreground) 7%);
+  mask-image: linear-gradient(to bottom, transparent 0, var(--color-foreground) 7%);
 }
 .ph-moulding {
   position: absolute;
