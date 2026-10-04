@@ -96,6 +96,9 @@ jobs:
         env:
           PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
           PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
+          # The ~390 page build needs 600 s, not the family default 180 s
+          # (PORTS.md card 76; read by playwright.visual.config.ts).
+          PLAYWRIGHT_WEBSERVER_TIMEOUT_MS: '600000'
         run: |
           if [ "${{ inputs.update }}" = "true" ]; then
             npm run test:visual:update

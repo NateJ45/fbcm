@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-03, resync with starter cards 75 and 76 (`resync-cards-75-76`)._
+
+Took the starter's `tests/fixtures.ts` (comment header only; now carries the `PORTABLE:` marker), `tests/smoke.spec.ts` (adds the card 58 localhost GA test) and `playwright.visual.config.ts` (timeout read from `PLAYWRIGHT_WEBSERVER_TIMEOUT_MS`, default 180000). fbcm's two Wix-migration URL tests moved unchanged from `smoke.spec.ts` to the unmarked `tests/site-urls.spec.ts` (chromium project only; `smoke.spec.ts` also runs on `webkit-iphone`, the new file does not). `.github/workflows/visual.yml` gained one `env:` line on the `Run the visual suite` step, `PLAYWRIGHT_WEBSERVER_TIMEOUT_MS: '600000'`, which keeps the 600 s budget the config used to hard-code. `sync-check` 76 same / 9 drifted / 85 marked became 81 same / 5 drifted / 86 marked against starter 916f53a; the remaining five are the preview-morph, preview-stega and redirects files, where fbcm is ahead. Only CI can prove the `visual` job still builds inside its timeout.
+
 _2026-10-03 — Un-mark three site-specific files (`unmark-site-specific`)._
 
 Removed the `PORTABLE: canonical copy` marker from `scripts/audit-studio.mjs`, `scripts/generate-llms-full.mjs` and `scripts/lib/render-og.mjs`: each carries content that is legitimately per-site (church fields, the brand-config identity fallback, the FBCM palette and Castoro Titling), so a byte-exact check could never pass (starter PORTS.md card 35). Files otherwise unchanged. `src/lib/page-checks.ts` differed only in two comment examples (/blog and /post for /journal), so it was synced to the starter's copy and stays marked. `sync-check` against starter `origin/main` 001b7ae: 76 same, 9 drifted, 0 missing (85 marked); the 9 are the AHEAD and mixed files listed in `docs/claude/ports-and-portable.md`.
