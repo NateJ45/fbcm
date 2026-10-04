@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-03 — Un-mark three site-specific files (`unmark-site-specific`)._
+
+Removed the `PORTABLE: canonical copy` marker from `scripts/audit-studio.mjs`, `scripts/generate-llms-full.mjs` and `scripts/lib/render-og.mjs`: each carries content that is legitimately per-site (church fields, the brand-config identity fallback, the FBCM palette and Castoro Titling), so a byte-exact check could never pass (starter PORTS.md card 35). Files otherwise unchanged. `src/lib/page-checks.ts` differed only in two comment examples (/blog and /post for /journal), so it was synced to the starter's copy and stays marked. `sync-check` against starter `origin/main` 001b7ae: 76 same, 9 drifted, 0 missing (85 marked); the 9 are the AHEAD and mixed files listed in `docs/claude/ports-and-portable.md`.
+
 _2026-10-03 — Sync of drifted PORTABLE files (`sync-portable-files`)._
 
 `sync-check` read 70 same, 16 drifted, 2 missing in starter. Two drifts were STALE and are now byte-identical to the starter: `src/components/analytics/GoogleAnalytics.astro` (card 58, GA4 fires only on the production hostname) and `scripts/check-live-links.mjs` (card 42 addendum, walks every published document). Result: 72 same, 14 drifted, 2 missing. The other 14 drifts and the two missing files are fbcm AHEAD or site-specific and were left alone on purpose; the per-file reasons are in `docs/claude/ports-and-portable.md` ("Known drift").

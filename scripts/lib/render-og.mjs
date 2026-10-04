@@ -1,5 +1,3 @@
-// PORTABLE: canonical copy
-// ncs-astro-sanity-starter is the library of record for this file.
 // =============================================================================
 // The share card renderer
 // =============================================================================
