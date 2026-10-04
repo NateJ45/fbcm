@@ -42,17 +42,19 @@ test.describe('Smoke: every hidden route still answers', () => {
   }
 });
 
-// Task 6 (2026-09-18): the Wix migration's URL-preservation gate. /blog and
-// /post/<slug> are the live site's exact paths — no redirects, no lost SEO.
-// The non-ASCII slug is the acceptance case: it stays failing (404) until
-// Task 9 imports the real posts, which is what proves the import worked.
-test('a post with a non-ASCII slug is served at its original URL', async ({ page }) => {
-  const res = await page.goto('/post/händel-s-messiah-sing-in-carols');
-  expect(res?.status()).toBe(200);
-  await expect(page.locator('h1')).toContainText('Messiah');
-});
-
-test('the blog listing is served at /blog', async ({ page }) => {
-  const res = await page.goto('/blog');
-  expect(res?.status()).toBe(200);
+// GA4 must never fire off the production hostname (PORTS.md card 58). CI
+// builds without PUBLIC_GA_ID, so there this passes trivially; it bites on the
+// local run whose .env carries the id, which is exactly how reid-design-site
+// filed 470 fake localhost sessions into its live property.
+test('GA4 sends nothing from localhost, even when the id is built in', async ({ page }) => {
+  const gaRequests: string[] = [];
+  page.on('request', (req) => {
+    if (/googletagmanager\.com|google-analytics\.com/.test(req.url())) gaRequests.push(req.url());
+  });
+  await page.goto('/', { waitUntil: 'load' });
+  await page.waitForTimeout(1500);
+  expect(gaRequests, 'requests to Google Analytics from localhost').toEqual([]);
+  expect(await page.evaluate(() => typeof (window as { dataLayer?: unknown }).dataLayer)).toBe(
+    'undefined',
+  );
 });

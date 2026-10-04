@@ -1,18 +1,24 @@
-// Every spec imports `test` and `expect` from here instead of
-// '@playwright/test' (2026-09-26). The one addition: Sanity's images come from
-// a disk cache, not from Sanity.
+// PORTABLE: canonical copy - ncs-astro-sanity-starter is the library of record for this file
+// A spec imports `test` and `expect` from here instead of '@playwright/test'
+// (PORTS.md card 75; built on fbcm, 2026-09-26). The one addition: Sanity's
+// images come from a disk cache, not from Sanity.
 //
-// WHY. Sanity's request log for 2026-09-19..26 counted 13.1 GB of image
-// bandwidth in 533k requests from browsers: Playwright runs, here and on CI,
-// each loading every page's photographs from cdn.sanity.io again. An image
-// URL there names its asset and its size, so it never changes: the first run
-// on a machine fetches each one once and keeps it in
-// node_modules/.cache/test-images/, and every later run is served from disk
-// (CI restores the folder, ci.yml). The pages under test are unchanged; only
-// where the bytes come from differs.
+// WHY. fbcm's Sanity request log for 2026-09-19..26 counted 13.1 GB of image
+// bandwidth in 533k requests from browsers: Playwright runs, locally and on
+// CI, each loading every page's photographs from cdn.sanity.io again. An
+// image URL there names its asset and its size, so it never changes: the
+// first run on a machine fetches each one once and keeps it in
+// node_modules/.cache/test-images/, and every later run is served from disk.
+// A site whose CI should share the cache restores that folder with an
+// actions/cache step in its own ci.yml (see the card). The pages under test
+// are unchanged; only where the bytes come from differs.
+//
+// NO CACHE, NO SANITY: harmless. With an empty folder every image is fetched
+// once, exactly as before, and kept. A build with no Sanity project (the
+// starter on CI) requests nothing from cdn.sanity.io, so the route never fires.
 //
 // A spec that opens its own context (browser.newContext) calls
-// cacheSanityImages(ctx) itself; this-sunday.spec.ts does.
+// cacheSanityImages(ctx) itself.
 import { test as base, type BrowserContext, type Route } from '@playwright/test';
 import { createHash } from 'node:crypto';
 import {
