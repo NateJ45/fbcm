@@ -333,13 +333,32 @@ jobs:
       # fetched from Sanity once and served from disk after that. Sanity's
       # request log counted 13.1 GB of test-run image traffic in one week
       # (2026-09-19..26). A few MB. Restored AFTER npm ci, which deletes
-      # node_modules and the cache inside it.
+      # node_modules and the cache inside it. One key is shared by the three
+      # shards, so each run only the first shard to finish can save ("Unable to
+      # reserve cache" in the others). That has not cost anything here: measured
+      # 2026-10-04, the shared cache already holds all 206 images and every
+      # shard fetches 0 on a warm run (see the report step below). If a shard
+      # ever shows a non-zero count on a warm run, key it per shard instead
+      # (`...-s${{ matrix.shard }}-${{ github.run_id }}`, same restore-key
+      # prefix with the shard, then the plain prefix); stonesteps-50k needed it.
       - name: Restore the test images
         uses: actions/cache@v4
         with:
           path: node_modules/.cache/test-images
           key: test-images-${{ runner.os }}-${{ github.run_id }}
           restore-keys: test-images-${{ runner.os }}-
+
+      # The fixture appends every image it has to fetch from Sanity to misses.log
+      # inside the cache folder, and that file travels with the cache. Count it
+      # before and after the tests (below) to see how many images this shard
+      # fetched this run: that number is what Sanity meters.
+      - name: Count the cached test images before the run
+        run: |
+          d=node_modules/.cache/test-images
+          before=0
+          if [ -f "$d/misses.log" ]; then before=$(wc -l < "$d/misses.log" | tr -d ' '); fi
+          echo "IMG_MISSES_BEFORE=$before" >> "$GITHUB_ENV"
+          echo "shard ${{ matrix.shard }}: $(ls "$d" 2>/dev/null | grep -c '\.bin$' || true) images in the restored cache, $before fetches logged so far"
 
       # The browser download is the slow part (286s on this repo), the apt
       # libraries are not. Cache the browsers by Playwright version; on a hit
@@ -401,6 +420,23 @@ jobs:
           # and cut three blocks of equal summed time.
           PWTEST_SHARD_WEIGHTS: '268:181:125'
         run: npm test -- --shard=${{ matrix.shard }}/3 --reporter=github,html
+
+      # Always runs, so a failed shard still reports. Prints the count in the log
+      # and in the run summary. A report must never fail the job: Actions runs
+      # this under `bash -e`, and `grep -c` exits 1 when it counts zero, so a
+      # shard with no cached images (a cancelled run, a cold folder) would have
+      # failed here; hence the `|| true` on the count.
+      - name: Report the test images fetched from Sanity
+        if: always()
+        run: |
+          d=node_modules/.cache/test-images
+          after=0
+          if [ -f "$d/misses.log" ]; then after=$(wc -l < "$d/misses.log" | tr -d ' '); fi
+          fetched=$((after - ${IMG_MISSES_BEFORE:-0}))
+          cached=$(ls "$d" 2>/dev/null | grep -c '\.bin$' || true)
+          size=$(du -sh "$d" 2>/dev/null | cut -f1)
+          echo "shard ${{ matrix.shard }}: fetched $fetched images from Sanity this run; $cached images cached now (${size:-0})"
+          echo "Test images, shard ${{ matrix.shard }}: fetched $fetched from Sanity this run, $cached cached now (${size:-0})." >> "$GITHUB_STEP_SUMMARY"
 
       # Only on failure: a green run has nothing worth the upload time.
       - uses: actions/upload-artifact@v7

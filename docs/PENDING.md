@@ -2433,5 +2433,8 @@ in `scripts/data/backups/journalEntry-bodies-2026-09-20.json`, and a second
       Visitors' PDF downloads are served from R2 at `/files/` too (src/pages/files/[name].ts).
 - [x] Playwright's Sanity images come from a disk cache (`tests/fixtures.ts`, every spec imports
       `test` from it; CI restores `node_modules/.cache/test-images`). Measured 2026-09-26: a cold
-      run fetched 206 images (7 MB) once; the next full run fetched 0.
+      run fetched 206 images (7 MB) once; the next full run fetched 0. Since 2026-10-03 each CI
+      shard prints how many images it fetched from Sanity that run (log and run summary); it
+      reads 0 on a warm run (checked 2026-10-04, 206 images cached). If that ever stops being 0,
+      key the cache per shard (see the comment in `ci.yml`).
 - [x] `/styleguide/visitor` links `/files/` too (2026-09-26).
