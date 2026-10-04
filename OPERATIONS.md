@@ -96,7 +96,7 @@ The site is `output: 'static'` + `@astrojs/cloudflare` adapter. Two paths:
 
 ### Auto-deploy via GitHub → Cloudflare
 
-This is the normal path. Cloudflare watches `main` on GitHub. `main` is the only branch and is production (2026-10-03: staging abandoned; main is the only branch). Work on a short-lived branch, open a PR into `main`, wait for green CI, and merge; the merge is the deploy.
+This is the normal path. Cloudflare watches `main` on GitHub. `main` is the only branch and is production (2026-10-03: staging abandoned; main is the only branch). Work on a short-lived branch, open a PR into `main`, wait for green CI, and merge; the merge is the deploy. Since 2026-10-03 a "main: PR + green CI" ruleset enforces this: no direct pushes, no force pushes or deletion of `main`, and the `build` and `test` jobs in `ci.yml` must pass (keep those job names). Auto-merge is enabled, so `gh pr merge --auto` merges once they are green.
 
 ```bash
 git switch -c feat/my-change
