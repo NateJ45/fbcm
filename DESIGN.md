@@ -75,7 +75,7 @@ Tokens are declared in `src/styles/globals.css` and mirrored in `brand/brand.con
 - **Light only** since 2026-09-24. `.dark` token blocks remain in the CSS but are dormant (site setting `theme: 'light'`, no toggle). Do not design or test a dark theme.
 - **Flat.** No decorative shadows or gradients on chrome. Depth comes from paper versus soft-paper bands, hairlines and photography. The only shadow-like effects are a pulse ring on the live dot and a focus ring.
 - **One grammar per page** (CLAUDE.md rule 17): one left edge (the gutter), one text-and-picture split, one button family.
-- Open reference-site and anti-reference questions are tracked in `PRODUCT.md`; this file records only what the code does.
+- Reference sites and anti-references live in `PRODUCT.md` (proposed answers, unconfirmed until Nathan edits them); this file records only what the code does.
 
 ## 2. Colors
 

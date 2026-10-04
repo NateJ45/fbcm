@@ -4,7 +4,7 @@
 
 **Where it stands (short).** Thirteen page-builder pages (`/`, `/visit`, `/who-we-are`, `/beliefs`, `/ministries`, `/staff`, `/history`, `/wedding`, `/give`, `/contact`, `/blog`, `/visitor`, `/architecture`), each seeded by a module under `scripts/pages/`. 142 imported posts at their original `/post/<slug>` URLs, 17 staff, 5 ministries, 48 retired-URL redirects. No form of the site's own. Deployed at https://fbcm-site.nathanjnixon86.workers.dev; live www.fbcmuncie.org is still the Wix site. **Next is plan 3, the cutover** of `fbcmuncie.org` (`docs/superpowers/notes/2026-09-20-cutover-plan.md`), which waits on Nathan's decisions listed in `docs/PENDING.md`. The full pass-by-pass history of what was built, with branches and dates, is in `docs/claude/status-history.md`.
 
-**Design context.** `PRODUCT.md` (audience, purpose, tone, anti-references; open questions are `TODO(Nathan)` lines) and `DESIGN.md` (the visual system as built) sit at the repo root; read them before any design work and update them in the same change when the system moves.
+**Design context.** `PRODUCT.md` (audience, purpose, tone, anti-references; its four former `TODO(Nathan)` answers are proposed by Claude and unconfirmed, tagged in the file) and `DESIGN.md` (the visual system as built) sit at the repo root; read them before any design work and update them in the same change when the system moves.
 
 **Read `docs/PENDING.md` early in a session.** It is the live registry of open loops. If you finish or discover one, update it in the same commit. Change history is in `docs/agent/changelog.md`, and the tactical runbook is `OPERATIONS.md`.
 
