@@ -333,21 +333,20 @@ jobs:
       # fetched from Sanity once and served from disk after that. Sanity's
       # request log counted 13.1 GB of test-run image traffic in one week
       # (2026-09-19..26). A few MB. Restored AFTER npm ci, which deletes
-      # node_modules and the cache inside it. The key carries the shard number:
-      # with one key shared by all three shards only the first to finish could
-      # save ("Unable to reserve cache"), so the other two shards' images were
-      # never kept, and the shards run different test blocks (see the weights
-      # below) so they need different images. Each shard now restores and saves
-      # its own set; the second restore key falls back to the older shared
-      # caches so the switch does not start from empty.
+      # node_modules and the cache inside it. One key is shared by the three
+      # shards, so each run only the first shard to finish can save ("Unable to
+      # reserve cache" in the others). That has not cost anything here: measured
+      # 2026-10-04, the shared cache already holds all 206 images and every
+      # shard fetches 0 on a warm run (see the report step below). If a shard
+      # ever shows a non-zero count on a warm run, key it per shard instead
+      # (`...-s${{ matrix.shard }}-${{ github.run_id }}`, same restore-key
+      # prefix with the shard, then the plain prefix); stonesteps-50k needed it.
       - name: Restore the test images
         uses: actions/cache@v4
         with:
           path: node_modules/.cache/test-images
-          key: test-images-${{ runner.os }}-s${{ matrix.shard }}-${{ github.run_id }}
-          restore-keys: |
-            test-images-${{ runner.os }}-s${{ matrix.shard }}-
-            test-images-${{ runner.os }}-
+          key: test-images-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: test-images-${{ runner.os }}-
 
       # The fixture appends every image it has to fetch from Sanity to misses.log
       # inside the cache folder, and that file travels with the cache. Count it
