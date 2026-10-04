@@ -174,7 +174,7 @@ jobs:
       # deletes node_modules and the cache inside it. The key moves every run so
       # a new chapter is saved; the prefix restores the last one.
       - name: Restore the scripture cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: node_modules/.cache/scripture
           key: scripture-${{ runner.os }}-${{ github.run_id }}
@@ -186,7 +186,7 @@ jobs:
       # issue (about 630 MB) to redraw covers it drew last time; with it, only a
       # new issue is fetched. The cache itself is about 7 MB.
       - name: Restore The Visitor's covers
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: node_modules/.cache/visitor
           key: visitor-${{ runner.os }}-${{ github.run_id }}
@@ -313,7 +313,7 @@ jobs:
       # restore steps.
       - name: Restore node_modules
         id: nm
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             node_modules
@@ -342,7 +342,7 @@ jobs:
       # (`...-s${{ matrix.shard }}-${{ github.run_id }}`, same restore-key
       # prefix with the shard, then the plain prefix); stonesteps-50k needed it.
       - name: Restore the test images
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: node_modules/.cache/test-images
           key: test-images-${{ runner.os }}-${{ github.run_id }}
