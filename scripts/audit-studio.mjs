@@ -1,6 +1,3 @@
-// PORTABLE: canonical copy
-// ncs-astro-sanity-starter is the library of record for this file.
-//
 // scripts/audit-studio.mjs
 //
 // The Studio audit, as a command: `npm run audit:studio`.
