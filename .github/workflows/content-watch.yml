@@ -1,0 +1,145 @@
+# The @content watch (2026-10-05).
+#
+# WHY IT EXISTS. The church secretary edits the live site in Sanity whenever he
+# likes, and CI builds from LIVE content. Specs that asserted his words (exact
+# headings, FAQ questions, band names, link counts) turned the required `test`
+# check red on every open PR each time he edited, which blocked merges and
+# mailed failure notices for something that is not a bug. So the required suite
+# (ci.yml's `e2e` and `test`) no longer asserts church-authored copy at all.
+#
+# WHAT IT DOES. The specs that ARE statements about the church's content are
+# tagged `@content` (tests/content-watch.spec.ts) and excluded from the required
+# run (`grepInvert` in playwright.config.ts). This workflow runs ONLY those, in
+# chromium, against a build of live content, and reports what drifted in the job
+# summary and as a warning annotation. A drifted expectation means "the content
+# moved, someone should look": tell the church, or update the expectation.
+#
+# WHAT IT CAN NEVER DO. It is not a required check and never runs on a pull
+# request (it fires on a schedule, after a deploy and by hand, none of which
+# attach to a PR), so it cannot block a merge. The test step is
+# `continue-on-error`, so drift leaves the run GREEN with a warning rather than
+# red with an email; the job is `continue-on-error` too, so an infrastructure
+# flake (an apt mirror, a cache) does not mail anyone either. Read the summary.
+#
+# KEEP IN STEP with ci.yml's `site` job: the Build step's fixture variables
+# (they must equal `webServer.env` in playwright.config.ts, which the
+# content-watch config inherits) and the job-level PUBLIC_SANITY_* variables.
+name: Content watch
+
+on:
+  # Daily, 09:17 UTC (5:17 am EDT): after the overnight edits, before the
+  # office opens. An odd minute keeps clear of the top-of-the-hour queue.
+  schedule:
+    - cron: '17 9 * * *'
+  # The Sanity publish webhook deploys (deploy.yml), and a deploy is exactly the
+  # moment the live content changed, so look again as soon as one succeeds.
+  workflow_run:
+    workflows: [Deploy]
+    types: [completed]
+  workflow_dispatch:
+
+# Several publishes in a row make several deploys; only the newest is worth a look.
+concurrency:
+  group: content-watch
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    name: Content watch
+    # A failed deploy changed nothing worth looking at.
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+      PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      # The same caches the required build uses (ci.yml, `site` job), restored
+      # AFTER npm ci, which deletes node_modules and the cache inside it.
+      - name: Restore the scripture cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/scripture
+          key: scripture-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: scripture-${{ runner.os }}-
+
+      - name: Restore The Visitor's covers
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/visitor
+          key: visitor-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: visitor-${{ runner.os }}-
+
+      # Sanity's images for the Playwright run (tests/fixtures.ts): fetched once,
+      # served from disk after that, so a daily run does not meter image traffic.
+      - name: Restore the test images
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/test-images
+          key: test-images-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: test-images-${{ runner.os }}-
+
+      # Live content, with the same fixture variables as ci.yml's build and
+      # playwright.config.ts's webServer.env (see the note at the top).
+      - name: Build (site + embedded Studio)
+        env:
+          LAST_SUNDAY_FIXTURE: '1'
+          LAST_SUNDAY_NOW: '2026-09-24T16:00:00Z'
+          VISITOR_FIXTURE: '1'
+          CHURCH_CALENDAR_FIXTURE: '1'
+          CHURCH_CALENDAR_NOW: '2026-09-25T16:00:00Z'
+          CHURCH_TRAC_PAGES_FIXTURE: '1'
+        run: npm run build
+
+      - name: Resolve Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v6
+        id: pw-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+
+      # Chromium only: the content config runs the chromium project alone. Same
+      # apt workaround as ci.yml (third-party sources mid-sync fail `apt-get update`).
+      - name: Install Playwright browser
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome* /etc/apt/sources.list.d/microsoft*
+          npx playwright install --with-deps chromium ||
+            npx playwright install --with-deps chromium
+
+      # `continue-on-error`: a drifted expectation is news, not a failure. The
+      # outcome is read by the next step. PLAYWRIGHT_SKIP_BUILD serves the build
+      # made above rather than building a second time.
+      - name: Run the @content specs
+        id: watch
+        continue-on-error: true
+        env:
+          PLAYWRIGHT_SKIP_BUILD: '1'
+          PLAYWRIGHT_JSON_OUTPUT_NAME: content-watch-report.json
+        run: npm run test:content -- --reporter=list,json
+
+      - name: Report what drifted
+        if: ${{ always() }}
+        run: |
+          echo "@content outcome: ${{ steps.watch.outcome }}"
+          node scripts/content-watch-summary.mjs content-watch-report.json
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ always() }}
+        with:
+          name: content-watch-report
+          path: content-watch-report.json
+          retention-days: 14
+          if-no-files-found: ignore

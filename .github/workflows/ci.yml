@@ -402,6 +402,11 @@ jobs:
       # instead of running `npm run build` a second time. The html reporter is
       # added on the command line so local runs keep the quiet `list` output
       # while CI still produces the report artifact below.
+      # The `@content` specs (what the church wrote: tests/content-watch.spec.ts) are
+      # NOT run here: playwright.config.ts has `grepInvert: /@content/`, so a church
+      # edit in Sanity cannot turn this required job red. content-watch.yml runs
+      # them on a schedule and after each deploy, as a warning. Do not add a
+      # `--grep` here that would bring them back.
       - name: Run tests (smoke, a11y, reflow, page specs)
         env:
           PLAYWRIGHT_SKIP_BUILD: '1'
@@ -413,12 +418,18 @@ jobs:
           # 37157730786). PWTEST_SHARD_WEIGHTS (colon separated, one per shard,
           # an internal Playwright variable) resizes the three blocks instead:
           # 268 + 181 + 125 = 574 tests, 352s / 353s / 351s of summed test time.
+          # 2026-10-05: 268 + 178 + 125 = 571. Three /visit tests that asserted the
+          # church's copy left the second block (all three sat in it, chromium
+          # tests 394 to 399 of 574), so only that weight moved; the @content
+          # specs are not in this count at all (playwright.config.ts excludes them
+          # and content-watch.yml runs them). Not re-measured on a runner: three
+          # short tests are well inside the shards' spread.
           # Every test still runs exactly once (the blocks always partition the
           # whole list); a stale weight only unbalances the shards, it cannot
           # drop a test. RE-MEASURE when tests are added in bulk: run with
           # --reporter=json, sum duration per test in project-then-file order,
           # and cut three blocks of equal summed time.
-          PWTEST_SHARD_WEIGHTS: '268:181:125'
+          PWTEST_SHARD_WEIGHTS: '268:178:125'
         run: npm test -- --shard=${{ matrix.shard }}/3 --reporter=github,html
 
       # Always runs, so a failed shard still reports. Prints the count in the log

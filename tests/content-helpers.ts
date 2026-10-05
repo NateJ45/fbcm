@@ -57,23 +57,25 @@ export async function searchWordFromBlog(page: Page): Promise<string> {
 }
 
 /**
- * Ids on the current page that a visitor can land on from a link: wrapper and
- * heading ids inside <main>, in page order, that the page is long enough to
- * scroll to the top of the window (an anchor in the last screenful cannot land
- * at the header's edge, so it says nothing about the offset). Generated ids
- * (React's `:r1:`, Radix) are left out.
+ * Ids on the current page that a visitor can land on from a link: the elements
+ * the site MARKS as anchor targets (SectionRenderer's band wrappers, a staff
+ * card), which carry a `scroll-mt-*` class so they clear the sticky header. They
+ * are read from inside <main>, in page order, and only those the page is long
+ * enough to scroll to the top of the window (an anchor in the last screenful
+ * cannot land at the header's edge, so it says nothing about the offset) and
+ * that sit below the first screen (the opener cannot scroll under the header).
+ * Generated ids (the `page-1` that labels a heading, React's `:r1:`) are not
+ * targets and carry no such class, so they never appear.
  */
 export async function reachableAnchors(page: Page): Promise<string[]> {
   return page.evaluate(() => {
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     const out: string[] = [];
-    for (const el of document.querySelectorAll<HTMLElement>(
-      'main section[id], main h2[id], main h3[id], main article[id], main li[id]',
-    )) {
+    for (const el of document.querySelectorAll<HTMLElement>('main [id][class*="scroll-mt-"]')) {
       if (!/^[A-Za-z][\w-]*$/.test(el.id) || /-pin-\d+$/.test(el.id)) continue;
       if (!el.offsetParent && getComputedStyle(el).position !== 'fixed') continue;
       const top = el.getBoundingClientRect().top + window.scrollY;
-      if (top > 0 && top <= maxScroll - 40) out.push(el.id);
+      if (top > 200 && top <= maxScroll - 40) out.push(el.id);
     }
     return out;
   });

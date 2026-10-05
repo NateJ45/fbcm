@@ -1,5 +1,6 @@
 // scaffold-file: journal
 import { test, expect } from './fixtures';
+import { postCandidates } from './content-helpers';
 
 // =============================================================================
 // A post prints as a bulletin (feat/print-motion, 2026-09-24)
@@ -11,12 +12,27 @@ import { test, expect } from './fixtures';
 // The post is a sermon preview with a reading, a slide cover (the plate, which
 // stays on screen), a Listen link out to the livestream and a foot band.
 // NOT PORTABLE: the post and its classes are this site's.
+//
+// CONTENT INDEPENDENCE (2026-10-05). It used to be one named post
+// (/post/a-light-wardrobe/). It is now the newest sermon preview that carries an
+// external link (the Listen link), found from the build, so retiring or
+// rewriting any one post cannot redden it; that "A Light Wardrobe" is still
+// published is watched in tests/content-watch.spec.ts (@content).
 // =============================================================================
 
-const POST = '/post/a-light-wardrobe/';
-
-test('on paper a post keeps its masthead and body and drops the chrome', async ({ page }) => {
-  await page.goto(POST, { waitUntil: 'load' });
+test('on paper a post keeps its masthead and body and drops the chrome', async ({
+  page,
+  request,
+}) => {
+  let POST = '';
+  for (const candidate of await postCandidates(request)) {
+    await page.goto(candidate, { waitUntil: 'load' });
+    if ((await page.locator('.p2 a[href^="http"]').count()) > 0) {
+      POST = candidate;
+      break;
+    }
+  }
+  test.skip(!POST, 'no recent sermon preview has an external link right now');
   // On screen, the printed foot is not there to be read twice.
   await expect(page.locator('.p2-print-foot')).toBeHidden();
 
@@ -43,7 +59,8 @@ test('on paper a post keeps its masthead and body and drops the chrome', async (
   const foot = page.locator('.p2-print-foot');
   await expect(foot).toBeVisible();
   await expect(foot).toContainText('First Baptist Church Muncie');
-  await expect(foot).toContainText('/post/a-light-wardrobe');
+  // The derived foot line names this post's own address.
+  await expect(foot).toContainText(decodeURI(POST).replace(/\/$/, ''));
 
   // An external link prints its address after it; one of the site's own does not.
   const after = (sel: string) =>

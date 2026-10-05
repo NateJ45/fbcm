@@ -63,11 +63,16 @@ test.describe('@content /visit', () => {
     expect(await openAll(kids.locator('h3, p'))).toBe(true);
     // /visit#children lands on it.
     await expect(page.locator('#children')).toHaveCount(1);
-    // It sits straight after the morning path, where the children are first mentioned.
+    // It sits after the morning path, where the children are first mentioned, and
+    // before the questions. (The old check, "straight after the morning path", was
+    // already stale when it moved here: "Doors, parking and access" sits between.)
     const order = await page
       .locator('main h2')
       .evaluateAll((hs) => hs.map((h) => (h.textContent ?? '').trim()));
-    expect(order.indexOf('Your children')).toBe(order.indexOf('How the morning runs') + 1);
+    expect(order.indexOf('Your children')).toBeGreaterThan(order.indexOf('How the morning runs'));
+    expect(order.indexOf('Your children')).toBeLessThan(
+      order.indexOf('Frequently asked questions'),
+    );
   });
 
   // Was in visit.spec.ts. The structural half (the jump resolves to a named
@@ -141,6 +146,13 @@ test.describe('@content /visit', () => {
 });
 
 test.describe('@content the other pages', () => {
+  // Stands in for motion.spec.ts's two slideshow tests, which skip when Home's
+  // hero has a single photo (the Pause button only exists on a slideshow).
+  test("Home's hero is a slideshow", async ({ page }) => {
+    await page.goto('/', { waitUntil: 'load' });
+    await expect(page.locator('[data-hero-pause]')).toHaveCount(1);
+  });
+
   test('/beliefs, /staff, /ministries and /history keep the anchors people link to', async ({
     page,
   }) => {

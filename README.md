@@ -104,6 +104,7 @@ npm run check:full   # typegen + build + unit tests
 npm run format:check # prettier
 npm run check:links  # linkinator over dist/client
 npm test             # Playwright: smoke, axe light, axe dark, reflow
+npm run test:content # Playwright: only the @content specs (what the church wrote)
 npx lhci autorun     # Lighthouse against the built dist/client
 ```
 
@@ -114,6 +115,11 @@ template on a PR and the full list on `main` and weekly. Accessibility is a hard
 are hard, performance / SEO / best-practices are warnings. The Playwright suites run on
 Chromium and a real WebKit iPhone profile, because that is where a Tailwind focus ring
 on a `<select>` turns out to be invisible.
+
+The required Playwright suite never asserts what the church wrote, because the secretary
+edits the live site whenever he likes and CI builds from it. The specs that do are tagged
+`@content` and run by `content-watch.yml` instead (daily, after each deploy, on demand),
+which is not a required check and reports drift as a warning.
 
 Two more workflows ship dormant, gated on repo secrets and variables that do not exist
 in the template: `sanity-backup.yml` (nightly encrypted dataset export) and `uptime.yml`
