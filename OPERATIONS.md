@@ -141,6 +141,8 @@ If a content change isn't appearing on the live site after a few minutes:
 - Check the Cloudflare deploy hook is configured (Workers → Settings → Triggers → Deploy hooks)
 - Try a manual `git push` to force a rebuild
 
+**Stale site after a publish (GitHub route, 2026-10-05):** the publish watchdog (`publish-watchdog.yml`, every 15 minutes) retriggers a lost rebuild by itself and opens the issue "Publish is not reaching the live site" if the site is still behind after 30 minutes. To push content out right now: `gh workflow run deploy.yml`; to see what the watchdog thinks: `gh workflow run publish-watchdog.yml -f dry_run=true`, then read its log. Detail: `docs/agent/deployment.md`, "Publish watchdog".
+
 ### Rebuild webhook filter (recommended)
 
 The webhook lives at manage.sanity.io → API → Webhooks. The recommended GROQ filter is a deny-list:

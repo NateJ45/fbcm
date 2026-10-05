@@ -1,0 +1,85 @@
+name: Publish watchdog
+
+# Self-heals a lost or stuck publish rebuild, and tells a human if it stays
+# stuck. Added 2026-10-05 after a bulk publish at 20:31 UTC reached the live
+# site 52 minutes late with nothing alerting anyone (about 29 repository_dispatch
+# runs in 8 seconds, all but two cancelled by the concurrency group by design,
+# the two survivors each waiting 5 to 15 minutes for a hosted runner during a
+# GitHub Actions incident). All the logic, thresholds and the reasoning are in
+# scripts/publish-watchdog.mjs; this file is only the schedule and the plumbing.
+#
+# Every 15 minutes it compares the newest PUBLISHED change in Sanity (the
+# non-cached API, no token needed) with the start of the last successful Deploy
+# run. If the publish is unserved for more than 10 minutes and no Deploy run is
+# queued or running, it retriggers deploy.yml. If it is still unserved after 30
+# minutes it opens ONE issue ("Publish is not reaching the live site"), which
+# GitHub emails to the repo owner, and closes it when the site catches up.
+#
+# TOKEN ROUTE. The plain GITHUB_TOKEN, via `gh workflow run deploy.yml`
+# (a workflow_dispatch). GITHUB_TOKEN-made events do not start workflow runs,
+# EXCEPT workflow_dispatch and repository_dispatch; the dispatch needs only
+# `actions: write`, where repository_dispatch (what the Sanity webhook sends)
+# would need `contents: write`. deploy.yml already has the trigger and is
+# untouched. No secret is added.
+#
+# NOT A REQUIRED CHECK, and no path filter belongs on it: it runs on the
+# schedule and by hand only, never on a PR. Do not add it to a ruleset. A run
+# that cannot read Sanity or GitHub logs a warning and exits green; a watchdog
+# that goes red on a blip is worse than none.
+#
+# GitHub pauses schedules in a repo with no activity for 60 days; a push to
+# main re-arms them (deploy.yml's schedule has the same caveat).
+#
+# Run it by hand from the Actions tab, or: gh workflow run publish-watchdog.yml
+#   dry_run=true prints every mutating gh command instead of running it.
+#   fake_publish_age_minutes (dry_run only) pretends the newest publish is that
+#   old, to rehearse the stale path against the real run history.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Print the gh commands instead of running them'
+        type: boolean
+        default: false
+      fake_publish_age_minutes:
+        description: 'Dry run only: pretend the newest publish is this many minutes old, with nothing in flight'
+        type: string
+        default: ''
+
+# Least privilege: actions:write to dispatch deploy.yml, issues:write for the
+# alert issue, contents:read for the checkout.
+permissions:
+  actions: write
+  contents: read
+  issues: write
+
+# Its own group, never deploy-production: the watchdog must not queue behind
+# the deploy it is watching. Overlapping ticks collapse into one.
+concurrency:
+  group: publish-watchdog
+  cancel-in-progress: false
+
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Only scripts/ is needed (the script imports nothing); the runner image
+      # already has Node, so no setup-node and no install.
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts
+          sparse-checkout-cone-mode: true
+
+      - name: Compare the newest publish with the last good deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # The same two variables deploy.yml builds with.
+          PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+          PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '' }}
+          WATCHDOG_FAKE_PUBLISH_AGE_MIN: ${{ inputs.fake_publish_age_minutes }}
+        run: node scripts/publish-watchdog.mjs
