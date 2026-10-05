@@ -11,6 +11,16 @@ import { settle } from './helpers';
 // the bar (and of the header when the header is there), the phone control
 // opens and closes by thumb and by keyboard, axe is clean, nothing overflows
 // at 320, and the links still jump without JavaScript.
+//
+// CONTENT INDEPENDENCE (2026-10-05). This used to name the eras (#era-1,
+// #era-3, #era-5, #era-6, #building), the first entry's words ("1859 to 1862:
+// Founding") and the phone control's label ("The gas boom to the debt paid").
+// All of that is the church's timeline, which the secretary edits. Now the
+// tests read the ids and the words OUT OF THE BAR ITSELF (entryIds), so they
+// hold for any timeline that earns a bar. When it no longer does (fewer than
+// three rows point at bands on the page: MIN_ENTRIES), they skip, and the
+// @content test in tests/content-watch.spec.ts reports that the bar is gone and
+// that the original eras are still there.
 // =============================================================================
 
 /** Every link's target, and the wrapper ids in order. */
@@ -19,6 +29,26 @@ async function linkTargets(page: Page, scope: string) {
     as.map((a) => (a as HTMLAnchorElement).getAttribute('href') ?? ''),
   );
 }
+
+/**
+ * The ids the bar's entries jump to (everything after the timeline's own first
+ * link), in page order. Skips the test when the page has no bar.
+ */
+async function entryIds(page: Page): Promise<string[]> {
+  const hrefs = await linkTargets(page, '.hc-strip');
+  test.skip(
+    hrefs.length < 2,
+    'no contents bar on /history right now (the @content watch reports it)',
+  );
+  return hrefs.slice(1).map((h) => h.slice(1));
+}
+
+/** The first, a middle and the last entry (the same one when there are few). */
+const pick = (ids: string[]) => ({
+  first: ids[0],
+  mid: ids[Math.floor(ids.length / 2)],
+  last: ids[ids.length - 1],
+});
 
 /** The target's top against the lowest of the header and a stuck bar. */
 async function landing(page: Page, id: string) {
@@ -50,26 +80,35 @@ test.describe('desktop', () => {
 
   test('the bar lists the timeline and its eras, and every link has a target', async ({ page }) => {
     await page.goto('/history', { waitUntil: 'load' });
+    const ids = await entryIds(page);
     const nav = page.getByRole('navigation', { name: 'Contents' });
     await expect(nav).toBeVisible();
     const hrefs = await linkTargets(page, '.hc-strip');
-    expect(hrefs.length).toBeGreaterThanOrEqual(4);
-    expect(hrefs[0]).toBe('#eras');
+    // The timeline itself comes first: the id the bar says it starts from.
+    expect(hrefs[0]).toBe(`#${await page.locator('.hc-bar').getAttribute('data-hc-from')}`);
+    expect(ids.length).toBeGreaterThanOrEqual(3);
     for (const href of hrefs) {
       expect(await page.locator(href).count(), `${href} exists`).toBe(1);
     }
     // The phone list carries the same links, in the same order.
     expect(await linkTargets(page, '.hc-list')).toEqual(hrefs);
-    // Accessible names read the whole marker and the title.
-    await expect(
-      nav.getByRole('link', { name: '1859 to 1862: Founding', exact: true }),
-    ).toBeVisible();
+    // An entry's accessible name reads the whole marker and the title: its
+    // visible year, then the screen-reader words after it.
+    const entry = page.locator('.hc-strip a[data-hc-link]').nth(1);
+    const year = ((await entry.locator('.hc-year').textContent()) ?? '').trim();
+    expect(year).toMatch(/\S/);
+    const title = (await entry.getAttribute('data-hc-title')) ?? '';
+    const name = (await entry.evaluate((a) => a.textContent ?? '')).replace(/\s+/g, ' ').trim();
+    expect(name.startsWith(year)).toBe(true);
+    expect(name).toContain(title);
+    await expect(entry).toHaveAccessibleName(name);
     await expect(page.locator('.hc-jump')).toBeHidden();
   });
 
   test('it sticks, and the part in view is marked as the page scrolls', async ({ page }) => {
     await page.goto('/history', { waitUntil: 'load' });
-    for (const id of ['era-3', 'era-6']) {
+    const { first, last } = pick(await entryIds(page));
+    for (const id of first === last ? [first] : [first, last]) {
       await page.evaluate(
         (i) =>
           window.scrollTo({
@@ -96,32 +135,35 @@ test.describe('desktop', () => {
     page,
   }) => {
     await page.goto('/history', { waitUntil: 'load' });
+    const { first, mid } = pick(await entryIds(page));
     await page.evaluate(() => window.scrollTo({ top: 1200, behavior: 'instant' }));
-    await page.locator('.hc-strip a[href="#building"]').click();
-    await expect(page).toHaveURL(/#building$/);
-    await expectLanded(page, 'building');
-    await expect(current(page)).toHaveAttribute('href', '#building');
+    await page.locator(`.hc-strip a[href="#${mid}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`#${mid}$`));
+    await expectLanded(page, mid);
+    await expect(current(page)).toHaveAttribute('href', `#${mid}`);
 
-    await page.locator('.hc-strip a[href="#era-1"]').click();
-    await expectLanded(page, 'era-1');
-    await expect(current(page)).toHaveAttribute('href', '#era-1');
+    await page.locator(`.hc-strip a[href="#${first}"]`).click();
+    await expectLanded(page, first);
+    await expect(current(page)).toHaveAttribute('href', `#${first}`);
   });
 
   test('the keyboard reaches every link, with a visible focus ring', async ({ page }) => {
     await page.goto('/history', { waitUntil: 'load' });
-    const first = page.locator('.hc-strip a').first();
-    await first.focus();
+    const { first } = pick(await entryIds(page));
+    const firstLink = page.locator('.hc-strip a').first();
+    await firstLink.focus();
     await page.keyboard.press('Tab');
     const focused = page.locator('.hc-strip a').nth(1);
     await expect(focused).toBeFocused();
     const outline = await focused.evaluate((a) => getComputedStyle(a).outlineStyle);
     expect(outline).not.toBe('none');
     await page.keyboard.press('Enter');
-    await expectLanded(page, 'era-1');
+    await expectLanded(page, first);
   });
 
   test('past the last era the bar steps aside', async ({ page }) => {
     await page.goto('/history', { waitUntil: 'load' });
+    await entryIds(page);
     const to = await page.locator('.hc-bar').getAttribute('data-hc-to');
     await page.evaluate((id) => {
       const el = document.getElementById(id!)!;
@@ -135,7 +177,10 @@ test.describe('desktop', () => {
   });
 
   test('axe: no violations with the bar stuck', async ({ page }) => {
-    await page.goto('/history#era-3', { waitUntil: 'load' });
+    await page.goto('/history', { waitUntil: 'load' });
+    const { mid } = pick(await entryIds(page));
+    await page.goto('about:blank');
+    await page.goto(`/history#${mid}`, { waitUntil: 'load' });
     await settle(page);
     const results = await new AxeBuilder({ page }).include('.hc-bar').analyze();
     expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
@@ -154,6 +199,7 @@ test.describe('phone', () => {
 
   test('Jump to opens the list, a tap jumps and closes it', async ({ page }) => {
     await page.goto('/history', { waitUntil: 'load' });
+    const { mid } = pick(await entryIds(page));
     await expect(page.locator('.hc-strip')).toBeHidden();
     const summary = page.locator('.hc-jump summary');
     await expect(summary).toBeVisible();
@@ -169,15 +215,18 @@ test.describe('phone', () => {
     )) {
       expect(b).toBeGreaterThanOrEqual(44);
     }
-    await list.locator('a[href="#era-3"]').tap();
+    // The control then names the part it landed in: the row's own words.
+    const name = ((await list.locator(`a[href="#${mid}"] .hc-l-name`).textContent()) ?? '').trim();
+    await list.locator(`a[href="#${mid}"]`).tap();
     await expect(list).toBeHidden();
-    await expectLanded(page, 'era-3');
-    await expect(current(page, '.hc-list')).toHaveAttribute('href', '#era-3');
-    await expect(summary).toContainText('The gas boom to the debt paid');
+    await expectLanded(page, mid);
+    await expect(current(page, '.hc-list')).toHaveAttribute('href', `#${mid}`);
+    await expect(summary).toContainText(name);
   });
 
   test('the keyboard opens it, and Escape closes it back onto the control', async ({ page }) => {
     await page.goto('/history', { waitUntil: 'load' });
+    await entryIds(page);
     const summary = page.locator('.hc-jump summary');
     await summary.focus();
     await page.keyboard.press('Enter');
@@ -190,7 +239,10 @@ test.describe('phone', () => {
   });
 
   test('axe: no violations with the list open', async ({ page }) => {
-    await page.goto('/history#era-2', { waitUntil: 'load' });
+    await page.goto('/history', { waitUntil: 'load' });
+    const { first } = pick(await entryIds(page));
+    await page.goto('about:blank');
+    await page.goto(`/history#${first}`, { waitUntil: 'load' });
     await settle(page);
     await page.locator('.hc-jump summary').click();
     const results = await new AxeBuilder({ page }).include('.hc-bar').analyze();
@@ -200,7 +252,10 @@ test.describe('phone', () => {
 
 test('no horizontal overflow at 320, closed and open', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 });
-  await page.goto('/history#era-2', { waitUntil: 'load' });
+  await page.goto('/history', { waitUntil: 'load' });
+  const { first } = pick(await entryIds(page));
+  await page.goto('about:blank');
+  await page.goto(`/history#${first}`, { waitUntil: 'load' });
   await settle(page, { freezeAnimations: false });
   const overflow = () =>
     page.evaluate(
@@ -223,10 +278,15 @@ test.describe('without JavaScript', () => {
 
   test('the links still jump', async ({ page }) => {
     await page.goto('/history', { waitUntil: 'load' });
-    await page.locator('.hc-strip a[href="#era-5"]').click();
-    await expect(page).toHaveURL(/#era-5$/);
+    // No script, so the bar's own links are read straight from the markup.
+    const hrefs = await linkTargets(page, '.hc-strip');
+    test.skip(hrefs.length < 2, 'no contents bar on /history right now (the @content watch)');
+    const id = hrefs[hrefs.length - 1].slice(1);
+    await page.locator(`.hc-strip a[href="#${id}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`#${id}$`));
     const top = await page.evaluate(
-      () => document.getElementById('era-5')!.getBoundingClientRect().top,
+      (i) => document.getElementById(i)!.getBoundingClientRect().top,
+      id,
     );
     expect(top).toBeGreaterThan(0);
     expect(top).toBeLessThan(400);

@@ -1,8 +1,18 @@
-import { test, expect } from './fixtures';
+import { test, expect, type Page } from './fixtures';
+import { reachableAnchors, spread } from './content-helpers';
 
 // =============================================================================
 // Anchors land below the sticky header
 // =============================================================================
+// CONTENT INDEPENDENCE (2026-10-05). This used to name five anchors by id
+// (#baptists, #kendall-ellis, #youth, #accessibility, #building). Those ids come
+// from the church's own headings and staff entries, so renaming one or
+// retiring a staff member turned the required check red. The anchors are now
+// DISCOVERED from each page (reachableAnchors: wrapper and heading ids in
+// <main> the page can scroll to the top), and the five named ones are watched
+// in tests/content-watch.spec.ts (@content), because the church's redirects and
+// bookmarks point at them.
+//
 // Plan 2b (F2) set --header-offset in globals.css so `scroll-mt-[var(--header-offset)]`
 // on every anchor target clears the sticky header. This is the assertion that
 // proves it, rather than trusting the CSS value forever: for each in-page anchor
@@ -17,16 +27,21 @@ import { test, expect } from './fixtures';
 // to be scrolled halfway down the viewport.
 // =============================================================================
 
-const ANCHOR_URLS = [
-  '/beliefs#baptists',
-  '/staff#kendall-ellis',
-  '/ministries#youth',
-  '/visit#accessibility',
-  '/history#building',
-];
+const ANCHOR_ROUTES = ['/beliefs', '/staff', '/ministries', '/visit', '/history'];
+
+/**
+ * An anchor on `route` to land on: the middle one of those the page can scroll
+ * to, or a skip when the church has left the page with none.
+ */
+async function anchorOn(page: Page, route: string): Promise<string> {
+  await page.goto(route, { waitUntil: 'load' });
+  const ids = await reachableAnchors(page);
+  test.skip(ids.length === 0, `${route} has no anchors right now`);
+  return ids[Math.floor(ids.length / 2)];
+}
 
 /** Read the target's top and the header's bottom, in the same frame. */
-async function measureAnchor(page: import('@playwright/test').Page, hash: string) {
+async function measureAnchor(page: Page, hash: string) {
   return page.evaluate((id) => {
     const target = document.getElementById(id);
     const header = document.querySelector('header.site-header');
@@ -46,24 +61,33 @@ async function measureAnchor(page: import('@playwright/test').Page, hash: string
   }, hash);
 }
 
-for (const url of ANCHOR_URLS) {
-  test(`${url} lands below the sticky header`, async ({ page }) => {
-    await page.goto(url, { waitUntil: 'load' });
-    // One animation frame so the browser's own anchor-scroll (which can land a
-    // frame after `load`) has settled before we measure.
-    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => r(undefined))));
+for (const route of ANCHOR_ROUTES) {
+  test(`${route}: anchors on the page land below the sticky header`, async ({ page }) => {
+    await page.goto(route, { waitUntil: 'load' });
+    // The first, the last and one between of what the page offers.
+    const ids = spread(await reachableAnchors(page), 3);
+    test.skip(ids.length === 0, `${route} has no anchors right now`);
 
-    const hash = url.split('#')[1];
-    const { targetTop, headerBottom } = await measureAnchor(page, hash);
+    for (const id of ids) {
+      const url = `${route}#${id}`;
+      // A fresh load each time: a same-document hash change skips the landing code.
+      await page.goto('about:blank');
+      await page.goto(url, { waitUntil: 'load' });
+      // One animation frame so the browser's own anchor-scroll (which can land a
+      // frame after `load`) has settled before we measure.
+      await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => r(undefined))));
 
-    expect(
-      targetTop,
-      `${url}: target top (${targetTop}) should be >= header bottom - 1 (${headerBottom - 1})`,
-    ).toBeGreaterThanOrEqual(headerBottom - 1);
-    expect(
-      targetTop,
-      `${url}: target top (${targetTop}) should be <= header bottom + 64 (${headerBottom + 64})`,
-    ).toBeLessThanOrEqual(headerBottom + 64);
+      const { targetTop, headerBottom } = await measureAnchor(page, id);
+
+      expect(
+        targetTop,
+        `${url}: target top (${targetTop}) should be >= header bottom - 1 (${headerBottom - 1})`,
+      ).toBeGreaterThanOrEqual(headerBottom - 1);
+      expect(
+        targetTop,
+        `${url}: target top (${targetTop}) should be <= header bottom + 64 (${headerBottom + 64})`,
+      ).toBeLessThanOrEqual(headerBottom + 64);
+    }
   });
 }
 
@@ -72,17 +96,19 @@ for (const url of ANCHOR_URLS) {
 // on chromium only: this is a browser preference, not a per-engine behavior,
 // and running it on every project would just double the anchor suite for no
 // new signal.
-test('reduced motion: /beliefs#baptists still lands below the sticky header', async ({
+test('reduced motion: an anchor on /beliefs still lands below the sticky header', async ({
   page,
   browserName,
 }) => {
   test.skip(browserName !== 'chromium', 'reduced-motion check runs once, on chromium');
 
+  const id = await anchorOn(page, '/beliefs');
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/beliefs#baptists', { waitUntil: 'load' });
+  await page.goto('about:blank');
+  await page.goto(`/beliefs#${id}`, { waitUntil: 'load' });
   await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => r(undefined))));
 
-  const { targetTop, headerBottom } = await measureAnchor(page, 'baptists');
+  const { targetTop, headerBottom } = await measureAnchor(page, id);
 
   expect(targetTop).toBeGreaterThanOrEqual(headerBottom - 1);
   expect(targetTop).toBeLessThanOrEqual(headerBottom + 64);
@@ -104,7 +130,9 @@ test('reduced motion: /beliefs#baptists still lands below the sticky header', as
 // =============================================================================
 
 test('a keyboard scroll right after a fragment landing is not undone', async ({ page }) => {
-  await page.goto('/beliefs#baptists', { waitUntil: 'load' });
+  const id = await anchorOn(page, '/beliefs');
+  await page.goto('about:blank');
+  await page.goto(`/beliefs#${id}`, { waitUntil: 'load' });
 
   // Five ArrowDown presses, back to back, well inside both the 600ms gesture
   // window and the 1500ms landing-correction window -- exactly the scenario
@@ -198,7 +226,9 @@ test('pinning the header does not shift the content', async ({ page }) => {
 // =============================================================================
 
 test('back/forward restores scroll position, not the fragment landing', async ({ page }) => {
-  await page.goto('/beliefs#baptists', { waitUntil: 'load' });
+  const id = await anchorOn(page, '/beliefs');
+  await page.goto('about:blank');
+  await page.goto(`/beliefs#${id}`, { waitUntil: 'load' });
   await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }));
   // Give the polish script's own correction loop a chance to react (it
   // shouldn't, since this is a real scrollTo with no gesture behind it, but

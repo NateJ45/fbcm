@@ -1,9 +1,22 @@
+import { existsSync, readdirSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+
 // EXPECTED TO DIFFER PER SITE. Every other file in tests/ is a canonical copy
 // carried by the whole family; this one is the list of routes THIS repo builds,
 // and it changes with src/pages.
 //
 // Single source of truth for the starter's public, statically-known routes.
 // Every path below was verified against dist/client after `npm run build`.
+//
+// CHURCH EDITS MUST NOT REDDEN CI (2026-10-05, .claude/rules/tests-and-gates.md).
+// Most of this list is the site's own pages, which only code can add or remove.
+// The blog archive's category and tag pages are the exception: they exist only
+// while some post carries that category or tag, and the secretary re-files posts
+// whenever he likes. So the one category and the one tag below are PICKED from
+// the build (BLOG_CATEGORY, BLOG_TAG): the preferred name when it was built,
+// else the first one that was. Smoke, axe, contrast, reflow and headings keep
+// their coverage of an archive page's shapes, and nothing names a taxonomy term
+// the church could retire.
 //
 // Deliberately absent:
 //   /[slug] and /post/[slug]      dynamic, and build zero paths with no
@@ -17,6 +30,36 @@
 //                                 2026-09-18 and are not staged at all.
 //   /404                          reachable as 404.html, not as a route
 
+const DIST = resolve(process.cwd(), 'dist/client');
+
+/** Built folders under dist/client/<sub> that hold a page, sorted. [] with no build. */
+function builtDirs(sub: string): string[] {
+  try {
+    return readdirSync(join(DIST, sub), { withFileTypes: true })
+      .filter((d) => d.isDirectory() && existsSync(join(DIST, sub, d.name, 'index.html')))
+      .map((d) => d.name)
+      .sort();
+  } catch {
+    return [];
+  }
+}
+
+/** `preferred` when it was built (or nothing was built yet), else the first that was. */
+function pick(sub: string, preferred: string): string {
+  const dirs = builtDirs(sub);
+  return dirs.length === 0 || dirs.includes(preferred) ? preferred : dirs[0];
+}
+
+/** A blog category that exists in this build: 'sermon-preview' while the church has it. */
+export const BLOG_CATEGORY = pick('blog/category', 'sermon-preview');
+/** A blog tag that exists in this build: 'advent' while the church has it. */
+export const BLOG_TAG = pick('blog/tag', 'advent');
+
+/** Whether the category has a second archive page (it needs more than one page of posts). */
+const categoryHasPage2 =
+  builtDirs('blog/category').length === 0 ||
+  existsSync(join(DIST, 'blog/category', BLOG_CATEGORY, 'page/2/index.html'));
+
 /** Routes that render real content and must pass every check. */
 export const routes: string[] = [
   '/',
@@ -26,9 +69,9 @@ export const routes: string[] = [
   // them: 12 archive pages, 5 categories and 217 tags are one page with four
   // titles, and a suite that screenshots 234 copies of it proves nothing extra.
   '/blog/page/2', // scaffold: journal
-  '/blog/category/sermon-preview', // scaffold: journal
-  '/blog/category/sermon-preview/page/2', // scaffold: journal
-  '/blog/tag/advent', // scaffold: journal
+  `/blog/category/${BLOG_CATEGORY}`, // scaffold: journal
+  ...(categoryHasPage2 ? [`/blog/category/${BLOG_CATEGORY}/page/2`] : []), // scaffold: journal
+  `/blog/tag/${BLOG_TAG}`, // scaffold: journal
   '/blog/scripture', // scaffold: journal
   '/privacy',
   // The styleguide (Task 6, 2026-09-19): fixed-data wall the visual-regression
