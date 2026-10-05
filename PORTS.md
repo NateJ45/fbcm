@@ -117,6 +117,7 @@ is installing it as of the date on the card.
 | 52  | Radix islands hydrate at client:idle, not client:only             | n/a     | partial     | yes      | no               | no            | no             | n/a                | yes                 | partial        |
 | 53  | One accent splitter (heading-accent absorbs scriptAccent)         | no      | no          | yes      | no               | no            | no             | n/a                | no                  | no             |
 | 54  | Analytics component (GA4 + Cloudflare beacon, canonical)          | no      | no          | yes      | partial          | no            | no             | n/a                | yes                 | yes            |
+| 89  | Publish watchdog (retrigger a lost Sanity-publish rebuild, alert) | n/a     | no          | no       | no               | no            | no             | n/a                | no                  | no             |
 
 Rows for repos that have adopted nothing still exist on purpose: a future sweep ticks
 cells instead of inventing the table again.
@@ -5278,3 +5279,58 @@ signal); no literal `<script src=googletagmanager>` in the built HTML; and no ta
 querying `eventName` and `eventCount`. Do not query `unifiedScreenName`: it returns
 empty rows for web `page_view` and reads as a false negative. Those hits are real and
 land in the live property.
+
+---
+
+## Card 89: A publish watchdog: a lost Sanity-publish rebuild retries itself and tells a human (2026-10-05)
+
+**Origin:** fbcm, branch `ci/publish-watchdog`. **Canonical (once the starter takes it):**
+`.github/workflows/publish-watchdog.yml`, `scripts/publish-watchdog.mjs` and
+`scripts/lib/publish-watchdog.test.mjs`. **The starter does not have it yet**: it needs a
+PORTABLE copy of the script and test (add the `PORTABLE:` marker line when it lands there)
+and the workflow as a template. The number comes from the starter's
+`node scripts/next-port-card.mjs` on 2026-10-05 (89); re-check it before the starter commit.
+
+**The defect.** A statically built site goes live only when a rebuild runs, and a Sanity
+publish asks for one with a webhook that POSTs a GitHub `repository_dispatch`. Sanity sends
+one request PER DOCUMENT, so a bulk publish is a burst. `deploy.yml`'s concurrency group
+(`cancel-in-progress: false`) turns a burst into one running and one pending deploy, which
+is right, but a rebuild can still be lost: the survivor waits for a runner, or a newer
+queued run cancels it and then never starts. On 2026-10-05 a bulk publish at 20:31 UTC fired
+about 29 dispatches in 8 seconds; the two survivors each waited 5 to 15 minutes for a hosted
+runner (a GitHub Actions incident) for a two-second gate job, the surviving deploy was
+cancelled by a newer queued run, and the content reached the live site 52 minutes late.
+Nothing alerted anyone, and with the newest run lost the site would have stayed stale until
+the next scheduled rebuild.
+
+**The fix.** A 15-minute scheduled workflow compares the newest PUBLISHED change in Sanity
+(non-cached `api.sanity.io`, no token) with the start of the last successful Deploy run.
+Unserved for over 10 minutes, with no Deploy run queued or running and fewer than 2
+retriggers since the publish: `gh workflow run deploy.yml --ref <default branch>`. Unserved
+over 30 minutes: one issue, "Publish is not reaching the live site" (commented at most
+hourly, closed on catch-up). A failed read of Sanity or GitHub is a warning and a green run.
+The decision is a pure function with 15 tests; the thresholds are constants at the top.
+Full table: `docs/agent/deployment.md`, "Publish watchdog".
+
+**Why `workflow_dispatch` and the plain `GITHUB_TOKEN`.** Events made by `GITHUB_TOKEN` start
+no runs except `workflow_dispatch` and `repository_dispatch`. The dispatch needs only
+`actions: write`; `repository_dispatch` (what the webhook sends) needs `contents: write`.
+The site's deploy workflow already has the trigger and nothing in it reads the event name
+except IndexNow (skipped only for `schedule`), so the build is identical. Always pass the
+default branch as `--ref`, or a manual run from a feature branch deploys that branch.
+
+**Install per site (adapt, do not copy blind).** 1. Confirm the site has a `deploy.yml` with
+`repository_dispatch: [sanity-publish]` AND `workflow_dispatch`, and a Sanity publish webhook
+(otherwise there is nothing to watch). 2. Copy the three files. 3. The workflow reads
+`vars.PUBLIC_SANITY_PROJECT_ID` and `vars.PUBLIC_SANITY_DATASET`; if the site's deploy uses
+other names, change both. 4. The script hardcodes the workflow file name `deploy.yml` and the
+issue title. 5. Do NOT add it to a ruleset or give it a path filter; it never runs on a PR.
+
+**Family repos that need it** (each has a Sanity publish webhook into a deploy workflow, to be
+confirmed per repo): ncs-astro-sanity-starter (as the template), presacademy,
+reid-design-site, mas-monograms, stonesteps-50k, 2ndpreschicago (dormant: confirm it still has
+a live webhook first). nixoncreativestudio needs checking, because its content is not
+statically built from Sanity the same way. wcp-website is Bricks and ncs-church-starter is
+archived, so both are `n/a`. fbcm is the origin and has no matrix column.
+
+**Status.** fbcm: PR open, not yet merged. Every other cell `no`.

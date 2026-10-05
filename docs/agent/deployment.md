@@ -64,6 +64,32 @@ The old allow-list approach (listing every `_type` that should trigger a rebuild
 - Cloudflare's free tier covers 500 builds/month -- well clear of expected publish cadence.
 - If near-instant updates are ever needed, the alternative is Incremental Static Regeneration or runtime-fetching from Sanity for specific pages. Both are larger architecture changes; the webhook is the right answer for most marketing sites.
 
+### Publish watchdog (2026-10-05)
+
+`.github/workflows/publish-watchdog.yml` plus `scripts/publish-watchdog.mjs` (PORTS.md card 89). Why: the publish webhook sends one `repository_dispatch` per document, and `deploy.yml`'s concurrency group (`deploy-production`, `cancel-in-progress: false`) collapses a burst down to one running and one pending deploy. That is correct, but it leaves two ways to lose a rebuild: the surviving run waits for a runner (GitHub incident) or is cancelled by a newer queued run that then never starts. On 2026-10-05 a bulk publish at 20:31 UTC fired about 29 dispatches in 8 seconds; the content reached the live site 52 minutes later and nothing alerted anyone.
+
+**What it does, every 15 minutes (`*/15`, plus a manual `workflow_dispatch`).** It reads the newest PUBLISHED change in Sanity (non-cached `api.sanity.io`, no token; drafts and `system.*` / `sanity.*` types excluded) and the start of the last successful Deploy run (the build reads the dataset just after it starts, so a publish earlier than that start is in that build). It then decides:
+
+| Situation                                                                               | Action                                                                                               |
+| --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Newest publish is not newer than the last good deploy's start                           | Caught up. Closes the alert issue if one is open.                                                    |
+| Unserved, publish 10 minutes old or less                                                | Wait (the webhook deploy is probably starting).                                                      |
+| Unserved, a Deploy run is queued, pending, waiting or running                           | Wait for it.                                                                                         |
+| Unserved, over 10 minutes, nothing in flight, fewer than 2 retriggers since the publish | Retrigger: `gh workflow run deploy.yml --ref main`.                                                  |
+| Same, but 2 retriggers already (a failing deploy, not a lost one)                       | Do nothing more; the alert covers it.                                                                |
+| Unserved and over 30 minutes (on top of any of the above)                               | Open the issue "Publish is not reaching the live site", or comment on the open one (at most hourly). |
+| Sanity or GitHub unreadable, or no successful Deploy run found                          | Warning, exit green, try again next tick.                                                            |
+
+The 10 minutes is measured from the PUBLISH, not from the last deploy's start, so a lost run whose predecessor started only minutes before the publish still heals. Thresholds are constants at the top of the script (`GRACE_MIN`, `ALERT_MIN`, `MAX_RETRIGGERS`, `COMMENT_EVERY_MIN`).
+
+**Token route.** The plain `GITHUB_TOKEN`, with `permissions: actions: write, contents: read, issues: write`. Events made by that token start no workflow runs EXCEPT `workflow_dispatch` and `repository_dispatch`; `workflow_dispatch` needs only `actions: write` (the webhook's `repository_dispatch` would need `contents: write`), and `deploy.yml` already has the trigger, so it is untouched. The build is identical to a webhook-started one: only IndexNow reads the event name, and it skips only `schedule`. The ref is always the default branch, so a manual watchdog run from a feature branch can never deploy that branch. No secret is added; the Sanity project id and dataset are the same `vars.PUBLIC_SANITY_PROJECT_ID` / `vars.PUBLIC_SANITY_DATASET` the deploy builds with (dataset defaults to `production`).
+
+**No loop.** A retrigger starts a run after the publish, so the next tick is caught up. A failing deploy is stopped by the retrigger cap (counted as `workflow_dispatch` runs created since the publish).
+
+**Reading it.** Each run prints one line, for example `latest publish 2026-10-05 20:31Z, last good deploy start 2026-10-05 21:23Z, lag 0, caught up, 0 in flight, caught-up: no action`, and repeats it in the run summary. To rehearse: `gh workflow run publish-watchdog.yml -f dry_run=true -f fake_publish_age_minutes=45`, which prints the `gh` commands it would run (including the issue text) and changes nothing. The issue GitHub emails to the repo owner carries both timestamps and links to the five newest Deploy runs; it closes itself, with a comment, on the first tick after the site catches up. Look at the newest Deploy run first, then githubstatus.com.
+
+**Silencing it.** Disable the workflow (`gh workflow disable publish-watchdog.yml`) and close the issue by hand. It is not a required check and must never become one; it never runs on a PR, so there is nothing for a ruleset to wait on. GitHub pauses schedules after 60 days of no repo activity; a push to `main` re-arms them.
+
 ### Environment variables
 
 Set in Cloudflare -> **Workers & Pages -> your-project -> Settings -> Variables** (Build section). All documented in `.env.example`; copy to `.env` and fill in real values for local dev.
