@@ -65,7 +65,7 @@ jobs:
 
       # The last good feed, so a YouTube outage still has something to read.
       - name: Restore the YouTube feed
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: node_modules/.cache/youtube
           key: youtube-${{ runner.os }}-${{ github.run_id }}
