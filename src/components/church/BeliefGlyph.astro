@@ -9,7 +9,8 @@
 // pathLength="1", staggered by nth-child). Drawn in a 48x48 box, so each sits
 // on the heading's line rather than standing tall like the goal glyphs.
 //
-//   trinity   God. A triangle in an unbroken circle: three and one, no end.
+//   trinity   God. A triquetra (the Trinity knot): three equal loops, each
+//             crossing the other two, no beginning and no end.
 //   creation  Creation and Humanity. A shoot with two leaves rising from the
 //             ground.
 //   cross     Jesus Christ. A plain Latin cross, outlined.
@@ -36,8 +37,21 @@ const { name, class: extraClass = '' } = Astro.props;
   {
     name === 'trinity' && (
       <>
-        <path pathLength="1" d="M5 24a19 19 0 1 0 38 0a19 19 0 1 0-38 0" />
-        <path pathLength="1" d="M24 10L36.1 31H11.9Z" />
+        <path
+          pathLength="1"
+          d="M24 33.8A17 17 0 0 0 24 4.4A17 17 0 0 0 24 33.8Z"
+          transform="translate(0 3)"
+        />
+        <path
+          pathLength="1"
+          d="M24 33.8A17 17 0 0 0 24 4.4A17 17 0 0 0 24 33.8Z"
+          transform="translate(0 3) rotate(120 24 24)"
+        />
+        <path
+          pathLength="1"
+          d="M24 33.8A17 17 0 0 0 24 4.4A17 17 0 0 0 24 33.8Z"
+          transform="translate(0 3) rotate(240 24 24)"
+        />
       </>
     )
   }
