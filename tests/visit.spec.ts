@@ -40,14 +40,16 @@ test.describe('the page', () => {
       'Check-in',
       'Who cares for them',
       'Pick-up',
-      'Ages and rooms',
+      'Nursery Care (104)',
+      'Family Room (105)',
+      "Children's Church (102)",
     ]);
     for (const fact of [
       'be background checked',
       'matching security tag',
       'at least two adults at all times',
       'this tag will need to be presented for pick up',
-      'Nursery (104): 6 weeks - 3 years.',
+      'nursery care is available throughout the service',
       'The Underground Children',
     ]) {
       await expect(kids.getByText(fact, { exact: false }).first()).toBeVisible();
