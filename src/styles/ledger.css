@@ -471,3 +471,33 @@
 .rt-band :focus-visible {
   outline-color: var(--rt-accent);
 }
+
+/* THE BELIEF GLYPHS (2026-10-05): the small line glyph beside a subheading of
+   /beliefs' "Our Basic Beliefs" band (BeliefGlyph.astro, src/lib/belief-glyphs.ts).
+   The heading becomes a flex row: glyph left, text right, aligned to the first
+   line, the same at every width (no vw, no wide-screen-only offset). The text
+   span is min-width 0 so a long word wraps inside it rather than pushing the
+   page sideways (CLAUDE.md rule 18). The glyph takes the heading's ink. */
+.rt-hg {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.rt-hg-i {
+  flex: none;
+  width: 32px;
+  margin-top: 0.05em;
+}
+.rt-hg-t {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+@media (min-width: 768px) {
+  .rt-hg {
+    gap: 16px;
+  }
+  .rt-hg-i {
+    width: 40px;
+  }
+}

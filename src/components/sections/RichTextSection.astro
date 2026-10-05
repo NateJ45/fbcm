@@ -36,6 +36,7 @@ import { classifyRichText } from '@/lib/rich-shape';
 import PortableText from '@/components/PortableText';
 import { toPt } from '@/lib/span-split';
 import type { RichGround } from '@/lib/rich-ground';
+import { isBasicBeliefsBand } from '@/lib/belief-glyphs';
 
 interface Props {
   eyebrow?: string;
@@ -66,6 +67,10 @@ const bg = ground === 'paper' ? surfaceClass(surface) : `rt-band rt-on-${ground}
 const hasHead = !!(heading || eyebrow);
 const layout = classifyRichText(body, { hasHead });
 const measure = layout.pieces[0];
+// THE BELIEF GLYPHS (2026-10-05): only /beliefs' "Our Basic Beliefs" band draws a
+// small line glyph beside each of its six subheadings (src/lib/belief-glyphs.ts).
+// Scoped on the band's own heading, stega-clean; every other band gets false.
+const glyphs = isBasicBeliefsBand(heading);
 ---
 
 <section
@@ -115,7 +120,7 @@ const measure = layout.pieces[0];
               />
             </div>
           )}
-          <RichBody pieces={layout.pieces} />
+          <RichBody pieces={layout.pieces} glyphs={glyphs} />
         </div>
       )
     }
