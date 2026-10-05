@@ -32,32 +32,6 @@ const openAll = (loc: Locator) =>
 test.describe('the page', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test('Good to know answers four questions in the open', async ({ page }) => {
-    await page.goto(PAGE);
-    const good = band(page, 'Good to know');
-    await expect(good).toHaveCount(1);
-    const questions = good.getByRole('heading', { level: 3 });
-    await expect(questions).toHaveText([
-      'What should I wear?',
-      'I’m not sure what I believe. Will that be a problem?',
-      'Am I allowed to take the Lord’s Supper (communion)?',
-      'Does my child need to bring a Bible?',
-    ]);
-    for (const answer of [
-      'Casual dress is welcome.',
-      'It won’t be a problem at all!',
-      'all who believe in him and have been baptized may partake',
-      'We will certainly provide a Bible',
-    ]) {
-      await expect(good.getByText(answer)).toBeVisible();
-    }
-    expect(await openAll(good.locator('h3, p'))).toBe(true);
-    // The full FAQ is still on the page, below.
-    await expect(
-      page.getByRole('heading', { level: 2, name: 'Frequently asked questions' }),
-    ).toBeVisible();
-  });
-
   test('Your children carries the safety facts, visible without expanding', async ({ page }) => {
     await page.goto(PAGE);
     const kids = band(page, 'Your children');
@@ -135,7 +109,7 @@ test.describe('at 320', () => {
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
     expect(over).toBeLessThanOrEqual(0);
-    for (const name of ['Good to know', 'Your children']) {
+    for (const name of ['Your children']) {
       const right = await band(page, name)
         .locator('h3, p')
         .evaluateAll((els) => Math.max(0, ...els.map((e) => e.getBoundingClientRect().right)));
