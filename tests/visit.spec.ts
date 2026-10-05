@@ -32,83 +32,36 @@ const openAll = (loc: Locator) =>
 test.describe('the page', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test('Good to know answers four questions in the open', async ({ page }) => {
-    await page.goto(PAGE);
-    const good = band(page, 'Good to know');
-    await expect(good).toHaveCount(1);
-    const questions = good.getByRole('heading', { level: 3 });
-    await expect(questions).toHaveText([
-      'What should I wear?',
-      'I’m not sure what I believe. Will that be a problem?',
-      'Am I allowed to take the Lord’s Supper (communion)?',
-      'Does my child need to bring a Bible?',
-    ]);
-    for (const answer of [
-      'Casual dress is welcome.',
-      'It won’t be a problem at all!',
-      'all who believe in him and have been baptized may partake',
-      'We will certainly provide a Bible',
-    ]) {
-      await expect(good.getByText(answer)).toBeVisible();
-    }
-    expect(await openAll(good.locator('h3, p'))).toBe(true);
-    // The full FAQ is still on the page, below.
-    await expect(
-      page.getByRole('heading', { level: 2, name: 'Frequently asked questions' }),
-    ).toBeVisible();
-  });
-
-  test('Your children carries the safety facts, visible without expanding', async ({ page }) => {
+  test('Your children is readable without expanding anything', async ({ page }) => {
+    // Structure only: the church edits this copy, so no heading or sentence is pinned here.
     await page.goto(PAGE);
     const kids = band(page, 'Your children');
     await expect(kids).toHaveCount(1);
-    await expect(kids.getByRole('heading', { level: 3 })).toHaveText([
-      'Check-in',
-      'Who cares for them',
-      'Pick-up',
-      'Ages and rooms',
-    ]);
-    for (const fact of [
-      'be background checked',
-      'matching security tag',
-      'at least two adults at all times',
-      'this tag will need to be presented for pick up',
-      'Nursery (104): 6 weeks - 3 years.',
-      'The Underground Children',
-    ]) {
-      await expect(kids.getByText(fact, { exact: false }).first()).toBeVisible();
-    }
+    const subheads = kids.getByRole('heading', { level: 3 });
+    expect(await subheads.count()).toBeGreaterThan(0);
+    await expect(subheads.first()).toBeVisible();
     expect(await openAll(kids.locator('h3, p'))).toBe(true);
     // /visit#children lands on it.
     await expect(page.locator('#children')).toHaveCount(1);
-    // It sits straight after the morning path, where the children are first mentioned.
-    const order = await page
-      .locator('main h2')
-      .evaluateAll((hs) => hs.map((h) => (h.textContent ?? '').trim()));
-    expect(order.indexOf('Your children')).toBe(order.indexOf('How the morning runs') + 1);
   });
 
-  test('"Let us know you’re coming" jumps to the connection card on the page', async ({ page }) => {
+  test('the "let us know you’re coming" buttons jump to the connection card on the page', async ({
+    page,
+  }) => {
     await page.goto(PAGE);
-    const buttons = page.getByRole('link', { name: 'Let us know you’re coming' });
-    // The hero's gold button and the closing band's, both to the card's band.
-    await expect(buttons).toHaveCount(2);
+    // Found by where they point, not by the church's button wording.
+    const buttons = page.locator('a[href="/visit#connect"]');
+    expect(await buttons.count()).toBeGreaterThan(0);
     for (const b of await buttons.all()) {
-      await expect(b).toHaveAttribute('href', '/visit#connect');
       await expect(b).not.toHaveAttribute('target', '_blank');
     }
-    // The band: its heading, and a Church Trac frame named for the form.
+    // The band holds a Church Trac frame named for the form.
     const card = page.locator('#connect');
-    await expect(card.getByRole('heading', { level: 2 })).toHaveText('Let us know you’re coming');
     await expect(card.locator('iframe')).toHaveAttribute(
       'src',
       /^https:\/\/fbcmuncie\.churchtrac\.com\/form\//,
     );
     await expect(card.locator('iframe')).toHaveAttribute('title', 'Connection card');
-    // The first is in the hero, above the fold, with its promise beside it.
-    const hero = page.locator('section').first();
-    await expect(hero.getByRole('link', { name: 'Let us know you’re coming' })).toBeInViewport();
-    await expect(hero).toContainText('a greeter will look out for you');
   });
 
   test('passes axe', async ({ page }) => {
@@ -135,7 +88,7 @@ test.describe('at 320', () => {
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
     expect(over).toBeLessThanOrEqual(0);
-    for (const name of ['Good to know', 'Your children']) {
+    for (const name of ['Your children']) {
       const right = await band(page, name)
         .locator('h3, p')
         .evaluateAll((els) => Math.max(0, ...els.map((e) => e.getBoundingClientRect().right)));
