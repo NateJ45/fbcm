@@ -15,12 +15,22 @@
 import '@/styles/ledger.css';
 import PortableText from '@/components/PortableText';
 import type { RichPiece } from '@/lib/rich-shape';
-import { toPt } from '@/lib/span-split';
+import { toPt, blockText } from '@/lib/span-split';
+import type { PtBlock } from '@/lib/span-split';
+import BeliefGlyph from '@/components/church/BeliefGlyph.astro';
+import { beliefGlyphFor } from '@/lib/belief-glyphs';
 
 interface Props {
   pieces: RichPiece[];
+  /** True only inside /beliefs' "Our Basic Beliefs" band (RichTextSection
+   *  decides, from the band heading): an h3 whose text is one of the six
+   *  known subheadings then gets its small line glyph (src/lib/belief-glyphs.ts).
+   *  False everywhere else, so every other band renders exactly as before. */
+  glyphs?: boolean;
 }
-const { pieces } = Astro.props as Props;
+const { pieces, glyphs = false } = Astro.props as Props;
+/** The glyph for a subheading block, or null (always null outside the band). */
+const glyphOf = (head: PtBlock) => (glyphs ? beliefGlyphFor(blockText(head)) : null);
 ---
 
 {
@@ -133,36 +143,66 @@ const { pieces } = Astro.props as Props;
       </ul>
     ) : x.kind === 'section' && x.beside ? (
       <div class="rt-sub rt-section rt-v">
-        <h3 class="rt-h3 rt-sh">
-          <PortableText value={toPt(x.head)} variant="bare" />
+        <h3 class:list={['rt-h3 rt-sh', glyphOf(x.head) && 'rt-hg']}>
+          {glyphOf(x.head) ? (
+            <>
+              <BeliefGlyph name={glyphOf(x.head)!} class="rt-hg-i" />
+
+              <span class="rt-hg-t">
+                <PortableText value={toPt(x.head)} variant="bare" />
+              </span>
+            </>
+          ) : (
+            <PortableText value={toPt(x.head)} variant="bare" />
+          )}
         </h3>
         <div class="rt-sb">
-          <Astro.self pieces={x.pieces} />
+          <Astro.self pieces={x.pieces} glyphs={glyphs} />
         </div>
       </div>
     ) : x.kind === 'section' ? (
       <>
         <div class="rt-sect">
-          <h3 class="rt-h3">
-            <PortableText value={toPt(x.head)} variant="bare" />
+          <h3 class:list={['rt-h3', glyphOf(x.head) && 'rt-hg']}>
+            {glyphOf(x.head) ? (
+              <>
+                <BeliefGlyph name={glyphOf(x.head)!} class="rt-hg-i" />
+
+                <span class="rt-hg-t">
+                  <PortableText value={toPt(x.head)} variant="bare" />
+                </span>
+              </>
+            ) : (
+              <PortableText value={toPt(x.head)} variant="bare" />
+            )}
           </h3>
         </div>
-        <Astro.self pieces={x.pieces} />
+        <Astro.self pieces={x.pieces} glyphs={glyphs} />
       </>
     ) : x.kind === 'columns' ? (
       <div class:list={['rt-sub rt-cols rt-v', `n${x.across}`, x.flush && 'is-flush']}>
         {x.groups.map((g) => (
           <div class:list={['rt-col', g.big && 'is-big']}>
             {x.level === 'h3' ? (
-              <h3 class="rt-h3">
-                <PortableText value={toPt(g.head)} variant="bare" />
+              <h3 class:list={['rt-h3', glyphOf(g.head) && 'rt-hg']}>
+                {glyphOf(g.head) ? (
+                  <>
+                    <BeliefGlyph name={glyphOf(g.head)!} class="rt-hg-i" />
+
+                    <span class="rt-hg-t">
+                      <PortableText value={toPt(g.head)} variant="bare" />
+                    </span>
+                  </>
+                ) : (
+                  <PortableText value={toPt(g.head)} variant="bare" />
+                )}
               </h3>
             ) : (
               <h4 class="rt-h4">
                 <PortableText value={toPt(g.head)} variant="bare" />
               </h4>
             )}
-            <Astro.self pieces={g.pieces} />
+            <Astro.self pieces={g.pieces} glyphs={glyphs} />
           </div>
         ))}
       </div>
@@ -170,12 +210,12 @@ const { pieces } = Astro.props as Props;
       <div class="rt-sub rt-register">
         {x.left.map((cell, k) => (
           <div class:list={['rt-cell is-l', k === 0 && 'is-first']} style={`grid-row:${k + 1}`}>
-            <Astro.self pieces={cell} />
+            <Astro.self pieces={cell} glyphs={glyphs} />
           </div>
         ))}
         {x.right.map((cell, k) => (
           <div class:list={['rt-cell is-r', k === 0 && 'is-first']} style={`grid-row:${k + 1}`}>
-            <Astro.self pieces={cell} />
+            <Astro.self pieces={cell} glyphs={glyphs} />
           </div>
         ))}
       </div>

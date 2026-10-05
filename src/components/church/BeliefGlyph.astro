@@ -1,0 +1,98 @@
+---
+// Safe to edit by hand
+// The six small glyphs beside the subheadings of /beliefs' "Our Basic Beliefs"
+// band (2026-10-05; which glyph goes where is src/lib/belief-glyphs.ts). The
+// same language as BuildingGlyph.astro: a 2px line at a constant width
+// (`.building-glyph` in globals.css), round caps, currentColor, decorative
+// (aria-hidden; the subheading beside it is the label), and the same first-view
+// draw (`data-reveal="draw"`: every stroke is a DIRECT child carrying
+// pathLength="1", staggered by nth-child). Drawn in a 48x48 box, so each sits
+// on the heading's line rather than standing tall like the goal glyphs.
+//
+//   trinity   God. A triangle in an unbroken circle: three and one, no end.
+//   creation  Creation and Humanity. A shoot with two leaves rising from the
+//             ground.
+//   cross     Jesus Christ. A plain Latin cross, outlined.
+//   flame     The Holy Spirit. A flame with a smaller flame inside it (Acts 2).
+//   sunrise   Salvation. The sun coming up over a horizon.
+//   cup       Baptism and the Lord's Supper. A cup with a drop of water in it.
+import type { BeliefGlyphName } from '@/lib/belief-glyphs';
+
+interface Props {
+  name: BeliefGlyphName;
+  class?: string;
+}
+const { name, class: extraClass = '' } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 48 48"
+  aria-hidden="true"
+  focusable="false"
+  class:list={['building-glyph belief-glyph h-auto', extraClass]}
+  data-glyph={name}
+  data-reveal="draw"
+>
+  {
+    name === 'trinity' && (
+      <>
+        <path pathLength="1" d="M5 24a19 19 0 1 0 38 0a19 19 0 1 0-38 0" />
+        <path pathLength="1" d="M24 10L36.1 31H11.9Z" />
+      </>
+    )
+  }
+  {
+    name === 'creation' && (
+      <>
+        <path pathLength="1" d="M5 43H43" />
+        <path pathLength="1" d="M24 43V23" />
+        <path pathLength="1" d="M24 33C16 33 12 28 12 21C19 21 24 26 24 33Z" />
+        <path pathLength="1" d="M24 25C24 18 29 13 36 13C36 20 31 25 24 25Z" />
+      </>
+    )
+  }
+  {
+    name === 'cross' && (
+      <>
+        <path pathLength="1" d="M20 4H28V16H39V24H28V44H20V24H9V16H20Z" />
+      </>
+    )
+  }
+  {
+    name === 'flame' && (
+      <>
+        <path
+          pathLength="1"
+          d="M24 3C25 13 37 19 37 31A13 13 0 0 1 11 31C11 24 15 20 18 15C19.5 19 21 21 22.5 21.5C24 16 22 10 24 3Z"
+        />
+        <path
+          pathLength="1"
+          d="M24 41C20 41 17.5 38 17.5 34.5C17.5 31 21 29 24 25C27 29 30.5 31 30.5 34.5C30.5 38 28 41 24 41Z"
+        />
+      </>
+    )
+  }
+  {
+    name === 'sunrise' && (
+      <>
+        <path pathLength="1" d="M3 36H45" />
+        <path pathLength="1" d="M14 36A10 10 0 0 1 34 36" />
+        <path pathLength="1" d="M24 22V15M14.1 26.1L9.2 21.2M33.9 26.1L38.8 21.2" />
+        <path pathLength="1" d="M11 43H37" />
+      </>
+    )
+  }
+  {
+    name === 'cup' && (
+      <>
+        <path pathLength="1" d="M12 4H36C36 14 31 21 24 21C17 21 12 14 12 4Z" />
+        <path
+          pathLength="1"
+          d="M24 8C22.5 10.5 20.5 12.8 20.5 15A3.5 3.5 0 0 0 27.5 15C27.5 12.8 25.5 10.5 24 8Z"
+        />
+        <path pathLength="1" d="M24 21V37" />
+        <path pathLength="1" d="M16 44C16 40.5 20 37 24 37C28 37 32 40.5 32 44Z" />
+      </>
+    )
+  }
+</svg>

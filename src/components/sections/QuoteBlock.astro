@@ -15,7 +15,7 @@
 // that needs a glyph to read as a quote is not set large enough. The words and
 // the name are a <figure> and its <figcaption>, which is what ties the name to
 // the words for a screen reader.
-import { splitStega } from '@/lib/preview-stega';
+import { LONG_QUOTE_WORDS, parseQuote } from '@/lib/quote-text';
 
 interface Props {
   quote?: string;
@@ -35,19 +35,25 @@ const { quote, attribution, detail } = Astro.props as Props;
 // one step and the line height opens up. The measure opens with it: 24ch is
 // right for a sentence and far too narrow for a paragraph.
 //
+// A STATEMENT STEPS DOWN TWICE (2026-10-05, fix/long-quote-section). The
+// Beliefs page holds the 2005 ABCUSA identity statement in one quote: several
+// paragraphs and a bulleted list in a single plain string. src/lib/quote-text.ts
+// splits it on blank lines and bullet glyphs, and a quote that comes out as
+// more than one block (or as a list) is set at READING size: Castoro italic at
+// the Ledger's item size, a 1.6 line height and a 62ch measure, paragraphs and
+// a real <ul> with a band-ink dot, instead of a wall of display type. A quote
+// that parses to ONE paragraph, short or long, renders byte-for-byte as before.
+//
 // MEASURE THE CLEANED STRING, NEVER THE STEGA-ENCODED ONE (CLAUDE.md, the
-// preview section). splitStega() returns the text with the payload removed,
-// which is the only thing safe to count. The visible string is untouched:
-// only the CLASS depends on this.
-const LONG_QUOTE_WORDS = 40;
-const quoteWordCount = splitStega(quote ?? '')
-  .cleaned.trim()
-  .split(/\s+/)
-  .filter(Boolean).length;
-const isLongQuote = quoteWordCount > LONG_QUOTE_WORDS;
-const quoteTypeClass = isLongQuote
-  ? 'text-h3 leading-[1.5] max-w-[46ch]'
-  : 'text-h2 leading-[1.15] max-w-[24ch]';
+// preview section). parseQuote() splits and counts the cleaned text and puts
+// the stega run back on the last text, so the visible string is untouched.
+const { blocks, structured, wordCount } = parseQuote(quote);
+const isLongQuote = wordCount > LONG_QUOTE_WORDS;
+const quoteTypeClass = structured
+  ? 'text-item leading-[1.6] max-w-[62ch]'
+  : isLongQuote
+    ? 'text-h3 leading-[1.5] max-w-[46ch]'
+    : 'text-h2 leading-[1.15] max-w-[24ch]';
 ---
 
 {
@@ -55,7 +61,21 @@ const quoteTypeClass = isLongQuote
     <section class="bg-band-gold text-band-ink">
       <figure class="mx-auto my-0 max-w-content px-gutter py-[clamp(72px,8vw,128px)]">
         <blockquote class:list={['font-body font-normal italic', quoteTypeClass]}>
-          {quote}
+          {structured
+            ? blocks.map((b, i) =>
+                b.kind === 'paragraph' ? (
+                  <p class={i > 0 ? 'mt-[0.9em]' : undefined}>{b.text}</p>
+                ) : (
+                  <ul class:list={['space-y-[0.5em]', i > 0 && 'mt-[0.9em]']}>
+                    {b.items.map((item) => (
+                      <li class="relative pl-[1.4em] before:absolute before:top-[0.62em] before:left-[0.3em] before:size-[0.38em] before:rounded-full before:bg-band-ink before:content-['']">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ),
+              )
+            : quote}
         </blockquote>
         {(attribution || detail) && (
           <figcaption class="mt-8 font-ui text-ui font-semibold">
