@@ -60,13 +60,14 @@ export const CHROME_SECTIONS = [
   {
     heading: 'Visit: "Which door?" and the share cards (2026-09-24, craft-details pass)',
     newCopy: [
-      '"Choose a door to see where it is." (under the street-side sketch before a door is chosen)',
       '"A sketch of the street side, not to scale. North is up." (the sketch\'s note)',
       'The sketch\'s labels: "Adams Street", "Jefferson Street", "Offices", "Sanctuary", "Parking".',
       'The sketch\'s description for screen readers: "The church stands on the corner of Adams Street\n  and Jefferson Street. Door 1, Adams Street circular drive, is on the Adams Street side, at the\n  circular drive. Door 2, The wooden front doors, is on the Adams Street side, at the foot of\n  the tower. Door 3, Jefferson Street side doors, is on the Jefferson Street side. The parking\n  lot is on the Adams Street side."',
       '"Sermon previews, news and writing from the church" (the /blog share card\'s line).',
     ],
-    edits: ["(none: each door's words under the sketch are the list's own)"],
+    edits: [
+      "(none: each door's words are the list's own; nothing is reprinted under the sketch since 2026-10-09)",
+    ],
   },
   {
     heading: 'Scripture index and site search (2026-09-24, `feat/scripture-search`)',

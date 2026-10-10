@@ -111,13 +111,14 @@ test.describe('Which door? (Visit)', () => {
     await expect(svg).toHaveAccessibleDescription(/Adams Street circular drive/);
   });
 
-  test('choosing a door by keyboard lights its pin and shows its words', async ({ page }) => {
+  test('choosing a door by keyboard lights its pin and its row', async ({ page }) => {
     await page.goto('/visit/', { waitUntil: 'domcontentloaded' });
     const links = band(page).locator('[data-door-link]');
     await links.nth(2).focus();
     const pin = band(page).locator('[data-pin="3"]');
     await expect(pin).toHaveClass(/is-on/);
-    await expect(band(page).locator('[data-dp-say]')).toContainText('Jefferson Street side doors');
+    await expect(band(page).locator('[data-door-row="3"]')).toHaveClass(/is-on/);
+    await expect(band(page).locator('[data-dp-say]')).toHaveCount(0);
     await expect(links.nth(2)).toHaveAttribute('aria-current', 'true');
     await page.keyboard.press('Enter');
     await expect(pin).toHaveClass(/is-on/);

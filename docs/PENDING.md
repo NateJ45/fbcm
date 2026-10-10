@@ -1586,8 +1586,7 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
       photographs and the OpenStreetMap footprint, and is the one inference: a two-minute look
       from someone who knows the building settles it. If the lot is somewhere else, move
       `.dp-lot` in `src/components/church/DoorPlan.astro`.
-- [ ] #nathan **Approve four new lines** (listed in the copy-for-approval note): "Choose a door
-      to see where it is.", "A sketch of the street side, not to scale. North is up.", the
+- [ ] #nathan **Approve three new lines** (listed in the copy-for-approval note): "A sketch of the street side, not to scale. North is up.", the
       sketch's labels (Offices, Sanctuary, Parking), and the /blog share card's line "Sermon
       previews, news and writing from the church".
 - [ ] **After the next deploy, run Google's Rich Results Test** on `/visit` and one sermon

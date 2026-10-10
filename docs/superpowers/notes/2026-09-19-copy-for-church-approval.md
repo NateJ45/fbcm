@@ -461,7 +461,6 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 ### New sentences
 
-- "Choose a door to see where it is." (under the street-side sketch before a door is chosen)
 - "A sketch of the street side, not to scale. North is up." (the sketch's note)
 - The sketch's labels: "Adams Street", "Jefferson Street", "Offices", "Sanctuary", "Parking".
 - The sketch's description for screen readers: "The church stands on the corner of Adams Street
