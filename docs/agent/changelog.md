@@ -1193,3 +1193,7 @@ and fails if the committed `src/lib/sanity.types.ts` differs. New npm scripts: `
 [Library of record](../../CLAUDE.md) section of CLAUDE.md for the working rules, above
 all the docs-in-sync clause: an improvement that generalizes gets a card in the same
 commit that generalizes it.
+
+## 2026-10-09: door plan hover only highlights
+
+Hovering or choosing a pin on the Visit "Which door?" sketch no longer reprints the door's words under the map (that line changed height and made the page jump). It now only lights the pin and the matching row in the doors list; the list is the one place the words live. `[data-dp-say]` and the "Choose a door to see where it is." line are gone. The Visit and styleguide parity baselines still carry the old caption and need a recapture on the next render-neutral baseline pass.

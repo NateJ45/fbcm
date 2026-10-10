@@ -10,8 +10,9 @@
 // the link still jumps to the sketch and `:target` lights the pin, and with no
 // SVG at all the list is the whole of the content, unchanged. With JavaScript,
 // choosing a door (click, or keyboard focus on its name) lights its pin and
-// shows its name and the church's own words for it under the sketch; hovering
-// a pin or a row previews it. The pins are not focusable and the figure is one
+// its row; hovering a pin or a row previews the same highlight. Nothing is
+// printed under the sketch (2026-10-09: reprinting a door's words there made
+// the page jump), so the list below is the only place the words live. The pins are not focusable and the figure is one
 // image to assistive technology (role="img", with a <desc> that says where
 // every door is), so a keyboard or screen-reader user meets each door once,
 // in the list.
@@ -144,7 +145,6 @@ const desc = [
     }
   </svg>
   <figcaption class="dp-cap">
-    <p class="dp-say" data-dp-say>Choose a door to see where it is.</p>
     <p class="dp-note">A sketch of the street side, not to scale. North is up.</p>
   </figcaption>
 </figure>
@@ -159,9 +159,6 @@ const desc = [
       if (fig.dataset.ready) return;
       fig.dataset.ready = '1';
       const band = fig.closest('section') ?? document.body;
-      const say = fig.querySelector<HTMLElement>('[data-dp-say]');
-      if (!say) return;
-      const idle = say.textContent ?? '';
       const pins = Array.from(fig.querySelectorAll<SVGGElement>('[data-pin]'));
       const rows = Array.from(band.querySelectorAll<HTMLElement>('[data-door-row]'));
       let chosen = '';
@@ -175,17 +172,6 @@ const desc = [
           if (on && n === chosen) link?.setAttribute('aria-current', 'true');
           else link?.removeAttribute('aria-current');
         }
-        const row = rows.find((r) => r.dataset.doorRow === n);
-        say.replaceChildren();
-        if (!row) {
-          say.textContent = idle;
-          return;
-        }
-        const name = row.querySelector('[data-door-name]')?.textContent?.trim() ?? '';
-        const words = row.querySelector('p')?.textContent?.trim() ?? '';
-        const strong = document.createElement('strong');
-        strong.textContent = `${n}. ${name}`;
-        say.append(strong, words ? ` ${words}` : '');
       };
       const choose = (n: string) => {
         chosen = n;
@@ -366,18 +352,6 @@ const desc = [
   .dp-cap {
     margin-top: 14px;
     max-width: 36em;
-  }
-  .dp-say {
-    margin: 0;
-    min-height: 3.1em;
-    font-family: var(--font-body);
-    font-size: 18px;
-    line-height: 1.55;
-    color: color-mix(in srgb, var(--color-bg) 88%, transparent);
-  }
-  .dp-say strong {
-    font-weight: 400;
-    color: var(--color-gold);
   }
   .dp-note {
     margin: 8px 0 0;
