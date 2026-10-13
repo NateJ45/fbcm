@@ -122,7 +122,7 @@
     "opentype.js": "^2.0.0",
     "pagefind": "1.5.2",
     "pdfjs-dist": "6.3.289",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.10",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.3.1",
