@@ -218,7 +218,7 @@ const stripSizes = strip.length === 1 ? '100vw' : '(min-width: 768px) 50vw, 100v
 
 {building ? (
   <section class="bg-bg text-band-brown" aria-labelledby={heading ? headingId : undefined}>
-    <div class="mx-auto grid max-w-content grid-cols-1 items-center gap-y-12 px-gutter py-section-lg lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:gap-x-[clamp(40px,6vw,104px)]">
+    <div class="split mx-auto max-w-content items-center gap-y-12 px-gutter py-section-lg">
       <div>
         {bigYear && (
           <p

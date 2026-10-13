@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-13: one text/picture column split (`feat/column-split-card-91`, starter PORTS card 91)._
+
+`globals.css` now carries the starter's `--split-text` / `--split-media` / `--split-gutter` tokens and the `.split` / `.split--media-first` classes, at FBCM's own ratio (words 7fr, picture 5fr, gutter `clamp(40px, 6vw, 104px)`, the Sunday band's numbers). `.split` sets only `column-gap`, so each band keeps its own Tailwind row gap. Adopted by the Sunday "Doors, parking and access" band (`SundayTimes`), "Our building" (`HeritageBand`, was 6fr/5fr) and the pastors' letter (`PastorsLetter`, picture first, now from `lg` instead of 901px). Tried and backed out: the pledge, whose liturgy lines wrapped at 7fr. Left alone on purpose: `ImageText` (the picture's shape picks its column count), the page hero's window, the home bands (words beside lists, not pictures) and the goals nave. `scripts/measure-columns.mjs` and `scripts/lib/column-alignment.mjs` came from the starter (PORTABLE). At 1280 on `/`, `/visit/`, `/who-we-are/`: 7 misaligned before, 6 after; `/visit/` picture-right spread 40.7px to 0. Screenshots: `_vault/attachments/column-split-2026-10-13/fbcm/`.
+
 _2026-10-13: SanityImage srcset ladder starts at 160w (starter PORTS card 93)._
 
 The srcset ladder in `SanityImage.astro` now comes from `src/lib/imageLadder.ts` (new, with `imageLadder.test.ts`) and runs `[160, 240, 320, 400, 600, 700, 800, 900, 1200, 1600, 2400]`. It started at 400w, so small slots downloaded 1.4 to 2x the bytes they painted. A slot that needs 400px or more picks the same candidate as before (asserted in the test). When `sizes` is passed and readable, steps below 75% of its smallest slot are dropped. `SanityImage.astro` is not `PORTABLE` (this site's copy has its own props), so this is a hand-applied three-line change from starter PORTS.md card 93. Live image bytes before and after are in the PR.
