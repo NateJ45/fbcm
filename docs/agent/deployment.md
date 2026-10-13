@@ -170,8 +170,9 @@ When you change a Sanity schema (`src/sanity/schemaTypes/**`), run `npm run type
 - It configures VERSION-update PRs only. Vulnerability alerts and automated security fixes are separate repo settings.
 - Dependabot runs get the Dependabot secrets store, not the Actions one. The CI jobs that run on pull requests read no secrets (the `secrets.*` references are in the deploy, publish-due, backup and this-sunday workflows), so nothing needs copying today. If a PR-time job ever reads a secret, set it again with `gh secret set NAME --app dependabot --repo NateJ45/fbcm`.
 - `main` is the only long-lived branch, so there is no `target-branch`.
-- The ignore list is the pinned stack (sanity, `@sanity/*`, `sanity-plugin-*`, react, react-dom, react-is, styled-components, the @astrojs/cloudflare + wrangler pair, typescript >=7). Those move together, by hand. Never merge a dependency PR whose CI is red.
+- The ignore list is the pinned stack (sanity, `@sanity/*`, `sanity-plugin-*`, react, react-dom, react-is, styled-components, the @astrojs/cloudflare + wrangler pair, astro itself, typescript >=7). Those move together, by hand. astro is on the list because the adapter imports Astro internals: astro 7.3 dropped an export adapter 14.2.4 imports, so the 2026-10-13 bundle failed the build (starter card 90). Never merge a dependency PR whose CI is red.
 - Every npm semver-major is ignored (`dependency-name: '*'` with `update-types: ['version-update:semver-major']`, starter PR #57): majors are taken in one planned, starter-first stack upgrade with a real deploy test, never from a Dependabot PR. The github-actions ecosystem is exempt.
+- Formatter bumps (`prettier`, `prettier-plugin-*`) come in their own `formatters` group, listed above `minor-and-patch` (first match wins), so a release that reformats files reds only that small PR. Fix it with `npm run format` on its branch and push (starter card 90).
 
 ### Security headers
 
