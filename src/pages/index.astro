@@ -206,13 +206,11 @@ const overlayHeader = shouldOverlayHeader(sections as any);
   seoImage={page?.seoImage}
   searchBody
 >
-  {
-    /* The band sits before the Church Blog rows: after "Our Building" has
+  {/* The band sits before the Church Blog rows: after "Our Building" has
       ended in the present, and next to the journal whose sermon previews it
       pairs with. Before the give band when the blog band is absent. The
       Visitor's band follows it in the same slot: the church's news, between
-      last Sunday and the blog. */
-  }
+      last Sunday and the blog. */}
   <SectionRenderer
     {sections}
     idPrefix="home"
@@ -221,42 +219,36 @@ const overlayHeader = shouldOverlayHeader(sections as any);
     {preacher}
     {insertBefore}
   >
-    {
-      lastSunday && (
-        <LastSunday
-          slot="insert"
-          recording={lastSunday}
-          preview={lastPreview}
-          headingId="home-last-sunday"
-        />
-      )
-    }
+    {lastSunday && (
+      <LastSunday
+        slot="insert"
+        recording={lastSunday}
+        preview={lastPreview}
+        headingId="home-last-sunday"
+      />
+    )}
     {/* scaffold: church */}
-    {
-      visitor?.latest && visitor.listHref && (
-        <VisitorBand
-          slot="insert"
-          issue={visitor.latest}
-          previous={visitor.previous ?? []}
-          covers={visitor.covers}
-          href={visitor.listHref}
-          since={visitor.since ?? null}
-          now={buildNow}
-          ground={visitorOn}
-          headingId="home-visitor"
-        />
-      )
-    }
-    {
-      upcoming.length > 0 && (
-        <WhatsOnBand
-          slot="insert"
-          events={upcoming}
-          ground={whatsOnGround}
-          headingId="home-whats-on"
-        />
-      )
-    }
+    {visitor?.latest && visitor.listHref && (
+      <VisitorBand
+        slot="insert"
+        issue={visitor.latest}
+        previous={visitor.previous ?? []}
+        covers={visitor.covers}
+        href={visitor.listHref}
+        since={visitor.since ?? null}
+        now={buildNow}
+        ground={visitorOn}
+        headingId="home-visitor"
+      />
+    )}
+    {upcoming.length > 0 && (
+      <WhatsOnBand
+        slot="insert"
+        events={upcoming}
+        ground={whatsOnGround}
+        headingId="home-whats-on"
+      />
+    )}
     {app && <ChurchAppBand slot="insert" {app} ground={appGround} headingId="home-church-app" />}
     {/* scaffold:end */}
   </SectionRenderer>

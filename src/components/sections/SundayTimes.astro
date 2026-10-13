@@ -239,389 +239,383 @@ const objectPositionOf = (img: SanityImageObject): string => {
 };
 ---
 
-{
-  doorPath ? (
-    <section class="bg-band-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
-      <div class="mx-auto grid max-w-content grid-cols-1 items-start gap-y-[clamp(40px,5vw,64px)] px-gutter py-section-lg lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-x-[clamp(40px,6vw,104px)]">
-        <div class="min-w-0">
-          {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
-          {heading && (
-            <h2
-              id={headingId}
-              class:list={[H2_DISPLAY, 'h-fit text-gold']}
-              style={headingFit(heading)}
-            >
-              <span class="h-fit-in">{heading}</span>
-            </h2>
-          )}
-          {intro && (
-            <p class="mt-[clamp(18px,2vw,28px)] max-w-[30em] font-body text-lede leading-normal whitespace-pre-line">
-              {intro}
+{doorPath ? (
+  <section class="bg-band-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
+    <div class="mx-auto grid max-w-content grid-cols-1 items-start gap-y-[clamp(40px,5vw,64px)] px-gutter py-section-lg lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-x-[clamp(40px,6vw,104px)]">
+      <div class="min-w-0">
+        {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
+        {heading && (
+          <h2
+            id={headingId}
+            class:list={[H2_DISPLAY, 'h-fit text-gold']}
+            style={headingFit(heading)}
+          >
+            <span class="h-fit-in">{heading}</span>
+          </h2>
+        )}
+        {intro && (
+          <p class="mt-[clamp(18px,2vw,28px)] max-w-[30em] font-body text-lede leading-normal whitespace-pre-line">
+            {intro}
+          </p>
+        )}
+
+        {(findUs || findUsFallback) && (
+          <div class="sd-findus mt-[clamp(30px,3.4vw,48px)]">
+            <BuildingGlyph name="door" class="sd-findus-glyph text-gold" />
+            {findUs?.label && <p class="sd-findus-label font-ui text-band-taupe">{findUs.label}</p>}
+            <p class="sd-findus-big font-display text-bg lining-nums">
+              {findUs ? findUs.big : findUsFallback}
             </p>
-          )}
-
-          {(findUs || findUsFallback) && (
-            <div class="sd-findus mt-[clamp(30px,3.4vw,48px)]">
-              <BuildingGlyph name="door" class="sd-findus-glyph text-gold" />
-              {findUs?.label && (
-                <p class="sd-findus-label font-ui text-band-taupe">{findUs.label}</p>
-              )}
-              <p class="sd-findus-big font-display text-bg lining-nums">
-                {findUs ? findUs.big : findUsFallback}
-              </p>
-              <div>
-                {findUs?.body && <p class="font-body text-[1.1875rem] text-bg/90">{findUs.body}</p>}
-                {/* Visit's Sunday weather line (SundayWeather.astro), passed
+            <div>
+              {findUs?.body && <p class="font-body text-[1.1875rem] text-bg/90">{findUs.body}</p>}
+              {/* Visit's Sunday weather line (SundayWeather.astro), passed
                     through SectionRenderer; empty everywhere else. */}
-                <slot name="findus-after" />
-                {directionsCta && (
-                  <CtaLink cta={directionsCta} variant="link" onDark class="mt-2.5" />
-                )}
-              </div>
+              <slot name="findus-after" />
+              {directionsCta && (
+                <CtaLink cta={directionsCta} variant="link" onDark class="mt-2.5" />
+              )}
             </div>
-          )}
+          </div>
+        )}
 
-          {plan && <DoorPlan plan={plan} idPrefix={planPrefix} names={planNames} />}
+        {plan && <DoorPlan plan={plan} idPrefix={planPrefix} names={planNames} />}
 
-          <ul class="sd-doors m-0 list-none p-0">
-            {timeRows.map((row) => (
-              <li>
-                <span class="sd-when font-display text-gold lining-nums">
-                  {row.big}
-                  {row.meridiem && (
-                    <span class="ml-[.14em] font-body text-[.42em] italic">{row.meridiem}</span>
-                  )}
-                </span>
+        <ul class="sd-doors m-0 list-none p-0">
+          {timeRows.map((row) => (
+            <li>
+              <span class="sd-when font-display text-gold lining-nums">
+                {row.big}
+                {row.meridiem && (
+                  <span class="ml-[.14em] font-body text-[.42em] italic">{row.meridiem}</span>
+                )}
+              </span>
+              <div class="min-w-0">
+                {row.label && <h3 class="sd-door-name font-body">{row.label}</h3>}
+                {row.body && <p>{row.body}</p>}
+              </div>
+            </li>
+          ))}
+          {validDoors.map((door, i) => {
+            const tag = doorTag(door.body);
+            const n = i + 1;
+            const onPlan = pinned.has(n);
+            return (
+              <li
+                data-reveal
+                id={onPlan ? doorRowId(planPrefix, n) : undefined}
+                data-door-row={onPlan ? String(n) : undefined}
+              >
+                <BuildingGlyph name="door" class="mt-0.5 w-8 text-gold" />
                 <div class="min-w-0">
-                  {row.label && <h3 class="sd-door-name font-body">{row.label}</h3>}
-                  {row.body && <p>{row.body}</p>}
+                  {door.name &&
+                    (onPlan ? (
+                      <h3 class="sd-door-name font-body">
+                        <a
+                          href={`#${doorPinId(planPrefix, n)}`}
+                          class="sd-door-link hit-44 relative"
+                          data-door-link
+                        >
+                          <span class="sd-door-num" aria-hidden="true">
+                            {n}
+                          </span>
+                          <span class="sd-door-label" data-door-name>
+                            {door.name}
+                          </span>
+                        </a>
+                      </h3>
+                    ) : (
+                      <h3 class="sd-door-name font-body">{door.name}</h3>
+                    ))}
+                  {tag && <span class="sd-tag font-ui">{tag}</span>}
+                  {textParagraphs(door.body).map((p) => (
+                    <p>{p}</p>
+                  ))}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        {hasCta && (
+          <div class="mt-9">
+            <CtaLink cta={cta} variant="gold" onDark />
+          </div>
+        )}
+      </div>
+
+      <div class="sd-side min-w-0">
+        {mainPhoto ? (
+          photoSubject(altOf(mainPhoto)) === 'people' ? (
+            <ArchFrame
+              image={mainPhoto}
+              shape="door"
+              width={900}
+              sizes="(min-width:1024px) 36vw, 100vw"
+              alt={altOf(mainPhoto)}
+              grade="warm"
+            />
+          ) : (
+            <figure class="sd-rect m-0" data-reveal>
+              <SanityImage
+                source={mainPhoto}
+                width={900}
+                sizes="(min-width:1024px) 36vw, 100vw"
+                quality={78}
+                alt={altOf(mainPhoto)}
+                class="graded h-full w-full object-cover"
+                style={`object-position: ${objectPositionOf(mainPhoto)};`}
+              />
+            </figure>
+          )
+        ) : (
+          showTheMap && (
+            <figure class="m-0 border border-gold/40" data-reveal>
+              <SanityImage
+                source={mapImage}
+                width={1000}
+                sizes="(min-width:1024px) 36vw, 100vw"
+                quality={75}
+                alt="Map of the streets around the church"
+                class="block w-full"
+              />
+            </figure>
+          )
+        )}
+        {sideNotes.length > 0 && (
+          <ul class="sd-notes m-0 list-none p-0">
+            {sideNotes.map((note) => (
+              <li>
+                <svg
+                  viewBox="-19 -19 38 38"
+                  aria-hidden="true"
+                  focusable="false"
+                  class="building-glyph mt-[.4em] w-[18px] text-gold"
+                >
+                  <path d={QUATREFOIL} />
+                </svg>
+                <div class="min-w-0">
+                  {note.title && <h3 class="sd-note-title font-ui text-gold">{note.title}</h3>}
+                  {note.body && <p>{note.body}</p>}
                 </div>
               </li>
             ))}
-            {validDoors.map((door, i) => {
-              const tag = doorTag(door.body);
-              const n = i + 1;
-              const onPlan = pinned.has(n);
-              return (
-                <li
-                  data-reveal
-                  id={onPlan ? doorRowId(planPrefix, n) : undefined}
-                  data-door-row={onPlan ? String(n) : undefined}
-                >
-                  <BuildingGlyph name="door" class="mt-0.5 w-8 text-gold" />
-                  <div class="min-w-0">
-                    {door.name &&
-                      (onPlan ? (
-                        <h3 class="sd-door-name font-body">
-                          <a
-                            href={`#${doorPinId(planPrefix, n)}`}
-                            class="sd-door-link hit-44 relative"
-                            data-door-link
-                          >
-                            <span class="sd-door-num" aria-hidden="true">
-                              {n}
-                            </span>
-                            <span class="sd-door-label" data-door-name>
-                              {door.name}
-                            </span>
-                          </a>
-                        </h3>
-                      ) : (
-                        <h3 class="sd-door-name font-body">{door.name}</h3>
-                      ))}
-                    {tag && <span class="sd-tag font-ui">{tag}</span>}
-                    {textParagraphs(door.body).map((p) => (
-                      <p>{p}</p>
-                    ))}
-                  </div>
-                </li>
-              );
-            })}
           </ul>
-
-          {hasCta && (
-            <div class="mt-9">
-              <CtaLink cta={cta} variant="gold" onDark />
-            </div>
-          )}
-        </div>
-
-        <div class="sd-side min-w-0">
-          {mainPhoto ? (
-            photoSubject(altOf(mainPhoto)) === 'people' ? (
-              <ArchFrame
-                image={mainPhoto}
-                shape="door"
-                width={900}
-                sizes="(min-width:1024px) 36vw, 100vw"
-                alt={altOf(mainPhoto)}
-                grade="warm"
-              />
-            ) : (
-              <figure class="sd-rect m-0" data-reveal>
-                <SanityImage
-                  source={mainPhoto}
-                  width={900}
-                  sizes="(min-width:1024px) 36vw, 100vw"
-                  quality={78}
+        )}
+      </div>
+    </div>
+  </section>
+) : (
+  <section class="bg-band-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
+    <div
+      class:list={[
+        'mx-auto max-w-content px-gutter py-section-lg',
+        hasPicture &&
+          'grid grid-cols-1 gap-y-[clamp(40px,5vw,64px)] lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-[clamp(32px,4vw,64px)]',
+      ]}
+    >
+      {
+        /* ── The pictures (or the map) ─────────────────────────────────────── */
+        hasPicture && (
+          <div
+            class:list={[
+              'relative w-full max-w-[40rem] lg:col-span-6 lg:max-w-none',
+              stickyPicture &&
+                'lg:sticky lg:top-[clamp(104px,12vh,136px)] lg:row-span-2 lg:self-start',
+            ]}
+          >
+            {mainPhoto ? (
+              <div class:list={['relative', smallPhoto && 'pb-[clamp(40px,5vw,80px)]']}>
+                <ArchFrame
+                  image={mainPhoto}
+                  shape="door"
+                  width={1400}
+                  sizes="(min-width:1024px) 45vw, 100vw"
                   alt={altOf(mainPhoto)}
-                  class="graded h-full w-full object-cover"
-                  style={`object-position: ${objectPositionOf(mainPhoto)};`}
+                  grade="warm"
+                  style="--arch-ratio: 160 / 112;"
                 />
-              </figure>
-            )
-          ) : (
-            showTheMap && (
+                {smallPhoto && (
+                  <div class="absolute right-[-2%] bottom-0 w-[36%]">
+                    <span class="hb-halo arch-lancet" aria-hidden="true" />
+                    <ArchFrame
+                      image={smallPhoto}
+                      shape="lancet"
+                      width={600}
+                      sizes="(min-width:1024px) 16vw, 36vw"
+                      alt={altOf(smallPhoto)}
+                      grade="warm"
+                      class="relative"
+                    />
+                  </div>
+                )}
+              </div>
+            ) : (
               <figure class="m-0 border border-gold/40" data-reveal>
                 <SanityImage
                   source={mapImage}
-                  width={1000}
-                  sizes="(min-width:1024px) 36vw, 100vw"
+                  width={1400}
+                  sizes="(min-width:1024px) 45vw, 100vw"
                   quality={75}
                   alt="Map of the streets around the church"
                   class="block w-full"
                 />
               </figure>
-            )
-          )}
-          {sideNotes.length > 0 && (
-            <ul class="sd-notes m-0 list-none p-0">
-              {sideNotes.map((note) => (
-                <li>
-                  <svg
-                    viewBox="-19 -19 38 38"
-                    aria-hidden="true"
-                    focusable="false"
-                    class="building-glyph mt-[.4em] w-[18px] text-gold"
-                  >
-                    <path d={QUATREFOIL} />
-                  </svg>
-                  <div class="min-w-0">
-                    {note.title && <h3 class="sd-note-title font-ui text-gold">{note.title}</h3>}
-                    {note.body && <p>{note.body}</p>}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-    </section>
-  ) : (
-    <section class="bg-band-brown text-bg" aria-labelledby={heading ? headingId : undefined}>
+            )}
+          </div>
+        )
+      }
+
+      {/* ── The words and the board ─────────────────────────────────────── */}
       <div
         class:list={[
-          'mx-auto max-w-content px-gutter py-section-lg',
-          hasPicture &&
-            'grid grid-cols-1 gap-y-[clamp(40px,5vw,64px)] lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-[clamp(32px,4vw,64px)]',
+          hasPicture
+            ? 'lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1 xl:col-span-5 xl:col-start-8'
+            : 'mx-auto max-w-[40rem]',
         ]}
       >
-        {
-          /* ── The pictures (or the map) ─────────────────────────────────────── */
-          hasPicture && (
-            <div
-              class:list={[
-                'relative w-full max-w-[40rem] lg:col-span-6 lg:max-w-none',
-                stickyPicture &&
-                  'lg:sticky lg:top-[clamp(104px,12vh,136px)] lg:row-span-2 lg:self-start',
-              ]}
-            >
-              {mainPhoto ? (
-                <div class:list={['relative', smallPhoto && 'pb-[clamp(40px,5vw,80px)]']}>
-                  <ArchFrame
-                    image={mainPhoto}
-                    shape="door"
-                    width={1400}
-                    sizes="(min-width:1024px) 45vw, 100vw"
-                    alt={altOf(mainPhoto)}
-                    grade="warm"
-                    style="--arch-ratio: 160 / 112;"
-                  />
-                  {smallPhoto && (
-                    <div class="absolute right-[-2%] bottom-0 w-[36%]">
-                      <span class="hb-halo arch-lancet" aria-hidden="true" />
-                      <ArchFrame
-                        image={smallPhoto}
-                        shape="lancet"
-                        width={600}
-                        sizes="(min-width:1024px) 16vw, 36vw"
-                        alt={altOf(smallPhoto)}
-                        grade="warm"
-                        class="relative"
-                      />
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <figure class="m-0 border border-gold/40" data-reveal>
-                  <SanityImage
-                    source={mapImage}
-                    width={1400}
-                    sizes="(min-width:1024px) 45vw, 100vw"
-                    quality={75}
-                    alt="Map of the streets around the church"
-                    class="block w-full"
-                  />
-                </figure>
-              )}
-            </div>
-          )
-        }
+        {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
+        {heading && (
+          <h2
+            id={headingId}
+            class:list={[H2_DISPLAY, 'h-fit text-gold']}
+            style={headingFit(heading)}
+          >
+            <span class="h-fit-in">{heading}</span>
+          </h2>
+        )}
+        {intro && (
+          <p class="mt-[clamp(18px,2vw,28px)] max-w-[30em] font-body text-lede leading-normal whitespace-pre-line">
+            {intro}
+          </p>
+        )}
 
-        {/* ── The words and the board ─────────────────────────────────────── */}
-        <div
-          class:list={[
-            hasPicture
-              ? 'lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1 xl:col-span-5 xl:col-start-8'
-              : 'mx-auto max-w-[40rem]',
-          ]}
-        >
-          {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
-          {heading && (
-            <h2
-              id={headingId}
-              class:list={[H2_DISPLAY, 'h-fit text-gold']}
-              style={headingFit(heading)}
-            >
-              <span class="h-fit-in">{heading}</span>
-            </h2>
-          )}
-          {intro && (
-            <p class="mt-[clamp(18px,2vw,28px)] max-w-[30em] font-body text-lede leading-normal whitespace-pre-line">
-              {intro}
-            </p>
-          )}
-
-          {rows.length > 0 && (
-            <ol
-              class="mt-[clamp(28px,3.5vw,48px)] grid grid-cols-[fit-content(40%)_minmax(0,1fr)] gap-x-[clamp(14px,2vw,24px)] border-t border-gold/35"
-              data-reveal
-            >
-              {rows.map((row) => (
-                <li
-                  class:list={[
-                    'col-span-full grid items-baseline border-b border-gold/35 py-[clamp(12px,1.4vw,16px)]',
-                    // A door row on a phone keeps its glyph in a narrow track of
-                    // its own, so the door's long directions get the width the
-                    // time column would otherwise hold empty beside them.
-                    row.kind === 'door'
-                      ? 'grid-cols-[28px_minmax(0,1fr)] gap-x-3.5 sm:grid-cols-subgrid sm:gap-x-[clamp(14px,2vw,24px)]'
-                      : 'grid-cols-subgrid',
-                  ]}
-                >
-                  {row.kind === 'time' ? (
-                    <span
-                      class:list={[
-                        'min-w-[3.2ch] font-display leading-none whitespace-nowrap text-gold lining-nums',
-                        row.main
-                          ? 'text-[clamp(36px,3.8vw,54px)]'
-                          : 'text-[clamp(28px,2.8vw,40px)]',
-                      ]}
-                    >
-                      {row.big}
-                      {row.meridiem && (
-                        <span class="ml-[.14em] font-body text-[.42em] italic">{row.meridiem}</span>
-                      )}
-                    </span>
-                  ) : row.kind === 'word' ? (
-                    <span class="max-w-full min-w-0 font-display text-[clamp(19px,1.7vw,24px)] leading-[1.1] break-words text-gold">
-                      {row.big}
-                    </span>
-                  ) : row.kind === 'door' ? (
-                    <span class="self-start pt-1 text-gold">
-                      <BuildingGlyph name="door" class="w-6" />
-                    </span>
-                  ) : (
-                    <span />
-                  )}
-                  <span class="min-w-0">
-                    {row.label && (
-                      <span
-                        class:list={[
-                          'block font-body leading-tight',
-                          row.main
-                            ? 'text-[clamp(1.375rem,1.1rem+.8vw,1.75rem)] text-white-pure italic'
-                            : 'text-[clamp(1.2rem,1.05rem+.4vw,1.375rem)]',
-                        ]}
-                      >
-                        {row.label}
-                      </span>
-                    )}
-                    {row.body && (
-                      <span class="mt-1 block font-ui text-[1rem] leading-snug text-band-taupe">
-                        {row.body}
-                      </span>
+        {rows.length > 0 && (
+          <ol
+            class="mt-[clamp(28px,3.5vw,48px)] grid grid-cols-[fit-content(40%)_minmax(0,1fr)] gap-x-[clamp(14px,2vw,24px)] border-t border-gold/35"
+            data-reveal
+          >
+            {rows.map((row) => (
+              <li
+                class:list={[
+                  'col-span-full grid items-baseline border-b border-gold/35 py-[clamp(12px,1.4vw,16px)]',
+                  // A door row on a phone keeps its glyph in a narrow track of
+                  // its own, so the door's long directions get the width the
+                  // time column would otherwise hold empty beside them.
+                  row.kind === 'door'
+                    ? 'grid-cols-[28px_minmax(0,1fr)] gap-x-3.5 sm:grid-cols-subgrid sm:gap-x-[clamp(14px,2vw,24px)]'
+                    : 'grid-cols-subgrid',
+                ]}
+              >
+                {row.kind === 'time' ? (
+                  <span
+                    class:list={[
+                      'min-w-[3.2ch] font-display leading-none whitespace-nowrap text-gold lining-nums',
+                      row.main ? 'text-[clamp(36px,3.8vw,54px)]' : 'text-[clamp(28px,2.8vw,40px)]',
+                    ]}
+                  >
+                    {row.big}
+                    {row.meridiem && (
+                      <span class="ml-[.14em] font-body text-[.42em] italic">{row.meridiem}</span>
                     )}
                   </span>
-                </li>
-              ))}
-            </ol>
-          )}
+                ) : row.kind === 'word' ? (
+                  <span class="max-w-full min-w-0 font-display text-[clamp(19px,1.7vw,24px)] leading-[1.1] break-words text-gold">
+                    {row.big}
+                  </span>
+                ) : row.kind === 'door' ? (
+                  <span class="self-start pt-1 text-gold">
+                    <BuildingGlyph name="door" class="w-6" />
+                  </span>
+                ) : (
+                  <span />
+                )}
+                <span class="min-w-0">
+                  {row.label && (
+                    <span
+                      class:list={[
+                        'block font-body leading-tight',
+                        row.main
+                          ? 'text-[clamp(1.375rem,1.1rem+.8vw,1.75rem)] text-white-pure italic'
+                          : 'text-[clamp(1.2rem,1.05rem+.4vw,1.375rem)]',
+                      ]}
+                    >
+                      {row.label}
+                    </span>
+                  )}
+                  {row.body && (
+                    <span class="mt-1 block font-ui text-[1rem] leading-snug text-band-taupe">
+                      {row.body}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ol>
+        )}
 
-          {showAddress && (
-            <div class="mt-7">
-              <address class="font-body text-body leading-snug not-italic oldstyle">
-                {addressLines.map((line) => (
-                  <span class="block">{line}</span>
-                ))}
-              </address>
-            </div>
-          )}
-          {(hasCta || directionsCta) && (
-            <div
-              class:list={[
-                showAddress ? 'mt-7' : 'mt-9',
-                'flex flex-wrap items-center gap-x-[34px] gap-y-[22px] pb-1.5',
-              ]}
-            >
-              <CtaLink cta={hasCta ? cta : directionsCta} variant="gold" onDark />
-              {hasCta && directionsCta && <CtaLink cta={directionsCta} variant="link" onDark />}
-            </div>
-          )}
-
-          {!hasPicture && validNotes.length > 0 && (
-            <ul class="mt-10 grid max-w-[32em] gap-3.5">
-              {validNotes.map((note) => (
-                <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
-                  <svg
-                    viewBox="-19 -19 38 38"
-                    aria-hidden="true"
-                    focusable="false"
-                    class="building-glyph mt-[.3em] w-[18px] text-gold"
-                  >
-                    <path d={QUATREFOIL} />
-                  </svg>
-                  <span>{note}</span>
-                </li>
+        {showAddress && (
+          <div class="mt-7">
+            <address class="font-body text-body leading-snug not-italic oldstyle">
+              {addressLines.map((line) => (
+                <span class="block">{line}</span>
               ))}
-            </ul>
-          )}
-        </div>
+            </address>
+          </div>
+        )}
+        {(hasCta || directionsCta) && (
+          <div
+            class:list={[
+              showAddress ? 'mt-7' : 'mt-9',
+              'flex flex-wrap items-center gap-x-[34px] gap-y-[22px] pb-1.5',
+            ]}
+          >
+            <CtaLink cta={hasCta ? cta : directionsCta} variant="gold" onDark />
+            {hasCta && directionsCta && <CtaLink cta={directionsCta} variant="link" onDark />}
+          </div>
+        )}
 
-        {
-          /* ── The notes, under the pictures ─────────────────────────────────── */
-          hasPicture && validNotes.length > 0 && (
-            <ul class="grid max-w-[32em] content-start gap-3.5 self-start lg:col-span-6 lg:row-start-2">
-              {validNotes.map((note) => (
-                <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
-                  <svg
-                    viewBox="-19 -19 38 38"
-                    aria-hidden="true"
-                    focusable="false"
-                    class="building-glyph mt-[.3em] w-[18px] text-gold"
-                  >
-                    <path d={QUATREFOIL} />
-                  </svg>
-                  <span>{note}</span>
-                </li>
-              ))}
-            </ul>
-          )
-        }
+        {!hasPicture && validNotes.length > 0 && (
+          <ul class="mt-10 grid max-w-[32em] gap-3.5">
+            {validNotes.map((note) => (
+              <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
+                <svg
+                  viewBox="-19 -19 38 38"
+                  aria-hidden="true"
+                  focusable="false"
+                  class="building-glyph mt-[.3em] w-[18px] text-gold"
+                >
+                  <path d={QUATREFOIL} />
+                </svg>
+                <span>{note}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-    </section>
-  )
-}
+
+      {
+        /* ── The notes, under the pictures ─────────────────────────────────── */
+        hasPicture && validNotes.length > 0 && (
+          <ul class="grid max-w-[32em] content-start gap-3.5 self-start lg:col-span-6 lg:row-start-2">
+            {validNotes.map((note) => (
+              <li class="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-3.5 font-body text-[1.125rem] leading-normal">
+                <svg
+                  viewBox="-19 -19 38 38"
+                  aria-hidden="true"
+                  focusable="false"
+                  class="building-glyph mt-[.3em] w-[18px] text-gold"
+                >
+                  <path d={QUATREFOIL} />
+                </svg>
+                <span>{note}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+)}
 
 <style is:global>
   /* Moved out of globals.css (2026-09-24, rule 20): Astro bundles a

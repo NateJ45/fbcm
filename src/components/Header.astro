@@ -225,22 +225,17 @@ function isGroupActive(items: { href: string }[]) {
 ---
 
 <header class="site-header" data-overlay={overlay ? '' : undefined}>
-  {
-    /* ONE row. `relative` is load-bearing: MobileNav's trigger positions
+  {/* ONE row. `relative` is load-bearing: MobileNav's trigger positions
       itself absolutely against this box. The fixed height (rather than
       vertical padding) is what lets --header-offset and the overlay mode's
-      negative margin both be a single known number. */
-  }
-  <div
-    class="relative mx-auto flex h-[74px] max-w-content items-center justify-between px-gutter lg:h-[88px]"
-  >
+      negative margin both be a single known number. */}
+  <div class="relative mx-auto flex h-[74px] max-w-content items-center justify-between px-gutter lg:h-[88px]">
     <a
       href="/"
       class="inline-flex items-center transition-opacity hover:opacity-80"
       aria-label={`${brandName} home`}
     >
-      {
-        /*
+      {/*
         Single theme-aware logo. The img ships with NO src/srcset so the
         browser doesn't start fetching anything; the inline script below sets
         the right variant synchronously before paint from the current
@@ -251,41 +246,37 @@ function isGroupActive(items: { href: string }[]) {
 
         Dimensions and aspect ratio match the wordmark's own 249.45:97.06, so
         the browser reserves the right layout box before the file lands. No CLS.
-      */
-      }
-      {
-        logo ? (
-          /* An uploaded Site Settings logo replaces the pair above. It carries no
+      */}
+      {logo ? (
+        /* An uploaded Site Settings logo replaces the pair above. It carries no
            data-theme-logo attribute, so the inline swap script below skips it
            and the one image serves both themes. */
-          <img
-            src={logoSrc}
-            srcset={logoSrcset}
-            sizes="280px"
-            alt={logo.alt || brandName}
-            class="h-12 w-auto lg:h-14"
-            loading="eager"
-            decoding="async"
-          />
-        ) : (
-          <img
-            alt={brandName}
-            width={257}
-            height={100}
-            class="h-12 w-auto lg:h-14"
-            loading="eager"
-            decoding="async"
-            data-theme-logo
-            data-logo-light-src={logoLightImg.src}
-            data-logo-light-srcset={logoLightSrcset}
-            data-logo-dark-src={logoDarkImg.src}
-            data-logo-dark-srcset={logoDarkSrcset}
-          />
-        )
-      }
+        <img
+          src={logoSrc}
+          srcset={logoSrcset}
+          sizes="280px"
+          alt={logo.alt || brandName}
+          class="h-12 w-auto lg:h-14"
+          loading="eager"
+          decoding="async"
+        />
+      ) : (
+        <img
+          alt={brandName}
+          width={257}
+          height={100}
+          class="h-12 w-auto lg:h-14"
+          loading="eager"
+          decoding="async"
+          data-theme-logo
+          data-logo-light-src={logoLightImg.src}
+          data-logo-light-srcset={logoLightSrcset}
+          data-logo-dark-src={logoDarkImg.src}
+          data-logo-dark-srcset={logoDarkSrcset}
+        />
+      )}
     </a>
-    {
-      /* Synchronous inline setup, right after the img element is parsed, so the
+    {/* Synchronous inline setup, right after the img element is parsed, so the
         src is set before the browser begins any image fetch.
 
         Overlay mode reads the DARK file (paper lettering) whatever the theme
@@ -293,8 +284,7 @@ function isGroupActive(items: { href: string }[]) {
         script adds data-scrolled the bar is ordinary paper again and the logo
         goes back to following the theme, which is what the `header:scrolled`
         listener is for. Re-applied across View Transitions navs by the
-        anti-FOUC listener in BaseLayout, which makes the same overlay check. */
-    }
+        anti-FOUC listener in BaseLayout, which makes the same overlay check. */}
     <script is:inline>
       (function () {
         const header = document.querySelector('header.site-header');
@@ -311,77 +301,72 @@ function isGroupActive(items: { href: string }[]) {
         window.addEventListener('header:scrolled', applyLogo);
       })();
     </script>
-
     {/* Nav, Watch live and Give grouped on the right (lg+ only). */}
     <div class="hidden items-center gap-m lg:flex xl:gap-l">
       <nav class="site-nav flex items-center gap-5 xl:gap-l" aria-label="Primary">
-        {
-          NAV_ITEMS.map((item) =>
-            item.kind === 'flat' ? (
-              <a
-                href={item.href}
-                class:list={[
-                  'nav-underline py-1 font-ui text-[0.9375rem] font-medium tracking-[0.01em] transition-colors',
-                  isActive(item.href) ? 'text-link' : 'text-foreground hover:text-link',
-                ]}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            ) : (
-              <details class="site-nav__group relative">
-                {/* <summary> is the disclosure toggle. It carries .nav-underline
+        {NAV_ITEMS.map((item) =>
+          item.kind === 'flat' ? (
+            <a
+              href={item.href}
+              class:list={[
+                'nav-underline py-1 font-ui text-[0.9375rem] font-medium tracking-[0.01em] transition-colors',
+                isActive(item.href) ? 'text-link' : 'text-foreground hover:text-link',
+              ]}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ) : (
+            <details class="site-nav__group relative">
+              {/* <summary> is the disclosure toggle. It carries .nav-underline
                   so it gets the same gold rule as flat links, and
                   aria-current="page" (which locks the rule wide) when one of
                   its children is the active route. role/aria-expanded are
                   managed natively by <details>. */}
-                <summary
-                  class:list={[
-                    'nav-underline py-1 font-ui text-[0.9375rem] font-medium tracking-[0.01em] transition-colors',
-                    'inline-flex cursor-pointer list-none items-center gap-0.5 select-none',
-                    'rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                    isGroupActive(item.items) ? 'text-link' : 'text-foreground hover:text-link',
-                  ]}
-                  aria-current={isGroupActive(item.items) ? 'page' : undefined}
-                >
-                  {item.label}
-                  <ChevronDown
-                    size={14}
-                    className="site-nav__chevron mt-px transition-transform duration-150"
-                    aria-hidden="true"
-                  />
-                </summary>
+              <summary
+                class:list={[
+                  'nav-underline py-1 font-ui text-[0.9375rem] font-medium tracking-[0.01em] transition-colors',
+                  'inline-flex cursor-pointer list-none items-center gap-0.5 select-none',
+                  'rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                  isGroupActive(item.items) ? 'text-link' : 'text-foreground hover:text-link',
+                ]}
+                aria-current={isGroupActive(item.items) ? 'page' : undefined}
+              >
+                {item.label}
+                <ChevronDown
+                  size={14}
+                  className="site-nav__chevron mt-px transition-transform duration-150"
+                  aria-hidden="true"
+                />
+              </summary>
 
-                {/* Menu panel. Absolutely positioned under the summary so it
+              {/* Menu panel. Absolutely positioned under the summary so it
                   doesn't shift layout. A hairline and a flat surface, no
                   shadow: this pass draws depth with rules, not drop shadows. */}
-                <div class="site-nav__menu absolute top-full left-0 z-50 mt-2 min-w-[200px] rounded-sm border border-hair bg-background p-1 text-popover-foreground">
-                  {item.items.map((sub) => (
-                    <a
-                      href={sub.href}
-                      class:list={[
-                        'block rounded-sm px-2.5 py-1.5 font-ui text-[0.9375rem] transition-colors',
-                        'outline-none hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground',
-                        isActive(sub.href) ? 'font-semibold text-link' : 'text-foreground',
-                      ]}
-                      aria-current={isActive(sub.href) ? 'page' : undefined}
-                    >
-                      {sub.label}
-                    </a>
-                  ))}
-                </div>
-              </details>
-            ),
-          )
-        }
+              <div class="site-nav__menu absolute top-full left-0 z-50 mt-2 min-w-[200px] rounded-sm border border-hair bg-background p-1 text-popover-foreground">
+                {item.items.map((sub) => (
+                  <a
+                    href={sub.href}
+                    class:list={[
+                      'block rounded-sm px-2.5 py-1.5 font-ui text-[0.9375rem] transition-colors',
+                      'outline-none hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground',
+                      isActive(sub.href) ? 'font-semibold text-link' : 'text-foreground',
+                    ]}
+                    aria-current={isActive(sub.href) ? 'page' : undefined}
+                  >
+                    {sub.label}
+                  </a>
+                ))}
+              </div>
+            </details>
+          ),
+        )}
       </nav>
       {/* scaffold: journal */}
-      {
-        /* Search (2026-09-24): the nav's own quiet style, a glass drawn in
+      {/* Search (2026-09-24): the nav's own quiet style, a glass drawn in
           currentColor so it follows the bar (paper over an image hero, ink on
           paper). A button, not a link: it opens the search dialog, which
-          search-dialog.ts loads on the first click and never before. */
-      }
+          search-dialog.ts loads on the first click and never before. */}
       <button
         type="button"
         data-search-open
@@ -423,29 +408,25 @@ function isGroupActive(items: { href: string }[]) {
           </a>
         )
       }
-      {
-        headerCta.show && (
-          <a
-            href={headerCta.href}
-            target={ctaIsExternal ? '_blank' : undefined}
-            rel={ctaIsExternal ? 'noopener noreferrer' : undefined}
-            class="header-give press-tactile inline-flex min-h-[44px] items-center justify-center rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
-          >
-            {headerCta.label}
-          </a>
-        )
-      }
+      {headerCta.show && (
+        <a
+          href={headerCta.href}
+          target={ctaIsExternal ? '_blank' : undefined}
+          rel={ctaIsExternal ? 'noopener noreferrer' : undefined}
+          class="header-give press-tactile inline-flex min-h-[44px] items-center justify-center rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
+        >
+          {headerCta.label}
+        </a>
+      )}
     </div>
 
-    {
-      /* The drawer hydrates on idle, not client:only. The shadcn Sheet (Radix
+    {/* The drawer hydrates on idle, not client:only. The shadcn Sheet (Radix
         Dialog) server-renders its trigger button fine, and the portal mounts
         nothing until the drawer opens, so the hamburger is in the server HTML
         and React arrives behind requestIdleCallback rather than on the
         critical path. Its trigger inherits `color`, so it reads as paper over
         an image hero and as ink on the ordinary bar. An Astro comment, not an
-        HTML one, so it does not ship on every page. */
-    }
+        HTML one, so it does not ship on every page. */}
     <MobileNav
       client:idle
       links={NAV_LINKS}
@@ -496,13 +477,11 @@ function isGroupActive(items: { href: string }[]) {
   }
 </style>
 
-{
-  /* Progressive enhancement for the desktop dropdown nav. Everything still
+{/* Progressive enhancement for the desktop dropdown nav. Everything still
   works without this (native <details> toggles on click/Enter/Space, links
   are real <a> tags). This adds: open-on-hover with a small close delay,
   close-on-outside-click, close-on-Escape, and close-when-a-link-is-followed.
-  Re-binds on astro:page-load so it survives View Transitions navigations. */
-}
+  Re-binds on astro:page-load so it survives View Transitions navigations. */}
 <script>
   // Query groups fresh each call — the nav DOM is replaced on every View
   // Transitions navigation, so a captured list would go stale.

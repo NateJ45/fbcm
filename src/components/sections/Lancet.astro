@@ -23,7 +23,9 @@ const d = 'M0,1 L0,0.5324 A1.5,0.7143 0 0 1 0.5,0 A1.5,0.7143 0 0 1 1,0.5324 L1,
 
 <div class="ph-window">
   <svg width="0" height="0" aria-hidden="true" focusable="false" class="absolute">
-    <clipPath id={clipId} clipPathUnits="objectBoundingBox"><path d={d}></path></clipPath>
+    <clipPath id={clipId} clipPathUnits="objectBoundingBox">
+      <path d={d}></path>
+    </clipPath>
   </svg>
   <div class="ph-pane" style={`clip-path:url(#${clipId})`}>
     <SanityImage
@@ -40,6 +42,8 @@ const d = 'M0,1 L0,0.5324 A1.5,0.7143 0 0 1 0.5,0 A1.5,0.7143 0 0 1 1,0.5324 L1,
     viewBox="0 0 1 1"
     preserveAspectRatio="none"
     aria-hidden="true"
-    focusable="false"><path d={d}></path></svg
+    focusable="false"
   >
+    <path d={d}></path>
+  </svg>
 </div>

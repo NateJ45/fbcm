@@ -26,29 +26,29 @@ const { icsHref, sundayIso, sundayLabel } = Astro.props;
 ---
 
 <div class="p2-tools" data-post-tools data-pagefind-ignore>
-  {
-    /* "Read aloud", not "Listen": a preview's order already has a Listen row
-      (the livestream), and two Listens a line apart would be two meanings. */
-  }
+  {/* "Read aloud", not "Listen": a preview's order already has a Listen row
+      (the livestream), and two Listens a line apart would be two meanings. */}
   <button type="button" class="p2-tool" data-listen aria-pressed="false" hidden>
     Read aloud
   </button>
-  <button type="button" class="p2-tool" data-listen-stop hidden>Stop</button>
-  <button type="button" class="p2-tool" data-share hidden>Share</button>
-  {
-    icsHref && (
-      <a
-        class="p2-tool"
-        href={icsHref}
-        download={`sunday-worship-${sundayIso}.ics`}
-        type="text/calendar"
-        data-until={sundayIso}
-      >
-        Add to calendar
-        <span class="sr-only">: Sunday worship{sundayLabel ? `, ${sundayLabel}` : ''}</span>
-      </a>
-    )
-  }
+  <button type="button" class="p2-tool" data-listen-stop hidden>
+    Stop
+  </button>
+  <button type="button" class="p2-tool" data-share hidden>
+    Share
+  </button>
+  {icsHref && (
+    <a
+      class="p2-tool"
+      href={icsHref}
+      download={`sunday-worship-${sundayIso}.ics`}
+      type="text/calendar"
+      data-until={sundayIso}
+    >
+      Add to calendar
+      <span class="sr-only">: Sunday worship{sundayLabel ? `, ${sundayLabel}` : ''}</span>
+    </a>
+  )}
   <span class="p2-tool-status" role="status" aria-live="polite"></span>
 </div>
 

@@ -62,13 +62,11 @@ const QF =
 <section class="bg-muted text-foreground" aria-labelledby={heading ? headingId : undefined}>
   <div class="pl-grid mx-auto max-w-content px-gutter py-section-lg">
     <div class="pl-side">
-      {
-        heading && (
-          <h2 id={headingId} class:list={[H2_DISPLAY, 'text-indigo']}>
-            {heading}
-          </h2>
-        )
-      }
+      {heading && (
+        <h2 id={headingId} class:list={[H2_DISPLAY, 'text-indigo']}>
+          {heading}
+        </h2>
+      )}
       {intro && <p class="mt-5 max-w-[17em] text-lede text-muted-foreground">{intro}</p>}
       <ArchFrame
         image={image}
@@ -82,69 +80,61 @@ const QF =
     </div>
 
     <div>
-      {
-        instruction && (
-          <p class="pl-rubric font-body text-indigo italic">
-            <svg viewBox="-20 -20 40 40" aria-hidden="true">
-              <path d={QF} fill="currentColor" />
-            </svg>
-            {instruction}
-          </p>
-        )
-      }
+      {instruction && (
+        <p class="pl-rubric font-body text-indigo italic">
+          <svg viewBox="-20 -20 40 40" aria-hidden="true">
+            <path d={QF} fill="currentColor" />
+          </svg>
+          {instruction}
+        </p>
+      )}
       <ol>
-        {
-          opening && (
-            <li class="pl-rd pl-open" data-reveal>
+        {opening && (
+          <li class="pl-rd pl-open" data-reveal>
+            <span class="pl-who font-display text-indigo">All</span>
+            <p class="font-body text-indigo italic">{opening}</p>
+          </li>
+        )}
+        {said.map((line, i) => {
+          const { head, tail } = turn(line.text ?? '');
+          const delay = (i + 1) * 110;
+          return (
+            <li class="pl-rd" data-reveal style={`transition-delay: ${delay}ms`}>
               <span class="pl-who font-display text-indigo">All</span>
-              <p class="font-body text-indigo italic">{opening}</p>
+              <p class="font-body">
+                {head}
+                {tail && ' '}
+                {tail && <span class="pl-turn text-indigo italic">{tail}</span>}
+              </p>
+              {line.reference && (
+                <span class="pl-ref font-body text-gold-ink italic">{line.reference}</span>
+              )}
             </li>
-          )
-        }
-        {
-          said.map((line, i) => {
-            const { head, tail } = turn(line.text ?? '');
-            const delay = (i + 1) * 110;
-            return (
-              <li class="pl-rd" data-reveal style={`transition-delay: ${delay}ms`}>
-                <span class="pl-who font-display text-indigo">All</span>
-                <p class="font-body">
-                  {head}
-                  {tail && ' '}
-                  {tail && <span class="pl-turn text-indigo italic">{tail}</span>}
-                </p>
-                {line.reference && (
-                  <span class="pl-ref font-body text-gold-ink italic">{line.reference}</span>
-                )}
-              </li>
-            );
-          })
-        }
+          );
+        })}
       </ol>
 
-      {
-        afterBlocks.length > 0 && (
-          <div class="pl-after">
-            <svg
-              class="pl-sep text-indigo"
-              viewBox="0 0 440 22"
-              preserveAspectRatio="xMinYMid meet"
-              aria-hidden="true"
-            >
-              <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
-                <path d="M0 11H178" opacity=".5" />
-                <path d="M190 20V12A8 8 0 0 1 196 3A8 8 0 0 1 202 12V20" />
-                <path d={QF} transform="translate(220 11) scale(.5)" />
-                <path d="M238 20V12A8 8 0 0 1 244 3A8 8 0 0 1 250 12V20" />
-                <path d="M262 11H440" opacity=".5" />
-              </g>
-            </svg>
-            <div class="space-y-4 text-muted-foreground">
-              <PortableText value={afterBlocks} variant="bare" />
-            </div>
+      {afterBlocks.length > 0 && (
+        <div class="pl-after">
+          <svg
+            class="pl-sep text-indigo"
+            viewBox="0 0 440 22"
+            preserveAspectRatio="xMinYMid meet"
+            aria-hidden="true"
+          >
+            <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+              <path d="M0 11H178" opacity=".5" />
+              <path d="M190 20V12A8 8 0 0 1 196 3A8 8 0 0 1 202 12V20" />
+              <path d={QF} transform="translate(220 11) scale(.5)" />
+              <path d="M238 20V12A8 8 0 0 1 244 3A8 8 0 0 1 250 12V20" />
+              <path d="M262 11H440" opacity=".5" />
+            </g>
+          </svg>
+          <div class="space-y-4 text-muted-foreground">
+            <PortableText value={afterBlocks} variant="bare" />
           </div>
-        )
-      }
+        </div>
+      )}
     </div>
   </div>
 </section>

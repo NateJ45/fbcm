@@ -179,104 +179,297 @@ const QF =
   aria-labelledby={heading ? headingId : undefined}
   data-photo-shape={hasPicture ? shape : 'none'}
 >
-  {
-    shape === 'ground' ? (
-      <>
-        <div class="ph-ground-fig">
-          <SanityImage source={image} width={2400} sizes="100vw" quality={75} alt={alt} />
-          <div class="hero-overlay" aria-hidden="true" />
-          <div class="ph-ground-text">
-            <div class="ph-in">
-              {eyebrow && (
-                <>
-                  <span class="ph-tick" />
-                  <p class="mb-5 font-ui text-ui text-bg">{eyebrow}</p>
-                </>
-              )}
-              {heading && (
-                <h2 id={headingId} class:list={[H2_DISPLAY, 'h-fit']} style={headingFit(heading)}>
-                  <span class="h-fit-in">{heading}</span>
-                </h2>
-              )}
-              {ledeBlock && (
-                <div class="ph-lede">
-                  <PortableText value={toPt(ledeBlock)} variant="bare" />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div class="mx-auto max-w-content px-gutter pt-[clamp(40px,5vw,64px)] pb-section-lg">
-          <div class="rt-g">
-            <div class="ph-gbody rt-g">
-              <RichBody pieces={layout.pieces} />
-            </div>
-            {cta?.label && (
-              <div class="col-span-12 mt-8">
-                <CtaLink cta={cta} variant="gold" />
+  {shape === 'ground' ? (
+    <>
+      <div class="ph-ground-fig">
+        <SanityImage source={image} width={2400} sizes="100vw" quality={75} alt={alt} />
+        <div class="hero-overlay" aria-hidden="true" />
+        <div class="ph-ground-text">
+          <div class="ph-in">
+            {eyebrow && (
+              <>
+                <span class="ph-tick" />
+                <p class="mb-5 font-ui text-ui text-bg">{eyebrow}</p>
+              </>
+            )}
+            {heading && (
+              <h2 id={headingId} class:list={[H2_DISPLAY, 'h-fit']} style={headingFit(heading)}>
+                <span class="h-fit-in">{heading}</span>
+              </h2>
+            )}
+            {ledeBlock && (
+              <div class="ph-lede">
+                <PortableText value={toPt(ledeBlock)} variant="bare" />
               </div>
             )}
           </div>
         </div>
-      </>
-    ) : (
-      <div class="mx-auto max-w-content px-gutter py-section-lg">
-        <div
-          class:list={[
-            'rt-g',
-            beside && hasPicture && 'ph-beside',
-            hasPicture && `is-${shape}`,
-            hasPicture && side === 'left' && 'is-left',
-            hasPicture && shape === 'row' && form === 'standard' && `w${rowWidth}`,
-            form !== 'standard' && `is-${form}`,
-          ]}
-        >
-          {!compact && (
-            <header class="rt-head">
-              {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
-              {heading && (
-                <h2
-                  id={headingId}
-                  class:list={[H2_DISPLAY, 'h-fit max-w-[22ch] text-foreground']}
-                  style={headingFit(heading)}
-                >
-                  <span class="h-fit-in">{heading}</span>
-                </h2>
-              )}
-            </header>
+      </div>
+      <div class="mx-auto max-w-content px-gutter pt-[clamp(40px,5vw,64px)] pb-section-lg">
+        <div class="rt-g">
+          <div class="ph-gbody rt-g">
+            <RichBody pieces={layout.pieces} />
+          </div>
+          {cta?.label && (
+            <div class="col-span-12 mt-8">
+              <CtaLink cta={cta} variant="gold" />
+            </div>
           )}
+        </div>
+      </div>
+    </>
+  ) : (
+    <div class="mx-auto max-w-content px-gutter py-section-lg">
+      <div
+        class:list={[
+          'rt-g',
+          beside && hasPicture && 'ph-beside',
+          hasPicture && `is-${shape}`,
+          hasPicture && side === 'left' && 'is-left',
+          hasPicture && shape === 'row' && form === 'standard' && `w${rowWidth}`,
+          form !== 'standard' && `is-${form}`,
+        ]}
+      >
+        {!compact && (
+          <header class="rt-head">
+            {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
+            {heading && (
+              <h2
+                id={headingId}
+                class:list={[H2_DISPLAY, 'h-fit max-w-[22ch] text-foreground']}
+                style={headingFit(heading)}
+              >
+                <span class="h-fit-in">{heading}</span>
+              </h2>
+            )}
+          </header>
+        )}
 
-          {shape === 'legend' && hasPicture ? (
-            <>
-              <figure class="ph-legend">
-                <SanityImage
-                  source={image}
-                  width={2000}
-                  sizes="(min-width: 1400px) 1400px, 100vw"
-                  quality={78}
-                  alt={alt}
-                  class="ph-img"
-                />
-                {legendLabel && (
-                  <div class="ph-label font-ui text-ui">
-                    <PortableText value={toPt(legendLabel)} variant="bare" />
+        {shape === 'legend' && hasPicture ? (
+          <>
+            <figure class="ph-legend">
+              <SanityImage
+                source={image}
+                width={2000}
+                sizes="(min-width: 1400px) 1400px, 100vw"
+                quality={78}
+                alt={alt}
+                class="ph-img"
+              />
+              {legendLabel && (
+                <div class="ph-label font-ui text-ui">
+                  <PortableText value={toPt(legendLabel)} variant="bare" />
+                </div>
+              )}
+              <ol class="ph-names" style={`--n:${legendNames.length}`}>
+                {legendNames.map((nm, k) => (
+                  <li>
+                    <span class="ph-pos">{k + 1}</span>
+                    <PortableText value={toPt(nm)} variant="bare" />
+                  </li>
+                ))}
+              </ol>
+              {legendFoot && (
+                <div class="ph-foot">
+                  <PortableText value={toPt(legendFoot)} variant="bare" />
+                </div>
+              )}
+            </figure>
+            <div class="ph-legend-rest rt-g">
+              {ledeBlock && (
+                <div class="rt-lede rt-v">
+                  <PortableText value={toPt(ledeBlock)} variant="bare" />
+                </div>
+              )}
+              <RichBody pieces={layout.pieces} />
+              {cta?.label && (
+                <div class="col-span-12 mt-8">
+                  <CtaLink cta={cta} variant="gold" />
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            {hasPicture && (
+              <div class="ph-fig" data-reveal>
+                {shape === 'window' && !arched ? (
+                  <figure class="ph-window-wrap">
+                    <Lancet image={image} alt={alt} uid={headingId} />
+                  </figure>
+                ) : shape === 'plate' ? (
+                  <figure class="ph-plate">
+                    <div class="ph-print">
+                      <SanityImage
+                        source={image}
+                        width={1000}
+                        sizes="500px"
+                        quality={80}
+                        alt={alt}
+                        class="ph-img"
+                      />
+                    </div>
+                  </figure>
+                ) : pair ? (
+                  <div class="it-pair">
+                    {[
+                      { img: image, a: alt },
+                      { img: detail, a: detailAlt },
+                    ].map(({ img, a }) => (
+                      <ArchFrame
+                        image={img}
+                        shape="lancet"
+                        width={900}
+                        sizes="(min-width: 1024px) 24vw, 46vw"
+                        alt={a}
+                        grade="warm"
+                        style="--arch-mould: var(--color-brown-ink);"
+                      />
+                    ))}
+                  </div>
+                ) : arched ? (
+                  <div class:list={['it-arches relative', hasDetail && 'has-detail']}>
+                    <ArchFrame
+                      image={image}
+                      shape={lancet ? 'lancet' : 'door'}
+                      width={1400}
+                      sizes="(min-width: 1024px) 45vw, 100vw"
+                      alt={alt}
+                      grade="warm"
+                      style={`--arch-ratio: ${archRatio}; --arch-mould: var(--color-brown-ink);`}
+                    />
+                    {hasDetail && (
+                      <div class="it-detail">
+                        <span class="it-halo arch-lancet" aria-hidden="true" />
+                        <ArchFrame
+                          image={detail}
+                          shape="lancet"
+                          width={600}
+                          sizes="(min-width: 1024px) 17vw, 38vw"
+                          alt={detailAlt}
+                          grade="warm"
+                          class="relative"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : shape === 'frame' ? (
+                  <figure class="ph-frame">
+                    <div class="ph-hung">
+                      <SanityImage
+                        source={image}
+                        width={900}
+                        sizes="(min-width: 1024px) 420px, 100vw"
+                        quality={78}
+                        alt={alt}
+                        class="ph-img"
+                      />
+                    </div>
+                  </figure>
+                ) : (
+                  <figure
+                    class:list={[rowBleed && (side === 'left' ? 'bleed-left' : 'bleed-right')]}
+                  >
+                    <SanityImage
+                      source={image}
+                      width={1600}
+                      sizes="(min-width: 1024px) 60vw, 100vw"
+                      quality={75}
+                      alt={alt}
+                      class="ph-img"
+                    />
+                  </figure>
+                )}
+              </div>
+            )}
+            {hasPicture ? (
+              <div class="ph-text">
+                {compact && (eyebrow || heading) && (
+                  <header class="rt-head">
+                    {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
+                    {heading && (
+                      <h2
+                        id={headingId}
+                        class:list={[H2_DISPLAY, 'h-fit max-w-[22ch] text-foreground']}
+                        style={headingFit(heading)}
+                      >
+                        <span class="h-fit-in">{heading}</span>
+                      </h2>
+                    )}
+                  </header>
+                )}
+                {ledeBlock && (
+                  <div class="rt-lede rt-v">
+                    <PortableText value={toPt(ledeBlock)} variant="bare" />
                   </div>
                 )}
-                <ol class="ph-names" style={`--n:${legendNames.length}`}>
-                  {legendNames.map((nm, k) => (
-                    <li>
-                      <span class="ph-pos">{k + 1}</span>
-                      <PortableText value={toPt(nm)} variant="bare" />
-                    </li>
-                  ))}
-                </ol>
-                {legendFoot && (
-                  <div class="ph-foot">
-                    <PortableText value={toPt(legendFoot)} variant="bare" />
+                {board ? (
+                  <>
+                    {board.intro.length > 0 && (
+                      <PortableText
+                        value={board.intro.flatMap((b) => toPt(b))}
+                        className="font-body text-body"
+                      />
+                    )}
+                    <ol class="it-rooms">
+                      {board.rooms.map((r) => (
+                        <li data-reveal>
+                          <p class="it-room-no font-display lining-nums">
+                            {r.room.split(/\s*&\s*/).map((part, k) => (
+                              <>
+                                {k > 0 && <i>&amp;</i>}
+                                {part}
+                              </>
+                            ))}
+                          </p>
+                          <div class="min-w-0">
+                            <h3
+                              class="it-room-title h-fit font-body"
+                              style={headingFit(r.title, 'body')}
+                            >
+                              <span class="h-fit-in">{r.title}</span>
+                            </h3>
+                            {r.blocks.filter((b) => !b.listItem).length > 0 && (
+                              <PortableText
+                                value={r.blocks.filter((b) => !b.listItem).flatMap((b) => toPt(b))}
+                                className="it-room-body font-body [&>p+p]:mt-2 [&>p]:my-0"
+                              />
+                            )}
+                            {r.blocks.some((b) => b.listItem) && (
+                              <ul class="it-room-list">
+                                {r.blocks
+                                  .filter((b) => b.listItem)
+                                  .map((b) => (
+                                    <li>
+                                      <svg
+                                        viewBox="-19 -19 38 38"
+                                        aria-hidden="true"
+                                        focusable="false"
+                                        class="building-glyph mt-[.35em] w-3.5 text-gold"
+                                      >
+                                        <path d={QF} />
+                                      </svg>
+                                      <span>{(b.children ?? []).map((c) => c.text).join('')}</span>
+                                    </li>
+                                  ))}
+                              </ul>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </>
+                ) : (
+                  <RichBody pieces={layout.pieces} />
+                )}
+                {cta?.label && (
+                  <div class="mt-8">
+                    <CtaLink cta={cta} variant="gold" />
                   </div>
                 )}
-              </figure>
-              <div class="ph-legend-rest rt-g">
+              </div>
+            ) : (
+              <div class="rt-sub">
                 {ledeBlock && (
                   <div class="rt-lede rt-v">
                     <PortableText value={toPt(ledeBlock)} variant="bare" />
@@ -289,211 +482,12 @@ const QF =
                   </div>
                 )}
               </div>
-            </>
-          ) : (
-            <>
-              {hasPicture && (
-                <div class="ph-fig" data-reveal>
-                  {shape === 'window' && !arched ? (
-                    <figure class="ph-window-wrap">
-                      <Lancet image={image} alt={alt} uid={headingId} />
-                    </figure>
-                  ) : shape === 'plate' ? (
-                    <figure class="ph-plate">
-                      <div class="ph-print">
-                        <SanityImage
-                          source={image}
-                          width={1000}
-                          sizes="500px"
-                          quality={80}
-                          alt={alt}
-                          class="ph-img"
-                        />
-                      </div>
-                    </figure>
-                  ) : pair ? (
-                    <div class="it-pair">
-                      {[
-                        { img: image, a: alt },
-                        { img: detail, a: detailAlt },
-                      ].map(({ img, a }) => (
-                        <ArchFrame
-                          image={img}
-                          shape="lancet"
-                          width={900}
-                          sizes="(min-width: 1024px) 24vw, 46vw"
-                          alt={a}
-                          grade="warm"
-                          style="--arch-mould: var(--color-brown-ink);"
-                        />
-                      ))}
-                    </div>
-                  ) : arched ? (
-                    <div class:list={['it-arches relative', hasDetail && 'has-detail']}>
-                      <ArchFrame
-                        image={image}
-                        shape={lancet ? 'lancet' : 'door'}
-                        width={1400}
-                        sizes="(min-width: 1024px) 45vw, 100vw"
-                        alt={alt}
-                        grade="warm"
-                        style={`--arch-ratio: ${archRatio}; --arch-mould: var(--color-brown-ink);`}
-                      />
-                      {hasDetail && (
-                        <div class="it-detail">
-                          <span class="it-halo arch-lancet" aria-hidden="true" />
-                          <ArchFrame
-                            image={detail}
-                            shape="lancet"
-                            width={600}
-                            sizes="(min-width: 1024px) 17vw, 38vw"
-                            alt={detailAlt}
-                            grade="warm"
-                            class="relative"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ) : shape === 'frame' ? (
-                    <figure class="ph-frame">
-                      <div class="ph-hung">
-                        <SanityImage
-                          source={image}
-                          width={900}
-                          sizes="(min-width: 1024px) 420px, 100vw"
-                          quality={78}
-                          alt={alt}
-                          class="ph-img"
-                        />
-                      </div>
-                    </figure>
-                  ) : (
-                    <figure
-                      class:list={[rowBleed && (side === 'left' ? 'bleed-left' : 'bleed-right')]}
-                    >
-                      <SanityImage
-                        source={image}
-                        width={1600}
-                        sizes="(min-width: 1024px) 60vw, 100vw"
-                        quality={75}
-                        alt={alt}
-                        class="ph-img"
-                      />
-                    </figure>
-                  )}
-                </div>
-              )}
-              {hasPicture ? (
-                <div class="ph-text">
-                  {compact && (eyebrow || heading) && (
-                    <header class="rt-head">
-                      {eyebrow && <p class="mb-5 font-ui text-ui text-gold-ink">{eyebrow}</p>}
-                      {heading && (
-                        <h2
-                          id={headingId}
-                          class:list={[H2_DISPLAY, 'h-fit max-w-[22ch] text-foreground']}
-                          style={headingFit(heading)}
-                        >
-                          <span class="h-fit-in">{heading}</span>
-                        </h2>
-                      )}
-                    </header>
-                  )}
-                  {ledeBlock && (
-                    <div class="rt-lede rt-v">
-                      <PortableText value={toPt(ledeBlock)} variant="bare" />
-                    </div>
-                  )}
-                  {board ? (
-                    <>
-                      {board.intro.length > 0 && (
-                        <PortableText
-                          value={board.intro.flatMap((b) => toPt(b))}
-                          className="font-body text-body"
-                        />
-                      )}
-                      <ol class="it-rooms">
-                        {board.rooms.map((r) => (
-                          <li data-reveal>
-                            <p class="it-room-no font-display lining-nums">
-                              {r.room.split(/\s*&\s*/).map((part, k) => (
-                                <>
-                                  {k > 0 && <i>&amp;</i>}
-                                  {part}
-                                </>
-                              ))}
-                            </p>
-                            <div class="min-w-0">
-                              <h3
-                                class="it-room-title h-fit font-body"
-                                style={headingFit(r.title, 'body')}
-                              >
-                                <span class="h-fit-in">{r.title}</span>
-                              </h3>
-                              {r.blocks.filter((b) => !b.listItem).length > 0 && (
-                                <PortableText
-                                  value={r.blocks
-                                    .filter((b) => !b.listItem)
-                                    .flatMap((b) => toPt(b))}
-                                  className="it-room-body font-body [&>p+p]:mt-2 [&>p]:my-0"
-                                />
-                              )}
-                              {r.blocks.some((b) => b.listItem) && (
-                                <ul class="it-room-list">
-                                  {r.blocks
-                                    .filter((b) => b.listItem)
-                                    .map((b) => (
-                                      <li>
-                                        <svg
-                                          viewBox="-19 -19 38 38"
-                                          aria-hidden="true"
-                                          focusable="false"
-                                          class="building-glyph mt-[.35em] w-3.5 text-gold"
-                                        >
-                                          <path d={QF} />
-                                        </svg>
-                                        <span>
-                                          {(b.children ?? []).map((c) => c.text).join('')}
-                                        </span>
-                                      </li>
-                                    ))}
-                                </ul>
-                              )}
-                            </div>
-                          </li>
-                        ))}
-                      </ol>
-                    </>
-                  ) : (
-                    <RichBody pieces={layout.pieces} />
-                  )}
-                  {cta?.label && (
-                    <div class="mt-8">
-                      <CtaLink cta={cta} variant="gold" />
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div class="rt-sub">
-                  {ledeBlock && (
-                    <div class="rt-lede rt-v">
-                      <PortableText value={toPt(ledeBlock)} variant="bare" />
-                    </div>
-                  )}
-                  <RichBody pieces={layout.pieces} />
-                  {cta?.label && (
-                    <div class="col-span-12 mt-8">
-                      <CtaLink cta={cta} variant="gold" />
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-        </div>
+            )}
+          </>
+        )}
       </div>
-    )
-  }
+    </div>
+  )}
 </section>
 
 <style is:global>

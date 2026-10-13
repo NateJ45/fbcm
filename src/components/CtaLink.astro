@@ -173,21 +173,19 @@ const variantClasses = (() => {
 
 <a
   href={href}
-  class:list={resolved === 'link'
-    ? [linkClasses, extraClass]
-    : [baseClasses, variantClasses, extraClass]}
+  class:list={
+    resolved === 'link' ? [linkClasses, extraClass] : [baseClasses, variantClasses, extraClass]
+  }
   target={newTab ? '_blank' : undefined}
   rel={newTab ? 'noopener noreferrer' : undefined}
 >
   {label}
-  {
-    resolved === 'link' && (
-      <span
-        aria-hidden="true"
-        class="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-      >
-        &#8594;
-      </span>
-    )
-  }
+  {resolved === 'link' && (
+    <span
+      aria-hidden="true"
+      class="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+    >
+      &#8594;
+    </span>
+  )}
 </a>

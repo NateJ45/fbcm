@@ -86,100 +86,96 @@ const read = latest
   : null;
 ---
 
-{
-  latest && (
-    <section class="vi-lead bg-band-indigo text-bg" aria-labelledby={headingId}>
-      <div class="vi-grid mx-auto max-w-content px-gutter py-section-lg">
-        <div class="vi-head min-w-0">
-          {eyebrow && (
-            <p class="mb-4 font-ui text-ui font-semibold tracking-eyebrow text-gold uppercase">
-              {eyebrow}
-            </p>
-          )}
-          <Heading
-            id={headingId}
-            class:list={[H2_DISPLAY, 'm-0 h-fit text-gold']}
-            style={headingFit(name)}
-          >
-            <span class="h-fit-in">{level === 'h1' ? <RiseWords words={nameWords} /> : name}</span>
-          </Heading>
-        </div>
-
-        <a href={latest.href} class="vi-lead-cover" id={latest.anchor}>
-          <IssueCover
-            issue={latest}
-            cover={coverFor(latest, covers)}
-            sizes="(min-width: 1440px) 440px, (min-width: 1024px) 30vw, min(calc(100vw - 40px), 360px)"
-            eager
-          />
-        </a>
-
-        <div class="vi-info min-w-0">
-          <p class="m-0 font-ui text-ui font-semibold tracking-eyebrow text-gold uppercase">
-            Latest issue
+{latest && (
+  <section class="vi-lead bg-band-indigo text-bg" aria-labelledby={headingId}>
+    <div class="vi-grid mx-auto max-w-content px-gutter py-section-lg">
+      <div class="vi-head min-w-0">
+        {eyebrow && (
+          <p class="mb-4 font-ui text-ui font-semibold tracking-eyebrow text-gold uppercase">
+            {eyebrow}
           </p>
-          <Sub class="mt-3 mb-0 font-body text-h3 leading-[1.15] font-normal text-bg">
-            {latest.title}
-          </Sub>
-          {latest.note && (
-            <p class="mt-3 mb-0 max-w-[36rem] font-body text-lg text-band-taupe italic">
-              {latest.note}
-            </p>
-          )}
-          <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-            {read && <CtaLink cta={read} variant="gold" onDark />}
-            <span class="font-ui text-ui text-bg/80">{fileLine(latest)}</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-{
-  groups.length > 0 && (
-    <section class="vi-past bg-bg text-indigo" aria-labelledby={`${headingId}-past`}>
-      <div class="mx-auto max-w-content px-gutter py-section-lg">
-        <Sub
-          id={`${headingId}-past`}
-          class:list={[H2_DISPLAY, 'm-0 h-fit text-indigo']}
-          style={headingFit('Past issues')}
+        )}
+        <Heading
+          id={headingId}
+          class:list={[H2_DISPLAY, 'm-0 h-fit text-gold']}
+          style={headingFit(name)}
         >
-          <span class="h-fit-in">Past issues</span>
+          <span class="h-fit-in">{level === 'h1' ? <RiseWords words={nameWords} /> : name}</span>
+        </Heading>
+      </div>
+
+      <a href={latest.href} class="vi-lead-cover" id={latest.anchor}>
+        <IssueCover
+          issue={latest}
+          cover={coverFor(latest, covers)}
+          sizes="(min-width: 1440px) 440px, (min-width: 1024px) 30vw, min(calc(100vw - 40px), 360px)"
+          eager
+        />
+      </a>
+
+      <div class="vi-info min-w-0">
+        <p class="m-0 font-ui text-ui font-semibold tracking-eyebrow text-gold uppercase">
+          Latest issue
+        </p>
+        <Sub class="mt-3 mb-0 font-body text-h3 leading-[1.15] font-normal text-bg">
+          {latest.title}
         </Sub>
-        <div class="mt-[clamp(28px,4vw,56px)] border-t border-indigo/25">
-          {groups.map((group) => (
-            <div class="vi-year border-b border-indigo/15 py-[clamp(24px,3vw,36px)]">
-              <YearHeading class="m-0 font-display text-h3 leading-none font-normal text-gold-ink">
-                {group.year}
-              </YearHeading>
-              <ul class="vi-wall m-0 list-none p-0" role="list">
-                {group.issues.map((issue) => (
-                  <li id={issue.anchor} class="min-w-0">
-                    <a
-                      href={issue.href}
-                      class="vi-tile group"
-                      aria-label={`${issue.title}, ${fileLine(issue)}`}
-                    >
-                      <span class="vi-tile-frame">
-                        <IssueCover
-                          issue={issue}
-                          cover={coverFor(issue, covers)}
-                          sizes="(min-width: 1440px) 190px, (min-width: 1024px) 14vw, (min-width: 768px) 20vw, (min-width: 360px) 30vw, 44vw"
-                        />
-                      </span>
-                      <span class="vi-tile-month">{MONTHS[issue.month]}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        {latest.note && (
+          <p class="mt-3 mb-0 max-w-[36rem] font-body text-lg text-band-taupe italic">
+            {latest.note}
+          </p>
+        )}
+        <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+          {read && <CtaLink cta={read} variant="gold" onDark />}
+          <span class="font-ui text-ui text-bg/80">{fileLine(latest)}</span>
         </div>
       </div>
-    </section>
-  )
-}
+    </div>
+  </section>
+)}
+
+{groups.length > 0 && (
+  <section class="vi-past bg-bg text-indigo" aria-labelledby={`${headingId}-past`}>
+    <div class="mx-auto max-w-content px-gutter py-section-lg">
+      <Sub
+        id={`${headingId}-past`}
+        class:list={[H2_DISPLAY, 'm-0 h-fit text-indigo']}
+        style={headingFit('Past issues')}
+      >
+        <span class="h-fit-in">Past issues</span>
+      </Sub>
+      <div class="mt-[clamp(28px,4vw,56px)] border-t border-indigo/25">
+        {groups.map((group) => (
+          <div class="vi-year border-b border-indigo/15 py-[clamp(24px,3vw,36px)]">
+            <YearHeading class="m-0 font-display text-h3 leading-none font-normal text-gold-ink">
+              {group.year}
+            </YearHeading>
+            <ul class="vi-wall m-0 list-none p-0" role="list">
+              {group.issues.map((issue) => (
+                <li id={issue.anchor} class="min-w-0">
+                  <a
+                    href={issue.href}
+                    class="vi-tile group"
+                    aria-label={`${issue.title}, ${fileLine(issue)}`}
+                  >
+                    <span class="vi-tile-frame">
+                      <IssueCover
+                        issue={issue}
+                        cover={coverFor(issue, covers)}
+                        sizes="(min-width: 1440px) 190px, (min-width: 1024px) 14vw, (min-width: 768px) 20vw, (min-width: 360px) 30vw, 44vw"
+                      />
+                    </span>
+                    <span class="vi-tile-month">{MONTHS[issue.month]}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
 
 <style>
   /* The opening band: heading, cover, issue on a phone; the cover in five

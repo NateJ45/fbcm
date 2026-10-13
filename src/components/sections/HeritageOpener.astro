@@ -80,28 +80,22 @@ const drawingStyle = `--ho-drawing: url(${renderingAsset.src}); aspect-ratio: ${
 ---
 
 <section class="bg-band-brown text-white-pure" aria-labelledby={heading ? headingId : undefined}>
-  <div
-    class="mx-auto grid max-w-content grid-cols-12 items-center gap-x-[clamp(16px,2.5vw,40px)] gap-y-10 px-gutter py-section-lg"
-  >
+  <div class="mx-auto grid max-w-content grid-cols-12 items-center gap-x-[clamp(16px,2.5vw,40px)] gap-y-10 px-gutter py-section-lg">
     <div class:list={['col-span-12', 'lg:col-span-6']}>
-      {
-        span.length > 0 && (
-          <p
-            class="mb-[clamp(20px,2.4vw,32px)] flex flex-wrap items-baseline gap-[0.18em] font-display text-[clamp(3.25rem,2.4rem+2.6vw,5rem)] leading-[0.86] tracking-[0.01em] text-gold lining-nums"
-            aria-hidden="true"
-          >
-            <span>{span[0]}</span>
-            {span[1] && (
-              <>
-                <span class="font-body text-[0.42em] tracking-normal text-band-taupe italic">
-                  to
-                </span>
-                <span>{span[1]}</span>
-              </>
-            )}
-          </p>
-        )
-      }
+      {span.length > 0 && (
+        <p
+          class="mb-[clamp(20px,2.4vw,32px)] flex flex-wrap items-baseline gap-[0.18em] font-display text-[clamp(3.25rem,2.4rem+2.6vw,5rem)] leading-[0.86] tracking-[0.01em] text-gold lining-nums"
+          aria-hidden="true"
+        >
+          <span>{span[0]}</span>
+          {span[1] && (
+            <>
+              <span class="font-body text-[0.42em] tracking-normal text-band-taupe italic">to</span>
+              <span>{span[1]}</span>
+            </>
+          )}
+        </p>
+      )}
       <SectionHeading
         eyebrow={eyebrow}
         headline={heading}
@@ -112,58 +106,50 @@ const drawingStyle = `--ho-drawing: url(${renderingAsset.src}); aspect-ratio: ${
         tone="band"
         face="display"
       />
-      {
-        body && (
-          <p class="mt-6 max-w-[30em] font-body text-[clamp(1.25rem,1rem+0.8vw,1.6875rem)] leading-[1.4] text-bg">
-            {body}
-          </p>
-        )
-      }
-      {
-        cta?.label && (
-          <div class="mt-8">
-            <CtaLink cta={cta} variant="gold" onDark />
-          </div>
-        )
-      }
+      {body && (
+        <p class="mt-6 max-w-[30em] font-body text-[clamp(1.25rem,1rem+0.8vw,1.6875rem)] leading-[1.4] text-bg">
+          {body}
+        </p>
+      )}
+      {cta?.label && (
+        <div class="mt-8">
+          <CtaLink cta={cta} variant="gold" onDark />
+        </div>
+      )}
     </div>
 
-    {
-      hasDrawing && (
-        <div class="ho-drawing col-span-12 lg:col-span-6" aria-hidden="true" style={drawingStyle}>
-          <div class="ho-drawing-ink" />
-        </div>
-      )
-    }
-    {
-      (hasDoor || hasLancet) && (
-        <div class:list={['ho-pics col-span-12 lg:col-span-6', hasDoor && hasLancet && 'ho-pair']}>
-          {hasDoor && (
-            <ArchFrame
-              image={image}
-              shape="door"
-              width={1200}
-              sizes="(min-width: 1024px) 40vw, 90vw"
-              alt={altOf(image)}
-              loading="eager"
-              class="ho-door"
-              style="--arch-ratio: 100 / 80;"
-            />
-          )}
-          {hasLancet && (
-            <ArchFrame
-              image={archive}
-              shape="lancet"
-              width={600}
-              sizes="(min-width: 1024px) 15vw, 34vw"
-              alt={altOf(archive)}
-              loading="eager"
-              class="ho-lancet"
-            />
-          )}
-        </div>
-      )
-    }
+    {hasDrawing && (
+      <div class="ho-drawing col-span-12 lg:col-span-6" aria-hidden="true" style={drawingStyle}>
+        <div class="ho-drawing-ink" />
+      </div>
+    )}
+    {(hasDoor || hasLancet) && (
+      <div class:list={['ho-pics col-span-12 lg:col-span-6', hasDoor && hasLancet && 'ho-pair']}>
+        {hasDoor && (
+          <ArchFrame
+            image={image}
+            shape="door"
+            width={1200}
+            sizes="(min-width: 1024px) 40vw, 90vw"
+            alt={altOf(image)}
+            loading="eager"
+            class="ho-door"
+            style="--arch-ratio: 100 / 80;"
+          />
+        )}
+        {hasLancet && (
+          <ArchFrame
+            image={archive}
+            shape="lancet"
+            width={600}
+            sizes="(min-width: 1024px) 15vw, 34vw"
+            alt={altOf(archive)}
+            loading="eager"
+            class="ho-lancet"
+          />
+        )}
+      </div>
+    )}
   </div>
 </section>
 

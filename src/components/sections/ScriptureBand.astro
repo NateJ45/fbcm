@@ -56,40 +56,31 @@ const quoted = !!reference;
 const labelled = heading || reference;
 ---
 
-{
-  verse && (
-    <section class="sb bg-band-deep text-bg" aria-labelledby={labelled ? headingId : undefined}>
-      <div class="sb-wrap mx-auto max-w-content px-gutter">
-        {heading && (
-          <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
-            {heading}
-          </h2>
-        )}
+{verse && (
+  <section class="sb bg-band-deep text-bg" aria-labelledby={labelled ? headingId : undefined}>
+    <div class="sb-wrap mx-auto max-w-content px-gutter">
+      {heading && (
+        <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
+          {heading}
+        </h2>
+      )}
 
-        <blockquote class="sb-verse">
-          <p class:list={['font-body', quoted && 'sb-q']}>
-            {quoted && <>&ldquo;</>}
-            {parts.map((part) =>
-              part.hit ? (
-                <mark class="bg-transparent text-gold italic">{part.text}</mark>
-              ) : (
-                part.text
-              ),
-            )}
-            {quoted && <>&rdquo;</>}
-          </p>
-          {reference && (
-            <cite
-              id={heading ? undefined : headingId}
-              class="font-ui font-bold text-gold not-italic"
-            >
-              {reference}
-            </cite>
+      <blockquote class="sb-verse">
+        <p class:list={['font-body', quoted && 'sb-q']}>
+          {quoted && <>&ldquo;</>}
+          {parts.map((part) =>
+            part.hit ? <mark class="bg-transparent text-gold italic">{part.text}</mark> : part.text,
           )}
-        </blockquote>
+          {quoted && <>&rdquo;</>}
+        </p>
+        {reference && (
+          <cite id={heading ? undefined : headingId} class="font-ui font-bold text-gold not-italic">
+            {reference}
+          </cite>
+        )}
+      </blockquote>
 
-        {intro && <p class="sb-intro whitespace-pre-line">{intro}</p>}
-      </div>
-    </section>
-  )
-}
+      {intro && <p class="sb-intro whitespace-pre-line">{intro}</p>}
+    </div>
+  </section>
+)}

@@ -119,31 +119,28 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
     </style>
   </head>
   <body class="relative bg-background text-foreground">
-    <div
-      class="flex items-center justify-between gap-4 border-b border-border-soft bg-card px-4 py-1.5 text-xs text-foreground/70"
-    >
-      <span data-connected-note
-        >Draft preview. Click the header or footer to edit Site settings.</span
-      >
-      <span data-reconnect-hint class="font-semibold"
-        >Draft session ended. Reload the Studio browser tab to reconnect the preview.</span
-      >
+    <div class="flex items-center justify-between gap-4 border-b border-border-soft bg-card px-4 py-1.5 text-xs text-foreground/70">
+      <span data-connected-note>
+        Draft preview. Click the header or footer to edit Site settings.
+      </span>
+      <span data-reconnect-hint class="font-semibold">
+        Draft session ended. Reload the Studio browser tab to reconnect the preview.
+      </span>
     </div>
-    {
-      /* The real site chrome, draft-aware, each piece an editable surface. The
+    {/* The real site chrome, draft-aware, each piece an editable surface. The
         wrapper divs are REAL block boxes on purpose: the overlay outlines the
-        element's rect (same rule as sectionEditAttr). */
-    }
+        element's rect (same rule as sectionEditAttr). */}
     <div data-sanity={headerAttr}>
       <Header siteSettings={chromeSettings} />
     </div>
-    <main id="main"><slot /></main>
+    <main id="main">
+      <slot />
+    </main>
     <div data-sanity={footerAttr}>
       <Footer siteSettings={chromeSettings} />
     </div>
 
-    {
-      /* The motion system's END states, forced. BaseLayout's IntersectionObserver
+    {/* The motion system's END states, forced. BaseLayout's IntersectionObserver
         script is not loaded here (this shell is deliberately minimal), and the
         reveal and stagger entrances hide content at opacity 0 until it runs, so
         without this block the preview would render INVISIBLE sections. Keep it
@@ -153,8 +150,7 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
         2026-09-28). The hero slideshow is left running: its first frame is
         opaque without any script, and its own script sequences the rest; so
         is the single photo's one 5 s push-in (.hero-still), which never
-        hides anything. */
-    }
+        hides anything. */}
     <style is:global>
       [data-reveal] {
         opacity: 1 !important;
@@ -172,20 +168,18 @@ const footerAttr = docEditAttr('siteSettings', 'siteSettings', 'tagline');
       }
     </style>
 
-    {
-      draftMode && (
-        <>
-          <VisualEditingOverlay client:only="react" pageId={pageId} />
-          <a
-            href="/api/draft-mode/disable"
-            data-exit-preview
-            class="fixed right-4 bottom-4 z-50 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-lg hover:bg-primary-dark"
-          >
-            Exit preview
-          </a>
-        </>
-      )
-    }
+    {draftMode && (
+      <>
+        <VisualEditingOverlay client:only="react" pageId={pageId} />
+        <a
+          href="/api/draft-mode/disable"
+          data-exit-preview
+          class="fixed right-4 bottom-4 z-50 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-lg hover:bg-primary-dark"
+        >
+          Exit preview
+        </a>
+      </>
+    )}
 
     <script>
       // =======================================================================

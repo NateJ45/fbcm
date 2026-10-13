@@ -31,40 +31,38 @@ const { entries, emptyMessage = 'Nothing here yet.' } = Astro.props as Props;
 const groups = groupByYear(entries ?? []);
 ---
 
-{
-  entries.length === 0 ? (
-    <p class="max-w-[62ch] text-body text-brown-ink">{emptyMessage}</p>
-  ) : (
-    <div class="reg">
-      {groups.map((g) => (
-        <div class="yr">
-          {g.year !== null && <h3 class="yr-h font-display">{g.year}</h3>}
-          <ol class="rows">
-            {g.items.map((entry) => {
-              const m = registerMeta(entry);
-              const author = clean(entry.author).trim();
-              return (
-                <PostRow
-                  href={entry.slug?.current ? `/post/${entry.slug.current}` : '#'}
-                  title={entry.title ?? ''}
-                  dateLabel={m.day}
-                  datetime={m.iso || undefined}
-                  image={entry.coverImage}
-                  excerpt={entry.excerpt}
-                  byline={m.preview ? m.key : author || m.key}
-                  meta={m.preview ? m.value : author ? m.key : ''}
-                  tone="paper"
-                  frame="plain"
-                  level={g.year !== null ? 'h4' : 'h3'}
-                />
-              );
-            })}
-          </ol>
-        </div>
-      ))}
-    </div>
-  )
-}
+{entries.length === 0 ? (
+  <p class="max-w-[62ch] text-body text-brown-ink">{emptyMessage}</p>
+) : (
+  <div class="reg">
+    {groups.map((g) => (
+      <div class="yr">
+        {g.year !== null && <h3 class="yr-h font-display">{g.year}</h3>}
+        <ol class="rows">
+          {g.items.map((entry) => {
+            const m = registerMeta(entry);
+            const author = clean(entry.author).trim();
+            return (
+              <PostRow
+                href={entry.slug?.current ? `/post/${entry.slug.current}` : '#'}
+                title={entry.title ?? ''}
+                dateLabel={m.day}
+                datetime={m.iso || undefined}
+                image={entry.coverImage}
+                excerpt={entry.excerpt}
+                byline={m.preview ? m.key : author || m.key}
+                meta={m.preview ? m.value : author ? m.key : ''}
+                tone="paper"
+                frame="plain"
+                level={g.year !== null ? 'h4' : 'h3'}
+              />
+            );
+          })}
+        </ol>
+      </div>
+    ))}
+  </div>
+)}
 
 <style>
   .yr {

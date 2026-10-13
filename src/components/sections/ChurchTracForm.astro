@@ -65,50 +65,48 @@ const headingText = String(heading ?? '');
 const bg = surfaceClass(surface);
 ---
 
-{
-  src && (
-    <section class:list={['ctf-band', bg]} aria-labelledby={headingId} data-church-trac-form>
-      <div class="ctf-grid mx-auto max-w-content px-gutter py-section-lg">
-        <div class="ctf-head min-w-0">
-          {eyebrow && (
-            <p class="mt-0 mb-4 font-ui text-ui font-semibold tracking-eyebrow text-gold-ink uppercase">
-              {eyebrow}
-            </p>
-          )}
-          <h2
-            id={headingId}
-            class:list={[H2_DISPLAY, 'h-fit text-indigo']}
-            style={headingFit(headingText)}
-          >
-            <span class="h-fit-in">{heading}</span>
-          </h2>
-          {intro && (
-            <p class="mt-6 mb-0 max-w-[36rem] font-body text-lg leading-relaxed whitespace-pre-line text-indigo">
-              {intro}
-            </p>
-          )}
-        </div>
-
-        <div class="ctf-form min-w-0">
-          <div class="ctf-frame">
-            <iframe
-              src={src}
-              title={formName}
-              loading="lazy"
-              allow="payment"
-              style={`--ctf-h:${height}px`}
-            />
-          </div>
-          <p class="ctf-out">
-            <a href={src} target="_blank" rel="noopener noreferrer">
-              Open the form in a new tab<span class="sr-only">: {formName}</span>
-            </a>
+{src && (
+  <section class:list={['ctf-band', bg]} aria-labelledby={headingId} data-church-trac-form>
+    <div class="ctf-grid mx-auto max-w-content px-gutter py-section-lg">
+      <div class="ctf-head min-w-0">
+        {eyebrow && (
+          <p class="mt-0 mb-4 font-ui text-ui font-semibold tracking-eyebrow text-gold-ink uppercase">
+            {eyebrow}
           </p>
-        </div>
+        )}
+        <h2
+          id={headingId}
+          class:list={[H2_DISPLAY, 'h-fit text-indigo']}
+          style={headingFit(headingText)}
+        >
+          <span class="h-fit-in">{heading}</span>
+        </h2>
+        {intro && (
+          <p class="mt-6 mb-0 max-w-[36rem] font-body text-lg leading-relaxed whitespace-pre-line text-indigo">
+            {intro}
+          </p>
+        )}
       </div>
-    </section>
-  )
-}
+
+      <div class="ctf-form min-w-0">
+        <div class="ctf-frame">
+          <iframe
+            src={src}
+            title={formName}
+            loading="lazy"
+            allow="payment"
+            style={`--ctf-h:${height}px`}
+          />
+        </div>
+        <p class="ctf-out">
+          <a href={src} target="_blank" rel="noopener noreferrer">
+            Open the form in a new tab<span class="sr-only">: {formName}</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+)}
 
 <style>
   /* The phone reads the heading and words, then the form. A wide screen is

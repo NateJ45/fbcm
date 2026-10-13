@@ -25,28 +25,26 @@ const thin = (list ?? []).length < 4;
 const links = thin ? thinStateTags(list, exclude, slugify, 8) : [];
 ---
 
-{
-  thin && (
-    <div class="thin">
-      {links.length > 0 && (
-        <>
-          <p class="lbl font-ui text-ui font-medium">Also filed under</p>
-          <p class="line font-ui">
-            {links.map((l, i) => (
-              <>
-                <a href={l.href}>{l.label}</a>
-                {i < links.length - 1 ? ', ' : '.'}
-              </>
-            ))}
-          </p>
-        </>
-      )}
-      <div class="act">
-        <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
-      </div>
+{thin && (
+  <div class="thin">
+    {links.length > 0 && (
+      <>
+        <p class="lbl font-ui text-ui font-medium">Also filed under</p>
+        <p class="line font-ui">
+          {links.map((l, i) => (
+            <>
+              <a href={l.href}>{l.label}</a>
+              {i < links.length - 1 ? ', ' : '.'}
+            </>
+          ))}
+        </p>
+      </>
+    )}
+    <div class="act">
+      <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
     </div>
-  )
-}
+  </div>
+)}
 
 <style>
   .thin {

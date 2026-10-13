@@ -20,12 +20,10 @@ interface Props {
 const { stats } = Astro.props as Props;
 ---
 
-{
-  stats.length > 0 && (
-    <section class="bg-background" aria-label="Studio stats">
-      <div class="mx-auto max-w-content px-gutter py-section-md" data-reveal>
-        <StatsCounter stats={stats} client:visible />
-      </div>
-    </section>
-  )
-}
+{stats.length > 0 && (
+  <section class="bg-background" aria-label="Studio stats">
+    <div class="mx-auto max-w-content px-gutter py-section-md" data-reveal>
+      <StatsCounter stats={stats} client:visible />
+    </div>
+  </section>
+)}

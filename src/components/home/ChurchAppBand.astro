@@ -119,46 +119,47 @@ const logo = await getImage({ src: logoAsset });
           onDark={dark}
         />
       </div>
-      <div class="mt-4"><AppButtons app={app} dark={dark} /></div>
+      <div class="mt-4">
+        <AppButtons app={app} dark={dark} />
+      </div>
 
-      {
-        app.code && (
-          <div class="ca-code" data-install-code={app.code}>
-            <p class="ca-code-label">Install code</p>
-            <p class="ca-code-tiles">
-              <span class="sr-only">{codeChars.join(' ')}</span>
-              {codeChars.map((c) => (
-                <span class="ca-tile" aria-hidden="true">
-                  {c}
-                </span>
-              ))}
-            </p>
-            <p class="ca-code-note">
-              Found the app in the store yourself? Enter this code when it asks, and it opens on
-              First Baptist.
-            </p>
-          </div>
-        )
-      }
+      {app.code && (
+        <div class="ca-code" data-install-code={app.code}>
+          <p class="ca-code-label">Install code</p>
+          <p class="ca-code-tiles">
+            <span class="sr-only">{codeChars.join(' ')}</span>
+            {codeChars.map((c) => (
+              <span class="ca-tile" aria-hidden="true">
+                {c}
+              </span>
+            ))}
+          </p>
+          <p class="ca-code-note">
+            Found the app in the store yourself? Enter this code when it asks, and it opens on First
+            Baptist.
+          </p>
+        </div>
+      )}
     </div>
 
     <div class="ca-art min-w-0">
       <div class="ca-figure" aria-hidden="true">
         <svg class="ca-arch" viewBox="-4 -4 108 158" preserveAspectRatio="none">
-          <path class="ca-arch-fill" d="M0 154V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V154Z"
+          <path
+            class="ca-arch-fill"
+            d="M0 154V67.1A70 70 0 0 1 50 0A70 70 0 0 1 100 67.1V154Z"
           ></path>
           <path
             class="ca-arch-mould"
             d="M-3 154V66.5A73 73 0 0 1 50 -3.4A73 73 0 0 1 103 66.5V154"
-            vector-effect="non-scaling-stroke"></path>
+            vector-effect="non-scaling-stroke"
+          ></path>
         </svg>
         <div class="ca-phone">
           <div class="ca-screen">
             <span class="ca-notch"></span>
-            {
-              /* The church's own wordmark (the header's, for cream grounds) and
-              its watchword, set as the footer sets it: Nathan, 2026-09-26. */
-            }
+            {/* The church's own wordmark (the header's, for cream grounds) and
+              its watchword, set as the footer sets it: Nathan, 2026-09-26. */}
             <img
               class="ca-logo"
               src={logo.src}
@@ -166,21 +167,23 @@ const logo = await getImage({ src: logoAsset });
               height={logo.attributes.height}
               alt=""
             />
-            <span class="ca-screen-motto">Praise <span class="ca-amp">&amp;</span> Proclaim</span>
-            {points.map((p) => <span class="ca-screen-row">{p.title}</span>)}
+            <span class="ca-screen-motto">
+              Praise <span class="ca-amp">&amp;</span> Proclaim
+            </span>
+            {points.map((p) => (
+              <span class="ca-screen-row">{p.title}</span>
+            ))}
           </div>
         </div>
       </div>
 
       <ul class="ca-points">
-        {
-          points.map((p) => (
-            <li class="ca-point">
-              <h3 class="ca-point-title">{p.title}</h3>
-              <p class="ca-point-line">{p.line}</p>
-            </li>
-          ))
-        }
+        {points.map((p) => (
+          <li class="ca-point">
+            <h3 class="ca-point-title">{p.title}</h3>
+            <p class="ca-point-line">{p.line}</p>
+          </li>
+        ))}
       </ul>
     </div>
   </div>

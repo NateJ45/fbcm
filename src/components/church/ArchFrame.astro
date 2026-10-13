@@ -121,31 +121,29 @@ const mould =
   data-sanity={editAttr}
   style={style}
 >
-  {
-    hasImage ? (
-      <div class:list={['arch', shape === 'lancet' ? 'arch-lancet' : 'arch-door']}>
-        <SanityImage
-          source={image}
-          width={width}
-          sizes={sizes}
-          alt={alt}
-          loading={loading}
-          fetchpriority={fetchpriority}
-          class:list={['h-full w-full object-cover', grade === 'warm' && 'graded']}
-          style={imgStyle}
-        />
-      </div>
-    ) : (
-      <div
-        class:list={[
-          'arch arch-glyph flex items-end justify-center',
-          shape === 'lancet' ? 'arch-lancet' : 'arch-door',
-        ]}
-      >
-        <BuildingGlyph name={glyph ?? 'window'} class="mb-[14%] w-[52%] text-gold" />
-      </div>
-    )
-  }
+  {hasImage ? (
+    <div class:list={['arch', shape === 'lancet' ? 'arch-lancet' : 'arch-door']}>
+      <SanityImage
+        source={image}
+        width={width}
+        sizes={sizes}
+        alt={alt}
+        loading={loading}
+        fetchpriority={fetchpriority}
+        class:list={['h-full w-full object-cover', grade === 'warm' && 'graded']}
+        style={imgStyle}
+      />
+    </div>
+  ) : (
+    <div
+      class:list={[
+        'arch arch-glyph flex items-end justify-center',
+        shape === 'lancet' ? 'arch-lancet' : 'arch-door',
+      ]}
+    >
+      <BuildingGlyph name={glyph ?? 'window'} class="mb-[14%] w-[52%] text-gold" />
+    </div>
+  )}
   <svg class="arch-mould" viewBox={mould.viewBox} preserveAspectRatio="none" aria-hidden="true">
     <path d={mould.d}></path>
   </svg>

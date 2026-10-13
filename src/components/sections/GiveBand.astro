@@ -114,63 +114,61 @@ const giveCta = href
   : null;
 ---
 
-{
-  level === 'h1' ? (
-    <section class="give-open" aria-labelledby={heading ? headingId : undefined}>
-      <div class="go-grid mx-auto max-w-content px-gutter">
-        <BuildingGlyph name="basin" class="go-glyph" />
-        <div class="go-words min-w-0">
-          <SectionHeading
-            headline={heading}
-            headingId={headingId}
-            level="h1"
-            scale={headlineScale(heading, { tall: false })}
-            align="left"
-            tone="band"
-            wide
-          />
-          {body && <p class="go-lede font-body">{body}</p>}
-          {giveCta && (
-            <div class="go-act">
-              <CtaLink cta={giveCta} variant="gold" onDark />
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
-  ) : (
-    <section
-      class="bg-band-gold py-[clamp(64px,7vw,110px)] text-band-ink"
-      aria-labelledby={heading ? headingId : undefined}
-    >
-      <div class="mx-auto grid max-w-content grid-cols-1 items-center gap-x-[clamp(24px,4vw,64px)] gap-y-6 px-gutter md:grid-cols-[auto_minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)_auto]">
-        <BuildingGlyph
-          name="basin"
-          class="w-14 text-band-indigo md:w-[clamp(64px,7vw,104px)] md:self-start lg:self-center"
+{level === 'h1' ? (
+  <section class="give-open" aria-labelledby={heading ? headingId : undefined}>
+    <div class="go-grid mx-auto max-w-content px-gutter">
+      <BuildingGlyph name="basin" class="go-glyph" />
+      <div class="go-words min-w-0">
+        <SectionHeading
+          headline={heading}
+          headingId={headingId}
+          level="h1"
+          scale={headlineScale(heading, { tall: false })}
+          align="left"
+          tone="band"
+          wide
         />
-
-        <div class="min-w-0">
-          {heading && (
-            <h2 id={headingId} class:list={[H2_DISPLAY, 'text-band-indigo']}>
-              {heading}
-            </h2>
-          )}
-          {body && (
-            <p class="mt-2.5 mb-0 max-w-[30em] font-body text-[clamp(1.25rem,1.1rem+0.5vw,1.5rem)] leading-[1.45] text-band-ink">
-              {body}
-            </p>
-          )}
-        </div>
-
+        {body && <p class="go-lede font-body">{body}</p>}
         {giveCta && (
-          <div class="md:col-span-2 lg:col-span-1">
-            <CtaLink cta={giveCta} variant="outline" onGold />
+          <div class="go-act">
+            <CtaLink cta={giveCta} variant="gold" onDark />
           </div>
         )}
       </div>
-    </section>
-  )
-}
+    </div>
+  </section>
+) : (
+  <section
+    class="bg-band-gold py-[clamp(64px,7vw,110px)] text-band-ink"
+    aria-labelledby={heading ? headingId : undefined}
+  >
+    <div class="mx-auto grid max-w-content grid-cols-1 items-center gap-x-[clamp(24px,4vw,64px)] gap-y-6 px-gutter md:grid-cols-[auto_minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)_auto]">
+      <BuildingGlyph
+        name="basin"
+        class="w-14 text-band-indigo md:w-[clamp(64px,7vw,104px)] md:self-start lg:self-center"
+      />
+
+      <div class="min-w-0">
+        {heading && (
+          <h2 id={headingId} class:list={[H2_DISPLAY, 'text-band-indigo']}>
+            {heading}
+          </h2>
+        )}
+        {body && (
+          <p class="mt-2.5 mb-0 max-w-[30em] font-body text-[clamp(1.25rem,1.1rem+0.5vw,1.5rem)] leading-[1.45] text-band-ink">
+            {body}
+          </p>
+        )}
+      </div>
+
+      {giveCta && (
+        <div class="md:col-span-2 lg:col-span-1">
+          <CtaLink cta={giveCta} variant="outline" onGold />
+        </div>
+      )}
+    </div>
+  </section>
+)}
 
 <style is:global>
   /* The /give opener only (level 'h1'). Home's gold h2 band uses none of it.

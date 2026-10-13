@@ -65,23 +65,21 @@ const parts = splitAtSliders(value).map((seg) => {
 });
 ---
 
-{
-  parts.length > 0 && (
-    <div class={className}>
-      {parts.map((p) =>
-        !p ? null : p.kind === 'html' ? (
-          <Fragment set:html={p.html} />
-        ) : (
-          <div class="-mx-m my-section-md md:mx-0">
-            <BeforeAfterSlider
-              client:visible
-              beforeImage={p.beforeImage}
-              afterImage={p.afterImage}
-              caption={p.caption}
-            />
-          </div>
-        ),
-      )}
-    </div>
-  )
-}
+{parts.length > 0 && (
+  <div class={className}>
+    {parts.map((p) =>
+      !p ? null : p.kind === 'html' ? (
+        <Fragment set:html={p.html} />
+      ) : (
+        <div class="-mx-m my-section-md md:mx-0">
+          <BeforeAfterSlider
+            client:visible
+            beforeImage={p.beforeImage}
+            afterImage={p.afterImage}
+            caption={p.caption}
+          />
+        </div>
+      ),
+    )}
+  </div>
+)}

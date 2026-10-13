@@ -144,32 +144,28 @@ const sizes = '(min-width: 640px) 340px, 58vw';
 
     <figure class="vb-picture m-0 min-w-0">
       <a {href} class="vb-pile group" tabindex="-1">
-        {
-          behind
-            .map((prev, i) => (
-              <span class:list={['vb-sheet', `vb-sheet-${i + 2}`]} aria-hidden="true">
-                <IssueCover issue={prev} cover={coverFor(prev, covers)} {sizes} decorative />
-              </span>
-            ))
-            .reverse()
-        }
+        {behind
+          .map((prev, i) => (
+            <span class:list={['vb-sheet', `vb-sheet-${i + 2}`]} aria-hidden="true">
+              <IssueCover issue={prev} cover={coverFor(prev, covers)} {sizes} decorative />
+            </span>
+          ))
+          .reverse()}
         <span class="vb-sheet vb-sheet-1">
           <IssueCover issue={issue} cover={coverFor(issue, covers)} {sizes} />
         </span>
       </a>
-      {
-        age && (
-          <figcaption
-            class:list={[
-              'mt-6 mb-0 font-ui text-ui font-semibold tracking-eyebrow uppercase',
-              dark ? 'text-gold' : 'text-gold-ink',
-            ]}
-            data-visitor-age
-          >
-            {age}
-          </figcaption>
-        )
-      }
+      {age && (
+        <figcaption
+          class:list={[
+            'mt-6 mb-0 font-ui text-ui font-semibold tracking-eyebrow uppercase',
+            dark ? 'text-gold' : 'text-gold-ink',
+          ]}
+          data-visitor-age
+        >
+          {age}
+        </figcaption>
+      )}
     </figure>
   </div>
 </section>

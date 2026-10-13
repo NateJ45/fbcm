@@ -248,61 +248,57 @@ const toneSub =
 
 <div class:list={[wrapperAlign, !wide && 'max-w-3xl', extraClass]}>
   {eyebrow && <p class:list={['mb-5 font-ui text-ui font-medium', toneEyebrow]}>{eyebrow}</p>}
-  {
-    headline &&
-      (level === 'h1' ? (
-        <h1 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
-          <span class="h-fit-in">
-            <RiseWords words={h1Words} accents={{ colour: { class: 'heading-accent' } }} />
-          </span>
-        </h1>
-      ) : level === 'h2' ? (
-        <h2 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
-          <span class="h-fit-in">
-            {scriptFound ? (
-              <>
-                {scriptBefore}
-                <span class="font-script">{scriptWord}</span>
-                {scriptAfter}
-              </>
-            ) : colour.found ? (
-              <>
-                {colour.before}
-                <span class="heading-accent">{colour.word}</span>
-                {colour.after}
-              </>
-            ) : (
-              headline
-            )}
-          </span>
-        </h2>
-      ) : (
-        <h3 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
-          <span class="h-fit-in">
-            {scriptFound ? (
-              <>
-                {scriptBefore}
-                <span class="font-script">{scriptWord}</span>
-                {scriptAfter}
-              </>
-            ) : colour.found ? (
-              <>
-                {colour.before}
-                <span class="heading-accent">{colour.word}</span>
-                {colour.after}
-              </>
-            ) : (
-              headline
-            )}
-          </span>
-        </h3>
-      ))
-  }
-  {
-    (subhead || richSubhead) && (
-      <p class:list={['lede mt-5 font-body text-lede font-normal italic', toneSub]}>
-        {richSubhead ? <InlineRich value={subheadRich} /> : subhead}
-      </p>
-    )
-  }
+  {headline &&
+    (level === 'h1' ? (
+      <h1 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
+        <span class="h-fit-in">
+          <RiseWords words={h1Words} accents={{ colour: { class: 'heading-accent' } }} />
+        </span>
+      </h1>
+    ) : level === 'h2' ? (
+      <h2 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
+        <span class="h-fit-in">
+          {scriptFound ? (
+            <>
+              {scriptBefore}
+              <span class="font-script">{scriptWord}</span>
+              {scriptAfter}
+            </>
+          ) : colour.found ? (
+            <>
+              {colour.before}
+              <span class="heading-accent">{colour.word}</span>
+              {colour.after}
+            </>
+          ) : (
+            headline
+          )}
+        </span>
+      </h2>
+    ) : (
+      <h3 id={headingId} class:list={[headingClass, toneHeadline, 'h-fit']} style={fitStyle}>
+        <span class="h-fit-in">
+          {scriptFound ? (
+            <>
+              {scriptBefore}
+              <span class="font-script">{scriptWord}</span>
+              {scriptAfter}
+            </>
+          ) : colour.found ? (
+            <>
+              {colour.before}
+              <span class="heading-accent">{colour.word}</span>
+              {colour.after}
+            </>
+          ) : (
+            headline
+          )}
+        </span>
+      </h3>
+    ))}
+  {(subhead || richSubhead) && (
+    <p class:list={['lede mt-5 font-body text-lede font-normal italic', toneSub]}>
+      {richSubhead ? <InlineRich value={subheadRich} /> : subhead}
+    </p>
+  )}
 </div>

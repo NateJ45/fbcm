@@ -106,63 +106,59 @@ const social = socialLinksOf(settings);
     <div class="hd-head">
       <BuildingGlyph name="door" class="hd-glyph" />
       {eyebrow && <p class="hd-eyebrow font-ui text-ui">{eyebrow}</p>}
-      {
-        heading && (
-          <h2 id={headingId} class:list={[H2_DISPLAY, 'hd-h2 h-fit']} style={headingFit(heading)}>
-            <span class="h-fit-in">{heading}</span>
-          </h2>
-        )
-      }
+      {heading && (
+        <h2 id={headingId} class:list={[H2_DISPLAY, 'hd-h2 h-fit']} style={headingFit(heading)}>
+          <span class="h-fit-in">{heading}</span>
+        </h2>
+      )}
     </div>
 
-    {
-      (groups.length > 0 || social.length > 0) && (
-        <div class="hd-board">
-          {groups.map((group) => (
-            <div class="hd-group">
-              <h3 class="hd-label font-ui">{group.label}</h3>
-              {group.lines.some((l) => l.kind === 'row') && (
-                <dl class="hd-rows">
-                  {group.lines.map((l) =>
-                    l.kind === 'row' ? (
-                      <div class="hd-row">
-                        <dt class="hd-days font-body">{l.days}</dt>
-                        <dd class="hd-times font-body oldstyle">{l.times}</dd>
-                      </div>
-                    ) : null,
-                  )}
-                </dl>
-              )}
-              {group.lines.map((l) =>
-                l.kind === 'note' ? (
-                  <PortableTextStatic value={[l.block as PtBlock]} className="hd-note" />
-                ) : null,
-              )}
-            </div>
-          ))}
-          {social.length > 0 && (
-            <div class="hd-group">
-              <h3 class="hd-label font-ui">Follow along</h3>
-              <ul class="hd-social">
-                {social.map((link) => (
-                  <li>
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="hd-social-link font-body"
-                    >
-                      <SocialIcon platform={link.platform} size={22} />
-                      <span>{link.name}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )
-    }
+    {(groups.length > 0 || social.length > 0) && (
+      <div class="hd-board">
+        {groups.map((group) => (
+          <div class="hd-group">
+            <h3 class="hd-label font-ui">{group.label}</h3>
+            {group.lines.some((l) => l.kind === 'row') && (
+              <dl class="hd-rows">
+                {group.lines.map((l) =>
+                  l.kind === 'row' ? (
+                    <div class="hd-row">
+                      <dt class="hd-days font-body">{l.days}</dt>
+                      <dd class="hd-times font-body oldstyle">{l.times}</dd>
+                    </div>
+                  ) : null,
+                )}
+              </dl>
+            )}
+            {group.lines.map((l) =>
+              l.kind === 'note' ? (
+                <PortableTextStatic value={[l.block as PtBlock]} className="hd-note" />
+              ) : null,
+            )}
+          </div>
+        ))}
+        {social.length > 0 && (
+          <div class="hd-group">
+            <h3 class="hd-label font-ui">Follow along</h3>
+            <ul class="hd-social">
+              {social.map((link) => (
+                <li>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hd-social-link font-body"
+                  >
+                    <SocialIcon platform={link.platform} size={22} />
+                    <span>{link.name}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    )}
   </div>
 </section>
 

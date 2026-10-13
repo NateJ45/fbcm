@@ -156,69 +156,68 @@ const fallbackLabel: Record<string, string> = {
 };
 ---
 
-{
-  hasItems && (
-    <section
-      class:list={[source === 'journal' ? 'bg-band-taupe text-band-ink' : 'bg-background']}
-      aria-labelledby={headingId}
-    >
-      <div class="mx-auto max-w-content px-gutter py-section-lg">
-        {/* scaffold: journal */}
-        {/* ── The journal, as the Church Blog band ──────────────────────── */}
-        {source === 'journal' && (
-          <Fragment>
-            {/* The heading and the way out on one line, as the prototype's
+{hasItems && (
+  <section
+    class:list={[source === 'journal' ? 'bg-band-taupe text-band-ink' : 'bg-background']}
+    aria-labelledby={headingId}
+  >
+    <div class="mx-auto max-w-content px-gutter py-section-lg">
+      {/* scaffold: journal */}
+      {/* ── The journal, as the Church Blog band ──────────────────────── */}
+      {source === 'journal' && (
+        <Fragment>
+          {/* The heading and the way out on one line, as the prototype's
                 .jr-top: the button wraps under the heading on a phone. */}
-            <div class="mb-[clamp(36px,4vw,60px)] flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
-              <div>
-                {eyebrow && headline && (
-                  <p class="mb-4 font-ui text-ui font-medium text-band-brown">{eyebrow}</p>
-                )}
-                <h2 id={headingId} class:list={[H2_DISPLAY, 'text-band-indigo']}>
-                  {headline || eyebrow}
-                </h2>
-                {subhead && (
-                  <p class="mt-3 mb-0 max-w-[46ch] font-body text-[1.3125rem] text-band-brown">
-                    {subhead}
-                  </p>
-                )}
-              </div>
-              <CtaLink
-                cta={cta}
-                variant="gold"
-                fallbackHref={fallbackHref[source]}
-                fallbackLabel={fallbackLabel[source]}
-              />
+          <div class="mb-[clamp(36px,4vw,60px)] flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+            <div>
+              {eyebrow && headline && (
+                <p class="mb-4 font-ui text-ui font-medium text-band-brown">{eyebrow}</p>
+              )}
+              <h2 id={headingId} class:list={[H2_DISPLAY, 'text-band-indigo']}>
+                {headline || eyebrow}
+              </h2>
+              {subhead && (
+                <p class="mt-3 mb-0 max-w-[46ch] font-body text-[1.3125rem] text-band-brown">
+                  {subhead}
+                </p>
+              )}
             </div>
+            <CtaLink
+              cta={cta}
+              variant="gold"
+              fallbackHref={fallbackHref[source]}
+              fallbackLabel={fallbackLabel[source]}
+            />
+          </div>
 
-            {/* data-pagefind-ignore: the rows are other posts' titles and
+          {/* data-pagefind-ignore: the rows are other posts' titles and
                 excerpts; the site search finds those posts themselves. */}
-            <ol class="m-0 list-none border-t border-band-brown/40 p-0" data-pagefind-ignore>
-              {visibleItems.map((item) => (
-                <PostRow
-                  href={item.href ?? '/blog'}
-                  title={item.title ?? ''}
-                  dateLabel={
-                    item.meta
-                      ? entryIsSermonPreview(item as any)
-                        ? weekOfEyebrow(item.meta)
-                        : rowDate(item.meta)
-                      : ''
-                  }
-                  datetime={rowDateTime(item.meta)}
-                  image={item.coverImage}
-                  excerpt={item.summary}
-                  byline={typeof item.author === 'string' ? item.author : null}
-                  meta={item.categories?.[0]?.title ?? null}
-                  tone="taupe"
-                />
-              ))}
-            </ol>
-          </Fragment>
-        )}
-        {/* scaffold:end */}
+          <ol class="m-0 list-none border-t border-band-brown/40 p-0" data-pagefind-ignore>
+            {visibleItems.map((item) => (
+              <PostRow
+                href={item.href ?? '/blog'}
+                title={item.title ?? ''}
+                dateLabel={
+                  item.meta
+                    ? entryIsSermonPreview(item as any)
+                      ? weekOfEyebrow(item.meta)
+                      : rowDate(item.meta)
+                    : ''
+                }
+                datetime={rowDateTime(item.meta)}
+                image={item.coverImage}
+                excerpt={item.summary}
+                byline={typeof item.author === 'string' ? item.author : null}
+                meta={item.categories?.[0]?.title ?? null}
+                tone="taupe"
+              />
+            ))}
+          </ol>
+        </Fragment>
+      )}
+      {/* scaffold:end */}
 
-        {/* ── Any other source ────────────────────────────────────────────
+      {/* ── Any other source ────────────────────────────────────────────
               Every branch above belongs to a scaffold capability and can be
               removed; this one belongs to none and is what is left when they
               have been. It renders the flat shape the GROQ projection
@@ -230,47 +229,46 @@ const fallbackLabel: Record<string, string> = {
               It is also what keeps `colClass` interpolated somewhere in this
               file, which layout-variants.test.ts reads off disk to confirm the
               registry's `baseColumns` has not gone stale. */}
-        {!KNOWN_SOURCES.includes(source) && (
-          <Fragment>
-            <SectionHeading
-              eyebrow={eyebrow}
-              headline={headline}
-              subhead={subhead}
-              subheadRich={subheadRich}
-              headingId={headingId}
+      {!KNOWN_SOURCES.includes(source) && (
+        <Fragment>
+          <SectionHeading
+            eyebrow={eyebrow}
+            headline={headline}
+            subhead={subhead}
+            subheadRich={subheadRich}
+            headingId={headingId}
+          />
+
+          <ul class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}>
+            {visibleItems.map((item) => (
+              <li>
+                <div class="h-full rounded-md border border-border-soft bg-card p-m">
+                  <h3 class="font-display text-h4 text-foreground">{item.title}</h3>
+                  {item.meta && (
+                    <p class="mt-xs text-xs font-semibold tracking-eyebrow text-link uppercase">
+                      {item.meta}
+                    </p>
+                  )}
+                  {item.summary && (
+                    <p class="mt-s line-clamp-3 text-sm leading-relaxed text-foreground/80">
+                      {item.summary}
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-section-lg flex justify-center">
+            <CtaLink
+              cta={cta}
+              variant="secondary"
+              fallbackHref={fallbackHref[source]}
+              fallbackLabel={fallbackLabel[source]}
             />
-
-            <ul class={`mt-section-lg grid grid-cols-1 ${colClass} list-none gap-m p-0`}>
-              {visibleItems.map((item) => (
-                <li>
-                  <div class="h-full rounded-md border border-border-soft bg-card p-m">
-                    <h3 class="font-display text-h4 text-foreground">{item.title}</h3>
-                    {item.meta && (
-                      <p class="mt-xs text-xs font-semibold tracking-eyebrow text-link uppercase">
-                        {item.meta}
-                      </p>
-                    )}
-                    {item.summary && (
-                      <p class="mt-s line-clamp-3 text-sm leading-relaxed text-foreground/80">
-                        {item.summary}
-                      </p>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-
-            <div class="mt-section-lg flex justify-center">
-              <CtaLink
-                cta={cta}
-                variant="secondary"
-                fallbackHref={fallbackHref[source]}
-                fallbackLabel={fallbackLabel[source]}
-              />
-            </div>
-          </Fragment>
-        )}
-      </div>
-    </section>
-  )
-}
+          </div>
+        </Fragment>
+      )}
+    </div>
+  </section>
+)}
