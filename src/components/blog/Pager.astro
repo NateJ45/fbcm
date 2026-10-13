@@ -28,43 +28,41 @@ const pages = spans.length;
 const hrefFor = (n: number) => (n <= 1 ? `${basePath}/` : `${basePath}/page/${n}/`);
 ---
 
-{
-  pages > 1 && (
-    <nav class="pager" aria-label="Archive pages">
-      {page > 1 ? (
-        <a class="end" href={hrefFor(page - 1)} rel="prev">
-          &larr; Newer
-        </a>
-      ) : (
-        <span class="end" aria-hidden="true" />
-      )}
-      <ol>
-        {spans.map((s) => (
-          <li>
-            <a
-              href={hrefFor(s.page)}
-              title={s.title || undefined}
-              aria-current={s.page === page ? 'page' : undefined}
-            >
-              <span class="pn oldstyle">{s.page}</span>
-              {s.span && <span class="sp oldstyle">{s.span}</span>}
-            </a>
-          </li>
-        ))}
-      </ol>
-      <span class="mob">
-        Page {page} of {pages}
-      </span>
-      {page < pages ? (
-        <a class="end" href={hrefFor(page + 1)} rel="next">
-          Older &rarr;
-        </a>
-      ) : (
-        <span class="end" aria-hidden="true" />
-      )}
-    </nav>
-  )
-}
+{pages > 1 && (
+  <nav class="pager" aria-label="Archive pages">
+    {page > 1 ? (
+      <a class="end" href={hrefFor(page - 1)} rel="prev">
+        &larr; Newer
+      </a>
+    ) : (
+      <span class="end" aria-hidden="true" />
+    )}
+    <ol>
+      {spans.map((s) => (
+        <li>
+          <a
+            href={hrefFor(s.page)}
+            title={s.title || undefined}
+            aria-current={s.page === page ? 'page' : undefined}
+          >
+            <span class="pn oldstyle">{s.page}</span>
+            {s.span && <span class="sp oldstyle">{s.span}</span>}
+          </a>
+        </li>
+      ))}
+    </ol>
+    <span class="mob">
+      Page {page} of {pages}
+    </span>
+    {page < pages ? (
+      <a class="end" href={hrefFor(page + 1)} rel="next">
+        Older &rarr;
+      </a>
+    ) : (
+      <span class="end" aria-hidden="true" />
+    )}
+  </nav>
+)}
 
 <style>
   .pager {

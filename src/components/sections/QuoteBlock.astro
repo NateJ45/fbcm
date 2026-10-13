@@ -56,35 +56,33 @@ const quoteTypeClass = structured
     : 'text-h2 leading-[1.15] max-w-[24ch]';
 ---
 
-{
-  quote && (
-    <section class="bg-band-gold text-band-ink">
-      <figure class="mx-auto my-0 max-w-content px-gutter py-[clamp(72px,8vw,128px)]">
-        <blockquote class:list={['font-body font-normal italic', quoteTypeClass]}>
-          {structured
-            ? blocks.map((b, i) =>
-                b.kind === 'paragraph' ? (
-                  <p class={i > 0 ? 'mt-[0.9em]' : undefined}>{b.text}</p>
-                ) : (
-                  <ul class:list={['space-y-[0.5em]', i > 0 && 'mt-[0.9em]']}>
-                    {b.items.map((item) => (
-                      <li class="relative pl-[1.4em] before:absolute before:top-[0.62em] before:left-[0.3em] before:size-[0.38em] before:rounded-full before:bg-band-ink before:content-['']">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                ),
-              )
-            : quote}
-        </blockquote>
-        {(attribution || detail) && (
-          <figcaption class="mt-8 font-ui text-ui font-semibold">
-            {attribution}
-            {attribution && detail ? ' · ' : ''}
-            {detail}
-          </figcaption>
-        )}
-      </figure>
-    </section>
-  )
-}
+{quote && (
+  <section class="bg-band-gold text-band-ink">
+    <figure class="mx-auto my-0 max-w-content px-gutter py-[clamp(72px,8vw,128px)]">
+      <blockquote class:list={['font-body font-normal italic', quoteTypeClass]}>
+        {structured
+          ? blocks.map((b, i) =>
+              b.kind === 'paragraph' ? (
+                <p class={i > 0 ? 'mt-[0.9em]' : undefined}>{b.text}</p>
+              ) : (
+                <ul class:list={['space-y-[0.5em]', i > 0 && 'mt-[0.9em]']}>
+                  {b.items.map((item) => (
+                    <li class="relative pl-[1.4em] before:absolute before:top-[0.62em] before:left-[0.3em] before:size-[0.38em] before:rounded-full before:bg-band-ink before:content-['']">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              ),
+            )
+          : quote}
+      </blockquote>
+      {(attribution || detail) && (
+        <figcaption class="mt-8 font-ui text-ui font-semibold">
+          {attribution}
+          {attribution && detail ? ' · ' : ''}
+          {detail}
+        </figcaption>
+      )}
+    </figure>
+  </section>
+)}

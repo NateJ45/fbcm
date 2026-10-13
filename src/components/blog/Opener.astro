@@ -45,25 +45,21 @@ const words = plainWords(heading);
         </h1>
         {lede && <p class="mt-6 max-w-[34em] font-body text-lede text-band-taupe italic">{lede}</p>}
       </div>
-      {
-        hasAside && (
-          <div class="r">
-            <slot />
-          </div>
-        )
-      }
+      {hasAside && (
+        <div class="r">
+          <slot />
+        </div>
+      )}
     </div>
   </div>
 </div>
-{
-  Astro.slots.has('filters') && (
-    <div class="bg-background">
-      <div class="mx-auto max-w-content px-gutter pt-8">
-        <slot name="filters" />
-      </div>
+{Astro.slots.has('filters') && (
+  <div class="bg-background">
+    <div class="mx-auto max-w-content px-gutter pt-8">
+      <slot name="filters" />
     </div>
-  )
-}
+  </div>
+)}
 
 <style>
   .ix-open {

@@ -46,69 +46,59 @@ const hasBody = !!(intro || moreBlocks.length || praise || proclaim);
   aria-labelledby={heading ? headingId : undefined}
 >
   <div class="ww-wrap mx-auto max-w-content px-gutter">
-    {
-      heading && (
-        <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
-          {heading}
-        </h2>
-      )
-    }
+    {heading && (
+      <h2 id={headingId} class:list={[H2_DISPLAY, 'text-gold']}>
+        {heading}
+      </h2>
+    )}
     <WatchwordMark size="band" class="mt-6 lg:mt-10" />
 
-    {
-      verseParts.length > 0 && (
-        <blockquote class="ww-verse">
-          <p class="font-body">
-            &ldquo;
-            {verseParts.map((part) =>
-              part.hit ? (
-                <mark class="bg-transparent text-gold italic">{part.text}</mark>
-              ) : (
-                part.text
-              ),
-            )}
-            &rdquo;
-          </p>
-          {reference && <cite class="font-ui font-bold text-gold not-italic">{reference}</cite>}
-        </blockquote>
-      )
-    }
+    {verseParts.length > 0 && (
+      <blockquote class="ww-verse">
+        <p class="font-body">
+          &ldquo;
+          {verseParts.map((part) =>
+            part.hit ? <mark class="bg-transparent text-gold italic">{part.text}</mark> : part.text,
+          )}
+          &rdquo;
+        </p>
+        {reference && <cite class="font-ui font-bold text-gold not-italic">{reference}</cite>}
+      </blockquote>
+    )}
 
-    {
-      hasBody && (
-        <div class="ww-body">
-          <div>
-            {intro && <p class="whitespace-pre-line">{intro}</p>}
-            {moreBlocks.length > 0 && (
-              <details class="ww-more">
-                <summary class="font-ui font-bold text-gold">
-                  <span class="ww-rm">Read more</span>
-                  <span class="ww-rl">Read less</span>
-                </summary>
-                <div class="mt-4 space-y-4">
-                  <PortableText value={moreBlocks} variant="bare" />
-                </div>
-              </details>
-            )}
-          </div>
-          {(praise || proclaim) && (
-            <dl class="ww-pair">
-              {praise && (
-                <div>
-                  <dt class="font-body text-white-pure italic">Praise</dt>
-                  <dd>{praise}</dd>
-                </div>
-              )}
-              {proclaim && (
-                <div>
-                  <dt class="font-display text-gold">Proclaim</dt>
-                  <dd>{proclaim}</dd>
-                </div>
-              )}
-            </dl>
+    {hasBody && (
+      <div class="ww-body">
+        <div>
+          {intro && <p class="whitespace-pre-line">{intro}</p>}
+          {moreBlocks.length > 0 && (
+            <details class="ww-more">
+              <summary class="font-ui font-bold text-gold">
+                <span class="ww-rm">Read more</span>
+                <span class="ww-rl">Read less</span>
+              </summary>
+              <div class="mt-4 space-y-4">
+                <PortableText value={moreBlocks} variant="bare" />
+              </div>
+            </details>
           )}
         </div>
-      )
-    }
+        {(praise || proclaim) && (
+          <dl class="ww-pair">
+            {praise && (
+              <div>
+                <dt class="font-body text-white-pure italic">Praise</dt>
+                <dd>{praise}</dd>
+              </div>
+            )}
+            {proclaim && (
+              <div>
+                <dt class="font-display text-gold">Proclaim</dt>
+                <dd>{proclaim}</dd>
+              </div>
+            )}
+          </dl>
+        )}
+      </div>
+    )}
   </div>
 </section>

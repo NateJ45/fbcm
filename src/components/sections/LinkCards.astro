@@ -142,93 +142,88 @@ const arrowInk = dark ? 'text-bg' : 'text-link';
 const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? null, '/');
 ---
 
-{
-  doors && (
-    <section
-      class:list={['lc-band', glyphed ? 'bg-band-deep' : 'bg-band-indigo', 'text-white-pure']}
-      aria-labelledby={heading ? headingId : undefined}
-    >
-      <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
-        {eyebrow && <p class="mb-4 font-ui text-ui text-gold">{eyebrow}</p>}
-        {heading && (
-          <h2 id={headingId} class:list={[H2_DISPLAY, 'mb-[clamp(36px,4vw,64px)]']}>
-            {heading}
-          </h2>
-        )}
-        {intro && <p class="-mt-4 mb-10 max-w-[42ch] text-lede">{intro}</p>}
-        <ul class="lc-doors" style={`--n:${shown.length}`}>
-          {shown.map((card, i) => (
-            <li>
-              <a href={hrefFor(card)} class="lc-door group">
-                <ArchFrame
-                  image={card.image}
-                  shape="door"
-                  width={720}
-                  sizes="(min-width: 1121px) 300px, (min-width: 621px) 45vw, 100vw"
-                  alt=""
-                  grade="warm"
-                  style={`transition-delay: ${i * 100}ms`}
-                />
-                {glyphed ? (
-                  <span class="lc-body">
-                    <span class="mb-2 flex items-center gap-3 text-gold">
-                      <BuildingGlyph name={card.glyph ?? 'window'} class="w-9 shrink-0" />
-                      <span class="font-display text-h3 leading-[1.05]">{card.title}</span>
-                    </span>
-                    {card.body && (
-                      <span class="mb-5 text-lg leading-[1.45] text-bg">{card.body}</span>
-                    )}
-                    {card.cta?.label && (
-                      <span class="mt-auto inline-flex w-fit items-center gap-2 border-b border-current pb-1 font-ui text-ui font-semibold text-gold">
-                        {card.cta.label}
-                      </span>
-                    )}
-                  </span>
-                ) : (
-                  <span class="lc-body bg-background text-foreground">
-                    <span class="font-display text-h3 leading-[1.05] text-indigo">
-                      {card.title}
-                    </span>
-                    {card.body && (
-                      <span class="mt-2.5 mb-6 text-lg leading-[1.45] text-muted-foreground">
-                        {card.body}
-                      </span>
-                    )}
-                    {card.cta?.label && (
-                      <span class="mt-auto inline-flex min-h-[44px] items-center self-start rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] transition-transform group-hover:-translate-y-px">
-                        {card.cta.label}
-                      </span>
-                    )}
-                  </span>
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  )
-}
-{
-  !doors && shown.length > 0 && (
-    <section
-      class:list={
-        hasFrame ? ['relative isolate flex min-h-[88svh] flex-col justify-end text-bg'] : [bg]
-      }
-      aria-labelledby={heading ? headingId : undefined}
-    >
-      {hasFrame && (
-        <SanityImage
-          source={frame}
-          width={2400}
-          sizes="100vw"
-          quality={70}
-          loading="lazy"
-          class="absolute inset-0 -z-20 h-full w-full object-cover object-[50%_40%]"
-        />
+{doors && (
+  <section
+    class:list={['lc-band', glyphed ? 'bg-band-deep' : 'bg-band-indigo', 'text-white-pure']}
+    aria-labelledby={heading ? headingId : undefined}
+  >
+    <div class="mx-auto w-full max-w-content px-gutter py-[clamp(80px,9vw,140px)]">
+      {eyebrow && <p class="mb-4 font-ui text-ui text-gold">{eyebrow}</p>}
+      {heading && (
+        <h2 id={headingId} class:list={[H2_DISPLAY, 'mb-[clamp(36px,4vw,64px)]']}>
+          {heading}
+        </h2>
       )}
+      {intro && <p class="-mt-4 mb-10 max-w-[42ch] text-lede">{intro}</p>}
+      <ul class="lc-doors" style={`--n:${shown.length}`}>
+        {shown.map((card, i) => (
+          <li>
+            <a href={hrefFor(card)} class="lc-door group">
+              <ArchFrame
+                image={card.image}
+                shape="door"
+                width={720}
+                sizes="(min-width: 1121px) 300px, (min-width: 621px) 45vw, 100vw"
+                alt=""
+                grade="warm"
+                style={`transition-delay: ${i * 100}ms`}
+              />
+              {glyphed ? (
+                <span class="lc-body">
+                  <span class="mb-2 flex items-center gap-3 text-gold">
+                    <BuildingGlyph name={card.glyph ?? 'window'} class="w-9 shrink-0" />
+                    <span class="font-display text-h3 leading-[1.05]">{card.title}</span>
+                  </span>
+                  {card.body && (
+                    <span class="mb-5 text-lg leading-[1.45] text-bg">{card.body}</span>
+                  )}
+                  {card.cta?.label && (
+                    <span class="mt-auto inline-flex w-fit items-center gap-2 border-b border-current pb-1 font-ui text-ui font-semibold text-gold">
+                      {card.cta.label}
+                    </span>
+                  )}
+                </span>
+              ) : (
+                <span class="lc-body bg-background text-foreground">
+                  <span class="font-display text-h3 leading-[1.05] text-indigo">{card.title}</span>
+                  {card.body && (
+                    <span class="mt-2.5 mb-6 text-lg leading-[1.45] text-muted-foreground">
+                      {card.body}
+                    </span>
+                  )}
+                  {card.cta?.label && (
+                    <span class="mt-auto inline-flex min-h-[44px] items-center self-start rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] transition-transform group-hover:-translate-y-px">
+                      {card.cta.label}
+                    </span>
+                  )}
+                </span>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+{!doors && shown.length > 0 && (
+  <section
+    class:list={
+      hasFrame ? ['relative isolate flex min-h-[88svh] flex-col justify-end text-bg'] : [bg]
+    }
+    aria-labelledby={heading ? headingId : undefined}
+  >
+    {hasFrame && (
+      <SanityImage
+        source={frame}
+        width={2400}
+        sizes="100vw"
+        quality={70}
+        loading="lazy"
+        class="absolute inset-0 -z-20 h-full w-full object-cover object-[50%_40%]"
+      />
+    )}
 
-      {/* ONE overlay, the hero's bottom-up gradient RE-WEIGHTED for this band.
+    {/* ONE overlay, the hero's bottom-up gradient RE-WEIGHTED for this band.
           MEASURED, not guessed. The hero's own stops (.94 / .62 / .12 / 0) are
           tuned for a headline sitting in the bottom third of the frame. This
           band's display line is four lines of capitals reaching from 11% to 54%
@@ -242,83 +237,77 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
           statement ever gets a dark photograph these stops can come back down,
           but they have to be re-measured against the new picture, not reasoned
           about. */}
-      {hasFrame && (
-        <div
-          class="absolute inset-0 -z-10"
-          aria-hidden="true"
-          style="background: linear-gradient(to top, rgba(23,21,31,.94) 0%, rgba(23,21,31,.84) 32%, rgba(23,21,31,.72) 62%, rgba(23,21,31,.62) 100%);"
+    {hasFrame && (
+      <div
+        class="absolute inset-0 -z-10"
+        aria-hidden="true"
+        style="background: linear-gradient(to top, rgba(23,21,31,.94) 0%, rgba(23,21,31,.84) 32%, rgba(23,21,31,.72) 62%, rgba(23,21,31,.62) 100%);"
+      />
+    )}
+
+    <div
+      class:list={[
+        'mx-auto w-full max-w-content px-gutter',
+        hasFrame ? 'py-[clamp(56px,9vw,120px)]' : 'py-section-lg',
+      ]}
+    >
+      {hasFrame ? (
+        <Fragment>
+          {heading && (
+            <h2
+              id={headingId}
+              class="max-w-[15ch] font-display text-h1 font-normal tracking-[0.01em] uppercase"
+            >
+              {heading}
+            </h2>
+          )}
+          {intro && <p class="mt-6 max-w-[42ch] text-lede font-normal text-bg/80">{intro}</p>}
+        </Fragment>
+      ) : (
+        <SectionHeading
+          eyebrow={eyebrow}
+          headline={heading}
+          subhead={intro}
+          headingId={headingId}
+          level="h2"
+          align="left"
+          tone="church"
         />
       )}
 
       <div
-        class:list={[
-          'mx-auto w-full max-w-content px-gutter',
-          hasFrame ? 'py-[clamp(56px,9vw,120px)]' : 'py-section-lg',
-        ]}
+        class:list={['mt-[clamp(40px,6vw,72px)] grid grid-cols-1 border-t md:grid-cols-3', ruleInk]}
       >
-        {hasFrame ? (
-          <Fragment>
-            {heading && (
-              <h2
-                id={headingId}
-                class="max-w-[15ch] font-display text-h1 font-normal tracking-[0.01em] uppercase"
+        {shown.map((card, i) => (
+          <a
+            href={hrefFor(card)}
+            class:list={[
+              'group border-b py-7 pr-[clamp(16px,2vw,32px)] last:mr-0 last:border-r-0 last:border-b-0 md:mr-[clamp(16px,2vw,32px)] md:border-r md:border-b-0',
+              ruleInk,
+            ]}
+          >
+            <span class:list={['mb-3 block font-ui text-ui', labelInk]}>
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span class:list={['block font-body text-h3 font-normal', titleInk]}>{card.title}</span>
+            {card.body && (
+              <span
+                class:list={[
+                  'mt-2.5 block max-w-[34ch] font-body text-base leading-[1.55]',
+                  bodyInk,
+                ]}
               >
-                {heading}
-              </h2>
+                {card.body}
+              </span>
             )}
-            {intro && <p class="mt-6 max-w-[42ch] text-lede font-normal text-bg/80">{intro}</p>}
-          </Fragment>
-        ) : (
-          <SectionHeading
-            eyebrow={eyebrow}
-            headline={heading}
-            subhead={intro}
-            headingId={headingId}
-            level="h2"
-            align="left"
-            tone="church"
-          />
-        )}
-
-        <div
-          class:list={[
-            'mt-[clamp(40px,6vw,72px)] grid grid-cols-1 border-t md:grid-cols-3',
-            ruleInk,
-          ]}
-        >
-          {shown.map((card, i) => (
-            <a
-              href={hrefFor(card)}
-              class:list={[
-                'group border-b py-7 pr-[clamp(16px,2vw,32px)] last:mr-0 last:border-r-0 last:border-b-0 md:mr-[clamp(16px,2vw,32px)] md:border-r md:border-b-0',
-                ruleInk,
-              ]}
-            >
-              <span class:list={['mb-3 block font-ui text-ui', labelInk]}>
-                {String(i + 1).padStart(2, '0')}
+            {card.cta?.label && (
+              <span class:list={['mt-3.5 inline-block font-body italic', arrowInk]}>
+                {card.cta.label} &#8594;
               </span>
-              <span class:list={['block font-body text-h3 font-normal', titleInk]}>
-                {card.title}
-              </span>
-              {card.body && (
-                <span
-                  class:list={[
-                    'mt-2.5 block max-w-[34ch] font-body text-base leading-[1.55]',
-                    bodyInk,
-                  ]}
-                >
-                  {card.body}
-                </span>
-              )}
-              {card.cta?.label && (
-                <span class:list={['mt-3.5 inline-block font-body italic', arrowInk]}>
-                  {card.cta.label} &#8594;
-                </span>
-              )}
-            </a>
-          ))}
-        </div>
+            )}
+          </a>
+        ))}
       </div>
-    </section>
-  )
-}
+    </div>
+  </section>
+)}

@@ -109,10 +109,8 @@ const H2 = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground';
 ---
 
 <BaseLayout {title} {description} {schemas} {siteSettings} seoImage={page?.seoImage} searchBody>
-  {
-    /* One region landmark per band, each named by its heading. The opener is
-      the h1; the policy is one column at the same gutter (CLAUDE.md rule 17). */
-  }
+  {/* One region landmark per band, each named by its heading. The opener is
+      the h1; the policy is one column at the same gutter (CLAUDE.md rule 17). */}
   <section class="pv-open" aria-labelledby="privacy-hero-heading">
     <div class="pv-grid mx-auto max-w-content px-gutter">
       <BuildingGlyph name="window" class="pv-glyph" />
@@ -135,60 +133,58 @@ const H2 = 'mt-14 mb-5 font-body text-h2 font-normal text-foreground';
 
   <section class="bg-background" aria-label="The policy">
     <div class="mx-auto max-w-content px-gutter py-section-lg">
-      {
-        hasSanityBody ? (
-          <>
-            <PortableTextStatic value={page!.body} className={`prose-friendly ${PROSE_MEASURE}`} />
-            {/* Cookies, measurement, search and the contact line: derived at
+      {hasSanityBody ? (
+        <>
+          <PortableTextStatic value={page!.body} className={`prose-friendly ${PROSE_MEASURE}`} />
+          {/* Cookies, measurement, search and the contact line: derived at
               build time, never stored in the document (PrivacyDerived.astro). */}
-            <div class={PROSE_MEASURE}>
-              <PrivacyDerived email={contactEmail} phone={contactPhone} />
-            </div>
-          </>
-        ) : (
-          <div class:list={['space-y-l', PROSE_MEASURE]}>
-            <p>
-              This site is run by {site.name} to share what is happening at the church. This policy
-              explains what the site itself does with information from anyone who visits it.
-            </p>
-
-            <div>
-              <h2 class={H2}>What this site does not do</h2>
-              <ul class="list-disc space-y-1 pl-6 marker:text-gold">
-                <li>This site has no contact form, sign-up form or account system of its own.</li>
-                <li>It does not ask you to create an account or log in.</li>
-              </ul>
-            </div>
-
-            <div>
-              <h2 class={H2}>Links to other services</h2>
-              <p>
-                This site links out to a few services the church uses for things this site itself
-                does not do.
-              </p>
-              <ul class="mt-s list-disc space-y-1 pl-6 marker:text-gold">
-                {services.map((s) => (
-                  <li>
-                    {s.url ? (
-                      <a
-                        href={s.url}
-                        class="text-link underline underline-offset-2 hover:text-primary"
-                      >
-                        {s.name}
-                      </a>
-                    ) : (
-                      s.name
-                    )}{' '}
-                    {s.does} It has its own privacy policy, separate from this one.
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <PrivacyDerived email={contactEmail} phone={contactPhone} h2Class={H2} pClass="" />
+          <div class={PROSE_MEASURE}>
+            <PrivacyDerived email={contactEmail} phone={contactPhone} />
           </div>
-        )
-      }
+        </>
+      ) : (
+        <div class:list={['space-y-l', PROSE_MEASURE]}>
+          <p>
+            This site is run by {site.name} to share what is happening at the church. This policy
+            explains what the site itself does with information from anyone who visits it.
+          </p>
+
+          <div>
+            <h2 class={H2}>What this site does not do</h2>
+            <ul class="list-disc space-y-1 pl-6 marker:text-gold">
+              <li>This site has no contact form, sign-up form or account system of its own.</li>
+              <li>It does not ask you to create an account or log in.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 class={H2}>Links to other services</h2>
+            <p>
+              This site links out to a few services the church uses for things this site itself does
+              not do.
+            </p>
+            <ul class="mt-s list-disc space-y-1 pl-6 marker:text-gold">
+              {services.map((s) => (
+                <li>
+                  {s.url ? (
+                    <a
+                      href={s.url}
+                      class="text-link underline underline-offset-2 hover:text-primary"
+                    >
+                      {s.name}
+                    </a>
+                  ) : (
+                    s.name
+                  )}{' '}
+                  {s.does} It has its own privacy policy, separate from this one.
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <PrivacyDerived email={contactEmail} phone={contactPhone} h2Class={H2} pClass="" />
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>

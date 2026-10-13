@@ -35,37 +35,37 @@ const { goals, headingId } = Astro.props;
 
 <section class="mg-band bg-band-deep text-white-pure" aria-labelledby={headingId}>
   <div class="mx-auto w-full max-w-content px-gutter py-[clamp(72px,8vw,128px)]">
-    <h2 id={headingId} class:list={[H2_DISPLAY, 'mb-[clamp(36px,4vw,64px)]']}>Our Goals</h2>
+    <h2 id={headingId} class:list={[H2_DISPLAY, 'mb-[clamp(36px,4vw,64px)]']}>
+      Our Goals
+    </h2>
     <ul class="mg-goals">
-      {
-        goals.map((g, i) => (
-          <li class="mg-goal" data-reveal style={`--i:${i}`}>
-            <a href={goalHref(g.value)} class="mg-name group">
-              <BuildingGlyph name={g.glyph} class="w-9 shrink-0 text-gold" />
-              <span class="font-display text-h3 leading-[1.05] text-gold group-hover:underline group-hover:decoration-1 group-hover:underline-offset-[6px]">
-                {g.name}
-              </span>
-            </a>
-            {/* The church writes each goal's own word in brackets under its name; Worship has none, and its slot stays so the lists line up. */}
-            <p class="mg-aside">{g.aside ? `(${g.aside})` : ''}</p>
-            {g.ministries.length > 0 && (
-              <ul class="mg-list">
-                {g.ministries.map((m) => (
-                  <li>
-                    {m.anchor ? (
-                      <a href={`#${m.anchor}`} class="mg-ministry">
-                        {m.label}
-                      </a>
-                    ) : (
-                      <span class="mg-ministry">{m.label}</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))
-      }
+      {goals.map((g, i) => (
+        <li class="mg-goal" data-reveal style={`--i:${i}`}>
+          <a href={goalHref(g.value)} class="mg-name group">
+            <BuildingGlyph name={g.glyph} class="w-9 shrink-0 text-gold" />
+            <span class="font-display text-h3 leading-[1.05] text-gold group-hover:underline group-hover:decoration-1 group-hover:underline-offset-[6px]">
+              {g.name}
+            </span>
+          </a>
+          {/* The church writes each goal's own word in brackets under its name; Worship has none, and its slot stays so the lists line up. */}
+          <p class="mg-aside">{g.aside ? `(${g.aside})` : ''}</p>
+          {g.ministries.length > 0 && (
+            <ul class="mg-list">
+              {g.ministries.map((m) => (
+                <li>
+                  {m.anchor ? (
+                    <a href={`#${m.anchor}`} class="mg-ministry">
+                      {m.label}
+                    </a>
+                  ) : (
+                    <span class="mg-ministry">{m.label}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
     </ul>
   </div>
 </section>

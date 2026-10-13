@@ -43,38 +43,36 @@ const drawn = cover && issue.key ? cover : null;
 const fallbackWidth = drawn ? (drawn.widths.find((w) => w >= 480) ?? drawn.widths[0]) : 0;
 ---
 
-{
-  drawn && issue.key ? (
-    <img
-      src={coverSrc(issue.key, fallbackWidth)}
-      srcset={coverSrcset(issue.key, drawn)}
-      {sizes}
-      width={drawn.w}
-      height={drawn.h}
-      {alt}
-      loading={eager ? 'eager' : 'lazy'}
-      decoding={eager ? 'auto' : 'async'}
-      fetchpriority={eager ? 'high' : undefined}
-      class:list={['ic-img', cls]}
-      data-issue-cover="drawn"
-    />
-  ) : (
-    <span
-      class:list={['ic-set', cls]}
-      role={decorative ? undefined : 'img'}
-      aria-label={decorative ? undefined : alt}
-      aria-hidden={decorative ? 'true' : undefined}
-      data-issue-cover="typeset"
-    >
-      <span class="ic-set-in" aria-hidden="true">
-        <span class="ic-name">{NEWSLETTER}</span>
-        <span class="ic-rule" />
-        <span class="ic-month">{MONTHS[issue.month]}</span>
-        <span class="ic-year">{issue.year}</span>
-      </span>
+{drawn && issue.key ? (
+  <img
+    src={coverSrc(issue.key, fallbackWidth)}
+    srcset={coverSrcset(issue.key, drawn)}
+    {sizes}
+    width={drawn.w}
+    height={drawn.h}
+    {alt}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding={eager ? 'auto' : 'async'}
+    fetchpriority={eager ? 'high' : undefined}
+    class:list={['ic-img', cls]}
+    data-issue-cover="drawn"
+  />
+) : (
+  <span
+    class:list={['ic-set', cls]}
+    role={decorative ? undefined : 'img'}
+    aria-label={decorative ? undefined : alt}
+    aria-hidden={decorative ? 'true' : undefined}
+    data-issue-cover="typeset"
+  >
+    <span class="ic-set-in" aria-hidden="true">
+      <span class="ic-name">{NEWSLETTER}</span>
+      <span class="ic-rule" />
+      <span class="ic-month">{MONTHS[issue.month]}</span>
+      <span class="ic-year">{issue.year}</span>
     </span>
-  )
-}
+  </span>
+)}
 
 <style>
   .ic-img {

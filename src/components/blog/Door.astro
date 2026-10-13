@@ -41,55 +41,51 @@ const freshMeta = fresh
 const latestDay = latest ? localDay(latest.publishedAt) : null;
 ---
 
-{
-  fresh && freshSunday && (
-    <div class="door" data-door-fresh={isoDay(freshSunday)}>
-      <p class="lbl font-ui text-ui font-medium">This Sunday, {monthDay(freshSunday)}</p>
-      <div class="dw">
-        <ArchFrame
-          image={fresh.coverImage as any}
-          glyph="door"
-          shape="door"
-          width={440}
-          sizes="150px"
-          alt=""
-          loading="eager"
-          reveal={false}
-        />
-      </div>
-      <a class="dt" href={hrefOf(fresh)}>
-        <b>{fresh.title}</b>
-      </a>
-      {freshMeta && <p class="meta oldstyle">{freshMeta}</p>}
-      {fresh.excerpt && <p class="ex">{fresh.excerpt}</p>}
+{fresh && freshSunday && (
+  <div class="door" data-door-fresh={isoDay(freshSunday)}>
+    <p class="lbl font-ui text-ui font-medium">This Sunday, {monthDay(freshSunday)}</p>
+    <div class="dw">
+      <ArchFrame
+        image={fresh.coverImage as any}
+        glyph="door"
+        shape="door"
+        width={440}
+        sizes="150px"
+        alt=""
+        loading="eager"
+        reveal={false}
+      />
     </div>
-  )
-}
-{
-  latest && (
-    <div class="door" data-door-latest hidden={fresh && freshSunday ? true : undefined}>
-      <p class="lbl font-ui text-ui font-medium">
-        Latest{latestDay && <> &middot; {monthDay(latestDay)}</>}
-      </p>
-      <div class="dw">
-        <ArchFrame
-          image={latest.coverImage as any}
-          glyph="door"
-          shape="door"
-          width={440}
-          sizes="150px"
-          alt=""
-          loading={fresh ? 'lazy' : 'eager'}
-          reveal={false}
-        />
-      </div>
-      <a class="dt" href={hrefOf(latest)}>
-        <b>{latest.title}</b>
-      </a>
-      {latest.excerpt && <p class="ex">{latest.excerpt}</p>}
+    <a class="dt" href={hrefOf(fresh)}>
+      <b>{fresh.title}</b>
+    </a>
+    {freshMeta && <p class="meta oldstyle">{freshMeta}</p>}
+    {fresh.excerpt && <p class="ex">{fresh.excerpt}</p>}
+  </div>
+)}
+{latest && (
+  <div class="door" data-door-latest hidden={fresh && freshSunday ? true : undefined}>
+    <p class="lbl font-ui text-ui font-medium">
+      Latest{latestDay && <> &middot; {monthDay(latestDay)}</>}
+    </p>
+    <div class="dw">
+      <ArchFrame
+        image={latest.coverImage as any}
+        glyph="door"
+        shape="door"
+        width={440}
+        sizes="150px"
+        alt=""
+        loading={fresh ? 'lazy' : 'eager'}
+        reveal={false}
+      />
     </div>
-  )
-}
+    <a class="dt" href={hrefOf(latest)}>
+      <b>{latest.title}</b>
+    </a>
+    {latest.excerpt && <p class="ex">{latest.excerpt}</p>}
+  </div>
+)}
 {/* Does nothing unless the fresh door was rendered. */}
 <script is:inline define:vars={{ tz: CHURCH_TZ }}>
   (function () {

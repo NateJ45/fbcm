@@ -150,57 +150,48 @@ const plainInk = taupe
 ---
 
 <li class={li}>
-  {
-    /* A sermon preview says which week it is for; everything else says its
-      date (derived from the category, CLAUDE.md rule 15). */
-  }
+  {/* A sermon preview says which week it is for; everything else says its
+      date (derived from the category, CLAUDE.md rule 15). */}
   <time datetime={datetime} class={C.time}>
     {dateLabel}
   </time>
 
-  {
-    plain ? (
-      hasImage ? (
-        <figure class:list={[plainBox, plainInk]}>
-          <SanityImage
-            source={image}
-            width={320}
-            sizes="(min-width: 1024px) 160px, (min-width: 768px) 136px, 96px"
-            alt={rowAlt(image?.alt, title)}
-            class:list={[
-              'block h-full w-full',
-              fit === 'cover' ? 'object-cover' : 'object-contain',
-            ]}
-            style={`object-position: ${objectPosition};`}
-          />
-        </figure>
-      ) : (
-        <figure
-          class:list={[
-            plainBox,
-            'flex items-center justify-center border-band-indigo bg-band-indigo',
-          ]}
-        >
-          <BuildingGlyph name="window" class="h-[70%] w-auto text-gold" />
-        </figure>
-      )
+  {plain ? (
+    hasImage ? (
+      <figure class:list={[plainBox, plainInk]}>
+        <SanityImage
+          source={image}
+          width={320}
+          sizes="(min-width: 1024px) 160px, (min-width: 768px) 136px, 96px"
+          alt={rowAlt(image?.alt, title)}
+          class:list={['block h-full w-full', fit === 'cover' ? 'object-cover' : 'object-contain']}
+          style={`object-position: ${objectPosition};`}
+        />
+      </figure>
     ) : (
-      <ArchFrame
-        image={image}
-        glyph="window"
-        shape="lancet"
-        width={176}
-        sizes="(min-width: 1024px) 88px, (min-width: 768px) 76px, 64px"
-        alt={rowAlt(image?.alt, title)}
-        class="col-start-1 row-span-3 row-start-1 self-start md:col-start-2 md:row-span-2 md:self-center lg:row-span-1"
-        style={C.arch}
-      />
+      <figure
+        class:list={[
+          plainBox,
+          'flex items-center justify-center border-band-indigo bg-band-indigo',
+        ]}
+      >
+        <BuildingGlyph name="window" class="h-[70%] w-auto text-gold" />
+      </figure>
     )
-  }
+  ) : (
+    <ArchFrame
+      image={image}
+      glyph="window"
+      shape="lancet"
+      width={176}
+      sizes="(min-width: 1024px) 88px, (min-width: 768px) 76px, 64px"
+      alt={rowAlt(image?.alt, title)}
+      class="col-start-1 row-span-3 row-start-1 self-start md:col-start-2 md:row-span-2 md:self-center lg:row-span-1"
+      style={C.arch}
+    />
+  )}
 
-  <div
-    class="col-start-2 row-start-2 min-w-0 md:col-start-3 md:row-start-1 md:self-end lg:self-center"
-  >
+  <div class="col-start-2 row-start-2 min-w-0 md:col-start-3 md:row-start-1 md:self-end lg:self-center">
     <Heading class={C.h} data-vt-title>
       <a href={href} class={C.a}>
         {title}
@@ -209,13 +200,11 @@ const plainInk = taupe
     {excerpt && <p class={C.ex}>{excerpt}</p>}
   </div>
 
-  {
-    (hasByline || hasMeta) && (
-      <p class={C.by}>
-        {hasByline && <span class={C.b}>{byline}</span>}
-        {hasByline && hasMeta && <span class="md:hidden">, </span>}
-        {hasMeta && meta}
-      </p>
-    )
-  }
+  {(hasByline || hasMeta) && (
+    <p class={C.by}>
+      {hasByline && <span class={C.b}>{byline}</span>}
+      {hasByline && hasMeta && <span class="md:hidden">, </span>}
+      {hasMeta && meta}
+    </p>
+  )}
 </li>

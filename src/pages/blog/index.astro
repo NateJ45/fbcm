@@ -96,8 +96,7 @@ const schemas = [
 ---
 
 <BaseLayout {title} {description} {schemas} {siteSettings} seoImage={page?.seoImage}>
-  {
-    /* Plan 1 retired six Wix category listings to `/blog?category=<slug>` (see
+  {/* Plan 1 retired six Wix category listings to `/blog?category=<slug>` (see
      BLOG_CATEGORIES in src/lib/fbcm-redirects.ts). This site is static, so the
      index cannot read a querystring at build time; this hands the visitor on to
      the built category page instead. `pianist` was a TAG on the old site, not a
@@ -110,8 +109,7 @@ const schemas = [
      somebody's bookmark was sent to a category route this build never made:
      a 404 in place of the archive index. The two allow-lists are built above
      from the same data the two routes' getStaticPaths use, so the script and
-     the build cannot disagree about what exists. */
-  }
+     the build cannot disagree about what exists. */}
   <script is:inline define:vars={{ categorySlugs: builtCategorySlugs, tagSlugs: builtTagSlugs }}>
     (function () {
       var slug = new URLSearchParams(location.search).get('category');
@@ -126,7 +124,6 @@ const schemas = [
       // Unknown slug: do nothing. The archive index is already rendering.
     })();
   </script>
-
   {/* ------- 1. Opener and door ---------------------------------------------- */}
   <Opener
     eyebrow={heroEyebrow}
@@ -140,7 +137,9 @@ const schemas = [
   {/* ------- 2. All posts: the filters and page 1 of the register ------------ */}
   <section class="bg-background" aria-labelledby="blog-all-heading">
     <div class="mx-auto max-w-content px-gutter py-section-lg">
-      <h2 id="blog-all-heading" class:list={[H2_DISPLAY, 'mb-8 text-indigo']}>All posts</h2>
+      <h2 id="blog-all-heading" class:list={[H2_DISPLAY, 'mb-8 text-indigo']}>
+        All posts
+      </h2>
       <Filters entries={all} allCurrent />
       <div class="mt-[clamp(36px,4vw,56px)]">
         <Register entries={firstPage.items} emptyMessage="The first posts are on their way." />
@@ -149,12 +148,10 @@ const schemas = [
     </div>
   </section>
 
-  {
-    /* ------- 3. Extra sections from the Studio ------------------------------
+  {/* ------- 3. Extra sections from the Studio ------------------------------
      The #publications document list (The Visitor, and the two books) is one of
      these, seeded by scripts/pages/blog.mjs. idPrefix keeps its generated
-     heading ids from colliding with the bands drawn above. */
-  }
+     heading ids from colliding with the bands drawn above. */}
   <SectionRenderer
     sections={(page as any)?.additionalSections}
     idPrefix="blog"

@@ -376,309 +376,307 @@ const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
 ---
 
-{
-  rows.map(({ block: s, surface, insertDividerBefore, headingId }, blockIndex) => (
-    <>
-      {blockIndex === insertAt && <slot name="insert" />}
-      {insertDividerBefore && !afterFullBleed(blockIndex) && !besideBrandBand(blockIndex) && (
-        <SectionDivider />
-      )}
-      {/* scaffold: church */}
-      {contents && blockIndex === contents.from && (
-        <TimelineContentsBar
-          contents={contents}
-          fromId={anchors[contents.from]}
-          toId={anchors[contents.to]}
-        />
-      )}
-      {/* scaffold:end */}
+{rows.map(({ block: s, surface, insertDividerBefore, headingId }, blockIndex) => (
+  <>
+    {blockIndex === insertAt && <slot name="insert" />}
+    {insertDividerBefore && !afterFullBleed(blockIndex) && !besideBrandBand(blockIndex) && (
+      <SectionDivider />
+    )}
+    {/* scaffold: church */}
+    {contents && blockIndex === contents.from && (
+      <TimelineContentsBar
+        contents={contents}
+        fromId={anchors[contents.from]}
+        toId={anchors[contents.to]}
+      />
+    )}
+    {/* scaffold:end */}
 
-      <Wrap
-        id={anchors[blockIndex]}
-        class="scroll-mt-[var(--header-offset)]"
-        {...wrapAttrs((s as { _key?: string })._key)}
-      >
-        {s._type === 'heroSection' ? (
-          <Hero
-            eyebrow={s.eyebrow}
-            headline={s.headline ?? ''}
-            subhead={s.subhead}
-            backgroundImage={s.backgroundImage}
-            backgroundImages={s.frames}
-            layout={s.layout}
-            facts={s.facts}
-            primaryCta={s.primaryCta}
-            secondaryCta={s.secondaryCta}
-            size={s.size ?? 'short'}
-            serviceTime={settings?.serviceTime}
-            dropInto={['watchwordSection', 'timelineSection'].includes(
-              (rows[blockIndex + 1]?.block as { _type?: string } | undefined)?._type ?? '',
-            )}
-            headingAccent={s.headingAccent ?? undefined}
-            sermon={sermon}
-            preacher={preacher}
-            calendarHref={calendarHref}
-            factBands={rows.map(({ block }) => block as LinkableBand)}
-            headingId={headingId}
-          />
-        ) : s._type === 'ctaBandSection' ? (
-          <FinalCta
-            eyebrow={s.eyebrow}
-            headline={s.headline}
-            subhead={s.subhead}
-            subheadRich={s.subheadRich}
-            cta={s.cta}
-            secondaryCta={s.secondaryCta}
-            scriptAccent={s.scriptAccent}
-            headingAccent={s.headingAccent}
-            backgroundImage={s.backgroundImage}
-            headingId={headingId}
-          />
-        ) : s._type === 'statSection' ? (
-          <StatsRow
-            stats={
-              (s.stats ?? []).filter((x) => typeof x?.number === 'number') as {
-                number: number;
-                suffix?: string;
-                label: string;
-              }[]
-            }
-          />
-        ) : s._type === 'spacerSection' ? (
-          s.variant === 'space' ? (
-            <div class="py-section-md" aria-hidden="true" />
-          ) : (
-            <SectionDivider variant={s.variant === 'line' ? 'line' : 'ornament'} />
-          )
-        ) : s._type === 'richTextSection' ? (
-          <RichTextSection
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            scriptAccent={s.scriptAccent}
-            headingAccent={s.headingAccent}
-            body={s.body}
-            width={s.width}
-            align={s.align}
-            surface={surface ?? 'background'}
-            ground={grounds[blockIndex] ?? 'paper'}
-            headingId={headingId}
-          />
-        ) : s._type === 'imageTextSection' ? (
-          <ImageText
-            image={renderedImage(s, blockIndex)}
-            detail={s.detail}
-            imageSide={s.imageSide}
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            body={s.body}
-            cta={s.cta}
-            shape={photoShapes.get(blockIndex) ?? 'row'}
-            surface={surface ?? 'background'}
-            headingId={headingId}
-          />
-        ) : s._type === 'gallerySection' ? (
-          <GalleryGrid
-            heading={s.heading}
-            images={s.images}
-            columns={s.columns}
-            surface={surface ?? 'background'}
-            headingId={headingId}
-          />
-        ) : s._type === 'quoteSection' ? (
-          <QuoteBlock
-            quote={s.quote}
-            attribution={s.attribution}
-            detail={s.detail}
-            surface={surface ?? 'background'}
-          />
-        ) : s._type === 'videoSection' ? (
-          <VideoEmbed
-            url={s.url}
-            heading={s.heading}
-            caption={s.caption}
-            surface={surface ?? 'background'}
-            headingId={headingId}
-          />
-        ) : s._type === 'logoStripSection' ? (
-          <LogoStrip
-            eyebrow={s.eyebrow}
-            headline={s.headline}
-            logos={s.logos ?? []}
-            layout={s.layout ?? 'row'}
-            headingId={headingId}
-          />
-        ) : s._type === 'teamSection' ? (
-          <TeamGrid
-            eyebrow={s.eyebrow}
-            headline={s.headline}
-            subhead={s.subhead}
-            subheadRich={s.subheadRich}
-            members={s.members ?? []}
-            headingId={headingId}
-          />
-        ) : s._type === 'embedSection' ? (
-          <EmbedSection
-            eyebrow={s.eyebrow}
-            headline={s.headline}
-            subhead={s.subhead}
-            embedUrl={s.embedUrl}
-            embedCode={s.embedCode}
-            heightHint={s.heightHint ?? 'medium'}
-            headingId={headingId}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'sundayTimesSection' ? (
-          <SundayTimes
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            intro={s.intro}
-            items={s.items ?? []}
-            notes={s.notes ?? []}
-            photos={s.photos ?? []}
-            cta={s.cta}
-            doors={s.doors ?? []}
-            showMap={s.showMap}
-            frame={blockIndex === spares.doorIndex ? spares.door : null}
-            headingId={headingId}
-            settings={settings}
-          >
-            {blockIndex === findUsExtraAt && <slot name="findus-extra" slot="findus-after" />}
-          </SundayTimes>
-        ) : /* scaffold-branch: church */ s._type === 'timelineSection' ? (
-          <Timeline
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            rows={s.rows ?? []}
-            surface={surface ?? 'background'}
-            serviceTime={settings?.serviceTime}
-            headingId={headingId}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'staffGridSection' ? (
-          <StaffGrid
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            intro={s.intro}
-            group={s.group}
-            showBios={s.showBios}
-            members={s.members ?? []}
-            surface={surface ?? 'background'}
-            headingId={headingId}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'faqSection' ? (
-          <FaqBand
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            items={s.items ?? []}
-            headingId={headingId}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'scriptureBandSection' ? (
-          <ScriptureBand
-            heading={s.heading}
-            verse={s.verse}
-            reference={s.reference}
-            accentWord={s.accentWord}
-            intro={s.intro}
-            headingId={headingId}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'heritageBandSection' ? (
-          <HeritageBand
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            body={s.body}
-            image={s.image}
-            archive={s.archive}
-            dates={s.dates}
-            cta={s.cta}
-            extraImages={spares.strip.slice(0, 2)}
-            heroFirstRef={heroFirstRef}
-            years={heritageYears}
-            level={openingLevel(blockIndex)}
-            headingId={headingId}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'giveBandSection' ? (
-          <GiveBand
-            heading={s.heading}
-            body={s.body}
-            buttonLabel={s.buttonLabel}
-            buttonUrl={s.buttonUrl}
-            level={openingLevel(blockIndex)}
-            headingId={headingId}
-            settings={settings}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'hoursSection' ? (
-          <Hours
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            surface={surface ?? 'background'}
-            headingId={headingId}
-            settings={settings}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'documentListSection' ? (
-          <DocumentList
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            docs={s.docs ?? []}
-            surface={surface ?? 'background'}
-            level={openingLevel(blockIndex)}
-            headingId={headingId}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'linkCardsSection' ? (
-          <LinkCards
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            intro={s.intro}
-            cards={s.cards ?? []}
-            surface={surface ?? 'background'}
-            frame={blockIndex === spares.statementIndex ? spares.statement : null}
-            headingId={headingId}
-          />
-        ) : /* scaffold-branch: church */ s._type === 'watchwordSection' ? (
-          <WatchwordBand block={s} headingId={headingId} />
-        ) : /* scaffold-branch: church */ s._type === 'ministryGoalsIndex' ? (
-          <MinistryGoals goals={s.goals} headingId={headingId} />
-        ) : /* scaffold-branch: church */ s._type === 'pledgeSection' ? (
-          <PledgeReading block={s} headingId={headingId} />
-        ) : /* scaffold-branch: church */ s._type === 'letterSection' ? (
-          <PastorsLetter block={s} headingId={headingId} settings={settings} />
-        ) : /* scaffold-branch: church */ s._type === 'goalsSection' ? (
-          <GoalsBand block={s} headingId={headingId} />
-        ) : /* scaffold-branch: church */ s._type === 'churchTracFormSection' ? (
-          <ChurchTracForm
-            eyebrow={s.eyebrow}
-            heading={s.heading}
-            intro={s.intro}
-            form={s.form}
-            surface={surface ?? 'background'}
-            headingId={headingId}
-          />
-        ) : s._type === 'dynamicListSection' ? (
-          <DynamicList
-            eyebrow={s.eyebrow}
-            headline={s.headline}
-            subhead={s.subhead}
-            subheadRich={s.subheadRich}
-            source={s.source}
-            items={s.items ?? []}
-            limit={s.limit}
-            cta={s.cta}
-            columns={s.columns}
-            headingId={headingId}
-          />
+    <Wrap
+      id={anchors[blockIndex]}
+      class="scroll-mt-[var(--header-offset)]"
+      {...wrapAttrs((s as { _key?: string })._key)}
+    >
+      {s._type === 'heroSection' ? (
+        <Hero
+          eyebrow={s.eyebrow}
+          headline={s.headline ?? ''}
+          subhead={s.subhead}
+          backgroundImage={s.backgroundImage}
+          backgroundImages={s.frames}
+          layout={s.layout}
+          facts={s.facts}
+          primaryCta={s.primaryCta}
+          secondaryCta={s.secondaryCta}
+          size={s.size ?? 'short'}
+          serviceTime={settings?.serviceTime}
+          dropInto={['watchwordSection', 'timelineSection'].includes(
+            (rows[blockIndex + 1]?.block as { _type?: string } | undefined)?._type ?? '',
+          )}
+          headingAccent={s.headingAccent ?? undefined}
+          sermon={sermon}
+          preacher={preacher}
+          calendarHref={calendarHref}
+          factBands={rows.map(({ block }) => block as LinkableBand)}
+          headingId={headingId}
+        />
+      ) : s._type === 'ctaBandSection' ? (
+        <FinalCta
+          eyebrow={s.eyebrow}
+          headline={s.headline}
+          subhead={s.subhead}
+          subheadRich={s.subheadRich}
+          cta={s.cta}
+          secondaryCta={s.secondaryCta}
+          scriptAccent={s.scriptAccent}
+          headingAccent={s.headingAccent}
+          backgroundImage={s.backgroundImage}
+          headingId={headingId}
+        />
+      ) : s._type === 'statSection' ? (
+        <StatsRow
+          stats={
+            (s.stats ?? []).filter((x) => typeof x?.number === 'number') as {
+              number: number;
+              suffix?: string;
+              label: string;
+            }[]
+          }
+        />
+      ) : s._type === 'spacerSection' ? (
+        s.variant === 'space' ? (
+          <div class="py-section-md" aria-hidden="true" />
         ) : (
-          // Unknown block type: render nothing, log in dev.
-          import.meta.env.DEV &&
-          console.warn(
-            // `s` is `never` here: every member of PageBuilderBlock is handled
-            // above, which is exactly what this branch exists to prove. The cast
-            // is only so the runtime warning can name the type Sanity actually
-            // sent when a NEW block ships without a mapping. Written as a
-            // Record rather than an inline object type on purpose: a brace
-            // inside an .astro template expression ends that expression, even
-            // inside a comment, so an inline object type breaks the parse.
-            `[SectionRenderer] Unknown block type: "${(s as Record<string, unknown>)._type}". Add a mapping in SectionRenderer.astro.`,
-          )
-        )}
-      </Wrap>
-    </>
-  ))
-}
+          <SectionDivider variant={s.variant === 'line' ? 'line' : 'ornament'} />
+        )
+      ) : s._type === 'richTextSection' ? (
+        <RichTextSection
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          scriptAccent={s.scriptAccent}
+          headingAccent={s.headingAccent}
+          body={s.body}
+          width={s.width}
+          align={s.align}
+          surface={surface ?? 'background'}
+          ground={grounds[blockIndex] ?? 'paper'}
+          headingId={headingId}
+        />
+      ) : s._type === 'imageTextSection' ? (
+        <ImageText
+          image={renderedImage(s, blockIndex)}
+          detail={s.detail}
+          imageSide={s.imageSide}
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          body={s.body}
+          cta={s.cta}
+          shape={photoShapes.get(blockIndex) ?? 'row'}
+          surface={surface ?? 'background'}
+          headingId={headingId}
+        />
+      ) : s._type === 'gallerySection' ? (
+        <GalleryGrid
+          heading={s.heading}
+          images={s.images}
+          columns={s.columns}
+          surface={surface ?? 'background'}
+          headingId={headingId}
+        />
+      ) : s._type === 'quoteSection' ? (
+        <QuoteBlock
+          quote={s.quote}
+          attribution={s.attribution}
+          detail={s.detail}
+          surface={surface ?? 'background'}
+        />
+      ) : s._type === 'videoSection' ? (
+        <VideoEmbed
+          url={s.url}
+          heading={s.heading}
+          caption={s.caption}
+          surface={surface ?? 'background'}
+          headingId={headingId}
+        />
+      ) : s._type === 'logoStripSection' ? (
+        <LogoStrip
+          eyebrow={s.eyebrow}
+          headline={s.headline}
+          logos={s.logos ?? []}
+          layout={s.layout ?? 'row'}
+          headingId={headingId}
+        />
+      ) : s._type === 'teamSection' ? (
+        <TeamGrid
+          eyebrow={s.eyebrow}
+          headline={s.headline}
+          subhead={s.subhead}
+          subheadRich={s.subheadRich}
+          members={s.members ?? []}
+          headingId={headingId}
+        />
+      ) : s._type === 'embedSection' ? (
+        <EmbedSection
+          eyebrow={s.eyebrow}
+          headline={s.headline}
+          subhead={s.subhead}
+          embedUrl={s.embedUrl}
+          embedCode={s.embedCode}
+          heightHint={s.heightHint ?? 'medium'}
+          headingId={headingId}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'sundayTimesSection' ? (
+        <SundayTimes
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          intro={s.intro}
+          items={s.items ?? []}
+          notes={s.notes ?? []}
+          photos={s.photos ?? []}
+          cta={s.cta}
+          doors={s.doors ?? []}
+          showMap={s.showMap}
+          frame={blockIndex === spares.doorIndex ? spares.door : null}
+          headingId={headingId}
+          settings={settings}
+        >
+          {blockIndex === findUsExtraAt && <slot name="findus-extra" slot="findus-after" />}
+        </SundayTimes>
+      ) : /* scaffold-branch: church */ s._type === 'timelineSection' ? (
+        <Timeline
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          rows={s.rows ?? []}
+          surface={surface ?? 'background'}
+          serviceTime={settings?.serviceTime}
+          headingId={headingId}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'staffGridSection' ? (
+        <StaffGrid
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          intro={s.intro}
+          group={s.group}
+          showBios={s.showBios}
+          members={s.members ?? []}
+          surface={surface ?? 'background'}
+          headingId={headingId}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'faqSection' ? (
+        <FaqBand
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          items={s.items ?? []}
+          headingId={headingId}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'scriptureBandSection' ? (
+        <ScriptureBand
+          heading={s.heading}
+          verse={s.verse}
+          reference={s.reference}
+          accentWord={s.accentWord}
+          intro={s.intro}
+          headingId={headingId}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'heritageBandSection' ? (
+        <HeritageBand
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          body={s.body}
+          image={s.image}
+          archive={s.archive}
+          dates={s.dates}
+          cta={s.cta}
+          extraImages={spares.strip.slice(0, 2)}
+          heroFirstRef={heroFirstRef}
+          years={heritageYears}
+          level={openingLevel(blockIndex)}
+          headingId={headingId}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'giveBandSection' ? (
+        <GiveBand
+          heading={s.heading}
+          body={s.body}
+          buttonLabel={s.buttonLabel}
+          buttonUrl={s.buttonUrl}
+          level={openingLevel(blockIndex)}
+          headingId={headingId}
+          settings={settings}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'hoursSection' ? (
+        <Hours
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          surface={surface ?? 'background'}
+          headingId={headingId}
+          settings={settings}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'documentListSection' ? (
+        <DocumentList
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          docs={s.docs ?? []}
+          surface={surface ?? 'background'}
+          level={openingLevel(blockIndex)}
+          headingId={headingId}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'linkCardsSection' ? (
+        <LinkCards
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          intro={s.intro}
+          cards={s.cards ?? []}
+          surface={surface ?? 'background'}
+          frame={blockIndex === spares.statementIndex ? spares.statement : null}
+          headingId={headingId}
+        />
+      ) : /* scaffold-branch: church */ s._type === 'watchwordSection' ? (
+        <WatchwordBand block={s} headingId={headingId} />
+      ) : /* scaffold-branch: church */ s._type === 'ministryGoalsIndex' ? (
+        <MinistryGoals goals={s.goals} headingId={headingId} />
+      ) : /* scaffold-branch: church */ s._type === 'pledgeSection' ? (
+        <PledgeReading block={s} headingId={headingId} />
+      ) : /* scaffold-branch: church */ s._type === 'letterSection' ? (
+        <PastorsLetter block={s} headingId={headingId} settings={settings} />
+      ) : /* scaffold-branch: church */ s._type === 'goalsSection' ? (
+        <GoalsBand block={s} headingId={headingId} />
+      ) : /* scaffold-branch: church */ s._type === 'churchTracFormSection' ? (
+        <ChurchTracForm
+          eyebrow={s.eyebrow}
+          heading={s.heading}
+          intro={s.intro}
+          form={s.form}
+          surface={surface ?? 'background'}
+          headingId={headingId}
+        />
+      ) : s._type === 'dynamicListSection' ? (
+        <DynamicList
+          eyebrow={s.eyebrow}
+          headline={s.headline}
+          subhead={s.subhead}
+          subheadRich={s.subheadRich}
+          source={s.source}
+          items={s.items ?? []}
+          limit={s.limit}
+          cta={s.cta}
+          columns={s.columns}
+          headingId={headingId}
+        />
+      ) : (
+        // Unknown block type: render nothing, log in dev.
+        import.meta.env.DEV &&
+        console.warn(
+          // `s` is `never` here: every member of PageBuilderBlock is handled
+          // above, which is exactly what this branch exists to prove. The cast
+          // is only so the runtime warning can name the type Sanity actually
+          // sent when a NEW block ships without a mapping. Written as a
+          // Record rather than an inline object type on purpose: a brace
+          // inside an .astro template expression ends that expression, even
+          // inside a comment, so an inline object type breaks the parse.
+          `[SectionRenderer] Unknown block type: "${(s as Record<string, unknown>)._type}". Add a mapping in SectionRenderer.astro.`,
+        )
+      )}
+    </Wrap>
+  </>
+))}
 {insertAt >= 0 && insertAt === rows.length && <slot name="insert" />}

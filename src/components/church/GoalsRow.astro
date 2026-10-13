@@ -30,24 +30,22 @@ const { size } = Astro.props;
 ---
 
 <ul class:list={['goals-row m-0 list-none p-0', `goals-row--${size}`]}>
-  {
-    CHURCH_GOALS.map((g) => (
-      <li>
-        <a
-          href={goalHref(g.value)}
-          class="goal-link rounded-sm text-bg focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:outline-none"
-        >
-          <BuildingGlyph name={g.glyph} class="goal-glyph shrink-0 text-gold" />
-          <span class="goal-text">
-            <span class="goal-name font-display">{g.name}</span>
-            {size === 'footer' && (
-              <span class="goal-line font-ui text-bg/70">{goalIndexLine(g)}</span>
-            )}
-          </span>
-        </a>
-      </li>
-    ))
-  }
+  {CHURCH_GOALS.map((g) => (
+    <li>
+      <a
+        href={goalHref(g.value)}
+        class="goal-link rounded-sm text-bg focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:outline-none"
+      >
+        <BuildingGlyph name={g.glyph} class="goal-glyph shrink-0 text-gold" />
+        <span class="goal-text">
+          <span class="goal-name font-display">{g.name}</span>
+          {size === 'footer' && (
+            <span class="goal-line font-ui text-bg/70">{goalIndexLine(g)}</span>
+          )}
+        </span>
+      </a>
+    </li>
+  ))}
 </ul>
 
 <style>

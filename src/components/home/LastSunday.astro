@@ -91,42 +91,34 @@ const watch = {
     </div>
     <div class="ls-body min-w-0">
       <h3 class="mb-0 font-body text-h3 leading-[1.15] font-normal text-bg">
-        {
-          preview ? (
-            <a href={preview.href} class="ls-title">
-              {title}
-            </a>
-          ) : (
-            title
-          )
-        }
+        {preview ? (
+          <a href={preview.href} class="ls-title">
+            {title}
+          </a>
+        ) : (
+          title
+        )}
       </h3>
       {meta.length > 0 && <p class="mt-3 mb-0 font-body text-lg text-bg/80">{meta.join(' · ')}</p>}
-      {
-        recording.preacher && (
-          <p class="mt-1 mb-0 font-body text-lg text-bg/80">{recording.preacher}</p>
-        )
-      }
+      {recording.preacher && (
+        <p class="mt-1 mb-0 font-body text-lg text-bg/80">{recording.preacher}</p>
+      )}
       <div class="mt-9 flex flex-wrap gap-4">
         <CtaLink cta={watch} variant="gold" onDark />
-        {
-          preview && (
-            <CtaLink
-              cta={{ label: 'Read the sermon preview' }}
-              fallbackHref={preview.href}
-              variant="outline"
-              onDark
-            />
-          )
-        }
+        {preview && (
+          <CtaLink
+            cta={{ label: 'Read the sermon preview' }}
+            fallbackHref={preview.href}
+            variant="outline"
+            onDark
+          />
+        )}
       </div>
     </div>
 
-    {
-      /* The facade. A second link to the same video, for the pointer only:
+    {/* The facade. A second link to the same video, for the pointer only:
         the button above is the one keyboard and screen-reader users meet, so
-        this one is out of the tab order and hidden from the tree. */
-    }
+        this one is out of the tab order and hidden from the tree. */}
     <a
       href={recording.watchUrl}
       target="_blank"

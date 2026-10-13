@@ -44,50 +44,44 @@ const link = 'text-link underline underline-offset-2 hover:text-primary';
 
 <div>
   <h2 class={h2Class}>Cookies and how visits are measured</h2>
-  {
-    !hasGa && !hasCfAnalytics && (
+  {!hasGa && !hasCfAnalytics && (
+    <p class={pClass}>
+      This site sets no cookies and runs no analytics. Visits are not counted, and nothing is stored
+      on your device for measurement.
+    </p>
+  )}
+  {hasCfAnalytics && !hasGa && (
+    <p class={pClass}>
+      This site sets no cookies. Page visits are counted with Cloudflare Web Analytics, which does
+      not identify individual visitors.
+    </p>
+  )}
+  {hasGa && (
+    <>
       <p class={pClass}>
-        This site sets no cookies and runs no analytics. Visits are not counted, and nothing is
-        stored on your device for measurement.
+        {hasCfAnalytics
+          ? 'Page visits are counted with Cloudflare Web Analytics, which sets no cookies, and also measured with Google Analytics.'
+          : 'Page visits are measured with Google Analytics.'}{' '}
+        Google Analytics sets cookies on your device (named <code>_ga</code> and <code>_ga_</code>{' '}
+        followed by a stream id) so returning visits are recognised as the same session. It records
+        which pages are opened, roughly where in the world the visit came from, and what kind of
+        device was used. It is not used for advertising, and the data is not sold or shared beyond
+        Google's own processing. These are the only cookies this site sets.
       </p>
-    )
-  }
-  {
-    hasCfAnalytics && !hasGa && (
       <p class={pClass}>
-        This site sets no cookies. Page visits are counted with Cloudflare Web Analytics, which does
-        not identify individual visitors.
+        You can block these cookies in your browser settings, with any tracker-blocking extension,
+        or with Google's{' '}
+        <a href="https://tools.google.com/dlpage/gaoptout" class={link}>
+          Analytics opt-out add-on
+        </a>
+        , and the site will work exactly the same. Google explains{' '}
+        <a href="https://policies.google.com/technologies/partner-sites" class={link}>
+          how it uses information from sites that use its services
+        </a>
+        .
       </p>
-    )
-  }
-  {
-    hasGa && (
-      <>
-        <p class={pClass}>
-          {hasCfAnalytics
-            ? 'Page visits are counted with Cloudflare Web Analytics, which sets no cookies, and also measured with Google Analytics.'
-            : 'Page visits are measured with Google Analytics.'}{' '}
-          Google Analytics sets cookies on your device (named <code>_ga</code> and <code>_ga_</code>{' '}
-          followed by a stream id) so returning visits are recognised as the same session. It
-          records which pages are opened, roughly where in the world the visit came from, and what
-          kind of device was used. It is not used for advertising, and the data is not sold or
-          shared beyond Google's own processing. These are the only cookies this site sets.
-        </p>
-        <p class={pClass}>
-          You can block these cookies in your browser settings, with any tracker-blocking extension,
-          or with Google's{' '}
-          <a href="https://tools.google.com/dlpage/gaoptout" class={link}>
-            Analytics opt-out add-on
-          </a>
-          , and the site will work exactly the same. Google explains{' '}
-          <a href="https://policies.google.com/technologies/partner-sites" class={link}>
-            how it uses information from sites that use its services
-          </a>
-          .
-        </p>
-      </>
-    )
-  }
+    </>
+  )}
 </div>
 
 <div>
@@ -102,9 +96,7 @@ const link = 'text-link underline underline-offset-2 hover:text-primary';
 <div>
   <h2 class={h2Class}>How to reach us</h2>
   <p class={pClass}>
-    Questions about this policy, or about anything on this site, can go to the church office. Email{
-      ' '
-    }
+    Questions about this policy, or about anything on this site, can go to the church office. Email{' '}
     <a href={`mailto:${email}`} class={link}>
       {email}
     </a>

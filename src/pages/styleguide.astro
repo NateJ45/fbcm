@@ -1413,17 +1413,15 @@ const JOURNAL_LIST_FIXTURE = {
 
       <h2 class="mt-14 font-display text-h3">Brand palette</h2>
       <ul class="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {
-          BRAND_TOKENS.map((t) => (
-            <li class="rounded-lg border border-border p-3">
-              <span
-                class="block h-12 w-full rounded border border-foreground/20"
-                style={`background: var(${t})`}
-              />
-              <code class="mt-2 block font-mono text-[0.6875rem] break-all">{t}</code>
-            </li>
-          ))
-        }
+        {BRAND_TOKENS.map((t) => (
+          <li class="rounded-lg border border-border p-3">
+            <span
+              class="block h-12 w-full rounded border border-foreground/20"
+              style={`background: var(${t})`}
+            />
+            <code class="mt-2 block font-mono text-[0.6875rem] break-all">{t}</code>
+          </li>
+        ))}
       </ul>
 
       <h2 class="mt-14 font-display text-h3">Semantic tokens</h2>
@@ -1432,29 +1430,28 @@ const JOURNAL_LIST_FIXTURE = {
         baselines is a token that forgot to.
       </p>
       <ul class="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {
-          SEMANTIC_TOKENS.map((t) => (
-            <li class="rounded-lg border border-border p-3">
-              <span
-                class="block h-12 w-full rounded border border-foreground/20"
-                style={`background: var(${t})`}
-              />
-              <code class="mt-2 block font-mono text-[0.6875rem] break-all">{t}</code>
-            </li>
-          ))
-        }
+        {SEMANTIC_TOKENS.map((t) => (
+          <li class="rounded-lg border border-border p-3">
+            <span
+              class="block h-12 w-full rounded border border-foreground/20"
+              style={`background: var(${t})`}
+            />
+            <code class="mt-2 block font-mono text-[0.6875rem] break-all">{t}</code>
+          </li>
+        ))}
       </ul>
 
       <h2 class="mt-14 font-display text-h3">Type, on the page ground</h2>
       <div class="mt-5">
-        {HEADINGS.map(([label, cls]) => <p class={`font-display ${cls}`}>{label}</p>)}
+        {HEADINGS.map(([label, cls]) => (
+          <p class={`font-display ${cls}`}>{label}</p>
+        ))}
         <p class="mt-3 max-w-[60ch]">
           Body copy on the page ground. The quick brown fox jumps over the lazy dog, twice, so the
           line has enough letters in it for a rasterisation change to show.
         </p>
         <p class="mt-2 text-sm text-muted-foreground">Muted body copy, one step down.</p>
-        {
-          /* BUG FOUND WHEN TASK 6 ADDED THIS PAGE TO THE AXE SWEEP (it had never
+        {/* BUG FOUND WHEN TASK 6 ADDED THIS PAGE TO THE AXE SWEEP (it had never
              been route-listed before): both lines below used the FIXED brand-
              mirror tokens (--color-primary / --color-primary-dark), which never
              flip with .dark and exist for text on FIXED grounds (gold, the ink
@@ -1463,23 +1460,23 @@ const JOURNAL_LIST_FIXTURE = {
              they read fine in light and at ~1.1-1.3:1 in dark. The real pattern
              for an eyebrow and a link ON THE PAGE GROUND is the theme-aware
              pair SectionHeading.astro and Footer.astro already use:
-             text-foreground/80 and text-link. */
-        }
+             text-foreground/80 and text-link. */}
         <p class="mt-4 font-mono text-[0.75rem] tracking-eyebrow text-foreground/80 uppercase">
           Eyebrow, uppercase, tracked
         </p>
         <p class="mt-4">
-          A <a class="nav-underline text-link" href="#">link with the nav underline</a> in a sentence,
-          so its rule sits against real type.
+          A{' '}
+          <a class="nav-underline text-link" href="#">
+            link with the nav underline
+          </a>{' '}
+          in a sentence, so its rule sits against real type.
         </p>
       </div>
 
       <h2 class="mt-14 font-display text-h3">Type, on a card</h2>
-      {
-        /* The exact combination that failed elsewhere: a heading inside a card,
+      {/* The exact combination that failed elsewhere: a heading inside a card,
            where a base-layer heading colour would otherwise win over the card's
-           own foreground token. */
-      }
+           own foreground token. */}
       <div class="mt-5 max-w-[30rem] rounded-lg border border-border bg-card p-7">
         <h3 class="font-display text-h3 text-card-foreground">Heading on a card</h3>
         <p class="mt-2 text-sm text-card-foreground">Body copy on a card.</p>
@@ -1494,15 +1491,13 @@ const JOURNAL_LIST_FIXTURE = {
     </div>
   </section>
 
-  {
-    /* The alternating surface, with a CTA pair on it, so both grounds are shot.
+  {/* The alternating surface, with a CTA pair on it, so both grounds are shot.
      BUG FOUND IN TASK 1: this section carried `surface-warm` (a gradient-only
      overlay utility, see globals.css) with no `bg-*` class at all, so it never
      painted the muted surface it claims to demonstrate -- it was rendering the
      page background underneath. surfaceClass('muted') is the real class the
      cadence assigns (bg-surface-soft: a taupe tint over cream in light, #262548
-     in dark), fixed here rather than relaxed away. */
-  }
+     in dark), fixed here rather than relaxed away. */}
   <section class={`${surfaceClass('muted')} surface-warm py-section-lg`}>
     <div class="mx-auto w-full max-w-content px-6">
       <SectionHeading
@@ -1521,10 +1516,8 @@ const JOURNAL_LIST_FIXTURE = {
     </div>
   </section>
 
-  {
-    /* A dark panel, because the inverse tone has its own contrast problems and
-      they are invisible in a light-only shot. */
-  }
+  {/* A dark panel, because the inverse tone has its own contrast problems and
+      they are invisible in a light-only shot. */}
   <section class="bg-accent-dark py-section-lg">
     <div class="mx-auto w-full max-w-content px-6">
       <SectionHeading
@@ -1543,13 +1536,13 @@ const JOURNAL_LIST_FIXTURE = {
     </div>
   </section>
 
-  {
-    /* Church identity (2026-09-23): the primitives the Who We Are "alive"
-       page is built from, each against the band it is made for. */
-  }
+  {/* Church identity (2026-09-23): the primitives the Who We Are "alive"
+       page is built from, each against the band it is made for. */}
   <section class="bg-background py-section-lg" aria-labelledby="styleguide-identity">
     <div class="mx-auto w-full max-w-content px-6">
-      <h2 id="styleguide-identity" class="font-display text-h3">Church identity</h2>
+      <h2 id="styleguide-identity" class="font-display text-h3">
+        Church identity
+      </h2>
       <p class="mt-2 max-w-[60ch] text-sm text-muted-foreground">
         The brand bands, the two arches drawn from the building, the four building glyphs, the
         watchword mark and the rule button. Every text pair here is measured in both themes in
@@ -1558,17 +1551,15 @@ const JOURNAL_LIST_FIXTURE = {
 
       <h3 class="mt-10 font-display text-h5">Identity palette</h3>
       <ul class="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {
-          IDENTITY_TOKENS.map((t) => (
-            <li class="rounded-lg border border-border p-3">
-              <span
-                class="block h-12 w-full rounded border border-foreground/20"
-                style={`background: var(${t})`}
-              />
-              <code class="mt-2 block font-mono text-[0.6875rem] break-all">{t}</code>
-            </li>
-          ))
-        }
+        {IDENTITY_TOKENS.map((t) => (
+          <li class="rounded-lg border border-border p-3">
+            <span
+              class="block h-12 w-full rounded border border-foreground/20"
+              style={`background: var(${t})`}
+            />
+            <code class="mt-2 block font-mono text-[0.6875rem] break-all">{t}</code>
+          </li>
+        ))}
       </ul>
 
       <h3 class="mt-10 font-display text-h5">Arch frames</h3>
@@ -1609,11 +1600,9 @@ const JOURNAL_LIST_FIXTURE = {
       </div>
 
       <h3 class="mt-10 font-display text-h5">Building glyphs</h3>
-      {
-        /* Each glyph on its own goal band, in that band's accent. Inline styles,
+      {/* Each glyph on its own goal band, in that band's accent. Inline styles,
            not utilities: this is a styleguide-only arrangement and must not add
-           bytes to every page's inlined sheet (CLAUDE.md rule 20). */
-      }
+           bytes to every page's inlined sheet (CLAUDE.md rule 20). */}
       <ul class="mt-5 flex flex-wrap items-end gap-6">
         <li class="p-3" style="background: var(--color-band-indigo); color: var(--color-gold)">
           <BuildingGlyph name="window" class="w-12" />
@@ -1627,7 +1616,9 @@ const JOURNAL_LIST_FIXTURE = {
         <li class="p-3" style="background: var(--color-band-taupe); color: var(--color-band-ink)">
           <BuildingGlyph name="basin" class="w-12" />
         </li>
-        <li class="text-foreground"><BuildingGlyph name="window" class="w-16" /></li>
+        <li class="text-foreground">
+          <BuildingGlyph name="window" class="w-16" />
+        </li>
       </ul>
 
       <h3 class="mt-10 font-display text-h5">The rule button</h3>
@@ -1675,10 +1666,8 @@ const JOURNAL_LIST_FIXTURE = {
     </div>
   </section>
 
-  {
-    /* The Who We Are bands (Task 4), in page order: the window hero drops
-      its lancets into the Watchword band that follows it. */
-  }
+  {/* The Who We Are bands (Task 4), in page order: the window hero drops
+      its lancets into the Watchword band that follows it. */}
   <Hero
     eyebrow={WINDOW_HERO.eyebrow}
     headline={WINDOW_HERO.headline}
@@ -1785,12 +1774,10 @@ const JOURNAL_LIST_FIXTURE = {
     headingId="styleguide-hero-full"
   />
 
-  {
-    /* The photo hero with ONE photograph (2026-09-28, feat/motion-openers): no
+  {/* The photo hero with ONE photograph (2026-09-28, feat/motion-openers): no
       slideshow and no Pause, one 5 s push-in towards the hotspot. No page in
       the dataset draws this branch today, so this is where it is seen and
-      tested (tests/motion.spec.ts). */
-  }
+      tested (tests/motion.spec.ts). */}
   <div id="styleguide-hero-one">
     <Hero
       eyebrow="One photograph"

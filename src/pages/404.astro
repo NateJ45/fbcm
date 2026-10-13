@@ -113,19 +113,17 @@ const doors = DOORS.map((fallback, i) => {
 
   <nav class="nf-doors" aria-label="Where to go instead">
     <ul class="nf-row mx-auto max-w-content px-gutter">
-      {
-        doors.map((door) => (
-          <li>
-            <a class="nf-door" href={door.href}>
-              <BuildingGlyph name={door.glyph} class="nf-door-glyph" />
-              <span class="nf-door-name font-display">{door.label}</span>
-              <span class="nf-door-arrow font-ui" aria-hidden="true">
-                &rarr;
-              </span>
-            </a>
-          </li>
-        ))
-      }
+      {doors.map((door) => (
+        <li>
+          <a class="nf-door" href={door.href}>
+            <BuildingGlyph name={door.glyph} class="nf-door-glyph" />
+            <span class="nf-door-name font-display">{door.label}</span>
+            <span class="nf-door-arrow font-ui" aria-hidden="true">
+              &rarr;
+            </span>
+          </a>
+        </li>
+      ))}
     </ul>
   </nav>
 </BaseLayout>

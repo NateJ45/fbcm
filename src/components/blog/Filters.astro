@@ -29,31 +29,29 @@ const { entries, activeSlug, allCurrent = false, scriptureCurrent = false } = As
 const filters = categoryFilters(entries ?? []);
 ---
 
-{
-  filters.length > 0 && (
-    <nav class="filters" aria-label="Browse the blog">
-      <a href="/blog/" aria-current={allCurrent ? 'page' : undefined}>
-        All posts<sup class="oldstyle">{entries.length}</sup>
-      </a>
-      {filters.map((f) => (
-        <a
-          href={`/blog/category/${f.slug}/`}
-          aria-current={activeSlug === f.slug ? 'page' : undefined}
-        >
-          {f.label}
-          <sup class="oldstyle">{f.count}</sup>
-        </a>
-      ))}
+{filters.length > 0 && (
+  <nav class="filters" aria-label="Browse the blog">
+    <a href="/blog/" aria-current={allCurrent ? 'page' : undefined}>
+      All posts<sup class="oldstyle">{entries.length}</sup>
+    </a>
+    {filters.map((f) => (
       <a
-        href="/blog/scripture/"
-        class="by-passage"
-        aria-current={scriptureCurrent ? 'page' : undefined}
+        href={`/blog/category/${f.slug}/`}
+        aria-current={activeSlug === f.slug ? 'page' : undefined}
       >
-        By passage
+        {f.label}
+        <sup class="oldstyle">{f.count}</sup>
       </a>
-    </nav>
-  )
-}
+    ))}
+    <a
+      href="/blog/scripture/"
+      class="by-passage"
+      aria-current={scriptureCurrent ? 'page' : undefined}
+    >
+      By passage
+    </a>
+  </nav>
+)}
 
 <style>
   .filters {

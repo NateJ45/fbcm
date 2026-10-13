@@ -117,171 +117,158 @@ const mastheadAlt = `${name}, ${newsletter.eyebrow.toLowerCase()}`;
           <p class="mt-6 max-w-[34em] font-body text-lede text-band-taupe italic">
             {newsletter.lede}
           </p>
-          {
-            page?.bannerBlocks
-              .filter((b) => b.kind === 'heading')
-              .map((b) => <p class="nl-banner-line">{b.kind === 'heading' && b.text}</p>)
-          }
+          {page?.bannerBlocks
+            .filter((b) => b.kind === 'heading')
+            .map((b) => (
+              <p class="nl-banner-line">{b.kind === 'heading' && b.text}</p>
+            ))}
         </div>
-        {
-          page?.banner && (
-            <figure class="r m-0 min-w-0">
-              <img
-                src={page.banner}
-                alt={mastheadAlt}
-                width="1500"
-                height="600"
-                decoding="async"
-                fetchpriority="high"
-              />
-            </figure>
-          )
-        }
+        {page?.banner && (
+          <figure class="r m-0 min-w-0">
+            <img
+              src={page.banner}
+              alt={mastheadAlt}
+              width="1500"
+              height="600"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </figure>
+        )}
       </div>
     </div>
   </div>
 
   <div class="bg-background" data-newsletter={newsletter.slug}>
     <div class="mx-auto max-w-content px-gutter pt-section-md pb-section-lg">
-      {
-        !page && (
-          <div class="nl-sec">
-            <div class="nl-words">
-              <p class="nl-p">
-                {name} could not be loaded here just now. It is always on Church Trac.
-              </p>
-              <div class="mt-6">
-                <CtaLink cta={cta(`Read ${name} on Church Trac`, churchTracHref)} variant="gold" />
-              </div>
+      {!page && (
+        <div class="nl-sec">
+          <div class="nl-words">
+            <p class="nl-p">
+              {name} could not be loaded here just now. It is always on Church Trac.
+            </p>
+            <div class="mt-6">
+              <CtaLink cta={cta(`Read ${name} on Church Trac`, churchTracHref)} variant="gold" />
             </div>
           </div>
-        )
-      }
-      {
-        page?.sections.map((blocks) => {
-          const { card, rest: all } = split(blocks);
-          // No title card: the section's own heading takes the card's place in
-          // the left five twelfths, so a wide screen never shows an empty
-          // column (2026-09-25, /youth-news). The words keep their one edge.
-          const side = !card && all[0]?.kind === 'heading' ? all[0] : null;
-          const rest = side ? all.slice(1) : all;
-          return (
-            <section class="nl-sec">
-              {side && side.kind === 'heading' && (
-                <div class="nl-side">
-                  {side.level === 2 ? (
-                    <h2 class="nl-h2">{side.text}</h2>
-                  ) : (
-                    <h3 class="nl-h3">{side.text}</h3>
-                  )}
-                </div>
-              )}
-              {card && (
-                <figure class="nl-card m-0">
-                  <img
-                    src={card}
-                    alt=""
-                    width="1500"
-                    height="600"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </figure>
-              )}
-              <div class="nl-words">
-                {grouped(rest).map((b) =>
-                  b.kind === 'heading' ? (
-                    b.level === 2 ? (
-                      <h2 class="nl-h2">{b.text}</h2>
-                    ) : (
-                      <h3 class="nl-h3">{b.text}</h3>
-                    )
-                  ) : b.kind === 'text' ? (
-                    <p class="nl-p">
-                      {b.inline.map((r) =>
-                        isBr(r) ? (
-                          <br />
-                        ) : r.href ? (
-                          <a
-                            href={r.href}
-                            target={external(r.href) ? '_blank' : undefined}
-                            rel={external(r.href) ? 'noopener noreferrer' : undefined}
-                            class:list={[r.bold && 'font-semibold', r.italic && 'italic']}
-                          >
-                            {r.text}
-                          </a>
-                        ) : r.bold && r.italic ? (
-                          <strong>
-                            <em>{r.text}</em>
-                          </strong>
-                        ) : r.bold ? (
-                          <strong>{r.text}</strong>
-                        ) : r.italic ? (
-                          <em>{r.text}</em>
-                        ) : (
-                          r.text
-                        ),
-                      )}
-                    </p>
-                  ) : b.kind === 'buttons' ? (
-                    <div class="nl-buttons">
-                      {b.buttons.map((btn, i) => (
-                        <CtaLink
-                          cta={cta(btn.label, btn.href)}
-                          variant={i === 0 ? 'gold' : 'outline'}
-                        />
-                      ))}
-                    </div>
-                  ) : b.kind === 'columns' ? (
-                    <div class="nl-cols">
-                      {b.columns.map((col) => (
-                        <div class="nl-col">
-                          {col.map((k) =>
-                            k.kind === 'heading' ? (
-                              <h3 class="nl-h3">{k.text}</h3>
-                            ) : k.kind === 'text' ? (
-                              <p class="nl-p nl-p-sm">
-                                {k.inline.map((r) =>
-                                  isBr(r) ? (
-                                    <br />
-                                  ) : r.bold ? (
-                                    <strong>{r.text}</strong>
-                                  ) : r.italic ? (
-                                    <em>{r.text}</em>
-                                  ) : (
-                                    r.text
-                                  ),
-                                )}
-                              </p>
-                            ) : k.kind === 'button' ? (
-                              <div class="nl-buttons">
-                                <CtaLink cta={cta(k.label, k.href)} variant="outline" />
-                              </div>
-                            ) : null,
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  ) : b.kind === 'image' ? (
-                    <figure class="nl-inline-img m-0">
-                      <img
-                        src={b.src}
-                        alt=""
-                        width="1500"
-                        height="600"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </figure>
-                  ) : b.kind === 'rule' ? (
-                    <hr class="nl-rule" />
-                  ) : null,
+        </div>
+      )}
+      {page?.sections.map((blocks) => {
+        const { card, rest: all } = split(blocks);
+        // No title card: the section's own heading takes the card's place in
+        // the left five twelfths, so a wide screen never shows an empty
+        // column (2026-09-25, /youth-news). The words keep their one edge.
+        const side = !card && all[0]?.kind === 'heading' ? all[0] : null;
+        const rest = side ? all.slice(1) : all;
+        return (
+          <section class="nl-sec">
+            {side && side.kind === 'heading' && (
+              <div class="nl-side">
+                {side.level === 2 ? (
+                  <h2 class="nl-h2">{side.text}</h2>
+                ) : (
+                  <h3 class="nl-h3">{side.text}</h3>
                 )}
               </div>
-            </section>
-          );
-        })
-      }
+            )}
+            {card && (
+              <figure class="nl-card m-0">
+                <img src={card} alt="" width="1500" height="600" loading="lazy" decoding="async" />
+              </figure>
+            )}
+            <div class="nl-words">
+              {grouped(rest).map((b) =>
+                b.kind === 'heading' ? (
+                  b.level === 2 ? (
+                    <h2 class="nl-h2">{b.text}</h2>
+                  ) : (
+                    <h3 class="nl-h3">{b.text}</h3>
+                  )
+                ) : b.kind === 'text' ? (
+                  <p class="nl-p">
+                    {b.inline.map((r) =>
+                      isBr(r) ? (
+                        <br />
+                      ) : r.href ? (
+                        <a
+                          href={r.href}
+                          target={external(r.href) ? '_blank' : undefined}
+                          rel={external(r.href) ? 'noopener noreferrer' : undefined}
+                          class:list={[r.bold && 'font-semibold', r.italic && 'italic']}
+                        >
+                          {r.text}
+                        </a>
+                      ) : r.bold && r.italic ? (
+                        <strong>
+                          <em>{r.text}</em>
+                        </strong>
+                      ) : r.bold ? (
+                        <strong>{r.text}</strong>
+                      ) : r.italic ? (
+                        <em>{r.text}</em>
+                      ) : (
+                        r.text
+                      ),
+                    )}
+                  </p>
+                ) : b.kind === 'buttons' ? (
+                  <div class="nl-buttons">
+                    {b.buttons.map((btn, i) => (
+                      <CtaLink
+                        cta={cta(btn.label, btn.href)}
+                        variant={i === 0 ? 'gold' : 'outline'}
+                      />
+                    ))}
+                  </div>
+                ) : b.kind === 'columns' ? (
+                  <div class="nl-cols">
+                    {b.columns.map((col) => (
+                      <div class="nl-col">
+                        {col.map((k) =>
+                          k.kind === 'heading' ? (
+                            <h3 class="nl-h3">{k.text}</h3>
+                          ) : k.kind === 'text' ? (
+                            <p class="nl-p nl-p-sm">
+                              {k.inline.map((r) =>
+                                isBr(r) ? (
+                                  <br />
+                                ) : r.bold ? (
+                                  <strong>{r.text}</strong>
+                                ) : r.italic ? (
+                                  <em>{r.text}</em>
+                                ) : (
+                                  r.text
+                                ),
+                              )}
+                            </p>
+                          ) : k.kind === 'button' ? (
+                            <div class="nl-buttons">
+                              <CtaLink cta={cta(k.label, k.href)} variant="outline" />
+                            </div>
+                          ) : null,
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : b.kind === 'image' ? (
+                  <figure class="nl-inline-img m-0">
+                    <img
+                      src={b.src}
+                      alt=""
+                      width="1500"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </figure>
+                ) : b.kind === 'rule' ? (
+                  <hr class="nl-rule" />
+                ) : null,
+              )}
+            </div>
+          </section>
+        );
+      })}
     </div>
   </div>
 
@@ -296,8 +283,8 @@ const mastheadAlt = `${name}, ${newsletter.eyebrow.toLowerCase()}`;
       </h2>
       <div class="min-w-0">
         <p class="mt-0 mb-0 max-w-[36rem] font-body text-lg leading-relaxed text-bg/85">
-          {name} is written by the ministry in Church Trac, and this page follows it each day. It is in
-          the church app too.
+          {name} is written by the ministry in Church Trac, and this page follows it each day. It is
+          in the church app too.
         </p>
         <div class="mt-8 flex flex-wrap gap-4">
           <CtaLink cta={cta('Open it on Church Trac', churchTracHref)} variant="gold" onDark />

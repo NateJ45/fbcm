@@ -75,74 +75,41 @@ const schemas = [
     <div class="mx-auto max-w-content px-gutter pt-8 pb-section-lg">
       <Filters entries={all} scriptureCurrent />
 
-      {
-        index.testaments.length > 0 && (
-          <nav class="jump" aria-label="Books of the Bible">
-            {index.testaments.map((t) => (
-              <p class="jump-line">
-                <span class="jump-t">{t.name}</span>
-                {t.books.map((b) => (
-                  <a href={`#${b.slug}`}>{b.name}</a>
-                ))}
-              </p>
-            ))}
-          </nav>
-        )
-      }
+      {index.testaments.length > 0 && (
+        <nav class="jump" aria-label="Books of the Bible">
+          {index.testaments.map((t) => (
+            <p class="jump-line">
+              <span class="jump-t">{t.name}</span>
+              {t.books.map((b) => (
+                <a href={`#${b.slug}`}>{b.name}</a>
+              ))}
+            </p>
+          ))}
+        </nav>
+      )}
 
-      {
-        !hasAny && (
-          <p class="mt-12 max-w-[62ch] text-body text-brown-ink">
-            The first sermon previews are on their way.
-          </p>
-        )
-      }
+      {!hasAny && (
+        <p class="mt-12 max-w-[62ch] text-body text-brown-ink">
+          The first sermon previews are on their way.
+        </p>
+      )}
 
-      {
-        index.testaments.map((t) => (
-          <div class="testament">
-            <h2 id={`t-${t.key}`} class:list={[H2_DISPLAY, 'text-indigo']}>
-              {t.name}
-            </h2>
-            {t.books.map((b) => (
-              <div class="book">
-                <h3 id={b.slug} class="book-h font-display">
-                  {b.name}
-                </h3>
-                <ol class="rows">
-                  {b.passages.map((p) => (
-                    <li class="row" id={p.id}>
-                      <p class="ref">{p.label}</p>
-                      <ul class="posts">
-                        {p.posts.map((post) => (
-                          <li class="post">
-                            <a href={post.href}>{post.title}</a>
-                            <time datetime={post.iso}>{post.dateLabel}</time>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            ))}
-          </div>
-        ))
-      }
-
-      {
-        index.other.length > 0 && (
-          <div class="testament">
-            <h2 id="t-other" class:list={[H2_DISPLAY, 'text-indigo']}>
-              Other readings
-            </h2>
+      {index.testaments.map((t) => (
+        <div class="testament">
+          <h2 id={`t-${t.key}`} class:list={[H2_DISPLAY, 'text-indigo']}>
+            {t.name}
+          </h2>
+          {t.books.map((b) => (
             <div class="book">
+              <h3 id={b.slug} class="book-h font-display">
+                {b.name}
+              </h3>
               <ol class="rows">
-                {index.other.map((o) => (
-                  <li class="row">
-                    <p class="ref">{o.reading}</p>
+                {b.passages.map((p) => (
+                  <li class="row" id={p.id}>
+                    <p class="ref">{p.label}</p>
                     <ul class="posts">
-                      {o.posts.map((post) => (
+                      {p.posts.map((post) => (
                         <li class="post">
                           <a href={post.href}>{post.title}</a>
                           <time datetime={post.iso}>{post.dateLabel}</time>
@@ -153,9 +120,34 @@ const schemas = [
                 ))}
               </ol>
             </div>
+          ))}
+        </div>
+      ))}
+
+      {index.other.length > 0 && (
+        <div class="testament">
+          <h2 id="t-other" class:list={[H2_DISPLAY, 'text-indigo']}>
+            Other readings
+          </h2>
+          <div class="book">
+            <ol class="rows">
+              {index.other.map((o) => (
+                <li class="row">
+                  <p class="ref">{o.reading}</p>
+                  <ul class="posts">
+                    {o.posts.map((post) => (
+                      <li class="post">
+                        <a href={post.href}>{post.title}</a>
+                        <time datetime={post.iso}>{post.dateLabel}</time>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ol>
           </div>
-        )
-      }
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>

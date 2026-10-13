@@ -38,23 +38,21 @@ const stores = [
   class:list={['app-buttons', dark && 'app-dark', compact && 'app-compact', extraClass]}
   data-app-buttons
 >
-  {
-    stores.map((s) => (
-      <li>
-        <a
-          href={s.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="app-button press-tactile"
-          data-store={s.key}
-          aria-label={`Get the church app on ${s.store}, ${s.device.toLowerCase()} (opens in a new tab)`}
-        >
-          <span class="app-button-device">{s.device}</span>
-          <span class="app-button-store">{s.store}</span>
-        </a>
-      </li>
-    ))
-  }
+  {stores.map((s) => (
+    <li>
+      <a
+        href={s.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="app-button press-tactile"
+        data-store={s.key}
+        aria-label={`Get the church app on ${s.store}, ${s.device.toLowerCase()} (opens in a new tab)`}
+      >
+        <span class="app-button-device">{s.device}</span>
+        <span class="app-button-store">{s.store}</span>
+      </a>
+    </li>
+  ))}
 </ul>
 
 <style>

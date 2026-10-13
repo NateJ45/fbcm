@@ -45,11 +45,9 @@ const preview = {
     {recording && <LastSunday recording={recording} headingId="sg-last-sunday-1" />}
   </div>
   <div data-state="paired">
-    {
-      recording && (
-        <LastSunday recording={recording} preview={preview} headingId="sg-last-sunday-2" />
-      )
-    }
+    {recording && (
+      <LastSunday recording={recording} preview={preview} headingId="sg-last-sunday-2" />
+    )}
   </div>
   <div data-state="unavailable">
     {unavailable && <LastSunday recording={unavailable} headingId="sg-last-sunday-3" />}

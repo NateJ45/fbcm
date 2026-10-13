@@ -60,51 +60,45 @@ const QF = 'M-5-5A6.2 6.2 0 1 1 5-5A6.2 6.2 0 1 1 5 5A6.2 6.2 0 1 1-5 5A6.2 6.2 
 <section class="bg-band-deep text-bg" aria-labelledby={heading ? headingId : undefined}>
   <div class="mx-auto max-w-content px-gutter py-section-lg">
     <div class="grid grid-cols-12 gap-x-[clamp(16px,2.5vw,40px)]">
-      <div
-        class="col-span-12 self-start lg:sticky lg:top-[calc(var(--header-offset)+1rem)] lg:col-span-4"
-      >
+      <div class="col-span-12 self-start lg:sticky lg:top-[calc(var(--header-offset)+1rem)] lg:col-span-4">
         <BuildingGlyph name="rose" class="mb-[22px] w-14 text-gold" />
         {eyebrow && <p class="mb-4 font-ui text-ui font-semibold text-gold">{eyebrow}</p>}
-        {
-          heading && (
-            <h2
-              id={headingId}
-              class:list={[headingClass, 'h-fit text-gold']}
-              style={headingFit(heading)}
-            >
-              <span class="h-fit-in">{heading}</span>
-            </h2>
-          )
-        }
+        {heading && (
+          <h2
+            id={headingId}
+            class:list={[headingClass, 'h-fit text-gold']}
+            style={headingFit(heading)}
+          >
+            <span class="h-fit-in">{heading}</span>
+          </h2>
+        )}
       </div>
 
-      {
-        validItems.length > 0 && (
-          <div class="col-span-12 mt-9 min-w-0 border-t border-gold/45 lg:col-span-8 lg:col-start-5 lg:mt-0">
-            {validItems.map((item, i) => (
-              <details class="faq-q group border-b border-gold/45" open={i === 0}>
-                <summary class="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_28px] items-center gap-5 py-[clamp(20px,2.2vw,28px)] font-body text-[clamp(1.3rem,1.1rem+.6vw,1.5625rem)] leading-[1.3] text-bg [&::-webkit-details-marker]:hidden">
-                  <span class="faq-q-text">{item.question}</span>
-                  <svg
-                    viewBox="-16 -16 32 32"
-                    aria-hidden="true"
-                    focusable="false"
-                    class="building-glyph faq-mark w-6 text-gold"
-                  >
-                    <path d={QF} />
-                  </svg>
-                </summary>
-                {item.answer && (
-                  <PortableText
-                    value={item.answer}
-                    className="max-w-[40em] pb-[clamp(22px,2.4vw,32px)] font-body text-[1.1875rem] leading-[1.6] lg:pr-12 [&_a]:text-gold [&_li]:text-bg/85 [&_p]:my-0 [&_p]:text-bg/85 [&_strong]:text-bg [&_ul]:text-bg/85"
-                  />
-                )}
-              </details>
-            ))}
-          </div>
-        )
-      }
+      {validItems.length > 0 && (
+        <div class="col-span-12 mt-9 min-w-0 border-t border-gold/45 lg:col-span-8 lg:col-start-5 lg:mt-0">
+          {validItems.map((item, i) => (
+            <details class="faq-q group border-b border-gold/45" open={i === 0}>
+              <summary class="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_28px] items-center gap-5 py-[clamp(20px,2.2vw,28px)] font-body text-[clamp(1.3rem,1.1rem+.6vw,1.5625rem)] leading-[1.3] text-bg [&::-webkit-details-marker]:hidden">
+                <span class="faq-q-text">{item.question}</span>
+                <svg
+                  viewBox="-16 -16 32 32"
+                  aria-hidden="true"
+                  focusable="false"
+                  class="building-glyph faq-mark w-6 text-gold"
+                >
+                  <path d={QF} />
+                </svg>
+              </summary>
+              {item.answer && (
+                <PortableText
+                  value={item.answer}
+                  className="max-w-[40em] pb-[clamp(22px,2.4vw,32px)] font-body text-[1.1875rem] leading-[1.6] lg:pr-12 [&_a]:text-gold [&_li]:text-bg/85 [&_p]:my-0 [&_p]:text-bg/85 [&_strong]:text-bg [&_ul]:text-bg/85"
+                />
+              )}
+            </details>
+          ))}
+        </div>
+      )}
     </div>
   </div>
 </section>

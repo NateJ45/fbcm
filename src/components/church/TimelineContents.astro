@@ -55,18 +55,18 @@ const { top, entries } = contents;
   <div class="hc-in mx-auto max-w-content px-gutter">
     <ol class="hc-strip" role="list">
       <li class="hc-top">
-        <a href={`#${top.id}`} data-hc-link={top.id}>{top.label}</a>
+        <a href={`#${top.id}`} data-hc-link={top.id}>
+          {top.label}
+        </a>
       </li>
-      {
-        entries.map((e) => (
-          <li>
-            <a href={`#${e.id}`} data-hc-link={e.id} data-hc-title={e.title}>
-              <span class="hc-year">{e.year}</span>
-              {e.rest && <span class="sr-only">{e.rest}</span>}
-            </a>
-          </li>
-        ))
-      }
+      {entries.map((e) => (
+        <li>
+          <a href={`#${e.id}`} data-hc-link={e.id} data-hc-title={e.title}>
+            <span class="hc-year">{e.year}</span>
+            {e.rest && <span class="sr-only">{e.rest}</span>}
+          </a>
+        </li>
+      ))}
     </ol>
     <p class="hc-now" aria-hidden="true" data-hc-now></p>
 
@@ -90,16 +90,14 @@ const { top, entries } = contents;
             <span class="hc-l-name">{top.label}</span>
           </a>
         </li>
-        {
-          entries.map((e) => (
-            <li>
-              <a href={`#${e.id}`} data-hc-link={e.id}>
-                <span class="hc-l-when">{e.marker}</span>
-                <span class="hc-l-name">{e.title}</span>
-              </a>
-            </li>
-          ))
-        }
+        {entries.map((e) => (
+          <li>
+            <a href={`#${e.id}`} data-hc-link={e.id}>
+              <span class="hc-l-when">{e.marker}</span>
+              <span class="hc-l-name">{e.title}</span>
+            </a>
+          </li>
+        ))}
       </ol>
     </details>
   </div>

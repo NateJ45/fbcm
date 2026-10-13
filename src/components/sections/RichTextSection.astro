@@ -85,44 +85,42 @@ const glyphs = isBasicBeliefsBand(heading);
       layout.continuation || layout.shape === 'row' ? 'py-section-md' : 'py-section-lg',
     ]}
   >
-    {
-      layout.shape === 'row' && measure?.kind === 'measure' ? (
-        <div class="rt-g">
-          <div class="rt-rowline">
-            <div class="rt-rh">
-              <SectionHeading
-                eyebrow={eyebrow}
-                headline={heading}
-                headingId={headingId}
-                scriptAccent={scriptAccent}
-                headingAccent={headingAccent}
-                face="display"
-              />
-            </div>
-            <div class:list={['rt-rt', layout.rowLong && 'is-long']}>
-              {measure.paras.map((q) => (
-                <PortableText value={toPt(q.block)} variant="bare" />
-              ))}
-            </div>
+    {layout.shape === 'row' && measure?.kind === 'measure' ? (
+      <div class="rt-g">
+        <div class="rt-rowline">
+          <div class="rt-rh">
+            <SectionHeading
+              eyebrow={eyebrow}
+              headline={heading}
+              headingId={headingId}
+              scriptAccent={scriptAccent}
+              headingAccent={headingAccent}
+              face="display"
+            />
+          </div>
+          <div class:list={['rt-rt', layout.rowLong && 'is-long']}>
+            {measure.paras.map((q) => (
+              <PortableText value={toPt(q.block)} variant="bare" />
+            ))}
           </div>
         </div>
-      ) : (
-        <div class="rt-g">
-          {hasHead && (
-            <div class="rt-head">
-              <SectionHeading
-                eyebrow={eyebrow}
-                headline={heading}
-                headingId={headingId}
-                scriptAccent={scriptAccent}
-                headingAccent={headingAccent}
-                face="display"
-              />
-            </div>
-          )}
-          <RichBody pieces={layout.pieces} glyphs={glyphs} />
-        </div>
-      )
-    }
+      </div>
+    ) : (
+      <div class="rt-g">
+        {hasHead && (
+          <div class="rt-head">
+            <SectionHeading
+              eyebrow={eyebrow}
+              headline={heading}
+              headingId={headingId}
+              scriptAccent={scriptAccent}
+              headingAccent={headingAccent}
+              face="display"
+            />
+          </div>
+        )}
+        <RichBody pieces={layout.pieces} glyphs={glyphs} />
+      </div>
+    )}
   </div>
 </section>

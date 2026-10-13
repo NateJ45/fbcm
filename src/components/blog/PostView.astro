@@ -373,11 +373,9 @@ const PRINT_SCRIPT = `
 {/* 2px gold hairline tracking scroll through the article. */}
 <ReadingProgress />
 
-{
-  /* data-pagefind-body: the site search indexes the article (the masthead,
+{/* data-pagefind-body: the site search indexes the article (the masthead,
       its facts and the body) and nothing outside it, so the foot's series
-      rows and doors never turn up as a match for another post's words. */
-}
+      rows and doors never turn up as a match for another post's words. */}
 <article class="p2" data-pagefind-body>
   {/* ------- 1. Masthead: title left, the order right ------------------- */}
   <header class="mx-auto max-w-content px-gutter">
@@ -391,33 +389,31 @@ const PRINT_SCRIPT = `
       </div>
 
       <div class="p2-mast-r">
-        {
-          facts.length > 0 && (
-            <Fragment>
-              <p class="p2-order-h font-ui text-ui text-gold-ink" data-pagefind-ignore>
-                {isPreview ? 'This Sunday’s order' : 'About this post'}
-              </p>
-              <dl class="p2-facts">
-                {facts.map((f) => (
-                  <div>
-                    <dt class="font-ui text-ui">{f.label}</dt>
-                    <dd class:list={{ 'p2-big': f.big }} data-pagefind-meta={f.meta}>
-                      {f.href ? (
-                        <a href={f.href}>{f.value}</a>
-                      ) : f.datetime ? (
-                        <time datetime={f.datetime} class="oldstyle">
-                          {f.value}
-                        </time>
-                      ) : (
-                        f.value
-                      )}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </Fragment>
-          )
-        }
+        {facts.length > 0 && (
+          <Fragment>
+            <p class="p2-order-h font-ui text-ui text-gold-ink" data-pagefind-ignore>
+              {isPreview ? 'This Sunday’s order' : 'About this post'}
+            </p>
+            <dl class="p2-facts">
+              {facts.map((f) => (
+                <div>
+                  <dt class="font-ui text-ui">{f.label}</dt>
+                  <dd class:list={{ 'p2-big': f.big }} data-pagefind-meta={f.meta}>
+                    {f.href ? (
+                      <a href={f.href}>{f.value}</a>
+                    ) : f.datetime ? (
+                      <time datetime={f.datetime} class="oldstyle">
+                        {f.value}
+                      </time>
+                    ) : (
+                      f.value
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Fragment>
+        )}
         {/* Listen, Share and (a preview) Add to calendar: one quiet row. */}
         <PostTools
           icsHref={icsHref}
@@ -429,207 +425,184 @@ const PRINT_SCRIPT = `
   </header>
 
   {/* ------- 2. The ground: a photograph cover, full bleed ------------- */}
-  {
-    cover && coverIsPhoto && (
-      <div class="mx-auto max-w-content px-gutter">
-        <ArchFrame
-          image={cover}
-          shape="door"
-          width={2400}
-          sizes="(min-width: 1320px) 1240px, 94vw"
-          alt={plateAlt}
-          loading="eager"
-          reveal={false}
-          class="p2-ground"
-          editAttr={coverEditAttr}
-          style="--arch-ratio: 100 / 42;"
-        />
-      </div>
-    )
-  }
+  {cover && coverIsPhoto && (
+    <div class="mx-auto max-w-content px-gutter">
+      <ArchFrame
+        image={cover}
+        shape="door"
+        width={2400}
+        sizes="(min-width: 1320px) 1240px, 94vw"
+        alt={plateAlt}
+        loading="eager"
+        reveal={false}
+        class="p2-ground"
+        editAttr={coverEditAttr}
+        style="--arch-ratio: 100 / 42;"
+      />
+    </div>
+  )}
 
   {/* ------- 3. Body left, plate and contents right --------------------- */}
   <div class="mx-auto max-w-content px-gutter">
     <div class="p2-grid p2-main">
       <div class="p2-body" data-sanity={bodyEditAttr}>
-        {
-          /* Static HTML, built once: no JavaScript ships for the body. Only
+        {/* Static HTML, built once: no JavaScript ships for the body. Only
               a before/after slider, if a post ever has one, hydrates
-              (JournalBody.astro, 2026-09-24). */
-        }
+              (JournalBody.astro, 2026-09-24). */}
         <JournalBody value={body} class="post-prose" />
 
-        {
-          entry.relatedProject?.slug?.current && (
-            <aside class="p2-related">
-              <p class="font-ui text-ui text-gold-ink">Related project</p>
-              <a href={`/portfolio/${entry.relatedProject.slug.current}`}>
-                {entry.relatedProject.title}
-              </a>
-            </aside>
-          )
-        }
+        {entry.relatedProject?.slug?.current && (
+          <aside class="p2-related">
+            <p class="font-ui text-ui text-gold-ink">Related project</p>
+            <a href={`/portfolio/${entry.relatedProject.slug.current}`}>
+              {entry.relatedProject.title}
+            </a>
+          </aside>
+        )}
 
-        {
-          /* Tags, at the FOOT of the article, as text links: here a tag
+        {/* Tags, at the FOOT of the article, as text links: here a tag
               means "more like the thing you just read", a question a reader
-              actually has once they have read it. */
-        }
-        {
-          tagLinks.length > 0 && (
-            <nav class="p2-tags" aria-label="Tags on this post" data-pagefind-ignore>
-              <span class="font-ui text-ui text-gold-ink">Tagged</span>
-              {tagLinks.map((tag, i) => (
-                <>
-                  <a href={`/blog/tag/${tag.slug}/`}>{tag.label}</a>
-                  {i < tagLinks.length - 1 && ', '}
-                </>
-              ))}
-            </nav>
-          )
-        }
+              actually has once they have read it. */}
+        {tagLinks.length > 0 && (
+          <nav class="p2-tags" aria-label="Tags on this post" data-pagefind-ignore>
+            <span class="font-ui text-ui text-gold-ink">Tagged</span>
+            {tagLinks.map((tag, i) => (
+              <>
+                <a href={`/blog/tag/${tag.slug}/`}>{tag.label}</a>
+                {i < tagLinks.length - 1 && ', '}
+              </>
+            ))}
+          </nav>
+        )}
       </div>
 
-      {
-        (hasPlate || hasContents) && (
-          <aside class="p2-side" aria-label="About this post" data-pagefind-ignore>
-            <div class="p2-side-in">
-              {hasPlate && cover && (
-                <ArchFrame
-                  image={cover}
-                  shape="door"
-                  width={900}
-                  sizes="(min-width: 1024px) 28vw, 300px"
-                  alt={plateAlt}
-                  loading="eager"
-                  reveal={false}
-                  class="p2-plate"
-                  editAttr={coverEditAttr}
-                  style={`--arch-ratio: ${plateRatio};`}
-                />
-              )}
-              {hasContents && (
-                <nav class="p2-contents" aria-label="In this post">
-                  <span class="font-ui text-ui text-gold-ink">In this post</span>
-                  <ol>
-                    {headings.map((h, i) => (
-                      <li>
-                        <a href={`#${h.id}`}>
-                          <span class="p2-n">{String(i + 1).padStart(2, '0')}</span>
-                          <span>{h.text}</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ol>
-                </nav>
-              )}
-            </div>
-          </aside>
-        )
-      }
+      {(hasPlate || hasContents) && (
+        <aside class="p2-side" aria-label="About this post" data-pagefind-ignore>
+          <div class="p2-side-in">
+            {hasPlate && cover && (
+              <ArchFrame
+                image={cover}
+                shape="door"
+                width={900}
+                sizes="(min-width: 1024px) 28vw, 300px"
+                alt={plateAlt}
+                loading="eager"
+                reveal={false}
+                class="p2-plate"
+                editAttr={coverEditAttr}
+                style={`--arch-ratio: ${plateRatio};`}
+              />
+            )}
+            {hasContents && (
+              <nav class="p2-contents" aria-label="In this post">
+                <span class="font-ui text-ui text-gold-ink">In this post</span>
+                <ol>
+                  {headings.map((h, i) => (
+                    <li>
+                      <a href={`#${h.id}`}>
+                        <span class="p2-n">{String(i + 1).padStart(2, '0')}</span>
+                        <span>{h.text}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )}
+          </div>
+        </aside>
+      )}
     </div>
   </div>
 </article>
 
-{
-  /* On paper only (display: none on screen, so no reader and no screen
-      reader meets it twice): where this bulletin came from. */
-}
+{/* On paper only (display: none on screen, so no reader and no screen
+      reader meets it twice): where this bulletin came from. */}
 <p class="p2-print-foot" data-pagefind-ignore>
   {printFoot.map((part, i) => (i === 0 ? part : <> · {part}</>))}
 </p>
 
-{
-  /* ------- 4. More from this series ---------------------------------------
+{/* ------- 4. More from this series ---------------------------------------
       The three posts sharing the most TAGS with this one (seriesByTag,
       unchanged). It renders only when something really does share a tag:
       nothing is better than a claim that is not true. A preview's row says
-      its Sunday and its reading, which is what a reader scans for. */
-}
-{
-  (series.length > 0 || doors.before || doors.after) && (
-    <section
-      class="p2-foot bg-band-taupe text-band-ink"
-      aria-labelledby={series.length > 0 ? 'post-series-heading' : undefined}
-      aria-label={series.length > 0 ? undefined : 'More posts'}
-    >
-      <div class="mx-auto max-w-content px-gutter py-section-lg">
-        {series.length > 0 && (
-          <Fragment>
-            <div class="mb-[clamp(36px,4vw,60px)] flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
-              <h2 id="post-series-heading" class:list={[H2_DISPLAY, 'text-band-indigo']}>
-                More from this series
-              </h2>
-              <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
-            </div>
-            <ol class="m-0 list-none border-t border-band-brown/40 p-0">
-              {series.map((item) => (
-                <PostRow
-                  href={`/post/${item.slug}`}
-                  title={item.title}
-                  dateLabel={item.date}
-                  datetime={item.datetime || undefined}
-                  image={item.cover}
-                  excerpt={item.excerpt}
-                  byline={item.meta}
-                  tone="taupe"
-                />
-              ))}
-            </ol>
-          </Fragment>
-        )}
-
-        {/* The doors. A preview's are the Sunday before and after, among
-              previews; any other post's are Older / Newer by date
-              (src/lib/post-neighbours.ts). */}
-        {(doors.before || doors.after) && (
-          <nav class="p2-doors" aria-label="Older and newer posts">
-            {doors.before ? (
-              <a href={`/post/${doors.before.slug}`}>
-                <span class="p2-door-l font-ui text-ui">&larr; {doors.before.label}</span>
-                <span class="p2-door-t">{doors.before.title}</span>
-                {doors.before.sub && <span class="p2-door-s">{doors.before.sub}</span>}
-              </a>
-            ) : (
-              <span />
-            )}
-            {doors.after ? (
-              <a href={`/post/${doors.after.slug}`}>
-                <span class="p2-door-l font-ui text-ui">{doors.after.label} &rarr;</span>
-                <span class="p2-door-t">{doors.after.title}</span>
-                {doors.after.sub && <span class="p2-door-s">{doors.after.sub}</span>}
-              </a>
-            ) : (
-              <span />
-            )}
-          </nav>
-        )}
-        {series.length === 0 && (
-          <div class="mt-10">
+      its Sunday and its reading, which is what a reader scans for. */}
+{(series.length > 0 || doors.before || doors.after) && (
+  <section
+    class="p2-foot bg-band-taupe text-band-ink"
+    aria-labelledby={series.length > 0 ? 'post-series-heading' : undefined}
+    aria-label={series.length > 0 ? undefined : 'More posts'}
+  >
+    <div class="mx-auto max-w-content px-gutter py-section-lg">
+      {series.length > 0 && (
+        <Fragment>
+          <div class="mb-[clamp(36px,4vw,60px)] flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+            <h2 id="post-series-heading" class:list={[H2_DISPLAY, 'text-band-indigo']}>
+              More from this series
+            </h2>
             <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
           </div>
-        )}
-      </div>
-    </section>
-  )
-}
+          <ol class="m-0 list-none border-t border-band-brown/40 p-0">
+            {series.map((item) => (
+              <PostRow
+                href={`/post/${item.slug}`}
+                title={item.title}
+                dateLabel={item.date}
+                datetime={item.datetime || undefined}
+                image={item.cover}
+                excerpt={item.excerpt}
+                byline={item.meta}
+                tone="taupe"
+              />
+            ))}
+          </ol>
+        </Fragment>
+      )}
 
-{
-  /* Sticky contextual CTA: appears past 50% scroll on long posts. Label is
-      Sanity-editable on journalPage; clearing the field hides the chip. */
-}
-{
-  journalPage?.stickyCtaLabel !== '' && (
-    <StickyCTAChip
-      client:idle
-      label={journalPage?.stickyCtaLabel ?? 'Got a question?'}
-      href="/contact"
-    />
-  )
-}
+      {/* The doors. A preview's are the Sunday before and after, among
+              previews; any other post's are Older / Newer by date
+              (src/lib/post-neighbours.ts). */}
+      {(doors.before || doors.after) && (
+        <nav class="p2-doors" aria-label="Older and newer posts">
+          {doors.before ? (
+            <a href={`/post/${doors.before.slug}`}>
+              <span class="p2-door-l font-ui text-ui">&larr; {doors.before.label}</span>
+              <span class="p2-door-t">{doors.before.title}</span>
+              {doors.before.sub && <span class="p2-door-s">{doors.before.sub}</span>}
+            </a>
+          ) : (
+            <span />
+          )}
+          {doors.after ? (
+            <a href={`/post/${doors.after.slug}`}>
+              <span class="p2-door-l font-ui text-ui">{doors.after.label} &rarr;</span>
+              <span class="p2-door-t">{doors.after.title}</span>
+              {doors.after.sub && <span class="p2-door-s">{doors.after.sub}</span>}
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
+      {series.length === 0 && (
+        <div class="mt-10">
+          <CtaLink variant="gold" fallbackHref="/blog/" fallbackLabel="All posts" />
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+{/* Sticky contextual CTA: appears past 50% scroll on long posts. Label is
+      Sanity-editable on journalPage; clearing the field hides the chip. */}
+{journalPage?.stickyCtaLabel !== '' && (
+  <StickyCTAChip
+    client:idle
+    label={journalPage?.stickyCtaLabel ?? 'Got a question?'}
+    href="/contact"
+  />
+)}
 
 <script is:inline set:html={PRINT_SCRIPT} />
-
 <style is:global>
   /* The P2 Bulletin post page and its reading styles. PAGE-SCOPED on purpose:
      this block ships only with /post/* pages, while a Tailwind utility added
