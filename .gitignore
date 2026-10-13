@@ -109,3 +109,6 @@ src/data/visitor.generated.json
 # The church's YouTube uploads, fetched before every build by
 # scripts/fetch-youtube-feed.mjs (2026-09-26).
 src/data/youtube-feed.generated.json
+
+# Playwright MCP session scratch
+.playwright-mcp/
