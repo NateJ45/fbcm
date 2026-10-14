@@ -29,6 +29,7 @@
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { requireProductionWrite } from './lib/production-write.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WRITE = process.argv.includes('--write');
@@ -63,7 +64,11 @@ function backupPath() {
 }
 
 async function main() {
-  const { client } = await import('./lib/sanity-lib.mjs');
+  const { client, dataset } = await import('./lib/sanity-lib.mjs');
+  // --write is this script's own flag, and sanity-lib's production check only
+  // sees --apply, so the second factor is checked here as well (PORTS.md card 86):
+  // a production write needs NCS_PRODUCTION_WRITE=yes in the same command.
+  requireProductionWrite({ write: WRITE, dataset, flag: '--write' });
   const ids = answers.map((a) => a.id);
   const all = await client.fetch(
     '*[_id in $ids || _id in $draftIds]',
