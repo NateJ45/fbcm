@@ -17,7 +17,7 @@
 // (scripts/lib/production-write.mjs). Every FBCM write is a production write:
 //
 //   npm run seed                                          # dry run
-//   NCS_PRODUCTION_WRITE=yes npm run seed -- --apply      # write (Nathan present)
+//   NCS_PRODUCTION_WRITE=yes npm run seed -- --apply      # write (after backup + dry run)
 //
 // CLAUDE.md still says: do not run `npm run seed` against this dataset. The
 // --only path below is the one that is ever meant to write here.
@@ -1000,7 +1000,7 @@ async function seed() {
       `\nDRY RUN: ${created} would be created, ${replaced} replaced. Nothing was written.`,
     );
     console.log(
-      'To write: NCS_PRODUCTION_WRITE=yes npm run seed -- --apply (with Nathan present).',
+      'To write: NCS_PRODUCTION_WRITE=yes npm run seed -- --apply (after a backup and a dry run).',
     );
     return;
   }

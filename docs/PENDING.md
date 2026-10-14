@@ -420,12 +420,11 @@ leaves open, with what closes each.
 
 ### Production second factor and the data audit (2026-10-13, `chore/gotcha-ports-production-writes`)
 
-- [ ] #nathan **Who sets NCS_PRODUCTION_WRITE.** Every Sanity write script now needs the write
-      flag AND `NCS_PRODUCTION_WRITE=yes` on `production` (starter card 86). The starter's
-      rule, copied into `.claude/rules/schema-and-data.md`, says only Nathan sets it and a
-      delegated agent never does; `.claude/rules/live-writes-and-handoff.md` (2026-10-03) says
-      Sanity writes are pre-approved for agents to run. Decide which governs an agent session.
-      Until then an agent does the backup, dry run and verification and hands over the write.
+- [x] **Who sets NCS_PRODUCTION_WRITE. Resolved 2026-10-13 (Nathan's decision).** Every Sanity
+      write script needs the write flag AND `NCS_PRODUCTION_WRITE=yes` on `production` (starter
+      card 86). A delegated agent may set the variable, only under the write protocol: backup
+      first, dry run, write with `--apply` plus the variable in the same command, verify. The
+      rules in `.claude/rules/schema-and-data.md` and `live-writes-and-handoff.md` now agree.
 - **`npm run audit:data` first run, 2026-10-13: 236 documents (1 draft), 0 findings.** No array
   item is missing `_type` or `_key`, and there are no orphan fields (data the schema does not
   declare), so no backfill and no unset was needed. `scripts/backfill-array-types.mjs` dry run:

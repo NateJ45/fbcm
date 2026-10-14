@@ -9,7 +9,7 @@
 //
 // DRY BY DEFAULT (2026-10-13, PORTS.md card 86): a bare run builds the NDJSON
 // and stops. The import needs --apply and, because it targets `production`,
-// NCS_PRODUCTION_WRITE=yes in the same command, with Nathan present.
+// NCS_PRODUCTION_WRITE=yes in the same command, after a backup and a dry run.
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';

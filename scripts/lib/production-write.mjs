@@ -40,8 +40,8 @@ export function productionWriteRefusal({ write, dataset, processEnv, flag = '--a
   if (processEnv.NCS_PRODUCTION_WRITE === 'yes') return null;
   return [
     `Refusing to write: ${flag} targets the production dataset, and ${flag} alone is not enough.`,
-    'Set NCS_PRODUCTION_WRITE=yes in the same command, and only with Nathan present',
-    `(bash: NCS_PRODUCTION_WRITE=yes node <script> ${flag}). A delegated agent never sets it.`,
+    'Set NCS_PRODUCTION_WRITE=yes in the same command, after a backup and a dry run',
+    `(bash: NCS_PRODUCTION_WRITE=yes node <script> ${flag}). A delegated agent may set it only under the write protocol (backup, dry run, apply, verify).`,
     `Run without ${flag} to see the plan. PORTS.md card 86.`,
   ].join('\n');
 }
