@@ -27,10 +27,15 @@
 import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { client } from './lib/sanity-lib.mjs';
+import { client, dataset } from './lib/sanity-lib.mjs';
+import { requireProductionWrite } from './lib/production-write.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WRITE = process.argv.includes('--write') || process.argv.includes('--apply');
+// --write is this script's own flag, and sanity-lib's production check only
+// sees --apply, so the second factor is checked here as well (PORTS.md card 86):
+// a production write needs NCS_PRODUCTION_WRITE=yes in the same command.
+requireProductionWrite({ write: WRITE, dataset, flag: '--write' });
 
 const BACKUP_PATH = resolve(__dirname, 'data', 'backups', 'contactPage-2026-09-20-plan2b.json');
 

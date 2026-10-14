@@ -50,7 +50,8 @@
     "favicon": "node scripts/generate-favicons.mjs",
     "scaffold": "node scripts/scaffold.mjs",
     "audit:studio": "node scripts/audit-studio.mjs",
-    "verify:redirects": "node scripts/verify-redirects.mjs --follow-script"
+    "verify:redirects": "node scripts/verify-redirects.mjs --follow-script",
+    "audit:data": "node scripts/audit-data-vs-schema.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "14.3.4",

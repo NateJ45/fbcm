@@ -5,11 +5,19 @@
 //
 // Run via `node scripts/import-content.mjs`. Idempotent: passing `--replace`
 // to the underlying import overwrites existing documents with the same _id.
+// A starter-era one-off: this repo has no migration-docs/content or studio/.
+//
+// DRY BY DEFAULT (2026-10-13, PORTS.md card 86): a bare run builds the NDJSON
+// and stops. The import needs --apply and, because it targets `production`,
+// NCS_PRODUCTION_WRITE=yes in the same command, with Nathan present.
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { requireProductionWrite } from './lib/production-write.mjs';
+
+const APPLY = process.argv.includes('--apply');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
@@ -56,6 +64,16 @@ for (const file of FILES) {
 if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
 writeFileSync(outPath, lines.join('\n') + '\n', 'utf-8');
 console.log(`\nWrote ${total} documents to ${outPath}`);
+
+// The import replaces documents in `production`, so it is gated like every
+// other write (2026-10-13, PORTS.md card 86): a bare run stops after writing
+// the local NDJSON; the import needs --apply AND NCS_PRODUCTION_WRITE=yes.
+if (!APPLY) {
+  console.log('\nDRY RUN: the NDJSON above is all that was written; nothing was imported.');
+  console.log('To import: NCS_PRODUCTION_WRITE=yes node scripts/import-content.mjs --apply');
+  process.exit(0);
+}
+requireProductionWrite({ write: APPLY, dataset: 'production' });
 
 // Run the import. Studio CLI is invoked from the studio/ folder because that's
 // where sanity.cli.ts lives (project ID + dataset config).

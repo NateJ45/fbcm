@@ -26,7 +26,7 @@ Gates (what CI runs, see below):
 - `npm run sync-check` diffs PORTABLE-marked files against the starter.
 - `node scripts/measure-tap-targets.mjs <url> --width 390` counts links and buttons under 44px (PRODUCT.md promises none on Home, Visit and Staff); `impeccable detect --json src` is the design-system drift check, with its ignores in `.impeccable/config.json`. Neither is a CI gate.
 
-Data and tooling scripts (all dry by default, backup-first; detail in `docs/claude/build-and-scripts.md`): `npm run seed-pages`, `npm run scaffold` (flags after `--`), `npm run audit:studio`, `npm run apply-brand`, `npm run og:pages`, `npm run og`, `npm run check:jsonld`. Do not run `npm run seed` against this dataset.
+Data and tooling scripts (all dry by default, backup-first; detail in `docs/claude/build-and-scripts.md`): `npm run seed-pages`, `npm run scaffold` (flags after `--`), `npm run audit:studio`, `npm run audit:data` (read-only: live data against the compiled schema), `npm run apply-brand`, `npm run og:pages`, `npm run og`, `npm run check:jsonld`. Do not run `npm run seed` against this dataset. A production Sanity write needs the write flag AND `NCS_PRODUCTION_WRITE=yes` in the same command (`.claude/rules/schema-and-data.md`, starter card 86).
 
 ## Branches, CI and deploy
 

@@ -38,6 +38,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { requireProductionWrite } from './lib/production-write.mjs';
 import {
   findTypedCopies,
   fillString,
@@ -76,7 +77,11 @@ async function load() {
   }
   // Imported lazily: sanity-lib exits when .env has no token, and --from-file
   // must work without one.
-  const { client } = await import('./lib/sanity-lib.mjs');
+  const { client, dataset } = await import('./lib/sanity-lib.mjs');
+  // --write is this script's own flag, and sanity-lib's production check only
+  // sees --apply, so the second factor is checked here as well (PORTS.md card 86):
+  // a production write needs NCS_PRODUCTION_WRITE=yes in the same command.
+  requireProductionWrite({ write: WRITE, dataset, flag: '--write' });
   // Drafts too: a draft still holding a typed copy would put it back the next
   // time somebody publishes that page.
   const docs = await client.fetch(

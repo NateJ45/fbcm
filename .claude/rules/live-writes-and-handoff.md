@@ -13,3 +13,7 @@ Writes to a live, shared system (production Sanity dataset, Cloudflare, Google S
 5. Never retry the refused action through a different tool.
 
 Switching the session to ask mode (Nathan approves each call) also works. Narrow standing permission also works: Nathan allow-lists a specific command in `.claude/settings.local.json` himself (for example `Bash(npx wrangler deploy:*)`), never "run anything".
+
+## The production second factor (2026-10-13)
+
+Every Sanity write script is dry by default, and a write to `production` also needs `NCS_PRODUCTION_WRITE=yes` in the same command, read from the process environment only (`.claude/rules/schema-and-data.md`, "Data-script safety"; starter PORTS.md card 86). That rule says only Nathan sets the variable and a delegated agent never does. It is newer than the 2026-10-03 pre-approval above, and which of the two governs an agent session is open in `docs/PENDING.md` ("Who sets NCS_PRODUCTION_WRITE"). Until Nathan answers, an agent runs the backup, the dry run and the read-only verification itself and hands Nathan the one write command. Never put text containing backticks or `$(...)` inside a shell string: write it with the file-writing tool, then run a script file.
