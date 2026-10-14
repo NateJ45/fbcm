@@ -57,13 +57,13 @@ const client = createClient({
 
 // DRY BY DEFAULT (2026-10-13, PORTS.md card 86). A bare run lists what it would
 // write and writes nothing. Writing needs --apply, and on the `production`
-// dataset also NCS_PRODUCTION_WRITE=yes in the same command, with Nathan present:
+// dataset also NCS_PRODUCTION_WRITE=yes in the same command, after a backup and a dry run:
 //   NCS_PRODUCTION_WRITE=yes node archive/modules/lead-magnets/seed.mjs --apply
 const APPLY = process.argv.includes('--apply');
 if (APPLY && dataset === 'production' && !PRODUCTION_WRITE) {
   console.error(
     'Refusing to write: --apply targets the production dataset, and --apply alone is not enough.\n' +
-      'Set NCS_PRODUCTION_WRITE=yes in the same command, and only with Nathan present.\n' +
+      'Set NCS_PRODUCTION_WRITE=yes in the same command, after a backup and a dry run.\n' +
       'Run without --apply to see the plan. PORTS.md card 86.',
   );
   process.exit(2);
