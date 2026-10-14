@@ -50,6 +50,7 @@
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { requireProductionWrite } from './lib/production-write.mjs';
 import {
   MINISTRY_BANDS,
   PAGE_ID,
@@ -88,7 +89,11 @@ async function load() {
   }
   // Imported lazily: sanity-lib exits when .env has no token, and --from-file
   // must work without one.
-  const { client } = await import('./lib/sanity-lib.mjs');
+  const { client, dataset } = await import('./lib/sanity-lib.mjs');
+  // --write is this script's own flag, and sanity-lib's production check only
+  // sees --apply, so the second factor is checked here as well (PORTS.md card 86):
+  // a production write needs NCS_PRODUCTION_WRITE=yes in the same command.
+  requireProductionWrite({ write: WRITE, dataset, flag: '--write' });
   // RAW perspective, so drafts show up: a draft of the page or a ministry
   // would put the old band back, or wipe the new fields, the next time
   // somebody publishes it.

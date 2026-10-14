@@ -11,6 +11,17 @@
 // Idempotent: uses client.createOrReplace with deterministic _id values.
 // Re-running this script is safe and will never duplicate documents.
 //
+// DRY BY DEFAULT (2026-10-13, PORTS.md card 86). A bare run prints what it
+// would create or replace and writes nothing. Writing needs --apply, and on the
+// `production` dataset also NCS_PRODUCTION_WRITE=yes in the same command
+// (scripts/lib/production-write.mjs). Every FBCM write is a production write:
+//
+//   npm run seed                                          # dry run
+//   NCS_PRODUCTION_WRITE=yes npm run seed -- --apply      # write (Nathan present)
+//
+// CLAUDE.md still says: do not run `npm run seed` against this dataset. The
+// --only path below is the one that is ever meant to write here.
+//
 // Module types (service modules, etc.) have their own per-module seed.mjs.
 // Run ONLY this file for the core pages.
 //
@@ -53,6 +64,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createClient } from '@sanity/client';
 import { loadEnv } from './lib/loadEnv.mjs';
+import { requireProductionWrite } from './lib/production-write.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
@@ -71,12 +83,19 @@ if (!token) {
   process.exit(0);
 }
 
+// The second factor runs before the client exists, so a refused run makes no
+// request at all. SANITY_API_HOST points the client elsewhere; the unit test
+// aims it at https://example.invalid (scripts/lib/production-write.test.mjs).
+const APPLY = process.argv.includes('--apply');
+requireProductionWrite({ write: APPLY, dataset });
+
 const client = createClient({
   projectId,
   dataset,
   token,
   apiVersion: '2026-05-01',
   useCdn: false,
+  ...(env.SANITY_API_HOST ? { apiHost: env.SANITY_API_HOST } : {}),
 });
 
 // ── Helper: portable-text paragraph block ────────────────────────────────
@@ -800,7 +819,9 @@ docs.push({
 //      having to type the field name is what makes you look at it.
 //
 // Usage:  node scripts/seed-core.mjs --only siteSettings [--label task9]
-//                                     [--expect tagline,phone]
+//                                     [--expect tagline,phone] [--apply]
+// Without --apply it only reports; a production write also needs
+// NCS_PRODUCTION_WRITE=yes in the same command (see the header).
 //
 // --only ALSO accepts a comma-separated list of ids, so a task that touches
 // more than one singleton runs one command instead of one per document:
@@ -831,7 +852,9 @@ const expectedChanges = new Set(
 );
 
 /** Keys Sanity owns. They differ on every fetch and mean nothing to a diff. */
-const SYSTEM_KEYS = new Set(['_rev', '_createdAt', '_updatedAt']);
+// `_system` is Sanity's too (2026-10-13): live documents now carry it, and
+// counting it made every document look changed.
+const SYSTEM_KEYS = new Set(['_rev', '_createdAt', '_updatedAt', '_system']);
 
 /** Stable stringify so key ORDER never shows up as a difference. */
 function canonical(value) {
@@ -853,6 +876,23 @@ async function seedOne(type) {
   }
 
   const live = await client.fetch(`*[_id == $id][0]`, { id: doc._id });
+
+  // 0. A dry run (no --apply) names what would happen and writes nothing, not
+  // even the backup, which is only the record of a write.
+  if (!APPLY) {
+    if (!live) {
+      console.log(`DRY RUN: no live ${type} yet; --apply would create it.`);
+      return;
+    }
+    const differs = Object.keys(live).filter(
+      (k) => !SYSTEM_KEYS.has(k) && canonical(live[k]) !== canonical(doc[k]),
+    );
+    const adds = Object.keys(doc).filter((k) => !(k in live));
+    console.log(`DRY RUN: ${type} exists. Would add: ${adds.join(', ') || '(nothing)'}`);
+    console.log(`  live values that differ from the seed: ${differs.join(', ') || '(none)'}`);
+    console.log('  --apply backs up, compares (stopping on any unnamed difference), then writes.');
+    return;
+  }
 
   // 1. Back up, verbatim, BEFORE anything else. A document that does not
   // exist yet backs up as `null` -- that absence is itself the record (rule
@@ -931,7 +971,9 @@ async function seedOne(type) {
 // ── Seed all documents ────────────────────────────────────────────────────
 
 async function seed() {
-  console.log(`Seeding ${docs.length} documents to ${projectId}/${dataset}...`);
+  console.log(
+    `${APPLY ? 'Seeding' : 'DRY RUN: would seed'} ${docs.length} documents to ${projectId}/${dataset}...`,
+  );
 
   let created = 0;
   let replaced = 0;
@@ -939,19 +981,29 @@ async function seed() {
   for (const doc of docs) {
     try {
       const existing = await client.fetch(`*[_id == $id][0]._id`, { id: doc._id });
-      await client.createOrReplace(doc);
+      if (APPLY) await client.createOrReplace(doc);
+      const verb = APPLY ? '' : 'would be ';
       if (existing) {
         replaced += 1;
-        console.log(`  replaced  ${doc._type}  ${doc._id}`);
+        console.log(`  ${verb}replaced  ${doc._type}  ${doc._id}`);
       } else {
         created += 1;
-        console.log(`  created   ${doc._type}  ${doc._id}`);
+        console.log(`  ${verb}created   ${doc._type}  ${doc._id}`);
       }
     } catch (err) {
       console.error(`  ERROR on ${doc._id}: ${err.message}`);
     }
   }
 
+  if (!APPLY) {
+    console.log(
+      `\nDRY RUN: ${created} would be created, ${replaced} replaced. Nothing was written.`,
+    );
+    console.log(
+      'To write: NCS_PRODUCTION_WRITE=yes npm run seed -- --apply (with Nathan present).',
+    );
+    return;
+  }
   console.log(`\nDone. ${created} created, ${replaced} replaced.`);
   console.log('Replace all placeholder text in Sanity before going live.');
 }

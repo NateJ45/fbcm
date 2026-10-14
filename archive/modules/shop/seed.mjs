@@ -11,7 +11,8 @@
  *     permissions. See https://sanity.io/docs/http-auth
  *
  * Usage:
- *   node modules/shop/seed.mjs
+ *   node modules/shop/seed.mjs                 # dry run
+ *   NCS_PRODUCTION_WRITE=yes node archive/modules/shop/seed.mjs --apply   # write
  *
  * All documents use deterministic `_id` values so running the script more than
  * once does not create duplicates (`createOrReplace` is idempotent).
@@ -29,6 +30,9 @@ import { createClient } from '@sanity/client';
 import { config } from 'dotenv';
 
 // Load env vars from the project root .env file.
+// The production second factor is read BEFORE config(): dotenv copies .env
+// into process.env, and the factor must never come from .env (PORTS.md card 86).
+const PRODUCTION_WRITE = process.env.NCS_PRODUCTION_WRITE === 'yes';
 config();
 
 const projectId = process.env.PUBLIC_SANITY_PROJECT_ID;
@@ -51,6 +55,20 @@ const client = createClient({
   apiVersion: '2024-01-01',
   useCdn: false,
 });
+
+// DRY BY DEFAULT (2026-10-13, PORTS.md card 86). A bare run lists what it would
+// write and writes nothing. Writing needs --apply, and on the `production`
+// dataset also NCS_PRODUCTION_WRITE=yes in the same command, with Nathan present:
+//   NCS_PRODUCTION_WRITE=yes node archive/modules/shop/seed.mjs --apply
+const APPLY = process.argv.includes('--apply');
+if (APPLY && dataset === 'production' && !PRODUCTION_WRITE) {
+  console.error(
+    'Refusing to write: --apply targets the production dataset, and --apply alone is not enough.\n' +
+      'Set NCS_PRODUCTION_WRITE=yes in the same command, and only with Nathan present.\n' +
+      'Run without --apply to see the plan. PORTS.md card 86.',
+  );
+  process.exit(2);
+}
 
 // ---------------------------------------------------------------------------
 // shopCollection
@@ -143,6 +161,12 @@ async function seed() {
     tx.createOrReplace(item);
   }
 
+  if (!APPLY) {
+    const ids = tx.serialize().map((m) => Object.values(m)[0]._id);
+    console.log(`DRY RUN: would create or replace ${ids.length}: ${ids.join(', ')}`);
+    console.log('Nothing was written. Re-run with --apply (production: NCS_PRODUCTION_WRITE=yes too).');
+    return;
+  }
   await tx.commit();
 
   console.log('Done. Created or replaced:');

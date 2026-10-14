@@ -418,6 +418,30 @@ https://fbcm-site.nathanjnixon86.workers.dev. Plan 2 is pages, sections, the
 Studio and the identity pass; plan 3 is the cutover. These are the loops plan 1
 leaves open, with what closes each.
 
+### Production second factor and the data audit (2026-10-13, `chore/gotcha-ports-production-writes`)
+
+- [ ] #nathan **Who sets NCS_PRODUCTION_WRITE.** Every Sanity write script now needs the write
+      flag AND `NCS_PRODUCTION_WRITE=yes` on `production` (starter card 86). The starter's
+      rule, copied into `.claude/rules/schema-and-data.md`, says only Nathan sets it and a
+      delegated agent never does; `.claude/rules/live-writes-and-handoff.md` (2026-10-03) says
+      Sanity writes are pre-approved for agents to run. Decide which governs an agent session.
+      Until then an agent does the backup, dry run and verification and hands over the write.
+- **`npm run audit:data` first run, 2026-10-13: 236 documents (1 draft), 0 findings.** No array
+  item is missing `_type` or `_key`, and there are no orphan fields (data the schema does not
+  declare), so no backfill and no unset was needed. `scripts/backfill-array-types.mjs` dry run:
+  0 changes. Re-run the audit after any schema field is removed or any seed script changes.
+- **Not gated, on purpose.** `scripts/publish-due.mjs` (PORTABLE, run every 30 minutes by
+  `publish-due.yml` with `--apply`): adding the second factor means the workflow sets the
+  variable, which is a starter change plus a CI edit. `scripts/restore-dataset.mjs` (PORTABLE)
+  already refuses `production` without `--i-understand-this-overwrites-production`.
+  `scripts/lib/pdf-pages.mjs` never writes to Sanity (it reads PDFs), despite the triage list.
+- **`seed-pages` dry run against the live dataset, 2026-10-13 (from a worktree).** Of the 11
+  modules that ran, 9 differ from the live document (the church's Studio edits since the last
+  apply, for example /visit's children band and FAQ: 25 changed paths) and privacy and
+  not-found are unchanged; who-we-are, beliefs, wedding and visitor stop early in a worktree
+  (no `../fbcm-archive` beside it, no `scripts/.asset-map.json`). That drift is why an
+  `--apply` now prints every nested path it would overwrite: read the list before applying.
+
 ### Waiting on Nathan
 
 - **Church Trac forms built 2026-10-05, five hidden Form Cards (Church Connect > Cards), each with a readable custom path (card > Page Setup > Page Options > Custom Path, saved on Close) and Jonathan as the notified user:** Contact Us `https://fbcmuncie.churchtrac.com/contact-us` (card 24), Wedding Information Form `/wedding-information` (25), Building Use Request Form `/building-use-request` (26), Notify the Church `/notify-the-church` (27), Help Us Get to Know You, the "I'm new" form `/im-new` (28). Each is "Hide card" (off the Connect page, reachable by its link). Site settings holds them (`lifeEventFormUrl` is Notify the Church, `weddingEnquiryUrl`, `weddingBookingUrl`; pre-change values were empty); the Contact page hero button "I'm new" goes to `/im-new` and a "Send us a message" band links `/contact-us` directly (a literal address in the page data, because `{contact-form}` is the Notify form). `visitorFormUrl` stays the Sunday Connection Card (`/connectcard`), which is a different, shorter card. Rebuilt like for like from the Planning Center forms 243785, 520312, 159897 and 159198. Deviations: Wedding "Date of Wedding" is a text box; Building Use links the agreement at fbcmuncie.org/reservation instead of copying it; Notify has an added optional "Tell us more" box; the I'm-new "Household members" is one text box (Planning Center had add-adult/add-child rows); dropdowns may list the first option twice. **At the cutover:** a card's Form tab "Form/Giving Embed Domain" is `fbcm-site.nathanjnixon86.workers.dev`; change it to `www.fbcmuncie.org` or any embedded Church Trac form (`/form/<code>`) stops rendering. Direct page links are unaffected. Still open: the ChurchTrac giving address (Planning Center link in use until then).

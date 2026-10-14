@@ -71,6 +71,8 @@ import { createClient } from '@sanity/client';
 import { loadEnv } from './lib/loadEnv.mjs';
 import * as copy from './lib/page-copy.mjs';
 import { renderApprovalNote } from './lib/approval-note.mjs';
+import { requireProductionWrite } from './lib/production-write.mjs';
+import { changedPaths, approvalGatedPaths, gatedHits } from './lib/field-diff.mjs';
 import { placeholdersForTypedCopies } from '../src/lib/settings-placeholders.ts';
 import { tokenizeChurchLinks, tokensWithAddress } from '../src/lib/church-links.ts';
 
@@ -148,8 +150,23 @@ const dataset = env.PUBLIC_SANITY_DATASET ?? 'production';
 const token = env.SANITY_API_WRITE_TOKEN;
 
 const configured = Boolean(projectId && token);
+
+// The production second factor (PORTS.md card 86): on the `production` dataset
+// --apply also needs NCS_PRODUCTION_WRITE=yes in the same command, read from
+// process.env directly. It runs before the client exists, so a refused run makes
+// no request. SANITY_API_HOST aims the client elsewhere (the unit test uses
+// https://example.invalid, scripts/lib/production-write.test.mjs).
+requireProductionWrite({ write: apply && configured, dataset });
+
 const client = configured
-  ? createClient({ projectId, dataset, token, apiVersion: '2026-05-01', useCdn: false })
+  ? createClient({
+      projectId,
+      dataset,
+      token,
+      apiVersion: '2026-05-01',
+      useCdn: false,
+      ...(env.SANITY_API_HOST ? { apiHost: env.SANITY_API_HOST } : {}),
+    })
   : null;
 
 if (!configured) {
@@ -184,7 +201,9 @@ const SINGLETON_IDS = {
 };
 
 // ── Stable compare ──────────────────────────────────────────────────────────
-const SYSTEM_KEYS = new Set(['_rev', '_createdAt', '_updatedAt']);
+// `_system` is Sanity's too (2026-10-13): live documents now carry it, and
+// counting it made every document look changed.
+const SYSTEM_KEYS = new Set(['_rev', '_createdAt', '_updatedAt', '_system']);
 
 /** Stable stringify: sorted keys, so key ORDER is never mistaken for a change. */
 function canonical(value) {
@@ -277,9 +296,41 @@ function printDifferences(live, doc) {
     console.log(`      - ${typeof before === 'string' ? before : '(none)'}`);
     console.log(`      + ${typeof after === 'string' ? after : '(none)'}`);
   }
-  if (!fields.some((f) => f.startsWith('pageBuilder'))) return;
-  const blocks = changedBlocks(live, doc);
-  if (blocks.length > 0) console.log(`    pageBuilder: ${blocks.join(', ')}`);
+  if (fields.some((f) => f.startsWith('pageBuilder'))) {
+    const blocks = changedBlocks(live, doc);
+    if (blocks.length > 0) console.log(`    pageBuilder: ${blocks.join(', ')}`);
+  }
+  printNestedPaths(live, doc);
+}
+
+// ── Every changed leaf, and the ones PENDING.md holds back ──────────────────
+// The block line above says WHICH section changes; a module writes the whole
+// section, so this names every field inside it that the write carries
+// (2026-09-28: the dry run said `[0] heroSection` and the apply also published
+// facts[fact-1].note, still awaiting the church's approval; vault gotcha
+// dry-run-summaries-hide-nested-fields). Paths use PENDING.md's own notation,
+// so a held-back path written there is matched exactly (scripts/lib/field-diff.mjs).
+const PENDING_PATH = resolve(root, 'docs', 'PENDING.md');
+const MAX_PATHS = 40;
+let gatedCache = null;
+function heldBackPaths() {
+  gatedCache ??= existsSync(PENDING_PATH)
+    ? approvalGatedPaths(readFileSync(PENDING_PATH, 'utf8'))
+    : [];
+  return gatedCache;
+}
+
+function printNestedPaths(live, doc) {
+  const paths = changedPaths(live, doc, { skip: [...SYSTEM_KEYS] });
+  if (paths.length === 0) return;
+  console.log(`    changed paths (${paths.length}):`);
+  for (const p of paths.slice(0, MAX_PATHS)) console.log(`      ${p}`);
+  if (paths.length > MAX_PATHS) console.log(`      ...and ${paths.length - MAX_PATHS} more`);
+  const hits = gatedHits(paths, heldBackPaths());
+  if (hits.length === 0) return;
+  console.log('    WARNING: docs/PENDING.md says to apply these only after approval:');
+  for (const h of hits) console.log(`      ${h}`);
+  console.log('    Check PENDING.md before --apply; the write carries them.');
 }
 
 // ── Module loading ──────────────────────────────────────────────────────────
