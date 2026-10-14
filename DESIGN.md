@@ -149,6 +149,7 @@ Tokens are declared in `src/styles/globals.css` and mirrored in `brand/brand.con
 - **Light only** since 2026-09-24. `.dark` token blocks remain in the CSS but are dormant (site setting `theme: 'light'`, no toggle). Do not design or test a dark theme.
 - **Flat.** No decorative shadows or gradients on chrome. Depth comes from paper versus soft-paper bands, hairlines and photography. The only shadow-like effects are a pulse ring on the live dot and a focus ring.
 - **One grammar per page** (CLAUDE.md rule 17): one left edge (the gutter), one text-and-picture split, one button family.
+- **The split** (`.split` in `globals.css`, starter PORTS card 91, 2026-10-13): words 7fr, picture 5fr, gutter `clamp(40px, 6vw, 104px)`, one column below `lg`; `.split--media-first` puts the picture first. On it: the Sunday access band, "Our building", the pastors' letter. Not on it: ImageText (shape-sized pictures), the hero window, the home bands, the pledge. Measure with `scripts/measure-columns.mjs`.
 - Reference sites and anti-references live in `PRODUCT.md` (proposed answers, unconfirmed until Nathan edits them); this file records only what the code does.
 
 ## 2. Colors

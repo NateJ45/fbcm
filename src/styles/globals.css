@@ -2236,7 +2236,50 @@ body::before {
   }
 }
 
-/* The pledge: a responsive reading. */
+/* ---------- The shared split (PORTS.md card 91, 2026-10-13) ----------
+   ONE column split for a band that sets words beside a picture. Before this,
+   the Sunday "Doors, parking and access" band was 7fr/5fr, "Our building"
+   6fr/5fr, the pastors' letter 5fr/7fr (from 901px) and the pledge 3.5fr/8.5fr,
+   so at 1280 the seams fell at x=768, 727, 589 and 454 (the pledge keeps its
+   own, see below). Measure with
+   `MSYS_NO_PATHCONV=1 node scripts/measure-columns.mjs <baseUrl> --paths /,/visit/`.
+
+   THE TOKENS: words 7fr, picture 5fr, gutter clamp(40px, 6vw, 104px) (the
+   gutter the Sunday and building bands already used). At 1280: words 628,
+   picture 449, seam x=769 with the picture right, x=590 with it left.
+   `.split--media-first` mirrors the tracks so the picture leads and is still
+   the narrow one. One column below `lg` (64rem).
+
+   FBCM DIFFERENCE from the starter: `.split` sets only `column-gap`, so a band
+   keeps its own row gap (Tailwind `gap-y-*`, which an unlayered `gap` here would
+   silently beat) for the stacked phone layout.
+
+   NOT ON IT, on purpose: ImageText (the picture's shape picks its column count,
+   src/lib/photo-shape.ts, so its seam moves by design), the page hero's window
+   (4fr/8fr, the site's signature), the home bands (Last Sunday, The Visitor,
+   What's On, the Church App: words beside lists and cards, not a picture), the
+   goals nave and the pledge (its liturgy lines need the wide reading column). */
+:root {
+  --split-text: 7fr;
+  --split-media: 5fr;
+  --split-gutter: clamp(40px, 6vw, 104px);
+}
+.split {
+  display: grid;
+  column-gap: var(--split-gutter);
+}
+@media (width >= 64rem) {
+  .split {
+    grid-template-columns: minmax(0, var(--split-text)) minmax(0, var(--split-media));
+  }
+  .split--media-first {
+    grid-template-columns: minmax(0, var(--split-media)) minmax(0, var(--split-text));
+  }
+}
+
+/* The pledge: a responsive reading. NOT on the shared split above (tried
+   2026-10-13): at 7fr the liturgy lines wrap and the door stops short of the
+   reading, so it keeps its own 3.5fr/8.5fr. */
 .pl-grid {
   display: grid;
   gap: clamp(40px, 6vw, 100px);
@@ -2345,10 +2388,10 @@ body::before {
   }
 }
 
-/* The letter. */
+/* The letter. Columns: the shared split above, the portrait in the narrow
+   track (5fr/7fr from 901px until 2026-10-13; now from lg, stacked below). */
 .lt-grid {
-  display: grid;
-  gap: clamp(40px, 6vw, 110px);
+  row-gap: clamp(40px, 6vw, 110px);
   align-items: start;
 }
 .lt-portrait {
@@ -2407,9 +2450,6 @@ body::before {
 @media (min-width: 901px) {
   .ww-body {
     grid-template-columns: minmax(0, 33em) minmax(0, 1fr);
-  }
-  .lt-grid {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   }
   .lt-portrait {
     position: sticky;
