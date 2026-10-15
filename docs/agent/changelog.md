@@ -10,6 +10,8 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-15: GA4 skips automated browsers (starter PORTS card 96)._ `GoogleAnalytics.astro` is re-synced from the starter (rule 4): the tag does nothing when `navigator.webdriver` is true or the user agent matches `HeadlessChrome|Lighthouse|PTST|GTmetrix|Speed Insights`. Our own Playwright and Lighthouse runs against production were being counted as visitors (194 in one day on another site). Real browsers are unaffected. Starter PORTS card 96.
+
 _2026-10-13: one text/picture column split (`feat/column-split-card-91`, starter PORTS card 91)._
 
 `globals.css` now carries the starter's `--split-text` / `--split-media` / `--split-gutter` tokens and the `.split` / `.split--media-first` classes, at FBCM's own ratio (words 7fr, picture 5fr, gutter `clamp(40px, 6vw, 104px)`, the Sunday band's numbers). `.split` sets only `column-gap`, so each band keeps its own Tailwind row gap. Adopted by the Sunday "Doors, parking and access" band (`SundayTimes`), "Our building" (`HeritageBand`, was 6fr/5fr) and the pastors' letter (`PastorsLetter`, picture first, now from `lg` instead of 901px). Tried and backed out: the pledge, whose liturgy lines wrapped at 7fr. Left alone on purpose: `ImageText` (the picture's shape picks its column count), the page hero's window, the home bands (words beside lists, not pictures) and the goals nave. `scripts/measure-columns.mjs` and `scripts/lib/column-alignment.mjs` came from the starter (PORTABLE). At 1280 on `/`, `/visit/`, `/who-we-are/`: 7 misaligned before, 6 after; `/visit/` picture-right spread 40.7px to 0. Screenshots: `_vault/attachments/column-split-2026-10-13/fbcm/`.
