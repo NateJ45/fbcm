@@ -20,7 +20,7 @@
 // typed address, exactly as before.
 
 import { defineType, defineField } from 'sanity';
-import { LinkIcon } from '@sanity/icons';
+import { LinkIcon } from '@sanity/icons/Link';
 import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 
 export const navLink = defineType({

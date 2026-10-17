@@ -105,7 +105,7 @@ export default function BusinessOverview() {
 
   return (
     <Container width={1} padding={4}>
-      <Stack space={6}>
+      <Stack gap={6}>
         {/* Header */}
         <Box>
           <Heading as="h1" size={3}>
@@ -122,7 +122,7 @@ export default function BusinessOverview() {
 
         {/* ── LIVE: Contact + availability + service areas ─────────────────── */}
         <Card padding={4} radius={2} shadow={1} tone="default">
-          <Stack space={4}>
+          <Stack gap={4}>
             <Heading as="h2" size={1}>
               Contact details (from Site settings)
             </Heading>
@@ -135,7 +135,7 @@ export default function BusinessOverview() {
 
             {/* Data */}
             {settings !== null && (
-              <Stack space={3}>
+              <Stack gap={3}>
                 {settings.email ? (
                   <Box>
                     <Text size={1} weight="semibold">
@@ -200,7 +200,7 @@ export default function BusinessOverview() {
         {/* ── EDITABLE: Who you are ───────────────────────────────────────── */}
         {notes?.businessSummary && (
           <Card padding={4} radius={2} shadow={1} tone="default">
-            <Stack space={3}>
+            <Stack gap={3}>
               <Heading as="h2" size={1}>
                 Who the church is
               </Heading>
@@ -216,7 +216,7 @@ export default function BusinessOverview() {
         {/* ── EDITABLE: Your ideal client ─────────────────────────────────── */}
         {notes?.idealClient && (
           <Card padding={4} radius={2} shadow={1} tone="default">
-            <Stack space={3}>
+            <Stack gap={3}>
               <Heading as="h2" size={1}>
                 Who we are writing for
               </Heading>
@@ -232,7 +232,7 @@ export default function BusinessOverview() {
         {/* ── EDITABLE: Your voice ────────────────────────────────────────── */}
         {(notes?.voiceSummary || (notes?.wordsToAvoid && notes.wordsToAvoid.length > 0)) && (
           <Card padding={4} radius={2} shadow={1} tone="default">
-            <Stack space={3}>
+            <Stack gap={3}>
               <Heading as="h2" size={1}>
                 How the church sounds in writing
               </Heading>

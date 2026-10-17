@@ -15,7 +15,8 @@
 // See the classification table in the Phase B plan for reasoning.
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
-import { UsersIcon, SyncIcon } from '@sanity/icons';
+import { UsersIcon } from '@sanity/icons/Users';
+import { SyncIcon } from '@sanity/icons/Sync';
 import { SECTION_TYPES } from './sections';
 import { columnsField, hideWhenRich, richTwin } from './_appearanceFields';
 import { DYNAMIC_LIST_MAX } from '../../lib/dynamicListLimits';

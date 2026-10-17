@@ -14,7 +14,9 @@
 // would be a second copy that nobody remembers to change.
 
 import { defineType, defineField, defineArrayMember } from 'sanity';
-import { LinkIcon, ChevronDownIcon, ListIcon } from '@sanity/icons';
+import { LinkIcon } from '@sanity/icons/Link';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { ListIcon } from '@sanity/icons/List';
 
 export const siteSettings = defineType({
   name: 'siteSettings',

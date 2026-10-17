@@ -28,25 +28,23 @@
 // "see it on the page" is the Presentation tool in the navbar.
 
 import type { StructureBuilder, StructureResolverContext } from 'sanity/structure';
-import {
-  ArrowRightIcon,
-  BellIcon,
-  BlockElementIcon,
-  BookIcon,
-  ClipboardIcon,
-  CogIcon,
-  DocumentsIcon,
-  DocumentTextIcon,
-  EditIcon,
-  HeartIcon,
-  HomeIcon,
-  InfoOutlineIcon,
-  LockIcon,
-  PresentationIcon,
-  TagIcon,
-  ThumbsUpIcon,
-  UsersIcon,
-} from '@sanity/icons';
+import { ArrowRightIcon } from '@sanity/icons/ArrowRight';
+import { BellIcon } from '@sanity/icons/Bell';
+import { BlockElementIcon } from '@sanity/icons/BlockElement';
+import { BookIcon } from '@sanity/icons/Book';
+import { ClipboardIcon } from '@sanity/icons/Clipboard';
+import { CogIcon } from '@sanity/icons/Cog';
+import { DocumentsIcon } from '@sanity/icons/Documents';
+import { DocumentTextIcon } from '@sanity/icons/DocumentText';
+import { EditIcon } from '@sanity/icons/Edit';
+import { HeartIcon } from '@sanity/icons/Heart';
+import { HomeIcon } from '@sanity/icons/Home';
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline';
+import { LockIcon } from '@sanity/icons/Lock';
+import { PresentationIcon } from '@sanity/icons/Presentation';
+import { TagIcon } from '@sanity/icons/Tag';
+import { ThumbsUpIcon } from '@sanity/icons/ThumbsUp';
+import { UsersIcon } from '@sanity/icons/Users';
 import StudioGuide from './components/StudioGuide';
 import { makeGuideView } from './components/GuideView';
 import { guides, GUIDE_CATEGORIES } from './guides/content';
