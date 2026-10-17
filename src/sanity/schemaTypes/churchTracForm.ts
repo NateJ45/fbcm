@@ -12,7 +12,7 @@
 //
 // Every field description says what to type, for a church secretary.
 
-import { ClipboardIcon } from '@sanity/icons';
+import { ClipboardIcon } from '@sanity/icons/Clipboard';
 import { defineField, defineType } from 'sanity';
 import { checkPaste, formSrc } from '../../lib/church-trac-form.ts';
 

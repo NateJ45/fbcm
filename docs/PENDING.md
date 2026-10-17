@@ -60,8 +60,8 @@ carry a verified-in-anger note rather than an installed-and-gated one.
 
 **Blocker: no agent can do this, and this template has no Sanity project.**
 
-2026-09-06 moved this repo onto the family's phase-1 Sanity set (`sanity` 6.9.1,
-`@sanity/ui` 3.5.4, `@sanity/client` 7.26.2, `@sanity/visual-editing` 5.7.3). Every
+2026-10-17 moved this repo onto the family's phase-2 Sanity set (`sanity` 6.19.0,
+`@sanity/ui` 4.4.9, `@sanity/client` 8.9.0, `@sanity/visual-editing` 6.1.3; PORTS.md card 103). Every
 automated gate is green and the single-instance invariant holds on disk and in the
 lockfile, but the login screen is core code and renders fine even when the
 styled-components theme context is broken. The set is already human-verified on
@@ -70,8 +70,8 @@ unverified is this repo's own custom Studio panes and the in-canvas overlay agai
 Whoever forks this next should sign in, open the desk, and drive the Presentation tool
 until an in-canvas control draws and writes back, then note it here.
 
-Do NOT take `sanity` 6.9.2: that PATCH release crosses to `@sanity/ui` 4, which is a real
-migration (PORTS.md card 10, phase 2).
+Phase 2 (the `@sanity/ui` 4 migration, PORTS.md card 103) is taken; the Studio files are
+written against `@sanity/ui` 4 and the browser check of this repo's own panes is still open.
 
 ### 1b. Run `npm run cutover --write` against a real zone, once
 
@@ -251,7 +251,7 @@ against a real `wrangler dev` and a real deploy.
 **Checked 2026-09-18. `npm audit` reports 30: 14 high, 14 moderate, 2 low, 0 critical.**
 
 **NEVER RUN `npm audit fix --force` IN THIS REPO.** Its offered fix for the Sanity half of
-the list is a DOWNGRADE of `sanity` from 6.9.1 to 5.14.1 and of `@sanity/vision` from 6.9.1
+the list is a DOWNGRADE of `sanity` from 6.19.0 to 5.14.1 and of `@sanity/vision` from 6.19.0
 to 5.31.2, each across a major version. That takes the embedded Studio back a major line
 with it, and the Studio ships with the site, so the damage lands on editors, not on a
 developer's machine. It would also downgrade `@lhci/cli` from 0.15.1 to 0.6.1 and push
@@ -275,8 +275,7 @@ not through the Studio code the browser loads. The three roots:
   `.github/workflows/lighthouse.yml`.
 
 **What would actually change this.** Upstream releases, nothing else. The Sanity set moves
-when the family takes PORTS.md card 10 phase 2 (the `@sanity/ui` 4 migration), which is a
-deliberate piece of work and not an audit fix. `wrangler` and `sharp` clear when a wrangler
+with the family's next deliberate Sanity piece of work (phase 2, PORTS.md card 103, is taken), not an audit fix. `wrangler` and `sharp` clear when a wrangler
 release inside the `~4.129.0` line picks up a patched `sharp` and `undici`, or when rule 8's
 pin is revisited on purpose. Lighthouse CI clears when `@lhci/cli` ships a 0.15.x that drops
 the old `puppeteer-core` and `tmp`.
