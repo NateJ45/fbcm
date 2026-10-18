@@ -25,9 +25,9 @@ export default defineCliConfig({
     projectId: process.env.SANITY_STUDIO_PROJECT_ID || process.env.PUBLIC_SANITY_PROJECT_ID,
     dataset: process.env.SANITY_STUDIO_DATASET || process.env.PUBLIC_SANITY_DATASET || 'production',
   },
-  // The embedded Studio is served at /studio (set by @sanity/astro's
-  // studioBasePath in astro.config.mjs). Mirror it here so standalone CLI
-  // tooling agrees the Studio lives at the sub-path.
+  // The embedded Studio is served at /studio (the site's own page,
+  // src/pages/studio/index.astro, since card 120). Mirror it here so standalone
+  // CLI tooling agrees the Studio lives at the sub-path.
   project: { basePath: '/studio' },
   // Typegen reads the extracted schema and writes types into src/lib/.
   // Extract via `sanity schema extract`; generate via `sanity typegen generate`

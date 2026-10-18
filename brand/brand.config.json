@@ -93,6 +93,14 @@
     "fonts": {
       "display": "\"Castoro Titling\", Georgia, serif",
       "body": "system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+    },
+    "icons": {
+      "types": {
+        "staffMember": "person",
+        "ministry": "service",
+        "churchTracForm": "form"
+      },
+      "tile": { "dark": "#D9CFC2" }
     }
   }
 }

@@ -48,6 +48,7 @@ Full stack notes and the `astro.config.mjs` landmines are in `docs/agent/stack-a
 - **React 19 islands** for interactivity; Astro components for everything static.
 - **Cloudflare Workers** for hosting, not Pages (Pages is in maintenance mode). Deploy with `npm run deploy`, which is `wrangler deploy -c dist/server/wrangler.json`. A bare `wrangler deploy` reads the root `wrangler.jsonc`, which knows nothing about the SSR entrypoint, and every sub-route 404s.
 - **No form of the site's own**: visitors use the church's forms, linked through Site settings' Church systems boxes, or embedded from Church Trac by a "Church Trac form" band (only a churchtrac.com address from the pasted code reaches the page, `src/lib/church-trac-form.ts`). **Cloudflare Web Analytics** (cookieless, no banner).
+- **The Studio is the church's own admin** (starter cards 106 to 120, 2026-10-18): Home (banner, Sunday checklist, Is it live?, Fix-it list, Visitors, Your pages), Quick update, Site Guide, Checkup, Trash, the staff view, Help for this page, Share a preview, table views, the owned `/studio/` boot page, and the church's colours, fonts, wordmark and goal-glyph icons. The kit files are PORTABLE (`src/sanity/kit/`, `src/sanity/workflow/`, `src/lib/studio-*.ts`); everything about this church is in `src/sanity/kit.config.ts`, `studioEdges.config.ts`, `brandIconArt.tsx`, `tables.config.ts` and `brand.config.json` `studio`. Guide: `docs/agent/studio-kit.md`; what waits on Nathan: `docs/PENDING.md` 1f.
 - **`sanityFetch(query, params, fallback)`** in `src/lib/sanity.ts` is the single chokepoint for all Sanity reads. When `PUBLIC_SANITY_PROJECT_ID` is absent or set to the placeholder value, it returns the fallback without any network call, so `npm run build` succeeds with no Sanity project configured -- pages render their default-sections content (see below).
 - **Page builder:** `src/components/SectionRenderer.astro` maps each block `_type` to a component and owns the alternating-surface cadence (logic in `src/lib/sectionCadence.ts`, unit-tested). Blocks carry no color field; the cadence is automatic.
 - **Default sections fallback:** `src/data/defaultSections.ts` holds code-defined default content arrays for each core page. When a page's `pageBuilder` array is absent (fresh clone, no Sanity project), the route uses the defaults, so the site always renders non-blank content.
@@ -110,6 +111,7 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 
 - Open loops registry (read early each session): `docs/PENDING.md`
 - Live draft preview, full reference: `docs/agent/preview.md`
+- The Studio kit (Home, Site Guide, Checkup, Trash, Quick update, the look, the edges; PORTABLE): `docs/agent/studio-kit.md`
 - What is safe to edit vs foundation, file by file: `docs/agent/file-map.md`
 - Stack detail + astro.config landmines: `docs/agent/stack-and-config.md`
 - Page + section architecture, nav, visibility toggles: `docs/agent/page-architecture.md`

@@ -22,6 +22,7 @@
 
 import { defineType, defineField } from 'sanity';
 import { BellIcon } from '@sanity/icons/Bell';
+import { previewDate, previewSubtitle } from '../../lib/studio-icons';
 
 export const announcement = defineType({
   name: 'announcement',
@@ -121,22 +122,18 @@ export const announcement = defineType({
       start: 'startDate',
       end: 'endDate',
     },
-    prepare: ({ message, style, enabled, start, end }) => {
-      const window = [
-        start ? new Date(start).toLocaleDateString() : null,
-        end ? new Date(end).toLocaleDateString() : null,
-      ]
-        .filter(Boolean)
-        .join(' to ');
-      return {
-        title: message || 'Announcement',
-        subtitle: `${enabled ? '' : 'Off. '}${
-          ({ info: 'Info', highlight: 'Highlight', urgent: 'Urgent' } as Record<string, string>)[
-            style as string
-          ] ?? 'Info'
-        }${window ? ` (${window})` : ''}`,
-      };
-    },
+    // Plain subtitles (card 119): "Off · Urgent · Shows until Sun, Nov 9, 2026".
+    prepare: ({ message, style, enabled, start, end }) => ({
+      title: message || 'Announcement',
+      subtitle: previewSubtitle(
+        enabled ? '' : 'Off',
+        ({ info: 'Info', highlight: 'Highlight', urgent: 'Urgent' } as Record<string, string>)[
+          style as string
+        ] ?? 'Info',
+        start && Date.parse(start) > Date.now() ? `Starts ${previewDate(start)}` : '',
+        end ? `Shows until ${previewDate(end)}` : '',
+      ),
+    }),
   },
   orderings: [
     { title: 'Soonest to end', name: 'endAsc', by: [{ field: 'endDate', direction: 'asc' }] },

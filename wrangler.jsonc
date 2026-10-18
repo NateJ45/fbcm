@@ -41,6 +41,30 @@
       "bucket_name": "fbcm-files",
     },
   ],
+  // ── The Studio kit's Worker routes (PORTS.md cards 111, 115, 117) ───────────
+  // /api/studio/deploy-status/ ("The last update didn't go through" and Try
+  // again) reads the deploy workflow's runs from GitHub. GITHUB_REPO is a plain
+  // var (it is public); the token is a SECRET that Nathan sets once:
+  //   npx wrangler secret put GITHUB_DEPLOY_TOKEN
+  // a fine-grained GitHub token on NateJ45/fbcm only, "Actions: Read and
+  // write" and nothing else (OPERATIONS.md). Until it exists the Studio keeps
+  // its build-time check.
+  //
+  // Home's Visitors card (/api/studio/visitors/): CF_ACCOUNT_ID is the Cloudflare
+  // account this Worker runs on (not secret). CF_WEB_ANALYTICS_SITE_TAG (the Web
+  // Analytics site id from the dashboard's edit URL, NOT the beacon token) is
+  // added here once the site is in Web Analytics, and the token is a SECRET:
+  //   npx wrangler secret put CF_ANALYTICS_TOKEN
+  // (Account Analytics: Read only). Until both exist the card says "not set up
+  // yet". Steps: OPERATIONS.md, "Visitor numbers".
+  //
+  // "Share a preview" (/api/studio/share-preview/) needs one secret, 32+ random
+  // characters: npx wrangler secret put SHARE_PREVIEW_SECRET. Without it the
+  // dialog says links are not set up and /preview ignores ?share=.
+  "vars": {
+    "GITHUB_REPO": "NateJ45/fbcm",
+    "CF_ACCOUNT_ID": "7e75a15ddc72aae04dca71aca5c7294b",
+  },
   "observability": {
     "enabled": true,
   },

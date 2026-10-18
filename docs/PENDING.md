@@ -103,6 +103,36 @@ domain and their mail.
 
 ---
 
+### 1f. The Studio kit (2026-10-18, starter cards 106 to 120): settings and signed-in checks
+
+The kit is in (`docs/agent/studio-kit.md`, settings in `src/sanity/kit.config.ts`). Each piece below
+says what it waits on; every one of them fails closed or says "not set up yet" until then.
+
+- [ ] **`GITHUB_DEPLOY_TOKEN` Worker secret** (fine-grained, `NateJ45/fbcm` only, Actions read
+      and write). Unlocks "The last update didn't go through" and Try again. OPERATIONS.md, "When an
+      update does not go through".
+- [ ] **Visitors card**: the site in Cloudflare Web Analytics, `CF_WEB_ANALYTICS_SITE_TAG` in
+      `wrangler.jsonc` vars, the `CF_ANALYTICS_TOKEN` Worker secret (`CF_ACCOUNT_ID` is set).
+      OPERATIONS.md, "Visitor numbers".
+- [ ] **`SANITY_API_WRITE_TOKEN` repo secret** (Editor). Scheduled publishing reads it since
+      2026-10-18 (it read `SANITY_AUTH_TOKEN` before, the backup's read token). Then switch
+      `features.comingUp` on in `kit.config.ts` and drop the "Leave Publish automatically at
+      empty" callout from the "Who to ask" guide.
+- [ ] **The publish webhook's filter** gains `"studioWeek"` and `"previewShare"` (OPERATIONS.md,
+      "Rebuild webhook filter"), or every Sunday-checklist tick and every share link rebuilds the site.
+- [ ] **Morning change note**: needs the `SANITY_AUTH_TOKEN` read secret (the backup's), then
+      uncomment the schedule in `.github/workflows/change-note.yml` and watch the repo.
+- [ ] **The staff view**: add the office's Sanity user id(s) to `kitConfig.staff` once they have
+      accepted the invitation (until then every non-administrator gets the staff view).
+- [ ] **Signed-in checks nobody has done yet** (the kit was verified signed out only): Home opens
+      first with the navy banner (tower on a disc, lancets along the foot, the name in gold); the
+      status line; the Sunday checklist's hand ticks (one `studioWeek-<date>` document); Quick
+      update's two forms publish a banner; the Fix-it list's Edit buttons open the right field;
+      "Help for this page" beside a page; Move to Trash and Bring it back on a banner; the staff
+      view's missing Delete and perspective menu; the desk's icons and list-row tiles; "Blog posts as
+      a table" and "Staff members as a table"; Share a preview's dialog (its
+      `SHARE_PREVIEW_SECRET` Worker secret is set, 2026-10-18); the editor's rich text in Castoro; the wordmark in the top bar.
+
 ## Known gaps, deliberately open
 
 ### 1c. The preview routes check the draft cookie's presence, not its fingerprint (found 2026-09-26)
@@ -611,12 +641,13 @@ changing the guide that mentions it in the same commit.
 - **"Publish automatically at" is switched on, waiting on one secret.**
   2026-09-22 (feat/settings-placeholders): `publish-due.yml` runs every half
   hour and falls back to the existing `PUBLIC_SANITY_PROJECT_ID` variable. It
-  skips with a warning until the `SANITY_AUTH_TOKEN` repo secret (an Editor
-  token) exists. When it does, replace the `who-to-ask` guide's "leave it
-  empty for now" callout with a short how-to.
+  skips with a warning until the `SANITY_API_WRITE_TOKEN` repo secret (an Editor
+  token; renamed from SANITY_AUTH_TOKEN on 2026-10-18, item 1f) exists. When it
+  does, replace the `who-to-ask` guide's "leave it empty for now" callout with a
+  short how-to.
 - ~~**The workspace is still titled "My Studio"**~~ Fixed 2026-09-22
   (feat/studio-readability): now "First Baptist Studio", which is also what
-  every image menu calls the Studio's own photo source.
+  every image menu calls the Studio's own photo source. Since 2026-10-18 (card 110) the title is brand.config.json `name`, "First Baptist Church Muncie".
 - ~~**The Presentation page list shows the Blog page as "Journal"**~~ Fixed
   2026-09-22: the label is "Blog" (a fixed label in `PreviewNavigator.tsx`).
   Custom pages still list by their own titles ("Plan a visit"), which is

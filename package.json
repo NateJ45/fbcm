@@ -42,6 +42,7 @@
     "test:ui": "playwright test --ui",
     "test:unit": "node --experimental-strip-types --test src/lib/*.test.ts",
     "test:scripts": "node --test scripts/lib/*.test.mjs",
+    "restore:doc": "node scripts/restore-doc.mjs",
     "test:visual": "playwright test -c playwright.visual.config.ts",
     "test:visual:update": "playwright test -c playwright.visual.config.ts --update-snapshots=all",
     "links:live": "node scripts/check-live-links.mjs",

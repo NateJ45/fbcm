@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  First Baptist Church Muncie: Studio icon "Lamp on a stand" (PORTS.md card 119).
+  Redrawn for icon sizes from the site's goal glyph of the same name in
+  src/components/church/BuildingGlyph.astro: the same paths, a heavier
+  stroke (16 to 24px in the Studio), the church's indigo with one gold line.
+  Generated once; edit by hand if the glyph changes.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Lamp on a stand">
+  <path d="M9.6 31.6C9.6 27.4 14.7 25.2 20.6 25.2C25.7 25.2 29.1 26.5 32.5 27.4L39.3 27.8C41.4 28 41.4 30.6 39.3 30.8L32.5 31.6C29.1 35 25.7 38 20.6 38C14.7 38 9.6 35.9 9.6 31.6Z" stroke="#292854" stroke-width="3.6"/>
+  <path d="M40.2 7.8C42.7 13.8 43.6 18 43.6 21.4A3.4 3.4 0 0 1 36.8 21.4C36.8 18 37.6 13.8 40.2 7.8Z" stroke="#D59B29" stroke-width="3.6"/>
+  <path d="M21 38V58" stroke="#292854" stroke-width="3.6"/>
+  <path d="M10 62H32" stroke="#292854" stroke-width="3.6"/>
+</svg>
