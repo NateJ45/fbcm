@@ -1145,6 +1145,107 @@ guides.push(
   },
 );
 
+// ── The authoring kit (PORTS.md card 109) ────────────────────────────────────
+guides.push(
+  {
+    slug: 'page-templates',
+    category: 'Start here',
+    title: 'Make a new page from a template',
+    icon: 'page',
+    lead: 'Start from a ready-made page, then change the words.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'steps',
+        items: [
+          'Go to `Pages`, then `All other pages`, and press the `+` button at the top of the list.',
+          'Pick a starting point. They are grouped: Visitors (a special service, an event), Ministries, Life events (baptism, membership, funerals), Church year (Christmas, Easter, VBS and more), News and records, and Blank.',
+          'Give the page a title and press `Generate` beside the web address.',
+          'Go through the sections and replace every line that starts with **Example:**. A yellow note marks each one until you do.',
+          'Add the photos, then `Publish`. To put the page in the menu, see the guide on menus in Site settings.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'primary',
+        title: 'Times and addresses fill themselves in.',
+        text: 'Where a template says {service time}, {address} or {phone}, leave it as it is: the website fills it in from Site settings.',
+      },
+      { kind: 'seealso', items: ['Reuse a section on other pages'] },
+    ],
+  },
+  {
+    slug: 'reuse-sections',
+    category: 'Start here',
+    title: 'Reuse a section on other pages',
+    icon: 'edit',
+    lead: 'Build a section once, then drop it onto any page as a copy.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'p',
+        text: 'A **saved section** is a section, or a few sections that belong together, kept so you can add it again. Saved sections live under `Pages`, then `Saved sections`. Some are ready for the church year: Advent and Christmas, Holy Week and Easter, Vacation Bible School and more.',
+      },
+      { kind: 'h', text: 'Add one to a page' },
+      {
+        kind: 'steps',
+        items: [
+          'Open the page and scroll to its sections.',
+          'Click `Insert a saved section` under the list.',
+          'Pick one and click `Add a copy`. It goes at the bottom of the page; drag it where you want it.',
+          'Replace any line that starts with **Example:**, then `Publish`.',
+        ],
+      },
+      { kind: 'h', text: 'Save one of your own' },
+      {
+        kind: 'steps',
+        items: [
+          'Open the page that has the section you like.',
+          'Open the menu next to `Publish` and choose `Save a section as preset...`.',
+          'Pick the section, give it a name you will recognize, and save.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'primary',
+        title: 'A copy is yours to change.',
+        text: 'Changing a copied section on one page never changes the saved section or any other page. For one section that stays the same everywhere, use a synced section.',
+      },
+      { kind: 'seealso', items: ['Keep a section the same on every page'] },
+    ],
+  },
+  {
+    slug: 'synced-sections',
+    category: 'Start here',
+    title: 'Keep a section the same on every page',
+    icon: 'arrow',
+    lead: 'Edit it once and every page that uses it changes.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'p',
+        text: 'A **synced section** shows a saved section, live. The words live in the saved section: change it, publish it, and every page using it changes together. Good for a band that must say the same thing everywhere.',
+      },
+      {
+        kind: 'steps',
+        items: [
+          'Make and publish the saved section first.',
+          'Open a page and click `Insert a saved section` under its sections.',
+          'Pick the saved section and click `Add synced`.',
+          'To change it everywhere, open it under `Pages`, then `Saved sections`, edit it and `Publish`.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'caution',
+        title: 'Changing it changes it everywhere.',
+        text: 'That is the point, but check which pages use it first. If one page needs different words, remove the synced section from that page and add a copy instead.',
+      },
+      { kind: 'seealso', items: ['Reuse a section on other pages'] },
+    ],
+  },
+);
+
 /**
  * Which guides "Help for this page" shows for each document type (kit.config.ts
  * guide.forType, PORTS.md card 110). '*' is the fallback for anything unlisted.
@@ -1152,7 +1253,15 @@ guides.push(
 export const GUIDES_FOR_TYPE: Record<string, string[]> = {
   '*': ['edit-a-page', 'help-panel', 'undo-earlier'],
   homePage: ['home-page', 'edit-a-page', 'photos'],
-  page: ['edit-a-page', 'share-a-preview', 'who-we-are', 'photos', 'old-web-addresses'],
+  page: [
+    'edit-a-page',
+    'page-templates',
+    'reuse-sections',
+    'synced-sections',
+    'share-a-preview',
+    'photos',
+    'old-web-addresses',
+  ],
   journalPage: ['blog-post'],
   journalEntry: ['blog-post', 'photos', 'undo-earlier'],
   journalCategory: ['blog-post'],
@@ -1162,5 +1271,5 @@ export const GUIDES_FOR_TYPE: Record<string, string[]> = {
   announcement: ['announcement', 'quick-update'],
   siteSettings: ['service-times', 'church-links', 'website-status'],
   redirect: ['old-web-addresses'],
-  sectionPreset: ['edit-a-page'],
+  sectionPreset: ['reuse-sections', 'synced-sections'],
 };

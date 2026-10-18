@@ -74,106 +74,6 @@ export type Redirect = {
   note?: string;
 };
 
-export type SectionPreset = {
-  _id: string;
-  _type: 'sectionPreset';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  sectionType?: string;
-  section?: Array<
-    | ({
-        _key: string;
-      } & HeroSection)
-    | ({
-        _key: string;
-      } & RichTextSection)
-    | ({
-        _key: string;
-      } & ImageTextSection)
-    | ({
-        _key: string;
-      } & GallerySection)
-    | ({
-        _key: string;
-      } & QuoteSection)
-    | ({
-        _key: string;
-      } & StatSection)
-    | ({
-        _key: string;
-      } & CtaBandSection)
-    | ({
-        _key: string;
-      } & VideoSection)
-    | ({
-        _key: string;
-      } & SpacerSection)
-    | ({
-        _key: string;
-      } & LogoStripSection)
-    | ({
-        _key: string;
-      } & EmbedSection)
-    | ({
-        _key: string;
-      } & SundayTimesSection)
-    | ({
-        _key: string;
-      } & TimelineSection)
-    | ({
-        _key: string;
-      } & StaffGridSection)
-    | ({
-        _key: string;
-      } & FaqSection)
-    | ({
-        _key: string;
-      } & ScriptureBandSection)
-    | ({
-        _key: string;
-      } & HeritageBandSection)
-    | ({
-        _key: string;
-      } & GiveBandSection)
-    | ({
-        _key: string;
-      } & HoursSection)
-    | ({
-        _key: string;
-      } & DocumentListSection)
-    | ({
-        _key: string;
-      } & LinkCardsSection)
-    | ({
-        _key: string;
-      } & MinistrySection)
-    | ({
-        _key: string;
-      } & WatchwordSection)
-    | ({
-        _key: string;
-      } & GoalsSection)
-    | ({
-        _key: string;
-      } & PledgeSection)
-    | ({
-        _key: string;
-      } & LetterSection)
-    | ({
-        _key: string;
-      } & ChurchTracFormSection)
-    | ({
-        _key: string;
-      } & TeamSection)
-    | ({
-        _key: string;
-      } & DynamicListSection)
-  >;
-  note?: string;
-};
-
 export type StaffMember = {
   _id: string;
   _type: 'staffMember';
@@ -624,6 +524,118 @@ export type TeamSection = {
     _type: 'teamMember';
     _key: string;
   }>;
+};
+
+export type SectionPresetReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'sectionPreset';
+};
+
+export type SyncedSection = {
+  _type: 'syncedSection';
+  preset?: SectionPresetReference;
+};
+
+export type SectionPreset = {
+  _id: string;
+  _type: 'sectionPreset';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  sectionType?: string;
+  section?: Array<
+    | ({
+        _key: string;
+      } & HeroSection)
+    | ({
+        _key: string;
+      } & RichTextSection)
+    | ({
+        _key: string;
+      } & ImageTextSection)
+    | ({
+        _key: string;
+      } & GallerySection)
+    | ({
+        _key: string;
+      } & QuoteSection)
+    | ({
+        _key: string;
+      } & StatSection)
+    | ({
+        _key: string;
+      } & CtaBandSection)
+    | ({
+        _key: string;
+      } & VideoSection)
+    | ({
+        _key: string;
+      } & SpacerSection)
+    | ({
+        _key: string;
+      } & LogoStripSection)
+    | ({
+        _key: string;
+      } & EmbedSection)
+    | ({
+        _key: string;
+      } & SundayTimesSection)
+    | ({
+        _key: string;
+      } & TimelineSection)
+    | ({
+        _key: string;
+      } & StaffGridSection)
+    | ({
+        _key: string;
+      } & FaqSection)
+    | ({
+        _key: string;
+      } & ScriptureBandSection)
+    | ({
+        _key: string;
+      } & HeritageBandSection)
+    | ({
+        _key: string;
+      } & GiveBandSection)
+    | ({
+        _key: string;
+      } & HoursSection)
+    | ({
+        _key: string;
+      } & DocumentListSection)
+    | ({
+        _key: string;
+      } & LinkCardsSection)
+    | ({
+        _key: string;
+      } & MinistrySection)
+    | ({
+        _key: string;
+      } & WatchwordSection)
+    | ({
+        _key: string;
+      } & GoalsSection)
+    | ({
+        _key: string;
+      } & PledgeSection)
+    | ({
+        _key: string;
+      } & LetterSection)
+    | ({
+        _key: string;
+      } & ChurchTracFormSection)
+    | ({
+        _key: string;
+      } & TeamSection)
+    | ({
+        _key: string;
+      } & DynamicListSection)
+  >;
+  note?: string;
 };
 
 export type ChurchTracFormReference = {
@@ -1447,6 +1459,9 @@ export type Page = {
     | ({
         _key: string;
       } & ChurchTracFormSection)
+    | ({
+        _key: string;
+      } & SyncedSection)
   >;
   addToMainNav?: boolean;
   navGroup?: 'top' | 'services' | 'resources';
@@ -1768,6 +1783,9 @@ export type JournalPage = {
     | ({
         _key: string;
       } & ChurchTracFormSection)
+    | ({
+        _key: string;
+      } & SyncedSection)
   >;
 };
 
@@ -1859,6 +1877,9 @@ export type HomePage = {
     | ({
         _key: string;
       } & ChurchTracFormSection)
+    | ({
+        _key: string;
+      } & SyncedSection)
     | ({
         _key: string;
       } & TeamSection)
@@ -2050,7 +2071,6 @@ export type AllSanitySchemaTypes =
   | LinkCardImage
   | Photo
   | Redirect
-  | SectionPreset
   | StaffMember
   | SanityImageCrop
   | SanityImageHotspot
@@ -2069,6 +2089,9 @@ export type AllSanitySchemaTypes =
   | NavLink
   | DynamicListSection
   | TeamSection
+  | SectionPresetReference
+  | SyncedSection
+  | SectionPreset
   | ChurchTracFormReference
   | ChurchTracFormSection
   | ChurchTracForm

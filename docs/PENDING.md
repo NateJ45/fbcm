@@ -122,6 +122,9 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       "Rebuild webhook filter"), or every Sunday-checklist tick and every share link rebuilds the site.
 - [ ] **Morning change note**: needs the `SANITY_AUTH_TOKEN` read secret (the backup's), then
       uncomment the schedule in `.github/workflows/change-note.yml` and watch the repo.
+- [ ] **Seed the eight church-year saved sections** (authoring kit, 2026-10-18), with Nathan's OK:
+      `$env:NCS_PRODUCTION_WRITE='yes'; node --experimental-strip-types scripts/content/seed-section-patterns.mjs --apply; Remove-Item Env:NCS_PRODUCTION_WRITE`
+      (dry run read: 8 new drafts, nothing overwritten). Then Pages > Saved sections lists them as drafts.
 - [ ] **The staff view**: add the office's Sanity user id(s) to `kitConfig.staff` once they have
       accepted the invitation (until then every non-administrator gets the staff view).
 - [ ] **Signed-in checks nobody has done yet** (the kit was verified signed out only): Home opens
@@ -131,7 +134,7 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       "Help for this page" beside a page; Move to Trash and Bring it back on a banner; the staff
       view's missing Delete and perspective menu; the desk's icons and list-row tiles; "Blog posts as
       a table" and "Staff members as a table"; Share a preview's dialog (it needs
-      `SHARE_PREVIEW_SECRET`); the editor's rich text in Castoro; the wordmark in the top bar.
+      `SHARE_PREVIEW_SECRET`); the editor's rich text in Castoro; the wordmark in the top bar; a page made from each template group; "+ Add item" in grid view; Insert a saved section as a copy and as synced (after the seed); the yellow page-rule warnings.
 
 ## Known gaps, deliberately open
 

@@ -31,6 +31,7 @@ import { comingSunday } from '../lib/studio-kit';
 import { buildNotice, NOTICE_MAX } from '../lib/quick-updates';
 import { runPageCheck } from './actions/checkPage';
 import { PAGE_BUILDER_TYPES } from './pageBuilderConfig';
+import type { PageRules } from '../lib/page-guardrails';
 
 const PUBLISHED = '!(_id in path("drafts.**"))';
 
@@ -392,4 +393,25 @@ export const kitConfig: KitConfig = {
     navbarStatus: true,
     helpPanel: true,
   },
+};
+
+/**
+ * The church's page-builder rules (the authoring kit, PORTS.md card 109).
+ * Each one shows as a yellow WARNING beside a page's sections, never an error,
+ * so nothing here can stop Publish or break a page that is already live. The
+ * built-in warnings (empty sections, leftover template example text, a synced
+ * section with nothing picked) apply everywhere whatever this says. Logic and
+ * tests: src/lib/page-guardrails.ts.
+ *
+ * The church's pages open with a page-top band, a heritage band (History,
+ * Architecture), a give band (Give) or words (The Visitor), so those four are
+ * the allowed openers (checked against the live pages, 2026-10-18: none warns).
+ * One page-top band is enough. 24 sections is a nudge, not a limit: History is
+ * 19 on purpose. Home is left out: it opens with its own twelve-frame hero.
+ */
+export const pageRules: PageRules = {
+  appliesTo: ['page'],
+  mustStartWith: ['heroSection', 'heritageBandSection', 'giveBandSection', 'richTextSection'],
+  atMostOnce: ['heroSection'],
+  maxSections: 24,
 };

@@ -27,6 +27,7 @@ import { visionTool } from '@sanity/vision';
 import { media } from 'sanity-plugin-media';
 import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash';
 import { schemaTypes } from './src/sanity/schemaTypes';
+import { PAGE_TEMPLATES, templateMenuTitle } from './src/sanity/pageTemplates';
 import { deskStructure } from './src/sanity/structure';
 import { resolve } from './src/sanity/resolve';
 import { PreviewNavigator } from './src/sanity/components/PreviewNavigator';
@@ -60,7 +61,7 @@ import { PAGE_BUILDER_TYPES } from './src/sanity/pageBuilderConfig';
 import { ncsStudioKit } from './src/sanity/kit';
 import { kitConfig } from './src/sanity/kit.config';
 import { ncsWorkflowTools } from './src/sanity/workflow';
-import { brandIcons, withBrandPreviews } from './src/sanity/brandIcons';
+import { brandIcons, typeIcon, withBrandPreviews } from './src/sanity/brandIcons';
 
 // =============================================================================
 // Studio theme
@@ -225,6 +226,24 @@ export default defineConfig({
     // Portable Text styles drawn in the site's fonts (StudioLook.tsx, card 116).
     // Every document type gets its icon and a picture in list rows (card 119).
     types: withBrandPreviews(withEditorTypography(schemaTypes, EDITOR_FONTS)),
+    // Page templates (the authoring kit, PORTS.md card 109): the starting
+    // points offered when someone makes a new page, under All other pages. The
+    // list is the church's own, in src/sanity/pageTemplates.ts, shown as
+    // "<group>: <title>" because the menu has no headings. `value` is a
+    // function so every new page gets fresh _keys. The stock 'page' template
+    // stays registered (links and intents that name it keep working);
+    // newDocumentOptions below hides it, where "Blank page" stands in for it.
+    templates: (prev) => [
+      ...prev,
+      ...PAGE_TEMPLATES.map((t) => ({
+        id: t.id,
+        title: templateMenuTitle(t),
+        description: t.description,
+        schemaType: 'page',
+        icon: typeIcon('page'),
+        value: () => ({ pageBuilder: t.sections() }),
+      })),
+    ],
   },
 
   // Singleton enforcement: hide these from the global "+" create menu so editors
@@ -235,6 +254,11 @@ export default defineConfig({
     // append ours.
     badges: (prev) => [...prev, ...documentBadges],
     newDocumentOptions: (prev, { creationContext }) => {
+      // New pages are made from a page template; the bare stock one is hidden
+      // because "Blank page" is the same thing with a clearer name.
+      const options = PAGE_TEMPLATES.length
+        ? prev.filter((option) => option.templateId !== 'page')
+        : prev;
       // 'document' is the "Create new" button inside a reference field. A
       // button link can point at Home or the Blog page, so without this the
       // link box offered "Create new Home page", which makes a second,
@@ -242,12 +266,12 @@ export default defineConfig({
       // 2026-09-26). Singletons are opened from the desk by their fixed id,
       // which does not go through this menu.
       if (creationContext.type === 'global' || creationContext.type === 'document') {
-        return prev.filter(
+        return options.filter(
           (option) =>
             !SINGLETON_TYPES.has(option.templateId) && !CREATED_ELSEWHERE.has(option.templateId),
         );
       }
-      return prev;
+      return options;
     },
     actions: (prev, { schemaType }) => {
       let base = SINGLETON_TYPES.has(schemaType)

@@ -12,7 +12,7 @@ import { journalPage } from './journalPage'; // scaffold: journal
 import { ministry } from './ministry';
 import { navLink } from './navLink';
 import { page } from './page';
-import { pageSectionSchemas } from './sections';
+import { pageSectionSchemas, syncedSection } from './sections';
 import { richSectionSchemas } from './richSections';
 import { notFoundPage } from './notFoundPage';
 import { privacyPage } from './privacyPage';
@@ -31,6 +31,7 @@ export const schemaTypes = [
   // Page-builder section blocks (objects). Registered before the documents
   // whose pageBuilder arrays reference them.
   ...pageSectionSchemas,
+  syncedSection, // authoring kit, card 109: shows a saved section, edit once everywhere
   ...richSectionSchemas,
 
   // Singletons
