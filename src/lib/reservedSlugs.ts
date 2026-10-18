@@ -40,6 +40,9 @@ export const RESERVED_SLUGS = new Set([
   // The PDFs, served from R2 or Cloudflare's cache (src/pages/files/[name].ts).
   'files',
   'styleguide',
+  // The embedded Sanity Studio, a src/pages route since card 120. A custom
+  // page called "studio" would take the editor's own address.
+  'studio',
   '404',
   'sitemap-index.xml',
   'og',

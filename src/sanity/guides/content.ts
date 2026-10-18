@@ -92,6 +92,13 @@ export const GUIDE_ICON_NAMES = [
   'image',
   'arrow',
   'help',
+  // The Studio kit's guides (2026-10-18).
+  'home',
+  'activity',
+  'restore',
+  'bolt',
+  'check',
+  'share',
 ] as const;
 export type GuideIconName = (typeof GUIDE_ICON_NAMES)[number];
 
@@ -103,6 +110,15 @@ export interface Guide {
   lead: string;
   diy: DiyLevel;
   body: GuideBlock[];
+  /**
+   * Optional short clip of the job being done (PORTS.md card 115). Shows under
+   * "Watch how it is done" on Studio Home and in the Site Guide; with no clips
+   * anywhere the row hides itself. Either a file in public/ (record the screen,
+   * save as MP4, put it at public/guides/<slug>.mp4 and write
+   * "/guides/<slug>.mp4"), or a YouTube (unlisted is fine) or Vimeo link. Keep
+   * clips under two minutes.
+   */
+  video?: string;
 }
 
 export const guides: Guide[] = [
@@ -156,7 +172,19 @@ export const guides: Guide[] = [
           '**Ministries**: each ministry’s words, photo and the people to talk to. The Ministries page reads from here.',
           '**Church Trac forms**: the forms from Church Trac that can sit on a page, like the connection card.',
           '**Site settings**: the service time, the address, office hours, the links to Church Trac, the menus, the notice banner and old web addresses.',
-          '**Help**: these guides.',
+          '**Help**: an overview of how the website works, and your church at a glance.',
+        ],
+      },
+      { kind: 'h', text: 'The top bar' },
+      {
+        kind: 'bullets',
+        items: [
+          '**Home** opens first: the Sunday checklist, whether your last change is on the website yet, and anything that needs fixing.',
+          '**Quick update** is for a job done from a phone, like putting up a banner.',
+          '**Content** is the menu on the left described above.',
+          '**Live preview** shows the website with your unpublished changes in place.',
+          '**Site Guide** is these guides, searchable and printable.',
+          '**Checkup** looks over the whole website for things worth fixing.',
         ],
       },
       { kind: 'h', text: 'If you change your mind' },
@@ -916,3 +944,223 @@ export const guides: Guide[] = [
     ],
   },
 ];
+
+// ── The Studio kit (PORTS.md cards 110, 111, 115, 117) ───────────────────────
+// Appended, so the church's own guides above keep their order.
+guides.push(
+  {
+    slug: 'studio-home',
+    category: 'Start here',
+    title: 'What Home in the Studio shows you',
+    icon: 'home',
+    lead: 'Home opens first every time. Here is what each card is for, top to bottom.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'p',
+        text: 'Home is a dashboard: it changes nothing by itself. Every card points somewhere, and the buttons take you straight there.',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          '**Sunday checklist**: the weekly jobs that keep the website current. Most tick themselves.',
+          '**Is it live?**: whether the change you last published is on the website yet.',
+          '**Fix-it list**: the things the Checkup found, by name, like a picture with no description. `Edit` opens it at the right spot.',
+          '**Visitors**: how many people visited in the last 7 days against the week before, the most-read pages and how people found the website.',
+          '**Your pages**: every page you can change, in groups, one click each. Pages you build yourself are added to it automatically.',
+          '**Pick up where you left off**: anything you changed but have not published yet.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'primary',
+        title: 'Visitors says "not set up yet"?',
+        text:
+          'The numbers come from Cloudflare, which counts visits without cookies. ' +
+          SITE.contactName +
+          ' switches it on once, and after that it fills in by itself.',
+      },
+      { kind: 'seealso', items: ['The line under the top bar', 'The Sunday checklist'] },
+    ],
+  },
+  {
+    slug: 'website-status',
+    category: 'Start here',
+    title: 'The line under the top bar',
+    icon: 'activity',
+    lead: 'A quiet answer to "is my change on the website yet?", wherever you are in the Studio.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'p',
+        text: 'Under the top bar there is a thin line that says how the website is doing. It reads the same thing as the **Is it live?** card on Home, so the two always agree.',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          '**Website up to date**: everything you have published is on the website.',
+          '**Updating the website, about 3 minutes**: you published something and the website is rebuilding. You do not need to wait for it.',
+          '**The website update is taking longer than usual**: nothing is lost, your change is safe and published. If it still says this an hour later, ask ' +
+            SITE.contactName +
+            '.',
+          "**The last update didn't go through**, in red: the website tried to update and something stopped it, so it is still showing the older version. Your published changes are safe. Press `Try again` once; if it comes back red, leave it with " +
+            SITE.contactName +
+            '.',
+        ],
+      },
+      { kind: 'seealso', items: ['Start here: how this all works'] },
+    ],
+  },
+  {
+    slug: 'help-panel',
+    category: 'Start here',
+    title: 'Help for this page',
+    icon: 'bulb',
+    lead: 'Help beside whatever you are editing, without leaving it.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'p',
+        text: 'When something is open for editing, click `Help for this page` at the top of it (it can also sit in the menu with three dots). A panel opens beside the boxes you are typing in.',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          '**Worth a look** lists photos with no description, empty sections and links that go nowhere, and anything the Checkup found on this page. None of it stops you publishing.',
+          '**How to** shows the Site Guide steps for this kind of page, so you can follow them while you work.',
+        ],
+      },
+      { kind: 'seealso', items: ['Change a page: its words and its sections'] },
+    ],
+  },
+  {
+    slug: 'undo-earlier',
+    category: 'When something is wrong',
+    title: 'Undo a change from earlier in the week',
+    icon: 'restore',
+    lead: 'Put a page back the way it was on a day you remember.',
+    diy: 'ask',
+    body: [
+      {
+        kind: 'p',
+        text: 'For something you changed in the last few minutes, use `Undo last change` beside Publish, or `Discard changes` if you have not published yet.',
+      },
+      {
+        kind: 'p',
+        text:
+          "For anything older, ask: the church's Sanity plan keeps only three days of history, and only an administrator can open it. But the website is copied every night, and " +
+          SITE.contactName +
+          ' can take one page out of a copy and put it back for you as an unpublished change. You check it and press Publish, or press `Discard changes` and nothing has happened.',
+      },
+      {
+        kind: 'callout',
+        tone: 'primary',
+        title: 'Ask within two weeks.',
+        text: 'The nightly copies are kept for fourteen days, so the sooner you ask, the more there is to choose from.',
+      },
+      { kind: 'seealso', items: ['Who to ask, and what to send'] },
+    ],
+  },
+  {
+    slug: 'quick-update',
+    category: 'Sundays and notices',
+    title: 'Quick update from your phone',
+    icon: 'bolt',
+    lead: 'Two jobs made small enough for a phone.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'p',
+        text: 'Open the Studio on your phone, tap the menu at the top and choose `Quick update` (on Home it is also a button). Pick one:',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          '**Put up a banner**: a short line across the top of every page, until the last day you pick.',
+          '**Cancel or change something this week**: a red banner that comes down by itself after Sunday.',
+        ],
+      },
+      {
+        kind: 'p',
+        text: 'Fill in the boxes and press the button at the bottom. It is published straight away and the website updates in a few minutes. To change it later, open it under Site settings, `Announcement banner`.',
+      },
+      { kind: 'seealso', items: ['Put a notice across the top of every page'] },
+    ],
+  },
+  {
+    slug: 'sunday-checklist',
+    category: 'Sundays and notices',
+    title: 'The Sunday checklist',
+    icon: 'check',
+    lead: 'The weekly jobs on Home, and how they get ticked.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'p',
+        text: 'Home has a card called **Sunday checklist** with the jobs that keep the website current each week. Two tick themselves when the website can see they are done:',
+      },
+      {
+        kind: 'bullets',
+        items: [
+          '**A blog post this week**: a post dated this week is published.',
+          '**Banners that have ended**: none is still switched on past its last day.',
+        ],
+      },
+      {
+        kind: 'p',
+        text: "The website cannot see inside YouTube or Church Trac, so **Sunday's livestream** and **this week's events** have a box you tick yourself. Ticks start fresh every Monday.",
+      },
+      { kind: 'seealso', items: ['What Home in the Studio shows you'] },
+    ],
+  },
+  {
+    slug: 'share-a-preview',
+    category: 'Start here',
+    title: 'Show someone a page before it goes live',
+    icon: 'share',
+    lead: 'A private link to your draft that works for a few days, no login needed.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'p',
+        text: 'Sometimes you want a second pair of eyes on a page before you publish it, from the pastor or a ministry leader. **Share a preview** makes a private link that shows your unpublished changes to that one page. The person opening it does not need a Studio login.',
+      },
+      {
+        kind: 'steps',
+        items: [
+          'Open the page you are working on.',
+          'Open the menu next to `Publish` and choose `Share a preview`.',
+          'Pick how long the link should work: 1, 3, 7 or 14 days.',
+          'Make the link, copy it and paste it into an email or a message.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'primary',
+        title: 'The link is shown once.',
+        text: 'Copy it straight away. If you lose it, make a new one. To stop a link early, open `Share a preview` again and press `Stop this link`.',
+      },
+      { kind: 'seealso', items: ['Change a page: its words and its sections'] },
+    ],
+  },
+);
+
+/**
+ * Which guides "Help for this page" shows for each document type (kit.config.ts
+ * guide.forType, PORTS.md card 110). '*' is the fallback for anything unlisted.
+ */
+export const GUIDES_FOR_TYPE: Record<string, string[]> = {
+  '*': ['edit-a-page', 'help-panel', 'undo-earlier'],
+  homePage: ['home-page', 'edit-a-page', 'photos'],
+  page: ['edit-a-page', 'share-a-preview', 'who-we-are', 'photos', 'old-web-addresses'],
+  journalPage: ['blog-post'],
+  journalEntry: ['blog-post', 'photos', 'undo-earlier'],
+  journalCategory: ['blog-post'],
+  staffMember: ['staff', 'photos'],
+  ministry: ['ministries', 'photos'],
+  churchTracForm: ['church-trac-forms'],
+  announcement: ['announcement', 'quick-update'],
+  siteSettings: ['service-times', 'church-links', 'website-status'],
+  redirect: ['old-web-addresses'],
+  sectionPreset: ['edit-a-page'],
+};

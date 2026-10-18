@@ -9,6 +9,13 @@
 // it was still the starter's generic template, then rewritten for the church
 // secretary and wired back into Help on 2026-09-22 (feat/editor-guide).
 //
+// The Studio kit (2026-10-18, PORTS.md cards 106 to 120): the guides moved
+// from Help into the Site Guide tool in the top bar (and "Help for this page"
+// beside every document), so Help keeps the two church panels only. Every
+// desk item a link can reach has an explicit .id(); the desk is wrapped in
+// staffDesk() so the staff view can hide developer-only lists; the Trash,
+// empty-list notes, table views and icons by meaning come from the kit.
+//
 // Every document type is placed explicitly so nothing floats loose at the
 // desk root. The trailing default-list filter is a safety net for any future
 // type that hasn't been placed (and hides sanity-plugin-media's media.tag
@@ -28,28 +35,16 @@
 // "see it on the page" is the Presentation tool in the navbar.
 
 import type { StructureBuilder, StructureResolverContext } from 'sanity/structure';
-import { ArrowRightIcon } from '@sanity/icons/ArrowRight';
-import { BellIcon } from '@sanity/icons/Bell';
-import { BlockElementIcon } from '@sanity/icons/BlockElement';
-import { BookIcon } from '@sanity/icons/Book';
-import { ClipboardIcon } from '@sanity/icons/Clipboard';
-import { CogIcon } from '@sanity/icons/Cog';
-import { DocumentsIcon } from '@sanity/icons/Documents';
-import { DocumentTextIcon } from '@sanity/icons/DocumentText';
-import { EditIcon } from '@sanity/icons/Edit';
-import { HeartIcon } from '@sanity/icons/Heart';
-import { HomeIcon } from '@sanity/icons/Home';
-import { InfoOutlineIcon } from '@sanity/icons/InfoOutline';
-import { LockIcon } from '@sanity/icons/Lock';
-import { PresentationIcon } from '@sanity/icons/Presentation';
-import { TagIcon } from '@sanity/icons/Tag';
-import { ThumbsUpIcon } from '@sanity/icons/ThumbsUp';
-import { UsersIcon } from '@sanity/icons/Users';
 import StudioGuide from './components/StudioGuide';
-import { makeGuideView } from './components/GuideView';
-import { guides, GUIDE_CATEGORIES } from './guides/content';
-import { GUIDE_ICONS } from './guides/icons';
 import BusinessOverview from './components/BusinessOverview';
+import { staffDesk } from './kit/shared';
+import { emptyAwareList } from './kit/emptyList';
+import { brandIcon, typeIcon, type BrandIcon } from './brandIcons';
+import { tableListItem } from './workflow';
+import { TABLES } from './tables.config';
+import { kitConfig } from './kit.config';
+import { WEEK_TYPE } from '../lib/studio-kit';
+import { TRASH_TYPE } from '../lib/studio-trash';
 import { STAFF_GROUPS } from '../lib/church-derive'; // scaffold: church
 import { site } from '../data/site';
 
@@ -84,9 +79,11 @@ const HIDDEN_FROM_DEFAULT = new Set<string>([
   'ministry', // placed explicitly at the top level as "Ministries"
   'staffMember', // placed explicitly under "People"
   'churchTracForm', // scaffold: church -- placed explicitly as "Church Trac forms"
-  // sanity-plugin-media registers this tag type; keep it out of the desk root
-  // (the "Media" tool in the top sidebar is where tags belong).
-  'media.tag',
+  TRASH_TYPE, // the Studio kit's Trash, placed explicitly at the bottom
+  // The Studio kit's weekly tick document (card 111): Home's bookkeeping, never edited here.
+  WEEK_TYPE,
+  // Private preview link records (card 117): managed from "Share a preview" only.
+  'previewShare',
 ]);
 
 /**
@@ -99,11 +96,25 @@ const HIDDEN_FROM_DEFAULT = new Set<string>([
  * S.document().views([...]) bypasses defaultDocumentNode in sanity.config.ts,
  * and that is where the per-type extra tabs are added.
  */
-function singletonWithPreview(S: StructureBuilder, schemaType: string, title: string, icon: any) {
+function singletonWithPreview(
+  S: StructureBuilder,
+  schemaType: string,
+  title: string,
+  icon: BrandIcon = typeIcon(schemaType),
+) {
+  // The id is the document id ON PURPOSE: an intent link ("open the Home
+  // page", from the Studio kit's Home and Checkup) resolves to the path
+  // pages;homePage, and a title-derived id left that pane blank.
   return S.listItem()
+    .id(schemaType)
     .title(title)
     .icon(icon)
-    .child(S.document().schemaType(schemaType).documentId(schemaType).views([S.view.form()]));
+    .child(
+      S.document()
+        .schemaType(schemaType)
+        .documentId(schemaType)
+        .views([S.view.form().title('Edit')]),
+    );
 }
 
 // ── Pages: order the church's own pages the way the header menu reads them ──
@@ -143,9 +154,12 @@ const NAV_PAGE_RANK = `select(${NAV_PAGE_ORDER.map(
 ).join(', ')}, ${NAV_PAGE_ORDER.length})`;
 
 function navOrderedPagesList(S: StructureBuilder) {
+  // The id 'page' is load-bearing: Home's "Add a page" and the guides link to
+  // pages;page.
   return S.documentTypeListItem('page')
+    .id('page')
     .title('All other pages')
-    .icon(DocumentsIcon)
+    .icon(typeIcon('page'))
     .child(
       S.documentList()
         .apiVersion(DESK_API_VERSION)
@@ -171,27 +185,34 @@ const STAFF_GROUP_RANK = `select(${STAFF_GROUPS.map(
 ).join(', ')}, ${STAFF_GROUPS.length})`;
 // scaffold:end
 
-export const deskStructure = (S: StructureBuilder, _context: StructureResolverContext) =>
+// The Studio kit's staff view hides kitConfig.staffHiddenPanes from this desk
+// (src/sanity/kit/shared.tsx, staffDesk); everyone else sees all of it.
+export const deskStructure = (S: StructureBuilder, context: StructureResolverContext) =>
+  staffDesk(fullDesk(S, context), context, kitConfig);
+
+const fullDesk = (S: StructureBuilder, context: StructureResolverContext) =>
   S.list()
     .title(site.name)
     .items([
       // ── Pages ────────────────────────────────────────────────────────────
+      // The id is load-bearing (kit.config.ts links to 'pages;page').
       S.listItem()
+        .id('pages')
         .title('Pages')
-        .icon(DocumentTextIcon)
+        .icon(brandIcon('pages'))
         .child(
           S.list()
             .title('Pages')
             .items([
-              singletonWithPreview(S, 'homePage', 'Home', HomeIcon),
+              singletonWithPreview(S, 'homePage', 'Home'),
               S.divider(),
 
               navOrderedPagesList(S),
 
               S.divider(),
 
-              singletonWithPreview(S, 'privacyPage', 'Privacy policy', LockIcon),
-              singletonWithPreview(S, 'notFoundPage', 'Page not found (404)', DocumentTextIcon),
+              singletonWithPreview(S, 'privacyPage', 'Privacy policy'),
+              singletonWithPreview(S, 'notFoundPage', 'Page not found (404)'),
 
               S.divider(),
 
@@ -200,8 +221,9 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
               // page from the Saved sections group in the Presentation
               // navigator.
               S.documentTypeListItem('sectionPreset')
+                .id('sectionPreset')
                 .title('Saved sections')
-                .icon(BlockElementIcon),
+                .icon(typeIcon('sectionPreset')),
             ]),
         ),
 
@@ -209,29 +231,42 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
 
       // ── Blog ─────────────────────────────────────────────────────────────
       // scaffold: journal
+      // The id keeps 'blog;journalEntry' links working (kit.config.ts).
       S.listItem()
+        .id('blog')
         .title('Blog')
-        .icon(BookIcon)
+        .icon(brandIcon('journal'))
         .child(
           S.list()
             .title('Blog')
             .items([
-              singletonWithPreview(S, 'journalPage', 'Blog page', BookIcon),
+              singletonWithPreview(S, 'journalPage', 'Blog page'),
 
               S.divider(),
 
-              S.documentTypeListItem('journalEntry')
-                .title('Posts')
-                .icon(EditIcon)
-                .child(
-                  S.documentList()
-                    .apiVersion(DESK_API_VERSION)
-                    .title('Posts')
-                    .filter('_type == "journalEntry"')
+              emptyAwareList(S, context, {
+                id: 'journalEntry',
+                type: 'journalEntry',
+                title: 'Posts',
+                icon: typeIcon('journalEntry'),
+                explain:
+                  'News from the church: a sermon preview, an event coming up, a word from a ministry. Newest first on the Blog page.',
+                createLabel: 'Write the first post',
+                list: (S) =>
+                  S.documentTypeList('journalEntry')
+                    .title('Posts, newest first')
                     .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
-                ),
+              }),
+              // The same list as a sortable table (card 117, tables.config.ts).
+              ...TABLES.filter((c) => c.type === 'journalEntry').map((c) => tableListItem(S, c)),
 
-              S.documentTypeListItem('journalCategory').title('Categories').icon(TagIcon),
+              emptyAwareList(S, context, {
+                id: 'journalCategory',
+                type: 'journalCategory',
+                title: 'Categories',
+                icon: typeIcon('journalCategory'),
+                explain: 'Labels that sort the posts, like "Sermon Preview" or "Missions".',
+              }),
             ]),
         ),
       // scaffold:end
@@ -239,16 +274,19 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
       S.divider(),
 
       // ── People ───────────────────────────────────────────────────────────
+      // The id keeps 'people;staffMember' links working (kit.config.ts).
       S.listItem()
+        .id('people')
         .title('People')
-        .icon(UsersIcon)
+        .icon(brandIcon('people'))
         .child(
           S.list()
             .title('People')
             .items([
               S.documentTypeListItem('staffMember')
+                .id('staffMember')
                 .title('Staff members')
-                .icon(UsersIcon)
+                .icon(typeIcon('staffMember'))
                 .child(
                   S.documentList()
                     .apiVersion(DESK_API_VERSION)
@@ -260,6 +298,8 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
                       { field: 'name', direction: 'asc' },
                     ]),
                 ),
+              // The same list as a sortable table (card 117, tables.config.ts).
+              ...TABLES.filter((c) => c.type === 'staffMember').map((c) => tableListItem(S, c)),
             ]),
         ),
 
@@ -273,8 +313,9 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
       // line, headline, photo, text and contact lines from it
       // (src/lib/ministry-band.ts). Editing a ministry here edits the page.
       S.documentTypeListItem('ministry')
+        .id('ministry')
         .title('Ministries')
-        .icon(HeartIcon)
+        .icon(typeIcon('ministry'))
         .child(
           S.documentList()
             .apiVersion(DESK_API_VERSION)
@@ -292,8 +333,9 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
       // a "Church Trac form" band (churchTracFormSection), which only points
       // here, so changing a form here changes every page that shows it.
       S.documentTypeListItem('churchTracForm')
+        .id('churchTracForm')
         .title('Church Trac forms')
-        .icon(ClipboardIcon)
+        .icon(typeIcon('churchTracForm'))
         .child(
           S.documentList()
             .apiVersion(DESK_API_VERSION)
@@ -306,14 +348,16 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
       S.divider(),
 
       // ── Site settings ────────────────────────────────────────────────────
+      // The id keeps 'settings;announcement' links working (kit.config.ts).
       S.listItem()
+        .id('settings')
         .title('Site settings')
-        .icon(CogIcon)
+        .icon(brandIcon('settings'))
         .child(
           S.list()
             .title('Site settings')
             .items([
-              singletonWithPreview(S, 'siteSettings', 'Site settings', CogIcon),
+              singletonWithPreview(S, 'siteSettings', 'Site settings'),
               // businessInfo ("Location details") came off the desk in the
               // Studio audit (2026-09-26). The document does not exist in the
               // dataset, and opening it created one carrying the starter's
@@ -324,7 +368,15 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
 
               S.divider(),
 
-              S.documentTypeListItem('announcement').title('Announcement banner').icon(BellIcon),
+              emptyAwareList(S, context, {
+                id: 'announcement',
+                type: 'announcement',
+                title: 'Announcement banner',
+                icon: typeIcon('announcement'),
+                explain:
+                  'A short line across the top of every page, like a snow closing or a special service. Each one can take itself down on a date you pick.',
+                createLabel: 'Put up the first banner',
+              }),
 
               S.divider(),
 
@@ -335,35 +387,35 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
               // with a title is the closest the desk builder has to a subtitle
               // on a list item, so the one-line description sits just above it.
               S.divider().title('Old web addresses: forward visitors from a page that moved'),
-              S.documentTypeListItem('redirect').title('Old web addresses').icon(ArrowRightIcon),
+              S.documentTypeListItem('redirect')
+                .id('redirect')
+                .title('Old web addresses')
+                .icon(typeIcon('redirect')),
             ]),
         ),
 
       S.divider(),
 
       // ── Help ─────────────────────────────────────────────────────────────
-      // The handbook (PORTS.md card 41), after the two panels that were already
-      // here. The guides are DATA in src/sanity/guides/content.ts, held in the
-      // repo so they cannot be deleted by accident; each category becomes a
-      // titled divider with its guides under it, in GUIDE_CATEGORIES order.
-      //
       // The two Start Here panels that still do real work for this church:
-      // the how-to guide (studioGuide, rewritten in Task 10 for a church
-      // secretary) and the church-at-a-glance notes (studioNotes). Brand kit
-      // was removed here (2026-09-19): a swatches-and-fonts panel for making
-      // flyers away from the site is not one of this desk's six jobs, and it
-      // read no field this task touched, so it was simply unhooked rather than
-      // repaired.
+      // the how-to overview (studioGuide, rewritten in Task 10 for a church
+      // secretary) and the church-at-a-glance notes (studioNotes). The step by
+      // step guides (src/sanity/guides/content.ts, PORTS.md card 41) used to
+      // be listed here too; since the Studio kit (2026-10-18) they live in the
+      // Site Guide tool in the top bar, searchable and printable, and in "Help
+      // for this page" beside every document, so they are not repeated here.
       S.listItem()
+        .id('help')
         .title('Help')
-        .icon(InfoOutlineIcon)
+        .icon(brandIcon('help'))
         .child(
           S.list()
             .title('Help')
             .items([
               S.listItem()
+                .id('studioGuide')
                 .title('How the website works')
-                .icon(PresentationIcon)
+                .icon(brandIcon('guide'))
                 .child(
                   S.document()
                     .schemaType('studioGuide')
@@ -374,8 +426,9 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
                     ]),
                 ),
               S.listItem()
+                .id('studioNotes')
                 .title('Your church at a glance')
-                .icon(ThumbsUpIcon)
+                .icon(brandIcon('overview'))
                 .child(
                   S.document()
                     .schemaType('studioNotes')
@@ -385,31 +438,31 @@ export const deskStructure = (S: StructureBuilder, _context: StructureResolverCo
                       S.view.form().title('Edit notes'),
                     ]),
                 ),
-              ...GUIDE_CATEGORIES.flatMap((category) => {
-                const mine = guides.filter((g) => g.category === category);
-                return mine.length === 0
-                  ? []
-                  : [
-                      S.divider().title(category),
-                      ...mine.map((g) =>
-                        S.listItem()
-                          .id(`guide-${g.slug}`)
-                          .title(g.title)
-                          .icon(GUIDE_ICONS[g.icon])
-                          .child(
-                            S.component(makeGuideView(g.slug) as never)
-                              .id(`guide-view-${g.slug}`)
-                              .title(g.title),
-                          ),
-                      ),
-                    ];
-              }),
             ]),
         ),
 
+      S.divider(),
+
+      // The Studio kit's Trash: "Move to Trash" keeps a copy here, and "Bring
+      // it back" puts it where it was (src/sanity/kit/trash.tsx). The id is
+      // load-bearing: the Checkup's "Open the Trash" links to it.
+      S.listItem()
+        .id('trash')
+        .title('Trash (bring things back)')
+        .icon(brandIcon('trash'))
+        .child(
+          S.documentTypeList(TRASH_TYPE)
+            .id('trash-list')
+            .title('Trash')
+            .defaultOrdering([{ field: 'deletedAt', direction: 'desc' }]),
+        ),
+
       // Safety net: surface any document type we have NOT explicitly placed above
-      // (and keep the hidden set, including media.tag, out of the desk root).
-      ...S.documentTypeListItems().filter(
-        (item) => !HIDDEN_FROM_DEFAULT.has(item.getId() as string),
-      ),
+      // (and keep the hidden set out of the desk root). Every media.* type
+      // belongs to sanity-plugin-media's own tool: newer versions add more than
+      // media.tag (a "Media Folder" list leaked into the desk on 2026-10-17).
+      ...S.documentTypeListItems().filter((item) => {
+        const id = item.getId() as string;
+        return !HIDDEN_FROM_DEFAULT.has(id) && !id.startsWith('media.');
+      }),
     ]);

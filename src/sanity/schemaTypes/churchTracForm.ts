@@ -64,7 +64,8 @@ export const churchTracForm = defineType({
       subtitle: formSrc(embed)
         ? 'Ready to show on a page'
         : 'Paste the embed code from Church Trac',
-      media: ClipboardIcon,
+      // No media: the Studio draws the type's icon on a brand tile (card 119).
+      media: undefined,
     }),
   },
 });

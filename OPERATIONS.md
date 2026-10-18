@@ -148,12 +148,14 @@ If a content change isn't appearing on the live site after a few minutes:
 The webhook lives at manage.sanity.io → API → Webhooks. The recommended GROQ filter is a deny-list:
 
 ```
-!(_id in path("drafts.**")) && !(_type in ["media.tag", "sanity.imageAsset", "sanity.fileAsset", "sanity.assetSourceData"])
+!(_id in path("drafts.**")) && !(_type in ["media.tag", "sanity.imageAsset", "sanity.fileAsset", "sanity.assetSourceData", "studioWeek", "previewShare"])
 ```
 
 This filter skips rebuilds triggered by draft saves and internal Sanity asset-management events (tagging an uploaded photo, rotating an image, etc.), which don't affect live HTML. New content types are covered automatically because the filter excludes only the named system types and lets everything else through. The old hand-maintained allow-list approach (explicitly listing every `_type` that should trigger a rebuild) silently dropped new types until a developer remembered to add them. The deny-list is safer: add a new schema type and it triggers rebuilds out of the box.
 
 If the webhook currently has no filter or uses an allow-list, replace the filter with the deny-list above and save. No other webhook config changes are needed.
+
+The Studio kit (2026-10-18) added the last two names: `studioWeek` is the Sunday checklist's hand ticks on Studio Home and `previewShare` is a private preview link record. Neither changes a page, so without them in the list every tick and every new link would rebuild the site. Nathan updates the live webhook's filter by hand (manage.sanity.io, project `7jw947g5`, API, Webhooks).
 
 ### Phased launch: turning sections on and off
 
@@ -179,19 +181,90 @@ The site has a section visibility system that lets you launch now and finish sec
 
 ### Scheduled publishing
 
-Sanity supports scheduling a document to go live at a future date and time.
+Sanity's own scheduling is a paid-plan feature (`sanity.config.ts` switches its Releases and Scheduled Drafts screens
+off, since on the free plan they only say "Upgrade"), so this site has the free version (`src/sanity/schemaTypes/_publishAt.ts`):
+an editor fills in **Publish automatically at** on a page's Publishing tab and leaves it unpublished;
+`.github/workflows/publish-due.yml` runs every half hour, publishes any draft whose time has passed
+(`scripts/publish-due.mjs`, behind the production write gate, PORTS.md card 114) and then starts `deploy.yml`
+(card 111) so the change reaches the website.
 
-**How to schedule a publish:**
+**It does not work yet.** Every run skips, green, with a warning, until the one step only Nathan can do:
 
-1. Open the document you want to schedule.
-2. Click the small arrow (chevron) to the right of the blue Publish button in the bottom bar.
-3. Choose "Schedule publish" from the menu.
-4. Pick the date and time. Times are local to your browser.
-5. Click "Schedule." The document moves to a "Scheduled" state.
+1. sanity.io/manage, project `7jw947g5`, API, Tokens, Add API token. Name it `publish-due (GitHub Actions)`,
+   permission **Editor**. Copy it once.
+2. GitHub, `NateJ45/fbcm`, Settings, Secrets and variables, Actions, New repository secret. Name
+   `SANITY_API_WRITE_TOKEN`, value the token. Keep a copy in 1Password, nowhere else. (Until 2026-10-18 the workflow
+   read `SANITY_AUTH_TOKEN`; that name is the nightly backup's READ token, and cannot publish.)
+3. Actions, "Publish scheduled drafts", Run workflow. The log should end "nothing scheduled is due".
+4. Then switch the Studio's "Coming up" card on (`features.comingUp` in `src/sanity/kit.config.ts`) and take the
+   "Leave Publish automatically at empty for now" callout out of the "Who to ask" guide
+   (`src/sanity/guides/content.ts`).
 
-The live site rebuilds automatically when the scheduled publish fires. You can see, edit, or cancel scheduled items by going back to that document before the time fires.
+### When an update does not go through
 
-**Note:** as of May 2026, the `@sanity/scheduled-publishing` plugin is incompatible with this Studio's React 19 dependency. Use the built-in document actions scheduling path above until the plugin is updated.
+`/api/studio/deploy-status/` reads `deploy.yml`'s newest runs from GitHub, and on a failure the Studio's status line
+and Home say "The last update didn't go through. Nathan has been told." with **Try again** (which re-runs `deploy.yml`,
+at most once every five minutes, only for a signed-in Studio member). The telling is real: `deploy.yml` opens one
+GitHub issue labelled `deploy-failed` when a run fails (or comments on the open one) and closes it on the next green
+run, so GitHub emails Nathan. Detail: `docs/agent/studio-kit.md` (PORTS.md card 111).
+
+**The one step only Nathan can do (until then the Studio keeps its build-time check and offers no Try again):**
+
+1. GitHub, Settings (your account), Developer settings, Fine-grained tokens, Generate. Repository access: only
+   `NateJ45/fbcm`. Permissions: **Actions: Read and write**, nothing else. Expiry: a year, with a reminder.
+2. From the repo folder: `npx wrangler secret put GITHUB_DEPLOY_TOKEN` and paste it at the prompt. Keep a copy in
+   1Password. (`GITHUB_REPO` is already a plain var in `wrangler.jsonc`.)
+3. Check: `https://fbcm-site.nathanjnixon86.workers.dev/api/studio/deploy-status/` should answer
+   `{"configured":true,"state":"ok",...}` (until then it says `"configured":false`).
+
+### Undo a change from earlier in the week (restore one document)
+
+The free plan keeps three days of history, administrators only, so the office's guide ("Undo a change from earlier in
+the week") says to ask Nathan with the page's name and the day it was right. The nightly backup
+(`sanity-backup.yml`) is the source, and `scripts/restore-doc.mjs` (card 111) puts ONE document back as a draft:
+
+1. Find the id: open the document in the Studio; the id is the last part of the address bar (`...;<id>`).
+2. Dry run, newest backup: `npm run restore:doc -- <id>`. With a day: `npm run restore:doc -- <id> --from 2026-10-15`.
+   It downloads that night's `sanity-backup` artifact with `gh` (signed in), decrypts it in memory with
+   `BACKUP_PASSPHRASE` (1Password), and prints every field that would change.
+3. Apply, after Nathan's OK for this site (rule 16's gate): in PowerShell
+   `$env:NCS_PRODUCTION_WRITE = 'yes'; npm run restore:doc -- <id> --apply`. It writes the backup copy as a DRAFT and
+   reads it back. Nothing on the website changes until someone presses Publish.
+
+**Not available yet:** the backup itself skips until the `SANITY_AUTH_TOKEN` and `BACKUP_PASSPHRASE` repo secrets
+exist (`docs/PENDING.md`), so there is nothing to restore from. Artifacts last 14 days once it runs.
+
+### Visitor numbers (Home's Visitors card, PORTS.md card 115)
+
+Home's Visitors card reads Cloudflare Web Analytics through `/api/studio/visitors/` (signed-in Studio members only).
+Until the Worker has three settings, the card says "Not set up yet". `CF_ACCOUNT_ID` is already in
+`wrangler.jsonc`. What is left, once:
+
+1. **Turn on Web Analytics** for the site if it is not already (Cloudflare dashboard, Analytics & Logs, Web Analytics,
+   Add a site, the workers.dev host until the cutover). Its beacon token goes in the repo variable
+   `PUBLIC_CF_ANALYTICS_TOKEN` (`deploy.yml` reads it), so visits are counted at all.
+2. **Find the site tag.** Open the site in Web Analytics: the address bar ends in `siteTag~in=<32 characters>`. Add it
+   to `wrangler.jsonc` `vars` as `"CF_WEB_ANALYTICS_SITE_TAG"` (not secret).
+3. **Create a read-only token**: My Profile, API Tokens, Create Custom Token, one row **Account / Account Analytics /
+   Read**, the account the site is on. Then `npx wrangler secret put CF_ANALYTICS_TOKEN` and paste it. Keep a copy in
+   1Password.
+4. Deploy (merge to `main`), open `/studio` and check the card shows numbers. "Could not load just now" means
+   Cloudflare refused: check the token's permission first (`npx wrangler tail` shows the status).
+
+### Studio workflow tools (PORTS.md card 117)
+
+- **Share a preview.** Needs one Worker secret, 32+ random characters: `npx wrangler secret put SHARE_PREVIEW_SECRET`.
+  Rotating it stops every link at once. Works on Home, the Blog page, the privacy policy and every page built from
+  sections (not on single blog posts, which preview at `/preview/post/<slug>`, a route without the share check).
+- **Morning change note** (`.github/workflows/change-note.yml`, OFF). Lists yesterday's Studio changes as a GitHub
+  issue, which GitHub emails to whoever watches the repo. Needs the `SANITY_AUTH_TOKEN` READ secret (the backup's),
+  then uncomment its `schedule:` block. Try it locally first:
+  `node --experimental-strip-types scripts/change-note.mjs --dry --hours 72`.
+- **Messages** is registered but left off the tool list (`kit.config.ts` `toolOrder`): the church's forms are Church
+  Trac's and the site keeps no inbox. `migrations/0001_message_status.sql` is there for a future form of the site's
+  own and has not been applied anywhere.
+- **Table views.** Blog posts and Staff members each have "... as a table" under the normal list. Columns live in
+  `src/sanity/tables.config.ts`.
 
 ### Field comments
 

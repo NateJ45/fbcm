@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
+import { execSync } from 'node:child_process';
 
 import cloudflare from '@astrojs/cloudflare';
 import mdx from '@astrojs/mdx';
@@ -11,6 +12,7 @@ import sanity from '@sanity/astro';
 
 import { buildRedirectMap } from './src/lib/redirects.ts';
 import { fixSanityDedupeAlias } from './src/lib/sanity-dedupe-alias.ts';
+import { studioConfigModule } from './src/lib/studio-route.ts';
 
 // -----------------------------------------------------------------------------
 // Build-time reads from Sanity (redirects + pages kept out of search)
@@ -119,6 +121,23 @@ const hiddenPagePaths = new Set(
     .map((/** @type {string} */ slug) => `/${slug}`),
 );
 
+// The commit this build came from, for /build-info.json (Studio kit, PORTS.md
+// card 106). Read HERE, in Node, because the route prerenders inside workerd,
+// where process.env.GITHUB_SHA is not visible (the deployed file said
+// "commit": null). GitHub Actions sets GITHUB_SHA; a local build asks git; no
+// git (a tarball) gives null. Handed to the route as a Vite define below.
+const BUILD_COMMIT = (() => {
+  const sha = process.env.GITHUB_SHA || process.env.WORKERS_CI_COMMIT_SHA;
+  if (sha) return sha.slice(0, 7);
+  try {
+    return execSync('git rev-parse --short=7 HEAD', { stdio: ['ignore', 'pipe', 'ignore'] })
+      .toString()
+      .trim();
+  } catch {
+    return null;
+  }
+})();
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.fbcmuncie.org',
@@ -195,11 +214,16 @@ export default defineConfig({
     // studio: it rebuilds with every deploy, so it can never drift stale the
     // way a hosted *.sanity.studio deploy does. The config it loads is the
     // repo-root sanity.config.ts.
+    //
+    // NO studioBasePath (PORTS.md card 120): the site owns the /studio page
+    // (src/pages/studio/index.astro: its title, icons and a branded splash).
+    // Setting studioBasePath would also inject Sanity's own page at /studio.
+    // studioConfigModule() in vite.plugins below serves the Studio its config
+    // instead, exactly as the integration did (hash history, basePath "/").
     sanity({
       projectId: SANITY_PROJECT_ID,
       dataset: SANITY_DATASET,
       useCdn: false,
-      studioBasePath: '/studio',
     }),
     sitemap({
       // /studio and /preview are Studio plumbing (SSR, noindex). The sitemap
@@ -231,13 +255,16 @@ export default defineConfig({
     react(),
   ],
   vite: {
+    // Read by src/pages/build-info.json.ts (see BUILD_COMMIT above).
+    define: { __NCS_BUILD_COMMIT__: JSON.stringify(BUILD_COMMIT) },
     // fixSanityDedupeAlias() repairs @sanity/astro's dev-only alias, which is
     // broken on Windows (it points `sanity` at a package.json FILE, so `astro
     // dev` dies with MISSING_EXPORT). It does nothing in `astro build` and on
     // macOS/Linux. Do not delete it, and do not "fix" this with
     // SANITY_ASTRO_DISABLE_MODULE_DEDUPE=1 (the Studio then fails to hydrate).
     // Full story: src/lib/sanity-dedupe-alias.ts and PORTS.md card 60.
-    plugins: [tailwindcss(), fixSanityDedupeAlias()],
+    // studioConfigModule(): the `sanity:studio` module for /studio (see above).
+    plugins: [tailwindcss(), fixSanityDedupeAlias(), studioConfigModule()],
     build: {
       // Drives Astro's `build.inlineStylesheets: 'auto'` above: a compiled
       // stylesheet is inlined only when its raw size is at or under this

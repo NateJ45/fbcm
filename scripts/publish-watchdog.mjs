@@ -211,9 +211,12 @@ function ghJson(args) {
 async function latestPublishFromSanity(projectId, dataset) {
   // api.sanity.io, NOT apicdn: the CDN can lag a publish by seconds to minutes,
   // and this is exactly the number that must not lag. A public dataset reads
-  // without a token.
+  // without a token. The Studio kit's bookkeeping (the Sunday checklist's
+  // studioWeek ticks, private preview-link records) changes no page, so it is
+  // left out, as the publish webhook's filter leaves it out (OPERATIONS.md).
   const query =
-    '*[!(_id in path("drafts.**")) && !(_type match "system.*") && !(_type match "sanity.*")]' +
+    '*[!(_id in path("drafts.**")) && !(_type match "system.*") && !(_type match "sanity.*")' +
+    ' && !(_type match "media.*") && !(_type in ["studioWeek", "previewShare"])]' +
     ' | order(_updatedAt desc)[0]._updatedAt';
   const url =
     `https://${projectId}.api.sanity.io/v2025-02-19/data/query/${dataset}` +

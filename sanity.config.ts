@@ -16,14 +16,13 @@
 // sanity CLI (sanity.cli.ts) uses it for typegen and dataset commands.
 //
 // FOR A NEW PROJECT: set PUBLIC_SANITY_PROJECT_ID in .env (and
-// SANITY_STUDIO_PROJECT_ID if you also drive the CLI), change `name` and
-// `title` below, and add your deployed origin to the project's CORS allow list
+// SANITY_STUDIO_PROJECT_ID if you also drive the CLI), change `name` below
+// (the title comes from brand.config.json), and add your deployed origin to the project's CORS allow list
 // (`npx sanity cors add https://your-site.workers.dev --credentials`).
 
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { presentationTool } from 'sanity/presentation';
-import { buildTheme, type RootTheme, type ThemeFont } from '@sanity/ui/theme';
 import { visionTool } from '@sanity/vision';
 import { media } from 'sanity-plugin-media';
 import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash';
@@ -32,7 +31,19 @@ import { deskStructure } from './src/sanity/structure';
 import { resolve } from './src/sanity/resolve';
 import { PreviewNavigator } from './src/sanity/components/PreviewNavigator';
 import { envVal } from './src/sanity/urls';
-import StudioLogo from './src/sanity/components/StudioLogo';
+import { StudioIcon } from './src/sanity/components/StudioIdentity';
+import { buildStudioTheme, seedLightScheme } from './src/sanity/studioTheme';
+import {
+  studioLook,
+  StudioWordmarkNavbar,
+  withEditorTypography,
+} from './src/sanity/components/StudioLook';
+// The Studio's edges: sign-in line, wording, navbar wordmark (card 120).
+import { studioWording } from './src/sanity/studioWording';
+import { studioEdges } from './src/sanity/studioEdges.config';
+// The site's own font files for the Studio (rewritten by apply-brand; card 116).
+import './src/sanity/studioFonts.css';
+import brand from './brand/brand.config.json';
 import { CharacterCountInput } from './src/sanity/components/CharacterCountInput';
 import { documentBadges } from './src/sanity/components/documentBadges';
 import { shareDraftLinkAction } from './src/sanity/components/shareDraftLink';
@@ -46,49 +57,48 @@ import { SaveSectionPresetAction } from './src/sanity/actions/saveSectionPreset'
 import { CheckPageAction } from './src/sanity/actions/checkPage';
 import { UndoAction, RedoAction, undoRedoShortcuts } from './src/sanity/components/UndoRedo';
 import { PAGE_BUILDER_TYPES } from './src/sanity/pageBuilderConfig';
+import { ncsStudioKit } from './src/sanity/kit';
+import { kitConfig } from './src/sanity/kit.config';
+import { ncsWorkflowTools } from './src/sanity/workflow';
+import { brandIcons, withBrandPreviews } from './src/sanity/brandIcons';
 
 // =============================================================================
 // Studio theme
 // =============================================================================
-// @sanity/ui's buildTheme() ships BOTH a light and a dark color scheme, so the
-// Studio's Appearance toggle (System / Light / Dark) works properly. Only the
-// FONT families are overridden here.
-//
-// This replaced buildLegacyTheme(), which was light-ONLY: it hard-codes white
-// component backgrounds and dark text, so flipping the Studio to Dark left
-// every panel white. The brand now lives in the logo and the guide-card
-// accents rather than in tinted Studio chrome.
+// The theme is built in src/sanity/studioTheme.ts from brand.config.json
+// (PORTS.md cards 110 and 116): a warm paper, the brand accent, re-hued greys,
+// the brand's fonts and radius, in BOTH schemes so the Appearance menu works.
+// Light is the default for new editors (seedLightScheme). The navbar's navy
+// chrome and the Portable Text typography are StudioLook.tsx.
 //
 // The families have to go INTO buildTheme({ font }): it bakes the CSS at build
-// time, and a post-hoc `theme.fonts.family` patch is ignored. Point these at
-// whatever `npm run apply-brand` writes into globals.css; the stacks below end
-// in system fallbacks so a fresh clone with no font files still reads well.
+// time, and a post-hoc `theme.fonts.family` patch is ignored. The font files
+// themselves load from src/sanity/studioFonts.css, imported above.
 //
-// FBCM, 2026-09-22: the body/label stack is the SYSTEM sans on purpose. The
-// site's reading serif (Castoro) set every label, list row and form field at
-// Sanity's small UI sizes and was hard to read; Nathan chose system sans for
-// the interface and kept Castoro Titling for pane headings only.
+// FBCM, 2026-09-22: the interface's body/label stack is the SYSTEM sans on
+// purpose. The site's reading serif (Castoro) set every label, list row and
+// form field at Sanity's small UI sizes and was hard to read; Nathan chose
+// system sans for the interface and kept Castoro Titling for headings. The
+// rich-text editor is different (card 116, 2026-10-18): it sets body text at
+// 17px, where Castoro reads well, so a post's words look as they will on the
+// site. That is EDITOR_FONTS below.
 // =============================================================================
 // These two lines are REWRITTEN by `npm run apply-brand` from
 // brand/brand.config.json (studio.fonts.display / studio.fonts.body). Keep them
 // as single-quoted one-line string literals or the rewrite will not match.
 const DISPLAY_STACK = '"Castoro Titling", Georgia, serif';
-const BODY_STACK =
-  'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+// prettier-ignore
+const BODY_STACK = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+const STUDIO_FONTS = { display: DISPLAY_STACK, body: BODY_STACK };
+/** The rich-text editor's faces: the site's own reading serif for body text. */
+const EDITOR_FONTS = { display: DISPLAY_STACK, body: '"Castoro", Georgia, serif' };
 
-function withFamily(font: ThemeFont, family: string): ThemeFont {
-  return { ...font, family };
-}
+const studioTheme = buildStudioTheme(STUDIO_FONTS);
+seedLightScheme();
 
-const themeDefaults = buildTheme();
-const studioTheme: RootTheme = buildTheme({
-  font: {
-    ...themeDefaults.fonts,
-    text: withFamily(themeDefaults.fonts.text, BODY_STACK),
-    label: withFamily(themeDefaults.fonts.label, BODY_STACK),
-    heading: withFamily(themeDefaults.fonts.heading, DISPLAY_STACK),
-  },
-});
+// The Studio tab's title and icons come from the site's own /studio page
+// (src/pages/studio/index.astro, card 120), so no runtime swap is needed.
+const wording = studioWording(brand.name, studioEdges);
 
 // Dev detection must FAIL CLOSED. An earlier version elsewhere in the family
 // also treated `process.env.NODE_ENV !== 'production'` as dev, but the
@@ -101,21 +111,31 @@ const IS_DEV =
 
 export default defineConfig({
   name: 'my-studio',
-  // Short title shown in the browser tab when editing. Update per project.
-  title: 'First Baptist Studio',
+  // The site's own name and mark (PORTS.md card 110). Both come from the brand,
+  // so a reskin renames the Studio too: `title` is brand.config.json `name`,
+  // the icon is public/favicon.svg. (The old `studio.components.logo` is
+  // deprecated and was never drawn; the login screen showed "My Studio".)
+  title: brand.name,
+  icon: StudioIcon,
+  // The line under the name on the sign-in card (card 120).
+  subtitle: wording.subtitle,
+  // The site's words on Sanity's screens: signed-out notice, user menu.
+  i18n: { bundles: wording.bundles },
+  // The wordmark beside the icon. At the ROOT on purpose: the root's middleware
+  // sits innermost, right around Sanity's bar (see StudioLook.tsx).
+  studio: { components: { navbar: StudioWordmarkNavbar } },
+
+  // Content Releases and Scheduled Drafts are paid Sanity features: on the free
+  // plan they only show an "Upgrade to unlock" screen. Scheduling is the site's
+  // own "Publish automatically at" field and publish-due.yml instead.
+  releases: { enabled: false },
+  scheduledDrafts: { enabled: false },
 
   projectId:
     envVal('SANITY_STUDIO_PROJECT_ID', 'PUBLIC_SANITY_PROJECT_ID') || 'placeholder-project-id',
   dataset: envVal('SANITY_STUDIO_DATASET', 'PUBLIC_SANITY_DATASET') || 'production',
 
   theme: studioTheme,
-
-  // Studio chrome overrides. Logo replaces the default Sanity wordmark.
-  studio: {
-    components: {
-      logo: StudioLogo,
-    },
-  },
 
   // Global form customization. Registering the character-count input once here
   // applies it to every capped text field across all schemas. The component
@@ -159,8 +179,8 @@ export default defineConfig({
     }),
     // Unsplash plugin - adds an "Unsplash" tab to every image picker. The
     // package's correct registration is via the plugins array (not
-    // form.image.assetSources). Held at 7.0.15: newer versions demand
-    // @sanity/ui ^3.4, which would drag the pinned 3.3.5 forward.
+    // form.image.assetSources). Version is part of the matched Sanity set
+    // (rule 8, PORTS.md card 103).
     unsplashImageAsset(),
     // Media browser - a top-level "Media" icon in the Studio sidebar for
     // browsing every uploaded image at once with tag + filter + bulk-edit.
@@ -174,10 +194,37 @@ export default defineConfig({
     // plugin only adds the keyboard layer, and it stays out of text boxes so
     // their own undo keeps working. See src/sanity/components/UndoRedo.tsx.
     undoRedoShortcuts(),
+    // Navy chrome for the top bar (StudioLook.tsx, PORTS.md card 116).
+    studioLook(STUDIO_FONTS),
+    // Share a preview, Messages, the previewShare type (PORTS.md card 117).
+    // Before the kit, so the kit's tool order and staff view place "messages".
+    // shareTypes: the types whose own page /preview renders. Messages is left
+    // out of the tool order (kit.config.ts): the church's forms are Church
+    // Trac's, and the site keeps no inbox of its own (no CONTACT_DB binding).
+    ncsWorkflowTools({
+      shareTypes: [
+        'homePage',
+        'journalPage', // scaffold: journal
+        'privacyPage',
+        'page',
+      ],
+    }),
+    // The Studio kit (src/sanity/kit/, settings in src/sanity/kit.config.ts):
+    // Home, Site Guide and Checkup tools, plain tool names, the staff view,
+    // Trash instead of Delete, the note after Publish and the first-run tour.
+    // KEEP IT LAST: its tools reducer has to see every other plugin's tools.
+    // See docs/agent/studio-kit.md and PORTS.md card 106.
+    ncsStudioKit(kitConfig),
+    // Icons by meaning on every tool, and on plugin-registered types (card 119,
+    // src/sanity/brandIcons.tsx). After the kit so its tools get icons too; it
+    // only swaps icons, so the kit still decides what shows and in what order.
+    brandIcons(),
   ],
 
   schema: {
-    types: schemaTypes,
+    // Portable Text styles drawn in the site's fonts (StudioLook.tsx, card 116).
+    // Every document type gets its icon and a picture in list rows (card 119).
+    types: withBrandPreviews(withEditorTypography(schemaTypes, EDITOR_FONTS)),
   },
 
   // Singleton enforcement: hide these from the global "+" create menu so editors

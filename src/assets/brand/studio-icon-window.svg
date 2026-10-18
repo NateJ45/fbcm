@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  First Baptist Church Muncie: Studio icon "Lancet window" (PORTS.md card 119).
+  Redrawn for icon sizes from the site's goal glyph of the same name in
+  src/components/church/BuildingGlyph.astro: the same paths, a heavier
+  stroke (16 to 24px in the Studio), the church's indigo with one gold line.
+  Generated once; edit by hand if the glyph changes.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Lancet window">
+  <path d="M5 62V30C5 16 14 7 24 3C34 7 43 16 43 30V62" stroke="#292854" stroke-width="3.6"/>
+  <path d="M13 62V37A6 6 0 0 1 19 31A6 6 0 0 1 25 37" stroke="#292854" stroke-width="3.6"/>
+  <path d="M23 62V37A6 6 0 0 1 29 31A6 6 0 0 1 35 37V62" stroke="#292854" stroke-width="3.6"/>
+  <path d="M-8.94-8.94A9 9 0 1 1 8.94-8.94A9 9 0 1 1 8.94 8.94A9 9 0 1 1-8.94 8.94A9 9 0 1 1-8.94-8.94Z" transform="translate(24 17) scale(.4)" stroke="#D59B29" stroke-width="9"/>
+  <path d="M2 62H46" stroke="#292854" stroke-width="3.6"/>
+</svg>

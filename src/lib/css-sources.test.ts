@@ -58,8 +58,17 @@ function resolveFile(abs: string): string {
   return abs;
 }
 
+/**
+ * Files inside an excluded tree that a rendered page may import because they
+ * carry no Tailwind classes by contract: the /studio loading splash's motif
+ * (PORTS.md card 120) is drawn with an inline style, and the page it sits on
+ * (src/pages/studio/index.astro) styles itself in its own <style> block.
+ */
+const NO_TAILWIND = new Set([path.join(SRC, 'sanity', 'StudioSplashMotif.astro')]);
+
 const rendersClasses = (file: string) =>
-  /\.(astro|tsx|jsx)$/.test(file) || file.startsWith(COMPONENTS + path.sep);
+  !NO_TAILWIND.has(file) &&
+  (/\.(astro|tsx|jsx)$/.test(file) || file.startsWith(COMPONENTS + path.sep));
 
 const stripExt = (p: string) => p.replace(/\.(astro|tsx?|mjs|jsx?)$/, '');
 const isInside = (p: string, target: string) => {
