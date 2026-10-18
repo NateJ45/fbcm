@@ -133,8 +133,8 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       update's two forms publish a banner; the Fix-it list's Edit buttons open the right field;
       "Help for this page" beside a page; Move to Trash and Bring it back on a banner; the staff
       view's missing Delete and perspective menu; the desk's icons and list-row tiles; "Blog posts as
-      a table" and "Staff members as a table"; Share a preview's dialog (it needs
-      `SHARE_PREVIEW_SECRET`); the editor's rich text in Castoro; the wordmark in the top bar; a page made from each template group; "+ Add item" in grid view; Insert a saved section as a copy and as synced (after the seed); the yellow page-rule warnings.
+      a table" and "Staff members as a table"; Share a preview's dialog (its
+      `SHARE_PREVIEW_SECRET` Worker secret is set, 2026-10-18); the editor's rich text in Castoro; the wordmark in the top bar; a page made from each template group; "+ Add item" in grid view; Insert a saved section as a copy and as synced (after the seed); the yellow page-rule warnings.
 
 ## Known gaps, deliberately open
 
