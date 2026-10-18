@@ -253,7 +253,7 @@ Until the Worker has three settings, the card says "Not set up yet". `CF_ACCOUNT
 
 ### Studio workflow tools (PORTS.md card 117)
 
-- **Share a preview.** Needs one Worker secret, 32+ random characters: `npx wrangler secret put SHARE_PREVIEW_SECRET`.
+- **Share a preview.** Needs one Worker secret, 32+ random characters, set on `fbcm-site` on 2026-10-18 (`npx wrangler secret put SHARE_PREVIEW_SECRET` to rotate it).
   Rotating it stops every link at once. Works on Home, the Blog page, the privacy policy and every page built from
   sections (not on single blog posts, which preview at `/preview/post/<slug>`, a route without the share check).
 - **Morning change note** (`.github/workflows/change-note.yml`, OFF). Lists yesterday's Studio changes as a GitHub
