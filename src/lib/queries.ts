@@ -721,7 +721,7 @@ export async function getAllPageSlugs(): Promise<string[]> {
 let footerPages: Promise<{ title?: string; navLabel?: string; slug?: string }[]> | null = null;
 export function getFooterPages() {
   footerPages ??= sanityFetch<{ title?: string; navLabel?: string; slug?: string }>(
-    `*[_type == "page" && defined(slug.current) && archived != true && addToFooter == true]|order(title asc){
+    `*[_type == "page" && defined(slug.current) && archived != true && hideFromSearch != true && addToFooter == true]|order(title asc){
       title,
       navLabel,
       "slug": slug.current
@@ -736,10 +736,12 @@ export function getFooterPages() {
 // and Footer.astro can inject these alongside the built-in links.
 //
 // Archived pages drop out: the page is not built, so a menu link to it would be
-// a 404 in the middle of the navigation.
+// a 404 in the middle of the navigation. So do pages with "Hide this page from
+// Google and the menus" on (hideFromSearch, starter card 122), here and in
+// getFooterPages above.
 export async function getNavPages() {
   return sanityFetch(
-    `*[_type == "page" && defined(slug.current) && archived != true && (addToMainNav == true || addToFooter == true)]{
+    `*[_type == "page" && defined(slug.current) && archived != true && hideFromSearch != true && (addToMainNav == true || addToFooter == true)]{
     title,
     "slug": slug.current,
     navLabel,
