@@ -13,6 +13,7 @@
 //     "TODAY · WORSHIP AT 10:45 AM"), in the site's UI face;
 //   - the church's name in Castoro Titling capitals at display scale, left on
 //     the hero's left edge, not a centred app title;
+//   - (card 132: the class names are the shared partial's .ncs-sp__*)
 //   - "Opening the editor" as the hero's italic Castoro lede;
 //   - the 1927 Hannaford rendering of the building in gold line, inking in
 //     from the corner the way it does behind the footer
@@ -53,7 +54,7 @@ import '@fontsource-variable/sofia-sans-semi-condensed';
     /* The gold rule the footer opens with, across the top of the card. */
     border-top: 1px solid #d59b29;
   }
-  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__inner {
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp {
     align-items: flex-start;
     text-align: left;
     gap: 0;
@@ -61,11 +62,11 @@ import '@fontsource-variable/sofia-sans-semi-condensed';
     width: 100%;
     margin-inline: auto;
   }
-  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__mark {
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp__mark {
     display: none;
   }
   /* The eyebrow: small caps in the UI face, a 44px gold hairline before it. */
-  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__name::before {
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp__name::before {
     content: 'Downtown Muncie \00B7  Since 1859';
     display: block;
     margin: 0 0 clamp(18px, 2.4vw, 28px);
@@ -81,7 +82,7 @@ import '@fontsource-variable/sofia-sans-semi-condensed';
     color: #f4efe6;
   }
   /* The name, as the hero sets "PRAISE AND PROCLAIM." */
-  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__name {
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp__name {
     font-family: 'Castoro Titling', Georgia, serif;
     font-size: clamp(3.25rem, 8.2vw, 6.75rem);
     line-height: 0.98;
@@ -92,13 +93,32 @@ import '@fontsource-variable/sofia-sans-semi-condensed';
     color: #f4efe6;
   }
   /* The words sit above the rendering. */
-  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__name,
-  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__note {
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp__name,
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp__note {
     position: relative;
     z-index: 1;
   }
+  /* Card 132 partial: the lettered name keeps the hero cream and the display
+     face (its per-letter colours are for a light paper), and the laid-stone
+     path sits quietly under the name as a progress line on the dark ground. */
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp__lettering,
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp__lettering > span {
+    font-family: inherit;
+    color: #f4efe6;
+  }
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp__path {
+    position: relative;
+    z-index: 1;
+    width: min(220px, 60vw);
+    margin: clamp(20px, 2.6vw, 32px) 0 0;
+  }
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp__stone {
+    stroke: #f4efe6;
+    stroke-opacity: 0.4;
+    stroke-width: 1;
+  }
   /* "Opening the editor" as the hero's italic lede. */
-  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__note {
+  .ncs-splash:has(.fbcm-splash-art) .ncs-sp[data-mode] .ncs-sp__note {
     margin-top: clamp(20px, 2.6vw, 32px);
     font-family: Castoro, Georgia, serif;
     font-style: italic;
@@ -106,7 +126,7 @@ import '@fontsource-variable/sofia-sans-semi-condensed';
     line-height: 1.35;
     color: #f4efe6;
   }
-  html[data-studio-scheme] .ncs-splash:has(.fbcm-splash-art) .ncs-splash__note {
+  html[data-studio-scheme] .ncs-splash:has(.fbcm-splash-art) .ncs-sp__note {
     color: #f4efe6;
   }
   .ncs-splash:has(.fbcm-splash-art) .ncs-splash__motif {
@@ -133,7 +153,7 @@ import '@fontsource-variable/sofia-sans-semi-condensed';
     mask-composite: intersect;
   }
   @media (max-width: 599px) {
-    .ncs-splash:has(.fbcm-splash-art) .ncs-splash__name::before {
+    .ncs-splash:has(.fbcm-splash-art) .ncs-sp__name::before {
       font-size: 0.75rem;
     }
     .ncs-splash .ncs-splash__motif img.fbcm-splash-art {

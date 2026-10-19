@@ -43,6 +43,7 @@ const SANITY_UI = new Set([
   'Delete',
   'Add filter',
   'Remove field',
+  'Discard changes',
   '...',
   '+',
 ]);
