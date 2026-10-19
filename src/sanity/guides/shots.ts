@@ -27,6 +27,33 @@
 import type { GuideShotData } from '../../lib/studio-look.ts';
 
 export const GUIDE_SHOTS: Record<string, GuideShotData> = {
+  // Captured 2026-10-19 from the kit harness (/kit-harness/studio/, a pretend
+  // administrator reading the public dataset; avatar hidden). The rest of the
+  // keys the guides ask for (quick-sermon-form, banner-form, new-post-form,
+  // publish-button, church-details, visitor-issues) still draw the wireframe:
+  // see docs/PENDING.md 1g for why and how to capture them.
+  'quick-update-tiles': {
+    src: '/guide-shots/quick-update-tiles.webp',
+    alt: 'Quick update on a phone: big buttons for Post a photo, the sermon preview, a banner, a change this week and a short news post.',
+    width: 390,
+    height: 877,
+    marks: [
+      { kind: 'ring', x: 26.7, y: 24.3, w: 63.6, h: 6.7 },
+      { kind: 'stone', x: 94, y: 27.7, label: 'The sermon preview, every week.' },
+      { kind: 'ring', x: 26.7, y: 60.8, w: 63.6, h: 9.7 },
+      { kind: 'stone', x: 94, y: 65.6, label: 'A snow day: red, and gone after Sunday.' },
+    ],
+  },
+  'home-checklist': {
+    src: '/guide-shots/home-checklist.webp',
+    alt: "Home's Sunday checklist: the sermon preview, a blog post, banners that have ended, the livestream and this week's events, with one already ticked.",
+    width: 526,
+    height: 712,
+    marks: [
+      { kind: 'stone', x: 94, y: 12.2, label: 'Ticks itself once the preview is published.' },
+      { kind: 'stone', x: 94, y: 66.2, label: 'Tick this one yourself.' },
+    ],
+  },
   // 'publish-button': {
   //   src: '/guide-shots/publish-button.webp',
   //   alt: 'The bottom right of the editor, with the Publish button in the corner.',

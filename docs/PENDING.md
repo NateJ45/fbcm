@@ -167,6 +167,15 @@ field kind, a patch form, a checklist item that opens one form) are listed at th
 - [ ] **Signed-in check of the new Quick update forms**: the sermon preview and the news post publish a whole post
       (title, web address, summary, category, body); a second post with the same title gets the date added to its
       web address; the sermon item on the Sunday checklist ticks itself; Post a photo saves a draft.
+- [ ] **Six guide captures still to take** (`quick-sermon-form`, `banner-form`, `new-post-form`,
+      `publish-button`, `church-details`, `visitor-issues`; `quick-update-tiles` and `home-checklist` are in).
+      The kit harness on a dev port that is not a Sanity CORS origin cannot open documents: answering CORS for reads
+      in Playwright works for queries, but the Studio's EventSource listener fails, so editors show empty fields, a
+      "does not have permission to publish" banner and no footer. Capture these with card 137's screenshot script, or
+      on port 4321 (a CORS origin) signed in, with sample text typed and never published.
+- [ ] **The "How to" chip's marker draws as a long gold bar** before the words (seen in the harness, 2026-10-19):
+      the look's hairline marker takes the chip's free width. Kit file (PORTABLE), so a starter fix if confirmed
+      signed in.
 - [ ] **"Add this month's Visitor"** on Home opens The Visitor page at its issues list (the field path
       `pageBuilder[_key=="visitor-issues"].docs`); if the page's section key ever changes, change it in
       `kit.config.ts` too.
