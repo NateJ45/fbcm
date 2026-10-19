@@ -1,0 +1,3540 @@
+[
+  {
+    "_createdAt": "2026-09-19T22:38:46Z",
+    "_id": "homePage",
+    "_rev": "bqs25zjusDOk2gZEdeIJCZ",
+    "_system": {
+      "base": {
+        "id": "homePage",
+        "rev": "zQicUBX7lBDfMtKkfIiFwn"
+      }
+    },
+    "_type": "homePage",
+    "_updatedAt": "2026-10-05T20:31:06Z",
+    "pageBuilder": [
+      {
+        "_key": "home-hero",
+        "_type": "heroSection",
+        "eyebrow": "A downtown church in Muncie, Indiana",
+        "facts": [
+          {
+            "_key": "fact-1",
+            "_type": "heroFact",
+            "label": "Sundays",
+            "value": "{time}"
+          },
+          {
+            "_key": "fact-2",
+            "_type": "heroFact",
+            "label": "Where",
+            "value": "{address}"
+          },
+          {
+            "_key": "fact-3",
+            "_type": "heroFact",
+            "label": "Online",
+            "value": "Live on YouTube"
+          }
+        ],
+        "frames": [
+          {
+            "_key": "frame-1",
+            "_type": "image",
+            "alt": "A singer leads worship at the microphone, a guitarist on either side of her",
+            "asset": {
+              "_ref": "image-e1a2bcafe515d5125f72956a31723a94e34fec5d-2400x1600-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.62,
+              "y": 0.4
+            }
+          },
+          {
+            "_key": "frame-2",
+            "_type": "image",
+            "alt": "Teenagers laughing together over a card game, a Bible on the table",
+            "asset": {
+              "_ref": "image-1b7806427fe8c419a24455260bd7f274a4516335-2400x1136-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.72,
+              "y": 0.3
+            }
+          },
+          {
+            "_key": "frame-3",
+            "_type": "image",
+            "alt": "Children sit on the chancel steps around Kendall as she reads to them",
+            "asset": {
+              "_ref": "image-21db96f59d2c41eec5e07709a3f0569ad2863bee-2400x1441-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.62,
+              "y": 0.35
+            }
+          },
+          {
+            "_key": "frame-4",
+            "_type": "image",
+            "alt": "The congregation standing to sing on a Sunday morning, seen from the balcony",
+            "asset": {
+              "_ref": "image-03d6da95af3fbc02c3ba9eaa95ab533dbdfa8b4b-2400x1309-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.85
+            }
+          },
+          {
+            "_key": "frame-5",
+            "_type": "image",
+            "alt": "Two teenage girls sing into microphones at the front of the church, ferns behind them",
+            "asset": {
+              "_ref": "image-9445495cb95b7c03a8788b38a1d4a1ce0138d6f5-1600x1067-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.68,
+              "y": 0.2
+            }
+          },
+          {
+            "_key": "frame-6",
+            "_type": "image",
+            "alt": "Four young children hold hands and smile outside the church's arched entrance",
+            "asset": {
+              "_ref": "image-e7b7e945ad95143ef6a2513b12d3f48d90244b64-2400x1600-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.55,
+              "y": 0.4
+            }
+          },
+          {
+            "_key": "frame-7",
+            "_type": "image",
+            "alt": "The pianist at the grand piano and the worship band leading a song at the front of the sanctuary",
+            "asset": {
+              "_ref": "image-5e43886b3b78c982482701d221a582112b692682-2400x1358-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.66,
+              "y": 0.38
+            }
+          },
+          {
+            "_key": "frame-8",
+            "_type": "image",
+            "alt": "Five deacons smile together behind the communion table, a wooden cross and the communion plates in front of them",
+            "asset": {
+              "_ref": "image-86ea34a0c404d24e71e4253242061def78b627c7-1600x800-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.55,
+              "y": 0.22
+            }
+          },
+          {
+            "_key": "frame-9",
+            "_type": "image",
+            "alt": "Women of the church smile around a table set for a fellowship breakfast, flowers and purple cups in the middle",
+            "asset": {
+              "_ref": "image-2f1ce4c6714c166672b1b80501b21e545ad14bc2-2400x1596-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.55,
+              "y": 0.38
+            }
+          },
+          {
+            "_key": "frame-10",
+            "_type": "image",
+            "alt": "The mission team, adults and children together, holding up a Serve Your City t-shirt",
+            "asset": {
+              "_ref": "image-efd8bf5a21f666ffe139b50d94378bc596622c5c-2400x1285-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.32
+            }
+          },
+          {
+            "_key": "frame-11",
+            "_type": "image",
+            "alt": "Children sing with their hands raised on a desert stage set with paper cacti, a leader beside them at the microphone",
+            "asset": {
+              "_ref": "image-7a8f3d14608b15dd9adeef723770a33674c1a295-2400x1800-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.42,
+              "y": 0.42
+            }
+          },
+          {
+            "_key": "frame-12",
+            "_type": "image",
+            "alt": "Members of the church preparing the communion trays at a table",
+            "asset": {
+              "_ref": "image-651ea65b35de1790bec98a228f47452e964cd46c-2400x1600-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.66,
+              "y": 0.4
+            }
+          }
+        ],
+        "headline": "Praise and proclaim.",
+        "layout": "full",
+        "primaryCta": {
+          "_key": "cta-1",
+          "_type": "ctaBlock",
+          "internalLink": {
+            "_ref": "page-visit",
+            "_type": "reference",
+            "_weak": true
+          },
+          "label": "Plan a visit",
+          "linkType": "internal"
+        },
+        "secondaryCta": {
+          "_key": "cta-2",
+          "_type": "ctaBlock",
+          "externalUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+          "label": "Watch online",
+          "linkType": "external",
+          "openInNewTab": true
+        },
+        "size": "tall",
+        "subhead": "We're a Spirit-led people gathered to join Christ's presence in our community."
+      },
+      {
+        "_key": "home-sundays",
+        "_type": "sundayTimesSection",
+        "cta": {
+          "_key": "cta-3",
+          "_type": "ctaBlock",
+          "internalLink": {
+            "_ref": "page-visit",
+            "_type": "reference",
+            "_weak": true
+          },
+          "label": "What to expect",
+          "linkType": "internal"
+        },
+        "heading": "What to Expect",
+        "intro": "At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have.",
+        "items": [
+          {
+            "_key": "time-1",
+            "_type": "timeItem",
+            "big": "9:30 am",
+            "body": "A time of small group Bible study during the hour before our regular worship service.",
+            "label": "Sunday School"
+          },
+          {
+            "_key": "time-2",
+            "_type": "timeItem",
+            "big": "10:15 am",
+            "body": "Between Bible study and Worship, join in a time of fellowship (and, of course, donuts)!",
+            "label": "Donut [Semi-] Hour"
+          },
+          {
+            "_key": "time-3",
+            "_type": "timeItem",
+            "big": "{time}",
+            "body": "For live streams, please visit our YouTube channel.",
+            "label": "Worship"
+          }
+        ],
+        "notes": [
+          "For children ages 3 and younger, nursery care is available throughout the service.",
+          "The first Sunday of each month is communion Sunday, a service with the whole church family."
+        ],
+        "photos": [
+          {
+            "_key": "expect-dinner",
+            "_type": "image",
+            "alt": "A group of girls of different ages seated around a round table set with a blue tablecloth, plates and cups, smiling for the camera.",
+            "asset": {
+              "_ref": "image-248d57ccefb2dd93feaa6416cfe3c20a9e039654-2400x1200-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.55,
+              "y": 0.35
+            }
+          },
+          {
+            "_key": "expect-children",
+            "_type": "image",
+            "alt": "Two little girls smiling, cheek to cheek.",
+            "asset": {
+              "_ref": "image-6df9b49a87b78d8b7f0ed57bfca7ae1ff18f4614-2995x1016-png",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.44,
+              "y": 0.5
+            }
+          }
+        ],
+        "showMap": false
+      },
+      {
+        "_key": "home-goals",
+        "_type": "linkCardsSection",
+        "cards": [
+          {
+            "_key": "goal-worship",
+            "_type": "linkCard",
+            "body": "First Baptist Church Muncie (FBCM) gives praise to the Lord by gathering to worship as the full, intergenerational body of Christ.",
+            "cta": {
+              "_key": "cta-4",
+              "_type": "ctaBlock",
+              "externalUrl": "/who-we-are#worship",
+              "label": "Read more",
+              "linkType": "external",
+              "openInNewTab": false
+            },
+            "glyph": "window",
+            "image": {
+              "_type": "image",
+              "alt": "The congregation standing in the pews during worship, the worship team leading from the front beneath the words on the screen.",
+              "asset": {
+                "_ref": "image-e6666c121c6318a9ce9f82798fefbfe16d6ac9d4-4032x1908-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.45,
+                "y": 0.5
+              }
+            },
+            "title": "Worship"
+          },
+          {
+            "_key": "goal-way",
+            "_type": "linkCard",
+            "body": "FBCM proclaims God's faithfulness with people who are curious about faith, as well as new believers.",
+            "cta": {
+              "_key": "cta-5",
+              "_type": "ctaBlock",
+              "externalUrl": "/who-we-are#the-way",
+              "label": "Read more",
+              "linkType": "external",
+              "openInNewTab": false
+            },
+            "glyph": "door",
+            "image": {
+              "_type": "image",
+              "alt": "Four teenagers reading open Bibles together around a table.",
+              "asset": {
+                "_ref": "image-6b98171a13972b551bb5738bc7617e326a7342a9-2048x969-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.58,
+                "y": 0.5
+              }
+            },
+            "title": "The Way"
+          },
+          {
+            "_key": "goal-witness",
+            "_type": "linkCard",
+            "body": "To make known what God has done, FBCM builds Christ-sharing relationships with people in Muncie and beyond to spread the good news.",
+            "cta": {
+              "_key": "cta-6",
+              "_type": "ctaBlock",
+              "externalUrl": "/who-we-are#witness",
+              "label": "Read more",
+              "linkType": "external",
+              "openInNewTab": false
+            },
+            "glyph": "rose",
+            "image": {
+              "_type": "image",
+              "alt": "Teens and adults lying together on snow tubes on a snowy hill, smiling for the camera.",
+              "asset": {
+                "_ref": "image-26ba0c9d1556ee7aef717050786cccedad6f5da3-1908x1967-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.5,
+                "y": 0.5
+              }
+            },
+            "title": "Witness"
+          },
+          {
+            "_key": "goal-work",
+            "_type": "linkCard",
+            "body": "FBCM exalts God by following Jesus’ example of serving others, rather than seeking to be served ourselves (Mark 10:45).",
+            "cta": {
+              "_key": "cta-7",
+              "_type": "ctaBlock",
+              "externalUrl": "/who-we-are#work",
+              "label": "Read more",
+              "linkType": "external",
+              "openInNewTab": false
+            },
+            "glyph": "basin",
+            "image": {
+              "_type": "image",
+              "alt": "The handbell choir ringing together at their music stands, a pianist beside them.",
+              "asset": {
+                "_ref": "image-72fb10cfd85a903fa781ca41304ae050c2ed6bed-1600x908-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.3,
+                "y": 0.4
+              }
+            },
+            "title": "Work"
+          }
+        ],
+        "heading": "Our Goals",
+        "intro": "Our Church Coordination Team (CCT) has set certain goals for our church this season, in pursuit of following the calling God has given us as a congregation in different areas of our life together."
+      },
+      {
+        "_key": "home-heritage",
+        "_type": "heritageBandSection",
+        "archive": {
+          "_type": "image",
+          "alt": "The congregation, adults and children, gathered outside the church entrance in a black and white photograph.",
+          "asset": {
+            "_ref": "image-7aff980f17a59db067b89ff2d6fa792de173b301-1749x1650-jpg",
+            "_type": "reference"
+          },
+          "crop": {
+            "_type": "sanity.imageCrop",
+            "bottom": 0.27,
+            "left": 0,
+            "right": 0,
+            "top": 0
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.45
+          }
+        },
+        "body": "First Baptist’s third, and most recent, building was completed in 1929. It has been on the National Register of Historic Places since 1988.",
+        "cta": {
+          "_key": "cta-8",
+          "_type": "ctaBlock",
+          "internalLink": {
+            "_ref": "page-architecture",
+            "_type": "reference",
+            "_weak": true
+          },
+          "label": "Our building",
+          "linkType": "internal"
+        },
+        "dates": [
+          {
+            "_key": "date-1859",
+            "_type": "heritageDate",
+            "text": "Twelve Indiana residents, meeting at the county courthouse, founded the first Baptist Church in Muncie.",
+            "year": "1859"
+          },
+          {
+            "_key": "date-1862",
+            "_type": "heritageDate",
+            "text": "The tiny congregation moved into their new church building.",
+            "year": "1862"
+          },
+          {
+            "_key": "date-1890",
+            "_type": "heritageDate",
+            "text": "The congregation eventually moved into a new building on July 20, 1890.",
+            "year": "1890"
+          },
+          {
+            "_key": "date-1929",
+            "_type": "heritageDate",
+            "text": "On May 12, 1929, 1200 people marched from the old church to the new one on the corner of Jefferson and Adams streets.",
+            "year": "1929"
+          },
+          {
+            "_key": "date-now",
+            "_type": "heritageDate",
+            "now": true,
+            "text": "First Baptist Muncie continues to discern God’s will to serve in a new era in the life of Muncie."
+          }
+        ],
+        "heading": "Our Building",
+        "image": {
+          "_type": "image",
+          "alt": "Samuel Hannaford and Sons’ original rendering of the church, drawn in 1927: the tower on the corner and the long limestone wings, a car of the period parked out front.",
+          "asset": {
+            "_ref": "image-d85152a1d17899795a394cf04985a1731a15ad04-1000x605-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      },
+      {
+        "_key": "home-blog",
+        "_type": "dynamicListSection",
+        "cta": {
+          "_key": "cta-9",
+          "_type": "ctaBlock",
+          "externalUrl": "/blog",
+          "label": "All posts",
+          "linkType": "external",
+          "openInNewTab": false
+        },
+        "headline": "Church Blog",
+        "limit": 3,
+        "source": "journal",
+        "subhead": "Read the latest from FBCM"
+      },
+      {
+        "_key": "home-give",
+        "_type": "giveBandSection",
+        "body": "We give sacrificially to help those in need through regular offerings and donations.",
+        "heading": "Give"
+      }
+    ],
+    "seoDescription": "An American Baptist church in downtown Muncie, Indiana, at {address}. Worship is {service time}, in person and online. All are welcome.",
+    "seoTitle": "First Baptist Church Muncie, Indiana | Sundays {time}"
+  },
+  {
+    "_createdAt": "2026-09-20T01:10:36Z",
+    "_id": "page-ministries",
+    "_rev": "sUW7WfSihJM43auWtoAnR6",
+    "_system": {
+      "base": {
+        "id": "page-ministries",
+        "rev": "r3OMep2eOIG3C5V37An80u"
+      }
+    },
+    "_type": "page",
+    "_updatedAt": "2026-10-19T17:14:57Z",
+    "addToMainNav": false,
+    "pageBuilder": [
+      {
+        "_key": "ministries-hero",
+        "_type": "heroSection",
+        "facts": [
+          {
+            "_key": "fact-1",
+            "_type": "heroFact",
+            "label": "Children",
+            "value": "Nursery through fifth grade"
+          },
+          {
+            "_key": "fact-2",
+            "_type": "heroFact",
+            "label": "Youth",
+            "value": "Grades 6 to 12"
+          },
+          {
+            "_key": "fact-3",
+            "_type": "heroFact",
+            "label": "Adults",
+            "value": "College and career to retirees"
+          }
+        ],
+        "frames": [
+          {
+            "_key": "frame-1",
+            "_type": "image",
+            "alt": "Children holding palm branches in a stone hallway, warm light coming through the leaded windows.",
+            "asset": {
+              "_ref": "image-66199736e30b8ec5c160729ea87001f77a00ef08-1920x2400-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.55
+            }
+          },
+          {
+            "_key": "frame-2",
+            "_type": "image",
+            "alt": "Three teenagers playing foosball in the youth room, the ping pong table behind them",
+            "asset": {
+              "_ref": "image-e0aef6d29ce0a256849694cc9d5c63e53b9061b1-2400x1351-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.42,
+              "y": 0.4
+            }
+          },
+          {
+            "_key": "frame-3",
+            "_type": "image",
+            "alt": "Two musicians rehearsing by the staircase, one at the drums and one on bass guitar.",
+            "asset": {
+              "_ref": "image-e734157252df111dc84ae943fa09f91631c1e19b-2070x1380-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.42,
+              "y": 0.5
+            }
+          }
+        ],
+        "headline": "Every age has a place here.",
+        "layout": "window",
+        "primaryCta": {
+          "_key": "cta-1",
+          "_type": "ctaBlock",
+          "externalUrl": "/ministries#get-involved",
+          "label": "Get involved",
+          "linkType": "external",
+          "openInNewTab": false
+        },
+        "secondaryCta": {
+          "_key": "cta-2",
+          "_type": "ctaBlock",
+          "externalUrl": "/events",
+          "label": "What’s On",
+          "linkType": "external",
+          "openInNewTab": false
+        },
+        "size": "short",
+        "subhead": "First Baptist Church Muncie (FBCM) believes that God created the church to be intergenerational."
+      },
+      {
+        "_key": "ministries-sunday",
+        "_type": "timelineSection",
+        "heading": "A Sunday for every age",
+        "rows": [
+          {
+            "_key": "row-1",
+            "_type": "timelineRow",
+            "body": [
+              {
+                "_key": "ss-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Intergenerational Bible Study (B-04): Led by Jim Butler, this intergenerational Bible Study includes adults of all ages."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "ss-2",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-2s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Friendship Class (B-05): Led by Pastor Jonathan, this class primarily consists of a mix of couples with children at home, but is open to adults of all ages."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "ss-3",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-3s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Youth Large Group (201): Sixth through twelfth (6th-12th) grade students join in discussions about life and faith."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "ss-4",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-4s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Children's Sunday School (102): Children's Worship Arts - Music education & Spiritual formation."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "ss-5",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-5s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "6 weeks - 3 years: Nursery (104)"
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "marker": "9:30 am",
+            "title": "Sunday school and Bible study"
+          },
+          {
+            "_key": "row-2",
+            "_type": "timelineRow",
+            "body": [
+              {
+                "_key": "dh-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "dh-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Between Bible study and Worship, join in a time of fellowship (and, of course, donuts)!"
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "marker": "10:15 am",
+            "title": "Donut hour"
+          },
+          {
+            "_key": "row-3",
+            "_type": "timelineRow",
+            "body": [
+              {
+                "_key": "wr-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "wr-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Children preschool through 5th grade join their families in the sanctuary for the first part of worship (~15 minutes) before being dismissed to Children's Church."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "wrb-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "wrb-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Nursery Care (104): For children ages 3 and younger, nursery care is available throughout the service."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "wrb-2",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "wrb-2s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Family Room (105): For little ones and parents who need to step out during service, this room provides toys, a live stream, rocking chairs, nursing privacy, and a changing table for all who desire it."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "wrb-3",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "wrb-3s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Kickstart Children's Church (102): Preschool - 2nd grade"
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "wrb-4",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "wrb-4s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "The Underground Children's Church (102): 3rd - 5th grade"
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "marker": "{time}",
+            "title": "Worship, children's church and nursery"
+          }
+        ]
+      },
+      {
+        "_key": "ministries-worship",
+        "_type": "ministrySection",
+        "anchor": {
+          "_type": "slug",
+          "current": "worship"
+        },
+        "imageSide": "right",
+        "ministry": {
+          "_ref": "ministry-worship",
+          "_type": "reference"
+        }
+      },
+      {
+        "_key": "ministries-children",
+        "_type": "ministrySection",
+        "anchor": {
+          "_type": "slug",
+          "current": "children"
+        },
+        "imageSide": "left",
+        "ministry": {
+          "_ref": "ministry-children",
+          "_type": "reference"
+        }
+      },
+      {
+        "_key": "ministries-children-faq",
+        "_type": "faqSection",
+        "eyebrow": "Children",
+        "heading": "Questions parents ask",
+        "items": [
+          {
+            "_key": "q-4",
+            "_type": "faqItem",
+            "answer": [
+              {
+                "_key": "a4-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "a4-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Absolutely! We encourage it! There are containers in each classroom in which the children can place their offering."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "question": "Can children bring an offering?"
+          },
+          {
+            "_key": "q-5",
+            "_type": "faqItem",
+            "answer": [
+              {
+                "_key": "a5-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "a5-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "No. But they are welcome to if they have their own. In Sunday School and Children’s Church the kids will be looking over passages in the Bible. We will certainly provide a Bible if your child does not have one."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "question": "Does my child need to bring a Bible?"
+          }
+        ]
+      },
+      {
+        "_key": "ministries-youth",
+        "_type": "ministrySection",
+        "anchor": {
+          "_type": "slug",
+          "current": "youth"
+        },
+        "imageSide": "right",
+        "ministry": {
+          "_ref": "ministry-youth",
+          "_type": "reference"
+        }
+      },
+      {
+        "_key": "ministries-adult",
+        "_type": "ministrySection",
+        "anchor": {
+          "_type": "slug",
+          "current": "adult"
+        },
+        "ministry": {
+          "_ref": "ministry-adult",
+          "_type": "reference"
+        }
+      },
+      {
+        "_key": "ministries-outreach",
+        "_type": "ministrySection",
+        "anchor": {
+          "_type": "slug",
+          "current": "outreach"
+        },
+        "ministry": {
+          "_ref": "ministry-outreach",
+          "_type": "reference"
+        }
+      },
+      {
+        "_key": "ministries-stay-updated",
+        "_type": "richTextSection",
+        "body": [
+          {
+            "_key": "su-h1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "su-h1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Stay updated"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "su-a-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "su-a-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "There are many ways to get the latest information about what is happening in Adult ministry or any of our ministries."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "su-b-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "su-b-1s1",
+                "_type": "span",
+                "marks": [
+                  "su-b-1l1"
+                ],
+                "text": "Wednesday Weekly"
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [
+              {
+                "_key": "su-b-1l1",
+                "_type": "link",
+                "href": "{wednesday}"
+              }
+            ],
+            "style": "normal"
+          },
+          {
+            "_key": "su-b-2",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "su-b-2s1",
+                "_type": "span",
+                "marks": [
+                  "su-b-2l1"
+                ],
+                "text": "The Visitor Quarterly"
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [
+              {
+                "_key": "su-b-2l1",
+                "_type": "link",
+                "href": "/visitor"
+              }
+            ],
+            "style": "normal"
+          },
+          {
+            "_key": "su-b-3",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "su-b-3s1",
+                "_type": "span",
+                "marks": [
+                  "su-b-3l1"
+                ],
+                "text": "Our Church App."
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [
+              {
+                "_key": "su-b-3l1",
+                "_type": "link",
+                "href": "{app}"
+              }
+            ],
+            "style": "normal"
+          }
+        ]
+      },
+      {
+        "_key": "ministries-get-involved",
+        "_type": "richTextSection",
+        "anchor": {
+          "_type": "slug",
+          "current": "get-involved"
+        },
+        "body": [
+          {
+            "_key": "gi-a-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-a-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "If you wish to be a part of our ministry, contact us!"
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "gi-h1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-h1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Serve on Sunday"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "gi-c-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-c-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Write to "
+              },
+              {
+                "_key": "gi-c-1s2",
+                "_type": "span",
+                "marks": [
+                  "gi-c-1l1"
+                ],
+                "text": "worship@fbcmuncie.org"
+              },
+              {
+                "_key": "gi-c-1s3",
+                "_type": "span",
+                "marks": [],
+                "text": "."
+              }
+            ],
+            "markDefs": [
+              {
+                "_key": "gi-c-1l1",
+                "_type": "link",
+                "href": "mailto:worship@fbcmuncie.org"
+              }
+            ],
+            "style": "normal"
+          },
+          {
+            "_key": "gi-h2",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-h2s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Sing and play"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "gi-e-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-e-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Write to "
+              },
+              {
+                "_key": "gi-e-1s2",
+                "_type": "span",
+                "marks": [
+                  "gi-e-1l1"
+                ],
+                "text": "cynthia@fbcmuncie.org"
+              },
+              {
+                "_key": "gi-e-1s3",
+                "_type": "span",
+                "marks": [],
+                "text": "."
+              }
+            ],
+            "markDefs": [
+              {
+                "_key": "gi-e-1l1",
+                "_type": "link",
+                "href": "mailto:cynthia@fbcmuncie.org"
+              }
+            ],
+            "style": "normal"
+          },
+          {
+            "_key": "gi-h3",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-h3s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Help with children"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "gi-g-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-g-1s1",
+                "_type": "span",
+                "marks": [
+                  "gi-g-1l1"
+                ],
+                "text": "Contact the church office."
+              }
+            ],
+            "markDefs": [
+              {
+                "_key": "gi-g-1l1",
+                "_type": "link",
+                "href": "/contact"
+              }
+            ],
+            "style": "normal"
+          },
+          {
+            "_key": "gi-h4",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-h4s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Help with youth"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "gi-i-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-i-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Write to "
+              },
+              {
+                "_key": "gi-i-1s2",
+                "_type": "span",
+                "marks": [
+                  "gi-i-1l1"
+                ],
+                "text": "youth@fbcmuncie.org"
+              },
+              {
+                "_key": "gi-i-1s3",
+                "_type": "span",
+                "marks": [],
+                "text": "."
+              }
+            ],
+            "markDefs": [
+              {
+                "_key": "gi-i-1l1",
+                "_type": "link",
+                "href": "mailto:youth@fbcmuncie.org"
+              }
+            ],
+            "style": "normal"
+          },
+          {
+            "_key": "gi-h5",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-h5s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Join a Life Group"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "gi-k-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-k-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "If you’re interested in joining a small group, or are seeking more information, contact "
+              },
+              {
+                "_key": "gi-k-1s2",
+                "_type": "span",
+                "marks": [
+                  "gi-k-1l1"
+                ],
+                "text": "adult@fbcmuncie.org"
+              },
+              {
+                "_key": "gi-k-1s3",
+                "_type": "span",
+                "marks": [],
+                "text": "."
+              }
+            ],
+            "markDefs": [
+              {
+                "_key": "gi-k-1l1",
+                "_type": "link",
+                "href": "mailto:adult@fbcmuncie.org"
+              }
+            ],
+            "style": "normal"
+          },
+          {
+            "_key": "gi-h6",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-h6s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Serve our community"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "gi-m-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-m-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Write to "
+              },
+              {
+                "_key": "gi-m-1s2",
+                "_type": "span",
+                "marks": [
+                  "gi-m-1l1"
+                ],
+                "text": "outreach@fbcmuncie.org"
+              },
+              {
+                "_key": "gi-m-1s3",
+                "_type": "span",
+                "marks": [],
+                "text": "."
+              }
+            ],
+            "markDefs": [
+              {
+                "_key": "gi-m-1l1",
+                "_type": "link",
+                "href": "mailto:outreach@fbcmuncie.org"
+              }
+            ],
+            "style": "normal"
+          },
+          {
+            "_key": "gi-n-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "gi-n-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "To become a member, be baptized or speak with a pastor, "
+              },
+              {
+                "_key": "gi-n-1s2",
+                "_type": "span",
+                "marks": [
+                  "gi-n-1l1"
+                ],
+                "text": "use the connection card"
+              },
+              {
+                "_key": "gi-n-1s3",
+                "_type": "span",
+                "marks": [],
+                "text": "."
+              }
+            ],
+            "markDefs": [
+              {
+                "_key": "gi-n-1l1",
+                "_type": "link",
+                "href": "/visit#connect"
+              }
+            ],
+            "style": "normal"
+          }
+        ],
+        "heading": "Get involved"
+      },
+      {
+        "_key": "ministries-cta",
+        "_type": "ctaBandSection",
+        "cta": {
+          "_key": "cta-3",
+          "_type": "ctaBlock",
+          "internalLink": {
+            "_ref": "page-visit",
+            "_type": "reference",
+            "_weak": true
+          },
+          "label": "Plan a visit",
+          "linkType": "internal"
+        },
+        "eyebrow": "Come and see",
+        "headline": "Find your place.",
+        "secondaryCta": {
+          "_key": "cta-4",
+          "_type": "ctaBlock",
+          "internalLink": {
+            "_ref": "page-contact",
+            "_type": "reference",
+            "_weak": true
+          },
+          "label": "Contact us",
+          "linkType": "internal"
+        },
+        "subhead": "{service time}. {address}."
+      }
+    ],
+    "seoDescription": "Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at {time}, and who to ask about each.",
+    "seoTitle": "Ministries | First Baptist Church Muncie",
+    "slug": {
+      "_type": "slug",
+      "current": "ministries"
+    },
+    "title": "Ministries"
+  },
+  {
+    "_createdAt": "2026-09-19T23:15:23Z",
+    "_id": "page-visit",
+    "_rev": "bqs25zjusDOk2gZEdeIJCZ",
+    "_system": {
+      "base": {
+        "id": "page-visit",
+        "rev": "zQicUBX7lBDfMtKkfC04l9"
+      }
+    },
+    "_type": "page",
+    "_updatedAt": "2026-10-05T20:31:06Z",
+    "addToMainNav": false,
+    "pageBuilder": [
+      {
+        "_key": "visit-hero",
+        "_type": "heroSection",
+        "facts": [
+          {
+            "_key": "fact-1",
+            "_type": "heroFact",
+            "label": "Sundays",
+            "value": "{time}"
+          },
+          {
+            "_key": "fact-2",
+            "_type": "heroFact",
+            "label": "Where",
+            "value": "{address}"
+          },
+          {
+            "_key": "fact-3",
+            "_type": "heroFact",
+            "label": "How long",
+            "value": "{service length}"
+          }
+        ],
+        "frames": [
+          {
+            "_key": "frame-1",
+            "_type": "image",
+            "alt": "A congregation seated in the sanctuary decorated for Christmas, a screen at the front showing the service.",
+            "asset": {
+              "_ref": "image-bbf1c177d25f566c939b84b97b5f097fb527d581-4023x2221-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.6
+            }
+          },
+          {
+            "_key": "frame-2",
+            "_type": "image",
+            "alt": "A group of girls of different ages seated around a round table set with a blue tablecloth, plates and cups, smiling for the camera.",
+            "asset": {
+              "_ref": "image-248d57ccefb2dd93feaa6416cfe3c20a9e039654-2400x1200-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.61,
+              "y": 0.5
+            }
+          },
+          {
+            "_key": "frame-3",
+            "_type": "image",
+            "alt": "A young man with curly hair playing an acoustic guitar, reading from a music stand, an amplifier beside him.",
+            "asset": {
+              "_ref": "image-439a78576cb342461a8d4ae1bb010754757f0fd1-2400x1600-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.66,
+              "y": 0.35
+            }
+          }
+        ],
+        "headingAccent": "on Sunday",
+        "headline": "What to Expect on Sunday",
+        "layout": "window",
+        "primaryCta": {
+          "_key": "cta-1",
+          "_type": "ctaBlock",
+          "externalUrl": "/visit#connect",
+          "label": "Let us know you’re coming",
+          "linkType": "external",
+          "openInNewTab": false
+        },
+        "secondaryCta": {
+          "_key": "cta-2",
+          "_type": "ctaBlock",
+          "externalUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+          "label": "Watch a service",
+          "linkType": "external",
+          "openInNewTab": true
+        },
+        "size": "short",
+        "subhead": "Here is what a Sunday morning looks like, from the parking lot to the last hymn. If you let us know you’re coming, a greeter will look out for you."
+      },
+      {
+        "_key": "visit-timeline",
+        "_type": "timelineSection",
+        "heading": "How the morning runs",
+        "rows": [
+          {
+            "_key": "row-0",
+            "_type": "timelineRow",
+            "body": [
+              {
+                "_key": "wel-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "wel-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "At each entrance, all ages are invited to check-in with a greeter. The Greeters can direct you where you need to go, and answer questions you may have."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "wel-2",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "wel-2s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Children will receive a name tag for nursery or children's church."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "image": {
+              "_type": "image",
+              "alt": "Three teenage girls sit together in a pew, each holding an open bible, smiling for the camera.",
+              "asset": {
+                "_ref": "image-cff2678f1751b3698c7fc8a1df24da7d2f1ca4a8-2048x969-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.5,
+                "y": 0.35
+              }
+            },
+            "title": "Welcome and Check-In"
+          },
+          {
+            "_key": "row-1",
+            "_type": "timelineRow",
+            "body": [
+              {
+                "_key": "ss-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Intergenerational Bible Study (B-04): Led by Jim Butler, this intergenerational Bible Study includes adults of all ages."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "ss-2",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-2s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Friendship Class (B-05): Led by Pastor Jonathan, this class primarily consists of a mix of couples with children at home, but is open to adults of all ages."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "ss-3",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-3s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Youth Large Group (201): Sixth through twelfth (6th-12th) grade students join in discussions about life and faith."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "ss-4",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-4s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Children's Sunday School (102): Children's Worship Arts - Music education & Spiritual formation."
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "ss-5",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "ss-5s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "6 weeks - 3 years: Nursery (104)"
+                  }
+                ],
+                "level": 1,
+                "listItem": "bullet",
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "image": {
+              "_type": "image",
+              "alt": "Children playing a group game with a long ribbon or hoop in a classroom.",
+              "asset": {
+                "_ref": "image-1d21d55f8d43f2dbc4d83e04696636d6f51cbf52-1440x491-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.42,
+                "y": 0.5
+              }
+            },
+            "marker": "9:30 am",
+            "title": "Sunday School"
+          },
+          {
+            "_key": "row-2",
+            "_type": "timelineRow",
+            "body": [
+              {
+                "_key": "donut-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "donut-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Between Bible study and Worship, join in a time of fellowship (and, of course, donuts)!"
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "image": {
+              "_type": "image",
+              "alt": "A group of adults sit together at a table set with an autumn runner and papers, talking and laughing during a fall dinner.",
+              "asset": {
+                "_ref": "image-7892aff7b3b049f359fdf30774af7fdb102d9bb0-1200x1600-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.62,
+                "y": 0.5
+              }
+            },
+            "marker": "10:15 am",
+            "note": "Donut [Semi-] Hour (Fellowship Hall)",
+            "title": "Fellowship"
+          },
+          {
+            "_key": "row-3",
+            "_type": "timelineRow",
+            "body": [
+              {
+                "_key": "w-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "w-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Nursery care is in room 104 and the family room is 105."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "w-2",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "w-2s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "For live streams, please visit our "
+                  },
+                  {
+                    "_key": "w-2s2",
+                    "_type": "span",
+                    "marks": [
+                      "w-2l1"
+                    ],
+                    "text": "YouTube channel"
+                  },
+                  {
+                    "_key": "w-2s3",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "."
+                  }
+                ],
+                "markDefs": [
+                  {
+                    "_key": "w-2l1",
+                    "_type": "link",
+                    "href": "https://www.youtube.com/@FbcmuncieOrg/streams"
+                  }
+                ],
+                "style": "normal"
+              }
+            ],
+            "image": {
+              "_type": "image",
+              "alt": "The congregation standing in the sanctuary, facing the worship band at the front.",
+              "asset": {
+                "_ref": "image-e6666c121c6318a9ce9f82798fefbfe16d6ac9d4-4032x1908-jpg",
+                "_type": "reference"
+              },
+              "hotspot": {
+                "_type": "sanity.imageHotspot",
+                "height": 0.3,
+                "width": 0.3,
+                "x": 0.58,
+                "y": 0.5
+              }
+            },
+            "marker": "{time}",
+            "note": "Sanctuary",
+            "title": "Worship"
+          },
+          {
+            "_key": "row-4",
+            "_type": "timelineRow",
+            "body": [
+              {
+                "_key": "com-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "com-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "A service with the whole church family."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "com-2",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "com-2s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "The first Sunday of each month is communion Sunday."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "com-3",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "com-3s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "To allow the whole church family to participate, there is no Children's Church (nursery care and our \"family room\" are always available)."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              },
+              {
+                "_key": "com-4",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "com-4s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "We will all worship together in a service intentionally planned for all ages."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "marker": "First Sundays",
+            "title": "Communion"
+          }
+        ]
+      },
+      {
+        "_key": "visit-getting-in",
+        "_type": "sundayTimesSection",
+        "anchor": {
+          "_type": "slug",
+          "current": "accessibility"
+        },
+        "doors": [
+          {
+            "_key": "door-1",
+            "_type": "door",
+            "body": "Our wheelchair accessible entrance is off our circular drive, on the Adams Street side of the building. Those wishing to use our automatic door should use the circular drive entrance. The door opener is on the side of our mailbox, close to the door on its right.\n\nOnce inside, there is an elevator which will go to any floor: our lower level (B) which houses our fellowship hall, the first floor (where the sanctuary and offices are) or the second floor (which hosts classrooms and our youth center).",
+            "name": "Adams Street circular drive"
+          },
+          {
+            "_key": "door-2",
+            "_type": "door",
+            "body": "The large wooden front doors which go into the sanctuary.",
+            "name": "The wooden front doors"
+          },
+          {
+            "_key": "door-3",
+            "_type": "door",
+            "body": "The Jefferson Street side doors which enter our main hallway near the church offices.",
+            "name": "Jefferson Street side doors"
+          }
+        ],
+        "heading": "Doors, parking and access",
+        "items": [
+          {
+            "_key": "time-2",
+            "_type": "timeItem",
+            "big": "{short address}",
+            "body": "Our parking lot is located on the Adams Street side.",
+            "label": "Find us"
+          },
+          {
+            "_key": "time-3",
+            "_type": "timeItem",
+            "body": "On Sundays, if you would like an assisted listening device, please ask one of our greeters or the Welcome Center and they will be happy to give you one.",
+            "label": "Assisted Listening"
+          },
+          {
+            "_key": "time-4",
+            "_type": "timeItem",
+            "body": "Wheelchair accessible restrooms, which also have baby changing tables, are on the first floor and the lower level (B).",
+            "label": "Restrooms"
+          }
+        ],
+        "photos": [
+          {
+            "_key": "photo-1",
+            "_type": "image",
+            "alt": "The glass doors at the Adams Street circular drive, the church's wheelchair accessible entrance, set into a carved limestone archway.",
+            "asset": {
+              "_ref": "image-757257774b6266ab0784e8b7174e63fd1a355139-1138x2400-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.5
+            }
+          }
+        ],
+        "showMap": true
+      },
+      {
+        "_key": "visit-children",
+        "_type": "imageTextSection",
+        "anchor": {
+          "_type": "slug",
+          "current": "children"
+        },
+        "body": [
+          {
+            "_key": "yc-lead-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "yc-lead-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "To create a safe environment for our children, First Baptist Church Muncie (FBCM) requires that all Children’s Ministry volunteers be background checked and children can only be picked up by a parent/guardian with a matching security tag."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "yc-h1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "yc-h1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Check-in"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "yc-a1-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "yc-a1-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "We have a check-in station for children at our Welcome Center, located on the first floor hallway just outside the sanctuary. Each child will be given a name tag. All children’s classrooms, birth through 5th grade, are in this same hallway."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "yc-h2",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "yc-h2s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Who cares for them"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "yc-a2-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "yc-a2-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Each classroom maintains at least two adults at all times. All Children's ministry volunteers are background checked and trained by an FBCM leader."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "yc-h3",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "yc-h3s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Pick-up"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "yc-a3-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "yc-a3-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Parents will get a security tag with a code that matches their child’s; this tag will need to be presented for pick up."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "kids1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "kids1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Nursery Care (104)"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "kids2-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "kids2-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "For children ages 3 and younger, nursery care is available throughout the service."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "kids3",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "kids3s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Family Room (105)"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "kids4-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "kids4-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "For little ones and parents who need to step out during service, this room provides toys, a live stream, rocking chairs, nursing privacy, and a changing table for all who desire it."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "kids5",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "kids5s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Children's Church (102)"
+              }
+            ],
+            "markDefs": [],
+            "style": "h3"
+          },
+          {
+            "_key": "kids6-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "kids6-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Students preschool - fifth grade will be dismissed to Children's Church during the service."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "kids7-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "kids7-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "There are two classes."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "kids8-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "kids8-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Preschool - 2nd grade: Kickstart Children's Church (102)"
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "kids9-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "kids9-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "3rd - 5th grade: The Underground Children's Church (102)"
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [],
+            "style": "normal"
+          }
+        ],
+        "cta": {
+          "_key": "cta-3",
+          "_type": "ctaBlock",
+          "externalUrl": "/ministries#children",
+          "label": "Children's ministry",
+          "linkType": "external",
+          "openInNewTab": false
+        },
+        "detail": {
+          "_type": "image",
+          "alt": "A sleeping newborn baby wrapped in a pink crocheted blanket, close-up portrait.",
+          "asset": {
+            "_ref": "image-402cc08f5c17eebd7ff8d54400c038db31ffd669-2400x1596-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.4
+          }
+        },
+        "heading": "Your children",
+        "image": {
+          "_type": "image",
+          "alt": "Children are seen from directly above, gathered around strips of yellow tape laid out on the floor for a group game.",
+          "asset": {
+            "_ref": "image-1e4a33b4e0b44a73e3d6b93e2e73daca0fee0350-1800x2400-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.55
+          }
+        },
+        "imageSide": "left"
+      },
+      {
+        "_key": "visit-faq",
+        "_type": "faqSection",
+        "heading": "Frequently asked questions",
+        "items": [
+          {
+            "_key": "q-2",
+            "_type": "faqItem",
+            "answer": [
+              {
+                "_key": "a2-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "a2-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Casual dress is welcome. People wear a variety of styles of clothes from short sleeves (especially in the summer), to suit jackets and “Sunday dresses.” Please dress comfortably and in a way which allows you to devote attention to worship."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "question": "What should I wear?"
+          },
+          {
+            "_key": "q-4",
+            "_type": "faqItem",
+            "answer": [
+              {
+                "_key": "a4-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "a4-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "We have a wheelchair accessible door, an elevator, two wheelchair-accessible bathrooms, and assisted listening devices available upon request. Our building was built in 1929, and is therefore not officially ADA compliant – though we have made efforts to retrofit our building to make it as accessible as possible. For more information "
+                  },
+                  {
+                    "_key": "a4-1s2",
+                    "_type": "span",
+                    "marks": [
+                      "a4-1l1"
+                    ],
+                    "text": "see Doors, parking and access"
+                  },
+                  {
+                    "_key": "a4-1s3",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "."
+                  }
+                ],
+                "markDefs": [
+                  {
+                    "_key": "a4-1l1",
+                    "_type": "link",
+                    "href": "/visit#accessibility"
+                  }
+                ],
+                "style": "normal"
+              }
+            ],
+            "question": "Is your building accessible / ADA compliant?"
+          },
+          {
+            "_key": "q-5",
+            "_type": "faqItem",
+            "answer": [
+              {
+                "_key": "a5-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "a5-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "We believe it is the Lord’s table, and all who believe in him and have been baptized may partake. This includes believing Christians, no matter their particular denomination."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "question": "Am I allowed to take the Lord’s Supper (communion)?"
+          },
+          {
+            "_key": "q-6",
+            "_type": "faqItem",
+            "answer": [
+              {
+                "_key": "a6-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "a6-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "It won’t be a problem at all! Anyone is welcome to attend our time of Worship. You may participate (in singing, the prayers, in Sunday Bible study) as you wish. And, if you want to see a service before you attend in-person, "
+                  },
+                  {
+                    "_key": "a6-1s2",
+                    "_type": "span",
+                    "marks": [
+                      "a6-1l1"
+                    ],
+                    "text": "check out our live streams"
+                  },
+                  {
+                    "_key": "a6-1s3",
+                    "_type": "span",
+                    "marks": [],
+                    "text": ". Please know the pastoral staff is always happy to discuss any questions you might have about our faith in God: Father, Son, & Holy Spirit."
+                  }
+                ],
+                "markDefs": [
+                  {
+                    "_key": "a6-1l1",
+                    "_type": "link",
+                    "href": "{sermons}"
+                  }
+                ],
+                "style": "normal"
+              }
+            ],
+            "question": "I don’t have a background in the Christian religion / I’m not sure what I believe. Will that be a problem if I want to visit?"
+          },
+          {
+            "_key": "q-7",
+            "_type": "faqItem",
+            "answer": [
+              {
+                "_key": "a7-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "a7-1s1",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Please contact the office. "
+                  },
+                  {
+                    "_key": "a7-1s2",
+                    "_type": "span",
+                    "marks": [
+                      "a7-1l1"
+                    ],
+                    "text": "You can find our contact form here"
+                  },
+                  {
+                    "_key": "a7-1s3",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "."
+                  }
+                ],
+                "markDefs": [
+                  {
+                    "_key": "a7-1l1",
+                    "_type": "link",
+                    "href": "{connect}"
+                  }
+                ],
+                "style": "normal"
+              }
+            ],
+            "question": "What if I have other questions?"
+          }
+        ]
+      },
+      {
+        "_key": "visit-connect",
+        "_type": "churchTracFormSection",
+        "anchor": {
+          "_type": "slug",
+          "current": "connect"
+        },
+        "form": {
+          "_ref": "churchTracForm-connection-card",
+          "_type": "reference"
+        },
+        "heading": "Let us know you’re coming"
+      },
+      {
+        "_key": "visit-heritage",
+        "_type": "heritageBandSection",
+        "anchor": {
+          "_type": "slug",
+          "current": "building"
+        },
+        "body": "FBCM’s building was completed in 1929. It has been on the National Register of Historic Places since 1988.",
+        "cta": {
+          "_key": "cta-4",
+          "_type": "ctaBlock",
+          "externalUrl": "/architecture",
+          "label": "Our building",
+          "linkType": "external",
+          "openInNewTab": false
+        },
+        "heading": "Our building",
+        "image": {
+          "_type": "image",
+          "alt": "The full limestone church building is seen from a street corner on a sunny day, tower and wings visible.",
+          "asset": {
+            "_ref": "image-acdfb085c3ec04c73b1c2286a61269b139fd6d87-3922x4902-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.3
+          }
+        }
+      },
+      {
+        "_key": "visit-cta",
+        "_type": "ctaBandSection",
+        "cta": {
+          "_key": "cta-5",
+          "_type": "ctaBlock",
+          "externalUrl": "/visit#connect",
+          "label": "Let us know you’re coming",
+          "linkType": "external",
+          "openInNewTab": false
+        },
+        "headline": "Come as you are.",
+        "secondaryCta": {
+          "_key": "cta-6",
+          "_type": "ctaBlock",
+          "externalUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+          "label": "Watch live",
+          "linkType": "external",
+          "openInNewTab": true
+        },
+        "subhead": "{service time}. {address}. A greeter will look out for you."
+      }
+    ],
+    "seoDescription": "Worship is {service time} at {address}, downtown Muncie. Park in the Adams Street lot. Casual dress, a nursery, and Children’s Church.",
+    "seoTitle": "Plan a visit | First Baptist Church Muncie, Indiana",
+    "slug": {
+      "_type": "slug",
+      "current": "visit"
+    },
+    "title": "Plan a visit"
+  },
+  {
+    "_createdAt": "2026-09-20T03:23:24Z",
+    "_id": "page-wedding",
+    "_rev": "bqs25zjusDOk2gZEdeIJCZ",
+    "_system": {
+      "base": {
+        "id": "page-wedding",
+        "rev": "zQicUBX7lBDfMtKkf747mZ"
+      }
+    },
+    "_type": "page",
+    "_updatedAt": "2026-10-05T20:31:06Z",
+    "addToMainNav": false,
+    "pageBuilder": [
+      {
+        "_key": "wed-hero",
+        "_type": "heroSection",
+        "eyebrow": "Weddings",
+        "frames": [
+          {
+            "_key": "frame-1",
+            "_type": "image",
+            "alt": "A bride and groom face each other at the chancel, their wedding party beside them and guests in the pews",
+            "asset": {
+              "_ref": "image-1d879a255d0f7db02e49ce2bb06543b1a241f28a-2400x1600-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.55,
+              "y": 0.55
+            }
+          },
+          {
+            "_key": "frame-2",
+            "_type": "image",
+            "alt": "A bride and groom embrace on the front steps before the church's red doors, her lace train spread down the stairs",
+            "asset": {
+              "_ref": "image-4a3214c220ab869fbae8961be9fcc13815e591ae-435x640-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.5
+            }
+          },
+          {
+            "_key": "frame-3",
+            "_type": "image",
+            "alt": "A wedding seen from the balcony, the wedding party at the chancel and the guests filling the pews below",
+            "asset": {
+              "_ref": "image-a0700430f600110014e00f8682ae1e693f18f864-1600x2400-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.6
+            }
+          }
+        ],
+        "headline": "Married here.",
+        "layout": "window",
+        "primaryCta": {
+          "_key": "cta-1",
+          "_type": "ctaBlock",
+          "externalUrl": "/wedding#reserve",
+          "label": "Reserving your wedding",
+          "linkType": "external",
+          "openInNewTab": false
+        },
+        "secondaryCta": {
+          "_key": "cta-2",
+          "_type": "ctaBlock",
+          "externalUrl": "/wedding#building-use",
+          "label": "Building use",
+          "linkType": "external",
+          "openInNewTab": false
+        },
+        "size": "short"
+      },
+      {
+        "_key": "wed-why",
+        "_type": "richTextSection",
+        "body": [
+          {
+            "_key": "wh-a-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "wh-a-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "First Baptist Church Muncie (FBCM) is a fitting wedding location and the facilities can be reserved for Christian weddings."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "wh-b-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "wh-b-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Building rentals for this purpose are something we do to share our building with sisters and brothers in Christ in the area so they might celebrate at a reasonable cost. Any associated fees are used exclusively for the cost of utilities, maintaining our building, and accounting for the time of our wedding coordinator, and others, who help make wedding ceremonies possible."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "wh-c-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "wh-c-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "If you are interested, please read the following information and requirements for using our building and decide if our church may be right for your wedding ceremony."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          }
+        ],
+        "heading": "A wedding at First Baptist"
+      },
+      {
+        "_key": "wed-coordinator",
+        "_type": "imageTextSection",
+        "body": [
+          {
+            "_key": "wh-d-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "wh-d-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Ella Mae is a long-time member of First Baptist Church who also serves as our Wedding Coordinator. She is the appropriate person to contact if you are interested in celebrating a Christian wedding ceremony at First Baptist."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          }
+        ],
+        "cta": {
+          "_key": "cta-3",
+          "_type": "ctaBlock",
+          "externalUrl": "mailto:wedding@fbcmuncie.org",
+          "label": "Email the wedding coordinator",
+          "linkType": "external",
+          "openInNewTab": true
+        },
+        "eyebrow": "Wedding Coordinator",
+        "heading": "Ella Mae Lemen",
+        "image": {
+          "_type": "image",
+          "alt": "Ella Mae Lemen, the church's wedding coordinator",
+          "asset": {
+            "_ref": "image-753f6f9f5e9cd4ff8ba89578241df26c4c530e20-3632x5448-jpg",
+            "_type": "reference"
+          }
+        },
+        "imageSide": "right"
+      },
+      {
+        "_key": "wed-spaces",
+        "_type": "gallerySection",
+        "anchor": {
+          "_type": "slug",
+          "current": "spaces"
+        },
+        "columns": 3,
+        "heading": "Our spaces",
+        "images": [
+          {
+            "_key": "gi-1",
+            "_type": "image",
+            "alt": "The sanctuary down the center aisle, the vaulted timber ceiling overhead",
+            "asset": {
+              "_ref": "image-55a3965193cd3a39e469880887bf17b0b7b8f6e0-2400x1600-jpg",
+              "_type": "reference"
+            },
+            "caption": "Sanctuary",
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.45
+            }
+          },
+          {
+            "_key": "gi-2",
+            "_type": "image",
+            "alt": "The bridal suite lounge",
+            "asset": {
+              "_ref": "image-4c49abdadc1909cc14276e1859b43a4e2ad6bb90-1600x758-jpg",
+              "_type": "reference"
+            },
+            "caption": "The Bridal Suite",
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.55
+            }
+          },
+          {
+            "_key": "gi-3",
+            "_type": "image",
+            "alt": "The fellowship hall",
+            "asset": {
+              "_ref": "image-c5a42d891105ad8f64b165b5ddff0f8aeb20afb3-1600x1066-jpg",
+              "_type": "reference"
+            },
+            "caption": "Fellowship Hall",
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.45,
+              "y": 0.5
+            }
+          },
+          {
+            "_key": "gi-4",
+            "_type": "image",
+            "alt": "The church kitchen",
+            "asset": {
+              "_ref": "image-cd0adc05ff989be1e46911194a02535e37e5783c-1600x758-jpg",
+              "_type": "reference"
+            },
+            "caption": "Kitchen",
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.45,
+              "y": 0.5
+            }
+          },
+          {
+            "_key": "gi-5",
+            "_type": "image",
+            "alt": "The youth center",
+            "asset": {
+              "_ref": "image-ebe114dd802c81d5b793574b1be9ac99c3451a1e-1600x758-jpg",
+              "_type": "reference"
+            },
+            "caption": "Youth Center",
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.5
+            }
+          }
+        ]
+      },
+      {
+        "_key": "wed-quote",
+        "_type": "quoteSection",
+        "attribution": "Hanna and Nathan",
+        "quote": "Looking back at our wedding, we are very thankful to have chosen First Baptist Muncie for our ceremony and to have had the pleasure to work with their staff. The care and help we received was genuine and thorough and the beauty of the building is unparalleled. Mrs. Lemen was always very quick to answer any questions and help with any accommodations. When it is all said and done, they celebrate the gift of marriage with you like family."
+      },
+      {
+        "_key": "wed-weddings",
+        "_type": "gallerySection",
+        "columns": 4,
+        "heading": "Weddings here",
+        "images": [
+          {
+            "_key": "gw-processional",
+            "_type": "image",
+            "alt": "Hanna and Nathan walk hand in hand down the sanctuary aisle past their guests",
+            "asset": {
+              "_ref": "image-0f7682c4513f5b23f1bc4ca7be569151e1ce2b8b-2400x1600-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.5,
+              "y": 0.5
+            }
+          },
+          {
+            "_key": "gw-bubbles",
+            "_type": "image",
+            "alt": "A bride and groom kiss on the church steps while their wedding party blows bubbles",
+            "asset": {
+              "_ref": "image-4afb02e7ac295800ab14f99b3963c0ae984988f7-1000x668-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.55,
+              "y": 0.4
+            }
+          },
+          {
+            "_key": "gw-red-doors",
+            "_type": "image",
+            "alt": "A wedding party celebrating in front of the church's red doors",
+            "asset": {
+              "_ref": "image-655381cf942bc373a180b84516ae3f0a36532608-1600x1067-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.42,
+              "y": 0.62
+            }
+          },
+          {
+            "_key": "gw-pew",
+            "_type": "image",
+            "alt": "A bride and groom share a kiss, seated in a sanctuary pew",
+            "asset": {
+              "_ref": "image-62dd5a11e4bee7576cce292547a91b546002873b-1440x963-jpg",
+              "_type": "reference"
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.3,
+              "width": 0.3,
+              "x": 0.4,
+              "y": 0.5
+            }
+          }
+        ]
+      },
+      {
+        "_key": "wed-credits",
+        "_type": "richTextSection",
+        "body": [
+          {
+            "_key": "cr-a-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "cr-a-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Photos used with permission from the couples and the photographers."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "cr-b-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "cr-b-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Special thanks to Ryann B Photography (Samantha and Jake), Melody Withers Photography (Hanna and Nathan), and Cara Boyer Photography (Olivia and Cameron)."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          }
+        ],
+        "width": "narrow"
+      },
+      {
+        "_key": "wed-reserve",
+        "_type": "richTextSection",
+        "anchor": {
+          "_type": "slug",
+          "current": "reserve"
+        },
+        "body": [
+          {
+            "_key": "rs-3",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "rs-3s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Talk with Ella Mae Lemen, the wedding coordinator, about your date and the building."
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "rs-2",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "rs-2s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Fill out the wedding information form online."
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "rs-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "rs-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Mail the signed contract, the information sheet and a deposit to First Baptist Church, {address}."
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "rs-fee-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "rs-fee-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "The documents below carry the fees."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          }
+        ],
+        "heading": "How to reserve the church"
+      },
+      {
+        "_key": "wed-documents",
+        "_type": "documentListSection",
+        "docs": [
+          {
+            "_key": "wd-1",
+            "_type": "listedDocument",
+            "file": {
+              "_type": "file",
+              "asset": {
+                "_ref": "file-18eeefe48def84d54fbfd1f9b55d3f8846e3a287-pdf",
+                "_type": "reference"
+              }
+            },
+            "note": "To reserve your date",
+            "title": "Wedding Contract"
+          },
+          {
+            "_key": "wd-2",
+            "_type": "listedDocument",
+            "file": {
+              "_type": "file",
+              "asset": {
+                "_ref": "file-dc34fd458246f098ff395ee7a6211c9e6721fb38-pdf",
+                "_type": "reference"
+              }
+            },
+            "note": "Everything to plan the day",
+            "title": "Bridal Packet"
+          },
+          {
+            "_key": "wd-3",
+            "_type": "listedDocument",
+            "note": "Fill this in online",
+            "title": "Wedding information form",
+            "url": "{wedding-enquiry}"
+          }
+        ],
+        "heading": "Wedding documents"
+      },
+      {
+        "_key": "wed-building-use",
+        "_type": "richTextSection",
+        "anchor": {
+          "_type": "slug",
+          "current": "building-use"
+        },
+        "body": [
+          {
+            "_key": "bu-a-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "bu-a-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Throughout our history and into the present, FBCM has opened up its facilities for use by friends and community organizations."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "bu-b-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "bu-b-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "If you would like to use our building on a short term basis in some other way, please fill out an online Building Use Request Form. Then only the Property Use Agreement must be signed and turned into the office."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "bu-lead-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "bu-lead-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Here are a few areas of our church you may be interested in:"
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "bu-c-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "bu-c-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Exterior Building"
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "bu-c-2",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "bu-c-2s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Fellowship Hall"
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "bu-c-3",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "bu-c-3s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Kitchen"
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "bu-c-4",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "bu-c-4s1",
+                "_type": "span",
+                "marks": [],
+                "text": "Youth Center"
+              }
+            ],
+            "level": 1,
+            "listItem": "bullet",
+            "markDefs": [],
+            "style": "normal"
+          },
+          {
+            "_key": "bu-fee-1",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "bu-fee-1s1",
+                "_type": "span",
+                "marks": [],
+                "text": "The documents below carry the fees."
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          }
+        ],
+        "heading": "Using the building for other events"
+      },
+      {
+        "_key": "wed-building-documents",
+        "_type": "documentListSection",
+        "docs": [
+          {
+            "_key": "bd-1",
+            "_type": "listedDocument",
+            "file": {
+              "_type": "file",
+              "asset": {
+                "_ref": "file-1420de4d03a3693029ac7ab78f94a784c1b3f2dd-pdf",
+                "_type": "reference"
+              }
+            },
+            "note": "Sign and return this to the office",
+            "title": "Property Use Agreement"
+          },
+          {
+            "_key": "bd-2",
+            "_type": "listedDocument",
+            "note": "Fill this in online",
+            "title": "Online request form",
+            "url": "{wedding-booking}"
+          }
+        ],
+        "heading": "Building documents"
+      },
+      {
+        "_key": "wed-cta",
+        "_type": "ctaBandSection",
+        "cta": {
+          "_key": "cta-4",
+          "_type": "ctaBlock",
+          "internalLink": {
+            "_ref": "page-contact",
+            "_type": "reference",
+            "_weak": true
+          },
+          "label": "Contact us",
+          "linkType": "internal"
+        },
+        "eyebrow": "Questions?",
+        "headline": "Talk to the office.",
+        "secondaryCta": {
+          "_key": "cta-5",
+          "_type": "ctaBlock",
+          "externalUrl": "mailto:wedding@fbcmuncie.org",
+          "label": "Email the wedding coordinator",
+          "linkType": "external",
+          "openInNewTab": true
+        },
+        "subhead": "{service time}. {address}."
+      }
+    ],
+    "seoDescription": "Reserve the sanctuary of First Baptist Church Muncie for a Christian wedding in downtown Muncie, or the fellowship hall, kitchen or youth center for an event.",
+    "seoTitle": "Wedding venue and building use | First Baptist Church Muncie",
+    "slug": {
+      "_type": "slug",
+      "current": "wedding"
+    },
+    "title": "Weddings and building use"
+  },
+  {
+    "_createdAt": "2026-09-19T14:00:18Z",
+    "_id": "siteSettings",
+    "_rev": "bqs25zjusDOk2gZEdgrPQt",
+    "_system": {
+      "base": {
+        "id": "siteSettings",
+        "rev": "iy8BT8xgnKmkUeFnvBk5LX"
+      }
+    },
+    "_type": "siteSettings",
+    "_updatedAt": "2026-10-05T21:53:32Z",
+    "address": "309 East Adams Street\nMuncie, IN 47305",
+    "appUrl": "https://open.churchtrac.com?code=8PG6ZJ",
+    "calendarUrl": "https://www.churchtrac.com/public_calendar?ui=0C7B1090",
+    "churchTracUrl": "https://fbcmuncie.churchtrac.com/",
+    "directionsUrl": "https://www.google.com/maps/search/?api=1&query=309+East+Adams+Street+Muncie+IN+47305",
+    "email": "office@fbcmuncie.org",
+    "footerColumns": [
+      {
+        "_key": "fcol-pages",
+        "_type": "footerColumn",
+        "links": [
+          {
+            "_key": "fcol-pages-visit",
+            "_type": "navLink",
+            "href": "/visit",
+            "label": "Visit"
+          },
+          {
+            "_key": "fcol-pages-who",
+            "_type": "navLink",
+            "href": "/who-we-are",
+            "label": "Who We Are"
+          },
+          {
+            "_key": "fcol-pages-beliefs",
+            "_type": "navLink",
+            "href": "/beliefs",
+            "label": "Beliefs"
+          },
+          {
+            "_key": "fcol-pages-ministries",
+            "_type": "navLink",
+            "href": "/ministries",
+            "label": "Ministries"
+          },
+          {
+            "_key": "fcol-pages-staff",
+            "_type": "navLink",
+            "href": "/staff",
+            "label": "Staff"
+          },
+          {
+            "_key": "fcol-pages-history",
+            "_type": "navLink",
+            "href": "/history",
+            "label": "History"
+          },
+          {
+            "_key": "fcol-pages-give",
+            "_type": "navLink",
+            "href": "/give",
+            "label": "Give"
+          },
+          {
+            "_key": "fcol-pages-blog",
+            "_type": "navLink",
+            "href": "/blog",
+            "label": "Blog"
+          },
+          {
+            "_key": "fcol-pages-wedding",
+            "_type": "navLink",
+            "href": "/wedding",
+            "label": "Weddings and Building Use"
+          },
+          {
+            "_key": "fcol-pages-contact",
+            "_type": "navLink",
+            "href": "/contact",
+            "label": "Contact"
+          }
+        ],
+        "title": "Pages"
+      },
+      {
+        "_key": "fcol-elsewhere",
+        "_type": "footerColumn",
+        "links": [
+          {
+            "_key": "fcol-elsewhere-ct",
+            "_type": "navLink",
+            "externalUrl": "https://fbcmuncie.churchtrac.com/",
+            "label": "Church Trac: newsletters and the app",
+            "linkType": "external"
+          },
+          {
+            "_key": "fcol-elsewhere-yt",
+            "_type": "navLink",
+            "externalUrl": "https://www.youtube.com/c/FbcmuncieOrg",
+            "label": "YouTube: every service",
+            "linkType": "external"
+          }
+        ],
+        "title": "Elsewhere"
+      }
+    ],
+    "givingUrl": "https://fbcmuncie.churchcenter.com/giving",
+    "headerCta": {
+      "label": "Give",
+      "link": {
+        "_type": "navLink",
+        "externalUrl": "{giving}",
+        "label": "Give",
+        "linkType": "external"
+      },
+      "show": true
+    },
+    "lifeEventFormUrl": "https://fbcmuncie.churchtrac.com/notify-the-church",
+    "livestreamUrl": "https://www.youtube.com/@FbcmuncieOrg/streams",
+    "navItems": [
+      {
+        "_key": "nav-visit",
+        "_type": "navLink",
+        "href": "/visit",
+        "label": "Visit"
+      },
+      {
+        "_key": "nav-group-who",
+        "_type": "navGroup",
+        "label": "Our Church",
+        "links": [
+          {
+            "_key": "sub-who",
+            "_type": "navSubLink",
+            "href": "/who-we-are",
+            "label": "Who We Are"
+          },
+          {
+            "_key": "sub-beliefs",
+            "_type": "navSubLink",
+            "href": "/beliefs",
+            "label": "Beliefs"
+          },
+          {
+            "_key": "sub-staff",
+            "_type": "navSubLink",
+            "href": "/staff",
+            "label": "Staff"
+          },
+          {
+            "_key": "sub-history",
+            "_type": "navSubLink",
+            "href": "/history",
+            "label": "History"
+          },
+          {
+            "_key": "sub-contact",
+            "_type": "navSubLink",
+            "href": "/contact",
+            "label": "Contact"
+          }
+        ]
+      },
+      {
+        "_key": "nav-ministries",
+        "_type": "navLink",
+        "href": "/ministries",
+        "label": "Ministries"
+      },
+      {
+        "_key": "nav-whats-on",
+        "_type": "navLink",
+        "href": "/events",
+        "label": "What's On"
+      },
+      {
+        "_key": "nav-weddings",
+        "_type": "navLink",
+        "href": "/wedding",
+        "label": "Weddings"
+      },
+      {
+        "_key": "nav-group-news",
+        "_type": "navGroup",
+        "label": "News",
+        "links": [
+          {
+            "_key": "sub-blog",
+            "_type": "navSubLink",
+            "href": "/blog",
+            "label": "Blog"
+          },
+          {
+            "_key": "sub-visitor",
+            "_type": "navSubLink",
+            "href": "/visitor",
+            "label": "The Visitor"
+          },
+          {
+            "_key": "sub-kids-corner",
+            "_type": "navSubLink",
+            "href": "/kids-corner",
+            "label": "The Kid's Corner"
+          },
+          {
+            "_key": "sub-youth-news",
+            "_type": "navSubLink",
+            "href": "/youth-news",
+            "label": "The Moose's Message"
+          }
+        ]
+      }
+    ],
+    "officeHours": [
+      {
+        "_key": "seed-1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-2",
+            "_type": "span",
+            "marks": [],
+            "text": "Monday to Thursday: 9 am to 12 pm and 1 pm to 4 pm"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "seed-3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-4",
+            "_type": "span",
+            "marks": [],
+            "text": "Friday: 9 am to 12 pm"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "seed-5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-6",
+            "_type": "span",
+            "marks": [],
+            "text": "Sunday: 9 am to 12 pm (church open; office not staffed)"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "seed-7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-8",
+            "_type": "span",
+            "marks": [],
+            "text": "Hours may change on holidays."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "pastoralHours": [
+      {
+        "_key": "seed-9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "seed-10",
+            "_type": "span",
+            "marks": [],
+            "text": "Tuesdays: 9 am to 12 pm and 1 pm to 5 pm"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "phone": "(765) 284-7749",
+    "prayerUrl": "https://fbcmuncie.churchtrac.com/pray",
+    "sectionVisibility": {
+      "showJournal": true
+    },
+    "serviceLength": "About an hour",
+    "serviceTime": "Sundays at 10:45 am",
+    "socialLinks": [
+      {
+        "_key": "k0",
+        "_type": "socialLink",
+        "platform": "Facebook",
+        "url": "https://www.facebook.com/firstbaptistmuncie"
+      },
+      {
+        "_key": "k1",
+        "_type": "socialLink",
+        "platform": "Instagram",
+        "url": "https://www.instagram.com/fbcmuncie/"
+      },
+      {
+        "_key": "social-threads",
+        "_type": "socialLink",
+        "platform": "Threads",
+        "url": "https://www.threads.net/@fbcmuncie"
+      },
+      {
+        "_key": "social-linktree",
+        "_type": "socialLink",
+        "platform": "Linktree",
+        "url": "https://linktr.ee/fbcmuncie"
+      }
+    ],
+    "tagline": "We're a Spirit-led people gathered to join Christ's presence in our community.",
+    "title": "First Baptist Church Muncie",
+    "visitorFormUrl": "https://fbcmuncie.churchtrac.com/connectcard",
+    "weddingBookingUrl": "https://fbcmuncie.churchtrac.com/building-use-request",
+    "weddingEnquiryUrl": "https://fbcmuncie.churchtrac.com/wedding-information",
+    "wednesdayUrl": "https://fbcmuncie.churchtrac.com/fbcs-wednesday-weekly",
+    "youtubeUrl": "https://www.youtube.com/c/FbcmuncieOrg"
+  }
+]

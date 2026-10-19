@@ -479,8 +479,9 @@ export default {
           _type: 'ctaBandSection',
           _key: 'wed-cta',
           eyebrow: 'Questions?',
-          headline: 'Talk to the office.',
-          subhead: `${settings.serviceTime}. ${streetLine}.`,
+          headline: 'Contact us.',
+          // Not the Sunday service time: nobody is in the office during worship (2026-10-19).
+          subhead: `${streetLine}.`,
           cta: ctaInternal('Contact us', 'contact'),
           secondaryCta: ctaExternal('Email the wedding coordinator', `mailto:${coordinator.email}`),
         },
