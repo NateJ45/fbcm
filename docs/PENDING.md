@@ -1997,6 +1997,23 @@ from the old site is approved by the church.
   default, one line per photo, writes nothing), then `--apply`. A second run reports
   `cached` for everything. `--overwrite-meta` replaces metadata an asset already has;
   without it only empty fields are filled, so editors' changes survive a re-run.
+  A batch the church sends (not from Wix) goes through `scripts/add-church-photos.mjs`
+  instead: a short JSON list (`scripts/data/church-photos-<yyyy-mm>.json`) beside a
+  folder of originals in `../fbcm-archive/<folder>/`, source marker
+  `fbcm-church-photos`, same dry-then-`--apply` shape. A `library` entry and
+  `place-ministry-photos.mjs` find either marker (`LIBRARY_SOURCES` in
+  `scripts/lib/page-images.mjs`).
+- **Church photo batch of 2026-10-19 (16 photos, in the library).** From Pastor
+  Jonathan: youth room (ping pong, foosball), a 2024 youth outing, a Life Group at a
+  fire pit (two), lunches for Muncie Central High School teachers (four), the March
+  2025 clothing closet day (three), a story time on steps, and Christmas Eve 2025
+  (nativity twice, candlelight). Placed: Youth, Adult and Outreach ministry photos
+  and the Ministries hero's youth light. Not placed yet: the Christmas three (seasonal;
+  a December home frame or the Advent saved section), the outing, the closet day and
+  story time, for an editor or a later pass. The candlelight photo is a side view, so
+  the Worship goal's front-on congregation photo is still wanted. Left out of the
+  drop: soft or blurred frames, backs to the camera, a camera raw file, and four
+  images that were exports of photos already in the library.
 - **Side effect at the next rebuild.** `queries.ts` falls back to the asset's
   `altText` when an image has no alt of its own. Only the 17 Staff page photos do
   that: their alt was the person's name and becomes the library's sentence (for
@@ -2020,7 +2037,8 @@ from the old site is approved by the church.
     photographers' names), which the page had cut on the wrong reading that no
     couple's photo was on it.
   - /ministries: Adult (a women's fellowship breakfast) and Outreach (the Serve Your
-    City team) have photos for the first time; Children is now VBS singing, so the
+    City team) have photos for the first time (both replaced 2026-10-19 by the
+    church's own batch, with Youth: see the batch entry above); Children is now VBS singing, so the
     four-children photo is not used three times. These live on the ministry
     documents, set by `scripts/place-ministry-photos.mjs` (dry by default).
   - How: a `page-images.json` entry can now be `{ "library": "<archive file>" }`,

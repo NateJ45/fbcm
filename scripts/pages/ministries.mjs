@@ -258,7 +258,9 @@ export default {
     // The middle light is the widest and tallest, so it goes first (Hero.astro's
     // window): the palm-branch children, the one portrait of the three. The
     // youth room and the musicians are landscapes, cropped to the side lights.
-    const heroYouth = await photo('ministries-hero-youth', 0.78, 0.3);
+    // The youth light is the foosball table the church sent on 2026-10-19 (it was
+    // teens at a card table from the Wix years); its focus is the boy in the cap.
+    const heroYouth = await photo('ministries-hero-youth', 0.42, 0.4);
     const heroPalms = await photo('ministries-hero-palms', 0.5, 0.55);
     const heroMusicians = await photo('ministries-hero-musicians', 0.42, 0.5);
 

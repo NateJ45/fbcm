@@ -1,0 +1,903 @@
+{
+  "_createdAt": "2026-09-20T01:10:36Z",
+  "_id": "page-ministries",
+  "_rev": "bqs25zjusDOk2gZEdeIJCZ",
+  "_system": {
+    "base": {
+      "id": "page-ministries",
+      "rev": "r3OMep2eOIG3C5V37An80u"
+    }
+  },
+  "_type": "page",
+  "_updatedAt": "2026-10-05T20:31:06Z",
+  "addToMainNav": false,
+  "pageBuilder": [
+    {
+      "_key": "ministries-hero",
+      "_type": "heroSection",
+      "facts": [
+        {
+          "_key": "fact-1",
+          "_type": "heroFact",
+          "label": "Children",
+          "value": "Nursery through fifth grade"
+        },
+        {
+          "_key": "fact-2",
+          "_type": "heroFact",
+          "label": "Youth",
+          "value": "Grades 6 to 12"
+        },
+        {
+          "_key": "fact-3",
+          "_type": "heroFact",
+          "label": "Adults",
+          "value": "College and career to retirees"
+        }
+      ],
+      "frames": [
+        {
+          "_key": "frame-1",
+          "_type": "image",
+          "alt": "Children holding palm branches in a stone hallway, warm light coming through the leaded windows.",
+          "asset": {
+            "_ref": "image-66199736e30b8ec5c160729ea87001f77a00ef08-1920x2400-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.5,
+            "y": 0.55
+          }
+        },
+        {
+          "_key": "frame-2",
+          "_type": "image",
+          "alt": "Teenagers laughing around a table in the youth room, cards in hand and a Bible on the table.",
+          "asset": {
+            "_ref": "image-f4a02d623edfdb736ef24629dbeb367ac7e24923-2048x969-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.78,
+            "y": 0.3
+          }
+        },
+        {
+          "_key": "frame-3",
+          "_type": "image",
+          "alt": "Two musicians rehearsing by the staircase, one at the drums and one on bass guitar.",
+          "asset": {
+            "_ref": "image-e734157252df111dc84ae943fa09f91631c1e19b-2070x1380-jpg",
+            "_type": "reference"
+          },
+          "hotspot": {
+            "_type": "sanity.imageHotspot",
+            "height": 0.3,
+            "width": 0.3,
+            "x": 0.42,
+            "y": 0.5
+          }
+        }
+      ],
+      "headline": "Every age has a place here.",
+      "layout": "window",
+      "primaryCta": {
+        "_key": "cta-1",
+        "_type": "ctaBlock",
+        "externalUrl": "/ministries#get-involved",
+        "label": "Get involved",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "secondaryCta": {
+        "_key": "cta-2",
+        "_type": "ctaBlock",
+        "externalUrl": "/events",
+        "label": "What’s On",
+        "linkType": "external",
+        "openInNewTab": false
+      },
+      "size": "short",
+      "subhead": "First Baptist Church Muncie (FBCM) believes that God created the church to be intergenerational."
+    },
+    {
+      "_key": "ministries-sunday",
+      "_type": "timelineSection",
+      "heading": "A Sunday for every age",
+      "rows": [
+        {
+          "_key": "row-1",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "ss-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Intergenerational Bible Study (B-04): Led by Jim Butler, this intergenerational Bible Study includes adults of all ages."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-2",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-2s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Friendship Class (B-05): Led by Pastor Jonathan, this class primarily consists of a mix of couples with children at home, but is open to adults of all ages."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-3",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-3s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Youth Large Group (201): Sixth through twelfth (6th-12th) grade students join in discussions about life and faith."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-4",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-4s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Children's Sunday School (102): Children's Worship Arts - Music education & Spiritual formation."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "ss-5",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ss-5s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "6 weeks - 3 years: Nursery (104)"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "9:30 am",
+          "title": "Sunday school and Bible study"
+        },
+        {
+          "_key": "row-2",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "dh-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "dh-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Between Bible study and Worship, join in a time of fellowship (and, of course, donuts)!"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "10:15 am",
+          "title": "Donut hour"
+        },
+        {
+          "_key": "row-3",
+          "_type": "timelineRow",
+          "body": [
+            {
+              "_key": "wr-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wr-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Children preschool through 5th grade join their families in the sanctuary for the first part of worship (~15 minutes) before being dismissed to Children's Church."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "wrb-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wrb-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Nursery Care (104): For children ages 3 and younger, nursery care is available throughout the service."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "wrb-2",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wrb-2s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Family Room (105): For little ones and parents who need to step out during service, this room provides toys, a live stream, rocking chairs, nursing privacy, and a changing table for all who desire it."
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "wrb-3",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wrb-3s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Kickstart Children's Church (102): Preschool - 2nd grade"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "wrb-4",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "wrb-4s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "The Underground Children's Church (102): 3rd - 5th grade"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "marker": "{time}",
+          "title": "Worship, children's church and nursery"
+        }
+      ]
+    },
+    {
+      "_key": "ministries-worship",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "worship"
+      },
+      "imageSide": "right",
+      "ministry": {
+        "_ref": "ministry-worship",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-children",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "children"
+      },
+      "imageSide": "left",
+      "ministry": {
+        "_ref": "ministry-children",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-children-faq",
+      "_type": "faqSection",
+      "eyebrow": "Children",
+      "heading": "Questions parents ask",
+      "items": [
+        {
+          "_key": "q-4",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a4-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a4-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Absolutely! We encourage it! There are containers in each classroom in which the children can place their offering."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "Can children bring an offering?"
+        },
+        {
+          "_key": "q-5",
+          "_type": "faqItem",
+          "answer": [
+            {
+              "_key": "a5-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a5-1s1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "No. But they are welcome to if they have their own. In Sunday School and Children’s Church the kids will be looking over passages in the Bible. We will certainly provide a Bible if your child does not have one."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "question": "Does my child need to bring a Bible?"
+        }
+      ]
+    },
+    {
+      "_key": "ministries-youth",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "youth"
+      },
+      "imageSide": "right",
+      "ministry": {
+        "_ref": "ministry-youth",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-adult",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "adult"
+      },
+      "ministry": {
+        "_ref": "ministry-adult",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-outreach",
+      "_type": "ministrySection",
+      "anchor": {
+        "_type": "slug",
+        "current": "outreach"
+      },
+      "ministry": {
+        "_ref": "ministry-outreach",
+        "_type": "reference"
+      }
+    },
+    {
+      "_key": "ministries-stay-updated",
+      "_type": "richTextSection",
+      "body": [
+        {
+          "_key": "su-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Stay updated"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "su-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "There are many ways to get the latest information about what is happening in Adult ministry or any of our ministries."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "su-b-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-b-1s1",
+              "_type": "span",
+              "marks": [
+                "su-b-1l1"
+              ],
+              "text": "Wednesday Weekly"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "su-b-1l1",
+              "_type": "link",
+              "href": "{wednesday}"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "su-b-2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-b-2s1",
+              "_type": "span",
+              "marks": [
+                "su-b-2l1"
+              ],
+              "text": "The Visitor Quarterly"
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "su-b-2l1",
+              "_type": "link",
+              "href": "/visitor"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "su-b-3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "su-b-3s1",
+              "_type": "span",
+              "marks": [
+                "su-b-3l1"
+              ],
+              "text": "Our Church App."
+            }
+          ],
+          "level": 1,
+          "listItem": "bullet",
+          "markDefs": [
+            {
+              "_key": "su-b-3l1",
+              "_type": "link",
+              "href": "{app}"
+            }
+          ],
+          "style": "normal"
+        }
+      ]
+    },
+    {
+      "_key": "ministries-get-involved",
+      "_type": "richTextSection",
+      "anchor": {
+        "_type": "slug",
+        "current": "get-involved"
+      },
+      "body": [
+        {
+          "_key": "gi-a-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-a-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "If you wish to be a part of our ministry, contact us!"
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "gi-h1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-h1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Serve on Sunday"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "gi-c-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-c-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Write to "
+            },
+            {
+              "_key": "gi-c-1s2",
+              "_type": "span",
+              "marks": [
+                "gi-c-1l1"
+              ],
+              "text": "worship@fbcmuncie.org"
+            },
+            {
+              "_key": "gi-c-1s3",
+              "_type": "span",
+              "marks": [],
+              "text": "."
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "gi-c-1l1",
+              "_type": "link",
+              "href": "mailto:worship@fbcmuncie.org"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "gi-h2",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-h2s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Sing and play"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "gi-e-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-e-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Write to "
+            },
+            {
+              "_key": "gi-e-1s2",
+              "_type": "span",
+              "marks": [
+                "gi-e-1l1"
+              ],
+              "text": "cynthia@fbcmuncie.org"
+            },
+            {
+              "_key": "gi-e-1s3",
+              "_type": "span",
+              "marks": [],
+              "text": "."
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "gi-e-1l1",
+              "_type": "link",
+              "href": "mailto:cynthia@fbcmuncie.org"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "gi-h3",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-h3s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Help with children"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "gi-g-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-g-1s1",
+              "_type": "span",
+              "marks": [
+                "gi-g-1l1"
+              ],
+              "text": "Contact the church office."
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "gi-g-1l1",
+              "_type": "link",
+              "href": "/contact"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "gi-h4",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-h4s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Help with youth"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "gi-i-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-i-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Write to "
+            },
+            {
+              "_key": "gi-i-1s2",
+              "_type": "span",
+              "marks": [
+                "gi-i-1l1"
+              ],
+              "text": "youth@fbcmuncie.org"
+            },
+            {
+              "_key": "gi-i-1s3",
+              "_type": "span",
+              "marks": [],
+              "text": "."
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "gi-i-1l1",
+              "_type": "link",
+              "href": "mailto:youth@fbcmuncie.org"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "gi-h5",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-h5s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Join a Life Group"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "gi-k-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-k-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "If you’re interested in joining a small group, or are seeking more information, contact "
+            },
+            {
+              "_key": "gi-k-1s2",
+              "_type": "span",
+              "marks": [
+                "gi-k-1l1"
+              ],
+              "text": "adult@fbcmuncie.org"
+            },
+            {
+              "_key": "gi-k-1s3",
+              "_type": "span",
+              "marks": [],
+              "text": "."
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "gi-k-1l1",
+              "_type": "link",
+              "href": "mailto:adult@fbcmuncie.org"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "gi-h6",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-h6s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Serve our community"
+            }
+          ],
+          "markDefs": [],
+          "style": "h3"
+        },
+        {
+          "_key": "gi-m-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-m-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "Write to "
+            },
+            {
+              "_key": "gi-m-1s2",
+              "_type": "span",
+              "marks": [
+                "gi-m-1l1"
+              ],
+              "text": "outreach@fbcmuncie.org"
+            },
+            {
+              "_key": "gi-m-1s3",
+              "_type": "span",
+              "marks": [],
+              "text": "."
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "gi-m-1l1",
+              "_type": "link",
+              "href": "mailto:outreach@fbcmuncie.org"
+            }
+          ],
+          "style": "normal"
+        },
+        {
+          "_key": "gi-n-1",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "gi-n-1s1",
+              "_type": "span",
+              "marks": [],
+              "text": "To become a member, be baptized or speak with a pastor, "
+            },
+            {
+              "_key": "gi-n-1s2",
+              "_type": "span",
+              "marks": [
+                "gi-n-1l1"
+              ],
+              "text": "use the connection card"
+            },
+            {
+              "_key": "gi-n-1s3",
+              "_type": "span",
+              "marks": [],
+              "text": "."
+            }
+          ],
+          "markDefs": [
+            {
+              "_key": "gi-n-1l1",
+              "_type": "link",
+              "href": "/visit#connect"
+            }
+          ],
+          "style": "normal"
+        }
+      ],
+      "heading": "Get involved"
+    },
+    {
+      "_key": "ministries-cta",
+      "_type": "ctaBandSection",
+      "cta": {
+        "_key": "cta-3",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-visit",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Plan a visit",
+        "linkType": "internal"
+      },
+      "eyebrow": "Come and see",
+      "headline": "Find your place.",
+      "secondaryCta": {
+        "_key": "cta-4",
+        "_type": "ctaBlock",
+        "internalLink": {
+          "_ref": "page-contact",
+          "_type": "reference",
+          "_weak": true
+        },
+        "label": "Contact us",
+        "linkType": "internal"
+      },
+      "subhead": "{service time}. {address}."
+    }
+  ],
+  "seoDescription": "Worship arts, children, youth, adults and outreach at First Baptist Church Muncie: Sunday school at 9:30 am, worship at {time}, and who to ask about each.",
+  "seoTitle": "Ministries | First Baptist Church Muncie",
+  "slug": {
+    "_type": "slug",
+    "current": "ministries"
+  },
+  "title": "Ministries"
+}

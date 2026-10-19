@@ -197,9 +197,9 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 ### Photos of children
 
 - ministry-children-vbs: Children singing on stage at Vacation Bible School
-- ministries-youth: Two teens singing into microphones in front of the youth group
+- ministries-youth: A church member takes on two teenagers at ping pong in the youth room
 - ministries-hero-palms: Children holding palm branches in a stone hallway, warm light coming through the leaded windows.
-- ministries-hero-youth: Teenagers laughing around a table in the youth room, cards in hand and a Bible on the table.
+- ministries-hero-youth: Three teenagers playing foosball in the youth room, the ping pong table behind them
 
 ## /staff
 
@@ -472,7 +472,7 @@ Sentences on the new site that did not exist on the Wix site, for the church to 
 
 ### Edits to the church’s own text
 
-- (none: each door's words under the sketch are the list's own)
+- (none: each door's words are the list's own; nothing is reprinted under the sketch since 2026-10-09)
 
 ## Scripture index and site search (2026-09-24, `feat/scripture-search`)
 

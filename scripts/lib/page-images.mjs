@@ -9,6 +9,8 @@
 //     media library (scripts/upload-photo-library.mjs). Nothing is resized or uploaded:
 //     the asset is found by its source marker (source.name "fbcm-wix-archive",
 //     source.id = the archive filename), so a page uses the library's one copy.
+//     Photos the church sends later (scripts/add-church-photos.mjs) carry
+//     source.name "fbcm-church-photos" and their batch file name, and resolve the same way.
 //   { "same": "<other key>", "alt": "..." }  -- an alias: resolves to the target key's
 //     resized file and asset, so a photo reused on several pages is uploaded exactly
 //     once, under the target key's cache filename. The alias's own "alt" wins for the
@@ -30,6 +32,8 @@ const CACHE = resolve(ROOT, 'scripts', '.page-images');
 const MANIFEST = resolve(ROOT, 'scripts', 'data', 'page-images.json');
 
 const ASSET_MAP = resolve(ROOT, 'scripts', '.asset-map.json');
+/** The source markers a `library` entry may be found under (see the header). */
+export const LIBRARY_SOURCES = ['fbcm-wix-archive', 'fbcm-church-photos'];
 
 export function loadManifest() {
   return JSON.parse(readFileSync(MANIFEST, 'utf8'));
@@ -154,12 +158,13 @@ export function makePageImages(uploadClient) {
   async function libraryAsset(file) {
     if (libraryIds.has(file)) return libraryIds.get(file);
     const id = await uploadClient.fetch(
-      `*[_type == "sanity.imageAsset" && source.name == "fbcm-wix-archive" && source.id == $file][0]._id`,
-      { file },
+      `*[_type == "sanity.imageAsset" && source.name in $sources && source.id == $file][0]._id`,
+      { file, sources: LIBRARY_SOURCES },
     );
     if (!id) {
       throw new Error(
-        `page-images: ${file} is not in the media library. Run scripts/upload-photo-library.mjs.`,
+        `page-images: ${file} is not in the media library. Run scripts/upload-photo-library.mjs ` +
+          '(Wix archive) or scripts/add-church-photos.mjs (a batch the church sent).',
       );
     }
     libraryIds.set(file, id);

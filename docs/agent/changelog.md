@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-19: new church photos (`feat/church-photos-2026-10`)._
+
+Pastor Jonathan sent 26 photos; 16 went into the media library with title, alt, description and tags through the new `scripts/add-church-photos.mjs` (batch list `scripts/data/church-photos-2026-10.json`, source marker `fbcm-church-photos`, which `page-images.mjs` and `place-ministry-photos.mjs` now resolve beside the Wix one). Placed, backup-first: Youth (ping pong in the youth room, was two teens singing on a stage), Adult (a Life Group around a fire pit, was a fellowship breakfast) and Outreach (lunches carried into Muncie Central High School, was the Serve Your City team) on their ministry documents, and the Ministries hero's youth light (foosball, was teens at a card table), patched alone because the live page has drifted from its seed. The rest wait in the library (`docs/PENDING.md`).
+
 _2026-10-19: Visitors card now reads GA4 and Search Console through studio-status (card 136)._
 
 _2026-10-19: Studio complete, phase B (`feat/studio-complete-b`, starter card 137 wired in)._

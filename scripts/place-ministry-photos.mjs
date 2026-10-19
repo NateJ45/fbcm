@@ -1,10 +1,15 @@
-// Sets the photograph on three Ministry documents from the Sanity media library
-// (the photo placement pass, 2026-09-23). The Ministries page draws each ministry's
-// band from its own document (src/lib/ministry-band.ts), so the photo lives there,
-// not in scripts/pages/ministries.mjs.
+// Sets the photograph on four Ministry documents from the Sanity media library
+// (the photo placement pass, 2026-09-23; youth, adult and outreach renewed on
+// 2026-10-19 from the photos the church sent, scripts/data/church-photos-2026-10.json).
+// The Ministries page draws each ministry's band from its own document
+// (src/lib/ministry-band.ts), so the photo lives there, not in scripts/pages/ministries.mjs.
 //
-//   Adult     had no photo, so its band drew as text: a women's fellowship breakfast.
-//   Outreach  had no photo either: the Serve Your City team.
+//   Youth     was two teens singing on a stage, from the Wix years: now ping pong in
+//             the youth room, a church member against two teens.
+//   Adult     a women's fellowship breakfast from 2026-09-23 until a Life Group
+//             around a fire pit, Bibles open, replaced it.
+//   Outreach  the Serve Your City team from 2026-09-23 until volunteers bringing lunch
+//             to Muncie Central High School replaced it.
 //   Children  used the four-children photo that the home hero and /visit also used:
 //             now children singing on stage at Vacation Bible School.
 //
@@ -24,6 +29,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { client, dataset } from './lib/sanity-lib.mjs';
 import { requireProductionWrite } from './lib/production-write.mjs';
+import { LIBRARY_SOURCES } from './lib/page-images.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WRITE = process.argv.includes('--write');
@@ -34,14 +40,22 @@ requireProductionWrite({ write: WRITE, dataset, flag: '--write' });
 
 const PLACEMENTS = [
   {
+    id: 'ministry-youth',
+    file: 'youth-ping-pong.jpg',
+    alt: 'A church member takes on two teenagers at ping pong in the youth room',
+  },
+  {
     id: 'ministry-adult',
-    file: '08181c_ea565de6ebd54eb492cc0160af1b3853_tilde_mv2.jpg',
-    alt: 'Women of the church around a table at a fellowship breakfast',
+    file: 'adult-life-group-fire.jpg',
+    alt: 'A Life Group meets around a back-yard fire pit, Bibles open on their laps',
   },
   {
     id: 'ministry-outreach',
-    file: '81f7ac_4dfaba15047d43a696c7e8f53df065b8_tilde_mv2.jpg',
-    alt: 'The Serve Your City team, all ages, holding up the day’s shirt',
+    file: 'outreach-muncie-central-arrival.jpg',
+    alt: 'Two church volunteers wheel a cart of catered lunches up to Muncie Central High School',
+    // A portrait with the volunteers at the left edge; the band's arch crops the
+    // sides, so the focus keeps them in it.
+    hotspot: { x: 0.3, y: 0.6 },
   },
   {
     id: 'ministry-children',
@@ -61,8 +75,8 @@ function backupPath() {
 async function main() {
   const docs = await client.fetch(`*[_id in $ids]`, { ids: PLACEMENTS.map((p) => p.id) });
   const assets = await client.fetch(
-    `*[_type == "sanity.imageAsset" && source.name == "fbcm-wix-archive" && source.id in $files]{_id, "file": source.id}`,
-    { files: PLACEMENTS.map((p) => p.file) },
+    `*[_type == "sanity.imageAsset" && source.name in $sources && source.id in $files]{_id, "file": source.id}`,
+    { files: PLACEMENTS.map((p) => p.file), sources: LIBRARY_SOURCES },
   );
 
   const plan = [];
@@ -71,14 +85,24 @@ async function main() {
     if (!doc) throw new Error(`${p.id}: no such document`);
     const asset = assets.find((a) => a.file === p.file);
     if (!asset)
-      throw new Error(`${p.file} is not in the media library; run upload-photo-library.mjs`);
+      throw new Error(
+        `${p.file} is not in the media library; run upload-photo-library.mjs or add-church-photos.mjs`,
+      );
     const current = doc.image?.asset?._ref ?? null;
-    const done = current === asset._id && doc.image?.alt === p.alt;
+    const hotspot = p.hotspot
+      ? { _type: 'sanity.imageHotspot', ...p.hotspot, width: 0.3, height: 0.3 }
+      : undefined;
+    const done =
+      current === asset._id &&
+      doc.image?.alt === p.alt &&
+      doc.image?.hotspot?.x === hotspot?.x &&
+      doc.image?.hotspot?.y === hotspot?.y;
     console.log(
       `${done ? 'already set' : 'SET        '} ${p.id.padEnd(18)} ` +
-        `${current ?? '(no photo)'} -> ${asset._id}\n${' '.repeat(31)}alt: "${p.alt}"`,
+        `${current ?? '(no photo)'} -> ${asset._id}\n${' '.repeat(31)}alt: "${p.alt}"` +
+        (hotspot ? `\n${' '.repeat(31)}focus: ${hotspot.x}, ${hotspot.y}` : ''),
     );
-    if (!done) plan.push({ doc, asset, alt: p.alt });
+    if (!done) plan.push({ doc, asset, alt: p.alt, hotspot });
   }
 
   if (!plan.length) return console.log('\nNothing to do.');
@@ -90,10 +114,15 @@ async function main() {
   console.log(`\nBacked up ${docs.length} document(s) verbatim to ${path}`);
 
   const tx = client.transaction();
-  for (const { doc, asset, alt } of plan) {
+  for (const { doc, asset, alt, hotspot } of plan) {
     tx.patch(doc._id, (patch) =>
       patch.ifRevisionId(doc._rev).set({
-        image: { _type: 'image', asset: { _type: 'reference', _ref: asset._id }, alt },
+        image: {
+          _type: 'image',
+          asset: { _type: 'reference', _ref: asset._id },
+          alt,
+          ...(hotspot ? { hotspot } : {}),
+        },
       }),
     );
   }
