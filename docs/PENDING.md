@@ -132,7 +132,7 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       (2026-10-18); private pages (`PRIVATE_PAGE_SECRET`) are not. Card 121 (the custom code block)
       likewise: only its Checkup rules came across, and they find nothing here.
 - [ ] **Signed-in checks nobody has done yet** (the kit was verified signed out only): Home opens
-      first with the navy banner (tower on a disc, lancets along the foot, the name in gold); the
+      first with the navy banner (the bare tower, FIRST BAPTIST CHURCH in capitals with Muncie in the gold italic, the Hannaford rendering along the foot; art pass 2026-10-19); the
       status line; the Sunday checklist's hand ticks (one `studioWeek-<date>` document); Quick
       update's two forms publish a banner; the Fix-it list's Edit buttons open the right field;
       "Help for this page" beside a page; Move to Trash and Bring it back on a banner; the staff

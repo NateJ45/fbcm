@@ -311,11 +311,23 @@ export const kitConfig: KitConfig = {
   // the site footer's own art (scripts/gen-studio-art.mjs): the four goal
   // glyphs on a gold rule and the 1927 Hannaford rendering in gold; and the
   // editor's name in the logo's gold.
+  // Set as the site sets its own big lines: the name in Castoro Titling
+  // capitals with one word in the gold italic (the footer's "Praise PROCLAIM"),
+  // the tower bare on the navy (no white disc: on the site it stands on the
+  // dark ground), the editor's name in the site's gold, and the 1927 Hannaford
+  // rendering inking in along the foot. All from scripts/gen-studio-art.mjs.
   homeBanner: {
     mark: '/favicon.svg',
+    markOnDark: '/studio-art/tower.svg',
     motif: '/studio-banner/foot.svg',
     motifNarrow: '/studio-banner/foot-phone.svg',
     accent: '#D59B29',
+    lettering: {
+      text: 'Muncie',
+      family: 'FBCM Castoro Italic',
+      src: '/studio-art/castoro-italic.woff2',
+      colors: ['#D59B29'],
+    },
   },
 
   // Home's big buttons (card 110): the office's most common jobs. Keep it to four.
