@@ -10,6 +10,8 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-19: Visitors card now reads GA4 and Search Console through studio-status (card 136)._
+
 _2026-10-19: the Studio covers the church's real weekly jobs (`feat/studio-complete`, phase A of the "Studio complete" pass; starter card 137 follows)._
 
 `docs/agent/studio-plan.md` maps who edits (the office, the pastor), their weekly, monthly and seasonal jobs, and the Studio surface for each. Quick update gains "Post Sunday's sermon preview" (publishes under Sermon Preview, so the home page names the sermon), "Write a short news post" (FBCM Events) and "Post a photo" (card 125, now on, drafts only); the builders are in `src/lib/quick-updates.ts`, tested. The Sunday checklist gains the sermon preview, which ticks itself. Home's big buttons swap "Update the staff list" for "Add this month's Visitor". Seven new guides, a "Once in a while" category, shot blocks in eight guides (`src/sanity/guides/shots.ts`, card 130), 15 "How to" field chips (card 134), the guides' block type is now the kit's (`KitGuideBlock`) and `GuideView` passes `section` through. Tours and the welcome and What's new modals are written as data in `src/sanity/guides/tours.ts`; video scripts in `docs/agent/studio-videos.md`. Both wait on card 137.

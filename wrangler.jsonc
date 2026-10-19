@@ -61,7 +61,14 @@
   // "Share a preview" (/api/studio/share-preview/) needs one secret, 32+ random
   // characters: npx wrangler secret put SHARE_PREVIEW_SECRET. Without it the
   // dialog says links are not set up and /preview ignores ?share=.
+  // Visitors card (starter PORTS.md card 136): GA4 and Search Console read through
+  // studio-status. SITE_DATA_KEY names this site there; ANALYTICS_PROVIDER picks ga4.
+  "services": [
+    { "binding": "SITE_DATA", "service": "studio-status", "entrypoint": "SiteData" }
+  ],
   "vars": {
+    "SITE_DATA_KEY": "fbcm",
+    "ANALYTICS_PROVIDER": "ga4",
     "GITHUB_REPO": "NateJ45/fbcm",
     "CF_ACCOUNT_ID": "7e75a15ddc72aae04dca71aca5c7294b",
   },
