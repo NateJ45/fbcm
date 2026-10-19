@@ -62,9 +62,14 @@ function resolveFile(abs: string): string {
  * Files inside an excluded tree that a rendered page may import because they
  * carry no Tailwind classes by contract: the /studio loading splash's motif
  * (PORTS.md card 120) is drawn with an inline style, and the page it sits on
- * (src/pages/studio/index.astro) styles itself in its own <style> block.
+ * (src/pages/studio/index.astro) styles itself in its own <style> block. The
+ * kit's test bench (card 128, src/pages/kit-harness/[name].astro, dev server
+ * only) mounts the Studio, which is styled by Sanity UI, never by Tailwind.
  */
-const NO_TAILWIND = new Set([path.join(SRC, 'sanity', 'StudioSplashMotif.astro')]);
+const NO_TAILWIND = new Set([
+  path.join(SRC, 'sanity', 'StudioSplashMotif.astro'),
+  path.join(SRC, 'sanity', 'kit', 'harness', 'Harness.tsx'),
+]);
 
 const rendersClasses = (file: string) =>
   !NO_TAILWIND.has(file) &&

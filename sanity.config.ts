@@ -44,6 +44,9 @@ import { studioWording } from './src/sanity/studioWording';
 import { studioEdges } from './src/sanity/studioEdges.config';
 // The site's own font files for the Studio (rewritten by apply-brand; card 116).
 import './src/sanity/studioFonts.css';
+// Home's banner set in the church's grammar: eyebrow, italic greeting, the gold
+// square button, the rendering behind the words (site-owned, 2026-10-19).
+import './src/sanity/studioHomeBanner.css';
 import brand from './brand/brand.config.json';
 import { CharacterCountInput } from './src/sanity/components/CharacterCountInput';
 import { documentBadges } from './src/sanity/components/documentBadges';
@@ -118,6 +121,11 @@ export default defineConfig({
   // deprecated and was never drawn; the login screen showed "My Studio".)
   title: brand.name,
   icon: StudioIcon,
+  // Sign in with a session TOKEN, not Sanity's default (a cookie where the
+  // browser allows one). The kit's Worker routes (/api/studio/*) check a Bearer
+  // token; a cookie session sends none and every route answers 401 (card 129).
+  // Each editor signs in once more after the site takes this line.
+  auth: { loginMethod: 'token' },
   // The line under the name on the sign-in card (card 120).
   subtitle: wording.subtitle,
   // The site's words on Sanity's screens: signed-out notice, user menu.

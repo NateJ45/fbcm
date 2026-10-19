@@ -43,8 +43,7 @@
             "--color-bg",
             "--color-bg-soft",
             "--color-border-soft",
-            "--color-white-pure",
-            "--color-gold"
+            "--color-white-pure"
           ],
           "properties": {
             "--color-primary": { "$ref": "#/definitions/hex" },
@@ -56,11 +55,7 @@
             "--color-bg": { "$ref": "#/definitions/hex" },
             "--color-bg-soft": { "$ref": "#/definitions/hex" },
             "--color-border-soft": { "$ref": "#/definitions/hex" },
-            "--color-white-pure": { "$ref": "#/definitions/hex" },
-            "--color-gold": {
-              "$ref": "#/definitions/hex",
-              "description": "A FILL and an on-dark ink (badges, rules, text on the dark band) — never a paper ink. --color-accent / --color-accent-dark carry that role and must stay in the primary/navy family; this schema cannot itself forbid pointing them at --color-gold's value, so that constraint is enforced by src/lib/theme-tokens.test.ts instead (it asserts --color-accent and --color-accent-dark at AA body text against the paper surfaces, which gold fails)."
-            }
+            "--color-white-pure": { "$ref": "#/definitions/hex" }
           }
         },
         "light": {
@@ -213,6 +208,16 @@
       "description": "Border-radius personality token (e.g. '0.5rem', '0.25rem', '1rem'). Drives --radius in globals.css.",
       "pattern": "^[0-9]+(\\.[0-9]+)?(rem|px|em)$"
     },
+    "layout": {
+      "type": "object",
+      "description": "Structure variants (the second axis beside palette and fonts). Each slot's FIRST value is the original layout. See src/lib/site-layout.ts.",
+      "properties": {
+        "header": { "type": "string", "enum": ["inline", "centered", "minimal"] },
+        "hero": { "type": "string", "enum": ["bleed", "split", "editorial"] },
+        "density": { "type": "string", "enum": ["standard", "airy", "tight"] },
+        "cards": { "type": "string", "enum": ["standard", "outline", "soft"] }
+      }
+    },
     "workerName": {
       "type": ["string", "null"],
       "description": "Cloudflare Worker name. When set (non-null) and domain != example.com, apply-brand rewrites the 'name' field in wrangler.jsonc. null = leave wrangler.jsonc untouched."
@@ -240,6 +245,71 @@
         "accent": {
           "$ref": "#/definitions/hex",
           "description": "Optional. The Studio's accent (primary buttons, links, focus rings) when the site's palette.light --primary is wrong for UI chrome. Only its hue and saturation are used; src/lib/studio-theme.ts solves the lightness and guards contrast (PORTS.md card 110)."
+        },
+        "look": {
+          "type": "object",
+          "description": "Optional. The site's own devices inside the Studio (PORTS.md card 128, src/lib/studio-look.ts): every family site should differ in form, not only colour. Unset keys take neutral defaults (a dot marker, round stones, a plain line, no texture, no lettering). Colours are guarded for contrast; an unusable value is ignored with a note.",
+          "properties": {
+            "marker": {
+              "description": "The section marker: \"dot\", \"steps\", \"rule\" or \"diamond\", or the site's own art { src (a path in public/), width, height }.",
+              "oneOf": [
+                { "type": "string", "enum": ["dot", "steps", "rule", "diamond"] },
+                {
+                  "type": "object",
+                  "required": ["src", "width", "height"],
+                  "properties": {
+                    "src": { "type": "string" },
+                    "width": { "type": "number" },
+                    "height": { "type": "number" }
+                  }
+                }
+              ]
+            },
+            "markerColor": { "$ref": "#/definitions/hex" },
+            "headingColor": { "$ref": "#/definitions/hex" },
+            "markColors": {
+              "type": "array",
+              "description": "The numbered stones' colours, in order.",
+              "items": { "$ref": "#/definitions/hex" }
+            },
+            "stone": { "type": "string", "enum": ["pebble", "round", "square", "lozenge"] },
+            "connector": {
+              "type": "object",
+              "properties": {
+                "kind": { "type": "string", "enum": ["dashes", "dots", "line", "none"] },
+                "color": { "$ref": "#/definitions/hex" }
+              }
+            },
+            "tones": {
+              "type": "object",
+              "description": "The callout hues: note, tip, careful.",
+              "properties": {
+                "note": { "$ref": "#/definitions/hex" },
+                "tip": { "$ref": "#/definitions/hex" },
+                "careful": { "$ref": "#/definitions/hex" }
+              }
+            },
+            "motif": {
+              "type": "string",
+              "description": "A wide, short SVG in public/ for a banner's foot."
+            },
+            "motifNarrow": { "type": "string" },
+            "texture": {
+              "type": "string",
+              "description": "A repeating tile SVG in public/ for featured panels."
+            },
+            "edgeColors": { "type": "array", "items": { "$ref": "#/definitions/hex" } },
+            "lettering": {
+              "type": "object",
+              "required": ["family", "src"],
+              "properties": {
+                "family": { "type": "string" },
+                "src": { "type": "string" },
+                "colors": { "type": "array", "items": { "$ref": "#/definitions/hex" } }
+              }
+            },
+            "motion": { "type": "string", "enum": ["lay", "draw", "none"] }
+          }
         },
         "icons": {
           "type": "object",
