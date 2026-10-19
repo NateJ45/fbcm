@@ -16,7 +16,18 @@ sequence).
 
 ## Waiting on a human
 
-### 0. Cutover in progress (2026-10-19): finish once the zone is active
+### 0. Cutover LIVE (2026-10-19): the rest of the list
+
+Update, same day: the zone went active, `fbcm-site` is attached to `www.fbcmuncie.org` and
+`fbcmuncie.org`, and a zone redirect rule sends the apex to www (301, canonical stays www). Sanity
+CORS has both origins. After attaching, the edge served a stale cached Wix page on the plain URL
+(Age about 23 h) until the zone cache was purged; purge if it ever recurs. Verified: 200 on www
+pages, GPTBot, ClaudeBot and PerplexityBot get 200, robots.txt is ours, `verify:redirects` 47 of 48
+(the one miss, `/team/michelle-heimlich`, is the `/staff` to `/staff/` 307 hop, same on workers.dev).
+Still open: Church Trac embed domains, Search Console, Bing, Rich Results, IndexNow first run, GA/Web
+Analytics tokens, Wix cancellation timing, and the Google MX question below.
+
+Original note, written before the zone was active:
 
 The `fbcmuncie.org` Cloudflare zone exists (full setup) and the registrar's nameservers now point
 at `opal.ns.cloudflare.com` and `porter.ns.cloudflare.com`. DNS was at Wix before. Carried across:
