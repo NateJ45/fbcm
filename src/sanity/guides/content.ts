@@ -1089,6 +1089,7 @@ guides.push(
     title: 'Quick update from your phone',
     icon: 'bolt',
     lead: 'The weekly jobs, made small enough for a phone.',
+    video: 'quick-update-tour',
     diy: 'self',
     body: [
       {
@@ -1450,6 +1451,7 @@ guides.push(
     title: 'Post a photo from your phone',
     icon: 'image',
     lead: 'Straight from the camera to a page’s gallery or a new blog post.',
+    video: 'post-a-photo',
     diy: 'self',
     body: [
       {

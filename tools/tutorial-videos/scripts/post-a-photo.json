@@ -1,0 +1,54 @@
+{
+  "slug": "post-a-photo",
+  "title": "Post a photo from your phone",
+  "start": "/quick-update",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "ready": "[data-tour=\"quick-list\"]",
+  "steps": [
+    {
+      "do": "ring",
+      "target": "[data-quick=\"post-photo\"]",
+      "caption": "Post a photo is first on Quick update.",
+      "ms": 2000,
+      "poster": true
+    },
+    {
+      "do": "click",
+      "target": "[data-quick=\"post-photo\"]",
+      "caption": "It opens one step at a time."
+    },
+    {
+      "do": "ring",
+      "target": "text:Take a photo",
+      "caption": "Take a photo with your camera.",
+      "ms": 2200
+    },
+    {
+      "do": "ring",
+      "target": "text:Choose from your photos",
+      "caption": "Or pick one you already have.",
+      "ms": 2200
+    },
+    {
+      "do": "wait",
+      "ms": 600,
+      "caption": "Then describe it, choose where it goes, and save."
+    },
+    {
+      "do": "wait",
+      "ms": 1800,
+      "caption": "It is a draft until you press Publish."
+    }
+  ],
+  "cover": {
+    "selectors": [
+      "[data-ui=\"whats-new-card\"]",
+      "[data-ui=\"Popover\"]:has([data-ui=\"whats-new-card\"])",
+      "[data-testid=\"whats-new-root\"]",
+      "[data-testid=\"whats-new-card\"]"
+    ]
+  }
+}
