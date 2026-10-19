@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-19: arch photos fetched at the width they are drawn (`fix/arch-photo-sharpness`)._
+
+The /ministries window hero's side lights looked pixelated: each is 2.6 times taller than wide, so `object-fit: cover` draws a landscape photo about 4.6 times the light's width, while `sizes` described the light, and the browser fetched a 160 to 320px image for a photo drawn about 720px wide. `ArchFrame` now multiplies its `sizes` and srcset ceiling by that factor (`src/lib/cover-sizes.ts`, unit-tested), capped at the uploaded width, so every arch on the site gets enough pixels; at 1280 the side lights fetch 800px at 1x and 1600px at 2x.
+
 _2026-10-19: Visitors card now reads GA4 and Search Console through studio-status (card 136)._
 
 _2026-10-19: Studio complete, phase B (`feat/studio-complete-b`, starter card 137 wired in)._
