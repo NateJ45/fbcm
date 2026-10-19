@@ -36,6 +36,7 @@
 
 import { defineType, defineField } from 'sanity';
 import { SECTION_TYPES, additionalSectionsField, sectionArrayOptions } from './sections';
+import { pageBuilderAuthoring } from '../pageBuilderAuthoring';
 import { PUBLISH_AT_GROUP, publishAtField } from './_publishAt';
 
 interface PageDefaults {
@@ -135,11 +136,15 @@ export function definePageSingleton(
         of: SECTION_TYPES,
         // Grouped + searchable insert menu, in the form AND in the preview canvas.
         options: sectionArrayOptions,
+        // The authoring kit (card 109): Insert a saved section, plus gentle warnings.
+        ...pageBuilderAuthoring,
       }),
-      {
+      // The authoring kit (card 109) on the extra sections too.
+      defineField({
         ...additionalSectionsField,
+        ...pageBuilderAuthoring,
         group: 'builder',
-      },
+      }),
 
       // ── SEO ───────────────────────────────────────────────────────────────
       defineField({

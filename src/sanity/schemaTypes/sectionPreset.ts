@@ -39,7 +39,7 @@
 
 import { defineType, defineField } from 'sanity';
 import { BlockElementIcon } from '@sanity/icons/BlockElement';
-import { SECTION_TYPES, sectionArrayOptions } from './sections';
+import { LIBRARY_SECTION_TYPES, sectionArrayOptions } from './sections';
 import { RICH_SECTION_TYPES } from './richSections';
 import { sectionTitle } from '../sectionTitles';
 
@@ -65,13 +65,17 @@ export const sectionPreset = defineType({
     }),
     defineField({
       name: 'section',
-      title: 'The section',
+      title: 'The section (or sections)',
       type: 'array',
-      of: [...SECTION_TYPES, ...RICH_SECTION_TYPES],
+      // Never syncedSection (LIBRARY_SECTION_TYPES, card 109), so no loop can exist.
+      of: [...LIBRARY_SECTION_TYPES, ...RICH_SECTION_TYPES],
       options: sectionArrayOptions,
       description:
-        'The saved section itself. Change it here and the next page you add it to gets the new version; pages that already have it are not touched.',
-      validation: (R) => R.max(1).error('A saved section holds one section. Remove the extra one.'),
+        'What gets added to a page. Add more than one to make a set that always goes together, like an Easter invitation. Pages that show this as a synced section change when you publish here; pages that got a copy keep their own.',
+      validation: (R) => [
+        R.min(1).warning('Add at least one section, or this saved section adds nothing.'),
+        R.max(12).error('A saved section can hold up to 12 sections. Split it into two.'),
+      ],
     }),
     defineField({
       name: 'note',
@@ -82,13 +86,19 @@ export const sectionPreset = defineType({
     }),
   ],
   preview: {
-    select: { title: 'title', sectionType: 'sectionType', note: 'note' },
-    prepare({ title, sectionType, note }) {
+    select: { title: 'title', sectionType: 'sectionType', note: 'note', section: 'section' },
+    prepare({ title, sectionType, note, section }) {
+      const count = Array.isArray(section) ? section.length : 0;
+      const first =
+        typeof sectionType === 'string' && sectionType
+          ? sectionType
+          : count > 0 && typeof section[0]?._type === 'string'
+            ? section[0]._type
+            : null;
+      const kind = count > 1 ? `${count} sections` : first ? sectionTitle(first) : null;
       return {
         title: title || '(unnamed saved section)',
-        subtitle: [typeof sectionType === 'string' ? sectionTitle(sectionType) : null, note]
-          .filter(Boolean)
-          .join(', '),
+        subtitle: [kind, note].filter(Boolean).join(', '),
       };
     },
   },

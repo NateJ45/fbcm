@@ -28,9 +28,9 @@ export const CTA_PROJECTION = `{
 //
 // Parameterized by field name so it serves both `pageBuilder` (custom pages)
 // and `additionalSections` (the flexible append zone on core pages).
-export function sectionsProjection(field = 'pageBuilder'): string {
-  return `${field}[]{
-    ...,
+// The per-type arms, shared by a page's own sections and by the sections a
+// synced section shows (below), so a block renders the same either way.
+const SECTION_ARMS = `
     _type == "heroSection" => {
       ...,
       backgroundImage${IMAGE_PROJECTION},
@@ -240,6 +240,27 @@ export function sectionsProjection(field = 'pageBuilder'): string {
       "form": form->{ _id, title, embed, size }
     }
     // scaffold:end
+`;
+
+// Synced sections (the authoring kit, PORTS.md card 109). The block holds only
+// a reference to a saved section; resolve it here into `sections`, run through
+// the SAME arms, and SectionRenderer swaps the block for them in place
+// (expandSyncedSections in src/lib/authoring.ts). One level only: a saved
+// section cannot hold a synced section, so there is nothing deeper to resolve.
+// A missing saved section resolves to null and renders nothing. (The reference
+// is strong, so Sanity refuses to delete a saved section a page still uses.)
+export function sectionsProjection(field = 'pageBuilder'): string {
+  return `${field}[]{
+    ...,
+    ${SECTION_ARMS},
+    _type == "syncedSection" => {
+      ...,
+      "presetTitle": preset->title,
+      "sections": preset->section[]{
+        ...,
+        ${SECTION_ARMS}
+      }
+    }
   }`;
 }
 
@@ -700,7 +721,7 @@ export async function getAllPageSlugs(): Promise<string[]> {
 let footerPages: Promise<{ title?: string; navLabel?: string; slug?: string }[]> | null = null;
 export function getFooterPages() {
   footerPages ??= sanityFetch<{ title?: string; navLabel?: string; slug?: string }>(
-    `*[_type == "page" && defined(slug.current) && archived != true && addToFooter == true]|order(title asc){
+    `*[_type == "page" && defined(slug.current) && archived != true && hideFromSearch != true && addToFooter == true]|order(title asc){
       title,
       navLabel,
       "slug": slug.current
@@ -715,10 +736,12 @@ export function getFooterPages() {
 // and Footer.astro can inject these alongside the built-in links.
 //
 // Archived pages drop out: the page is not built, so a menu link to it would be
-// a 404 in the middle of the navigation.
+// a 404 in the middle of the navigation. So do pages with "Hide this page from
+// Google and the menus" on (hideFromSearch, starter card 122), here and in
+// getFooterPages above.
 export async function getNavPages() {
   return sanityFetch(
-    `*[_type == "page" && defined(slug.current) && archived != true && (addToMainNav == true || addToFooter == true)]{
+    `*[_type == "page" && defined(slug.current) && archived != true && hideFromSearch != true && (addToMainNav == true || addToFooter == true)]{
     title,
     "slug": slug.current,
     navLabel,

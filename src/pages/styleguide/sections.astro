@@ -1,0 +1,442 @@
+---
+// Foundation, edit with care
+//
+// THE SECTIONS WALL: one of every page-builder block, rendered through the real
+// SectionRenderer with FIXED data (the authoring kit, PORTS.md card 109).
+//
+// WHAT IT IS FOR. `npm run thumbnails` (scripts/shoot-section-thumbnails.mjs)
+// shoots each `[data-section-type]` box below into
+// public/section-thumbnails/<type>.jpg, and those pictures are what the
+// "+ Add item" menu's grid view shows in the Studio. So the picture the church
+// office picks from is the block as this site actually draws it, in the
+// church's colours and type, not a generic drawing. Re-run after a redesign.
+//
+// src/lib/authoring.test.ts fails if a block type in sections.ts,
+// richSections.ts or churchSections.ts has no fixture here (it looks for
+// `_type: '<name>'`) or no picture on disk, so a new block cannot ship
+// without a thumbnail.
+//
+// Fixed data on purpose (see styleguide.astro). Collection-fed blocks (the
+// staff grid, the ministry band, the latest posts, a Church Trac form) get
+// their rows inline, already in the shape the GROQ projection produces. The
+// images are fake Sanity references; the script answers the CDN request with
+// tests/visual/fixtures/layout-hero.jpg, so no network is needed. Not shot by
+// the visual suite, and like the other walls: noindex, out of the sitemap
+// ('/styleguide' is filtered in astro.config.mjs) and under a reserved slug.
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionRenderer from '@/components/SectionRenderer.astro';
+import { site } from '@/data/site';
+
+const image = (alt = 'A photo of the church') => ({
+  _type: 'image',
+  alt,
+  asset: {
+    _type: 'reference',
+    _ref: 'image-0123456789abcdef0123456789abcdef01234567-1600x900-jpg',
+  },
+});
+
+const para = (key: string, text: string) => ({
+  _type: 'block',
+  _key: key,
+  style: 'normal',
+  markDefs: [],
+  children: [{ _type: 'span', _key: `${key}-s`, marks: [], text }],
+});
+
+const cta = (label: string) => ({
+  _type: 'ctaBlock',
+  label,
+  linkType: 'external',
+  externalUrl: '#',
+});
+
+/** The Site settings the church blocks read, fixed so the pictures never move. */
+const SETTINGS = {
+  title: 'First Baptist Church Muncie',
+  serviceTime: 'Sundays at 10:45 am',
+  address: '309 East Adams Street',
+  city: 'Muncie',
+  state: 'Indiana',
+  givingUrl: '#',
+  officeHours: [para('oh', 'Monday to Thursday, 9:00 am to 3:00 pm')],
+  pastoralHours: [para('ph', 'By appointment')],
+};
+
+const SECTIONS: Record<string, unknown>[] = [
+  {
+    _type: 'heroSection',
+    _key: 'hero',
+    eyebrow: 'Welcome',
+    headline: 'A page heading in a few words',
+    subhead: 'One sentence that says what this page is about.',
+    size: 'short',
+    backgroundImage: image(),
+    primaryCta: cta('Plan your visit'),
+    secondaryCta: cta('Watch a service'),
+  },
+  {
+    _type: 'richTextSection',
+    _key: 'text',
+    eyebrow: 'About',
+    heading: 'A heading over some words',
+    body: [
+      para(
+        't1',
+        'Paragraphs of words with a heading above them. Good for most of what a page says.',
+      ),
+      para('t2', 'A second paragraph, so the block reads as a block of words.'),
+    ],
+  },
+  {
+    _type: 'imageTextSection',
+    _key: 'imagetext',
+    imageSide: 'right',
+    eyebrow: 'Picture and words',
+    heading: 'Words beside a photo',
+    body: [para('i1', 'Two or three sentences next to a picture, with a button underneath.')],
+    image: image(),
+    cta: cta('Find out more'),
+  },
+  {
+    _type: 'gallerySection',
+    _key: 'gallery',
+    heading: 'Photos',
+    columns: 3,
+    images: [image('One'), image('Two'), image('Three')].map((img, i) => ({
+      ...img,
+      _key: `g${i}`,
+    })),
+  },
+  {
+    _type: 'quoteSection',
+    _key: 'quote',
+    quote: 'A short, warm word from someone in the church.',
+    attribution: 'A church member',
+  },
+  {
+    _type: 'statSection',
+    _key: 'stats',
+    heading: 'At a glance',
+    stats: [
+      { _key: 's1', _type: 'statItem', number: 12, label: 'groups each week' },
+      { _key: 's2', _type: 'statItem', number: 5, label: 'ministries' },
+      { _key: 's3', _type: 'statItem', number: 1, label: 'service each Sunday' },
+    ],
+  },
+  {
+    _type: 'ctaBandSection',
+    _key: 'ctaband',
+    eyebrow: 'Next step',
+    headline: 'Come and see',
+    subhead: 'One line that says what happens when you press the button.',
+    cta: cta('Plan your visit'),
+  },
+  {
+    _type: 'videoSection',
+    _key: 'video',
+    heading: 'A video',
+    url: 'https://www.youtube.com/watch?v=aaaaaaaaaaa',
+    caption: 'A short caption under the video.',
+  },
+  { _type: 'spacerSection', _key: 'spacer', variant: 'space' },
+  {
+    _type: 'logoStripSection',
+    _key: 'logos',
+    eyebrow: 'Together with',
+    headline: 'Our partners',
+    layout: 'row',
+    logos: [image('Partner one'), image('Partner two'), image('Partner three')].map((img, i) => ({
+      ...img,
+      _key: `l${i}`,
+    })),
+  },
+  {
+    _type: 'embedSection',
+    _key: 'embed',
+    eyebrow: 'Embed',
+    headline: 'A map, form or calendar from another site',
+    subhead: 'Paste a link and it shows here.',
+    heightHint: 'short',
+    embedUrl: 'https://embed.example.com/map',
+  },
+  // scaffold: church
+  {
+    _type: 'sundayTimesSection',
+    _key: 'sunday',
+    eyebrow: 'Sundays',
+    heading: 'When we gather',
+    items: [
+      { _key: 'w1', _type: 'timeItem', label: 'Worship', big: '10:45 am', body: 'About an hour.' },
+      {
+        _key: 'w2',
+        _type: 'timeItem',
+        label: 'Sunday school',
+        big: '9:30 am',
+        body: 'For every age.',
+      },
+    ],
+    notes: ['A nursery for little ones.'],
+    showMap: false,
+  },
+  {
+    _type: 'timelineSection',
+    _key: 'timeline',
+    eyebrow: 'Our story',
+    heading: 'A timeline',
+    rows: [
+      {
+        _key: 'r1',
+        _type: 'timelineRow',
+        marker: 'Then',
+        title: 'Where it started',
+        body: [para('r1b', 'A sentence about what happened.')],
+      },
+      {
+        _key: 'r2',
+        _type: 'timelineRow',
+        marker: '1927',
+        title: 'A new building',
+        body: [para('r2b', 'A sentence about what happened.')],
+      },
+    ],
+  },
+  {
+    _type: 'staffGridSection',
+    _key: 'staff',
+    eyebrow: 'Our people',
+    heading: 'Our pastors',
+    group: 'pastors',
+    members: ['Pastor one', 'Pastor two'].map((name, i) => ({
+      _id: `p${i}`,
+      name,
+      role: 'Co-Pastor',
+      group: 'pastors',
+      photo: image(name),
+    })),
+  },
+  {
+    _type: 'faqSection',
+    _key: 'faq',
+    eyebrow: 'Questions',
+    heading: 'Questions people ask',
+    items: ['What should I wear?', 'Is there a nursery?', 'Where do I park?'].map(
+      (question, i) => ({
+        _key: `q${i}`,
+        _type: 'faqItem',
+        question,
+        answer: [para(`a${i}`, 'A short, friendly answer.')],
+      }),
+    ),
+  },
+  {
+    _type: 'scriptureBandSection',
+    _key: 'scripture',
+    verse: 'Give praise to the Lord, proclaim his name.',
+    reference: 'Isaiah 12:4',
+  },
+  {
+    _type: 'heritageBandSection',
+    _key: 'heritage',
+    eyebrow: 'Our building',
+    heading: 'A home on Adams Street',
+    body: 'A few sentences about the building and its story.',
+    image: image(),
+    dates: [
+      { _key: 'd1', _type: 'heritageDate', year: '1927', text: 'The building is finished.' },
+      { _key: 'd2', _type: 'heritageDate', now: true, text: 'Still gathering here today.' },
+    ],
+  },
+  {
+    _type: 'giveBandSection',
+    _key: 'give',
+    heading: 'Give',
+    body: 'One sentence on what giving makes possible.',
+    buttonLabel: 'Give online',
+    buttonUrl: '#',
+  },
+  { _type: 'hoursSection', _key: 'hours', eyebrow: 'The office', heading: 'Office hours' },
+  {
+    _type: 'documentListSection',
+    _key: 'docs',
+    heading: 'Documents',
+    docs: [
+      { _key: 'f1', _type: 'listedDocument', title: 'Annual report', year: 2025, url: '#' },
+      { _key: 'f2', _type: 'listedDocument', title: 'Church constitution', year: 2024, url: '#' },
+    ],
+  },
+  {
+    _type: 'linkCardsSection',
+    _key: 'cards',
+    heading: 'Find your way in',
+    cards: [
+      {
+        _key: 'c1',
+        _type: 'linkCard',
+        title: 'Visit',
+        body: 'What to expect on a Sunday.',
+        cta: cta('Plan your visit'),
+        glyph: 'door',
+      },
+      {
+        _key: 'c2',
+        _type: 'linkCard',
+        title: 'Worship',
+        body: 'How we worship together.',
+        cta: cta('Find out more'),
+        glyph: 'window',
+      },
+      {
+        _key: 'c3',
+        _type: 'linkCard',
+        title: 'Serve',
+        body: 'Ways to help in Muncie.',
+        cta: cta('Find out more'),
+        glyph: 'basin',
+      },
+    ],
+  },
+  {
+    _type: 'ministrySection',
+    _key: 'ministry',
+    imageSide: 'right',
+    ministry: {
+      _id: 'm1',
+      title: 'Children',
+      slug: 'children',
+      eyebrow: 'Ministries',
+      headline: 'A place for children',
+      body: [para('mb', 'A few sentences about the ministry, drawn from the ministry itself.')],
+      image: image(),
+      contacts: [],
+    },
+  },
+  {
+    _type: 'watchwordSection',
+    _key: 'watchword',
+    heading: 'Our Watchword',
+    verse: 'Give praise to the Lord, proclaim his name.',
+    reference: 'Isaiah 12:4',
+    intro: 'A watchword is a short promise from scripture about who God is.',
+    praise: 'That our purpose is worship.',
+    proclaim: 'That our joy is to share the Good News.',
+  },
+  {
+    _type: 'goalsSection',
+    _key: 'goals',
+    heading: 'Our Goals',
+    intro: 'The goals for our life together this season.',
+    goals: [
+      {
+        _key: 'g1',
+        _type: 'goal',
+        name: 'Worship',
+        subtitle: 'Worshiping together',
+        glyph: 'window',
+        summary: 'One sentence.',
+        points: [],
+        photos: [],
+      },
+      {
+        _key: 'g2',
+        _type: 'goal',
+        name: 'The Way',
+        subtitle: 'Seeking understanding',
+        glyph: 'door',
+        summary: 'One sentence.',
+        points: [],
+        photos: [],
+      },
+    ],
+  },
+  {
+    _type: 'pledgeSection',
+    _key: 'pledge',
+    heading: 'Our Pledge',
+    intro: 'Our commitment to one another is drawn from scripture.',
+    opening: 'We pledge ourselves to be the family of God for you in this place:',
+    lines: [
+      {
+        _key: 'pl1',
+        _type: 'pledgeLine',
+        text: 'Bearing your burdens, as you bear ours.',
+        reference: 'Galatians 6:2',
+      },
+      {
+        _key: 'pl2',
+        _type: 'pledgeLine',
+        text: 'Encouraging you in the faith.',
+        reference: '1 Thessalonians 5:11',
+      },
+    ],
+    after: [],
+    image: image(),
+  },
+  {
+    _type: 'letterSection',
+    _key: 'letter',
+    heading: 'A Note From Our Pastors',
+    body: [para('lt', 'A short letter of welcome, in the pastors’ own words.')],
+    signature: 'The pastors',
+    signatureNote: 'First Baptist Church Muncie',
+    portrait: image(),
+  },
+  {
+    _type: 'churchTracFormSection',
+    _key: 'form',
+    heading: 'Tell us you are coming',
+    intro: 'A form from Church Trac, shown on the page.',
+    form: {
+      _id: 'f',
+      title: 'Connection card',
+      embed: 'https://example.churchtrac.com/form',
+      size: 'medium',
+    },
+  },
+  // scaffold:end
+  {
+    _type: 'teamSection',
+    _key: 'team',
+    eyebrow: 'Our team',
+    headline: 'The people you will meet',
+    members: ['Alex', 'Sam', 'Jo'].map((name, i) => ({
+      _key: `m${i}`,
+      name,
+      role: 'Their role',
+      photo: image(name),
+    })),
+  },
+  {
+    _type: 'dynamicListSection',
+    _key: 'dynamic',
+    eyebrow: 'Latest',
+    headline: 'From the blog',
+    source: 'journal',
+    limit: 3,
+    items: ['First post', 'Second post', 'Third post'].map((title, i) => ({
+      _id: `d${i}`,
+      title,
+      meta: '2026-01-15',
+      summary: 'A short summary of the post.',
+      href: '#',
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title={`Sections wall | ${site.name}`}
+  description="Fixed-data wall of every page-builder section. Not for visitors."
+  noindex
+>
+  {SECTIONS.map((section) => (
+    <div data-section-type={String(section._type)}>
+      <SectionRenderer
+        sections={[section] as never}
+        idPrefix={`fx-${String(section._key)}`}
+        settings={SETTINGS as never}
+      />
+    </div>
+  ))}
+</BaseLayout>

@@ -45,6 +45,7 @@ import TimelineContentsBar from '@/components/church/TimelineContents.astro';
 import { timelineContents, type TimelineContents } from '@/lib/timeline-contents';
 // scaffold:end
 import { classifySections } from '@/lib/sectionCadence';
+import { expandSyncedSections } from '@/lib/authoring';
 import { richGrounds, isBrandGround } from '@/lib/rich-ground';
 import { splitStega } from '@/lib/preview-stega';
 import { assignSpareImages } from '@/lib/spare-images';
@@ -147,9 +148,14 @@ const {
 // names. Doing it HERE, before the cadence and the spare-image pool below,
 // means both treat it as the band it renders as, so a page that trades a typed
 // band for a Ministry band changes nothing else about itself.
-let blocks = sections as RenderedBlock[];
+//
+// Synced sections (the authoring kit, PORTS.md card 109) are swapped for the
+// sections their saved copy holds even before that, so a synced band takes its
+// place in the cadence like any typed-in band (rule 9), and a Ministry band
+// inside a saved section resolves like any other.
+let blocks = expandSyncedSections(sections as PageBuilderBlock[]) as RenderedBlock[];
 // scaffold: church
-blocks = resolveMinistryBands(sections as PageBuilderBlock[]);
+blocks = resolveMinistryBands(blocks as PageBuilderBlock[]);
 // scaffold:end
 const rows = classifySections<RenderedBlock>(blocks, idPrefix);
 
@@ -374,6 +380,12 @@ const findUsExtraAt = Astro.slots.has('findus-extra')
 
 const wrapAttrs = (key: string | undefined) =>
   editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
+// A section that came out of a synced section is not in the page itself; its
+// in-canvas controls act on the synced block it came from, which is.
+const editKeyOf = (block: unknown) => {
+  const b = block as { _key?: string; _editKey?: string };
+  return b._editKey ?? b._key;
+};
 ---
 
 {rows.map(({ block: s, surface, insertDividerBefore, headingId }, blockIndex) => (
@@ -395,7 +407,7 @@ const wrapAttrs = (key: string | undefined) =>
     <Wrap
       id={anchors[blockIndex]}
       class="scroll-mt-[var(--header-offset)]"
-      {...wrapAttrs((s as { _key?: string })._key)}
+      {...wrapAttrs(editKeyOf(s))}
     >
       {s._type === 'heroSection' ? (
         <Hero
