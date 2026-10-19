@@ -44,7 +44,7 @@ test('the five URLs the restored post bodies link to are covered', () => {
   // exactly the class of breakage nothing else would catch.
   const map = new Map(fbcmRedirects().map((r) => [r.from, r.to]));
   assert.equal(map.get('/about-us'), '/who-we-are');
-  assert.equal(map.get('/team/james-heimlich'), '/staff');
+  assert.equal(map.get('/team/james-heimlich'), '/ministers');
   for (const tag of ['2', '3', 'Barbenheimer']) {
     assert.equal(map.get(`/blog/hashtags/${tag}`), '/blog');
   }
