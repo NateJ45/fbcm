@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-19: CI builds from a pinned content snapshot (starter card 138; `ci/snapshot-build`)._
+
+The Staff rename turned build, test, the e2e shards and the link check red on a docs-only PR, because CI built from the live dataset. Now `ci.yml`'s site build, `lighthouse.yml` and `visual.yml` run as `node scripts/snapshot.mjs run -- <cmd>` over `ci/sanity-snapshot.ndjson.gz`; `deploy.yml` still builds live; `live-watch.yml` checks the real site daily. The snapshot, exported the same evening, carried a new bright stained-glass opener on /beliefs that sank the header nav to 2.87:1, so the hero overlay gained a short top-edge fade behind the header (`.hero-overlay` in globals.css): any picture the church chooses now keeps the nav legible. Rules: `.claude/rules/tests-and-gates.md`.
+
 _2026-10-19: Staff page renamed to /ministers; redirect loop fixed (`fix/ministers-redirect-loop`)._
 
 The church renamed the Staff page's web address to `/ministers`. The Studio's safe-rename step filed `/staff` to `/ministers` and repointed the `/team/*` forwards, but the launch map still carried `/ministers` to `/staff`, so the two sent visitors back and forth ("too many redirects"). The live `redirect-ministers` document was removed (backup kept outside the repo), the rule came out of `fbcm-redirects.ts` (47 now), and a unit test fails on any two rules that point at each other. fbcm had never adopted the starter's live-page guard (`src/lib/redirect-guard.ts`, card 22 addendum), which drops any redirect whose old address is where a published page lives now; it is wired into `astro.config.mjs` with `page` and `journalEntry` addresses, so the same trap cannot loop the site again.

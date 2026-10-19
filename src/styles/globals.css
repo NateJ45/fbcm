@@ -1327,7 +1327,18 @@ a:focus-visible .zoom-img img,
       rgb(23 21 31 / 12%) 62%,
       rgb(23 21 31 / 0%) 80%
     ),
-    linear-gradient(to right, rgb(23 21 31 / 55%) 0%, rgb(23 21 31 / 0%) 55%);
+    linear-gradient(to right, rgb(23 21 31 / 55%) 0%, rgb(23 21 31 / 0%) 55%),
+    /* The header's backing (2026-10-19). The header overlays the top of the hero,
+       and the two gradients above leave the top clear, so any bright photograph
+       (the stained-glass opener on /beliefs measured 2.87:1 under "Watch live")
+       sank the nav below AA. A short fade from the top edge makes the nav
+       legible over whatever picture the church chooses. */
+    linear-gradient(
+        to bottom,
+        rgb(23 21 31 / 58%) 0%,
+        rgb(23 21 31 / 40%) 5.5rem,
+        rgb(23 21 31 / 0%) 9rem
+      );
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-overlay {
