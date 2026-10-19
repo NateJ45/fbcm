@@ -10,6 +10,8 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-19: Visitors card now reads GA4 and Search Console through studio-status (card 136)._
+
 _2026-10-19: Studio complete, phase B (`feat/studio-complete-b`, starter card 137 wired in)._
 
 PORTABLE files resynced to starter `dcb8d78`. `src/sanity/studio-tours.ts` holds the tours, the welcome and What's new (passed through `kit.config.ts`); `src/sanity/quick-jobs.ts` adds the Visitor, take down a banner, service time or phone, show or hide a staff member and two seasonal banners as data jobs (`src/lib/church-quick-jobs.test.ts`); six new guide pictures in `shots.ts`; four clips in `videos.ts` (sermon preview, banners and snow days, the Visitor, the service time) recorded with `tools/tutorial-videos/record.mjs`, and `tools/guide-shots/shots.json` for the capture script. The Phase A `guides/tours.ts` is gone.
