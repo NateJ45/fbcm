@@ -112,3 +112,11 @@ src/data/youtube-feed.generated.json
 
 # Playwright MCP session scratch
 .playwright-mcp/
+
+# Card 137: the Studio capture and recording working files. Music tracks never go in
+# a repo (public; the licence is not the repo's): keep them outside it.
+tools/.studio-media.lock/
+tools/tutorial-videos/work/
+tools/tutorial-videos/chk/
+tools/**/*.mp3
+tools/**/*.wav
