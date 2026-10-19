@@ -307,13 +307,14 @@ export const kitConfig: KitConfig = {
   ],
 
   // Home's banner (card 118): the navy welcome at the top of Home, dressed in
-  // the church's own identity. The tower mark on a light disc, a row of the
-  // building's lancet windows in gold line along the foot (the same windows the
-  // site's photo frames use), and the editor's name in the logo's gold.
+  // the church's own identity. The tower mark on a light disc; along the foot
+  // the site footer's own art (scripts/gen-studio-art.mjs): the four goal
+  // glyphs on a gold rule and the 1927 Hannaford rendering in gold; and the
+  // editor's name in the logo's gold.
   homeBanner: {
     mark: '/favicon.svg',
-    motif: '/studio-banner/lancets.svg',
-    motifNarrow: '/studio-banner/lancets-phone.svg',
+    motif: '/studio-banner/foot.svg',
+    motifNarrow: '/studio-banner/foot-phone.svg',
     accent: '#D59B29',
   },
 
