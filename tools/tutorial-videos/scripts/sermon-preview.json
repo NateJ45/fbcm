@@ -1,0 +1,61 @@
+{
+  "slug": "sermon-preview",
+  "title": "Post Sunday's sermon preview",
+  "start": "/quick-update",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "ready": "[data-tour=\"quick-list\"]",
+  "steps": [
+    {
+      "do": "ring",
+      "target": "[data-quick=\"sermon-preview\"]",
+      "caption": "The sermon preview is on Quick update.",
+      "ms": 1800,
+      "poster": true
+    },
+    {
+      "do": "click",
+      "target": "[data-quick=\"sermon-preview\"]",
+      "caption": "One form, nothing else on the screen."
+    },
+    {
+      "do": "type",
+      "target": "#quick-title",
+      "text": "Bread for the journey",
+      "caption": "The sermon's title."
+    },
+    {
+      "do": "type",
+      "target": "#quick-passage",
+      "text": "John 6:35-40",
+      "caption": "The passage: book, chapter, verses."
+    },
+    {
+      "do": "type",
+      "target": "#quick-preacher",
+      "text": "Sam Example",
+      "caption": "Who is preaching. Empty means no name."
+    },
+    {
+      "do": "type",
+      "target": "#quick-summary",
+      "text": "What does it mean to be fed? Come and find out on Sunday.",
+      "caption": "A sentence or two for the Blog page."
+    },
+    {
+      "do": "scroll",
+      "target": "[data-tour=\"quick-submit\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-submit\"]",
+      "caption": "Press the button. It is live in a few minutes.",
+      "ms": 2600
+    }
+  ],
+  "cover": {
+    "selectors": ["[data-testid=\"whats-new-root\"]", "[data-testid=\"whats-new-card\"]"]
+  }
+}

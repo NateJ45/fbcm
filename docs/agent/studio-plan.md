@@ -3,8 +3,9 @@
 Written 2026-10-19 for the "Studio complete" pass. This is the map from the church's real jobs to the Studio surface
 that serves each one. When a job changes, change this page, then the Quick update form, guide, tour or shot that
 serves it. Settings live in `src/sanity/kit.config.ts`; guides in `src/sanity/guides/content.ts`; pictures in
-`src/sanity/guides/shots.ts`; tours (data until starter card 137) in `src/sanity/guides/tours.ts`; video scripts in
-`docs/agent/studio-videos.md`.
+`src/sanity/guides/shots.ts`; tours, the welcome and What's new in `src/sanity/studio-tours.ts`; the Quick update jobs
+written as data in `src/sanity/quick-jobs.ts`; clips in `src/sanity/guides/videos.ts` (scripts and how to record them:
+`docs/agent/studio-videos.md`).
 
 ## Who edits
 
@@ -69,20 +70,29 @@ Site Guide, Checkup. Their Sanity user ids go into `staff` once they have accept
   desk's `settings;...` ids.
 - **How to chips** (card 134) on 15 fields the office gets wrong: categories, author, publishedAt, excerpt, slug,
   endDate, serviceTime, givingUrl, churchTracUrl, youtubeUrl, navItems, showOnSite, contacts, alt, docs.
-- **Tours** as data for card 137: a seven-stop welcome, four on-demand tours (sermon preview, snow day, The Visitor, a
-  page), the welcome modal and the first What's new.
+- **Tours** (phase B, card 137): `studio-tours.ts` holds the seven-stop first-run tour (anchored to Home, the Quick
+  update tab, Content, Live preview and the Site Guide), a "How this screen works" for Home, Quick update and the Site
+  Guide, two named tours (The Visitor, finding your way round a page) reached from What's new, the welcome modal and
+  three dated What's new entries. The first Phase A sketch had separate sermon-preview and snow-day tours; they
+  folded into the Quick update tour, because a tour cannot open a form to light its boxes.
+- **Quick update jobs written as data** (`quick-jobs.ts`, checked by `src/lib/church-quick-jobs.test.ts`): **Add this
+  month's Visitor** (an append to the issues list: a month chosen from twelve, the year, the PDF), **Take down a
+  banner** (pick one that is up, untick it), **Change the service time or phone** (an edit of Site settings),
+  **Show or hide a staff member** (pick one, untick Show on the Staff page), and two seasonal banners (Christmas
+  services from 15 November to 26 December, Holy Week and Easter from 1 March to 30 April).
+- **Home's** "Add this month's Visitor" button still opens the issues list on the page, for the desk. The phone path
+  is the Quick update tile.
+- **Pictures and clips**: the capture script filled the guide pictures (all but `publish-button`, which the test
+  harness cannot draw because its pretend administrator may not publish; it keeps the wireframe). Four clips are on their
+  guides and Home's "Watch how it is done" row: `sermon-preview`, `announcement` (also on the snow-day guide),
+  `visitor-newsletter` and `service-times`, all at phone size with music. `quick-update-tour` failed its frame check (its
+  rings pointed at tiles below the fold) and is not shipped; the other scripts in `studio-videos.md` are still to record.
 
-## Asks for starter card 137 (generic, not built here)
+## What card 137 now covers, and what it still does not
 
-- **A `file` field kind for Quick update** (a PDF or image picked on the phone, uploaded as an asset). Then "Add this
-  month's Visitor" becomes a phone form: month (a `select` kind), year, the PDF, appended to a named array on a named
-  document (`page-visitor`, `pageBuilder[_key=="visitor-issues"].docs`). Today it is a Home button to that list.
-- **A `select` field kind** (fixed choices) for the month and for a banner's style.
-- **A "patch" form type**: Quick update that changes one field of an existing document (the service time, a staff
-  member's "Show on the Staff page") rather than creating one.
-- **A checklist item that runs a Quick update form** directly (the sermon item opens the tool, not the form).
-- **Tour anchors** for a Home quick action by index or id, an array field's "+ Add item" button, and a Quick update
-  tile and its fields (the anchors `tours.ts` names).
+Built: a `file` and a `select` field kind, edit and append jobs, seasonal forms, tour anchors for the tiles, a `link`
+job. Still asked for (card 138): a checklist item that runs one Quick update form directly (the sermon item opens
+the tool, not the form), and a tour that opens a Quick update form to light its boxes.
 
 ## Bigger ideas, not built
 
