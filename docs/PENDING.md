@@ -128,7 +128,7 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
 - [ ] **The staff view**: add the office's Sanity user id(s) to `kitConfig.staff` once they have
       accepted the invitation (until then every non-administrator gets the staff view).
 - [ ] **Starter cards 125 and the Earlier versions panel came across as PORTABLE resyncs only (2026-10-19).** The Studio installs as a phone app (`/studio/manifest.webmanifest`, `public/studio/sw.js`, the tower icon `public/icon-maskable-512.png`, short name "FBC Muncie"). "Post a photo" stays off (no `postPhoto` in kit.config.ts). Earlier versions and `restore-doc.yml` need `GITHUB_DEPLOY_TOKEN`, `SANITY_API_WRITE_TOKEN` and `BACKUP_PASSPHRASE` as repo secrets before a restore can run; until then the panel says it is not set up. Card 124 (section looks) and 126 (site search) are not adopted here; fbcm keeps its own search.
-- [ ] **Starter cards 128 and 129 (2026-10-19).** The Site Guide and "Help for this page" are drawn in
+- [ ] **Starter cards 128, 129 and 131 (2026-10-19).** The Site Guide and "Help for this page" are drawn in
       the church's own design language from `brand/brand.config.json` `studio.look`: the gold
       eyebrow hairline as the section marker, square indigo stones for steps joined by a gold line,
       callouts in indigo, gold and brown, the Hannaford rendering along each guide's banner, one gold
@@ -141,7 +141,9 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       once** after this deploys, or Home's cards answer "sign out and in again". The bench at
       `/kit-harness/guide/` and `/kit-harness/studio/` (dev server only) shows the guide pieces
       signed out. Newsletter and RSVPs (card 127) came across as files only and stay off (no
-      `features.mail`, no mail provider).
+      `features.mail`, no mail provider). Card 131 (the first slice of the Studio-wide design pass)
+      came across as files; the two Quick update tiles carry the footer's lamp and door
+      (`meaning` in `kit.config.ts`).
 - [ ] **Starter card 122 (private pages) to adopt next round.** The "Hide this page from Google and
       the menus" wording and the hidden-page filter on the automatic footer and menu pages are in
       (2026-10-18); private pages (`PRIVATE_PAGE_SECRET`) are not. Card 121 (the custom code block)

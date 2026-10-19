@@ -182,6 +182,8 @@ export const kitConfig: KitConfig = {
       title: 'Put up a banner',
       detail: 'A short line across the top of every page, until the day you pick.',
       icon: BellIcon,
+      // The tile's art (card 131): the footer's lamp, the church's sign for news.
+      meaning: 'notice',
       fields: [
         {
           name: 'message',
@@ -215,6 +217,8 @@ export const kitConfig: KitConfig = {
       title: 'Cancel or change something this week',
       detail: 'A red banner that takes itself down after Sunday.',
       icon: CalendarIcon,
+      // The footer's door: whether and where the church meets this week.
+      meaning: 'place',
       fields: [
         {
           name: 'message',
