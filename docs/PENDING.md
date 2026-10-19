@@ -16,6 +16,18 @@ sequence).
 
 ## Waiting on a human
 
+### 0. Cutover in progress (2026-10-19): finish once the zone is active
+
+The `fbcmuncie.org` Cloudflare zone exists (full setup) and the registrar's nameservers now point
+at `opal.ns.cloudflare.com` and `porter.ns.cloudflare.com`. DNS was at Wix before. Carried across:
+the one MX (`alt4.aspmx.l.google.com`, priority 10), the Google site-verification TXT, and the
+`mail`, `calendar` and `docs` CNAMEs to `ghs.googlehosted.com` (DNS only). The apex A and `www`
+CNAME were not copied, since the Worker custom domains replace them. Still to do, in order, once
+the zone shows `active`: attach `fbcm-site` to `fbcmuncie.org` and `www.fbcmuncie.org`; decide
+canonical host (apex vs www) and make the redirect match; `npx sanity cors add` for the new
+origin(s); Church Trac embed domains; AI Crawl Control off; Search Console; then the "After the
+move" list in `docs/superpowers/notes/2026-09-20-cutover-plan.md`.
+
 ### 1. Verify the live preview against a real Sanity project
 
 **Blocker: this template has no Sanity project, by design.**
