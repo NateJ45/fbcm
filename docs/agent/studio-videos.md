@@ -3,8 +3,9 @@
 Status (2026-10-19, phase B): recorded and registered in `src/sanity/guides/videos.ts`: 1 `sermon-preview`, 2
 `announcement`, 3 `visitor-newsletter` (now the Quick update form, not the page list) and 5 `service-times` (now the Quick
 update form). The recorded scripts are the JSON files in `tools/tutorial-videos/scripts/` (390 wide, rings instead of
-clicks on the last button, which the recorder never presses). Still to record: 4, 6, 7, and a Quick update overview whose
-rings must scroll each tile into view first. Rerun with `node tools/tutorial-videos/record.mjs <script> --serve --music <mp3>`.
+clicks on the last button, which the recorder never presses). Also recorded: 6 `post-a-photo` (it stops at the picker, the recorder cannot attach a
+file) and the overview `quick-update-tour`. Still to record: 4 (needs a picture upload) and 7 (the staff list shows real
+names, so its rows must be mocked). Record on port 4321 only (other ports fail Sanity's CORS list). Rerun with `node tools/tutorial-videos/record.mjs <script> --serve --music <mp3>`.
 
 Written 2026-10-19 (`docs/agent/studio-plan.md`), to be recorded with the starter's tutorial-video pipeline once card
 137 lands (Playwright against the local Studio with sample data, burned-in captions, mp4 and webm, every caption frame
