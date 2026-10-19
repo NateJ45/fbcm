@@ -24,7 +24,10 @@ CORS has both origins. After attaching, the edge served a stale cached Wix page 
 (Age about 23 h) until the zone cache was purged; purge if it ever recurs. Verified: 200 on www
 pages, GPTBot, ClaudeBot and PerplexityBot get 200, robots.txt is ours, `verify:redirects` 47 of 48
 (the one miss, `/team/michelle-heimlich`, is the `/staff` to `/staff/` 307 hop, same on workers.dev).
-Still open: Church Trac embed domains, Search Console, Bing, Rich Results, IndexNow first run, GA/Web
+Church Trac's Form/Giving Embed Domain is ONE account-wide setting (not per form) and was set to
+`www.fbcmuncie.org` on 2026-10-19; the Connection Card embed on `/visit/#connect` draws live. The
+workers.dev address no longer embeds forms, so form checks go through the real domain now. Still
+open: Search Console, Bing, Rich Results, IndexNow first run, GA/Web
 Analytics tokens, Wix cancellation timing, and the Google MX question below.
 
 Original note, written before the zone was active:
