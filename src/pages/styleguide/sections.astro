@@ -140,7 +140,7 @@ const SECTIONS: Record<string, unknown>[] = [
     url: 'https://www.youtube.com/watch?v=aaaaaaaaaaa',
     caption: 'A short caption under the video.',
   },
-  { _type: 'spacerSection', _key: 'spacer', variant: 'ornament' },
+  { _type: 'spacerSection', _key: 'spacer', variant: 'space' },
   {
     _type: 'logoStripSection',
     _key: 'logos',
@@ -387,7 +387,12 @@ const SECTIONS: Record<string, unknown>[] = [
     _key: 'form',
     heading: 'Tell us you are coming',
     intro: 'A form from Church Trac, shown on the page.',
-    form: { _id: 'f', title: 'Connection card', embed: '', size: 'medium' },
+    form: {
+      _id: 'f',
+      title: 'Connection card',
+      embed: 'https://example.churchtrac.com/form',
+      size: 'medium',
+    },
   },
   // scaffold:end
   {
