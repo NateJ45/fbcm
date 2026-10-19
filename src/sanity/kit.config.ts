@@ -19,7 +19,7 @@
 
 import type { KitConfig } from './kit/types';
 import { genericRules, itemsOf, plural, type CheckupRule } from '../lib/studio-checkup';
-import { guides, GUIDE_CATEGORIES, GUIDES_FOR_TYPE } from './guides/content';
+import { guides, GUIDE_CATEGORIES, GUIDE_FOR_FIELD, GUIDES_FOR_TYPE } from './guides/content';
 import { makeGuideView } from './components/GuideView';
 import { envVal } from './urls';
 import { BellIcon } from '@sanity/icons/Bell';
@@ -254,6 +254,8 @@ export const kitConfig: KitConfig = {
     view: makeGuideView,
     // "Help for this page" (card 110): which guides each document type shows.
     forType: GUIDES_FOR_TYPE,
+    // "How to" chip on fields (card 134): empty until a field is mapped.
+    forField: GUIDE_FOR_FIELD,
   },
 
   // Home's "Your pages" card (card 115): every page the office can change, in

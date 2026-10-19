@@ -42,6 +42,7 @@
 
 import type { BrandIconKey } from '../../lib/studio-icons';
 import type { GUIDE_ICON_MEANINGS } from '../../lib/studio-look';
+import type { FieldGuideMap } from '../../lib/studio-kit';
 
 export type DiyLevel = 'self' | 'ask' | 'mixed';
 
@@ -1258,3 +1259,9 @@ export const GUIDES_FOR_TYPE: Record<string, string[]> = {
   redirect: ['old-web-addresses'],
   sectionPreset: ['reuse-sections', 'synced-sections'],
 };
+
+/**
+ * The "How to" chip on a field (kit.config.ts guide.forField, PORTS.md card 134).
+ * Empty for now: a field named here gets a chip that opens its guide section.
+ */
+export const GUIDE_FOR_FIELD: FieldGuideMap = { fields: {}, types: {} };
