@@ -4,17 +4,142 @@
 // (src/pages/studio/index.astro, PORTS.md card 120). NOT PORTABLE: a site draws
 // its own art here (plain SVG or HTML, decorative, no script).
 //
-// First Baptist Church Muncie: the row of lancet windows in gold line, the same
-// file the Studio Home banner draws along its foot (public/studio-banner/,
-// card 118). Gold reads on the paper and on the dark ground alike. The ends
-// fade so the row does not stop at a hard edge.
+// First Baptist Church Muncie: the splash is set the way the home page hero is
+// set, so opening the editor feels like opening the church's own front page:
+//
+//   - the deep aubergine-navy ground of the hero and footer (#1C1B3A), in both
+//     appearances (the site is dark-grounded; the splash is a title card);
+//   - a small-caps eyebrow led by a short gold hairline (the hero's
+//     "TODAY · WORSHIP AT 10:45 AM"), in the site's UI face;
+//   - the church's name in Castoro Titling capitals at display scale, left on
+//     the hero's left edge, not a centred app title;
+//   - "Opening the editor" as the hero's italic Castoro lede;
+//   - the 1927 Hannaford rendering of the building in gold line, inking in
+//     from the corner the way it does behind the footer
+//     (public/studio-art/rendering-gold.webp, scripts/gen-studio-art.mjs).
+//
+// The page's own mark (the rounded favicon tile) is hidden here: on the site
+// the tower lives in the wordmark, never on a tile.
+//
+// The splash page is PORTABLE and fixed, so the look comes from this file's
+// global style, scoped with :has() to a splash that holds this motif. When the
+// Studio mounts it replaces the splash, the motif leaves the page, and every
+// rule here stops matching. Static: no animation.
+import '@fontsource-variable/sofia-sans-semi-condensed';
 ---
 
 <img
-  src="/studio-banner/lancets-phone.svg"
+  class="fbcm-splash-art"
+  src="/studio-art/rendering-gold.webp"
   alt=""
-  width="312"
-  height="45"
+  width="952"
+  height="452"
   decoding="async"
-  style="mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent)"
 />
+
+<style is:global>
+  html:root:has(.fbcm-splash-art),
+  html:root:has(.fbcm-splash-art) body {
+    background: #1c1b3a;
+    color: #f4efe6;
+  }
+  .ncs-splash:has(.fbcm-splash-art) {
+    position: relative;
+    overflow: hidden;
+    place-items: center start;
+    padding: 48px clamp(16px, 5vw, 64px) clamp(120px, 22vw, 200px);
+    background: #1c1b3a;
+    color: #f4efe6;
+    /* The gold rule the footer opens with, across the top of the card. */
+    border-top: 1px solid #d59b29;
+  }
+  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__inner {
+    align-items: flex-start;
+    text-align: left;
+    gap: 0;
+    max-width: min(72rem, 100%);
+    width: 100%;
+    margin-inline: auto;
+  }
+  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__mark {
+    display: none;
+  }
+  /* The eyebrow: small caps in the UI face, a 44px gold hairline before it. */
+  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__name::before {
+    content: 'Downtown Muncie \00B7  Since 1859';
+    display: block;
+    margin: 0 0 clamp(18px, 2.4vw, 28px);
+    padding-left: 56px;
+    white-space: nowrap;
+    background: linear-gradient(#d59b29, #d59b29) left center / 44px 1px no-repeat;
+    font-family: 'Sofia Sans Semi Condensed Variable', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #f4efe6;
+  }
+  /* The name, as the hero sets "PRAISE AND PROCLAIM." */
+  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__name {
+    font-family: 'Castoro Titling', Georgia, serif;
+    font-size: clamp(3.25rem, 8.2vw, 6.75rem);
+    line-height: 0.98;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    max-width: 11.5ch;
+    color: #f4efe6;
+  }
+  /* The words sit above the rendering. */
+  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__name,
+  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__note {
+    position: relative;
+    z-index: 1;
+  }
+  /* "Opening the editor" as the hero's italic lede. */
+  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__note {
+    margin-top: clamp(20px, 2.6vw, 32px);
+    font-family: Castoro, Georgia, serif;
+    font-style: italic;
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+    line-height: 1.35;
+    color: #f4efe6;
+  }
+  html[data-studio-scheme] .ncs-splash:has(.fbcm-splash-art) .ncs-splash__note {
+    color: #f4efe6;
+  }
+  .ncs-splash:has(.fbcm-splash-art) .ncs-splash__motif {
+    margin: 0;
+    width: auto;
+  }
+  /* The rendering, standing in the lower right on the gold ground line and
+     fading in from its left and top, behind the words. */
+  .ncs-splash .ncs-splash__motif img.fbcm-splash-art {
+    position: absolute;
+    z-index: 0;
+    right: clamp(-40px, -2vw, 0px);
+    bottom: 0;
+    width: min(66vw, 980px);
+    height: auto;
+    opacity: 0.62;
+    pointer-events: none;
+    user-select: none;
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent, #000 38%), linear-gradient(180deg, transparent, #000 30%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(90deg, transparent, #000 38%), linear-gradient(180deg, transparent, #000 30%);
+    mask-composite: intersect;
+  }
+  @media (max-width: 599px) {
+    .ncs-splash:has(.fbcm-splash-art) .ncs-splash__name::before {
+      font-size: 0.75rem;
+    }
+    .ncs-splash .ncs-splash__motif img.fbcm-splash-art {
+      right: -12vw;
+      width: 128vw;
+      opacity: 0.5;
+    }
+  }
+</style>

@@ -22,6 +22,9 @@
 // not a design review. Each picture is 600 by 400 (the grid's 3:2 tile), the
 // top of the block at a 1200px desktop width, scaled by half.
 //
+// `--only a,b` reshoots just those block types. A Church Trac form frame is
+// answered with a drawn connection card (FORM_STAND_IN below), not the network.
+//
 // Images in the fixtures are fake Sanity references; every request to the
 // Sanity CDN is answered with tests/visual/fixtures/layout-hero.jpg, so the
 // shots need no network and no Sanity project.
@@ -29,7 +32,7 @@
 
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
-import { existsSync, mkdirSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
 import { chromium } from '@playwright/test';
 
@@ -45,8 +48,57 @@ const STAND_IN =
   '<svg width="96" height="96" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#e8e8e8"/></svg>' +
   '</body></html>';
 
+/**
+ * What a Church Trac form frame shows in a thumbnail. The real frame needs the
+ * network and, with the fixture's made-up address, draws Church Trac's "We
+ * couldn't find that church" page, which told the editor nothing. This is a
+ * drawing of a connection card in the site's own grammar instead: Castoro
+ * Titling title, small-caps labels in the UI face, hairline fields, the gold
+ * double-rule button. The fonts are the site's own files, inlined.
+ */
+const fontUri = (rel) =>
+  `data:font/woff2;base64,${readFileSync(join(ROOT, 'node_modules', rel)).toString('base64')}`;
+const FORM_STAND_IN = () => {
+  const ui = fontUri(
+    '@fontsource-variable/sofia-sans-semi-condensed/files/sofia-sans-semi-condensed-latin-wght-normal.woff2',
+  );
+  const display = fontUri(
+    '@fontsource/castoro-titling/files/castoro-titling-latin-400-normal.woff2',
+  );
+  const body = fontUri('@fontsource/castoro/files/castoro-latin-400-italic.woff2');
+  const field = (label, h = 44) =>
+    `<div class="f"><span>${label}</span><i style="height:${h}px"></i></div>`;
+  return (
+    '<html><head><style>' +
+    `@font-face{font-family:U;src:url(${ui}) format('woff2');font-weight:100 900}` +
+    `@font-face{font-family:D;src:url(${display}) format('woff2')}` +
+    `@font-face{font-family:B;src:url(${body}) format('woff2');font-style:italic}` +
+    'body{margin:0;padding:44px 48px;background:#fff;color:#1c1b3a;font-family:U,sans-serif}' +
+    'h1{margin:0;font:400 34px/1.1 D,serif;letter-spacing:.02em;text-transform:uppercase}' +
+    'p{margin:10px 0 30px;font:italic 19px/1.4 B,serif;color:#514c58}' +
+    '.row{display:grid;grid-template-columns:1fr 1fr;gap:20px}' +
+    '.f{display:grid;gap:8px;margin-bottom:22px}' +
+    '.f span{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#724f43}' +
+    '.f i{display:block;border:1px solid rgba(57,37,30,.35);background:#fbf9f5}' +
+    '.b{display:inline-block;margin-top:6px;padding:15px 30px;background:#d59b29;' +
+    'outline:2px solid #d59b29;outline-offset:3px;font-size:14px;font-weight:600;' +
+    'letter-spacing:.16em;text-transform:uppercase;color:#1c1b3a}' +
+    '</style></head><body>' +
+    '<h1>Connection card</h1><p>We would love to know you were here.</p>' +
+    `<div class="row">${field('First name')}${field('Last name')}</div>` +
+    field('Email') +
+    field('How can we pray for you?', 96) +
+    '<span class="b">Send it</span>' +
+    '</body></html>'
+  );
+};
+
 const argUrl = process.argv.includes('--url')
   ? process.argv[process.argv.indexOf('--url') + 1]
+  : null;
+// `--only churchTracFormSection,heroSection` reshoots just those blocks.
+const only = process.argv.includes('--only')
+  ? new Set(process.argv[process.argv.indexOf('--only') + 1].split(','))
   : null;
 
 async function waitFor(url, ms = 30_000) {
@@ -128,6 +180,9 @@ try {
     /youtube(-nocookie)?\.com\/embed|player\.vimeo\.com|embed\.example\.com/,
     (route) => route.fulfill({ contentType: 'text/html', body: STAND_IN }),
   );
+  await page.route(/churchtrac\.com/, (route) =>
+    route.fulfill({ contentType: 'text/html', body: FORM_STAND_IN() }),
+  );
 
   await page.goto(`${base}/styleguide/sections/`, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
@@ -155,6 +210,7 @@ try {
   );
   let shot = 0;
   for (const type of types) {
+    if (only && !only.has(type)) continue;
     const box = page.locator(`[data-section-type="${type}"]`);
     await box.scrollIntoViewIfNeeded();
     await page.waitForTimeout(150);
