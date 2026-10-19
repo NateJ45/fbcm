@@ -178,7 +178,7 @@ When you change a Sanity schema (`src/sanity/schemaTypes/**`), run `npm run type
 
 `public/_headers` ships with the deploy. Five site-wide headers Cloudflare applies to every route:
 
-- `Strict-Transport-Security` (HSTS, one year, includeSubDomains)
+- `Strict-Transport-Security` (HSTS, one year, includeSubDomains, `preload` directive added 2026-10-19 for Lighthouse's "strong HSTS policy" check; the domain is deliberately NOT submitted to hstspreload.org, which is hard to undo and would force https on the `mail`, `calendar` and `docs` Google-hosted subdomains)
 - `X-Frame-Options: DENY` (clickjacking)
 - `X-Content-Type-Options: nosniff`
 - `Referrer-Policy: strict-origin-when-cross-origin`
