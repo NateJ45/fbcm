@@ -12,7 +12,7 @@
 
 _2026-10-19: Staff page renamed to /ministers; redirect loop fixed (`fix/ministers-redirect-loop`)._
 
-The church renamed the Staff page's web address to `/ministers`. The Studio's safe-rename step filed `/staff` to `/ministers` and repointed the `/team/*` forwards, but the launch map still carried `/ministers` to `/staff`, so the two sent visitors back and forth ("too many redirects"). The live `redirect-ministers` document was removed (backup kept outside the repo), the rule came out of `fbcm-redirects.ts` (47 now), and a unit test fails on any two rules that point at each other. The Studio and build-time guards that would have stopped it (a rename onto an address that is already an old address) are a starter change, tracked in the starter's PORTS.md.
+The church renamed the Staff page's web address to `/ministers`. The Studio's safe-rename step filed `/staff` to `/ministers` and repointed the `/team/*` forwards, but the launch map still carried `/ministers` to `/staff`, so the two sent visitors back and forth ("too many redirects"). The live `redirect-ministers` document was removed (backup kept outside the repo), the rule came out of `fbcm-redirects.ts` (47 now), and a unit test fails on any two rules that point at each other. fbcm had never adopted the starter's live-page guard (`src/lib/redirect-guard.ts`, card 22 addendum), which drops any redirect whose old address is where a published page lives now; it is wired into `astro.config.mjs` with `page` and `journalEntry` addresses, so the same trap cannot loop the site again.
 
 _2026-10-19: arch photos fetched at the width they are drawn (`fix/arch-photo-sharpness`)._
 
