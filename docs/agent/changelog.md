@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-19: arch photos fetched at the width they are drawn (`fix/arch-photo-sharpness`)._
+
+The /ministries window hero's side lights looked pixelated: each is 2.6 times taller than wide, so `object-fit: cover` draws a landscape photo about 4.6 times the light's width, while `sizes` described the light, and the browser fetched a 160 to 320px image for a photo drawn about 720px wide. `ArchFrame` now multiplies its `sizes` and srcset ceiling by that factor (`src/lib/cover-sizes.ts`, unit-tested), capped at the uploaded width, so every arch on the site gets enough pixels; at 1280 the side lights fetch 800px at 1x and 1600px at 2x.
+
 _2026-10-19: new church photos (`feat/church-photos-2026-10`)._
 
 Pastor Jonathan sent 26 photos; 16 went into the media library with title, alt, description and tags through the new `scripts/add-church-photos.mjs` (batch list `scripts/data/church-photos-2026-10.json`, source marker `fbcm-church-photos`, which `page-images.mjs` and `place-ministry-photos.mjs` now resolve beside the Wix one). Placed, backup-first: Youth (ping pong in the youth room, was two teens singing on a stage), Adult (a Life Group around a fire pit, was a fellowship breakfast) and Outreach (lunches carried into Muncie Central High School, was the Serve Your City team) on their ministry documents, and the Ministries hero's youth light (foosball, was teens at a card table), patched alone because the live page has drifted from its seed. The rest wait in the library (`docs/PENDING.md`).

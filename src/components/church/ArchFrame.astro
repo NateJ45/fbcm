@@ -25,6 +25,8 @@
 //   arch (2026-09-25, src/lib/hero-frames.ts archPlacement): a portrait fills
 //   the arch's height, so no object-position can move its head clear of the
 //   point.
+// - `sizes` describes the FRAME; when cover draws the photo wider than the
+//   frame, the srcset asks for the drawn width instead (src/lib/cover-sizes.ts).
 // - `glyph` (2026-09-23, the Home blog rows): with no photograph the frame
 //   normally draws nothing, but a caller whose rows must line up (a post with
 //   no featured image) passes a building glyph, and the arch is drawn filled
@@ -36,6 +38,7 @@ import type { SanityImageObject } from '@/lib/pageBuilder.types';
 import { archPlacement, archRatioFromStyle, type FrameCrop } from '@/lib/hero-frames';
 import { photoAspect } from '@/lib/photo-shape';
 import { photoSubject } from '@/lib/photo-subject';
+import { coverScale, scaleSizes } from '@/lib/cover-sizes';
 
 interface Props {
   image: SanityImageObject | null | undefined;
@@ -57,7 +60,8 @@ interface Props {
   /**
    * The arch's height / width, for a caller whose --arch-ratio lives in its
    * own CSS rather than in `style` (the window hero's lights). Read from
-   * `style` otherwise, else the shape's default. Only the headroom reads it.
+   * `style` otherwise, else the shape's default. The headroom and the cover
+   * scale (how many pixels to fetch) read it.
    */
   frameRatio?: number;
   /**
@@ -94,14 +98,25 @@ if (!hasImage && !glyph) return null;
 // people in a lancet whose face the hotspot puts above the arch's springing,
 // headroom, so the pointed head never cuts off hair and forehead. The alt is
 // read stega-cleaned (photoSubject cleans it itself).
+const photo = photoAspect(image as Parameters<typeof photoAspect>[0]);
+const ratio = frameRatio ?? archRatioFromStyle(style) ?? (shape === 'lancet' ? 1.5 : 1.3);
 const { objectPosition, headroom } = archPlacement({
   shape,
   people: hasImage && photoSubject(alt) === 'people',
-  aspect: photoAspect(image as Parameters<typeof photoAspect>[0])?.a,
-  frameRatio: frameRatio ?? archRatioFromStyle(style) ?? (shape === 'lancet' ? 1.5 : 1.3),
+  aspect: photo?.a,
+  frameRatio: ratio,
   hotspot: image?.hotspot,
   crop: (image as { crop?: FrameCrop | null } | null | undefined)?.crop,
 });
+
+// Cover draws a photo wider than a frame that is taller than the photo's shape
+// (a landscape in a side light is drawn ~4.6 times the light's width), so ask
+// for that many more pixels: `sizes` and the srcset ceiling grow by the same
+// factor, never past the uploaded width (src/lib/cover-sizes.ts; the pixelated
+// /ministries side lights, 2026-10-19).
+const scale = coverScale({ frameRatio: ratio, aspect: photo?.a, heightShare: 1 - headroom });
+const imgWidth = scale > 1 ? Math.min(Math.ceil(width * scale), photo?.w ?? width) : width;
+const imgSizes = scaleSizes(sizes, scale);
 const imgStyle =
   headroom > 0
     ? `object-position: ${objectPosition}; position: absolute; left: 0; bottom: 0; height: ${((1 - headroom) * 100).toFixed(2)}%; -webkit-mask-image: linear-gradient(to bottom, transparent 0, var(--color-foreground) 6%); mask-image: linear-gradient(to bottom, transparent 0, var(--color-foreground) 6%);`
@@ -125,8 +140,8 @@ const mould =
     <div class:list={['arch', shape === 'lancet' ? 'arch-lancet' : 'arch-door']}>
       <SanityImage
         source={image}
-        width={width}
-        sizes={sizes}
+        width={Math.max(width, imgWidth)}
+        sizes={imgSizes}
         alt={alt}
         loading={loading}
         fetchpriority={fetchpriority}
