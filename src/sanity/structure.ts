@@ -153,23 +153,56 @@ const NAV_PAGE_RANK = `select(${NAV_PAGE_ORDER.map(
   (slug, i) => `slug.current == "${slug}" => ${i}`,
 ).join(', ')}, ${NAV_PAGE_ORDER.length})`;
 
-function navOrderedPagesList(S: StructureBuilder) {
+// A custom sort expression cannot go in `defaultOrdering`: the Studio checks
+// each ordering `field` as a real field path, a `select(...)` fails that check,
+// and the list then shows "Could not fetch list items" and retries forever
+// (found in the signed-in checks, 2026-10-18). So lists that rank by an
+// expression fetch their ids in that order once, when the list opens, and show
+// them as plain document rows.
+type RankedListOptions = {
+  id: string;
+  title: string;
+  type: string;
+  icon: ReturnType<typeof typeIcon>;
+  // A GROQ query returning the document ids (drafts included) in display order.
+  idsQuery: string;
+};
+
+function rankedDocumentList(
+  S: StructureBuilder,
+  context: StructureResolverContext,
+  opts: RankedListOptions,
+) {
+  return S.listItem()
+    .id(opts.id)
+    .title(opts.title)
+    .icon(opts.icon)
+    .schemaType(opts.type)
+    .child(async () => {
+      const client = context.getClient({ apiVersion: DESK_API_VERSION });
+      const ids = await client.fetch<string[]>(opts.idsQuery);
+      // One row per document: a published page and its draft share a row.
+      const seen = new Set<string>();
+      const rows = ids
+        .map((id) => id.replace(/^drafts\./, ''))
+        .filter((id) => (seen.has(id) ? false : (seen.add(id), true)));
+      return S.list()
+        .id(opts.id)
+        .title(opts.title)
+        .items(rows.map((id) => S.documentListItem().id(id).schemaType(opts.type)));
+    });
+}
+
+function navOrderedPagesList(S: StructureBuilder, context: StructureResolverContext) {
   // The id 'page' is load-bearing: Home's "Add a page" and the guides link to
   // pages;page.
-  return S.documentTypeListItem('page')
-    .id('page')
-    .title('All other pages')
-    .icon(typeIcon('page'))
-    .child(
-      S.documentList()
-        .apiVersion(DESK_API_VERSION)
-        .title('All other pages')
-        .filter('_type == "page"')
-        .defaultOrdering([
-          { field: NAV_PAGE_RANK, direction: 'asc' },
-          { field: 'title', direction: 'asc' },
-        ]),
-    );
+  return rankedDocumentList(S, context, {
+    id: 'page',
+    title: 'All other pages',
+    type: 'page',
+    icon: typeIcon('page'),
+    idsQuery: `*[_type == "page"] | order(${NAV_PAGE_RANK} asc, title asc)._id`,
+  });
 }
 
 // ── People: staff sorted the way the Staff page itself groups them ──────────
@@ -207,7 +240,7 @@ const fullDesk = (S: StructureBuilder, context: StructureResolverContext) =>
               singletonWithPreview(S, 'homePage', 'Home'),
               S.divider(),
 
-              navOrderedPagesList(S),
+              navOrderedPagesList(S, context),
 
               S.divider(),
 
@@ -283,21 +316,13 @@ const fullDesk = (S: StructureBuilder, context: StructureResolverContext) =>
           S.list()
             .title('People')
             .items([
-              S.documentTypeListItem('staffMember')
-                .id('staffMember')
-                .title('Staff members')
-                .icon(typeIcon('staffMember'))
-                .child(
-                  S.documentList()
-                    .apiVersion(DESK_API_VERSION)
-                    .title('Staff members')
-                    .filter('_type == "staffMember"')
-                    .defaultOrdering([
-                      { field: STAFF_GROUP_RANK, direction: 'asc' }, // scaffold: church
-                      { field: 'order', direction: 'asc' },
-                      { field: 'name', direction: 'asc' },
-                    ]),
-                ),
+              rankedDocumentList(S, context, {
+                id: 'staffMember',
+                title: 'Staff members',
+                type: 'staffMember',
+                icon: typeIcon('staffMember'), // scaffold: church
+                idsQuery: `*[_type == "staffMember"] | order(${STAFF_GROUP_RANK} asc, order asc, name asc)._id`,
+              }),
               // The same list as a sortable table (card 117, tables.config.ts).
               ...TABLES.filter((c) => c.type === 'staffMember').map((c) => tableListItem(S, c)),
             ]),
