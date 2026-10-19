@@ -9,7 +9,11 @@
       "title": "Ping pong in the youth room",
       "altText": "A church member takes on two teenagers at ping pong in the youth room",
       "description": "Landscape, the youth room with its mountain mural: an older woman returns a serve while two teens wait at the far end of the table. Intergenerational, candid, good light.",
-      "tags": ["Youth", "People", "Fellowship"]
+      "tags": [
+        "Youth",
+        "People",
+        "Fellowship"
+      ]
     },
     {
       "file": "youth-foosball.jpg",
@@ -17,7 +21,10 @@
       "title": "Foosball in the youth room",
       "altText": "Three teenagers playing foosball in the youth room, the ping pong table behind them",
       "description": "Landscape, three teens around the foosball table in the youth room, the ping pong table and mountain mural behind.",
-      "tags": ["Youth", "People"]
+      "tags": [
+        "Youth",
+        "People"
+      ]
     },
     {
       "file": "youth-restaurant-outing.jpg",
@@ -25,7 +32,11 @@
       "title": "Youth group outing",
       "altText": "The youth group smiling around a restaurant table on an outing",
       "description": "Landscape, about ten teens and a leader around a round table in a fast-food restaurant. Cheerful; the restaurant branding is prominent and the group has changed since 2024.",
-      "tags": ["Youth", "People", "Fellowship"]
+      "tags": [
+        "Youth",
+        "People",
+        "Fellowship"
+      ]
     },
     {
       "file": "adult-life-group-fire.jpg",
@@ -33,7 +44,10 @@
       "title": "Life Group around the fire pit",
       "altText": "A Life Group meets around a back-yard fire pit, Bibles open on their laps",
       "description": "Landscape, six adults in camp chairs around a fire pit on an autumn evening, one reading from an open Bible. Two children play on a deck behind.",
-      "tags": ["People", "Fellowship"]
+      "tags": [
+        "People",
+        "Fellowship"
+      ]
     },
     {
       "file": "adult-life-group-circle.jpg",
@@ -41,35 +55,50 @@
       "title": "Life Group conversation by the fire",
       "altText": "Members of a Life Group talk and laugh around a back-yard fire on an autumn evening",
       "description": "Landscape, the same Life Group a moment earlier, a closer framing with more faces turned to the camera. A blurred head in the right foreground.",
-      "tags": ["People", "Fellowship"]
+      "tags": [
+        "People",
+        "Fellowship"
+      ]
     },
     {
       "file": "outreach-muncie-central-arrival.jpg",
       "title": "Lunch delivery at Muncie Central",
       "altText": "Two church volunteers wheel a cart of catered lunches up to Muncie Central High School",
       "description": "Portrait, bright day, two volunteers with a cart of catering boxes in front of the Muncie Central High School entrance sign.",
-      "tags": ["Service", "People"]
+      "tags": [
+        "Service",
+        "People"
+      ]
     },
     {
       "file": "outreach-muncie-central-bags.jpg",
       "title": "Bagging lunches at Muncie Central",
       "altText": "Volunteers lay out rows of bagged lunches in a room at Muncie Central High School",
       "description": "Portrait, a long table of paper lunch bags in the foreground, volunteers working behind it in front of a Muncie Central Bearcats banner.",
-      "tags": ["Service", "People"]
+      "tags": [
+        "Service",
+        "People"
+      ]
     },
     {
       "file": "outreach-muncie-central-unloading.jpg",
       "title": "Unloading lunches for Muncie Central",
       "altText": "Two volunteers unload catering boxes from a pickup truck onto a cart",
       "description": "Portrait, outdoors in a parking lot, two volunteers moving boxes from a truck bed to a hand cart.",
-      "tags": ["Service", "People"]
+      "tags": [
+        "Service",
+        "People"
+      ]
     },
     {
       "file": "outreach-muncie-central-card.jpg",
       "title": "Thank-you card for Muncie Central teachers",
       "altText": "A volunteer sets out lunch bags beside a thank-you card the church signed for Muncie Central's teachers",
       "description": "Portrait, a volunteer at a table of lunch bags, a large signed card reading First Baptist and Teachers with the Muncie Central M in front of him.",
-      "tags": ["Service", "People"]
+      "tags": [
+        "Service",
+        "People"
+      ]
     },
     {
       "file": "serve-clothing-shelves.jpg",
@@ -77,7 +106,10 @@
       "title": "Sorting the clothing shelves",
       "altText": "A volunteer in a Serve Your City shirt sorts folded clothing on the shelves",
       "description": "Portrait, a smiling volunteer in the church's Serve Your City shirt arranging folded clothes and blankets on metal shelving.",
-      "tags": ["Service", "People"]
+      "tags": [
+        "Service",
+        "People"
+      ]
     },
     {
       "file": "serve-closet-family.jpg",
@@ -85,7 +117,11 @@
       "title": "A family volunteering in the closet",
       "altText": "A young family stands among the shelves of clothing and dishes they helped sort",
       "description": "Landscape, a couple holding a baby in a rainbow sweater, standing between shelves of folded clothes and housewares.",
-      "tags": ["Service", "People", "Children"]
+      "tags": [
+        "Service",
+        "People",
+        "Children"
+      ]
     },
     {
       "file": "serve-closet-team.jpg",
@@ -93,14 +129,21 @@
       "title": "Volunteers in the closet",
       "altText": "Three volunteers and a baby smile among the shelves of clothing and dishes",
       "description": "Landscape, three adults and a baby posed together in the storeroom, shelves of folded clothes and bowls either side.",
-      "tags": ["Service", "People", "Children"]
+      "tags": [
+        "Service",
+        "People",
+        "Children"
+      ]
     },
     {
       "file": "children-story-steps.png",
       "title": "Story time on the steps",
       "altText": "A leader tells a story to children sitting on carpeted steps",
       "description": "Landscape, a woman reading from a binder to a dozen children seated on carpeted platform steps, guitars and music stands behind. Smaller file (1330 wide).",
-      "tags": ["Children", "People"]
+      "tags": [
+        "Children",
+        "People"
+      ]
     },
     {
       "file": "christmas-nativity-children.jpg",
@@ -108,7 +151,11 @@
       "title": "Children at the nativity set",
       "altText": "Children gather at the nativity set on Christmas Eve, one smiling at the camera",
       "description": "Landscape, four children in Christmas clothes beside a wooden nativity stable, garland and the balcony behind. Seasonal.",
-      "tags": ["Children", "People", "Worship"]
+      "tags": [
+        "Children",
+        "People",
+        "Worship"
+      ]
     },
     {
       "file": "christmas-nativity-reach.jpg",
@@ -116,7 +163,11 @@
       "title": "Reaching for the nativity",
       "altText": "A small girl reaches out to the nativity figures on Christmas Eve",
       "description": "Landscape, a toddler in a white coat seen from behind reaching toward the nativity figures, an older girl in red plaid beside her. Seasonal; faces mostly away from the camera.",
-      "tags": ["Children", "People", "Worship"]
+      "tags": [
+        "Children",
+        "People",
+        "Worship"
+      ]
     },
     {
       "file": "christmas-eve-candles.jpg",
@@ -124,7 +175,20 @@
       "title": "Christmas Eve candlelight",
       "altText": "The congregation stands in the pews with candles at the Christmas Eve service",
       "description": "Landscape, from the side aisle: the congregation standing with small candles, garland along the balcony. Seasonal.",
-      "tags": ["Worship", "People"]
+      "tags": [
+        "Worship",
+        "People"
+      ]
+    },
+    {
+      "file": "music-guitar-fellowship-hall.jpg",
+      "title": "Guitar in the fellowship hall",
+      "altText": "A man in a plaid shirt plays an acoustic guitar beside a music stand in the fellowship hall",
+      "description": "Portrait, a guitarist reading from a music stand in the fellowship hall, tables with green spring centrepieces around him. Sent by Jonathan as the music photo for the Ministries window.",
+      "tags": [
+        "Worship",
+        "People"
+      ]
     }
   ]
 }
