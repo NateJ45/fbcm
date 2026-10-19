@@ -156,6 +156,21 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       a table" and "Staff members as a table"; Share a preview's dialog (its
       `SHARE_PREVIEW_SECRET` Worker secret is set, 2026-10-18); the editor's rich text in Castoro; the wordmark in the top bar; a page made from each template group; "+ Add item" in grid view; Insert a saved section as a copy and as synced (after the seed); the yellow page-rule warnings.
 
+### 1g. The Studio complete pass, phase B (2026-10-19, waits on starter card 137)
+
+Phase A is in (`docs/agent/studio-plan.md`). When card 137 lands: merge `origin/main` and resync the PORTABLE
+files, wire `src/sanity/guides/tours.ts` (the welcome tour, four on-demand tours, the welcome and What's new modals)
+and the guide `video` blocks, record the seven clips in `docs/agent/studio-videos.md` with the pipeline (sample data
+only), check every caption frame, then the gates. The generic asks for 137 (a `file` and a `select` Quick update
+field kind, a patch form, a checklist item that opens one form) are listed at the end of the plan.
+
+- [ ] **Signed-in check of the new Quick update forms**: the sermon preview and the news post publish a whole post
+      (title, web address, summary, category, body); a second post with the same title gets the date added to its
+      web address; the sermon item on the Sunday checklist ticks itself; Post a photo saves a draft.
+- [ ] **"Add this month's Visitor"** on Home opens The Visitor page at its issues list (the field path
+      `pageBuilder[_key=="visitor-issues"].docs`); if the page's section key ever changes, change it in
+      `kit.config.ts` too.
+
 ## Known gaps, deliberately open
 
 ### 1c. The preview routes check the draft cookie's presence, not its fingerprint (found 2026-09-26)

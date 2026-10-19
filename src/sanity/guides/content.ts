@@ -43,25 +43,21 @@
 import type { BrandIconKey } from '../../lib/studio-icons';
 import type { GUIDE_ICON_MEANINGS } from '../../lib/studio-look';
 import type { FieldGuideMap } from '../../lib/studio-kit';
+import type { KitGuideBlock } from '../kit/guide/GuidePage';
 
 export type DiyLevel = 'self' | 'ask' | 'mixed';
 
 /** Where a "Where in the Studio" breadcrumb can link to. */
 export type PathLink = { doc: string; type?: string } | { pane: string } | { tool: string };
 
-export type GuideBlock =
-  | { kind: 'h'; text: string }
-  | { kind: 'p'; text: string }
-  | { kind: 'steps'; items: string[] }
-  | { kind: 'bullets'; items: string[] }
-  | { kind: 'path'; items: string[]; link?: PathLink }
-  | {
-      kind: 'callout';
-      tone?: 'primary' | 'positive' | 'caution' | 'critical' | 'default';
-      title?: string;
-      text: string;
-    }
-  | { kind: 'seealso'; items: string[] };
+/**
+ * Every block a guide can hold: the kit's list (kit/guide/GuidePage.tsx, card
+ * 128). New since 2026-10-19 here: { kind: 'shot', key } (a picture of the
+ * Studio from src/sanity/guides/shots.ts, card 130; a key with no capture draws
+ * the wireframe), { kind: 'quote' }, steps { across: true } and the tones
+ * 'note' | 'tip' | 'careful'.
+ */
+export type GuideBlock = KitGuideBlock;
 
 /** Names the prose refers to. Replace these, do not hardcode them in guides. */
 export const SITE = {
@@ -74,6 +70,7 @@ export const GUIDE_CATEGORIES = [
   'Sundays and notices',
   'Blog, staff and ministries',
   'Pictures',
+  'Once in a while',
   'When something is wrong',
 ] as const;
 export type GuideCategory = (typeof GUIDE_CATEGORIES)[number];
@@ -139,6 +136,7 @@ export const guides: Guide[] = [
           'Wait a few minutes, usually about two. The website rebuilds itself and your change appears.',
         ],
       },
+      { kind: 'shot', key: 'publish-button' },
       {
         kind: 'callout',
         tone: 'primary',
@@ -166,7 +164,7 @@ export const guides: Guide[] = [
         kind: 'bullets',
         items: [
           '**Home** opens first: the Sunday checklist, whether your last change is on the website yet, and anything that needs fixing.',
-          '**Quick update** is for a job done from a phone, like putting up a banner.',
+          '**Quick update** is for the weekly jobs done from a phone: the sermon preview, a banner, a change this week, a short news post or a photo.',
           '**Content** is the menu on the left described above.',
           '**Live preview** shows the website with your unpublished changes in place.',
           '**Site Guide** is these guides, searchable and printable.',
@@ -281,6 +279,7 @@ export const guides: Guide[] = [
           'Publish.',
         ],
       },
+      { kind: 'shot', key: 'church-details' },
       {
         kind: 'callout',
         tone: 'positive',
@@ -392,7 +391,7 @@ export const guides: Guide[] = [
       {
         kind: 'path',
         items: ['Site settings', 'Announcement banner'],
-        link: { pane: 'siteSettings;announcement' },
+        link: { pane: 'settings;announcement' },
       },
       {
         kind: 'steps',
@@ -404,6 +403,13 @@ export const guides: Guide[] = [
           'If it should link somewhere, fill in `Link (optional)`.',
           'Check `Show this banner` is on, then Publish.',
         ],
+      },
+      { kind: 'shot', key: 'banner-form' },
+      {
+        kind: 'callout',
+        tone: 'tip',
+        title: 'Quicker from a phone.',
+        text: 'Quick update has `Put up a banner` (you pick the last day) and `Cancel or change something this week` (red, down after Sunday). Both are three boxes and a button.',
       },
       {
         kind: 'p',
@@ -596,6 +602,13 @@ export const guides: Guide[] = [
           'Publish.',
         ],
       },
+      { kind: 'shot', key: 'new-post-form' },
+      {
+        kind: 'callout',
+        tone: 'tip',
+        title: 'A short post or a sermon preview is quicker from a phone.',
+        text: "Quick update has `Post Sunday's sermon preview` and `Write a short news post`. They fill in the web address, the date and the category for you.",
+      },
       {
         kind: 'callout',
         tone: 'caution',
@@ -616,7 +629,12 @@ export const guides: Guide[] = [
         title: 'A new category needs a moment’s thought.',
         text: 'Each category gets its own page on the site. Use the ones already there where you can, and add a new one under `Blog`, then `Categories`, only when a series will run for a while.',
       },
-      { kind: 'seealso', items: ['Add or change a photo'] },
+      { kind: 'h', text: 'The web address' },
+      {
+        kind: 'p',
+        text: 'Click `Generate` once, when the post (or page, or person) is new. After it is published, leave the `Web address` alone: people and Google have the old one. If you must change it, the website forwards the old address to the new one by itself.',
+      },
+      { kind: 'seealso', items: ["Post Sunday's sermon preview", 'Add or change a photo'] },
     ],
   },
 
@@ -729,7 +747,7 @@ export const guides: Guide[] = [
       {
         kind: 'path',
         items: ['Pages', 'All other pages', 'Who we are'],
-        link: { pane: 'page' },
+        link: { doc: 'page-who-we-are', type: 'page' },
       },
       {
         kind: 'p',
@@ -850,7 +868,7 @@ export const guides: Guide[] = [
       {
         kind: 'path',
         items: ['Site settings', 'Old web addresses'],
-        link: { pane: 'siteSettings;redirect' },
+        link: { pane: 'settings;redirect' },
       },
       {
         kind: 'steps',
@@ -1052,7 +1070,7 @@ guides.push(
     category: 'Sundays and notices',
     title: 'Quick update from your phone',
     icon: 'bolt',
-    lead: 'Two jobs made small enough for a phone.',
+    lead: 'The weekly jobs, made small enough for a phone.',
     diy: 'self',
     body: [
       {
@@ -1062,15 +1080,32 @@ guides.push(
       {
         kind: 'bullets',
         items: [
+          '**Post a photo**: from the camera into a gallery on a page or a new blog post. Saved as a draft for you to publish.',
+          "**Post Sunday's sermon preview**: the title, the passage, the preacher and a few lines. The home page names the sermon from it.",
           '**Put up a banner**: a short line across the top of every page, until the last day you pick.',
           '**Cancel or change something this week**: a red banner that comes down by itself after Sunday.',
+          '**Write a short news post**: an event or a word from a ministry, with a link if you have one.',
         ],
       },
+      { kind: 'shot', key: 'quick-update-tiles' },
       {
         kind: 'p',
-        text: 'Fill in the boxes and press the button at the bottom. It is published straight away and the website updates in a few minutes. To change it later, open it under Site settings, `Announcement banner`.',
+        text: 'Fill in the boxes and press the button at the bottom. Everything but a photo is published straight away, and the website updates in a few minutes. To change it later, press `Open it in the full editor`, or find it in `Content`: banners under Site settings, `Announcement banner`, posts under `Blog`.',
       },
-      { kind: 'seealso', items: ['Put a notice across the top of every page'] },
+      {
+        kind: 'callout',
+        tone: 'tip',
+        title: 'Put it on your home screen.',
+        text: 'On an iPhone, open the Studio in Safari, tap the share button and choose `Add to Home Screen`. On Android, open the Chrome menu and choose `Add to Home screen`. It then opens like an app.',
+      },
+      {
+        kind: 'seealso',
+        items: [
+          "Post Sunday's sermon preview",
+          'Snow days and changes this week',
+          'Post a photo from your phone',
+        ],
+      },
     ],
   },
   {
@@ -1083,11 +1118,12 @@ guides.push(
     body: [
       {
         kind: 'p',
-        text: 'Home has a card called **Sunday checklist** with the jobs that keep the website current each week. Two tick themselves when the website can see they are done:',
+        text: 'Home has a card called **Sunday checklist** with the jobs that keep the website current each week. Three tick themselves when the website can see they are done:',
       },
       {
         kind: 'bullets',
         items: [
+          "**Sunday's sermon preview**: a post filed under Sermon Preview is published this week.",
           '**A blog post this week**: a post dated this week is published.',
           '**Banners that have ended**: none is still switched on past its last day.',
         ],
@@ -1096,7 +1132,11 @@ guides.push(
         kind: 'p',
         text: "The website cannot see inside YouTube or Church Trac, so **Sunday's livestream** and **this week's events** have a box you tick yourself. Ticks start fresh every Monday.",
       },
-      { kind: 'seealso', items: ['What Home in the Studio shows you'] },
+      { kind: 'shot', key: 'home-checklist' },
+      {
+        kind: 'seealso',
+        items: ['What Home in the Studio shows you', "Post Sunday's sermon preview"],
+      },
     ],
   },
   {
@@ -1232,6 +1272,258 @@ guides.push(
   },
 );
 
+// ── The weekly and monthly jobs (2026-10-19, docs/agent/studio-plan.md) ─────
+// One guide per job in the plan that had none. Pictures are { kind: 'shot' }
+// keys from ./shots.ts; the plan says which guides also want a video.
+guides.push(
+  {
+    slug: 'sermon-preview',
+    category: 'Sundays and notices',
+    title: "Post Sunday's sermon preview",
+    icon: 'scripture',
+    lead: 'A few lines each week, and the home page names Sunday’s sermon from them.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'p',
+        text: 'The sermon preview is the one job most weeks have. It goes on the Blog, and the top of the home page uses it to say what Sunday’s sermon is, which passage it is on and who is preaching. The quickest way is from your phone.',
+      },
+      { kind: 'h', text: 'From your phone' },
+      {
+        kind: 'steps',
+        items: [
+          'Open the Studio and tap `Quick update` (on Home it is also a button on the Sunday checklist).',
+          "Tap `Post Sunday's sermon preview`.",
+          "Type the sermon's title, the Bible passage, who is preaching and a sentence or two about it.",
+          'Add more if you like. Leave a blank line between paragraphs.',
+          'Tap `Post the preview`. It is on the Blog and the home page in a few minutes.',
+        ],
+      },
+      { kind: 'shot', key: 'quick-sermon-form' },
+      { kind: 'h', text: 'Which Sunday it is for' },
+      {
+        kind: 'p',
+        text: 'The website files a preview under the first Sunday on or after its `Date`. Post it any day from Monday to Sunday morning and it is for that Sunday. Posting it early in the week is fine, and gives people time to read the passage.',
+      },
+      { kind: 'h', text: 'The Bible passage' },
+      {
+        kind: 'p',
+        text: 'Type it as book, chapter and verses, like "John 6:35-40" or "Psalm 23:1-6". The home page and the post’s page pick the first one they find in the opening lines, so keep it at the top.',
+      },
+      { kind: 'h', text: 'Who is preaching' },
+      {
+        kind: 'p',
+        text: 'The name in `Author` prints under the title, and the home page names that person as the preacher. Leave it empty, or use the church’s name, and no preacher is named.',
+      },
+      { kind: 'h', text: 'Filing it as a sermon preview' },
+      {
+        kind: 'p',
+        text: 'A post counts as a sermon preview because its `Categories` include "Sermon Preview". The phone form does this for you. If you write one in the full editor, add that category, or the home page will not name the sermon.',
+      },
+      {
+        kind: 'callout',
+        tone: 'tip',
+        title: 'Adding a picture or fixing a word',
+        text: 'After posting, tap `Open it in the full editor`, or find it under `Blog`, then `Posts`. Change what you need and press `Publish` again.',
+      },
+      {
+        kind: 'seealso',
+        items: ['Add a blog post or a sermon preview', 'What the home page fills in by itself'],
+      },
+    ],
+  },
+  {
+    slug: 'visitor-newsletter',
+    category: 'Sundays and notices',
+    title: "Add this month's Visitor",
+    icon: 'download',
+    lead: 'Pick the month and year, upload the PDF. The website draws its cover.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'path',
+        items: ['Pages', 'All other pages', 'The Visitor', 'The Visitor'],
+        link: { doc: 'page-visitor', type: 'page' },
+      },
+      {
+        kind: 'steps',
+        items: [
+          "On Home, press `Add this month's Visitor`. It opens The Visitor page at the list of issues.",
+          'Click `Add item` at the bottom of the list.',
+          'Type the month as a word in `Title`, like "November", and the `Year`, like "2026".',
+          'Under `File`, click `Upload` and pick the PDF of the issue.',
+          'Close the little window and press `Publish`.',
+        ],
+      },
+      { kind: 'shot', key: 'visitor-issues' },
+      {
+        kind: 'callout',
+        tone: 'positive',
+        title: 'The newest issue goes to the top by itself.',
+        text: 'The website sorts the issues by month and year, shows the newest on the home page and draws each cover from the first page of the PDF. Nothing to tick, nothing to move.',
+      },
+      {
+        kind: 'p',
+        text: '_The title must be just the month’s name. "November 2026 issue" will not sort, because the website reads the month from it._',
+      },
+      { kind: 'seealso', items: ['What the home page fills in by itself'] },
+    ],
+  },
+  {
+    slug: 'this-week-change',
+    category: 'Sundays and notices',
+    title: 'Snow days and changes this week',
+    icon: 'place',
+    lead: 'A red line across the top of every page that takes itself down after Sunday.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'steps',
+        items: [
+          'Open the Studio on your phone and tap `Quick update`.',
+          'Tap `Cancel or change something this week`.',
+          'Type what is changing in one sentence, like "No Wednesday Night Live this week because of the snow."',
+          'Tap the button at the bottom.',
+        ],
+      },
+      { kind: 'shot', key: 'quick-update-tiles' },
+      {
+        kind: 'p',
+        text: 'The banner is red, sits above the menu on every page, and comes down by itself after the coming Sunday. For news that should stay up longer, or should link somewhere, use `Put up a banner` instead and pick the last day.',
+      },
+      {
+        kind: 'callout',
+        tone: 'careful',
+        title: 'Leave the service time alone.',
+        text: 'For one Sunday that is different, a banner is the right tool. Change the `Service time` in Site settings only when the time changes for good.',
+      },
+      {
+        kind: 'seealso',
+        items: ['Put a notice across the top of every page', 'Quick update from your phone'],
+      },
+    ],
+  },
+  {
+    slug: 'post-a-photo',
+    category: 'Pictures',
+    title: 'Post a photo from your phone',
+    icon: 'image',
+    lead: 'Straight from the camera to a page’s gallery or a new blog post.',
+    diy: 'self',
+    body: [
+      {
+        kind: 'steps',
+        items: [
+          'Open the Studio on your phone and tap `Quick update`, then `Post a photo`.',
+          'Take a photo or pick one from your phone.',
+          'Describe it in a sentence, like "Children decorating pumpkins in Fellowship Hall". This is read aloud to people who cannot see it.',
+          'Choose where it goes: a gallery on one of the pages, or a new blog post.',
+          'It is saved as a draft. Open it, check it, and press `Publish`.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'careful',
+        title: 'Children need a parent’s permission first.',
+        text: 'Only post a photo of a child when the church has a parent’s permission on file, and never add a child’s name.',
+      },
+      { kind: 'seealso', items: ['Add or change a photo'] },
+    ],
+  },
+  {
+    slug: 'livestream',
+    category: 'Sundays and notices',
+    title: "Sunday's livestream and last week's replay",
+    icon: 'event',
+    lead: 'The website finds both on YouTube by itself. Here is what it needs from you.',
+    diy: 'mixed',
+    body: [
+      {
+        kind: 'bullets',
+        items: [
+          '**Watch live**: the home page’s Watch live link goes to the church’s next scheduled stream. Schedule Sunday’s stream on YouTube during the week, and tick it on the Sunday checklist.',
+          '**Last Sunday**: after the service, the website finds the recording on the church’s YouTube channel and shows it as last Sunday’s replay. It looks again on Sunday afternoon and Monday morning.',
+          '**The YouTube channel**: the address is in Site settings, `Church details`, `YouTube channel`. Change it only if the church moves to a new channel.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'note',
+        title: 'Nothing to type in the Studio.',
+        text:
+          'If the replay is missing by Monday lunchtime, check the video is public on YouTube, then tell ' +
+          SITE.contactName +
+          '.',
+      },
+      { kind: 'seealso', items: ['The Sunday checklist', 'What the home page fills in by itself'] },
+    ],
+  },
+  {
+    slug: 'church-trac-content',
+    category: 'Sundays and notices',
+    title: 'What comes from Church Trac',
+    icon: 'event',
+    lead: "The calendar, the Kid's Corner and The Moose's Message are written in Church Trac, not here.",
+    diy: 'self',
+    body: [
+      {
+        kind: 'bullets',
+        items: [
+          "**What's On**: the events page reads the Church Trac calendar. Add or change an event in Church Trac.",
+          "**The Kid's Corner** and **The Moose's Message**: the two ministry newsletters are pages in Church Trac. The website copies them in each morning.",
+          '**Forms** (the connection card, prayer requests, sign-ups) are Church Trac forms. To put one on a page, see the guide below.',
+        ],
+      },
+      {
+        kind: 'callout',
+        tone: 'note',
+        title: 'Changes show by the next morning.',
+        text: 'The website rebuilds every morning and copies in what is in Church Trac then. A change you need sooner shows after anyone publishes anything in the Studio.',
+      },
+      {
+        kind: 'seealso',
+        items: ['Put a Church Trac form on a page', 'Links to giving, forms and sermons'],
+      },
+    ],
+  },
+  {
+    slug: 'menus',
+    category: 'Once in a while',
+    title: 'Change the top menu or the footer',
+    icon: 'link',
+    lead: 'Rename a menu item, add a page to a dropdown, or change the footer links.',
+    diy: 'mixed',
+    body: [
+      {
+        kind: 'path',
+        items: ['Site settings', 'Site settings', 'Menus'],
+        link: { doc: 'siteSettings', field: 'navItems' },
+      },
+      {
+        kind: 'steps',
+        items: [
+          'Open `Site settings`, then `Site settings` again, then the `Menus` tab.',
+          '`Top menu` has the links along the top. "Our Church" and "News" are dropdowns: open one to see its links.',
+          'To add a link, click `Add item`, type the `Label`, choose `A page on this site` and pick the page.',
+          'Drag the dotted handle on the left of a row to move it.',
+          'Publish, then look at the website on your phone too: the phone menu is the same list.',
+        ],
+      },
+      {
+        kind: 'p',
+        text: 'The footer’s link columns are under the `Social media and footer` tab, in `Footer link columns`.',
+      },
+      {
+        kind: 'callout',
+        tone: 'careful',
+        title: 'Keep the top menu short.',
+        text: 'Six items fit on one line on a laptop. A new page usually belongs in one of the dropdowns.',
+      },
+      { kind: 'seealso', items: ['Make a new page from a template'] },
+    ],
+  },
+);
+
 /**
  * Which guides "Help for this page" shows for each document type (kit.config.ts
  * guide.forType, PORTS.md card 110). '*' is the fallback for anything unlisted.
@@ -1241,6 +1533,7 @@ export const GUIDES_FOR_TYPE: Record<string, string[]> = {
   homePage: ['home-page', 'edit-a-page', 'photos'],
   page: [
     'edit-a-page',
+    'visitor-newsletter',
     'page-templates',
     'reuse-sections',
     'synced-sections',
@@ -1249,19 +1542,41 @@ export const GUIDES_FOR_TYPE: Record<string, string[]> = {
     'old-web-addresses',
   ],
   journalPage: ['blog-post'],
-  journalEntry: ['blog-post', 'photos', 'undo-earlier'],
+  journalEntry: ['sermon-preview', 'blog-post', 'photos', 'undo-earlier'],
   journalCategory: ['blog-post'],
   staffMember: ['staff', 'photos'],
   ministry: ['ministries', 'photos'],
-  churchTracForm: ['church-trac-forms'],
-  announcement: ['announcement', 'quick-update'],
-  siteSettings: ['service-times', 'church-links', 'website-status'],
+  churchTracForm: ['church-trac-forms', 'church-trac-content'],
+  announcement: ['announcement', 'this-week-change', 'quick-update'],
+  siteSettings: ['service-times', 'church-links', 'menus', 'livestream', 'website-status'],
   redirect: ['old-web-addresses'],
   sectionPreset: ['reuse-sections', 'synced-sections'],
 };
 
 /**
- * The "How to" chip on a field (kit.config.ts guide.forField, PORTS.md card 134).
- * Empty for now: a field named here gets a chip that opens its guide section.
+ * The "How to" chip on a field (kit.config.ts guide.forField, PORTS.md card 134):
+ * the fields the office is most likely to get wrong (docs/agent/studio-plan.md,
+ * 2026-10-19). A field NAME wins over its type, so only names that mean one
+ * thing everywhere are listed. At most 16 (studio-guides.test.ts).
  */
-export const GUIDE_FOR_FIELD: FieldGuideMap = { fields: {}, types: {} };
+export const GUIDE_FOR_FIELD: FieldGuideMap = {
+  fields: {
+    categories: { guide: 'sermon-preview', section: 'Filing it as a sermon preview' },
+    author: { guide: 'sermon-preview', section: 'Who is preaching' },
+    publishedAt: { guide: 'sermon-preview', section: 'Which Sunday it is for' },
+    excerpt: { guide: 'blog-post' },
+    slug: { guide: 'blog-post', section: 'The web address' },
+    endDate: { guide: 'announcement', section: 'Taking it down' },
+    serviceTime: { guide: 'service-times' },
+    givingUrl: { guide: 'church-links', section: 'Changing where a link goes' },
+    churchTracUrl: { guide: 'church-trac-content' },
+    youtubeUrl: { guide: 'livestream' },
+    navItems: { guide: 'menus' },
+    showOnSite: { guide: 'staff', section: 'When someone leaves, or is away for a while' },
+    contacts: { guide: 'ministries', section: 'When a coordinator changes' },
+    alt: { guide: 'photos', section: 'Why every photo needs a description' },
+    // The "Documents to download" section's list: The Visitor's issues live in one.
+    docs: { guide: 'visitor-newsletter' },
+  },
+  types: {},
+};

@@ -44,6 +44,8 @@ export const BRAND_ICON_ART: Partial<Record<BrandIconKey, BrandIcon>> = {
   page: Window,
   sections: Window,
   savedSection: Window,
+  // Sunday's sermon preview (Quick update, 2026-10-19): worship, so the window.
+  scripture: Window,
   // The Way: the door for the church's address and plan-a-visit.
   place: Door,
   // Witness: the lamp for the banner, the blog and its posts.

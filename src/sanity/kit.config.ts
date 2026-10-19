@@ -26,9 +26,21 @@ import { BellIcon } from '@sanity/icons/Bell';
 import { CalendarIcon } from '@sanity/icons/Calendar';
 import { ClockIcon } from '@sanity/icons/Clock';
 import { EditIcon } from '@sanity/icons/Edit';
-import { UsersIcon } from '@sanity/icons/Users';
+import { DocumentPdfIcon } from '@sanity/icons/DocumentPdf';
 import { comingSunday } from '../lib/studio-kit';
-import { buildNotice, NOTICE_MAX } from '../lib/quick-updates';
+import {
+  buildNewsPost,
+  buildNotice,
+  buildSermonPreview,
+  NOTICE_MAX,
+  POST_SUMMARY_MAX,
+  POST_TITLE_MAX,
+  postSlug,
+} from '../lib/quick-updates';
+import { slugify } from '../lib/slugify';
+import { BookIcon } from '@sanity/icons/Book';
+import { DocumentTextIcon } from '@sanity/icons/DocumentText';
+import type { SanityClient } from 'sanity';
 import { runPageCheck } from './actions/checkPage';
 import { PAGE_BUILDER_TYPES } from './pageBuilderConfig';
 import type { PageRules } from '../lib/page-guardrails';
@@ -37,6 +49,16 @@ import type { PageRules } from '../lib/page-guardrails';
 const SOFIA = "'Sofia Sans Semi Condensed Variable', system-ui, sans-serif";
 
 const PUBLISHED = '!(_id in path("drafts.**"))';
+
+/** Is a post's web address already used? Then the phone forms add the date to it. */
+async function slugTaken(client: SanityClient, title: string, now: Date): Promise<boolean> {
+  const slug = postSlug(title, now.toISOString().slice(0, 10));
+  const n = await client.fetch<number>(
+    'count(*[_type == "journalEntry" && slug.current == $slug])',
+    { slug },
+  );
+  return n > 0;
+}
 
 /**
  * Page types with a Google description (seoDescription). Not journalEntry: a
@@ -144,6 +166,15 @@ export const kitConfig: KitConfig = {
   thisWeekTitle: 'Sunday checklist',
   thisWeek: [
     {
+      id: 'sermon',
+      title: "Post Sunday's sermon preview",
+      detail:
+        "The title, the passage and a few lines. The home page names this Sunday's sermon from it.",
+      query: `count(*[_type == "journalEntry" && ${PUBLISHED} && publishedAt >= $weekStart && "category-sermon-preview" in categories[]._ref])`,
+      target: { tool: 'quick-update' },
+      targetLabel: 'Post the preview',
+    },
+    {
       id: 'news',
       title: 'Post something on the blog',
       detail:
@@ -176,10 +207,108 @@ export const kitConfig: KitConfig = {
     },
   ],
 
-  // Quick update (card 111): the jobs the office does from a phone. Each form
-  // publishes straight away, so the builders in src/lib/quick-updates.ts
-  // return whole, valid documents (tested in quick-updates.test.ts).
+  // Quick update (card 111): the jobs the office does from a phone, every
+  // weekly one in docs/agent/studio-plan.md (2026-10-19): the sermon preview,
+  // a banner, a change this week, a short news post. Each form publishes
+  // straight away, so the builders in src/lib/quick-updates.ts return whole,
+  // valid documents (tested in quick-updates.test.ts).
+  // "Post a photo" (card 125) is the first button: a photo from the phone into
+  // a gallery on a page, or into a new blog post. Always a DRAFT; the office
+  // presses Publish. The note repeats the church's rule for children's photos.
+  postPhoto: {
+    galleryTypes: [...PAGE_BUILDER_TYPES],
+    note: "Photos of children need a parent's permission on file first, and never add a child's name.",
+    post: {
+      label: 'A new blog post',
+      type: 'journalEntry',
+      build: ({ title, alt, caption, image, now }) => ({
+        _type: 'journalEntry',
+        title,
+        slug: { _type: 'slug', current: slugify(title) },
+        excerpt: (caption || alt).slice(0, POST_SUMMARY_MAX),
+        coverImage: image,
+        publishedAt: now.toISOString(),
+        categories: [{ _type: 'reference', _ref: 'category-fbcm-events', _key: 'events' }],
+        body: [
+          {
+            _type: 'block',
+            _key: 'photo-intro',
+            style: 'normal',
+            markDefs: [],
+            children: [
+              { _type: 'span', _key: 'photo-intro-text', text: caption || alt, marks: [] },
+            ],
+          },
+        ],
+      }),
+    },
+  },
+
   quickUpdate: [
+    {
+      id: 'sermon-preview',
+      title: "Post Sunday's sermon preview",
+      detail: 'The title, the passage and a few lines. It goes on the blog and the home page.',
+      icon: BookIcon,
+      // The window (worship): the sermon. The other tiles keep the lamp and the door.
+      meaning: 'scripture',
+      submitLabel: 'Post the preview',
+      fields: [
+        {
+          name: 'title',
+          title: "The sermon's title",
+          kind: 'string',
+          required: true,
+          max: POST_TITLE_MAX,
+          description: 'As it will appear on the blog, like "Bread for the journey".',
+        },
+        {
+          name: 'passage',
+          title: 'The Bible passage',
+          kind: 'string',
+          required: true,
+          max: 60,
+          description:
+            'Book, chapter and verses, like "John 6:35-40". The home page shows it beside the sermon.',
+        },
+        {
+          name: 'preacher',
+          title: 'Who is preaching',
+          kind: 'string',
+          max: 60,
+          description: 'Their name as it should read under the title. Leave it empty for no name.',
+        },
+        {
+          name: 'summary',
+          title: 'A sentence or two about it',
+          kind: 'text',
+          required: true,
+          max: POST_SUMMARY_MAX,
+          description: 'Shown under the title on the Blog page and in Google.',
+        },
+        {
+          name: 'more',
+          title: 'Anything more (optional)',
+          kind: 'text',
+          max: 4000,
+          description: 'Leave a blank line between paragraphs.',
+        },
+      ],
+      build: async (v, { now, client }) =>
+        buildSermonPreview(
+          {
+            title: v.title,
+            passage: v.passage,
+            preacher: v.preacher,
+            summary: v.summary,
+            more: v.more,
+          },
+          now,
+          await slugTaken(client, v.title, now),
+        ),
+      doneMessage:
+        'The preview will be on the blog and the home page in a few minutes. To add a picture or fix a word, open it in the full editor.',
+    },
     {
       id: 'notice',
       title: 'Put up a banner',
@@ -236,6 +365,53 @@ export const kitConfig: KitConfig = {
         buildNotice({ message: v.message, lastDay: comingSunday(now) }, 'urgent'),
       doneMessage:
         'The banner will be on the website in a few minutes and comes down by itself after Sunday.',
+    },
+    {
+      id: 'news',
+      title: 'Write a short news post',
+      detail: 'An event coming up or a word from a ministry, filed under FBCM Events.',
+      icon: DocumentTextIcon,
+      meaning: 'post',
+      submitLabel: 'Post it',
+      fields: [
+        {
+          name: 'title',
+          title: 'Title',
+          kind: 'string',
+          required: true,
+          max: POST_TITLE_MAX,
+          description: 'Short and specific, like "Trunk or Treat this Saturday".',
+        },
+        {
+          name: 'summary',
+          title: 'A sentence or two',
+          kind: 'text',
+          required: true,
+          max: POST_SUMMARY_MAX,
+          description: 'What, when and where. Shown under the title on the Blog page.',
+        },
+        {
+          name: 'more',
+          title: 'Anything more (optional)',
+          kind: 'text',
+          max: 4000,
+          description: 'Leave a blank line between paragraphs.',
+        },
+        {
+          name: 'link',
+          title: 'A link for more (optional)',
+          kind: 'url',
+          description: 'A sign-up form or an event page, starting with https://',
+        },
+      ],
+      build: async (v, { now, client }) =>
+        buildNewsPost(
+          { title: v.title, summary: v.summary, more: v.more, link: v.link },
+          now,
+          await slugTaken(client, v.title, now),
+        ),
+      doneMessage:
+        'The post will be on the blog in a few minutes. To add a picture, open it in the full editor.',
     },
   ],
 
@@ -390,10 +566,16 @@ export const kitConfig: KitConfig = {
       icon: BellIcon,
     },
     {
-      title: 'Update the staff list',
-      detail: 'Names, roles and photos on the Staff page.',
-      target: { pane: 'people;staffMember' },
-      icon: UsersIcon,
+      // Monthly (docs/agent/studio-plan.md): straight to The Visitor's list of issues.
+      // The staff list is on "Your pages" for the rarer staff changes.
+      title: "Add this month's Visitor",
+      detail: 'The newsletter: pick the month and year, upload the PDF.',
+      target: {
+        doc: 'page-visitor',
+        type: 'page',
+        field: 'pageBuilder[_key=="visitor-issues"].docs',
+      },
+      icon: DocumentPdfIcon,
     },
   ],
 
