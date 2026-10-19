@@ -1,5 +1,11 @@
 # Studio tutorial videos: scripts
 
+Status (2026-10-19, phase B): recorded and registered in `src/sanity/guides/videos.ts`: 1 `sermon-preview`, 2
+`announcement`, 3 `visitor-newsletter` (now the Quick update form, not the page list) and 5 `service-times` (now the Quick
+update form). The recorded scripts are the JSON files in `tools/tutorial-videos/scripts/` (390 wide, rings instead of
+clicks on the last button, which the recorder never presses). Still to record: 4, 6, 7, and a Quick update overview whose
+rings must scroll each tile into view first. Rerun with `node tools/tutorial-videos/record.mjs <script> --serve --music <mp3>`.
+
 Written 2026-10-19 (`docs/agent/studio-plan.md`), to be recorded with the starter's tutorial-video pipeline once card
 137 lands (Playwright against the local Studio with sample data, burned-in captions, mp4 and webm, every caption frame
 checked). Each finished clip goes on its guide as `video: '/guides/<slug>.mp4'` and shows under "Watch how it is done"

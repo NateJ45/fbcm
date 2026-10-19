@@ -1,0 +1,55 @@
+{
+  "slug": "visitor-newsletter",
+  "title": "Add this month's Visitor",
+  "start": "/quick-update",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "ready": "[data-tour=\"quick-list\"]",
+  "steps": [
+    {
+      "do": "ring",
+      "target": "[data-quick=\"visitor\"]",
+      "caption": "The newsletter is on Quick update.",
+      "ms": 1800,
+      "poster": true
+    },
+    {
+      "do": "click",
+      "target": "[data-quick=\"visitor\"]",
+      "caption": "Add this month's Visitor."
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-field-title\"]",
+      "caption": "The month on the front of the newsletter.",
+      "ms": 2200
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-field-year\"]",
+      "caption": "Check the year.",
+      "ms": 1600
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-field-file\"]",
+      "caption": "Choose the PDF from your phone or computer.",
+      "ms": 2400
+    },
+    {
+      "do": "scroll",
+      "target": "[data-tour=\"quick-submit\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-submit\"]",
+      "caption": "The cover is drawn from its first page.",
+      "ms": 2600
+    }
+  ],
+  "cover": {
+    "selectors": ["[data-testid=\"whats-new-root\"]", "[data-testid=\"whats-new-card\"]"]
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "slug": "announcement",
+  "title": "Put up a banner, or a snow day",
+  "start": "/quick-update",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "ready": "[data-tour=\"quick-list\"]",
+  "steps": [
+    {
+      "do": "ring",
+      "target": "[data-quick=\"notice\"]",
+      "caption": "Banners are on Quick update.",
+      "ms": 1800,
+      "poster": true
+    },
+    {
+      "do": "click",
+      "target": "[data-quick=\"notice\"]",
+      "caption": "Put up a banner: it stays until a day you pick."
+    },
+    {
+      "do": "type",
+      "target": "#quick-message",
+      "text": "Trunk or Treat this Saturday at 5 pm.",
+      "caption": "One short sentence."
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-field-lastDay\"]",
+      "caption": "It comes down by itself after this day.",
+      "ms": 2200
+    },
+    {
+      "do": "scroll",
+      "target": "[data-tour=\"quick-submit\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-submit\"]",
+      "caption": "Press the button. It is up in a few minutes.",
+      "ms": 2000
+    },
+    {
+      "do": "click",
+      "target": "text:Back",
+      "caption": "For a snow day, go back to the list."
+    },
+    {
+      "do": "ring",
+      "target": "[data-quick=\"this-week\"]",
+      "caption": "Cancel or change something this week.",
+      "ms": 2000
+    },
+    {
+      "do": "click",
+      "target": "[data-quick=\"this-week\"]",
+      "caption": "It makes a red banner."
+    },
+    {
+      "do": "type",
+      "target": "#quick-message",
+      "text": "No Wednesday Night Live this week because of the snow.",
+      "caption": "Say what is changing."
+    },
+    {
+      "do": "scroll",
+      "target": "[data-tour=\"quick-submit\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-submit\"]",
+      "caption": "It comes down by itself after Sunday.",
+      "ms": 2600
+    }
+  ],
+  "cover": {
+    "selectors": ["[data-testid=\"whats-new-root\"]", "[data-testid=\"whats-new-card\"]"]
+  }
+}

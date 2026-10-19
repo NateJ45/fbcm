@@ -1,13 +1,153 @@
 {
   "base": "http://localhost:4321/kit-harness/studio",
-  "viewport": { "width": 1280, "height": 800 },
+  "viewport": {
+    "width": 1280,
+    "height": 1500
+  },
   "shots": [
     {
-      "key": "quick-update-list",
+      "key": "quick-sermon-form",
       "path": "/quick-update",
-      "waitFor": "[data-tour=\"quick-list\"]",
-      "clip": "[data-tour=\"quick-list\"]",
-      "measure": { "Pick the job you want to do.": "[data-quick=\"banner-message\"]" }
+      "steps": [
+        {
+          "do": "click",
+          "target": "[data-quick=\"sermon-preview\"]"
+        },
+        {
+          "do": "type",
+          "target": "#quick-title",
+          "text": "Bread for the journey"
+        },
+        {
+          "do": "type",
+          "target": "#quick-passage",
+          "text": "John 6:35-40"
+        },
+        {
+          "do": "type",
+          "target": "#quick-preacher",
+          "text": "Sam Example"
+        },
+        {
+          "do": "type",
+          "target": "#quick-summary",
+          "text": "What does it mean to be fed? Come and find out on Sunday."
+        }
+      ],
+      "waitFor": "[data-tour=\"quick-submit\"]",
+      "clip": {
+        "x": 340,
+        "y": 90,
+        "width": 600,
+        "height": 1100
+      },
+      "measure": {
+        "The sermon's title.": "[data-tour=\"quick-field-title\"]",
+        "The passage.": "[data-tour=\"quick-field-passage\"]",
+        "Post it.": "[data-tour=\"quick-submit\"]"
+      }
+    },
+    {
+      "key": "banner-form",
+      "path": "/quick-update",
+      "steps": [
+        {
+          "do": "click",
+          "target": "text:Back"
+        },
+        {
+          "do": "click",
+          "target": "[data-quick=\"notice\"]"
+        },
+        {
+          "do": "type",
+          "target": "#quick-message",
+          "text": "Trunk or Treat this Saturday at 5 pm."
+        }
+      ],
+      "waitFor": "[data-tour=\"quick-submit\"]",
+      "clip": {
+        "x": 340,
+        "y": 90,
+        "width": 600,
+        "height": 900
+      },
+      "measure": {
+        "One short sentence.": "[data-tour=\"quick-field-message\"]",
+        "It comes down after this day.": "[data-tour=\"quick-field-lastDay\"]",
+        "Press this.": "[data-tour=\"quick-submit\"]"
+      }
+    },
+    {
+      "key": "quick-visitor-form",
+      "path": "/quick-update",
+      "steps": [
+        {
+          "do": "click",
+          "target": "text:Back"
+        },
+        {
+          "do": "click",
+          "target": "[data-quick=\"visitor\"]"
+        }
+      ],
+      "waitFor": "[data-tour=\"quick-submit\"]",
+      "clip": {
+        "x": 340,
+        "y": 90,
+        "width": 600,
+        "height": 900
+      },
+      "measure": {
+        "The month on the front.": "[data-tour=\"quick-field-title\"]",
+        "The PDF.": "[data-tour=\"quick-field-file\"]",
+        "Add it.": "[data-tour=\"quick-submit\"]"
+      }
+    },
+    {
+      "key": "new-post-form",
+      "path": "/intent/create/type=journalEntry",
+      "waitFor": "[data-testid=\"document-panel-scroller\"]",
+      "settle": 4000,
+      "clip": {
+        "x": 441,
+        "y": 115,
+        "width": 839,
+        "height": 880
+      },
+      "measure": {
+        "Type the title, then press Generate.": "[data-testid=\"field-title\"]"
+      }
+    },
+    {
+      "key": "church-details",
+      "path": "/intent/edit/id=siteSettings;type=siteSettings;path=serviceTime",
+      "waitFor": "[data-testid=\"field-serviceTime\"]",
+      "settle": 4000,
+      "clip": {
+        "x": 642,
+        "y": 115,
+        "width": 638,
+        "height": 560
+      },
+      "measure": {
+        "Type it the way it should read.": "[data-testid=\"field-serviceTime\"]"
+      }
+    },
+    {
+      "key": "visitor-issues",
+      "path": "/intent/edit/id=page-visitor;type=page;path=pageBuilder%5B_key%3D%3D%22visitor-issues%22%5D.docs",
+      "waitFor": "[data-testid=\"document-panel-scroller\"]",
+      "settle": 5000,
+      "clip": {
+        "x": 540,
+        "y": 180,
+        "width": 640,
+        "height": 800
+      },
+      "measure": {
+        "Add the new issue here.": "text:Add item"
+      }
     }
   ]
 }

@@ -1,0 +1,43 @@
+{
+  "slug": "service-times",
+  "title": "Change the service time",
+  "start": "/quick-update",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "ready": "[data-tour=\"quick-list\"]",
+  "steps": [
+    {
+      "do": "ring",
+      "target": "[data-quick=\"church-details\"]",
+      "caption": "Service time and phone are on Quick update.",
+      "ms": 1800,
+      "poster": true
+    },
+    {
+      "do": "click",
+      "target": "[data-quick=\"church-details\"]",
+      "caption": "Every page reads the time from here."
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-field-serviceTime\"]",
+      "caption": "Type it the way it should read.",
+      "ms": 2400
+    },
+    {
+      "do": "scroll",
+      "target": "[data-tour=\"quick-submit\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-submit\"]",
+      "caption": "Save it. Every page follows in a few minutes.",
+      "ms": 2600
+    }
+  ],
+  "cover": {
+    "selectors": ["[data-testid=\"whats-new-root\"]", "[data-testid=\"whats-new-card\"]"]
+  }
+}

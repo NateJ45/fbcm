@@ -38,6 +38,8 @@ import {
   postSlug,
 } from '../lib/quick-updates';
 import { slugify } from '../lib/slugify';
+import { QUICK_JOBS } from './quick-jobs';
+import { TOURS, WELCOME, WHATS_NEW } from './studio-tours';
 import { BookIcon } from '@sanity/icons/Book';
 import { DocumentTextIcon } from '@sanity/icons/DocumentText';
 import type { SanityClient } from 'sanity';
@@ -413,6 +415,8 @@ export const kitConfig: KitConfig = {
       doneMessage:
         'The post will be on the blog in a few minutes. To add a picture, open it in the full editor.',
     },
+    // Card 137 jobs written as data (monthly, now and then, seasonal): src/sanity/quick-jobs.ts.
+    ...QUICK_JOBS,
   ],
 
   checkup: {
@@ -583,6 +587,13 @@ export const kitConfig: KitConfig = {
   // checks as the "Check this page..." action, on the page-builder types.
   pageCheck: { types: [...PAGE_BUILDER_TYPES], run: (doc, client) => runPageCheck(client, doc) },
 
+  // Card 137: the spotlight tours, the welcome and What's new live in
+  // studio-tours.ts (plain data, unit-tested; the plan is docs/agent/studio-plan.md).
+  tours: TOURS,
+  welcome: WELCOME,
+  whatsNew: WHATS_NEW,
+
+  // The plain fallback (the type requires it): with `tours` set, the kit uses those instead.
   tourSteps: [
     {
       title: 'This is Home',
