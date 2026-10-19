@@ -156,29 +156,20 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       a table" and "Staff members as a table"; Share a preview's dialog (its
       `SHARE_PREVIEW_SECRET` Worker secret is set, 2026-10-18); the editor's rich text in Castoro; the wordmark in the top bar; a page made from each template group; "+ Add item" in grid view; Insert a saved section as a copy and as synced (after the seed); the yellow page-rule warnings.
 
-### 1g. The Studio complete pass, phase B (2026-10-19, waits on starter card 137)
+### 1g. The Studio complete pass, phase B (2026-10-19, in PR; waits on a signed-in check)
 
-Phase A is in (`docs/agent/studio-plan.md`). When card 137 lands: merge `origin/main` and resync the PORTABLE
-files, wire `src/sanity/guides/tours.ts` (the welcome tour, four on-demand tours, the welcome and What's new modals)
-and the guide `video` blocks, record the seven clips in `docs/agent/studio-videos.md` with the pipeline (sample data
-only), check every caption frame, then the gates. The generic asks for 137 (a `file` and a `select` Quick update
-field kind, a patch form, a checklist item that opens one form) are listed at the end of the plan.
+Phase B is built (tours, data-only Quick update jobs, guide pictures, four clips: docs/agent/studio-plan.md).
 
-- [ ] **Signed-in check of the new Quick update forms**: the sermon preview and the news post publish a whole post
-      (title, web address, summary, category, body); a second post with the same title gets the date added to its
-      web address; the sermon item on the Sunday checklist ticks itself; Post a photo saves a draft.
-- [ ] **Six guide captures still to take** (`quick-sermon-form`, `banner-form`, `new-post-form`,
-      `publish-button`, `church-details`, `visitor-issues`; `quick-update-tiles` and `home-checklist` are in).
-      The kit harness on a dev port that is not a Sanity CORS origin cannot open documents: answering CORS for reads
-      in Playwright works for queries, but the Studio's EventSource listener fails, so editors show empty fields, a
-      "does not have permission to publish" banner and no footer. Capture these with card 137's screenshot script, or
-      on port 4321 (a CORS origin) signed in, with sample text typed and never published.
-- [ ] **The "How to" chip's marker draws as a long gold bar** before the words (seen in the harness, 2026-10-19):
-      the look's hairline marker takes the chip's free width. Kit file (PORTABLE), so a starter fix if confirmed
-      signed in.
-- [ ] **"Add this month's Visitor"** on Home opens The Visitor page at its issues list (the field path
-      `pageBuilder[_key=="visitor-issues"].docs`); if the page's section key ever changes, change it in
-      `kit.config.ts` too.
+- [ ] **Signed-in check of Quick update**: the sermon preview and the news post publish a whole post; the Visitor
+      job adds an issue at the top of the list (`pageBuilder[_key=="visitor-issues"].docs`, a number year, a PDF); Take
+      down a banner and Show or hide a staff member list their documents and save; Change the service time or phone
+      edits Site settings; Post a photo saves a draft; the Christmas and Easter banners show only in their weeks. The
+      tours' anchors (`tool:presentation`, `tool:site-guide`, the `quick:<id>` tiles) light up and none lands centred.
+- [ ] **Clips to redo**: `quick-update-tour` (rings need to scroll each tile into view first) and scripts 4, 6, 7 in
+      `docs/agent/studio-videos.md`.
+- [ ] **`publish-button` picture**: draws the wireframe; the harness cannot show Publish. Capture it signed in.
+- [ ] **The "How to" chip's marker draws as a long gold bar** (seen 2026-10-19): card 137 boxed it at 14 by 10; check
+      signed in that it is fixed.
 
 ## Known gaps, deliberately open
 

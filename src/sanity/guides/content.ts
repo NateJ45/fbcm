@@ -263,8 +263,15 @@ export const guides: Guide[] = [
     title: 'Change the service time or the Sunday details',
     icon: 'clock',
     lead: 'Change it once, in Site settings, and every page follows.',
+    video: 'service-times',
     diy: 'self',
     body: [
+      {
+        kind: 'callout',
+        tone: 'tip',
+        title: 'Quicker from a phone.',
+        text: '`Quick update` has `Change the service time or phone`: two boxes and a button. For the address and the office hours, use Site settings below.',
+      },
       {
         kind: 'path',
         items: ['Site settings', 'Site settings', 'Church details'],
@@ -386,6 +393,7 @@ export const guides: Guide[] = [
     title: 'Put a notice across the top of every page',
     icon: 'notice',
     lead: 'For a closing, a change of plan, or news everyone should see.',
+    video: 'announcement',
     diy: 'self',
     body: [
       {
@@ -416,6 +424,10 @@ export const guides: Guide[] = [
         text: 'The notice sits above the menu on every page of the site. If more than one is switched on, the most urgent one shows.',
       },
       { kind: 'h', text: 'Taking it down' },
+      {
+        kind: 'p',
+        text: 'From a phone, `Quick update` has `Take down a banner`: pick the one that is still up and switch it off. It stays in the list if you want it again.',
+      },
       {
         kind: 'callout',
         tone: 'caution',
@@ -662,6 +674,12 @@ export const guides: Guide[] = [
           'Add a `Photo` and a few lines in `About them` if you have them.',
           'Publish.',
         ],
+      },
+      {
+        kind: 'callout',
+        tone: 'tip',
+        title: 'Someone away or leaving?',
+        text: '`Quick update` has `Show or hide a staff member`. It switches `Show on the Staff page` off without losing their details.',
       },
       {
         kind: 'p',
@@ -1085,7 +1103,15 @@ guides.push(
           '**Put up a banner**: a short line across the top of every page, until the last day you pick.',
           '**Cancel or change something this week**: a red banner that comes down by itself after Sunday.',
           '**Write a short news post**: an event or a word from a ministry, with a link if you have one.',
+          "**Add this month's Visitor**: pick the month, check the year and choose the PDF.",
+          '**Take down a banner**: pick one that is still up and switch it off. Nothing is deleted.',
+          '**Change the service time or phone**: type it the way it should read.',
+          '**Show or hide a staff member**: for someone who is away or has left.',
         ],
+      },
+      {
+        kind: 'p',
+        text: 'In November and December there is also a Christmas services banner, and in spring a Holy Week and Easter one. They only show in their weeks.',
       },
       { kind: 'shot', key: 'quick-update-tiles' },
       {
@@ -1282,6 +1308,7 @@ guides.push(
     title: "Post Sunday's sermon preview",
     icon: 'scripture',
     lead: 'A few lines each week, and the home page names Sunday’s sermon from them.',
+    video: 'sermon-preview',
     diy: 'self',
     body: [
       {
@@ -1338,8 +1365,21 @@ guides.push(
     title: "Add this month's Visitor",
     icon: 'download',
     lead: 'Pick the month and year, upload the PDF. The website draws its cover.',
+    video: 'visitor-newsletter',
     diy: 'self',
     body: [
+      { kind: 'h', text: 'From Quick update' },
+      {
+        kind: 'steps',
+        items: [
+          "Open `Quick update` and tap `Add this month's Visitor`.",
+          'Pick the month. It starts on this month.',
+          'Check the year and choose the PDF of the issue.',
+          'Press `Add it to The Visitor`. It is on The Visitor page and the home page in a few minutes.',
+        ],
+      },
+      { kind: 'shot', key: 'quick-visitor-form' },
+      { kind: 'h', text: 'Or on the page itself' },
       {
         kind: 'path',
         items: ['Pages', 'All other pages', 'The Visitor', 'The Visitor'],
@@ -1375,6 +1415,7 @@ guides.push(
     title: 'Snow days and changes this week',
     icon: 'place',
     lead: 'A red line across the top of every page that takes itself down after Sunday.',
+    video: 'announcement',
     diy: 'self',
     body: [
       {
