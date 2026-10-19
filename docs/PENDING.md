@@ -127,6 +127,7 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       (dry run read: 8 new drafts, nothing overwritten). Then Pages > Saved sections lists them as drafts.
 - [ ] **The staff view**: add the office's Sanity user id(s) to `kitConfig.staff` once they have
       accepted the invitation (until then every non-administrator gets the staff view).
+- [ ] **Starter cards 125 and the Earlier versions panel came across as PORTABLE resyncs only (2026-10-19).** The Studio installs as a phone app (`/studio/manifest.webmanifest`, `public/studio/sw.js`, the tower icon `public/icon-maskable-512.png`, short name "FBC Muncie"). "Post a photo" stays off (no `postPhoto` in kit.config.ts). Earlier versions and `restore-doc.yml` need `GITHUB_DEPLOY_TOKEN`, `SANITY_API_WRITE_TOKEN` and `BACKUP_PASSPHRASE` as repo secrets before a restore can run; until then the panel says it is not set up. Card 124 (section looks) and 126 (site search) are not adopted here; fbcm keeps its own search.
 - [ ] **Starter card 122 (private pages) to adopt next round.** The "Hide this page from Google and
       the menus" wording and the hidden-page filter on the automatic footer and menu pages are in
       (2026-10-18); private pages (`PRIVATE_PAGE_SECRET`) are not. Card 121 (the custom code block)

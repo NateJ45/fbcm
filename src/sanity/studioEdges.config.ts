@@ -14,6 +14,7 @@
 // =============================================================================
 
 import type { StudioWordingInput } from './studioWording';
+import type { StudioStart } from '../lib/studio-app';
 
 export interface StudioEdgesConfig extends StudioWordingInput {
   wordmark: {
@@ -26,12 +27,26 @@ export interface StudioEdgesConfig extends StudioWordingInput {
      */
     view?: string | null;
   };
+  /**
+   * The Studio as a phone app (card 125): what the home-screen icon is called
+   * and where it opens. Optional; the default is the site's name, opening on
+   * Home. 'quick-update' needs the Quick update tool (kit.config.ts
+   * quickUpdate or postPhoto).
+   */
+  app?: {
+    /** Under the icon. About 12 characters fits every phone. */
+    shortName?: string;
+    start?: StudioStart;
+  };
 }
 
 export const studioEdges: StudioEdgesConfig = {
   // The cream-on-indigo wordmark (src/assets/logo-dark.svg), whole: the tower
   // stands between FIRST and BAPTIST, so there are no words-only to crop to.
   wordmark: { logo: 'dark', view: null },
+  // The phone app (card 125): the church's own short name under the tower icon
+  // (public/icon-maskable-512.png, drawn by scripts/gen-studio-art.mjs).
+  app: { shortName: 'FBC Muncie', start: 'home' },
   // Under "First Baptist Church Muncie" on the sign-in card.
   loginSubtitle: 'Sign in to update the church website',
   words: {

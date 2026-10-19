@@ -27,6 +27,7 @@
 //                                          (the Home banner's markOnDark)
 //   src/assets/brand/studio-icon-tower.svg the same tower on the favicon's square,
 //                                          no plate, for the Studio's Home icon
+//   public/icon-maskable-512.png           the Studio app icon: the tower on navy, full bleed
 //   public/studio-art/castoro-italic.woff2 the site's italic accent face (OFL),
 //                                          for the banner's "Muncie" lettering
 //
@@ -196,6 +197,29 @@ writeFileSync(
 </svg>
 `,
 );
+
+// ── The Studio app's Android icon (starter card 125) ─────────────────────────
+// Android crops a maskable icon to a circle or squircle, so the ground runs to
+// every edge and the tower stands in the middle 60%. generate-favicons.mjs
+// keeps a drawn public/icon-maskable-512.png, so this one wins; its own
+// version would be the rounded favicon tile floating on white.
+{
+  const tower = await sharp(readFileSync(join(ART, 'tower.svg')), { density: 600 })
+    .resize({ height: 300 })
+    .png()
+    .toBuffer();
+  const t = await sharp(tower).metadata();
+  await sharp({ create: { width: 512, height: 512, channels: 4, background: '#292854' } })
+    .composite([
+      {
+        input: tower,
+        left: Math.round((512 - t.width) / 2),
+        top: Math.round((512 - t.height) / 2),
+      },
+    ])
+    .png({ compressionLevel: 9 })
+    .toFile(join(ROOT, 'public', 'icon-maskable-512.png'));
+}
 
 // ── The italic accent face for the banner lettering ──────────────────────────
 copyFileSync(
