@@ -48,6 +48,16 @@ const SANITY_UI = new Set([
   '+',
 ]);
 
+/**
+ * Words the kit draws in JSX rather than on a title line (the Quick update tool's
+ * own buttons, kit/QuickUpdateTool.tsx), and the top-bar names set by
+ * kit.config.ts toolTitles.
+ */
+const KIT_UI = new Set(['Open it in the full editor', 'Post a photo', 'Content', 'Live preview']);
+
+/** The phone's own menu items, quoted in the Quick update guide's home-screen tip. */
+const PHONE_UI = new Set(['Add to Home Screen', 'Add to Home screen']);
+
 /** Words on Church Trac's own screens, quoted in the Church Trac forms guide. */
 const CHURCH_TRAC_UI = new Set([
   'Church Connect',
@@ -78,7 +88,7 @@ function studioNames(): Set<string> {
     join(ROOT, 'sanity.config.ts'),
   ];
   const names = new Set<string>();
-  const line = /(?:\btitle:|\blabel:|\.title\(|\btext=)[^\n]*/g;
+  const line = /(?:\btitle:|\blabel:|\bsubmitLabel:|\.title\(|\btext=)[^\n]*/g;
   const quoted = /'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)"/g;
   for (const file of sources) {
     const text = readFileSync(file, 'utf8');
@@ -96,7 +106,9 @@ function guideNames(): Array<{ slug: string; name: string }> {
   const out: Array<{ slug: string; name: string }> = [];
   for (const g of guides) {
     const text = g.body
-      .flatMap((b) => ('text' in b ? [b.text, 'title' in b ? (b.title ?? '') : ''] : b.items))
+      .flatMap((b) =>
+        'text' in b ? [b.text, 'title' in b ? (b.title ?? '') : ''] : 'items' in b ? b.items : [],
+      )
       .join('\n');
     for (const m of text.matchAll(/`([^`]+)`/g)) out.push({ slug: g.slug, name: m[1] });
   }
@@ -106,7 +118,7 @@ function guideNames(): Array<{ slug: string; name: string }> {
 describe('Studio guide names', () => {
   const names = studioNames();
   const known = (name: string): boolean => {
-    if (SANITY_UI.has(name) || CHURCH_TRAC_UI.has(name)) return true;
+    if ([SANITY_UI, KIT_UI, PHONE_UI, CHURCH_TRAC_UI].some((set) => set.has(name))) return true;
     if (/^\{[a-z -]+\}$/.test(name)) return true;
     if (names.has(name)) return true;
     // `Dates` for "Dates (optional)", `Info` for "Info (quiet, ...)".
