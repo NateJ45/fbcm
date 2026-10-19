@@ -19,6 +19,7 @@
 
 import { useRef, useState, type FormEvent } from 'react';
 import { subscribeEmail } from '@/lib/subscribe';
+import { track } from '@/lib/track';
 
 export interface NewsletterConfig {
   /** Set by siteSettings.newsletter.enabled in Sanity. When false, render null. */
@@ -92,6 +93,7 @@ export default function NewsletterSignup({ newsletter, source = 'newsletter' }: 
 
     if (result.ok) {
       setStatus('success');
+      track('generate_lead', { form_name: 'newsletter', form_location: source });
     } else {
       setStatus('error');
       setErrorMsg(result.message);
@@ -120,6 +122,7 @@ export default function NewsletterSignup({ newsletter, source = 'newsletter' }: 
       {blurb && <p className="mt-s text-sm leading-relaxed text-foreground/80">{blurb}</p>}
 
       <form
+        data-track-form="newsletter"
         onSubmit={onSubmit}
         noValidate
         className="mt-m space-y-s"
