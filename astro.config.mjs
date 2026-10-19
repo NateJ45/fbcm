@@ -11,6 +11,7 @@ import react from '@astrojs/react';
 import sanity from '@sanity/astro';
 
 import { buildRedirectMap } from './src/lib/redirects.ts';
+import { dropRedirectsOverLivePages } from './src/lib/redirect-guard.ts';
 import { fixSanityDedupeAlias } from './src/lib/sanity-dedupe-alias.ts';
 import { studioConfigModule } from './src/lib/studio-route.ts';
 
@@ -85,9 +86,40 @@ async function cmsQuery(query, fallback) {
 // 301/302. Most of them are filed automatically when a page's web address
 // changes (src/sanity/components/slugRedirect.tsx); the shaping rules live in
 // src/lib/redirects.ts so the Studio and the build agree on what a path is.
-const cmsRedirects = buildRedirectMap(
-  await cmsQuery('*[_type == "redirect" && defined(from) && defined(to)]{from,to,permanent}', []),
+//
+// The live-page guard (src/lib/redirect-guard.ts, starter card 22 addendum): a
+// redirect whose OLD address is where a published page lives NOW is dropped,
+// because Cloudflare applies redirects before it serves files and it would
+// shadow the page. Renaming /staff to /ministers while a launch redirect
+// /ministers -> /staff existed looped both ways on 2026-10-19. The address of
+// each slugged type is listed here (the same map pathForDoc() in
+// src/sanity/urls.ts holds); a new slugged route adds a line.
+/** @type {Record<string, (slug: string) => string>} */
+const LIVE_PATH_BY_TYPE = {
+  page: (slug) => `/${slug}`,
+  journalEntry: (slug) => `/post/${slug}`,
+};
+const redirectRead = await cmsQuery(
+  `{
+    "redirects": *[_type == "redirect" && defined(from) && defined(to)]{from,to,permanent},
+    "live": *[_type in $types && defined(slug.current) && archived != true &&
+              !(_id in path("drafts.**"))]{_type, "slug": slug.current}
+  }`.replace('$types', JSON.stringify(Object.keys(LIVE_PATH_BY_TYPE))),
+  { redirects: [], live: [] },
 );
+const guarded = dropRedirectsOverLivePages(
+  buildRedirectMap(Array.isArray(redirectRead?.redirects) ? redirectRead.redirects : []),
+  (Array.isArray(redirectRead?.live) ? redirectRead.live : []).map(
+    (/** @type {{ _type: string; slug: string }} */ doc) =>
+      LIVE_PATH_BY_TYPE[doc._type]?.(doc.slug) ?? null,
+  ),
+);
+if (guarded.dropped.length) {
+  console.warn(
+    `[redirects] skipped ${guarded.dropped.length} redirect(s) from an address a published page lives at now: ${guarded.dropped.join(', ')}`,
+  );
+}
+const cmsRedirects = guarded.redirects;
 
 // Non-font asset inline ceiling (128 KiB), unchanged since 2026-09-20: margin
 // between the then-measured site sheet (124,750 B, since grown, see below)

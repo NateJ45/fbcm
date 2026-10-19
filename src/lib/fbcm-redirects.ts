@@ -130,8 +130,10 @@ export function fbcmRedirects(): FbcmRedirect[] {
       permanent: true,
       note: 'Renamed to Who we are',
     },
-    { from: '/ministers', to: '/staff', permanent: true, note: 'Renamed to Staff' },
-    { from: '/team', to: '/staff', permanent: true, note: 'Renamed to Staff' },
+    // No /ministers rule: the Staff page's address is /ministers since the church
+    // renamed it on 2026-10-19, and a /ministers -> /staff rule here made a loop
+    // with the redirect the Studio files when an address changes.
+    { from: '/team', to: '/ministers', permanent: true, note: 'Renamed to Staff' },
     {
       from: '/reservation',
       to: '/wedding',
@@ -161,13 +163,13 @@ export function fbcmRedirects(): FbcmRedirect[] {
     })),
     ...CURRENT_STAFF.map((s) => ({
       from: `/team/${s}`,
-      to: STAFF_WITH_BIOS.has(s) ? `/staff#${s}` : '/staff',
+      to: STAFF_WITH_BIOS.has(s) ? `/ministers#${s}` : '/ministers',
       permanent: true,
       note: 'Staff profiles consolidated onto one page',
     })),
     ...FORMER_STAFF.map((s) => ({
       from: `/team/${s}`,
-      to: '/staff',
+      to: '/ministers',
       permanent: true,
       note: 'Former staff; page already gone from Wix but still earning search clicks',
     })),
