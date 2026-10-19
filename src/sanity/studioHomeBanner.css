@@ -1,0 +1,128 @@
+/* Safe to edit by hand
+ * =============================================================================
+ * Studio Home's banner, set in the church's own grammar (2026-10-19, card 128 round)
+ * =============================================================================
+ * The banner itself is the kit's (src/sanity/kit/HomeBanner.tsx, PORTABLE, card
+ * 118), drawn with Sanity's own button and text styles. This site-owned sheet,
+ * imported by sanity.config.ts, re-sets three of its parts the way the home
+ * page's hero sets them:
+ *
+ *   1. The date line becomes the hero's eyebrow: tracked capitals in the UI face
+ *      (Sofia Sans Semi Condensed) led by a short gold hairline ("TODAY · WORSHIP
+ *      AT 10:45 AM" on the site).
+ *   2. "Good morning, Ann" takes the hero's italic Castoro lede (Castoro italic,
+ *      which studioFonts.css already loads).
+ *   3. "View the website" becomes the site's button: a square gold plate with
+ *      indigo tracked capitals and a gold outline standing 3px off it ("PLAN A
+ *      VISIT" / "GIVE" on the site), not Sanity's lavender primary.
+ *   4. From 600px the Hannaford rendering stands BEHIND the words on the right,
+ *      full banner height, the way it does on the /studio splash, instead of
+ *      sitting in its own band under them (that band left a big empty middle).
+ *      Under 600px the kit's narrow foot strip is kept as drawn.
+ *
+ * These selectors reach into the kit's markup (.ncs-hb, .ncs-hb__go,
+ * .ncs-hb__motif, and Sanity UI's data-ui attributes). If a starter resync
+ * changes HomeBanner.tsx, open Studio Home and check the banner still reads as
+ * above. Proposed to the starter as a proper `homeBanner` look (results file,
+ * "Starter proposals"), after which this sheet can go.
+ * ============================================================================= */
+
+/* The UI face for the eyebrow and the button (the site's --font-ui). */
+@import '@fontsource-variable/sofia-sans-semi-condensed';
+
+/* 1. The date line as the hero's eyebrow. */
+.ncs-hb .ncs-hb__who [data-ui='Stack'] > [data-ui='Text']:first-child {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Sofia Sans Semi Condensed Variable', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f4efe6;
+}
+.ncs-hb .ncs-hb__who [data-ui='Stack'] > [data-ui='Text']:first-child > span {
+  color: inherit;
+}
+.ncs-hb .ncs-hb__who [data-ui='Stack'] > [data-ui='Text']:first-child::before {
+  content: '';
+  flex: none;
+  width: 44px;
+  height: 1px;
+  background: #d59b29;
+}
+
+/* 2. The greeting in the hero's italic lede. */
+.ncs-hb .ncs-hb__hello {
+  font-family: 'Castoro', Georgia, serif !important;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* 3. "View the website" as the site's square gold button. */
+.ncs-hb .ncs-hb__go [data-ui='Button'] {
+  --card-bg-color: #d59b29;
+  --card-fg-color: #1c1b3a;
+  --card-icon-color: #1c1b3a;
+  --card-border-color: #d59b29;
+  position: relative;
+  border-radius: 2px !important;
+  background-color: #d59b29 !important;
+  color: #1c1b3a !important;
+  box-shadow: none !important;
+  outline: 2px solid #d59b29;
+  outline-offset: 3px;
+  margin: 5px;
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+}
+.ncs-hb .ncs-hb__go [data-ui='Button'] [data-ui='Text'],
+.ncs-hb .ncs-hb__go [data-ui='Button'] [data-ui='Text'] > span {
+  color: #1c1b3a !important;
+  font-family: 'Sofia Sans Semi Condensed Variable', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ncs-hb .ncs-hb__go [data-ui='Button']:hover {
+  background-color: #e2ae4a !important;
+  transform: translateY(-1px);
+}
+.ncs-hb .ncs-hb__go [data-ui='Button']:focus-visible {
+  outline-color: #f4efe6;
+}
+
+/* 4. The rendering behind the words, from 600px. */
+@media (min-width: 600px) {
+  .ncs-hb {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-bottom: 1px solid #d59b29;
+  }
+  .ncs-hb > [data-ui='Box'] {
+    position: relative;
+    z-index: 1;
+  }
+  .ncs-hb .ncs-hb__motif {
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    bottom: 0;
+    width: auto !important;
+    max-width: none;
+    height: 100%;
+    pointer-events: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ncs-hb .ncs-hb__go [data-ui='Button'] {
+    transition: none;
+  }
+  .ncs-hb .ncs-hb__go [data-ui='Button']:hover {
+    transform: none;
+  }
+}

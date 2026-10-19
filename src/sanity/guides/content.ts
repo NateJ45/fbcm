@@ -40,6 +40,9 @@
 //   - src/lib/studio-guides.test.ts enforces the structural half of this.
 // =============================================================================
 
+import type { BrandIconKey } from '../../lib/studio-icons';
+import type { GUIDE_ICON_MEANINGS } from '../../lib/studio-look';
+
 export type DiyLevel = 'self' | 'ask' | 'mixed';
 
 /** Where a "Where in the Studio" breadcrumb can link to. */
@@ -75,32 +78,14 @@ export const GUIDE_CATEGORIES = [
 export type GuideCategory = (typeof GUIDE_CATEGORIES)[number];
 
 /**
- * The icon each guide shows, by NAME. src/sanity/guides/icons.ts maps each name
- * to an @sanity/icons component. Names rather than emoji since 2026-09-22:
- * Windows draws emoji small and inconsistently, and the rest of the desk uses
- * @sanity/icons, so the Help list now matches it. Kept as plain strings so
- * this file stays data and the unit test can import it without React.
+ * The icon each guide shows, by MEANING (card 128). The Site Guide draws it on a
+ * stone, in the church's own icon art where it has some (src/sanity/brandIconArt.tsx:
+ * the window, door, lamp and basin from the footer). Either a name from
+ * GUIDE_ICON_MEANINGS in src/lib/studio-look.ts ('clock', 'bulb') or a meaning in
+ * the icon registry ('notice', 'people'). Types only, so this file stays data and
+ * the unit test can import it without React.
  */
-export const GUIDE_ICON_NAMES = [
-  'bulb',
-  'page',
-  'clock',
-  'bell',
-  'edit',
-  'users',
-  'heart',
-  'image',
-  'arrow',
-  'help',
-  // The Studio kit's guides (2026-10-18).
-  'home',
-  'activity',
-  'restore',
-  'bolt',
-  'check',
-  'share',
-] as const;
-export type GuideIconName = (typeof GUIDE_ICON_NAMES)[number];
+export type GuideIconName = keyof typeof GUIDE_ICON_MEANINGS | BrandIconKey;
 
 export interface Guide {
   slug: string;
@@ -399,7 +384,7 @@ export const guides: Guide[] = [
     slug: 'announcement',
     category: 'Sundays and notices',
     title: 'Put a notice across the top of every page',
-    icon: 'bell',
+    icon: 'notice',
     lead: 'For a closing, a change of plan, or news everyone should see.',
     diy: 'self',
     body: [
@@ -518,7 +503,7 @@ export const guides: Guide[] = [
     slug: 'church-trac-forms',
     category: 'Sundays and notices',
     title: 'Put a Church Trac form on a page',
-    icon: 'edit',
+    icon: 'form',
     lead: 'A form you built in Church Trac, like the connection card or giving, can sit on any page so visitors fill it in without leaving the site.',
     diy: 'self',
     body: [
@@ -588,7 +573,7 @@ export const guides: Guide[] = [
     slug: 'blog-post',
     category: 'Blog, staff and ministries',
     title: 'Add a blog post or a sermon preview',
-    icon: 'edit',
+    icon: 'post',
     lead: 'A new post appears on the Blog page, newest first, by itself.',
     diy: 'self',
     body: [
@@ -638,7 +623,7 @@ export const guides: Guide[] = [
     slug: 'staff',
     category: 'Blog, staff and ministries',
     title: 'Add, change or remove a staff member',
-    icon: 'users',
+    icon: 'people',
     lead: 'The Staff page, and the "people to talk to" on the Ministries page, read from here.',
     diy: 'self',
     body: [
@@ -690,7 +675,7 @@ export const guides: Guide[] = [
     slug: 'ministries',
     category: 'Blog, staff and ministries',
     title: 'Update a ministry and who leads it',
-    icon: 'heart',
+    icon: 'people',
     lead: 'Each ministry has one home in the Studio. The Ministries page reads from it.',
     diy: 'self',
     body: [
@@ -736,7 +721,7 @@ export const guides: Guide[] = [
     slug: 'who-we-are',
     category: 'Blog, staff and ministries',
     title: 'Update the Who We Are page',
-    icon: 'heart',
+    icon: 'page',
     lead: 'Four sections made for this page: the Watchword, Our goals, the Pledge, and the pastors’ letter.',
     diy: 'self',
     body: [
@@ -1117,7 +1102,7 @@ guides.push(
     slug: 'share-a-preview',
     category: 'Start here',
     title: 'Show someone a page before it goes live',
-    icon: 'share',
+    icon: 'preview',
     lead: 'A private link to your draft that works for a few days, no login needed.',
     diy: 'self',
     body: [
@@ -1178,7 +1163,7 @@ guides.push(
     slug: 'reuse-sections',
     category: 'Start here',
     title: 'Reuse a section on other pages',
-    icon: 'edit',
+    icon: 'savedSection',
     lead: 'Build a section once, then drop it onto any page as a copy.',
     diy: 'self',
     body: [

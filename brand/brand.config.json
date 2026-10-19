@@ -100,7 +100,32 @@
         "ministry": "service",
         "churchTracForm": "form"
       },
-      "tile": { "dark": "#D9CFC2" }
+      "tile": {
+        "dark": "#D9CFC2"
+      }
+    },
+    "look": {
+      "headingColor": "#292854",
+      "marker": {
+        "src": "/studio-art/eyebrow-rule.svg",
+        "width": 44,
+        "height": 2
+      },
+      "markColors": ["#292854", "#724F43"],
+      "stone": "square",
+      "connector": {
+        "kind": "line",
+        "color": "#D59B29"
+      },
+      "tones": {
+        "note": "#292854",
+        "tip": "#D59B29",
+        "careful": "#724F43"
+      },
+      "motif": "/studio-banner/foot.svg",
+      "motifNarrow": "/studio-banner/foot-phone.svg",
+      "edgeColors": ["#D59B29"],
+      "motion": "draw"
     }
   }
 }
