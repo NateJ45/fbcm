@@ -133,11 +133,10 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       eyebrow hairline as the section marker, square indigo stones for steps joined by a gold line,
       callouts in indigo, gold and brown, the Hannaford rendering along each guide's banner, one gold
       edge. Guide icons are meanings now (`src/sanity/guides/content.ts`; the old
-      `guides/icons.ts` is gone). Home's banner is re-set by the site-owned
-      `src/sanity/studioHomeBanner.css` (the date as the hero eyebrow, the greeting in italic
-      Castoro, "View the website" as the square gold button, the rendering behind the words); it
-      reaches into the kit's markup, so after any resync that changes `kit/HomeBanner.tsx`, open
-      Home and check it. The Studio signs in by token (card 129): **every editor signs out and in
+      `guides/icons.ts` is gone). Home's banner is re-set by `homeBanner.style` in `src/sanity/kit.config.ts` (card 135: the
+      date as the hero eyebrow, the greeting in italic Castoro, "View the website" as the square
+      gold button, the rendering behind the words); `src/sanity/studioHomeBanner.css` only loads
+      the Sofia Sans font. After a resync, open Home (or `/kit-harness/studio/`) and check it. The Studio signs in by token (card 129): **every editor signs out and in
       once** after this deploys, or Home's cards answer "sign out and in again". The bench at
       `/kit-harness/guide/` and `/kit-harness/studio/` (dev server only) shows the guide pieces
       signed out. Newsletter and RSVPs (card 127) came across as files only and stay off (no

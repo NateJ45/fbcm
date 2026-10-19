@@ -33,6 +33,9 @@ import { runPageCheck } from './actions/checkPage';
 import { PAGE_BUILDER_TYPES } from './pageBuilderConfig';
 import type { PageRules } from '../lib/page-guardrails';
 
+// The UI face the Studio's banner eyebrow and button use (loaded by studioHomeBanner.css).
+const SOFIA = "'Sofia Sans Semi Condensed Variable', system-ui, sans-serif";
+
 const PUBLISHED = '!(_id in path("drafts.**"))';
 
 /**
@@ -333,6 +336,36 @@ export const kitConfig: KitConfig = {
       family: 'FBCM Castoro Italic',
       src: '/studio-art/castoro-italic.woff2',
       colors: ['#D59B29'],
+    },
+    // Card 135: the banner's look as data (eyebrow with a gold hairline, italic greeting, the square
+    // gold plate with a standing ring, the rendering behind the words). The font file for
+    // Sofia Sans is loaded by src/sanity/studioHomeBanner.css.
+    style: {
+      background: { rule: '#d59b29' },
+      eyebrow: {
+        font: SOFIA,
+        size: '13px',
+        weight: 600,
+        tracking: '0.14em',
+        case: 'upper',
+        color: '#f4efe6',
+        mark: { kind: 'rule', color: '#d59b29' },
+      },
+      greeting: { font: "'Castoro', Georgia, serif", italic: true, weight: 400 },
+      chip: {
+        shape: 'square',
+        bg: '#d59b29',
+        fg: '#1c1b3a',
+        hoverBg: '#e2ae4a',
+        halo: '#d59b29',
+        ring: '#f4efe6',
+        font: SOFIA,
+        size: '14px',
+        weight: 600,
+        tracking: '0.14em',
+        case: 'upper',
+      },
+      motif: { place: 'behind-right' },
     },
   },
 
