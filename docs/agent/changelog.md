@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-19: Staff page renamed to /ministers; redirect loop fixed (`fix/ministers-redirect-loop`)._
+
+The church renamed the Staff page's web address to `/ministers`. The Studio's safe-rename step filed `/staff` to `/ministers` and repointed the `/team/*` forwards, but the launch map still carried `/ministers` to `/staff`, so the two sent visitors back and forth ("too many redirects"). The live `redirect-ministers` document was removed (backup kept outside the repo), the rule came out of `fbcm-redirects.ts` (47 now), and a unit test fails on any two rules that point at each other. The Studio and build-time guards that would have stopped it (a rename onto an address that is already an old address) are a starter change, tracked in the starter's PORTS.md.
+
 _2026-10-19: arch photos fetched at the width they are drawn (`fix/arch-photo-sharpness`)._
 
 The /ministries window hero's side lights looked pixelated: each is 2.6 times taller than wide, so `object-fit: cover` draws a landscape photo about 4.6 times the light's width, while `sizes` described the light, and the browser fetched a 160 to 320px image for a photo drawn about 720px wide. `ArchFrame` now multiplies its `sizes` and srcset ceiling by that factor (`src/lib/cover-sizes.ts`, unit-tested), capped at the uploaded width, so every arch on the site gets enough pixels; at 1280 the side lights fetch 800px at 1x and 1600px at 2x.
