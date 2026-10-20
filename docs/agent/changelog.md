@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-20: starter cards 145 and 146 synced (`feat/studio-sync-c`)._
+
+Home is a full-width dashboard with a status rail (card 145: `HomeTool`, `HomeCards`, `ui/css`), and an empty Trash has a page of its own (card 146: `trashListItem()`; `structure.ts` now builds the Trash item with it and keeps the id `trash`). Also picked up the later `PostPhoto`, `types` and `trash` changes. `sync-check` against starter main: 236 same.
+
 _2026-10-20: the Studio's own character (`feat/studio-character`)._
 
 The Studio was neutral in form (a hairline marker, a plain line between steps). `brand.config.json` `studio.look` now names devices drawn from the building: a lancet-arch marker (the photo-frame arch, navy with a gold inner arch), a dashed gold connector, a faint coursed-stone tile behind featured panels, banner titles in Castoro Titling, and `motion: lay`, so numbered stones are set down one after another. The marker, texture and the font copy are written by `scripts/gen-studio-art.mjs`. `npm run check:look` (card 139) now reports the look as settled. Checked at 1280, 375 and 320.
