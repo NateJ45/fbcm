@@ -130,7 +130,7 @@
       "lettering": {
         "family": "FBCM Castoro Titling",
         "src": "/studio-art/castoro-titling.woff2",
-        "colors": ["#FFFFFF", "#D59B29"]
+        "colors": ["#FFFFFF"]
       }
     }
   }
