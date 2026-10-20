@@ -21,8 +21,20 @@ test('the redirect set is the size it is meant to be', () => {
   // A count, so adding a rule is a deliberate act with a number attached.
   // 44 through plan 2c; 49 since task 16 added the five in-body URLs the
   // restored post bodies revealed (see the test below); 48 since 2026-10-03,
-  // when /architecture became a page again and its redirect to /visit came off.
-  assert.equal(fbcmRedirects().length, 48);
+  // when /architecture became a page again and its redirect to /visit came off;
+  // 47 since 2026-10-19, when /ministers became the Staff page's own address.
+  assert.equal(fbcmRedirects().length, 47);
+});
+
+test('no two redirects send people back and forth between the same two paths', () => {
+  // A -> B together with B -> A is a loop: the browser reports "too many
+  // redirects" and the page is unreachable. This is what happened to /staff and
+  // /ministers on 2026-10-19.
+  const path = (p: string) => p.split(/[?#]/)[0];
+  const map = new Map(fbcmRedirects().map((r) => [r.from, path(r.to)]));
+  for (const [from, to] of map) {
+    assert.notEqual(map.get(to), from, `${from} and ${to} redirect to each other`);
+  }
 });
 
 test('the five URLs the restored post bodies link to are covered', () => {
@@ -32,7 +44,7 @@ test('the five URLs the restored post bodies link to are covered', () => {
   // exactly the class of breakage nothing else would catch.
   const map = new Map(fbcmRedirects().map((r) => [r.from, r.to]));
   assert.equal(map.get('/about-us'), '/who-we-are');
-  assert.equal(map.get('/team/james-heimlich'), '/staff');
+  assert.equal(map.get('/team/james-heimlich'), '/ministers');
   for (const tag of ['2', '3', 'Barbenheimer']) {
     assert.equal(map.get(`/blog/hashtags/${tag}`), '/blog');
   }
