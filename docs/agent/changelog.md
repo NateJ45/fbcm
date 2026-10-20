@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-19: CI builds from a pinned content snapshot (starter card 138; `ci/snapshot-build`)._
+
+The Staff rename turned build, test, the e2e shards and the link check red on a docs-only PR, because CI built from the live dataset. Now `ci.yml`'s site build, `lighthouse.yml` and `visual.yml` run as `node scripts/snapshot.mjs run -- <cmd>` over `ci/sanity-snapshot.ndjson.gz`; `deploy.yml` still builds live; `live-watch.yml` checks the real site daily. Rules: `.claude/rules/tests-and-gates.md`.
+
 _2026-10-19: GA4 event tracking level with Theology Matters and FRT (`feat/analytics-parity`)._
 
 New `SiteEvents.astro` (delegated link classification: giving, contact, directions, video, app, calendar, social; form views, frame use, newsletter lead, search, reading depth, 404, JS errors), `src/lib/track.ts`, `tests/site-events.spec.ts`, privacy wording. No PORTABLE file touched. Detail: `docs/agent/analytics.md`.
