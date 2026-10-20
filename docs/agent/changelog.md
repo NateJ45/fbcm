@@ -12,7 +12,7 @@
 
 _2026-10-20: starter card 149 synced (`feat/studio-sync-f`)._
 
-Only the bench (`harness/Surfaces.tsx`) and `studio-kit.md` changed here: the writing helper and the private-page password input that card 149 turns into callouts are not in this site. `sync-check` against starter main: 236 same.
+The bench (`harness/Surfaces.tsx`) and `studio-kit.md` changed. The bench imports `SuggestionCard` from `src/sanity/ai/WritingHelp.tsx`, but the writing-help feature is not installed in this site (no `lib/studio-ai.ts`, no `/api/studio/ai`), so that path holds a small unmarked copy of just the card (it first failed CI with a missing module). The private-page password input is not in this site either. `sync-check` against starter main: 236 same.
 
 _2026-10-20: starter card 148 synced (`feat/studio-sync-e`)._
 
