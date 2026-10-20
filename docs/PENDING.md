@@ -27,8 +27,16 @@ pages, GPTBot, ClaudeBot and PerplexityBot get 200, robots.txt is ours, `verify:
 Church Trac's Form/Giving Embed Domain is ONE account-wide setting (not per form) and was set to
 `www.fbcmuncie.org` on 2026-10-19; the Connection Card embed on `/visit/#connect` draws live. The
 workers.dev address no longer embeds forms, so form checks go through the real domain now. Still
-open: Search Console, Bing, Rich Results, IndexNow first run, GA/Web
-Analytics tokens, Wix cancellation timing, and the Google MX question below.
+open: Rich Results, IndexNow first run, Cloudflare Web Analytics token, Wix cancellation timing, and
+the Google MX question below.
+
+Search and analytics (2026-10-19): GA4 (property 557590212) already ran on the live tag and its stream
+is `https://www.fbcmuncie.org`; Search Console `sc-domain:fbcmuncie.org` is verified (its TXT came
+across in the Cloudflare zone), linked to GA, and has `sitemap-index.xml` submitted (it said "Couldn't
+fetch" right after, the file serves 200: re-check). Bing Webmaster Tools has `https://www.fbcmuncie.org/`
+verified by a DNS-only CNAME in the Cloudflare zone (keep it) with `sitemap-index.xml` submitted. The
+repo variable `PRODUCTION_URL` now points at `https://www.fbcmuncie.org`, so the deploy smoke test and
+IndexNow check the real host.
 
 Original note, written before the zone was active:
 
