@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-20: starter card 149 synced (`feat/studio-sync-f`)._
+
+Only the bench (`harness/Surfaces.tsx`) and `studio-kit.md` changed here: the writing helper and the private-page password input that card 149 turns into callouts are not in this site. `sync-check` against starter main: 236 same.
+
 _2026-10-20: starter card 148 synced (`feat/studio-sync-e`)._
 
 Quick update uses a wide pane: a tile grid, and a "How this goes" rail beside an open form from 860px; phones are unchanged (`QuickUpdateTool.tsx`, `ui/css.ts`). No site-owned edits; `sync-check` against starter main: 236 same.
