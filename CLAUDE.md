@@ -111,6 +111,7 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 `docs/bootstrap/NEW-PROJECT.md` is the setup entry point for adapting this starter to a new project, and `docs/bootstrap/setup-checklist.md` is the pre-launch sign-off that goes with it.
 
 - Open loops registry (read early each session): `docs/PENDING.md`
+- GA4 events (what is tracked, the settings, how to verify): `docs/agent/analytics.md`
 - Live draft preview, full reference: `docs/agent/preview.md`
 - The Studio kit (Home, Site Guide, Checkup, Trash, Quick update, the look, the edges; PORTABLE): `docs/agent/studio-kit.md`
 - What is safe to edit vs foundation, file by file: `docs/agent/file-map.md`

@@ -1,0 +1,272 @@
+---
+// Safe to edit by hand
+/* ============================================================================
+   SiteEvents: what visitors do on the site, sent to GA4 as events
+   ============================================================================
+   Added 2026-10-19 to bring this site level with the other sites in the
+   family that track the same kinds of action.
+
+   ONE DELEGATED SCRIPT, NOT A DATA ATTRIBUTE ON EVERY LINK. Nearly every link
+   on this site comes from the Studio (a button, a menu item, a rich-text
+   link), so an editor can add a giving link or a video link with no developer
+   in the loop. The script therefore reads the link's ADDRESS when it is
+   clicked and decides what it is. Nothing is configured per link.
+
+   NOT A PORTABLE FILE. The tag itself is (GoogleAnalytics.astro) and is left
+   alone; this file only calls window.gtag, which the tag defines on the
+   production hostname outside automated browsers. Everywhere else window.gtag
+   is undefined and every call below does nothing, so tests and previews are
+   never counted. (Rendered whether or not PUBLIC_GA_ID is set, so tests can stub
+   gtag and watch the calls; without the tag every call is a no-op.) Events queue on the dataLayer until gtag.js arrives.
+
+   NOTHING PERSONAL IS SENT. Link kind, destination name (never the address of
+   a mailto or tel link), the page region, the form's name, the pages not
+   found, the search words (withheld when they look like an email address or a
+   phone number). No names, emails or form contents.
+
+   WHAT IT CANNOT SEE. The Church Trac forms and the YouTube player are other
+   sites' iframes: a visitor's clicks inside them never reach this page. So a
+   form is counted when it comes into view (form_view) and when the visitor
+   first uses it (embed_interact, the page losing focus to the frame), not
+   when it is sent. Gifts finish on Church Center, off this site.
+
+   Event list: docs/agent/analytics.md.
+   ============================================================================ */
+---
+
+<script is:inline>
+  (function () {
+    if (window.__fbcmEvents) return;
+    window.__fbcmEvents = true;
+
+    function send(name, params) {
+      if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+    }
+    window.fbcmTrack = send;
+
+    // Which part of the page a link sits in.
+    function region(el) {
+      var r = el.closest('header, footer, nav, main, aside');
+      if (!r) return 'page';
+      var tag = r.tagName.toLowerCase();
+      return tag === 'main' ? 'page' : tag;
+    }
+
+    var social = {
+      'facebook.com': 'facebook',
+      'instagram.com': 'instagram',
+      'threads.net': 'threads',
+      'linktr.ee': 'linktree',
+      'x.com': 'x',
+      'twitter.com': 'x',
+    };
+
+    // Link address -> event. Returns [name, params] or null.
+    function classify(a) {
+      var raw = a.getAttribute('href') || '';
+      var loc = region(a);
+      if (/^mailto:/i.test(raw)) return ['contact_click', { method: 'email', location: loc }];
+      if (/^tel:/i.test(raw)) return ['contact_click', { method: 'phone', location: loc }];
+      var u;
+      try {
+        u = new URL(a.href, location.href);
+      } catch (_e) {
+        return null;
+      }
+      var host = u.hostname.replace(/^www\./, '');
+      var path = u.pathname.toLowerCase();
+      var own = location.hostname.replace(/^www\./, '');
+
+      if (/\.ics$/.test(path)) return ['calendar_add', { location: loc }];
+      if (host === own && /^\/give(\/|$)/.test(path)) {
+        return ['give_click', { destination: 'give_page', location: loc }];
+      }
+      if (/(^|\.)churchcenter\.com$/.test(host)) {
+        return [
+          /giving/.test(path) ? 'give_click' : 'church_center_click',
+          { destination: 'church_center', location: loc },
+        ];
+      }
+      if (
+        host === 'open.churchtrac.com' ||
+        host === 'apps.apple.com' ||
+        host === 'play.google.com'
+      ) {
+        var store =
+          host === 'apps.apple.com' ? 'ios' : host === 'play.google.com' ? 'android' : 'web';
+        return ['app_click', { destination: store, location: loc }];
+      }
+      if (/(^|\.)churchtrac\.com$/.test(host)) {
+        return ['churchtrac_click', { destination: 'portal', location: loc }];
+      }
+      if (/(^|\.)(youtube\.com|youtu\.be|vimeo\.com)$/.test(host)) {
+        var kind = /\/streams|\/live/.test(path)
+          ? 'streams'
+          : /watch/.test(path) || host === 'youtu.be' || /vimeo/.test(host)
+            ? 'video'
+            : 'channel';
+        return ['watch_click', { destination: kind, location: loc }];
+      }
+      if (/maps/.test(host + path) && /(google\.com|apple\.com|goo\.gl)$/.test(host)) {
+        return ['directions_click', { location: loc }];
+      }
+      if (social[host]) return ['social_click', { network: social[host], location: loc }];
+      return null;
+    }
+
+    document.addEventListener(
+      'click',
+      function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a) return;
+        var hit = classify(a);
+        if (hit) send(hit[0], hit[1]);
+      },
+      true,
+    );
+
+    // The search sends the last term once the visitor pauses.
+    var searchTimer = 0;
+    var lastTerm = '';
+    window.fbcmTrackSearch = function (term, count) {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () {
+        var t = String(term || '')
+          .trim()
+          .toLowerCase()
+          .slice(0, 80);
+        if (!t || t === lastTerm) return;
+        lastTerm = t;
+        if (/@|\d{7,}|(\d[\s.-]?){9,}/.test(t)) t = '(withheld)';
+        var p = { search_term: t, search_results: count };
+        send('site_search', p);
+        if (!count) send('search_no_results', p);
+      }, 1200);
+    };
+
+    // A JavaScript error in the site's own scripts, at most three a page view.
+    var errors = 0;
+    window.addEventListener('error', function (ev) {
+      if (errors >= 3 || !ev.filename || ev.filename.indexOf(location.origin) !== 0) return;
+      errors++;
+      send('js_error', {
+        error_message: String(ev.message || '').slice(0, 100),
+        error_source: ev.filename.split('/').pop().split('?')[0].slice(0, 60),
+      });
+    });
+
+    // ---- per page (the router swaps pages without reloading) ----------
+    var io = null;
+    var cleanup = [];
+
+    function formName(n) {
+      return (n.getAttribute('data-track-form') || n.getAttribute('title') || 'form').slice(0, 60);
+    }
+
+    function pageSetup() {
+      cleanup.forEach(function (f) {
+        f();
+      });
+      cleanup = [];
+      if (io) io.disconnect();
+
+      // A 404 page.
+      if (document.querySelector('[data-page-not-found]')) {
+        var from = '';
+        try {
+          var r = new URL(document.referrer);
+          if (r.hostname !== location.hostname) from = r.hostname;
+        } catch (_e) {
+          from = '';
+        }
+        send('page_not_found', {
+          missing_path: location.pathname.slice(0, 100),
+          from_site: from || '(direct)',
+        });
+      }
+
+      // Forms and frames coming into view.
+      var seen = new WeakSet();
+      if ('IntersectionObserver' in window) {
+        io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (en) {
+              if (!en.isIntersecting || seen.has(en.target)) return;
+              seen.add(en.target);
+              send('form_view', { form_name: formName(en.target) });
+            });
+          },
+          { threshold: 0.4 },
+        );
+        document
+          .querySelectorAll('[data-church-trac-form] iframe, form[data-track-form]')
+          .forEach(function (n) {
+            io.observe(n);
+          });
+      }
+
+      // First use of a frame: the page loses focus to it.
+      var used = new WeakSet();
+      var onBlur = function () {
+        setTimeout(function () {
+          var f = document.activeElement;
+          if (!f || f.tagName !== 'IFRAME' || used.has(f)) return;
+          used.add(f);
+          send('embed_interact', {
+            embed: f.closest('[data-church-trac-form]') ? 'form' : 'video',
+            embed_name: (f.getAttribute('title') || '').slice(0, 60),
+          });
+        }, 0);
+      };
+      window.addEventListener('blur', onBlur);
+      cleanup.push(function () {
+        window.removeEventListener('blur', onBlur);
+      });
+
+      // Reading: how far down a journal post, and a finished read.
+      var body = document.querySelector('.post-prose');
+      if (body) {
+        var words = (body.textContent || '').trim().split(/\s+/).length;
+        var minSecs = Math.min(300, Math.max(30, Math.round((words / 220) * 60 * 0.3)));
+        var marks = { 25: false, 50: false, 75: false, 100: false };
+        var active = 0;
+        var lastAct = 0;
+        var finished = false;
+        var tick = setInterval(function () {
+          if (document.visibilityState === 'visible' && Date.now() - lastAct < 5000) active++;
+        }, 1000);
+        var act = function () {
+          lastAct = Date.now();
+        };
+        var onScroll = function () {
+          act();
+          var rect = body.getBoundingClientRect();
+          if (rect.height < 200) return;
+          var pct = ((window.innerHeight - rect.top) / rect.height) * 100;
+          [25, 50, 75, 100].forEach(function (m) {
+            if (pct >= m && !marks[m]) {
+              marks[m] = true;
+              send('article_progress', { percent: m });
+            }
+          });
+          if (marks[100] && !finished && active >= minSecs) {
+            finished = true;
+            send('article_read', { read_seconds: active });
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('pointermove', act, { passive: true });
+        window.addEventListener('keydown', act);
+        cleanup.push(function () {
+          clearInterval(tick);
+          window.removeEventListener('scroll', onScroll);
+          window.removeEventListener('pointermove', act);
+          window.removeEventListener('keydown', act);
+        });
+      }
+    }
+
+    // Fires on the first load and after every router navigation.
+    document.addEventListener('astro:page-load', pageSetup);
+  })();
+</script>
