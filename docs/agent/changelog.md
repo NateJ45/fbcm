@@ -12,7 +12,11 @@
 
 _2026-10-19: CI builds from a pinned content snapshot (starter card 138; `ci/snapshot-build`)._
 
-The Staff rename turned build, test, the e2e shards and the link check red on a docs-only PR, because CI built from the live dataset. Now `ci.yml`'s site build, `lighthouse.yml` and `visual.yml` run as `node scripts/snapshot.mjs run -- <cmd>` over `ci/sanity-snapshot.ndjson.gz`; `deploy.yml` still builds live; `live-watch.yml` checks the real site daily. The snapshot, exported the same evening, carried a new bright stained-glass opener on /beliefs that sank the header nav to 2.87:1, so the hero overlay gained a short top-edge fade behind the header (`.hero-overlay` in globals.css): any picture the church chooses now keeps the nav legible. Rules: `.claude/rules/tests-and-gates.md`.
+The Staff rename turned build, test, the e2e shards and the link check red on a docs-only PR, because CI built from the live dataset. Now `ci.yml`'s site build, `lighthouse.yml` and `visual.yml` run as `node scripts/snapshot.mjs run -- <cmd>` over `ci/sanity-snapshot.ndjson.gz`; `deploy.yml` still builds live; `live-watch.yml` checks the real site daily. Rules: `.claude/rules/tests-and-gates.md`.
+
+_2026-10-19: GA4 event tracking level with Theology Matters and FRT (`feat/analytics-parity`)._
+
+New `SiteEvents.astro` (delegated link classification: giving, contact, directions, video, app, calendar, social; form views, frame use, newsletter lead, search, reading depth, 404, JS errors), `src/lib/track.ts`, `tests/site-events.spec.ts`, privacy wording. No PORTABLE file touched. Detail: `docs/agent/analytics.md`.
 
 _2026-10-19: Staff page renamed to /ministers; redirect loop fixed (`fix/ministers-redirect-loop`)._
 
