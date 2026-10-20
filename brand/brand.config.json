@@ -107,14 +107,14 @@
     "look": {
       "headingColor": "#292854",
       "marker": {
-        "src": "/studio-art/eyebrow-rule.svg",
-        "width": 44,
-        "height": 2
+        "src": "/studio-art/lancet-marker.svg",
+        "width": 22,
+        "height": 32
       },
       "markColors": ["#292854", "#724F43"],
       "stone": "square",
       "connector": {
-        "kind": "line",
+        "kind": "dashes",
         "color": "#D59B29"
       },
       "tones": {
@@ -125,7 +125,13 @@
       "motif": "/studio-banner/foot.svg",
       "motifNarrow": "/studio-banner/foot-phone.svg",
       "edgeColors": ["#D59B29"],
-      "motion": "draw"
+      "motion": "lay",
+      "texture": "/studio-art/ashlar-tile.svg",
+      "lettering": {
+        "family": "FBCM Castoro Titling",
+        "src": "/studio-art/castoro-titling.woff2",
+        "colors": ["#FFFFFF", "#D59B29"]
+      }
     }
   }
 }
