@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-20: starter card 148 synced (`feat/studio-sync-e`)._
+
+Quick update uses a wide pane: a tile grid, and a "How this goes" rail beside an open form from 860px; phones are unchanged (`QuickUpdateTool.tsx`, `ui/css.ts`). No site-owned edits; `sync-check` against starter main: 236 same.
+
 _2026-10-20: starter card 147 synced (`feat/studio-sync-d`)._
 
 The Checkup uses the whole pane: a count strip and the levels as columns (`CheckupTool.tsx`, `ui/surfaces.tsx`, `ui/css.ts`). No site-owned edits; `sync-check` against starter main: 236 same.
