@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-20: starter card 150 synced (`feat/studio-sync-g`)._
+
+Quick update tiles keep their colour edge flush at the top: the button was centring its inside (`ui/css.ts`). No site-owned edits; `sync-check` against starter main: 236 same.
+
 _2026-10-20: starter card 149 synced (`feat/studio-sync-f`)._
 
 The bench (`harness/Surfaces.tsx`) and `studio-kit.md` changed. The bench imports `SuggestionCard` from `src/sanity/ai/WritingHelp.tsx`, but the writing-help feature is not installed in this site (no `lib/studio-ai.ts`, no `/api/studio/ai`), so that path holds a small unmarked copy of just the card (it first failed CI with a missing module). The private-page password input is not in this site either. `sync-check` against starter main: 236 same.
