@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-20: starter card 147 synced (`feat/studio-sync-d`)._
+
+The Checkup uses the whole pane: a count strip and the levels as columns (`CheckupTool.tsx`, `ui/surfaces.tsx`, `ui/css.ts`). No site-owned edits; `sync-check` against starter main: 236 same.
+
 _2026-10-20: starter cards 145 and 146 synced (`feat/studio-sync-c`)._
 
 Home is a full-width dashboard with a status rail (card 145: `HomeTool`, `HomeCards`, `ui/css`), and an empty Trash has a page of its own (card 146: `trashListItem()`; `structure.ts` now builds the Trash item with it and keeps the id `trash`). Also picked up the later `PostPhoto`, `types` and `trash` changes. `sync-check` against starter main: 236 same.
