@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-19: starter cards 139 and 140 synced (`feat/studio-sync-b`)._
+
+Copied the starter's canonical files: toasts in the site's voice (card 140: `KitToastBody`, mini stones after Publish, `trash.tsx`, `css.ts`, `surfaces.tsx`, the `part=toast` bench) and `npm run check:look` (card 139: `neutralLookWarnings()`, `scripts/check-studio-look.mjs`). Card 138 (snapshot, live-watch) was already in. `check:look` still lists one neutral device here, the plain connector, which the next piece of work (the Studio's own character) answers.
+
 _2026-10-19: CI builds from a pinned content snapshot (starter card 138; `ci/snapshot-build`)._
 
 The Staff rename turned build, test, the e2e shards and the link check red on a docs-only PR, because CI built from the live dataset. Now `ci.yml`'s site build, `lighthouse.yml` and `visual.yml` run as `node scripts/snapshot.mjs run -- <cmd>` over `ci/sanity-snapshot.ndjson.gz`; `deploy.yml` still builds live; `live-watch.yml` checks the real site daily. Rules: `.claude/rules/tests-and-gates.md`.
