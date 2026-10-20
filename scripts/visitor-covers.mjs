@@ -60,6 +60,7 @@ import {
 } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { snapshotClientOptions } from './snapshot.mjs';
 
 const started = Date.now();
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -165,6 +166,8 @@ if (fixtureMode) {
       useCdn: true,
       perspective: 'published',
       ...(env.SANITY_API_READ_TOKEN ? { token: env.SANITY_API_READ_TOKEN } : {}),
+      // CI reads a pinned snapshot (PORTS.md card 138); empty unless SANITY_SNAPSHOT_URL is set.
+      ...snapshotClientOptions(process.env),
     });
     try {
       const page = await client.fetch(

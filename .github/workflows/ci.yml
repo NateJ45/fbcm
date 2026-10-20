@@ -207,6 +207,9 @@ jobs:
       # block in playwright.config.ts. The cost: the link check below now scans
       # the fixture build (Home's band points at /styleguide/visitor, not
       # /visitor); the Sanity-backed routes it covers are identical.
+      # Built from the PINNED content snapshot (ci/sanity-snapshot.ndjson.gz), never the
+      # live dataset (PORTS.md card 138), so a client edit in the Studio cannot turn this
+      # red. Refresh deliberately: node scripts/snapshot.mjs export.
       - name: Build (site + embedded Studio)
         env:
           LAST_SUNDAY_FIXTURE: '1'
@@ -215,7 +218,7 @@ jobs:
           CHURCH_CALENDAR_FIXTURE: '1'
           CHURCH_CALENDAR_NOW: '2026-09-25T16:00:00Z'
           CHURCH_TRAC_PAGES_FIXTURE: '1'
-        run: npm run build
+        run: node scripts/snapshot.mjs run -- npm run build
 
       # NOTE: `npm run parity compare` is deliberately NOT a CI step. The
       # baselines in scripts/.parity/ are captured on a developer machine and

@@ -52,6 +52,7 @@ import { createClient } from '@sanity/client';
 import opentype from 'opentype.js';
 import sharp from 'sharp';
 import { loadEnv } from './lib/loadEnv.mjs';
+import { snapshotClientOptions } from './snapshot.mjs';
 import { fitTitle, typeset } from '../src/lib/og-card.ts';
 import { ogCardPath, SERVICE_PAGE_SLUG } from '../src/lib/church-schema.ts';
 // scaffold: journal
@@ -89,6 +90,8 @@ const client = createClient({
   useCdn: true,
   perspective: 'published',
   ...(readToken ? { token: readToken } : {}),
+  // CI reads a pinned snapshot (PORTS.md card 138); empty unless SANITY_SNAPSHOT_URL is set.
+  ...snapshotClientOptions(process.env),
 });
 
 // ── The look ───────────────────────────────────────────────────────────────

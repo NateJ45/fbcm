@@ -30,6 +30,7 @@
 
 import css from './search-dialog.css?inline';
 import { searchRow, countLabel, type PagefindData } from '@/lib/search-results';
+import { trackSearch } from '@/lib/track';
 
 interface PagefindResult {
   id: string;
@@ -268,6 +269,7 @@ async function run(value: string) {
   // null: a newer keystroke superseded this search.
   if (!search || !parts || q !== query) return;
   results = search.results;
+  trackSearch(q, results.length);
   shown = 0;
   parts.list.replaceChildren();
   parts.status.textContent = countLabel(results.length, q);

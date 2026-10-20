@@ -40,7 +40,7 @@ export const routes: string[] = [
   '/who-we-are',
   '/beliefs',
   '/ministries',
-  '/staff',
+  '/ministers',
   '/history',
   '/wedding',
   '/give',

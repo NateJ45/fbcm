@@ -1,0 +1,107 @@
+{
+  "slug": "quick-update-tour",
+  "title": "Quick update: a tour",
+  "start": "/quick-update",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "ready": "[data-tour=\"quick-list\"]",
+  "steps": [
+    {
+      "do": "ring",
+      "target": "[data-tour=\"quick-list\"]",
+      "caption": "Quick update: each weekly job is a button.",
+      "ms": 2200,
+      "poster": true
+    },
+    {
+      "do": "scroll",
+      "target": "[data-quick=\"sermon-preview\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-quick=\"post-photo\"]",
+      "caption": "A photo, saved as a draft for you to publish.",
+      "ms": 2200
+    },
+    {
+      "do": "scroll",
+      "target": "[data-quick=\"notice\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-quick=\"sermon-preview\"]",
+      "caption": "Sunday's sermon preview.",
+      "ms": 2200
+    },
+    {
+      "do": "scroll",
+      "target": "[data-quick=\"this-week\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-quick=\"notice\"]",
+      "caption": "A banner across the top of every page.",
+      "ms": 2200
+    },
+    {
+      "do": "scroll",
+      "target": "[data-quick=\"visitor\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-quick=\"this-week\"]",
+      "caption": "A change this week, like a snow day.",
+      "ms": 2200
+    },
+    {
+      "do": "scroll",
+      "target": "[data-quick=\"take-down-banner\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-quick=\"visitor\"]",
+      "caption": "This month's Visitor.",
+      "ms": 2200
+    },
+    {
+      "do": "scroll",
+      "target": "[data-quick=\"church-details\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-quick=\"take-down-banner\"]",
+      "caption": "Take a banner down early.",
+      "ms": 2200
+    },
+    {
+      "do": "scroll",
+      "target": "[data-quick=\"staff-on-page\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-quick=\"church-details\"]",
+      "caption": "The service time and phone number.",
+      "ms": 2200
+    },
+    {
+      "do": "scroll",
+      "target": "[data-quick=\"staff-on-page\"]"
+    },
+    {
+      "do": "ring",
+      "target": "[data-quick=\"staff-on-page\"]",
+      "caption": "Show or hide someone on the Staff page.",
+      "ms": 2200
+    }
+  ],
+  "cover": {
+    "selectors": [
+      "[data-ui=\"whats-new-card\"]",
+      "[data-ui=\"Popover\"]:has([data-ui=\"whats-new-card\"])",
+      "[data-testid=\"whats-new-root\"]",
+      "[data-testid=\"whats-new-card\"]"
+    ]
+  }
+}

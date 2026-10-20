@@ -34,6 +34,13 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createClient } from '@sanity/client';
 import { loadEnv } from './lib/loadEnv.mjs';
+import { snapshotClientOptions } from './snapshot.mjs';
+
+// Exit a moment after the last request. On Windows, Node 24 can hit a libuv assertion
+// ("UV_HANDLE_CLOSING", exit 127) when process.exit() runs straight after an HTTP
+// request to the local snapshot server (PORTS.md card 138) and an HTTPS fetch.
+// Never resolves: the timer ends the process.
+const exitAfterDrain = () => new Promise(() => setTimeout(() => process.exit(0), 300));
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const outPath = resolve(root, 'src/data/youtube-feed.generated.json');
@@ -129,7 +136,7 @@ const projectId = env.PUBLIC_SANITY_PROJECT_ID;
 if (!projectId || projectId === 'your-project-id') {
   log('no Sanity project: nothing to fetch.');
   write({ xml: null, source: 'none' });
-  process.exit(0);
+  await exitAfterDrain();
 }
 
 try {
@@ -138,13 +145,15 @@ try {
     dataset: env.PUBLIC_SANITY_DATASET || 'production',
     apiVersion: '2025-01-01',
     useCdn: true,
+    // CI reads a pinned snapshot (PORTS.md card 138); empty unless SANITY_SNAPSHOT_URL is set.
+    ...snapshotClientOptions(process.env),
   });
   const settings = await client.fetch('*[_id == "siteSettings"][0]{youtubeUrl, livestreamUrl}');
   const channelId = youtubeChannelId(settings?.youtubeUrl, settings?.livestreamUrl);
   if (!channelId) {
     log('Site settings names no YouTube channel: nothing to fetch.');
     write({ xml: null, source: 'none' });
-    process.exit(0);
+    await exitAfterDrain();
   }
   const cachePath = resolve(cacheDir, `${channelId}.xml`);
 
@@ -177,7 +186,7 @@ try {
     const n = (xml.match(/<entry>/g) ?? []).length;
     log(`${n} uploads from the ${source}.`);
     write({ xml, source, fetchedAt: new Date().toISOString() });
-    process.exit(0);
+    await exitAfterDrain();
   }
 
   if (existsSync(cachePath)) {
@@ -186,7 +195,7 @@ try {
     if (age <= MAX_CACHE_AGE_MS) {
       log(`every source failed; using the last good copy, ${days} days old.`);
       write({ xml: readFileSync(cachePath, 'utf8'), source: `cache (${days} days old)` });
-      process.exit(0);
+      await exitAfterDrain();
     }
     log(`every source failed, and the last good copy is ${days} days old: too stale to use.`);
   } else {

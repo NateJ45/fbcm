@@ -1016,13 +1016,17 @@ html.motion [data-reveal].is-visible {
    well below the lettering, and it only exists in overlay mode before the
    first scroll. Measured after: 6.09:1 at the worst link, the whole page
    clean in both themes. z-index -1 keeps it behind the bar's own contents and
-   inside the header's stacking context, so it never touches the page below. */
+   inside the header's stacking context, so it never touches the page below.
+   2026-10-19: strengthened from 0.62 to 0.84 at the top. The church switched the
+   Beliefs hero to a full-bleed stained-glass photo, brighter at the right than
+   the tower photograph, and the nav links measured 2.87:1 to 3.92:1 there;
+   at 0.84 the whole contrast spec passes again. */
 .site-header[data-overlay]:not([data-scrolled])::before {
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
   height: calc(var(--header-h, 88px) * 1.9);
-  background: linear-gradient(to bottom, rgba(20, 18, 27, 0.62), rgba(20, 18, 27, 0));
+  background: linear-gradient(to bottom, rgba(20, 18, 27, 0.84), rgba(20, 18, 27, 0));
   pointer-events: none;
   z-index: -1;
 }
