@@ -19,7 +19,7 @@ import { test, expect } from './fixtures';
 
 const ANCHOR_URLS = [
   '/beliefs#baptists',
-  '/staff#kendall-ellis',
+  '/ministers#kendall-ellis',
   '/ministries#youth',
   '/visit#accessibility',
   '/history#building',
