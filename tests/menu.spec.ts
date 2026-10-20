@@ -233,3 +233,19 @@ test.describe('with motion', () => {
     expect(dashed).toEqual([]);
   });
 });
+
+// The Hannaford line along the sheet's foot is drawn wider than the sheet on purpose (it bleeds off
+// both edges), so the scrolling box has to clip it sideways: without that, a finger can drag the
+// whole menu left and right. Checked on the scroll box itself because the PAGE never overflows
+// (the dialog is fixed), which is why the reflow sweep missed it.
+for (const width of [320, 375, 390]) {
+  test(`the open mobile menu does not scroll sideways at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await openMenu(page);
+    // scrollWidth counts clipped overflow too, so check the box clips sideways rather than scrolls.
+    const overflowX = await page
+      .locator('.menu-scroll')
+      .evaluate((el) => getComputedStyle(el).overflowX);
+    expect(['hidden', 'clip']).toContain(overflowX);
+  });
+}
