@@ -436,7 +436,7 @@ export default function MobileNav({
 
           {/* The scrolling part of the sheet: everything but the window. The
               pinned Give (below) is sticky to this box. */}
-          <div className="menu-scroll relative min-h-0 flex-1 overflow-y-auto">
+          <div className="menu-scroll relative min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
             <div className="relative flex min-h-full shrink-0 flex-col px-gutter pt-4 pb-8">
               {/* The Hannaford rendering along the sheet's foot, the same faint
                 gold line art as the footer's (Nathan, 2026-09-24: the window
