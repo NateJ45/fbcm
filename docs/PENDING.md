@@ -194,14 +194,18 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
 
 Phase B is built (tours, data-only Quick update jobs, guide pictures, four clips: docs/agent/studio-plan.md).
 
-- [ ] **Signed-in check of Quick update**: the sermon preview and the news post publish a whole post; the Visitor
-      job adds an issue at the top of the list (`pageBuilder[_key=="visitor-issues"].docs`, a number year, a PDF); Take
-      down a banner and Show or hide a staff member list their documents and save; Change the service time or phone
-      edits Site settings; Post a photo saves a draft; the Christmas and Easter banners show only in their weeks. The
-      tours' anchors (`tool:presentation`, `tool:site-guide`, the `quick:<id>` tiles) light up and none lands centred.
-- [ ] **Clips to redo**: `quick-update-tour` (rings need to scroll each tile into view first) and scripts 4, 6, 7 in
-      `docs/agent/studio-videos.md`.
-- [ ] **`publish-button` picture**: draws the wireframe; the harness cannot show Publish. Capture it signed in.
+- [x] **Signed-in check of Quick update** (2026-10-20, read only, nothing saved): all nine tiles open their forms with
+      no errors; the staff picker lists the 17 staff; Take down a banner says there is nothing to choose while none is up.
+      Home's six tour anchors, the Site Guide's two and an open page's form, Publish button and "..." menu are all on
+      screen. Not exercised, because each saves: the Save and Publish clicks themselves, and the stepped tours.
+- [x] **Clips redone** (2026-10-20): `quick-update-tour` and `post-a-photo` are recorded and on their guides. Still to
+      record: script 4 (needs a picture upload the recorder cannot do) and script 7 (the staff list shows real names;
+      its rows must be mocked), in `docs/agent/studio-videos.md`.
+- [ ] **`publish-button` picture** (needs Nathan, once): it still draws the wireframe because the harness cannot show
+      Publish, and an enabled Publish button only appears once a document has an unpublished change. Open any page in
+      the live Studio, type a letter, screenshot the foot of the document with the green Publish button (cover the
+      small avatar beside "Last published"), then discard the change. Save as a WebP under 150 KB and add the entry
+      in `src/sanity/guides/shots.ts` with numbered marks and alt text. No agent session edits a live document.
 - [ ] **The "How to" chip's marker draws as a long gold bar** (seen 2026-10-19): card 137 boxed it at 14 by 10; check
       signed in that it is fixed.
 
