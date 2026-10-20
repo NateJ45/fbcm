@@ -31,6 +31,7 @@
     "parity:compare": "node scripts/page-parity.mjs compare --exclude \"blog/page/**,blog/tag/**,blog/category/**/page/**\"",
     "cutover": "node scripts/cutover.mjs",
     "sync-check": "node scripts/sync-check.mjs",
+    "check:look": "node --experimental-strip-types scripts/check-studio-look.mjs",
     "free-dist": "node scripts/free-dist.mjs",
     "check": "astro check && npm run lint",
     "check:full": "npm run typegen && npm run build && npm run test:unit && npm run test:scripts",
