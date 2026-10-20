@@ -55,12 +55,23 @@ finished gift (it ends on Church Center). Form sends are therefore counted by `f
 
 ## GA4 Admin settings
 
-See the table at the end of this file; filled in on 2026-10-19 (custom dimensions, key events, retention,
-internal traffic). Key events: `give_click`, `generate_lead`, `contact_click`, `app_click`.
+Set or checked on 2026-10-19 (Chrome, signed in as Nathan):
+
+| Setting                         | State                                                                                                                                                                                                                                              |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enhanced measurement            | On: page changes (history), scrolls, outbound clicks, site search, form interactions, video, file downloads                                                                                                                                        |
+| Data retention                  | 14 months, event and user data                                                                                                                                                                                                                     |
+| Unwanted referrals              | `churchcenter.com`, `churchtrac.com` (visitors returning from giving or a form do not start a new referral session)                                                                                                                                |
+| Search Console                  | `sc-domain:fbcmuncie.org`, sitemap index submitted 2026-10-19, success                                                                                                                                                                             |
+| Internal traffic                | Not set: needs the office or church IP addresses                                                                                                                                                                                                   |
+| Key events                      | To mark once the events show in Admin > Events (about a day after first receipt): `give_click`, `generate_lead`, `contact_click`, `app_click`                                                                                                      |
+| Custom dimensions (event scope) | To register once the parameters show in the picker: `location`, `destination`, `method`, `network`, `form_name`, `form_location`, `embed`, `embed_name`, `percent`, `search_results`, `missing_path`, `from_site`, `error_message`, `error_source` |
+
+Cross-domain linking to Church Center giving cannot be set from here: it needs their tag.
 
 ## Verifying
 
-Never by HTML scan. Open the live site in a real browser (not WebDriver), then GA4 Realtime by event name, or
+Verified live 2026-10-19: `contact_click` and `give_click` reached GA4 Realtime from the production site. (A Chrome with a content blocker never loads gtag.js, so a missing hit there proves nothing; use the desktop app's browser pane.) Never by HTML scan. Open the live site in a real browser (not WebDriver), then GA4 Realtime by event name, or
 `run_realtime_report` in the analytics MCP. The Playwright suite `tests/site-events.spec.ts` stubs `window.gtag`
 and checks each classification.
 
