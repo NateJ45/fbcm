@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-20: the Studio's own character (`feat/studio-character`)._
+
+The Studio was neutral in form (a hairline marker, a plain line between steps). `brand.config.json` `studio.look` now names devices drawn from the building: a lancet-arch marker (the photo-frame arch, navy with a gold inner arch), a dashed gold connector, a faint coursed-stone tile behind featured panels, banner titles in Castoro Titling, and `motion: lay`, so numbered stones are set down one after another. The marker, texture and the font copy are written by `scripts/gen-studio-art.mjs`. `npm run check:look` (card 139) now reports the look as settled. Checked at 1280, 375 and 320.
+
 _2026-10-20: the open mobile menu no longer scrolls sideways (`fix/mobile-menu-hscroll`)._
 
 The Hannaford line along the sheet's foot is 130% wide and bleeds off both edges on purpose, but `.menu-scroll` (overflow-y auto, which makes overflow-x auto too) measured 431px inside a 375px sheet, so a finger could drag the whole menu sideways. `MobileNav.tsx` now clips it (`overflow-x-hidden`); `tests/menu.spec.ts` checks the scroll box clips sideways at 320, 375 and 390 (the page itself never overflows, which is why the reflow sweep missed it).
