@@ -3,29 +3,36 @@
 // How a post's cover sits in the plain picture box on /blog and the archives
 // (2026-09-24, feat/blog-flat; PostRow.astro's `frame="plain"`).
 //
-// The box is one consistent landscape shape, 9:7, because that is the shape of
-// the covers themselves: measured on 2026-09-24, 115 of the 141 covers are
-// 940x726-style series slides (1.29:1), and a box of exactly that shape shows
-// every one of them whole. The rest are squares (11), 16:9 (6), a few near
-// the slides (1.19, 1.36), one portrait photograph and one panorama. Most of
-// them are slides with lettering running close to the edges, so an image is
-// only CROPPED to fill the box when its shape is close enough that the crop
-// takes a sliver; anything further off is shown WHOLE inside the box
-// ("contain") on a quiet ground, so no slide ever loses a line of its words.
+// The box is 16:9 (2026-10-21, the co-pastor's request): the church's sermon
+// slide graphics are 16:9 and were being letterboxed in the old 9:7 box, which
+// was drawn for the legacy Wix covers. Measured on 2026-09-24, 115 of the 141
+// covers are 940x726-style series slides (1.29:1); the church confirmed their
+// lettering sits in the centre, so those are CROPPED to fill the 16:9 box
+// (about a quarter of the height trimmed, top and bottom). Anything in the
+// legacy band (1.15 to 1.40) is treated the same way. A cover already near
+// 16:9 fills the box exactly. The rest (squares, the portrait photograph, the
+// panorama) have no safe crop, so they are shown WHOLE inside the box
+// ("contain") on a quiet ground and never lose a line of words.
 //
 // Derived from the asset's own dimensions every build (CLAUDE.md rule 15),
 // never a stored field.
 import { parseSanityAssetDimensions } from './sanity-asset.ts';
 
 /** The plain box's shape, width over height. */
-export const PLAIN_COVER_RATIO = 9 / 7;
+export const PLAIN_COVER_RATIO = 16 / 9;
 
 /**
  * How far an image's shape may be from the box's before it is shown whole
- * rather than cropped: 12%, so a 1.19 or 1.36 cover loses at most about 7% of
- * one dimension, and a square or 16:9 slide is never cut.
+ * rather than cropped: 12%, so a near-16:9 cover is filled and a square is not.
  */
 export const COVER_TOLERANCE = 0.12;
+
+/**
+ * The legacy slide band, width over height: the 940x726 series slides and
+ * their near neighbours (1.19, 1.36). Cropped to the 16:9 box on purpose.
+ */
+export const LEGACY_COVER_MIN = 1.15;
+export const LEGACY_COVER_MAX = 1.4;
 
 interface CoverImage {
   asset?: { _ref?: string; _id?: string } | null;
@@ -52,5 +59,6 @@ export function coverFit(
 ): 'cover' | 'contain' {
   const r = coverRatio(image);
   if (r === null) return 'contain';
-  return Math.abs(r / box - 1) <= COVER_TOLERANCE ? 'cover' : 'contain';
+  if (Math.abs(r / box - 1) <= COVER_TOLERANCE) return 'cover';
+  return r >= LEGACY_COVER_MIN && r <= LEGACY_COVER_MAX ? 'cover' : 'contain';
 }

@@ -14,6 +14,10 @@ _2026-10-20: starter card 150 synced (`feat/studio-sync-g`)._
 
 Quick update tiles keep their colour edge flush at the top: the button was centring its inside (`ui/css.ts`). No site-owned edits; `sync-check` against starter main: 236 same.
 
+_2026-10-21: blog covers are 16:9 and larger (`fix/blog-cover-16x9`)._
+
+The co-pastor asked for 16:9 covers because the sermon slide graphics were letterboxed in the old 9:7 box. The `PostRow` plain frame is now `aspect-video` and its picture column is wider (128 / 176 / 224 px at phone / md / lg, was 96 / 136 / 160), because the covers felt small next to the text. `cover-fit.ts` crops the legacy 940x726 series slides (band 1.15 to 1.40) and fills with near-16:9 covers, and still shows squares, portraits and panoramas whole. No schema change, no new field.
+
 _2026-10-20: starter card 149 synced (`feat/studio-sync-f`)._
 
 The bench (`harness/Surfaces.tsx`) and `studio-kit.md` changed. The bench imports `SuggestionCard` from `src/sanity/ai/WritingHelp.tsx`, but the writing-help feature is not installed in this site (no `lib/studio-ai.ts`, no `/api/studio/ai`), so that path holds a small unmarked copy of just the card (it first failed CI with a missing module). The private-page password input is not in this site either. `sync-check` against starter main: 236 same.

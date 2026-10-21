@@ -12,7 +12,7 @@
 // Two frames for the picture (2026-09-24, feat/blog-flat):
 //   plain  THE DEFAULT, everywhere a row is drawn (home's Church Blog band,
 //          the register on /blog and the archives, a post's More from this
-//          series): a plain 9:7 rectangle with a hairline and the site's tiny
+//          series): a plain 16:9 rectangle (was 9:7 until 2026-10-21) with a hairline and the site's tiny
 //          radius. Nathan found the arches "look overdone and make it harder
 //          to see the images" on /blog (2026-09-24), then chose plain on Home
 //          and the post foot too, for one look across the site. The
@@ -123,9 +123,9 @@ const C = taupe
 // change; every other class on the row is the tone's own. Each replacement is
 // written out in full so Tailwind finds it.
 const PLAIN_COLS: Record<string, string> = {
-  'grid-cols-[64px_minmax(0,1fr)]': 'grid-cols-[96px_minmax(0,1fr)]',
-  'md:grid-cols-[8em_76px_minmax(0,1fr)]': 'md:grid-cols-[8em_136px_minmax(0,1fr)]',
-  'lg:grid-cols-[9em_88px_minmax(0,1fr)_12em]': 'lg:grid-cols-[9em_160px_minmax(0,1fr)_12em]',
+  'grid-cols-[64px_minmax(0,1fr)]': 'grid-cols-[128px_minmax(0,1fr)]',
+  'md:grid-cols-[8em_76px_minmax(0,1fr)]': 'md:grid-cols-[8em_176px_minmax(0,1fr)]',
+  'lg:grid-cols-[9em_88px_minmax(0,1fr)_12em]': 'lg:grid-cols-[9em_224px_minmax(0,1fr)_12em]',
 };
 const li = plain
   ? C.li
@@ -143,7 +143,7 @@ const objectPosition =
     ? `${(hotspot.x * 100).toFixed(2)}% ${(hotspot.y * 100).toFixed(2)}%`
     : '50% 50%';
 const plainBox =
-  'col-start-1 row-span-3 row-start-1 m-0 aspect-[9/7] self-start overflow-hidden rounded border md:col-start-2 md:row-span-2 md:self-center lg:row-span-1';
+  'col-start-1 row-span-3 row-start-1 m-0 aspect-video self-start overflow-hidden rounded border md:col-start-2 md:row-span-2 md:self-center lg:row-span-1';
 const plainInk = taupe
   ? 'border-band-brown/40 bg-band-brown/10'
   : 'border-brown-ink/25 bg-brown-ink/[0.07]';
@@ -161,8 +161,8 @@ const plainInk = taupe
       <figure class:list={[plainBox, plainInk]}>
         <SanityImage
           source={image}
-          width={320}
-          sizes="(min-width: 1024px) 160px, (min-width: 768px) 136px, 96px"
+          width={560}
+          sizes="(min-width: 1024px) 224px, (min-width: 768px) 176px, 128px"
           alt={rowAlt(image?.alt, title)}
           class:list={['block h-full w-full', fit === 'cover' ? 'object-cover' : 'object-contain']}
           style={`object-position: ${objectPosition};`}

@@ -1560,7 +1560,7 @@ Home is fixed (mobile perf 1.00, LCP 1.73 s, 5 of 5 runs). The numbers and cause
 ### The blog as a plain register (2026-09-24, `feat/blog-flat`)
 
 - [ ] #nathan **Should Home's Church Blog rows follow?** /blog and every archive now draw each
-      cover as a plain 9:7 picture (PostRow `frame="plain"`); Home's band and a post's More from
+      cover as a plain 16:9 picture (9:7 until 2026-10-21) (PostRow `frame="plain"`); Home's band and a post's More from
       this series keep the small lancet. Switching Home is one prop (`frame="plain"` on the
       PostRow in `src/components/sections/DynamicList.astro`), but Home's rows then change
       markup, so parity moves with it. Side-by-side screenshots were taken on the branch.
