@@ -60,5 +60,8 @@ export function calendarEventNode(
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: compact({ '@type': 'Place', name: place, address: address ?? undefined }),
     organizer: { '@id': churchId(opts.site.url) },
+    // The church hosts and leads its own events (a Google suggestion). No
+    // `offers`: a calendar row can have a cost the church has not told us of.
+    performer: { '@id': churchId(opts.site.url) },
   });
 }

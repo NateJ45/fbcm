@@ -122,6 +122,7 @@ export const TYPES: Record<string, readonly string[]> = {
   PlaceOfWorship: CIVIC,
   Church: CIVIC,
   Organization: ORGANIZATION,
+  Offer: [...THING, 'price', 'priceCurrency', 'availability', 'validFrom'],
   Person: [...THING, 'email', 'telephone', 'jobTitle', 'affiliation', 'worksFor'],
   Event: [
     ...THING,
@@ -221,6 +222,7 @@ const ENUMS: Record<string, readonly string[]> = {
     'https://schema.org/OnlineEventAttendanceMode',
     'https://schema.org/MixedEventAttendanceMode',
   ],
+  availability: ['https://schema.org/InStock', 'https://schema.org/SoldOut'],
   byDay: [
     'https://schema.org/Monday',
     'https://schema.org/Tuesday',

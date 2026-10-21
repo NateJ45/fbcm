@@ -329,6 +329,8 @@ test('each dated row is a valid schema.org Event with the church clock offset', 
   const messiah = nodes.find((n) => n.name === 'Messiah Sing-In')!;
   assert.equal(messiah.startDate, '2026-12-11T18:30:00-05:00');
   assert.equal(messiah.endDate, '2026-12-11T20:30:00-05:00');
+  assert.deepEqual(messiah.performer, { '@id': `${site.url}/#church` });
+  assert.ok(!('offers' in messiah), 'no free-entry claim on calendar rows');
   const membership = nodes.find((n) => String(n.name).startsWith('Membership'))!;
   assert.equal(membership.startDate, '2026-10-04T09:30:00-04:00');
   assert.equal(

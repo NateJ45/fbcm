@@ -206,6 +206,14 @@ test('sundayWorshipNode: a weekly Event, dated at one real Sunday', () => {
     scheduleTimezone: 'America/Indiana/Indianapolis',
   });
   assert.equal(node.eventAttendanceMode, 'https://schema.org/MixedEventAttendanceMode');
+  assert.deepEqual(node.performer, { '@id': 'https://www.fbcmuncie.org/#church' });
+  assert.deepEqual(node.offers, {
+    '@type': 'Offer',
+    url: 'https://www.fbcmuncie.org/visit',
+    price: '0',
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+  });
   assert.equal(
     node.description,
     'Worship on Sundays at 10:45 am at 309 East Adams Street, Muncie. About an hour.',
