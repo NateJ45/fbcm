@@ -14,6 +14,10 @@ _2026-10-20: starter card 150 synced (`feat/studio-sync-g`)._
 
 Quick update tiles keep their colour edge flush at the top: the button was centring its inside (`ui/css.ts`). No site-owned edits; `sync-check` against starter main: 236 same.
 
+_2026-10-21: Event JSON-LD gains `performer` and `offers` (`fix/event-offers-performer`)._
+
+Search Console listed six non-critical Events suggestions (performer, endDate, eventStatus, offers, description). endDate, eventStatus and description were already emitted after the cutover (the warnings look like the Wix-era crawl); performer and offers were not. Both generators now add `performer` (the church, by `@id`); Sunday worship also gets a free `offers` (price 0, matching `isAccessibleForFree`). Calendar rows get no `offers`: a row can have a cost we are not told about. `schema-vocab.ts` learns the `Offer` type.
+
 _2026-10-21: blog covers are 16:9 and larger (`fix/blog-cover-16x9`)._
 
 The co-pastor asked for 16:9 covers because the sermon slide graphics were letterboxed in the old 9:7 box. The `PostRow` plain frame is now `aspect-video` and its picture column is wider (128 / 176 / 224 px at phone / md / lg, was 96 / 136 / 160), because the covers felt small next to the text. `cover-fit.ts` crops the legacy 940x726 series slides (band 1.15 to 1.40) and fills with near-16:9 covers, and still shows squares, portraits and panoramas whole. No schema change, no new field.

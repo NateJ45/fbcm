@@ -401,6 +401,16 @@ export function sundayWorshipNode(
       : 'https://schema.org/OfflineEventAttendanceMode',
     location: livestream ? [place, { '@type': 'VirtualLocation', url: livestream }] : place,
     organizer: { '@id': churchId(site.url) },
+    performer: { '@id': churchId(site.url) },
+    // Worship is free to attend (isAccessibleForFree); Google asks for the
+    // matching Offer.
+    offers: {
+      '@type': 'Offer',
+      url: opts.pageUrl,
+      price: '0',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+    },
     isAccessibleForFree: true,
   });
 }
