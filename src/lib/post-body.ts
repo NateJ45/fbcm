@@ -178,6 +178,18 @@ function whollyStrong(node: { [key: string]: unknown }): boolean {
   return spans.length > 0 && spans.every((s) => (s.marks ?? []).includes('strong'));
 }
 
+/**
+ * A block the Wix converter wrote (src/lib/convert-body.ts rekeys every span
+ * `<block key>s<index>`), as opposed to one typed in the Studio, whose span keys
+ * are random hex (never an "s"). The Wix repairs below (underline dropped, long
+ * bold dropped, a bold line made a point) are for the import's residue only: an
+ * editor who underlines, bolds or italicises a phrase meant it.
+ */
+function isImported(node: { [key: string]: unknown }): boolean {
+  const spans = spansOf(node);
+  return spans.length > 0 && spans.every((s) => /s\d+$/.test(String(s._key ?? '')));
+}
+
 // ---- The block-level repairs -------------------------------------------------
 
 /**
@@ -189,12 +201,16 @@ function whollyStrong(node: { [key: string]: unknown }): boolean {
 function repairBlock<T extends PTBlock>(block: T, opts: { noStrong?: boolean } = {}): T {
   const defs = block.markDefs ?? [];
   const dead = new Set(defs.filter((d) => isDeadHref(linkHref(block, d._key))).map((d) => d._key));
+  const imported = isImported(block);
   const children = (block.children ?? []).map((child) => {
     if ((child as PTSpan)._type !== 'span') return child;
     const span = child as PTSpan;
-    const long = words(cleaned(span.text)) > 12;
+    const long = imported && words(cleaned(span.text)) > 12;
     const marks = (span.marks ?? []).filter(
-      (m) => m !== 'underline' && !dead.has(m) && !(m === 'strong' && (opts.noStrong || long)),
+      (m) =>
+        !(imported && m === 'underline') &&
+        !dead.has(m) &&
+        !(m === 'strong' && (opts.noStrong || long)),
     );
     return { ...span, marks };
   });
@@ -276,7 +292,7 @@ export function isTableRun(run: PTBlock[]): boolean {
  * question mark, opens with a number ("2. "), or has no closing punctuation.
  */
 export function isPoint(block: PTBlock): boolean {
-  if (!isParagraph(block)) return false;
+  if (!isParagraph(block) || !isImported(block)) return false;
   const text = textOf(block).trim();
   if (!text || !whollyStrong(block) || words(text) > 22) return false;
   // Two exclusions the 142 posts asked for, beyond the prototype's rule: a
@@ -391,7 +407,12 @@ export function prepareBody(
         run.push(body[i] as PTBlock);
         i += 1;
       }
-      if (run.length === 1 && run[0].listItem === 'number' && whollyStrong(run[0])) {
+      if (
+        run.length === 1 &&
+        run[0].listItem === 'number' &&
+        isImported(run[0]) &&
+        whollyStrong(run[0])
+      ) {
         out.push(pointOf(run[0], '1'));
       } else if (isTableRun(run)) {
         out.push(tableOf(run));
