@@ -160,18 +160,16 @@ function makeComponents(seen: Map<string, number> = new Map()): PortableTextComp
     },
 
     marks: {
-      // Castoro has one weight, so bold was always a faux bold. It is a gold
-      // highlighter band instead (post-body.ts has already taken it off any
-      // run longer than twelve words).
+      // Bold, synthesised from Castoro's one weight (.post-prose strong).
+      // post-body.ts takes it off long runs in imported Wix posts only.
       strong: ({ children }) => <strong>{children}</strong>,
       em: ({ children }) => <em>{children}</em>,
       // post-body.ts drops the underline only from imported Wix blocks (it read
       // as a link there); one an editor applied in the Studio is drawn.
       underline: ({ children }) => <u className="underline-offset-[0.18em]">{children}</u>,
-      // Highlight uses bg-accent (theme-aware) for a subtle warm callout effect.
-      highlight: ({ children }) => (
-        <span className="rounded-sm bg-accent/60 px-1 text-foreground">{children}</span>
-      ),
+      // Highlight: a gold marker, styled with the post (.pp-hl in PostView.astro).
+      // It was bg-accent, which is within a shade of the page and so invisible.
+      highlight: ({ children }) => <mark className="pp-hl">{children}</mark>,
       link: ({ children, value }) => {
         const href = value?.href ?? '';
         // A link token with no address behind it (church-links.ts's

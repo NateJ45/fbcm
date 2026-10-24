@@ -964,10 +964,21 @@ const PRINT_SCRIPT = `
   .post-prose a:hover {
     color: var(--color-gold-ink);
   }
-  /* Castoro has one weight: bold is a gold highlighter band, never faux bold. */
+  /* Bold is bold (2026-10-23, Jonathan's report). Castoro ships one weight, so
+     the browser synthesises it; until then bold was a faint gold band that read
+     as an underline beside a real one. */
   .post-prose strong {
-    font-weight: inherit;
-    box-shadow: inset 0 -0.34em 0 color-mix(in srgb, var(--color-gold) 20%, transparent);
+    font-weight: 700;
+  }
+  /* The Studio's Highlight: a gold marker under the words, cloned onto each
+     line a run wraps across. */
+  .post-prose .pp-hl {
+    padding: 0 0.12em;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--color-gold) 38%, transparent);
+    color: inherit;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
   .post-prose .pp-lead {
     font-size: var(--text-lede);
@@ -1189,7 +1200,7 @@ const PRINT_SCRIPT = `
     margin-top: 0.7em;
   }
   .post-prose .pp-lection strong {
-    box-shadow: none;
+    font-weight: inherit;
   }
 
   /* The passage itself (2026-09-24, feat/scripture-text): a disclosure under
@@ -1442,12 +1453,15 @@ const PRINT_SCRIPT = `
       color: #444;
       overflow-wrap: anywhere;
     }
-    .post-prose strong {
-      box-shadow: none;
+    /* A background does not print by default: the highlight keeps a gold
+       rule under it instead. */
+    .post-prose .pp-hl {
+      padding: 0;
+      background: none;
       text-decoration: underline;
       text-decoration-color: var(--color-gold);
-      text-decoration-thickness: 0.5pt;
-      text-underline-offset: 0.2em;
+      text-decoration-thickness: 1.5pt;
+      text-underline-offset: 0.12em;
     }
     .post-prose .pp-sh {
       margin-top: 1.6em;
