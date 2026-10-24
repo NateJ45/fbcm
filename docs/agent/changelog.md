@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-23: bold, italic and underline typed in the Studio now show (`fix/post-marks-authored`)._
+
+Jonathan reported formatting not working in new posts. `prepareBody` (`src/lib/post-body.ts`) repaired Wix residue on every block: it dropped `underline`, dropped bold over 12 words and turned a short all-bold line into a heading-style point. Those repairs now run only on imported blocks (span keys `<key>s<n>`, written by `convert-body.ts`; Studio keys are random hex). `JournalPortableText` draws `underline` as `<u>`. Bold stays the gold highlighter band, not heavier type (Castoro has one weight). Imported posts render unchanged.
+
 _2026-10-20: starter card 150 synced (`feat/studio-sync-g`)._
 
 Quick update tiles keep their colour edge flush at the top: the button was centring its inside (`ui/css.ts`). No site-owned edits; `sync-check` against starter main: 236 same.

@@ -474,3 +474,33 @@ test('splitAtSliders: empty and missing bodies give no segments', () => {
   assert.deepEqual(splitAtSliders(null), []);
   assert.deepEqual(splitAtSliders(undefined), []);
 });
+
+// ── Posts typed in the Studio keep their marks ──────────────────────────────
+// Studio span keys are random hex; only the Wix converter writes `<key>s<n>`.
+const authored = (spans: SpanSpec[]): PTBlock => ({
+  _type: 'block',
+  _key: 'a1b2c3d4e5f6',
+  style: 'normal',
+  markDefs: [],
+  children: spans.map((s, i) => ({
+    _type: 'span',
+    _key: `f0e1d2c3b4a${i}`,
+    text: typeof s === 'string' ? s : s[0],
+    marks: typeof s === 'string' ? [] : s[1],
+  })),
+});
+
+test('a block typed in the Studio keeps underline, long bold and a bold line', () => {
+  const long = 'one two three four five six seven eight nine ten eleven twelve thirteen';
+  const out = prepareBody([
+    authored([
+      ['Underlined', ['underline']],
+      [' and ', []],
+      [long, ['strong']],
+    ]),
+    authored([['A short bold line', ['strong']]]),
+  ]);
+  assert.deepEqual(marksOf(out[0]), ['underline', 'strong']);
+  assert.equal(out[1]._type, 'block');
+  assert.deepEqual(marksOf(out[1]), ['strong']);
+});

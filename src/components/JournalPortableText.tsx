@@ -165,9 +165,9 @@ function makeComponents(seen: Map<string, number> = new Map()): PortableTextComp
       // run longer than twelve words).
       strong: ({ children }) => <strong>{children}</strong>,
       em: ({ children }) => <em>{children}</em>,
-      // post-body.ts drops every underline before render; this stays so a
-      // body that skipped the pass still renders, but it draws nothing.
-      underline: ({ children }) => <>{children}</>,
+      // post-body.ts drops the underline only from imported Wix blocks (it read
+      // as a link there); one an editor applied in the Studio is drawn.
+      underline: ({ children }) => <u className="underline-offset-[0.18em]">{children}</u>,
       // Highlight uses bg-accent (theme-aware) for a subtle warm callout effect.
       highlight: ({ children }) => (
         <span className="rounded-sm bg-accent/60 px-1 text-foreground">{children}</span>
