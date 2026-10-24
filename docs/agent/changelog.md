@@ -10,9 +10,13 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-23: bold looks bold and highlight is gold in posts (`fix/post-bold-highlight`)._
+
+Testing #110 on Jonathan's draft showed bold still read as a faint gold band (close to an underline) and Highlight (`bg-accent/60`) was within a shade of the page. `.post-prose strong` is now `font-weight: 700`, synthesised from Castoro's one weight; Highlight renders as `<mark class="pp-hl">`, a 38% gold background cloned across line wraps. On paper the highlight becomes a gold underline (backgrounds do not print) and bold prints as bold. This also makes the imported posts' short bold runs heavier.
+
 _2026-10-23: bold, italic and underline typed in the Studio now show (`fix/post-marks-authored`)._
 
-Jonathan reported formatting not working in new posts. `prepareBody` (`src/lib/post-body.ts`) repaired Wix residue on every block: it dropped `underline`, dropped bold over 12 words and turned a short all-bold line into a heading-style point. Those repairs now run only on imported blocks (span keys `<key>s<n>`, written by `convert-body.ts`; Studio keys are random hex). `JournalPortableText` draws `underline` as `<u>`. Bold stays the gold highlighter band, not heavier type (Castoro has one weight). Imported posts render unchanged.
+Jonathan reported formatting not working in new posts. `prepareBody` (`src/lib/post-body.ts`) repaired Wix residue on every block: it dropped `underline`, dropped bold over 12 words and turned a short all-bold line into a heading-style point. Those repairs now run only on imported blocks (span keys `<key>s<n>`, written by `convert-body.ts`; Studio keys are random hex). `JournalPortableText` draws `underline` as `<u>`. Imported posts render unchanged.
 
 _2026-10-20: starter card 150 synced (`feat/studio-sync-g`)._
 
