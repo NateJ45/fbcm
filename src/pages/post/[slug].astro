@@ -94,8 +94,8 @@ const coverOg = entry.coverImage?.asset
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Blog', url: `${site.url}/blog` },
-    { name: entry.title ?? slug, url: `${site.url}/post/${slug}` },
+    { name: 'Blog', url: `${site.url}/blog/` },
+    { name: entry.title ?? slug, url: `${site.url}/post/${slug}/` },
   ]),
   blogPostingSchema(entry, coverOg ?? null),
 ];

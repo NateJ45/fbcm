@@ -12,6 +12,7 @@
 //   - BackToTop React island
 
 import { ClientRouter } from 'astro:transitions';
+import { withTrailingSlash } from '@/lib/href';
 import { site } from '@/data/site';
 import { urlFor } from '@/lib/sanity';
 import { localBusinessSchema } from '@/lib/schemas';
@@ -474,7 +475,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         <span>{announcement!.message}</span>
         {announcement?.link?.url && announcement?.link?.label && (
           <a
-            href={announcement.link.url}
+            href={withTrailingSlash(announcement.link.url)}
             class:list={['ml-2', announcementStyle.link]}
           >
             {announcement.link.label}

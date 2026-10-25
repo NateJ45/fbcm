@@ -32,7 +32,7 @@
 import { splitStega } from './preview-stega.ts';
 
 /** Where a link goes when its setting is blank: the church's own contact page. */
-export const LINK_FALLBACK = '/contact';
+export const LINK_FALLBACK = '/contact/';
 
 /**
  * Every link token, the Site settings field it reads, and what it is for. The
@@ -136,7 +136,7 @@ const HIDDEN_TOKENS: ReadonlySet<LinkToken> = new Set(['{wednesday}', '{contact-
 
 /** Tokens whose blank box becomes something other than LINK_FALLBACK. */
 const OWN_FALLBACK: Partial<Record<LinkToken, string>> = {
-  '{giving}': '/give',
+  '{giving}': '/give/',
   '{wedding-enquiry}': WEDDING_COORDINATOR_EMAIL,
   '{wedding-booking}': WEDDING_COORDINATOR_EMAIL,
 };

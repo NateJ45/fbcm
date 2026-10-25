@@ -33,6 +33,7 @@
 //
 // Each issue carries its anchor, #issue-2026-06, so a link can name one.
 import CtaLink from '@/components/CtaLink.astro';
+import { withTrailingSlash } from '@/lib/href';
 import IssueCover from '@/components/visitor/IssueCover.astro';
 import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { plainWords } from '@/lib/hero-words';
@@ -104,7 +105,7 @@ const read = latest
         </Heading>
       </div>
 
-      <a href={latest.href} class="vi-lead-cover" id={latest.anchor}>
+      <a href={withTrailingSlash(latest.href)} class="vi-lead-cover" id={latest.anchor}>
         <IssueCover
           issue={latest}
           cover={coverFor(latest, covers)}
@@ -154,7 +155,7 @@ const read = latest
               {group.issues.map((issue) => (
                 <li id={issue.anchor} class="min-w-0">
                   <a
-                    href={issue.href}
+                    href={withTrailingSlash(issue.href)}
                     class="vi-tile group"
                     aria-label={`${issue.title}, ${fileLine(issue)}`}
                   >

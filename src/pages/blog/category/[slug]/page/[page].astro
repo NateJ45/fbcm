@@ -61,7 +61,7 @@ const description = `Page ${slice.page} of ${slice.pages} of ${label} from First
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Blog', url: `${site.url}/blog` },
+    { name: 'Blog', url: `${site.url}/blog/` },
     { name: label, url: `${site.url}/blog/category/${slug}/` },
     { name: `Page ${slice.page}`, url: `${site.url}/blog/category/${slug}/page/${slice.page}/` },
   ]),

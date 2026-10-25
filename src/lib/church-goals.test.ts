@@ -6,10 +6,10 @@ test('the four goals are the church order, each with its building glyph and anch
   assert.deepEqual(
     CHURCH_GOALS.map((g) => [g.value, g.name, g.glyph, goalHref(g.value)]),
     [
-      ['worship', 'Worship', 'window', '/who-we-are#worship'],
-      ['the-way', 'The Way', 'door', '/who-we-are#the-way'],
-      ['witness', 'Witness', 'rose', '/who-we-are#witness'],
-      ['work', 'Work', 'basin', '/who-we-are#work'],
+      ['worship', 'Worship', 'window', '/who-we-are/#worship'],
+      ['the-way', 'The Way', 'door', '/who-we-are/#the-way'],
+      ['witness', 'Witness', 'rose', '/who-we-are/#witness'],
+      ['work', 'Work', 'basin', '/who-we-are/#work'],
     ],
   );
 });

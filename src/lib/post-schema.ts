@@ -34,7 +34,7 @@ export function blogPostingNode(
 ): Json {
   const slug = clean(entry.slug?.current);
   // Percent-encoded, as the canonical link is (a slug may carry an accent).
-  const url = encodeURI(slug ? `${site.url}/post/${slug}` : `${site.url}/blog`);
+  const url = encodeURI(slug ? `${site.url}/post/${slug}/` : `${site.url}/blog/`);
   const categories = (entry.categories ?? []).map((c) => clean(c?.title)).filter(Boolean);
   const preview = entryIsSermonPreview(entry as unknown as BlogEntry);
   const opening = openingText(Array.isArray(entry.body) ? entry.body : []);
@@ -59,7 +59,7 @@ export function blogPostingNode(
     author: author ? { '@type': 'Person', name: author } : { '@id': churchId(site.url) },
     publisher: { '@id': churchId(site.url) },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-    isPartOf: { '@type': 'Blog', '@id': `${site.url}/blog#blog`, name: `${site.name} Blog` },
+    isPartOf: { '@type': 'Blog', '@id': `${site.url}/blog/#blog`, name: `${site.name} Blog` },
     inLanguage: 'en-US',
     articleSection: categories[0],
     keywords: [...categories, ...(entry.tags ?? []).map(clean)].filter(Boolean).join(', '),

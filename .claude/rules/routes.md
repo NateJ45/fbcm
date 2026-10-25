@@ -9,6 +9,8 @@ paths:
 
 # Routes summary and rule 10
 
+**Trailing slash (2026-10-25, starter card 89).** Every page lives at `/about/` (`trailingSlash: 'always'`). Hand-written hrefs carry the slash; render-time hrefs (nav, footer, CTAs, post and blog links, JSON-LD urls) go through `withTrailingSlash()` in `src/lib/href.ts`, and Portable Text link marks through `bodyHref()` in `src/lib/body-link.ts`. A new route or link that skips this is a 307 in Search Console.
+
 Core routes that ship with the starter. None of them is toggleable in the Studio; the ones a fork may not want are **scaffold capabilities**, removed from the source with `npm run scaffold -- --remove <name> --write`.
 
 | Path                          | Source                                            | scaffold  | Notes                                                                                                                                                                                                                                                                  |

@@ -49,6 +49,7 @@
 // the preview the post's own fields (title, excerpt, author, tags, category
 // titles) carry stega.
 import { entryIsSermonPreview, weekOfEyebrow, clean, type BlogEntry } from '@/lib/blog-derive';
+import { withTrailingSlash } from '@/lib/href';
 import { readingTimeFromPortableText } from '@/lib/reading-time';
 import { sundayOf, localDay, formatDay, isoDay, readingOf, seriesOf } from '@/lib/sermon-derive';
 import {
@@ -331,7 +332,7 @@ const addressLine = clean(typeof siteSettings?.address === 'string' ? siteSettin
   .map((l) => l.trim())
   .filter(Boolean)
   .join(', ');
-const postUrl = decodeURI(new URL(`/post/${slug}`, site.url).toString());
+const postUrl = decodeURI(new URL(`/post/${slug}/`, site.url).toString());
 const printFoot = [site.name, addressLine, postUrl].filter(Boolean);
 
 // On paper, every picture in the body, and the reading's passage open. The
@@ -382,7 +383,7 @@ const PRINT_SCRIPT = `
     <div class="p2-grid p2-mast">
       <div class="p2-mast-l">
         <p class="p2-cat font-ui text-ui text-gold-ink" data-pagefind-ignore>
-          <a href={isPreview || !categoryHref ? '/blog' : categoryHref}>{eyebrowLabel}</a>
+          <a href={isPreview || !categoryHref ? '/blog/' : categoryHref}>{eyebrowLabel}</a>
         </p>
         <h1 class:list={['p2-title', { 'p2-title-long': titleIsLong }]}>{entry.title}</h1>
         {showLede && <p class="p2-lede">{entry.excerpt}</p>}
@@ -400,7 +401,7 @@ const PRINT_SCRIPT = `
                   <dt class="font-ui text-ui">{f.label}</dt>
                   <dd class:list={{ 'p2-big': f.big }} data-pagefind-meta={f.meta}>
                     {f.href ? (
-                      <a href={f.href}>{f.value}</a>
+                      <a href={withTrailingSlash(f.href)}>{f.value}</a>
                     ) : f.datetime ? (
                       <time datetime={f.datetime} class="oldstyle">
                         {f.value}
@@ -454,7 +455,7 @@ const PRINT_SCRIPT = `
         {entry.relatedProject?.slug?.current && (
           <aside class="p2-related">
             <p class="font-ui text-ui text-gold-ink">Related project</p>
-            <a href={`/portfolio/${entry.relatedProject.slug.current}`}>
+            <a href={`/portfolio/${entry.relatedProject.slug.current}/`}>
               {entry.relatedProject.title}
             </a>
           </aside>
@@ -544,7 +545,7 @@ const PRINT_SCRIPT = `
           <ol class="m-0 list-none border-t border-band-brown/40 p-0">
             {series.map((item) => (
               <PostRow
-                href={`/post/${item.slug}`}
+                href={`/post/${item.slug}/`}
                 title={item.title}
                 dateLabel={item.date}
                 datetime={item.datetime || undefined}
@@ -564,7 +565,7 @@ const PRINT_SCRIPT = `
       {(doors.before || doors.after) && (
         <nav class="p2-doors" aria-label="Older and newer posts">
           {doors.before ? (
-            <a href={`/post/${doors.before.slug}`}>
+            <a href={`/post/${doors.before.slug}/`}>
               <span class="p2-door-l font-ui text-ui">&larr; {doors.before.label}</span>
               <span class="p2-door-t">{doors.before.title}</span>
               {doors.before.sub && <span class="p2-door-s">{doors.before.sub}</span>}
@@ -573,7 +574,7 @@ const PRINT_SCRIPT = `
             <span />
           )}
           {doors.after ? (
-            <a href={`/post/${doors.after.slug}`}>
+            <a href={`/post/${doors.after.slug}/`}>
               <span class="p2-door-l font-ui text-ui">{doors.after.label} &rarr;</span>
               <span class="p2-door-t">{doors.after.title}</span>
               {doors.after.sub && <span class="p2-door-s">{doors.after.sub}</span>}
@@ -598,7 +599,7 @@ const PRINT_SCRIPT = `
   <StickyCTAChip
     client:idle
     label={journalPage?.stickyCtaLabel ?? 'Got a question?'}
-    href="/contact"
+    href="/contact/"
   />
 )}
 

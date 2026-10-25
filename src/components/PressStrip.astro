@@ -9,6 +9,7 @@
 // break the strip.
 
 import SanityImage from '@/components/SanityImage.astro';
+import { withTrailingSlash } from '@/lib/href';
 import type { SanityImageObject } from '@/lib/pageBuilder.types';
 
 interface PressItem {
@@ -52,7 +53,7 @@ if (logoItems.length === 0) return null;
         <li>
           {item.url ? (
             <a
-              href={item.url}
+              href={withTrailingSlash(item.url)}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Read the ${item.outlet ?? 'press'} coverage (opens in new tab)`}

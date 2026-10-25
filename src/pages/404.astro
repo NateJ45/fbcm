@@ -31,6 +31,7 @@
 // (CLAUDE.md rule 20).
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withTrailingSlash } from '@/lib/href';
 import { getNotFoundPage, getSiteSettings } from '@/lib/queries';
 import SectionHeading from '@/components/SectionHeading.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
@@ -68,10 +69,10 @@ const body =
 // The four doors. Each slot is the singleton's label and destination when an
 // editor filled both, and the site's own door in that position otherwise.
 const DOORS = [
-  { glyph: 'door', label: 'Visit', href: '/visit' },
-  { glyph: 'window', label: 'Who We Are', href: '/who-we-are' },
-  { glyph: 'rose', label: 'Blog', href: '/blog' },
-  { glyph: 'basin', label: 'Give', href: '/give' },
+  { glyph: 'door', label: 'Visit', href: '/visit/' },
+  { glyph: 'window', label: 'Who We Are', href: '/who-we-are/' },
+  { glyph: 'rose', label: 'Blog', href: '/blog/' },
+  { glyph: 'basin', label: 'Give', href: '/give/' },
 ] as const;
 const slots: [string | null | undefined, string | null | undefined][] = [
   [doc?.primaryCtaLabel, doc?.primaryCtaHref],
@@ -81,7 +82,7 @@ const slots: [string | null | undefined, string | null | undefined][] = [
 ];
 const doors = DOORS.map((fallback, i) => {
   const [label, href] = slots[i];
-  return label && href ? { glyph: fallback.glyph, label, href } : fallback;
+  return label && href ? { glyph: fallback.glyph, label, href: withTrailingSlash(href) } : fallback;
 });
 ---
 

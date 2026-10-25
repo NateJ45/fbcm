@@ -31,6 +31,7 @@
 // to 1500 x 600, which the frames reserve so nothing jumps as they load.
 // They are served from Church Trac, lazy below the opener.
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withTrailingSlash } from '@/lib/href';
 import CtaLink from '@/components/CtaLink.astro';
 import { breadcrumbSchema } from '@/lib/schemas';
 import { site } from '@/data/site';
@@ -56,7 +57,7 @@ const appHref = (siteSettings?.appUrl as string | undefined) || null;
 
 const name = page?.title || newsletter.fallbackTitle;
 const scale = headlineScale(name, { tall: false });
-const pageUrl = `${site.url}/${newsletter.slug}`;
+const pageUrl = `${site.url}/${newsletter.slug}/`;
 const title = `${name} | ${site.name}`;
 const summary = page
   ? pageText(page)
@@ -67,7 +68,7 @@ const description = `${newsletter.lede}${summary ? ` ${summary}…` : ''}`;
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Ministries', url: `${site.url}/ministries` },
+    { name: 'Ministries', url: `${site.url}/ministries/` },
     { name, url: pageUrl },
   ]),
 ];
@@ -191,7 +192,7 @@ const mastheadAlt = `${name}, ${newsletter.eyebrow.toLowerCase()}`;
                         <br />
                       ) : r.href ? (
                         <a
-                          href={r.href}
+                          href={withTrailingSlash(r.href)}
                           target={external(r.href) ? '_blank' : undefined}
                           rel={external(r.href) ? 'noopener noreferrer' : undefined}
                           class:list={[r.bold && 'font-semibold', r.italic && 'italic']}

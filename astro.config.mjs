@@ -11,6 +11,7 @@ import react from '@astrojs/react';
 import sanity from '@sanity/astro';
 
 import { buildRedirectMap } from './src/lib/redirects.ts';
+import { finalizeRedirects } from './src/lib/redirect-final.ts';
 import { dropRedirectsOverLivePages } from './src/lib/redirect-guard.ts';
 import { fixSanityDedupeAlias } from './src/lib/sanity-dedupe-alias.ts';
 import { studioConfigModule } from './src/lib/studio-route.ts';
@@ -119,7 +120,8 @@ if (guarded.dropped.length) {
     `[redirects] skipped ${guarded.dropped.length} redirect(s) from an address a published page lives at now: ${guarded.dropped.join(', ')}`,
   );
 }
-const cmsRedirects = guarded.redirects;
+// One hop to a 200: slashed destinations, redirect chains collapsed.
+const cmsRedirects = finalizeRedirects(guarded.redirects);
 
 // Non-font asset inline ceiling (128 KiB), unchanged since 2026-09-20: margin
 // between the then-measured site sheet (124,750 B, since grown, see below)
@@ -178,6 +180,10 @@ const BUILD_COMMIT = (() => {
 export default defineConfig({
   site: 'https://www.fbcmuncie.org',
   output: 'static',
+  // Every page lives at /about/ (canonicals and the sitemap say so), and
+  // Cloudflare 307s the slashless form. Internal links go through
+  // withTrailingSlash() in src/lib/href.ts (PORTS.md card 89).
+  trailingSlash: 'always',
   // 2026-08-28: no sessions anywhere in this template (there is no gated area
   // or login), so opt out. Left on, @astrojs/cloudflare v14 auto-declares a
   // "SESSION" KV binding in the generated dist/server/wrangler.json, and a KV

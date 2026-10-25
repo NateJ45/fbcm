@@ -10,7 +10,7 @@ import { resolveCtaHref } from './cta-href.ts';
 // the two slug-based document types, because the slug cases are the ones a
 // second copy of this function has always got wrong.
 
-const FALLBACK = '/contact';
+const FALLBACK = '/contact/';
 
 test('nothing to resolve falls back', () => {
   assert.equal(resolveCtaHref(null, FALLBACK), FALLBACK);
@@ -26,14 +26,14 @@ test('an internal link to a singleton takes its fixed path', () => {
   );
   assert.equal(
     resolveCtaHref({ linkType: 'internal', internalLink: { _type: 'journalPage' } }, FALLBACK),
-    '/blog',
+    '/blog/',
   );
 });
 
 test('a custom page takes its slug at the root', () => {
   assert.equal(
     resolveCtaHref({ linkType: 'internal', internalLink: { _type: 'page', slug: 'visit' } }, '/'),
-    '/visit',
+    '/visit/',
   );
 });
 
@@ -45,7 +45,7 @@ test('a journal entry takes /post/<slug>', () => {
       { linkType: 'internal', internalLink: { _type: 'journalEntry', slug: 'blue-christmas' } },
       '/',
     ),
-    '/post/blue-christmas',
+    '/post/blue-christmas/',
   );
 });
 
@@ -70,14 +70,14 @@ test('an unknown document type falls back', () => {
 
 test('an external link passes through untouched', () => {
   // Including the same-site paths a reference cannot express, which ride in on
-  // externalUrl since plan 2b: they must not be rewritten.
+  // externalUrl since plan 2b: they only gain the trailing slash.
   assert.equal(
     resolveCtaHref({ linkType: 'external', externalUrl: 'https://example.org/give' }, FALLBACK),
     'https://example.org/give',
   );
   assert.equal(
     resolveCtaHref({ linkType: 'external', externalUrl: '/history#building' }, FALLBACK),
-    '/history#building',
+    '/history/#building',
   );
   assert.equal(resolveCtaHref({ linkType: 'external' }, FALLBACK), FALLBACK);
 });
@@ -106,5 +106,5 @@ test('a phone link becomes a tel, with the punctuation stripped', () => {
 test('the fallback is whatever the caller passed, never a hard-coded path', () => {
   // The statement band's cards pass '/', the buttons pass '/contact'.
   assert.equal(resolveCtaHref(null, '/'), '/');
-  assert.equal(resolveCtaHref(null, '/blog'), '/blog');
+  assert.equal(resolveCtaHref(null, '/blog/'), '/blog/');
 });

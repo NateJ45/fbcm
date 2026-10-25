@@ -12,6 +12,7 @@ import { PortableText as PT, type PortableTextComponents } from '@portabletext/r
 import type { PortableTextBlock } from '@portabletext/types';
 import { urlFor, parseSanityAssetDimensions } from '@/lib/sanity';
 import { slugify } from '@/lib/slugify';
+import { bodyHref } from '@/lib/body-link';
 
 interface Props {
   value: PortableTextBlock[] | undefined | null;
@@ -109,7 +110,7 @@ function makeComponents(): PortableTextComponents {
       strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
       em: ({ children }) => <em className="italic">{children}</em>,
       link: ({ children, value }) => {
-        const href = value?.href ?? '';
+        const href = bodyHref(value?.href);
         // A link token with no address behind it (church-links.ts's
         // linkFallback()) fills to '', not a dead link: the words stay
         // plain text rather than linking nowhere.

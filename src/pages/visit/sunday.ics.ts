@@ -21,7 +21,7 @@ export const GET: APIRoute = async () => {
     serviceLength: settings?.serviceLength,
     address: settings?.address,
     name: clean(settings?.title) || site.name,
-    url: `${site.url}/visit`,
+    url: `${site.url}/visit/`,
     domain: site.domain,
     geo: site.geo,
     now: new Date(),

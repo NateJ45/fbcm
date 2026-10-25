@@ -49,7 +49,7 @@ export const getStaticPaths = (async () => {
       siteName: site.name,
       domain: site.domain,
       postTitle: clean(e.title),
-      postUrl: decodeURI(new URL(`/post/${slug}`, site.url).toString()),
+      postUrl: decodeURI(new URL(`/post/${slug}/`, site.url).toString()),
       reading: readingOf(openingText(headById.get(e._id ?? '') ?? [])),
     });
     if (ics) out.push({ params: { slug }, props: { ics } });

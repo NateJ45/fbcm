@@ -47,6 +47,7 @@
 // at 30%. The CSS lives in this file's <style> block, not globals.css, so it
 // ships only on the pages that draw the band (CLAUDE.md rule 20).
 import PortableTextStatic from '@/components/PortableTextStatic.astro';
+import { withTrailingSlash } from '@/lib/href';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { getSiteSettings } from '@/lib/queries';
@@ -144,7 +145,7 @@ const social = socialLinksOf(settings);
               {social.map((link) => (
                 <li>
                   <a
-                    href={link.url}
+                    href={withTrailingSlash(link.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="hd-social-link font-body"

@@ -9,6 +9,7 @@
 // CTA is already enough.
 
 import { useEffect, useState } from 'react';
+import { withTrailingSlash } from '@/lib/href';
 
 interface Props {
   /** Visible label. Should read as conversational, not pushy. */
@@ -21,7 +22,7 @@ interface Props {
 
 const SESSION_KEY = 'sticky-cta-dismissed';
 
-export default function StickyCTAChip({ label, href = '/contact', threshold = 0.5 }: Props) {
+export default function StickyCTAChip({ label, href = '/contact/', threshold = 0.5 }: Props) {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
@@ -129,7 +130,7 @@ export default function StickyCTAChip({ label, href = '/contact', threshold = 0.
           label text instead of the bronze gutter. */}
       <div className="relative flex max-w-[min(92vw,28rem)] items-center gap-1 rounded-full bg-gold py-s pr-s pl-m text-indigo-field shadow-lg shadow-foreground/15">
         <a
-          href={href}
+          href={withTrailingSlash(href)}
           tabIndex={visible ? 0 : -1}
           className="press-tactile flex min-w-0 items-center gap-2 text-xs font-semibold tracking-eyebrow uppercase"
         >

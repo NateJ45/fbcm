@@ -72,7 +72,7 @@ export const CHURCH_GOALS: readonly ChurchGoal[] = [
 ];
 
 /** Where each goal is described: its band on Who We Are. */
-export const goalHref = (value: string): string => `/who-we-are#${value}`;
+export const goalHref = (value: string): string => `/who-we-are/#${value}`;
 
 /**
  * The small line under a goal's name, as Who We Are's goal index prints it:

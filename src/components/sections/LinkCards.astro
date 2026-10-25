@@ -77,6 +77,7 @@
 // SectionRenderer, and is ignored in the statement and door forms, which
 // paint their own.
 import SectionHeading from '@/components/SectionHeading.astro';
+import { withTrailingSlash } from '@/lib/href';
 import SanityImage from '@/components/SanityImage.astro';
 import ArchFrame from '@/components/church/ArchFrame.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
@@ -158,7 +159,7 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
       <ul class="lc-doors" style={`--n:${shown.length}`}>
         {shown.map((card, i) => (
           <li>
-            <a href={hrefFor(card)} class="lc-door group">
+            <a href={withTrailingSlash(hrefFor(card))} class="lc-door group">
               <ArchFrame
                 image={card.image}
                 shape="door"
@@ -280,7 +281,7 @@ const hrefFor = (card: ProjectedLinkCard): string => resolveCtaHref(card.cta ?? 
       >
         {shown.map((card, i) => (
           <a
-            href={hrefFor(card)}
+            href={withTrailingSlash(hrefFor(card))}
             class:list={[
               'group border-b py-7 pr-[clamp(16px,2vw,32px)] last:mr-0 last:border-r-0 last:border-b-0 md:mr-[clamp(16px,2vw,32px)] md:border-r md:border-b-0',
               ruleInk,

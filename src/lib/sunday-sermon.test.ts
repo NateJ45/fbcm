@@ -61,7 +61,7 @@ test('daylight saving: the fall-back and spring-forward Sundays are still Sunday
 test("a preview written for the coming Sunday is this Sunday's sermon", () => {
   assert.deepEqual(sermonForUpcomingSunday([preview()], new Date('2026-09-24T16:00:00Z')), {
     sunday: '2026-09-27',
-    href: '/post/when-god-shows-up',
+    href: '/post/when-god-shows-up/',
     title: '‘When God Shows Up’',
     titleSm: '‘When God Shows Up’',
     titleLg: '‘When God Shows Up’',
@@ -113,8 +113,8 @@ test('two previews for one Sunday: the newest wins, whatever the order', () => {
     publishedAt: '2026-09-25T15:00:00Z',
   });
   const now = new Date('2026-09-26T16:00:00Z');
-  assert.equal(sermonForUpcomingSunday([older, newer], now)?.href, '/post/final');
-  assert.equal(sermonForUpcomingSunday([newer, older], now)?.href, '/post/final');
+  assert.equal(sermonForUpcomingSunday([older, newer], now)?.href, '/post/final/');
+  assert.equal(sermonForUpcomingSunday([newer, older], now)?.href, '/post/final/');
 });
 
 test('stega-encoded title, slug, date and category are all read clean', () => {
@@ -129,7 +129,7 @@ test('stega-encoded title, slug, date and category are all read clean', () => {
   const got = sermonForUpcomingSunday([encoded], new Date('2026-09-24T16:00:00Z'));
   assert.deepEqual(got, {
     sunday: '2026-09-27',
-    href: '/post/when-god-shows-up',
+    href: '/post/when-god-shows-up/',
     title: '‘When God Shows Up’',
     titleSm: '‘When God Shows Up’',
     titleLg: '‘When God Shows Up’',
@@ -154,7 +154,7 @@ test('last Sunday’s recording pairs with the preview written for that Sunday',
     opening: 'This week we read from Matthew 20:1-16 (NIV).',
   });
   assert.deepEqual(previewForSunday([sep20, preview()], '2026-09-20'), {
-    href: '/post/unequal-opportunity-grace',
+    href: '/post/unequal-opportunity-grace/',
     title: 'Unequal Opportunity Grace',
     reading: 'Matthew 20:1-16',
   });

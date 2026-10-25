@@ -16,6 +16,8 @@
 // Pure, no Astro and no Sanity client, so it is unit-testable and safe to
 // import from anywhere.
 
+import { withTrailingSlash } from './href.ts';
+
 export interface CtaBlock {
   label?: string;
   linkType?: 'internal' | 'external' | 'email' | 'phone';
@@ -31,11 +33,15 @@ export interface CtaBlock {
 // /post/[slug] route.
 const TYPE_TO_PATH: Record<string, string> = {
   homePage: '/',
-  journalPage: '/blog', // scaffold: journal
+  journalPage: '/blog/', // scaffold: journal
 };
 
 /** Resolve a ctaBlock to the href it points at, or `fallbackHref`. */
 export function resolveCtaHref(c: CtaBlock | null | undefined, fallbackHref: string): string {
+  return withTrailingSlash(resolveRawCtaHref(c, fallbackHref));
+}
+
+function resolveRawCtaHref(c: CtaBlock | null | undefined, fallbackHref: string): string {
   if (!c?.linkType) return fallbackHref;
   switch (c.linkType) {
     case 'internal': {
@@ -44,12 +50,12 @@ export function resolveCtaHref(c: CtaBlock | null | undefined, fallbackHref: str
       // Slug-based types need the slug appended. Singletons use a fixed path.
       // scaffold: journal
       if (t === 'journalEntry' && c.internalLink?.slug) {
-        return `/post/${c.internalLink.slug}`;
+        return `/post/${c.internalLink.slug}/`;
       }
       // scaffold:end
       // Custom pages (type 'page') route via /[slug].astro.
       if (t === 'page' && c.internalLink?.slug) {
-        return `/${c.internalLink.slug}`;
+        return `/${c.internalLink.slug}/`;
       }
       return TYPE_TO_PATH[t] ?? fallbackHref;
     }

@@ -67,6 +67,7 @@
 
 import { getImage } from 'astro:assets';
 import { site } from '@/data/site';
+import { withTrailingSlash } from '@/lib/href';
 import { Mail, Phone } from 'lucide-react';
 import NewsletterSignup from '@/components/NewsletterSignup';
 // THE SVG, NOT A PNG, and the same files the header uses.
@@ -351,7 +352,7 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
           )}
           {footerCta.show && (
             <a
-              href={footerCta.href}
+              href={withTrailingSlash(footerCta.href)}
               target={footerCtaIsExternal ? '_blank' : undefined}
               rel={footerCtaIsExternal ? 'noopener noreferrer' : undefined}
               class="press-tactile mt-[clamp(22px,3vh,34px)] inline-flex min-h-[44px] items-center justify-center rounded-sm bg-gold px-[1.6em] py-[1.05em] font-ui text-ui font-semibold text-indigo-deep shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-deep)] hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-bg focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-deep focus-visible:outline-none"
@@ -399,7 +400,10 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
             >
               {col.links.map((link) => (
                 <li class="border-b border-bg/12 py-2">
-                  <a href={link.href} class:list={['block font-body text-[1.125rem]', bandLink]}>
+                  <a
+                    href={withTrailingSlash(link.href)}
+                    class:list={['block font-body text-[1.125rem]', bandLink]}
+                  >
                     {link.label}
                   </a>
                 </li>
@@ -450,7 +454,7 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
               {socialLinksToRender.map((link) => (
                 <li>
                   <a
-                    href={link.url}
+                    href={withTrailingSlash(link.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={socialLinkLabel(link, brandName)}
@@ -532,12 +536,15 @@ const renderingStyle = `--footer-rendering: url(${renderingAsset.src}); aspect-r
       <div class="flex flex-wrap items-center gap-x-m gap-y-[20px] pr-20 sm:gap-y-xs sm:pr-0">
         {LEGAL_LINKS.length > 0 ? (
           LEGAL_LINKS.map((l) => (
-            <a href={l.href} class:list={['underline underline-offset-2', bandLink]}>
+            <a
+              href={withTrailingSlash(l.href)}
+              class:list={['underline underline-offset-2', bandLink]}
+            >
               {l.label}
             </a>
           ))
         ) : (
-          <a href="/privacy" class:list={['underline underline-offset-2', bandLink]}>
+          <a href="/privacy/" class:list={['underline underline-offset-2', bandLink]}>
             Privacy policy
           </a>
         )}

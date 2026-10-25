@@ -25,6 +25,7 @@
 // Empty state: renders nothing when items is empty or absent (graceful absence).
 import SectionHeading from '@/components/SectionHeading.astro';
 import CtaLink from '@/components/CtaLink.astro';
+import { withTrailingSlash } from '@/lib/href';
 import PostRow from '@/components/blog/PostRow.astro'; // scaffold: journal
 import type { ProjectedDynamicListSection } from '@/lib/pageBuilder.types';
 import { columnsClass } from '@/lib/layout-variants';
@@ -149,7 +150,7 @@ const KNOWN_SOURCES: string[] = [
 
 // Source-specific fallback CTA link if no cta prop provided.
 const fallbackHref: Record<string, string> = {
-  journal: '/blog', // scaffold: journal
+  journal: '/blog/', // scaffold: journal
 };
 const fallbackLabel: Record<string, string> = {
   journal: 'All posts', // scaffold: journal
@@ -195,7 +196,7 @@ const fallbackLabel: Record<string, string> = {
           <ol class="m-0 list-none border-t border-band-brown/40 p-0" data-pagefind-ignore>
             {visibleItems.map((item) => (
               <PostRow
-                href={item.href ?? '/blog'}
+                href={withTrailingSlash(item.href ?? '/blog/')}
                 title={item.title ?? ''}
                 dateLabel={
                   item.meta

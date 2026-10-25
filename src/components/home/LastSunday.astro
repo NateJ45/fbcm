@@ -31,6 +31,7 @@
 // The heading is the one grammar every church band's h2 uses
 // (src/lib/heading-grammar.ts H2_DISPLAY), in paper on the indigo ground.
 import CtaLink from '@/components/CtaLink.astro';
+import { withTrailingSlash } from '@/lib/href';
 import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
 import { sundayLabel, thumbnailUrl, type SundayRecording } from '@/lib/youtube-feed';
 
@@ -92,7 +93,7 @@ const watch = {
     <div class="ls-body min-w-0">
       <h3 class="mb-0 font-body text-h3 leading-[1.15] font-normal text-bg">
         {preview ? (
-          <a href={preview.href} class="ls-title">
+          <a href={withTrailingSlash(preview.href)} class="ls-title">
             {title}
           </a>
         ) : (

@@ -11,6 +11,7 @@
 // The church identity pass (2026-09-24) closes it with the gold "All posts"
 // plate, the same button the home page's Church Blog band ends on.
 import CtaLink from '@/components/CtaLink.astro';
+import { withTrailingSlash } from '@/lib/href';
 import { slugify } from '@/lib/slugify';
 import { thinStateTags, type BlogEntry } from '@/lib/blog-derive';
 
@@ -33,7 +34,7 @@ const links = thin ? thinStateTags(list, exclude, slugify, 8) : [];
         <p class="line font-ui">
           {links.map((l, i) => (
             <>
-              <a href={l.href}>{l.label}</a>
+              <a href={withTrailingSlash(l.href)}>{l.label}</a>
               {i < links.length - 1 ? ', ' : '.'}
             </>
           ))}

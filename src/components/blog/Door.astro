@@ -31,7 +31,7 @@ interface Props {
 }
 const { fresh, latest } = Astro.props as Props;
 
-const hrefOf = (e: RegisterEntry) => (e.slug?.current ? `/post/${e.slug.current}` : '#');
+const hrefOf = (e: RegisterEntry) => (e.slug?.current ? `/post/${e.slug.current}/` : '#');
 const monthDay = (d: Date | null) => (d ? formatDay(d, { month: 'long', day: 'numeric' }) : '');
 
 const freshSunday = fresh ? sundayOf(fresh.publishedAt) : null;
