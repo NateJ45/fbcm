@@ -49,7 +49,7 @@ export function withFooterPages(
     const slug = clean(page?.slug);
     const label = clean(page?.navLabel) || clean(page?.title);
     if (!slug || !label) continue;
-    const href = `/${slug.replace(/^\/+/, '')}`;
+    const href = `/${slug.replace(/^\/+/, '')}/`;
     if (linked.has(pathOf(href))) continue;
     linked.add(pathOf(href));
     add.push({ label, href });

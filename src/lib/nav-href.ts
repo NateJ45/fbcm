@@ -19,12 +19,14 @@
 // address) returns undefined and the caller DROPS it. A dead <a> in a menu is
 // worse than a missing one.
 
+import { withTrailingSlash } from './href.ts';
+
 /** Live route per path-mapped singleton. Mirrors SINGLETON_PREVIEW_PATHS. */
 export const SINGLETON_LIVE_PATHS: Record<string, string> = {
   homePage: '/',
-  journalPage: '/blog', // scaffold: journal
-  privacyPage: '/privacy',
-  notFoundPage: '/404',
+  journalPage: '/blog/', // scaffold: journal
+  privacyPage: '/privacy/',
+  notFoundPage: '/404/',
 };
 
 /** One navLink as it comes back from NAV_LINK_PROJECTION in src/lib/queries.ts. */
@@ -67,7 +69,7 @@ export function navHref(link?: RawNavLink | null): string | undefined {
   if (!link) return undefined;
 
   const typed = plain(link.href);
-  if (typed) return typed;
+  if (typed) return withTrailingSlash(typed);
 
   if (plain(link.linkType) === 'external') {
     return plain(link.externalUrl) || undefined;
@@ -80,7 +82,7 @@ export function navHref(link?: RawNavLink | null): string | undefined {
   if (link.pageArchived === true) return undefined;
   if (docType === 'page') {
     const slug = plain(link.slug);
-    return slug ? `/${slug}` : undefined;
+    return slug ? `/${slug}/` : undefined;
   }
   return SINGLETON_LIVE_PATHS[docType];
 }

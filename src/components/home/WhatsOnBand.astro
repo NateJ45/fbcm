@@ -87,7 +87,7 @@ const where = (loc: string) => (loc && loc !== 'First Baptist Church' ? loc : ''
       <div class="mt-8">
         <CtaLink
           cta={{ label: 'Everything on the calendar' }}
-          fallbackHref="/events"
+          fallbackHref="/events/"
           variant="gold"
           onDark={dark}
         />
@@ -104,7 +104,7 @@ const where = (loc: string) => (loc && loc !== 'First Baptist Church' ? loc : ''
           </p>
           <div class="min-w-0">
             <h3 class="wo-title">
-              <a href={`/events#${it.key}`} class="hit-44 relative block">
+              <a href={`/events/#${it.key}`} class="hit-44 relative block">
                 {it.title}
               </a>
             </h3>

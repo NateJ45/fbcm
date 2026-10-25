@@ -112,7 +112,7 @@ export interface ResolvedChromeSettings {
  */
 export function fallbackNavItems(visible: SectionVisibility): NavItem[] {
   return [
-    ...(visible.journal ? [{ kind: 'flat' as const, label: 'Blog', href: '/blog' }] : []), // scaffold: journal
+    ...(visible.journal ? [{ kind: 'flat' as const, label: 'Blog', href: '/blog/' }] : []), // scaffold: journal
   ];
 }
 
@@ -130,7 +130,7 @@ export function fallbackNavItems(visible: SectionVisibility): NavItem[] {
 export const FALLBACK_HEADER_CTA: HeaderCta = {
   show: true,
   label: 'Contact us',
-  href: '/contact',
+  href: '/contact/',
 };
 
 /** Trim a Sanity string; treat blank/whitespace-only/missing as "unset". */

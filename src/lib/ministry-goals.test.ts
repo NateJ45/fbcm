@@ -27,7 +27,7 @@ test('the four goals are the church order, each with its building glyph', () => 
     ],
   );
   // The values are GoalsBand's ids on Who We Are, so the link lands on the goal.
-  assert.equal(goalHref('the-way'), '/who-we-are#the-way');
+  assert.equal(goalHref('the-way'), '/who-we-are/#the-way');
 });
 
 test('goalFor reads the stored value, cleaned of a stega payload; blank or unknown is null', () => {

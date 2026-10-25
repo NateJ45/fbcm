@@ -49,6 +49,7 @@
 // page's extra sections, under the h1 the blog route draws itself, and
 // openingLevel cannot see that one.
 import { sortDocsByYearDesc, groupDocsByYear } from '@/lib/church-derive';
+import { withTrailingSlash } from '@/lib/href';
 import { docAction, documentForm } from '@/lib/document-doors';
 import { H2_DISPLAY } from '@/lib/heading-grammar';
 import { isIssueList } from '@/lib/visitor-issues';
@@ -142,7 +143,7 @@ const ACTION_LINK =
                   <span class="dl-row-action">
                     {action && (
                       <a
-                        href={action.href}
+                        href={withTrailingSlash(action.href)}
                         download={action.kind === 'file' ? true : undefined}
                         target={action.kind === 'link' ? '_blank' : undefined}
                         rel={action.kind === 'link' ? 'noopener noreferrer' : undefined}
@@ -185,7 +186,7 @@ const ACTION_LINK =
                       <li>
                         {action ? (
                           <a
-                            href={action.href}
+                            href={withTrailingSlash(action.href)}
                             download={action.kind === 'file' ? true : undefined}
                             target={action.kind === 'link' ? '_blank' : undefined}
                             rel={action.kind === 'link' ? 'noopener noreferrer' : undefined}

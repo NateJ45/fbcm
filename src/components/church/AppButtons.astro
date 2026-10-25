@@ -16,6 +16,7 @@
 // the Google Play listing with the church's install code as its referrer, so
 // an Android phone installs the app already linked to First Baptist.
 import type { ChurchApp } from '@/lib/church-app';
+import { withTrailingSlash } from '@/lib/href';
 
 interface Props {
   app: ChurchApp;
@@ -41,7 +42,7 @@ const stores = [
   {stores.map((s) => (
     <li>
       <a
-        href={s.href}
+        href={withTrailingSlash(s.href)}
         target="_blank"
         rel="noopener noreferrer"
         class="app-button press-tactile"

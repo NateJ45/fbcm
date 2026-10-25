@@ -42,6 +42,7 @@
 // (src/components/transitions/shared-title.ts). An attribute and nothing else:
 // the name itself is only set for the navigation that needs it.
 import ArchFrame from '@/components/church/ArchFrame.astro';
+import { withTrailingSlash } from '@/lib/href';
 import SanityImage from '@/components/SanityImage.astro';
 import BuildingGlyph from '@/components/church/BuildingGlyph.astro';
 import { splitStega } from '@/lib/preview-stega';
@@ -193,7 +194,7 @@ const plainInk = taupe
 
   <div class="col-start-2 row-start-2 min-w-0 md:col-start-3 md:row-start-1 md:self-end lg:self-center">
     <Heading class={C.h} data-vt-title>
-      <a href={href} class={C.a}>
+      <a href={withTrailingSlash(href)} class={C.a}>
         {title}
       </a>
     </Heading>

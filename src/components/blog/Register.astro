@@ -44,7 +44,7 @@ const groups = groupByYear(entries ?? []);
             const author = clean(entry.author).trim();
             return (
               <PostRow
-                href={entry.slug?.current ? `/post/${entry.slug.current}` : '#'}
+                href={entry.slug?.current ? `/post/${entry.slug.current}/` : '#'}
                 title={entry.title ?? ''}
                 dateLabel={m.day}
                 datetime={m.iso || undefined}

@@ -84,7 +84,7 @@ const SECTION_ARMS = `
         // which is already present on this section via the leading "...".
         source == "journal" => *[_type == "journalEntry"] | order(publishedAt desc)[0...${DYNAMIC_LIST_MAX}]{
           _id, "title": title, "meta": publishedAt, "summary": excerpt,
-          "href": "/post/" + slug.current,
+          "href": "/post/" + slug.current + "/",
           // The row's eyebrow and the durable-first ordering are both derived
           // from the category (src/lib/blog-derive.ts), so the category has to
           // travel with the item. Since the art-direction pass the journal list

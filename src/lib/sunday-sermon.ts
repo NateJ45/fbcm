@@ -66,7 +66,7 @@ export function sermonForUpcomingSunday(
   if (!best) return null;
   const parts = sermonParts(clean(best.title), readingOf(best.opening));
   if (!parts) return null;
-  return { sunday: target, href: `/post/${clean(best.slug?.current)}`, ...parts };
+  return { sunday: target, href: `/post/${clean(best.slug?.current)}/`, ...parts };
 }
 
 /**
@@ -111,7 +111,7 @@ export function previewForSunday(
   const title = clean(best.title);
   if (!title) return null;
   return {
-    href: `/post/${clean(best.slug?.current)}`,
+    href: `/post/${clean(best.slug?.current)}/`,
     title,
     reading: readingOf(best.opening),
   };

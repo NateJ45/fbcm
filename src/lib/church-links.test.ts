@@ -245,19 +245,19 @@ test('isYouTubeUrl', () => {
 });
 
 test('the fallback is the church’s own contact page', () => {
-  assert.equal(LINK_FALLBACK, '/contact');
+  assert.equal(LINK_FALLBACK, '/contact/');
 });
 
 test('linkFallback: most tokens fall back to /contact', () => {
-  assert.equal(linkFallback('{connect}'), '/contact');
-  assert.equal(linkFallback('{sermons}'), '/contact');
-  assert.equal(linkFallback('{calendar}'), '/contact');
-  assert.equal(linkFallback('{prayer}'), '/contact');
-  assert.equal(linkFallback('{app}'), '/contact');
+  assert.equal(linkFallback('{connect}'), '/contact/');
+  assert.equal(linkFallback('{sermons}'), '/contact/');
+  assert.equal(linkFallback('{calendar}'), '/contact/');
+  assert.equal(linkFallback('{prayer}'), '/contact/');
+  assert.equal(linkFallback('{app}'), '/contact/');
 });
 
 test('linkFallback: {giving} falls back to the church’s own /give page', () => {
-  assert.equal(linkFallback('{giving}'), '/give');
+  assert.equal(linkFallback('{giving}'), '/give/');
 });
 
 test('linkFallback: the two wedding forms fall back to the wedding office’s own email', () => {

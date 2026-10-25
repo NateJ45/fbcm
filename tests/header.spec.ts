@@ -76,7 +76,7 @@ test('data-scrolled follows a scroll up, and is seeded on a restore', async ({ p
   // A real in-page link click, so the View Transitions router handles it, and
   // a settle before going back: Astro stores the outgoing scroll position
   // during the swap, and leaving immediately gives it nothing to restore.
-  await page.click('header a[href="/ministries"]');
+  await page.click('header a[href="/ministries/"]');
   await expect(page).toHaveURL(/\/ministries\/?$/);
   await page.waitForTimeout(900);
   await page.goBack();

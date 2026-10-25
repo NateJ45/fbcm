@@ -6,6 +6,7 @@
 // renders so the page is never blank.
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withTrailingSlash } from '@/lib/href';
 import SectionRenderer from '@/components/SectionRenderer.astro';
 import { getHomePage, getSiteSettings } from '@/lib/queries';
 import { site } from '@/data/site';
@@ -234,7 +235,7 @@ const overlayHeader = shouldOverlayHeader(sections as any);
         issue={visitor.latest}
         previous={visitor.previous ?? []}
         covers={visitor.covers}
-        href={visitor.listHref}
+        href={withTrailingSlash(visitor.listHref)}
         since={visitor.since ?? null}
         now={buildNow}
         ground={visitorOn}

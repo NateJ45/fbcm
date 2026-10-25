@@ -25,7 +25,7 @@ test('a switched-on page joins the first column, after its links', () => {
     [
       ['Blog', '/blog'],
       ['Contact', '/contact'],
-      ['The Visitor', '/visitor'],
+      ['The Visitor', '/visitor/'],
     ],
   );
   assert.equal(out[1], columns[1]);
@@ -45,7 +45,7 @@ test('the menu label wins over the title, and stega never decides', () => {
   const out = withFooterPages(columns, [
     { title: `The Visitor newsletter${RUN}`, navLabel: `The Visitor${RUN}`, slug: `visitor${RUN}` },
   ]);
-  assert.deepEqual(out[0].links.at(-1), { label: 'The Visitor', href: '/visitor' });
+  assert.deepEqual(out[0].links.at(-1), { label: 'The Visitor', href: '/visitor/' });
 });
 
 test('no columns, no slug or no name: nothing changes', () => {

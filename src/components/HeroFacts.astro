@@ -8,6 +8,7 @@
 // sets its times; any other value is set in the UI face. Used by the window
 // and split branches of Hero.astro, both of which sit on a fixed dark band.
 import { readBig } from '@/lib/clock-read';
+import { withTrailingSlash } from '@/lib/href';
 
 interface Fact {
   _key?: string;
@@ -55,7 +56,7 @@ const index = rows.some((f) => !!f.href);
           </dd>
         ) : f.href ? (
           <dd class="font-ui">
-            <a href={f.href} class="hf-jump">
+            <a href={withTrailingSlash(f.href)} class="hf-jump">
               {f.value}
               <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
                 <path d="M6 1.5v8.5M2.5 6.5 6 10l3.5-3.5" />

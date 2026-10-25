@@ -70,7 +70,7 @@ const xml =
 const parts = sermonParts('When God Shows Up', 'Jeremiah 29:10-12');
 const withPreview = state === 'preview' || state === 'preacher-preview';
 const preview: SundaySermon | null =
-  withPreview && sunday && parts ? { sunday, href: '/blog', ...parts } : null;
+  withPreview && sunday && parts ? { sunday, href: '/blog/', ...parts } : null;
 const entries = parseYoutubeFeed(xml);
 const sermon = thisSundaySermon(sunday, preview, upcomingBroadcast(entries, NOW));
 const preacher = thisSundayPreacher(

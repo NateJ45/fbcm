@@ -46,7 +46,7 @@ const description = `${count} ${count === 1 ? 'post' : 'posts'} tagged ${label} 
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Blog', url: `${site.url}/blog` },
+    { name: 'Blog', url: `${site.url}/blog/` },
     { name: label, url: `${site.url}/blog/tag/${tag}/` },
   ]),
 ];

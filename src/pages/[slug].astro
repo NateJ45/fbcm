@@ -108,7 +108,7 @@ const calendarHref =
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: (pageDoc as any).title ?? 'Page', url: `${site.url}/${slug}` },
+    { name: (pageDoc as any).title ?? 'Page', url: `${site.url}/${slug}/` },
   ]),
   ...(worship ? [worship] : []),
   ...(faq ? [faq] : []),

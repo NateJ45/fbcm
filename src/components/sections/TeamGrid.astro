@@ -18,6 +18,7 @@
 //
 // SELF_CONTAINED -- manages its own bg-background surface (no surface prop).
 import ArchFrame from '@/components/church/ArchFrame.astro';
+import { withTrailingSlash } from '@/lib/href';
 import InlineRich from '@/components/InlineRich.astro';
 import { H2_DISPLAY } from '@/lib/heading-grammar';
 import { hasInlineRich } from '@/lib/inline-rich';
@@ -105,7 +106,7 @@ const richSubhead = hasInlineRich(subheadRich);
                       link?.url && link?.label ? (
                         <li>
                           <a
-                            href={link.url}
+                            href={withTrailingSlash(link.url)}
                             target="_blank"
                             rel="noopener noreferrer"
                             class="font-ui text-base font-semibold text-link underline decoration-gold underline-offset-4"

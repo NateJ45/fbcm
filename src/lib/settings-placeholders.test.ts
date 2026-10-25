@@ -125,7 +125,7 @@ test('an unfilled link token becomes /contact, never a broken link, and is repor
     linked,
     (t) => heard.push(t),
   );
-  assert.deepEqual(out, { a: { href: '/contact' }, b: { externalUrl: '/contact' } });
+  assert.deepEqual(out, { a: { href: '/contact/' }, b: { externalUrl: '/contact/' } });
   assert.deepEqual(heard, ['{calendar}', '{prayer}']);
 });
 
@@ -133,7 +133,7 @@ test('{giving} with no giving address falls back to the church’s own /give pag
   const heard: string[] = [];
   const unset = placeholderValues(settings); // no givingUrl at all
   const out = fillPlaceholders({ href: '{giving}' }, unset, (t) => heard.push(t));
-  assert.deepEqual(out, { href: '/give' });
+  assert.deepEqual(out, { href: '/give/' });
   assert.deepEqual(heard, ['{giving}']);
 });
 

@@ -86,11 +86,11 @@ test.describe("Home's What's On band", () => {
     ]);
     await expect(band.locator('.wo-title a').first()).toHaveAttribute(
       'href',
-      '/events#membership-class-week-1-2026-10-04',
+      '/events/#membership-class-week-1-2026-10-04',
     );
     await expect(band.getByRole('link', { name: 'Everything on the calendar' })).toHaveAttribute(
       'href',
-      '/events',
+      '/events/',
     );
     // It follows The Visitor, and never shares its ground.
     const order = await page.evaluate(() => {

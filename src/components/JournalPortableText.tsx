@@ -43,6 +43,7 @@ import type { PortableTextBlock } from '@portabletext/types';
 import { Fragment, type ReactNode } from 'react';
 import { urlFor, parseSanityAssetDimensions } from '@/lib/sanity';
 import { slugify } from '@/lib/slugify';
+import { bodyHref } from '@/lib/body-link';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 import type {
   BodyNode,
@@ -171,7 +172,7 @@ function makeComponents(seen: Map<string, number> = new Map()): PortableTextComp
       // It was bg-accent, which is within a shade of the page and so invisible.
       highlight: ({ children }) => <mark className="pp-hl">{children}</mark>,
       link: ({ children, value }) => {
-        const href = value?.href ?? '';
+        const href = bodyHref(value?.href);
         // A link token with no address behind it (church-links.ts's
         // linkFallback()) fills to '', not a dead link: the words stay
         // plain text rather than linking nowhere.

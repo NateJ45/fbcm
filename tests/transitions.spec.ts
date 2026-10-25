@@ -53,7 +53,7 @@ test('Home, Blog, a post and back keep scroll, header, Sunday line and search', 
   // Blog is in the header's News dropdown since 2026-09-26: open it by hover,
   // as a visitor does, then take the link.
   await page.locator('header summary', { hasText: 'News' }).hover();
-  await page.click('header a[href="/blog"]');
+  await page.click('header a[href="/blog/"]');
   await expect(page).toHaveURL(/\/blog\/?$/);
   await settled(page);
 

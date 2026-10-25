@@ -39,7 +39,7 @@ const description = `Page ${slice.page} of ${slice.pages} of the First Baptist C
 const schemas = [
   breadcrumbSchema([
     { name: 'Home', url: site.url },
-    { name: 'Blog', url: `${site.url}/blog` },
+    { name: 'Blog', url: `${site.url}/blog/` },
     { name: `Page ${slice.page}`, url: `${site.url}/blog/page/${slice.page}/` },
   ]),
 ];

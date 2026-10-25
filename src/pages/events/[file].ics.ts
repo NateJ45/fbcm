@@ -26,7 +26,7 @@ export const getStaticPaths = (async () => {
     .replace(/\s*\n\s*/g, ', ')
     .trim();
   const place = (loc: string) => [loc, address].filter(Boolean).join(', ');
-  const url = (key: string) => `${site.url}/events#${key}`;
+  const url = (key: string) => `${site.url}/events/#${key}`;
   const paths: Array<{ params: { file: string }; props: { event: IcsEvent } }> = [];
 
   for (const it of on.months.flatMap((m) => m.items)) {

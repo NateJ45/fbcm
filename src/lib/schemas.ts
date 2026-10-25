@@ -18,6 +18,7 @@ import {
   type ChurchSettings,
   type SiteFacts,
 } from './church-schema.ts';
+import { withTrailingSlash } from './href.ts';
 import { blogPostingNode, type PostForSchema } from './post-schema.ts'; // scaffold: journal
 import { faqPageNode, type SectionIn } from './faq-schema.ts'; // scaffold: church
 
@@ -81,7 +82,7 @@ export function sundayWorshipSchema(
   settings: SiteSettings | null | undefined,
   occurrence: Date | null,
 ): string | null {
-  const pageUrl = `${site.url}/${SERVICE_PAGE_SLUG}`;
+  const pageUrl = `${site.url}/${SERVICE_PAGE_SLUG}/`;
   const node = sundayWorshipNode(settings as ChurchSettings | null | undefined, SITE_FACTS, {
     pageUrl,
     occurrence,
@@ -99,7 +100,7 @@ export function sundayWorshipSchema(
 export function faqSchema(sections: unknown, path: string): string | null {
   const node = faqPageNode(
     Array.isArray(sections) ? (sections as SectionIn[]) : null,
-    `${site.url}${path === '/' ? '' : path}`,
+    `${site.url}${path === '/' ? '' : withTrailingSlash(path)}`,
   );
   return node ? ldJson(node) : null;
 }

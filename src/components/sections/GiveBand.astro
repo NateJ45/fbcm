@@ -102,7 +102,7 @@ const isExternalHref = Boolean(explicitHref) && /^https?:\/\//i.test(explicitHre
 // The h1 opener IS /give: a button back to the page it is already on would be
 // pointless, so it shows one only when there is a real giving address to send
 // people to. The h2 band (Home, and anywhere else) falls back to /give itself.
-const href: string | undefined = explicitHref ?? (level === 'h2' ? '/give' : undefined);
+const href: string | undefined = explicitHref ?? (level === 'h2' ? '/give/' : undefined);
 
 const giveCta = href
   ? {

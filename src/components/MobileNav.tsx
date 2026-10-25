@@ -164,7 +164,7 @@ interface Props {
  * to decide whether to serialize a `cta` prop at all, so the two defaults must
  * stay identical.
  */
-const DEFAULT_CTA = { show: true, label: 'Contact us', href: '/contact' };
+const DEFAULT_CTA = { show: true, label: 'Contact us', href: '/contact/' };
 
 /**
  * The stagger index for each top-level item, in reading order: a group's label
@@ -553,7 +553,7 @@ export default function MobileNav({
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   {phone && <a href={telHref(phone)}>{phone}</a>}
-                  <a href="/contact" onClick={close}>
+                  <a href="/contact/" onClick={close}>
                     Contact
                   </a>
                 </div>
