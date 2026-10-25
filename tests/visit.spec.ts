@@ -50,7 +50,7 @@ test.describe('the page', () => {
   }) => {
     await page.goto(PAGE);
     // Found by where they point, not by the church's button wording.
-    const buttons = page.locator('a[href="/visit#connect"]');
+    const buttons = page.locator('a[href="/visit/#connect"]');
     expect(await buttons.count()).toBeGreaterThan(0);
     for (const b of await buttons.all()) {
       await expect(b).not.toHaveAttribute('target', '_blank');

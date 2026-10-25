@@ -143,7 +143,7 @@ test.describe('Last Sunday on fixed data', () => {
     );
     await expect(paired.getByRole('link', { name: 'Read the sermon preview' })).toHaveAttribute(
       'href',
-      '/blog',
+      '/blog/',
     );
     await expect(paired.getByRole('link', { name: 'Watch on YouTube' })).toHaveCount(1);
 

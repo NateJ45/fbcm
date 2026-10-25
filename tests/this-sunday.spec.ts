@@ -60,7 +60,7 @@ test.describe('This Sunday: the sermon on the dated line', () => {
     await page.clock.setFixedTime(THURSDAY);
     await page.goto('/styleguide/this-sunday/preview');
     const link = sermonLink(page);
-    await expect(link).toHaveAttribute('href', '/blog');
+    await expect(link).toHaveAttribute('href', '/blog/');
     await expect(link).toHaveAttribute('data-sermon-source', 'preview');
     await expect(link).not.toHaveAttribute('target', /.*/);
     await expect(link).toContainText('‘When God Shows Up’');

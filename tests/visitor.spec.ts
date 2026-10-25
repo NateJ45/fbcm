@@ -131,13 +131,13 @@ test.describe('home', () => {
     // Both the button and the text link go to the newsletter's page, never
     // to a 15 to 75 MB PDF (the fixture's page stands in for /visitor here).
     const read = band.getByRole('link', { name: 'Read the latest issue' });
-    await expect(read).toHaveAttribute('href', PAGE);
+    await expect(read).toHaveAttribute('href', `${PAGE}/`);
     const past = band.getByRole('link', { name: /^Past issues/ });
-    await expect(past).toHaveAttribute('href', PAGE);
+    await expect(past).toHaveAttribute('href', `${PAGE}/`);
     for (const href of await band
       .locator('a')
       .evaluateAll((as) => as.map((a) => a.getAttribute('href')))) {
-      expect(href).toBe(PAGE);
+      expect(href).toBe(`${PAGE}/`);
     }
     // Straight after Last Sunday, before the blog rows.
     const order = await page

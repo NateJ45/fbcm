@@ -175,10 +175,10 @@ test('Escape closes the menu; the rows carry no numbers; the goals link to Who W
   const goals = dialog.locator('.goals-row a');
   await expect(goals).toHaveCount(4);
   expect(await goals.evaluateAll((as) => as.map((a) => a.getAttribute('href')))).toEqual([
-    '/who-we-are#worship',
-    '/who-we-are#the-way',
-    '/who-we-are#witness',
-    '/who-we-are#work',
+    '/who-we-are/#worship',
+    '/who-we-are/#the-way',
+    '/who-we-are/#witness',
+    '/who-we-are/#work',
   ]);
 
   await page.keyboard.press('Escape');
@@ -195,7 +195,7 @@ test('following a goal from the menu closes the sheet', async ({ page, browserNa
   );
   await page.goto('/who-we-are/', { waitUntil: 'domcontentloaded' });
   await pressMenu(page);
-  await page.getByRole('dialog').locator('.goals-row a[href="/who-we-are#witness"]').click();
+  await page.getByRole('dialog').locator('.goals-row a[href="/who-we-are/#witness"]').click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(page).toHaveURL(/#witness$/);
 });
