@@ -10,6 +10,8 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-26: Lighthouse on main tests /ministers/, not /staff/._ The full Lighthouse run (push to main and the weekly schedule; PRs run a six-page sample) still listed `/staff/` in `lighthouserc.json`. Since Staff became Ministers (2026-10-19) `/staff` is only a Sanity redirect, and the static server Lighthouse uses does not follow redirects, so every main run failed with ERRORED_DOCUMENT_REQUEST. The list now names `/ministers/`.
+
 _2026-10-26: American spelling everywhere (starter cards 163 and 164)._ Nathan's call: every family site is American English. Starter cards 163 and 164 copied byte-identical (164 moves the shared Studio and site text to American spelling, including "check" for a checkbox and "Website inquiry" as the contact email subject, and makes `build-csp.mjs` fail when the CSP line passes 2,000 characters). This site's own strings had the same pass: text only, no field name, option value, key, slug or CSS class renamed. The live Sanity content was checked the same day and fixed where needed.
 
 _2026-10-26: the drift check compares with the starter again._ `ci.yml` carried the starter's own "self-check" step, which runs `sync-check` with the repo as its own library of record, so every marked file always reported SAME and drift could never fail CI here. The step is now the one every other site runs: check out `NateJ45/ncs-astro-sanity-starter` at `main`, run `sync-check` with `NCS_STARTER_DIR` pointing at it, then delete the checkout before eslint and prettier. All 238 marked files match today.
