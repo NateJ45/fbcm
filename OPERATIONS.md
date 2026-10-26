@@ -569,6 +569,15 @@ See the full schema-change procedure above (in the "Schema-change procedure" sec
 
 ---
 
+## Cloudflare zone rules
+
+Set in the dashboard (fbcmuncie.org, Rules, Redirect Rules), not in this repo. The API token cannot read them.
+
+1. **apex to www**: `fbcmuncie.org` 301s to `www.fbcmuncie.org` (cutover, 2026-10-19).
+2. **Slashless page paths 301 to trailing slash** (2026-10-26): on `www.fbcmuncie.org`, a GET or HEAD for a path with no trailing slash and no dot 301s to the same path plus `/`, keeping the query string. Without it, Workers static assets answer `/post/x` with a **307**, and Search Console kept the old slashless Wix URLs as canonical ("Duplicate, Google chose different canonical than user", 47 pages). It skips `/api/`, `/files/`, `/cdn-cgi/`, `/preview` and `/studio`, because those are Worker routes and a 301 would turn a POST into a GET. **If you add a new SSR route prefix, add it to the rule's exclusions.**
+
+Side effect: an old Wix path like `/youth` now takes two permanent hops (`/youth/`, then `/ministries/#youth`) instead of one. `verify:redirects` follows the slash hop.
+
 ## Common gotchas (the ones that have bitten at least once)
 
 | Symptom                                                 | Cause                                                                                        | Fix                                                                                                                                |
