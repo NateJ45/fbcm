@@ -7,7 +7,7 @@
 // by a person or a crawler, came out of the project's monthly Sanity
 // bandwidth. The Visitor alone is 39 issues and about 600 MB, ten of them over
 // 25 MB; the day /visitor went up bandwidth jumped to ~18 GB, the next day
-// ~38 GB, against a 100 GB month. /files/<name> (src/pages/files/[name].ts)
+// ~38 GB, against a 100 GB month. /files/<name> (src/lib/files-route.ts)
 // serves the same file from R2 when the FILES bucket is bound, else through
 // Cloudflare's cache, so Sanity sends each file about once.
 //

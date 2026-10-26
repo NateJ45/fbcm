@@ -230,7 +230,7 @@ let drawn = 0;
 // of PDFs on 2026-09-25 alone, every GitHub runner, cloud session and fresh
 // worktree that started without this cache pulling all 39 issues from
 // cdn.sanity.io. The site now serves every file from R2 at /files/<name>
-// (src/pages/files/[name].ts), where a download costs Sanity nothing after
+// (src/lib/files-route.ts), where a download costs Sanity nothing after
 // the first. So this step asks the site first: the production domain (right
 // after the cutover; before it, Wix answers 404 and the next is tried), then
 // the Worker's own address, and Sanity itself only if both fail.

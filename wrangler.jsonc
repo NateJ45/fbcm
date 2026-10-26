@@ -32,7 +32,7 @@
     "directory": "./dist/client",
     "binding": "ASSETS",
   },
-  // The church's PDFs (src/pages/files/[name].ts): each is fetched from Sanity
+  // The church's PDFs (src/lib/files-route.ts): each is fetched from Sanity
   // once and kept here, so downloads stop costing Sanity bandwidth
   // (2026-09-26). The bucket was created by hand: wrangler r2 bucket create fbcm-files.
   "r2_buckets": [

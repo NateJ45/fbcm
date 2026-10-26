@@ -62,7 +62,7 @@ test('every reserved slug is a route this repo serves, a scaffolded one, or a bu
     // The ministry newsletters from Church Trac (src/pages/kids-corner.astro, youth-news.astro).
     'kids-corner',
     'youth-news',
-    // The PDFs, from R2 or Cloudflare's cache (src/pages/files/[name].ts).
+    // The PDFs, from R2 or Cloudflare's cache (src/lib/files-route.ts).
     'files',
     '404',
     // Served, but never for visitors: the fixed-data design-system wall the

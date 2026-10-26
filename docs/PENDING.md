@@ -2578,7 +2578,7 @@ in `scripts/data/backups/journalEntry-bodies-2026-09-20.json`, and a second
       reads are memoised per build (`sanity.ts`); a build fell from 754 reads / 29.0 MB to 555
       reads / 3.8 MB. - Images 13.1 GB, 533k requests from browsers: mostly Playwright runs (home and CI).
       Still open, below. - Uncached API 8.9 GB, before the 2026-09-23 always-CDN fix.
-      Visitors' PDF downloads are served from R2 at `/files/` too (src/pages/files/[name].ts).
+      Visitors' PDF downloads are served from R2 at `/files/` too (src/lib/files-route.ts).
 - [x] Playwright's Sanity images come from a disk cache (`tests/fixtures.ts`, every spec imports
       `test` from it; CI restores `node_modules/.cache/test-images`). Measured 2026-09-26: a cold
       run fetched 206 images (7 MB) once; the next full run fetched 0. Since 2026-10-03 each CI

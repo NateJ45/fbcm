@@ -17,12 +17,18 @@
 // ever fetched (upstreamFileUrl), so the route cannot be used to proxy
 // anything else.
 //
-// SSR like the other runtime routes (CLAUDE.md rule 8): prerender = false.
+// ONE ROUTE FILE PER EXTENSION (src/pages/files/[name].<ext>.ts), each a
+// two-line wrapper around fileRoute() below. Why not one [name].ts: with
+// trailingSlash 'always' Astro only exempts an endpoint from the trailing slash
+// when its route ends in a file extension, so /files/[name] answered
+// /files/<sha>.pdf with a 404 and only /files/<sha>.pdf/ worked (2026-10-25,
+// after fbcm#112). The extensions match FILE_NAME in file-url.ts.
+//
+// SSR like the other runtime routes (CLAUDE.md rule 8): each wrapper sets
+// prerender = false.
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
 import { downloadName, fileType, upstreamFileUrl } from '@/lib/file-url';
-
-export const prerender = false;
 
 // A Workers runtime global (a TransformStream that promises R2 the body's
 // length); declared here because this project does not load workers-types.
@@ -144,22 +150,22 @@ async function viaCache(
   return new Response(request.method === 'HEAD' ? null : res.body, { status: res.status, headers });
 }
 
-const handle: APIRoute = async ({ params, request, url }) => {
-  const name = String(params.name ?? '');
-  const upstream = upstreamFileUrl(name, PROJECT, DATASET);
-  if (!upstream) return new Response('Not found', { status: 404 });
-  const dl = url.searchParams.get('dl') ?? '';
-  const bucket = (env as { FILES?: R2Like }).FILES;
-  try {
-    return bucket
-      ? await fromR2(bucket, name, upstream, request, dl)
-      : await viaCache(name, upstream, request, dl);
-  } catch (err) {
-    console.error(`[files] ${name}: ${String(err)}`);
-    // Never strand a reader: send them to the file itself.
-    return Response.redirect(upstream, 302);
-  }
-};
-
-export const GET = handle;
-export const HEAD = handle;
+/** The GET/HEAD handler for /files/<sha>.<ext>. */
+export const fileRoute =
+  (ext: string): APIRoute =>
+  async ({ params, request, url }) => {
+    const name = `${String(params.name ?? '')}.${ext}`;
+    const upstream = upstreamFileUrl(name, PROJECT, DATASET);
+    if (!upstream) return new Response('Not found', { status: 404 });
+    const dl = url.searchParams.get('dl') ?? '';
+    const bucket = (env as { FILES?: R2Like }).FILES;
+    try {
+      return bucket
+        ? await fromR2(bucket, name, upstream, request, dl)
+        : await viaCache(name, upstream, request, dl);
+    } catch (err) {
+      console.error(`[files] ${name}: ${String(err)}`);
+      // Never strand a reader: send them to the file itself.
+      return Response.redirect(upstream, 302);
+    }
+  };

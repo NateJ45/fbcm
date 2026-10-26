@@ -1100,7 +1100,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
           }
           if (Date.now() - asked < 55000) return;
           asked = Date.now();
-          fetch('/api/live-status', { headers: { Accept: 'application/json' } })
+          fetch('/api/live-status/', { headers: { Accept: 'application/json' } })
             .then(function (r) {
               return r.ok ? r.json() : null;
             })
