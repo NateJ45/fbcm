@@ -31,6 +31,11 @@ export const CTA_PROJECTION = `{
 // The per-type arms, shared by a page's own sections and by the sections a
 // synced section shows (below), so a block renders the same either way.
 const SECTION_ARMS = `
+    _type == "buttonRowSection" => { ..., links[]{ ..., link${CTA_PROJECTION} } },
+    _type == "photoSection" => { ..., image${IMAGE_PROJECTION} },
+    _type == "countdownSection" => { ..., link${CTA_PROJECTION} },
+    _type == "noticeSection" => { ..., link${CTA_PROJECTION} },
+    _type == "eventDetailsSection" => { ..., image${IMAGE_PROJECTION}, button${CTA_PROJECTION} },
     _type == "heroSection" => {
       ...,
       backgroundImage${IMAGE_PROJECTION},

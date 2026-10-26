@@ -156,9 +156,9 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       "Rebuild webhook filter"), or every Sunday-checklist tick and every share link rebuilds the site.
 - [ ] **Morning change note**: needs the `SANITY_AUTH_TOKEN` read secret (the backup's), then
       uncomment the schedule in `.github/workflows/change-note.yml` and watch the repo.
-- [ ] **Seed the eight church-year saved sections** (authoring kit, 2026-10-18), with Nathan's OK:
+- [ ] **Seed the ten saved sections** (authoring kit, 2026-10-18; Closed notice and Event details and schedule added with the builder kit, 2026-10-26), with Nathan's OK:
       `$env:NCS_PRODUCTION_WRITE='yes'; node --experimental-strip-types scripts/content/seed-section-patterns.mjs --apply; Remove-Item Env:NCS_PRODUCTION_WRITE`
-      (dry run read: 8 new drafts, nothing overwritten). Then Pages > Saved sections lists them as drafts.
+      (dry run 2026-10-26: 10 new drafts, nothing overwritten). Then Pages > Saved sections lists them as drafts.
 - [ ] **The staff view**: add the office's Sanity user id(s) to `kitConfig.staff` once they have
       accepted the invitation (until then every non-administrator gets the staff view).
 - [ ] **Starter cards 125 and the Earlier versions panel came across as PORTABLE resyncs only (2026-10-19).** The Studio installs as a phone app (`/studio/manifest.webmanifest`, `public/studio/sw.js`, the tower icon `public/icon-maskable-512.png`, short name "FBC Muncie"). "Post a photo" stays off (no `postPhoto` in kit.config.ts). Earlier versions and `restore-doc.yml` need `GITHUB_DEPLOY_TOKEN`, `SANITY_API_WRITE_TOKEN` and `BACKUP_PASSPHRASE` as repo secrets before a restore can run; until then the panel says it is not set up. Card 124 (section looks) and 126 (site search) are not adopted here; fbcm keeps its own search.
@@ -188,7 +188,7 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       "Help for this page" beside a page; Move to Trash and Bring it back on a banner; the staff
       view's missing Delete and perspective menu; the desk's icons and list-row tiles; "Blog posts as
       a table" and "Staff members as a table"; Share a preview's dialog (its
-      `SHARE_PREVIEW_SECRET` Worker secret is set, 2026-10-18); the editor's rich text in Castoro; the wordmark in the top bar; a page made from each template group; "+ Add item" in grid view; Insert a saved section as a copy and as synced (after the seed); the yellow page-rule warnings.
+      `SHARE_PREVIEW_SECRET` Worker secret is set, 2026-10-18); the editor's rich text in Castoro; the wordmark in the top bar; a page made from each template group; "+ Add item" in grid view; Insert a saved section as a copy and as synced (after the seed); the yellow page-rule warnings; the builder kit's eight blocks in "+ Add item" (Basics, Photos and video, Events and notices) and a page made from "Visitors: Weekend or retreat" (2026-10-26, type-checked, built and unit-tested, not yet clicked through logged in).
 
 ### 1g. The Studio complete pass, phase B (2026-10-19, in PR; waits on a signed-in check)
 

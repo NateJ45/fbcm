@@ -5,7 +5,9 @@
 // Sets of sections the church uses every year, ready to drop onto any page
 // with "Insert a saved section" (as a copy, or synced once it is published):
 // Advent and Christmas, Holy Week and Easter, Vacation Bible School, the fall
-// kickoff, Thanksgiving, a weather closing, a mission offering, a memorial.
+// kickoff, Thanksgiving, a weather closing, a mission offering, a memorial,
+// and (the builder kit, starter PORTS.md card 173) a dated notice and an
+// event's details with its schedule.
 //
 // The same section lists are reused by the seasonal page templates in
 // src/sanity/pageTemplates.ts, so a "Christmas" page and a "Christmas" saved
@@ -25,6 +27,13 @@ import { freshKeys } from '../lib/authoring.ts';
 import {
   button,
   ctaBand,
+  daysFromNow,
+  eventDate,
+  eventDetails,
+  notice,
+  schedule,
+  scheduleDay,
+  slot,
   example,
   faq,
   give,
@@ -219,6 +228,33 @@ export const memorialSections = (): Rec[] => [
   ),
 ];
 
+/** A notice that takes itself down after its last day (the builder kit). */
+export const closureNoticeSections = (): Rec[] => [
+  notice(
+    example(
+      'The church office is closed Monday for the holiday. Call (765) 555-0100 in an emergency.',
+    ),
+    { urgency: 'urgent', label: example('Closed') },
+  ),
+];
+
+/** An event's when and where, then its schedule. At the church unless a place is typed. */
+export const eventDetailsSections = (): Rec[] => [
+  eventDetails({
+    eyebrow: example('Save the date'),
+    title: example('The name of the event'),
+    dates: [eventDate(daysFromNow(30), { startTime: '17:30', endTime: '19:00' })],
+    note: example('Who it is for and what to bring.'),
+  }),
+  schedule('', [
+    scheduleDay('', [
+      slot('17:30', example('Doors open')),
+      slot('18:00', example('Supper')),
+      slot('18:45', example('A closing prayer')),
+    ]),
+  ]),
+];
+
 // ── The saved sections, in the order they are listed ────────────────────────
 
 export const SECTION_PATTERNS: SectionPattern[] = [
@@ -269,5 +305,17 @@ export const SECTION_PATTERNS: SectionPattern[] = [
     title: 'Memorial for a member',
     note: 'A verse, a few words about them, and the visitation and service times. Only with the family’s blessing.',
     sections: () => list(...memorialSections()),
+  },
+  {
+    id: 'closure-notice',
+    title: 'Closed notice',
+    note: 'A short notice that shows between the dates you set, then takes itself down. Set "Show from" and "Show until".',
+    sections: () => list(...closureNoticeSections()),
+  },
+  {
+    id: 'event-details',
+    title: 'Event details and schedule',
+    note: 'The date, time and place with "Add to my calendar" and directions, then the times. Leave "Where" empty for the church.',
+    sections: () => list(...eventDetailsSections()),
   },
 ];

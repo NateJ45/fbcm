@@ -104,6 +104,11 @@ const NON_STEGA_FIELDS = new Set([
   // read back out of a URL fragment, so an encoded copy would produce a
   // wrapper id nobody can link to, in the preview only.
   'current',
+  // The builder kit (starter PORTS.md card 173): the notice's urgency picks its
+  // band, and the picked times are read as times (rule 8b).
+  'urgency',
+  'startTime',
+  'endTime',
 ]);
 
 /** Whether a field name skips stega encoding in preview (rule 8b). */
