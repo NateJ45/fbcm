@@ -34,3 +34,18 @@ test('a cycle stops and does not hang', () => {
   const out = finalizeRedirects({ '/a': r('/b'), '/b': r('/a') });
   assert.match(out['/a'].destination, /^\/[ab]\/$/);
 });
+
+import { withBareRedirectRules } from './redirect-final.ts';
+
+test('every slashed rule also gets its bare form, once', () => {
+  const out = withBareRedirectRules(
+    '/staff/ /ministers/ 301\n/a/ /b/ 301\n/a /b/ 301\n/ /home/ 301\n',
+  );
+  assert.deepEqual(out.trim().split('\n'), [
+    '/staff/ /ministers/ 301',
+    '/a/ /b/ 301',
+    '/a /b/ 301',
+    '/ /home/ 301',
+    '/staff /ministers/ 301',
+  ]);
+});

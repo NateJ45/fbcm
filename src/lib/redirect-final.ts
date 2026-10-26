@@ -43,3 +43,30 @@ export function finalizeRedirects(
   }
   return out;
 }
+
+/**
+ * Add the bare (no trailing slash) form of every `_redirects` rule.
+ *
+ * With `trailingSlash: 'always'` Astro writes only "/staff/ /ministers/ 301".
+ * Cloudflare answers a bare "/staff" with a 301 to "/staff/" before it looks
+ * at that rule, so every old address took two hops. A rule for the bare form
+ * sends it straight to the final page. Rules already in both forms, the root
+ * and comments are left alone.
+ */
+export function withBareRedirectRules(text: string): string {
+  const lines = text.split(/\r?\n/);
+  const have = new Set(lines.map((l) => l.trim().split(/\s+/)[0]));
+  const extra: string[] = [];
+  for (const line of lines) {
+    const parts = line.trim().split(/\s+/);
+    const from = parts[0];
+    if (!from || from.startsWith('#') || !from.startsWith('/')) continue;
+    if (from.length < 2 || !from.endsWith('/') || from.includes('*')) continue;
+    const bare = from.slice(0, -1);
+    if (have.has(bare)) continue;
+    have.add(bare);
+    extra.push([bare, ...parts.slice(1)].join(' '));
+  }
+  const body = text.replace(/\s+$/, '');
+  return extra.length ? `${body}\n${extra.join('\n')}\n` : text;
+}

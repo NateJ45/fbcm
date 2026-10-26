@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 import { execSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 import cloudflare from '@astrojs/cloudflare';
 import mdx from '@astrojs/mdx';
@@ -11,7 +12,7 @@ import react from '@astrojs/react';
 import sanity from '@sanity/astro';
 
 import { buildRedirectMap } from './src/lib/redirects.ts';
-import { finalizeRedirects } from './src/lib/redirect-final.ts';
+import { finalizeRedirects, withBareRedirectRules } from './src/lib/redirect-final.ts';
 import { dropRedirectsOverLivePages } from './src/lib/redirect-guard.ts';
 import { fixSanityDedupeAlias } from './src/lib/sanity-dedupe-alias.ts';
 import { studioConfigModule } from './src/lib/studio-route.ts';
@@ -295,6 +296,24 @@ export default defineConfig({
       },
     }),
     react(),
+    // Runs last: adds the bare form of every _redirects rule the Cloudflare
+    // adapter wrote, so an old address without the slash is one 301 (see
+    // withBareRedirectRules in src/lib/redirect-final.ts).
+    {
+      name: 'bare-redirect-rules',
+      hooks: {
+        'astro:build:done': async ({ dir }) => {
+          const file = new URL('./_redirects', dir);
+          try {
+            const before = readFileSync(file, 'utf8');
+            const after = withBareRedirectRules(before);
+            if (after !== before) writeFileSync(file, after);
+          } catch {
+            // no _redirects file: nothing to add
+          }
+        },
+      },
+    },
   ],
   vite: {
     // Read by src/pages/build-info.json.ts (see BUILD_COMMIT above).
