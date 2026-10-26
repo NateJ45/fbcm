@@ -40,6 +40,12 @@ export interface IcsEvent {
   url?: string;
   /** A recurrence rule without the "RRULE:" prefix, e.g. "FREQ=WEEKLY;BYDAY=SU". */
   rrule?: string;
+  /**
+   * A whole-day event (the builder kit's event details, PORTS.md card 173): written
+   * as DATE values, start day to the next day, so a calendar shows it across the
+   * top of the day. `start.minutes` and `durationMinutes` are ignored.
+   */
+  allDay?: boolean;
 }
 
 export interface IcsCalendar {
@@ -145,8 +151,15 @@ export function buildIcs(cal: IcsCalendar): string {
       'BEGIN:VEVENT',
       `UID:${e.uid}`,
       `DTSTAMP:${utcStamp(cal.stamp)}`,
-      `DTSTART;TZID=${ICS_TZID}:${localStamp(e.start)}`,
-      `DTEND;TZID=${ICS_TZID}:${localStamp(e.start, e.durationMinutes)}`,
+      ...(e.allDay
+        ? [
+            `DTSTART;VALUE=DATE:${localStamp({ date: e.start.date, minutes: 0 }).slice(0, 8)}`,
+            `DTEND;VALUE=DATE:${localStamp({ date: e.start.date, minutes: 0 }, 1440).slice(0, 8)}`,
+          ]
+        : [
+            `DTSTART;TZID=${ICS_TZID}:${localStamp(e.start)}`,
+            `DTEND;TZID=${ICS_TZID}:${localStamp(e.start, e.durationMinutes)}`,
+          ]),
     );
     if (e.rrule) lines.push(`RRULE:${e.rrule}`);
     lines.push(`SUMMARY:${escapeText(e.summary)}`);

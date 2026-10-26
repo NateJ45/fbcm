@@ -191,7 +191,11 @@ describe('example text', () => {
 
 describe('page templates (src/sanity/pageTemplates.ts)', () => {
   // FBCM: the church blocks live in churchSections.ts and a custom page takes them all.
-  const allowed = new Set([...declaredTypes('sections.ts'), ...declaredTypes('churchSections.ts')]);
+  const allowed = new Set([
+    ...declaredTypes('sections.ts'),
+    ...declaredTypes('churchSections.ts'),
+    ...declaredTypes('builderSections.ts'),
+  ]);
 
   it('has a blank page and unique ids', () => {
     const ids = PAGE_TEMPLATES.map((t) => t.id);
@@ -233,6 +237,7 @@ describe('section thumbnails (the grid view of the + Add menu)', () => {
     ...declaredTypes('sections.ts'),
     ...declaredTypes('richSections.ts'),
     ...declaredTypes('churchSections.ts'),
+    ...declaredTypes('builderSections.ts'),
   ].filter((t) => t !== 'syncedSection');
   const wall = readFileSync(new URL('../pages/styleguide/sections.astro', import.meta.url), 'utf8');
 

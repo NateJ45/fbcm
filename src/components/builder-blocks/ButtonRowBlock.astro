@@ -1,0 +1,34 @@
+---
+// Safe to edit by hand
+// A row of two to six buttons, all in the outline look: the page keeps the gold
+// plate for its main action, and one button family (rule 17). For cards with a
+// photo and a sentence the church has its link cards (linkCardsSection).
+import BuilderBand from './BuilderBand.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import type { ProjectedButtonRowSection } from '@/lib/builderBlocks.types';
+
+interface Props {
+  block: ProjectedButtonRowSection;
+  surface?: 'background' | 'muted';
+  headingId: string;
+}
+const { block, surface, headingId } = Astro.props;
+const links = (block.links ?? []).filter((l) => l?.link?.label);
+---
+
+{links.length > 0 && (
+  <BuilderBand
+    type={block._type}
+    heading={block.heading}
+    intro={block.intro}
+    headingId={headingId}
+    surface={surface}
+    label="Links"
+  >
+    <div class="bb-actions">
+      {links.map((l) => (
+        <CtaLink cta={l.link} variant="outline" />
+      ))}
+    </div>
+  </BuilderBand>
+)}

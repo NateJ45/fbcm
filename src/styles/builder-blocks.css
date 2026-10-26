@@ -1,0 +1,452 @@
+/* =============================================================================
+   The builder kit's styles (src/components/builder-blocks/, starter PORTS.md
+   card 173), in the church's own grammar (DESIGN.md)
+   =============================================================================
+   Imported once by BuilderBlock.astro. Flat: no card boxes, no shadows, no
+   radius on photographs. The marks are the site's own: a short gold rule over a
+   hairline (the register's head), the UI face in capitals for labels, dates and
+   times, Castoro for reading, Castoro Titling for the h2 and the big numerals.
+   Gold is a rule and an on-dark ink only; on paper small labels use gold-ink.
+   Every colour is a token (light only, rule 3). Class names start `bb-`; state
+   set by a script is an attribute (`[data-bb-tabs-ready]`, `[hidden]`), never a
+   class built at run time. Keep it lean: the site stylesheet has an inline
+   ceiling (rule 20).
+   ========================================================================== */
+
+/* ---- The shared head, intro and text ---- */
+.bb-head {
+  margin-bottom: var(--spacing-l);
+}
+.bb-eyebrow {
+  margin: 0 0 1rem;
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+.bb-intro {
+  margin-top: 1.5rem;
+  max-width: 36rem;
+  font-family: var(--font-body);
+  font-size: var(--text-item);
+  line-height: 1.6;
+  color: var(--color-indigo);
+}
+.bb-title {
+  font-family: var(--font-body);
+  font-size: var(--text-h4);
+  line-height: 1.25;
+  color: var(--color-indigo);
+}
+.bb-prose > :first-child {
+  margin-top: 0;
+}
+.bb-prose > :last-child {
+  margin-bottom: 0;
+}
+
+/* The register's head: a short gold rule laid on a hairline. */
+.bb-col,
+.bb-event__card,
+.bb-countdown__count,
+.bb-sched__rows {
+  border-top: 1px solid var(--hair-strong);
+  background: linear-gradient(var(--color-gold), var(--color-gold)) 0 0 / 56px 2px no-repeat;
+}
+
+/* ---- Columns ---- */
+.bb-grid {
+  display: grid;
+  gap: var(--spacing-l);
+}
+@media (width >= 40rem) {
+  .bb-grid--2,
+  .bb-grid--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (width >= 64rem) {
+  .bb-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.bb-col {
+  padding-top: var(--spacing-m);
+}
+.bb-col > .bb-title + * {
+  margin-top: var(--spacing-s);
+}
+
+/* ---- Buttons ---- */
+.bb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-s);
+  margin-top: var(--spacing-m);
+}
+.bb-head + .bb-actions {
+  margin-top: 0;
+}
+
+/* ---- Wide photo: square corners, the column's full width ---- */
+.bb-photo {
+  margin: 0;
+}
+.bb-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---- Tabs: without JavaScript every panel shows under its own heading; with
+   it, the tab list shows and the panel headings hide. ---- */
+.bb-tablist {
+  display: none;
+}
+.bb-panel + .bb-panel {
+  margin-top: var(--spacing-l);
+}
+.bb-panel__title {
+  margin-bottom: var(--spacing-s);
+}
+[data-bb-tabs-ready] .bb-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--spacing-m);
+  border-bottom: 1px solid var(--hair-strong);
+  margin-bottom: var(--spacing-m);
+}
+[data-bb-tabs-ready] .bb-panel + .bb-panel {
+  margin-top: 0;
+}
+[data-bb-tabs-ready] .bb-panel__title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.bb-tab {
+  min-height: 44px;
+  padding: 0.5rem 0;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+  cursor: pointer;
+}
+.bb-tab:hover {
+  color: var(--color-indigo);
+}
+.bb-tab[aria-selected='true'] {
+  color: var(--color-indigo);
+  border-bottom-color: var(--color-gold);
+}
+.bb-tab:focus-visible,
+.bb-panel:focus-visible {
+  outline: 2px solid var(--color-indigo);
+  outline-offset: 2px;
+}
+
+/* ---- Countdown ---- */
+.bb-countdown {
+  row-gap: var(--spacing-l);
+  align-items: end;
+}
+.bb-countdown__count {
+  padding-top: var(--spacing-m);
+}
+.bb-countdown__count > p {
+  margin: 0;
+}
+.bb-countdown__days {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+  color: var(--color-indigo);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.bb-countdown__label {
+  display: block;
+  margin-top: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+.bb-countdown__now {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-lede);
+  line-height: 1.3;
+  color: var(--color-indigo);
+}
+
+/* ---- Notice: a slim band of its own. "Good to know" is soft paper between
+   hairlines; "urgent" the church's fixed indigo band. ---- */
+.bb-notice--info {
+  background: var(--color-bg-soft);
+  border-block: 1px solid var(--hair-strong);
+  color: var(--color-indigo);
+}
+.bb-notice--urgent {
+  background: var(--color-band-indigo);
+  color: var(--color-white-pure);
+}
+.bb-notice__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem var(--spacing-m);
+  padding-block: var(--spacing-m);
+}
+.bb-notice__tag {
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+.bb-notice--urgent .bb-notice__tag {
+  color: var(--color-gold);
+}
+.bb-notice__message {
+  flex: 1 1 20rem;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-item);
+  line-height: 1.45;
+}
+.bb-notice__tel {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--color-gold);
+  text-underline-offset: 3px;
+}
+.bb-notice__tel:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ---- Event details. Without a photo: words left, details right. With one:
+   the photo right, the details under the words. ---- */
+.bb-event {
+  row-gap: var(--spacing-l);
+}
+@media (width >= 64rem) {
+  .bb-event--plain {
+    align-items: start;
+  }
+  .bb-event--photo .bb-event__media {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .bb-event--photo .bb-event__words,
+  .bb-event--photo .bb-event__card {
+    grid-column: 1;
+  }
+}
+.bb-event__media {
+  margin: 0;
+}
+.bb-event__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.bb-event__card {
+  padding-top: var(--spacing-m);
+  color: var(--color-indigo);
+}
+.bb-event__dates {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bb-event__date {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  column-gap: var(--spacing-m);
+  align-items: center;
+  padding-block: 0.75rem;
+}
+.bb-event__date + .bb-event__date:not(.bb-event__date--same) {
+  border-top: 1px solid var(--hair);
+}
+.bb-event__date--same {
+  padding-top: 0;
+}
+.bb-event__num {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+.bb-event__day {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  line-height: 1;
+  font-variant-numeric: lining-nums;
+}
+.bb-event__month {
+  margin-top: 0.25rem;
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+.bb-event__when {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.bb-event__weekday {
+  font-family: var(--font-body);
+  font-size: var(--text-item);
+}
+.bb-event__time {
+  font-family: var(--font-ui);
+  font-size: var(--text-dense);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.bb-event__label {
+  font-weight: 400;
+  color: var(--color-muted-foreground);
+}
+.bb-event__label::before {
+  content: ', ';
+}
+.bb-event__place {
+  margin-top: var(--spacing-s);
+  padding-top: var(--spacing-s);
+  border-top: 1px solid var(--hair);
+  font-family: var(--font-body);
+  font-size: var(--text-item);
+  line-height: 1.45;
+}
+.bb-event__place p {
+  margin: 0;
+}
+.bb-event__place .bb-event__place-title {
+  margin-bottom: 0.25rem;
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+.bb-event__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-s);
+  margin-top: var(--spacing-m);
+}
+.bb-event__links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--spacing-m);
+  margin: 0;
+}
+/* The UI face underlined in gold, like Church Trac's "Open the form" line. */
+.bb-event__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-ui);
+  font-size: var(--text-dense);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--color-indigo);
+  text-decoration: none;
+  background: linear-gradient(var(--color-gold), var(--color-gold)) 0 calc(100% - 10px) / 100% 1px
+    no-repeat;
+}
+.bb-event__link--out::after {
+  content: '\2197';
+  margin-left: 0.4em;
+  color: var(--color-gold-ink);
+}
+.bb-event__link:hover,
+.bb-event__link:focus-visible {
+  background-size: 100% 2px;
+}
+.bb-event__link:focus-visible {
+  outline: 2px solid var(--color-indigo);
+  outline-offset: 2px;
+}
+
+/* ---- Schedule ---- */
+.bb-sched {
+  display: grid;
+  gap: var(--spacing-l);
+}
+@media (width >= 64rem) {
+  .bb-sched--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .bb-sched--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.bb-sched > div > .bb-title {
+  margin-bottom: var(--spacing-s);
+}
+.bb-sched__rows {
+  margin: 0;
+  padding: 0.5rem 0 0;
+  list-style: none;
+}
+.bb-sched__row {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  column-gap: var(--spacing-m);
+  padding-block: 0.875rem;
+  border-bottom: 1px solid var(--hair);
+}
+@media (width >= 40rem) {
+  .bb-sched__row {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+  }
+}
+.bb-sched__time {
+  padding-top: 0.2rem;
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+.bb-sched__what {
+  font-family: var(--font-body);
+  font-size: var(--text-item);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--color-indigo);
+}
+.bb-sched__note {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-dense);
+  line-height: 1.5;
+  color: var(--color-muted-foreground);
+}

@@ -29,6 +29,8 @@ import { columnsField, headingAccentField, hideWhenRich, richTwin } from './_app
 import { anchorField } from './_anchorField';
 import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 import { sideOptions } from '../../lib/layout-variants';
+import { withSiteGroups } from '../../lib/insert-groups.ts';
+import { BUILDER_INSERT_GROUPS, builderSectionSchemas } from './builderSections';
 // scaffold: church
 import { CHURCH_SECTION_TYPES } from './churchSections';
 // scaffold:end
@@ -823,6 +825,9 @@ export const pageSectionSchemas = [
   spacerSection,
   logoStripSection,
   embedSection,
+  // The builder kit (starter PORTS.md card 173): the smaller blocks an editor
+  // builds an event page or a notice from (builderSections.ts).
+  ...builderSectionSchemas,
   // scaffold: church
   ...CHURCH_SECTION_TYPES,
   // scaffold:end
@@ -862,64 +867,70 @@ export const sectionThumbnailUrl = (type: string): string | undefined =>
 // types are all absent from a given array simply does not appear, which is what
 // lets one config serve the curated per-page lists in richSections.ts. Any type
 // not named in a group falls under "All".
+//
+// The builder kit's blocks (card 173) are merged in by withSiteGroups() from
+// BUILDER_INSERT_GROUPS in builderSections.ts: they join Basics and Photos and
+// video, and add an "Events and notices" group. Edit that list, not this one.
+const BASE_INSERT_GROUPS = [
+  {
+    name: 'basics',
+    title: 'Basics',
+    of: ['heroSection', 'richTextSection', 'imageTextSection', 'spacerSection'],
+  },
+  {
+    name: 'proof',
+    title: 'Quotations and numbers',
+    of: ['quoteSection', 'statSection', 'logoStripSection'],
+  },
+  {
+    name: 'media',
+    title: 'Photos and video',
+    of: ['gallerySection', 'videoSection', 'embedSection'],
+  },
+  {
+    name: 'business',
+    title: 'People, posts and invitations',
+    of: ['teamSection', 'dynamicListSection', 'ctaBandSection'],
+  },
+  {
+    // The authoring kit (card 109). A saved section can also be dropped in as
+    // a COPY from the "Insert a saved section" button under the sections list.
+    name: 'saved',
+    title: 'Saved and synced',
+    of: ['syncedSection'],
+  },
+  // scaffold: church
+  {
+    name: 'church',
+    title: 'Church',
+    of: [
+      'sundayTimesSection',
+      'timelineSection',
+      'staffGridSection',
+      'faqSection',
+      'scriptureBandSection',
+      'heritageBandSection',
+      'giveBandSection',
+      'hoursSection',
+      'documentListSection',
+      'linkCardsSection',
+      'ministrySection',
+      'watchwordSection',
+      'goalsSection',
+      'pledgeSection',
+      'letterSection',
+      'churchTracFormSection',
+    ],
+  },
+  // scaffold:end
+];
+
 export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
   filter: true,
   // Grid first, so the picker opens on pictures; the list view stays one click
   // away and keeps the search box (the authoring kit, card 109).
   views: [{ name: 'grid', previewImageUrl: sectionThumbnailUrl }, { name: 'list' }],
-  groups: [
-    {
-      name: 'basics',
-      title: 'Basics',
-      of: ['heroSection', 'richTextSection', 'imageTextSection', 'spacerSection'],
-    },
-    {
-      name: 'proof',
-      title: 'Quotations and numbers',
-      of: ['quoteSection', 'statSection', 'logoStripSection'],
-    },
-    {
-      name: 'media',
-      title: 'Photos and video',
-      of: ['gallerySection', 'videoSection', 'embedSection'],
-    },
-    {
-      name: 'business',
-      title: 'People, posts and invitations',
-      of: ['teamSection', 'dynamicListSection', 'ctaBandSection'],
-    },
-    {
-      // The authoring kit (card 109). A saved section can also be dropped in as
-      // a COPY from the "Insert a saved section" button under the sections list.
-      name: 'saved',
-      title: 'Saved and synced',
-      of: ['syncedSection'],
-    },
-    // scaffold: church
-    {
-      name: 'church',
-      title: 'Church',
-      of: [
-        'sundayTimesSection',
-        'timelineSection',
-        'staffGridSection',
-        'faqSection',
-        'scriptureBandSection',
-        'heritageBandSection',
-        'giveBandSection',
-        'hoursSection',
-        'documentListSection',
-        'linkCardsSection',
-        'ministrySection',
-        'watchwordSection',
-        'goalsSection',
-        'pledgeSection',
-        'letterSection',
-        'churchTracFormSection',
-      ],
-    },
-    // scaffold:end
-  ],
+  groups: withSiteGroups(BASE_INSERT_GROUPS, BUILDER_INSERT_GROUPS),
 };
 
 /** The `options` block every pageBuilder array should carry. */

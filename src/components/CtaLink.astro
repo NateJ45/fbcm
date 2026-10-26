@@ -100,7 +100,14 @@ const isExternal = cta?.linkType === 'external';
 // the visitor to a second tab for a link inside the same site is wrong. Only an
 // UNSET value falls back to the old default of opening an off-site URL in a new
 // tab, so nothing an editor wrote before this change moves.
-const newTab = cta?.openInNewTab ?? isExternal;
+// Card 178 removed the field's initialValue, so a button made since then has it
+// unset: a same-site path typed as a web address ("/history#building") still
+// stays in this tab, and only an off-site address opens a new one.
+const newTab = cta?.openInNewTab ?? (isExternal && !href.startsWith('/') && !href.startsWith('#'));
+// A button object with nothing filled in (an optional button left empty, card
+// 178) draws nothing, rather than the "Get in touch" fallback. No cta at all
+// still takes the fallbacks.
+const isEmpty = cta != null && !cta.label && !cta.linkType && !(cta as { href?: string }).href;
 
 // Focus ring offset uses --background by default, but under onDark we offset
 // against transparent so the ring still reads on the photographic surface.
@@ -171,21 +178,23 @@ const variantClasses = (() => {
 })();
 ---
 
-<a
-  href={href}
-  class:list={
-    resolved === 'link' ? [linkClasses, extraClass] : [baseClasses, variantClasses, extraClass]
-  }
-  target={newTab ? '_blank' : undefined}
-  rel={newTab ? 'noopener noreferrer' : undefined}
->
-  {label}
-  {resolved === 'link' && (
-    <span
-      aria-hidden="true"
-      class="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-    >
-      &#8594;
-    </span>
-  )}
-</a>
+{!isEmpty && (
+  <a
+    href={href}
+    class:list={
+      resolved === 'link' ? [linkClasses, extraClass] : [baseClasses, variantClasses, extraClass]
+    }
+    target={newTab ? '_blank' : undefined}
+    rel={newTab ? 'noopener noreferrer' : undefined}
+  >
+    {label}
+    {resolved === 'link' && (
+      <span
+        aria-hidden="true"
+        class="transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+      >
+        &#8594;
+      </span>
+    )}
+  </a>
+)}

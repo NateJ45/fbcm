@@ -582,6 +582,30 @@ export type SectionPreset = {
       } & EmbedSection)
     | ({
         _key: string;
+      } & ColumnsSection)
+    | ({
+        _key: string;
+      } & ButtonRowSection)
+    | ({
+        _key: string;
+      } & PhotoSection)
+    | ({
+        _key: string;
+      } & TabsSection)
+    | ({
+        _key: string;
+      } & CountdownSection)
+    | ({
+        _key: string;
+      } & NoticeSection)
+    | ({
+        _key: string;
+      } & EventDetailsSection)
+    | ({
+        _key: string;
+      } & ScheduleSection)
+    | ({
+        _key: string;
       } & SundayTimesSection)
     | ({
         _key: string;
@@ -1084,6 +1108,376 @@ export type SundayTimesSection = {
   anchor?: Slug;
 };
 
+export type ScheduleSection = {
+  _type: 'scheduleSection';
+  heading?: string;
+  intro?: string;
+  days?: Array<{
+    title?: string;
+    items?: Array<{
+      startTime?:
+        | '06:00'
+        | '06:15'
+        | '06:30'
+        | '06:45'
+        | '07:00'
+        | '07:15'
+        | '07:30'
+        | '07:45'
+        | '08:00'
+        | '08:15'
+        | '08:30'
+        | '08:45'
+        | '09:00'
+        | '09:15'
+        | '09:30'
+        | '09:45'
+        | '10:00'
+        | '10:15'
+        | '10:30'
+        | '10:45'
+        | '11:00'
+        | '11:15'
+        | '11:30'
+        | '11:45'
+        | '12:00'
+        | '12:15'
+        | '12:30'
+        | '12:45'
+        | '13:00'
+        | '13:15'
+        | '13:30'
+        | '13:45'
+        | '14:00'
+        | '14:15'
+        | '14:30'
+        | '14:45'
+        | '15:00'
+        | '15:15'
+        | '15:30'
+        | '15:45'
+        | '16:00'
+        | '16:15'
+        | '16:30'
+        | '16:45'
+        | '17:00'
+        | '17:15'
+        | '17:30'
+        | '17:45'
+        | '18:00'
+        | '18:15'
+        | '18:30'
+        | '18:45'
+        | '19:00'
+        | '19:15'
+        | '19:30'
+        | '19:45'
+        | '20:00'
+        | '20:15'
+        | '20:30'
+        | '20:45'
+        | '21:00'
+        | '21:15'
+        | '21:30'
+        | '21:45'
+        | '22:00'
+        | '22:15'
+        | '22:30'
+        | '22:45'
+        | '23:00'
+        | '23:15'
+        | '23:30'
+        | '23:45';
+      title?: string;
+      note?: string;
+      _type: 'scheduleItem';
+      _key: string;
+    }>;
+    _type: 'scheduleDay';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
+export type EventDetailsSection = {
+  _type: 'eventDetailsSection';
+  eyebrow?: string;
+  title?: string;
+  occurrences?: Array<{
+    date?: string;
+    startTime?:
+      | '06:00'
+      | '06:15'
+      | '06:30'
+      | '06:45'
+      | '07:00'
+      | '07:15'
+      | '07:30'
+      | '07:45'
+      | '08:00'
+      | '08:15'
+      | '08:30'
+      | '08:45'
+      | '09:00'
+      | '09:15'
+      | '09:30'
+      | '09:45'
+      | '10:00'
+      | '10:15'
+      | '10:30'
+      | '10:45'
+      | '11:00'
+      | '11:15'
+      | '11:30'
+      | '11:45'
+      | '12:00'
+      | '12:15'
+      | '12:30'
+      | '12:45'
+      | '13:00'
+      | '13:15'
+      | '13:30'
+      | '13:45'
+      | '14:00'
+      | '14:15'
+      | '14:30'
+      | '14:45'
+      | '15:00'
+      | '15:15'
+      | '15:30'
+      | '15:45'
+      | '16:00'
+      | '16:15'
+      | '16:30'
+      | '16:45'
+      | '17:00'
+      | '17:15'
+      | '17:30'
+      | '17:45'
+      | '18:00'
+      | '18:15'
+      | '18:30'
+      | '18:45'
+      | '19:00'
+      | '19:15'
+      | '19:30'
+      | '19:45'
+      | '20:00'
+      | '20:15'
+      | '20:30'
+      | '20:45'
+      | '21:00'
+      | '21:15'
+      | '21:30'
+      | '21:45'
+      | '22:00'
+      | '22:15'
+      | '22:30'
+      | '22:45'
+      | '23:00'
+      | '23:15'
+      | '23:30'
+      | '23:45';
+    endTime?:
+      | '06:00'
+      | '06:15'
+      | '06:30'
+      | '06:45'
+      | '07:00'
+      | '07:15'
+      | '07:30'
+      | '07:45'
+      | '08:00'
+      | '08:15'
+      | '08:30'
+      | '08:45'
+      | '09:00'
+      | '09:15'
+      | '09:30'
+      | '09:45'
+      | '10:00'
+      | '10:15'
+      | '10:30'
+      | '10:45'
+      | '11:00'
+      | '11:15'
+      | '11:30'
+      | '11:45'
+      | '12:00'
+      | '12:15'
+      | '12:30'
+      | '12:45'
+      | '13:00'
+      | '13:15'
+      | '13:30'
+      | '13:45'
+      | '14:00'
+      | '14:15'
+      | '14:30'
+      | '14:45'
+      | '15:00'
+      | '15:15'
+      | '15:30'
+      | '15:45'
+      | '16:00'
+      | '16:15'
+      | '16:30'
+      | '16:45'
+      | '17:00'
+      | '17:15'
+      | '17:30'
+      | '17:45'
+      | '18:00'
+      | '18:15'
+      | '18:30'
+      | '18:45'
+      | '19:00'
+      | '19:15'
+      | '19:30'
+      | '19:45'
+      | '20:00'
+      | '20:15'
+      | '20:30'
+      | '20:45'
+      | '21:00'
+      | '21:15'
+      | '21:30'
+      | '21:45'
+      | '22:00'
+      | '22:15'
+      | '22:30'
+      | '22:45'
+      | '23:00'
+      | '23:15'
+      | '23:30'
+      | '23:45';
+    label?: string;
+    _type: 'eventDate';
+    _key: string;
+  }>;
+  place?: string;
+  note?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  button?: CtaBlock;
+  showCalendar?: boolean;
+  anchor?: Slug;
+};
+
+export type NoticeSection = {
+  _type: 'noticeSection';
+  message?: string;
+  urgency?: 'info' | 'urgent';
+  label?: string;
+  link?: CtaBlock;
+  startDate?: string;
+  endDate?: string;
+  anchor?: Slug;
+};
+
+export type CountdownSection = {
+  _type: 'countdownSection';
+  eventName?: string;
+  startDate?: string;
+  endDate?: string;
+  intro?: string;
+  duringText?: string;
+  afterText?: string;
+  link?: CtaBlock;
+  anchor?: Slug;
+};
+
+export type TabsSection = {
+  _type: 'tabsSection';
+  heading?: string;
+  intro?: string;
+  tabs?: Array<{
+    label?: string;
+    body?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: 'span';
+        _key: string;
+      }>;
+      style?: 'normal';
+      listItem?: 'bullet' | 'number';
+      markDefs?: Array<{
+        href?: string;
+        _type: 'link';
+        _key: string;
+      }>;
+      level?: number;
+      _type: 'block';
+      _key: string;
+    }>;
+    _type: 'tabPanel';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
+export type PhotoSection = {
+  _type: 'photoSection';
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  anchor?: Slug;
+};
+
+export type ButtonRowSection = {
+  _type: 'buttonRowSection';
+  heading?: string;
+  intro?: string;
+  links?: Array<{
+    link?: CtaBlock;
+    _type: 'quickLink';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
+export type ColumnsSection = {
+  _type: 'columnsSection';
+  heading?: string;
+  intro?: string;
+  textColumns?: Array<{
+    heading?: string;
+    body?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: 'span';
+        _key: string;
+      }>;
+      style?: 'normal';
+      listItem?: 'bullet' | 'number';
+      markDefs?: Array<{
+        href?: string;
+        _type: 'link';
+        _key: string;
+      }>;
+      level?: number;
+      _type: 'block';
+      _key: string;
+    }>;
+    _type: 'textColumn';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
 export type EmbedSection = {
   _type: 'embedSection';
   eyebrow?: string;
@@ -1413,6 +1807,30 @@ export type Page = {
       } & EmbedSection)
     | ({
         _key: string;
+      } & ColumnsSection)
+    | ({
+        _key: string;
+      } & ButtonRowSection)
+    | ({
+        _key: string;
+      } & PhotoSection)
+    | ({
+        _key: string;
+      } & TabsSection)
+    | ({
+        _key: string;
+      } & CountdownSection)
+    | ({
+        _key: string;
+      } & NoticeSection)
+    | ({
+        _key: string;
+      } & EventDetailsSection)
+    | ({
+        _key: string;
+      } & ScheduleSection)
+    | ({
+        _key: string;
       } & SundayTimesSection)
     | ({
         _key: string;
@@ -1737,6 +2155,30 @@ export type JournalPage = {
       } & EmbedSection)
     | ({
         _key: string;
+      } & ColumnsSection)
+    | ({
+        _key: string;
+      } & ButtonRowSection)
+    | ({
+        _key: string;
+      } & PhotoSection)
+    | ({
+        _key: string;
+      } & TabsSection)
+    | ({
+        _key: string;
+      } & CountdownSection)
+    | ({
+        _key: string;
+      } & NoticeSection)
+    | ({
+        _key: string;
+      } & EventDetailsSection)
+    | ({
+        _key: string;
+      } & ScheduleSection)
+    | ({
+        _key: string;
       } & SundayTimesSection)
     | ({
         _key: string;
@@ -1829,6 +2271,30 @@ export type HomePage = {
     | ({
         _key: string;
       } & EmbedSection)
+    | ({
+        _key: string;
+      } & ColumnsSection)
+    | ({
+        _key: string;
+      } & ButtonRowSection)
+    | ({
+        _key: string;
+      } & PhotoSection)
+    | ({
+        _key: string;
+      } & TabsSection)
+    | ({
+        _key: string;
+      } & CountdownSection)
+    | ({
+        _key: string;
+      } & NoticeSection)
+    | ({
+        _key: string;
+      } & EventDetailsSection)
+    | ({
+        _key: string;
+      } & ScheduleSection)
     | ({
         _key: string;
       } & SundayTimesSection)
@@ -2113,6 +2579,14 @@ export type AllSanitySchemaTypes =
   | StaffGridSection
   | TimelineSection
   | SundayTimesSection
+  | ScheduleSection
+  | EventDetailsSection
+  | NoticeSection
+  | CountdownSection
+  | TabsSection
+  | PhotoSection
+  | ButtonRowSection
+  | ColumnsSection
   | EmbedSection
   | LogoStripSection
   | SpacerSection

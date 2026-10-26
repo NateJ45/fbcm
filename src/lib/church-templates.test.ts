@@ -40,7 +40,7 @@ const RULES: PageRules = {
 };
 const CHECKS = {
   selfFillingSections: listIn('../sanity/pageBuilderConfig.ts', 'const SELF_FILLING_SECTIONS'),
-  extraSettingKeys: ['imageSide', 'surface'],
+  extraSettingKeys: ['imageSide', 'surface', 'urgency', 'duringText', 'afterText'],
 };
 
 function stringsIn(value: unknown, out: string[] = []): string[] {
@@ -109,6 +109,7 @@ describe('the saved sections (sectionPatterns.ts)', () => {
       ...declaredTypes('sections.ts'),
       ...declaredTypes('richSections.ts'),
       ...declaredTypes('churchSections.ts'),
+      ...declaredTypes('builderSections.ts'),
     ].filter((t) => t !== 'syncedSection'),
   );
 

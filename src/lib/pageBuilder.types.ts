@@ -15,6 +15,7 @@
 //
 // This file is safe to edit by hand. Do NOT import from it in sanity.types.ts.
 
+import type { BuilderPageBlock } from './builderBlocks.types';
 import type {
   HeroSection as _HeroSection,
   RichTextSection as _RichTextSection,
@@ -575,6 +576,8 @@ export type PageBuilderBlock =
   | ProjectedEmbedSection
   // Church-reverse-port
   | ProjectedDynamicListSection
+  // The builder kit (starter PORTS.md card 173), src/lib/builderBlocks.types.ts
+  | BuilderPageBlock
   // scaffold: church
   | ProjectedSundayTimesSection
   | ProjectedTimelineSection
