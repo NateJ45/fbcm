@@ -176,7 +176,7 @@ export const page = defineType({
           type: 'image',
           group: 'seo',
           description:
-            "Optional. The picture shown when someone shares this page on Facebook or in a text message. A wide picture, about 1200 by 630 pixels. Leave blank and the site draws one in the church's colours.",
+            "Optional. The picture shown when someone shares this page on Facebook or in a text message. A wide picture, about 1200 by 630 pixels. Leave blank and the site draws one in the church's colors.",
           options: { hotspot: true },
           fields: [defineField({ name: 'alt', title: 'Describe the picture', type: 'string' })],
         }),

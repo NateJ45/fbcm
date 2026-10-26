@@ -47,7 +47,7 @@ export const CHURCH_LINKS = [
   { token: '{calendar}', field: 'calendarUrl', label: 'Events calendar' },
   { token: '{prayer}', field: 'prayerUrl', label: 'Prayer list' },
   { token: '{app}', field: 'appUrl', label: 'Church app' },
-  { token: '{wedding-enquiry}', field: 'weddingEnquiryUrl', label: 'Wedding enquiry form' },
+  { token: '{wedding-enquiry}', field: 'weddingEnquiryUrl', label: 'Wedding inquiry form' },
   { token: '{wedding-booking}', field: 'weddingBookingUrl', label: 'Building booking form' },
 ] as const;
 
