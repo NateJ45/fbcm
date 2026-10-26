@@ -105,7 +105,7 @@ test('the inline copy uses the same check window, freshness and endpoint', () =>
   );
   assert.ok(inlineScript.includes(`CHECK_AFTER = ${CHECK_AFTER_MINUTES};`), 'check end differs');
   assert.ok(inlineScript.includes(`FRESH = ${STATUS_FRESH_MS};`), 'freshness differs');
-  assert.ok(inlineScript.includes("fetch('/api/live-status'"), 'endpoint path differs');
+  assert.ok(inlineScript.includes("fetch('/api/live-status/'"), 'endpoint path differs');
   // At most once a minute: the throttle, and the one-minute tick.
   assert.ok(inlineScript.includes('< 55000) return;'), 'throttle differs');
   assert.ok(inlineScript.includes('setInterval(tick, 60000)'), 'tick differs');
