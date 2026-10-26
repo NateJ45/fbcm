@@ -46,7 +46,7 @@ export const TOURS: TourDef[] = [
         title: 'The Sunday checklist',
         short: 'Checklist',
         meaning: 'step',
-        body: 'The jobs that keep the website current each week. Most tick themselves when they are done, and the list starts fresh every Monday.',
+        body: 'The jobs that keep the website current each week. Most check themselves when they are done, and the list starts fresh every Monday.',
       },
       {
         anchor: 'tool:quick-update',
@@ -100,7 +100,7 @@ export const TOURS: TourDef[] = [
         anchor: 'home-this-week',
         title: 'Sunday checklist',
         meaning: 'step',
-        body: 'Each job ticks itself when it is done. The livestream and the Church Trac calendar live outside the website, so those two you tick by hand.',
+        body: 'Each job checks itself when it is done. The livestream and the Church Trac calendar live outside the website, so those two you check by hand.',
       },
       {
         anchor: 'home-is-it-live',
@@ -217,7 +217,7 @@ export const TOURS: TourDef[] = [
         title: 'A page is a stack of sections',
         short: 'Sections',
         meaning: 'pages',
-        body: 'Open one to change its words. Drag the dotted handle to move it. The design looks after colours and spacing.',
+        body: 'Open one to change its words. Drag the dotted handle to move it. The design looks after colors and spacing.',
       },
       {
         anchor: 'tool:presentation',

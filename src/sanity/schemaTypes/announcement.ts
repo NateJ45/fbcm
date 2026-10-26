@@ -57,7 +57,7 @@ export const announcement = defineType({
       options: {
         list: [
           { title: 'Info (quiet, for everyday news)', value: 'info' },
-          { title: 'Highlight (the church colour, for good news)', value: 'highlight' },
+          { title: 'Highlight (the church color, for good news)', value: 'highlight' },
           { title: 'Urgent (red, for a closing or a warning)', value: 'urgent' },
         ],
         layout: 'radio',

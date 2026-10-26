@@ -240,7 +240,7 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'weddingEnquiryUrl',
-      title: 'Wedding enquiry form',
+      title: 'Wedding inquiry form',
       type: 'url',
       group: 'systems',
       description:
@@ -604,7 +604,7 @@ export const siteSettings = defineType({
       type: 'image',
       group: 'social',
       description:
-        "Normally left blank: every page and post already shares with its own picture, drawn in the church's colours. This is only used for a page that has none. A wide picture, about 1200 by 630 pixels.",
+        "Normally left blank: every page and post already shares with its own picture, drawn in the church's colors. This is only used for a page that has none. A wide picture, about 1200 by 630 pixels.",
       options: { hotspot: true },
       fields: [defineField({ name: 'alt', title: 'Describe the picture', type: 'string' })],
     }),

@@ -1001,7 +1001,7 @@ export const goalsSection = defineType({
   title: 'Our goals',
   type: 'object',
   description:
-    'Up to four goals. Each gets its own colour and layout, in order: green, gold, purple, brown.',
+    'Up to four goals. Each gets its own color and layout, in order: green, gold, purple, brown.',
   fields: [
     heading,
     defineField({ name: 'intro', title: 'Introduction', type: 'text', rows: 3 }),

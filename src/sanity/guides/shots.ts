@@ -45,7 +45,7 @@ export const GUIDE_SHOTS: Record<string, GuideShotData> = {
   },
   'home-checklist': {
     src: '/guide-shots/home-checklist.webp',
-    alt: "Home's Sunday checklist: the sermon preview, a blog post, banners that have ended, the livestream and this week's events, with one already ticked.",
+    alt: "Home's Sunday checklist: the sermon preview, a blog post, banners that have ended, the livestream and this week's events, with one already checked.",
     width: 526,
     height: 712,
     marks: [
