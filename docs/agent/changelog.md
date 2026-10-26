@@ -10,6 +10,8 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-26: the drift check compares with the starter again._ `ci.yml` carried the starter's own "self-check" step, which runs `sync-check` with the repo as its own library of record, so every marked file always reported SAME and drift could never fail CI here. The step is now the one every other site runs: check out `NateJ45/ncs-astro-sanity-starter` at `main`, run `sync-check` with `NCS_STARTER_DIR` pointing at it, then delete the checkout before eslint and prettier. All 238 marked files match today.
+
 _2026-10-23: bold looks bold and highlight is gold in posts (`fix/post-bold-highlight`)._
 
 Testing #110 on Jonathan's draft showed bold still read as a faint gold band (close to an underline) and Highlight (`bg-accent/60`) was within a shade of the page. `.post-prose strong` is now `font-weight: 700`, synthesised from Castoro's one weight; Highlight renders as `<mark class="pp-hl">`, a 38% gold background cloned across line wraps. On paper the highlight becomes a gold underline (backgrounds do not print) and bold prints as bold. This also makes the imported posts' short bold runs heavier.
