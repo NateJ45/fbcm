@@ -90,3 +90,21 @@ Never hardcode hex values in component markup. All palette and semantic tokens a
   25 percent, shared image and font budgets, and the JSON-LD types each route must carry. Image
   budgets are defaults only (lazy images load by timing). A new route in `tests/routes.ts` needs an
   entry or it uses the defaults.
+
+## Shapes in this church's grammar, and the photo hero's shade (starter cards 188, 189, 2026-10-27)
+
+- **Shape tokens** (`globals.css`, after the one scale): a block that uses the starter's shape
+  classes reads as this church. `.shape-gable` (a standalone picture) is cut to the sanctuary's
+  lancet: `--shape-gable-polygon` traces `.arch-lancet`'s two circular arcs as a polygon (so it
+  scales with the box), springing at `--gable-pitch: 40%`, square sides, `--shape-feature-radius: 0`.
+  The slab is the soft paper (`--color-bg-soft`), the empty tile the indigo band the arches fill
+  with, the hover zoom 1.04. The church's own pictures still use `ArchFrame.astro` and
+  `photo-shapes.css`; nothing on a live page uses the shape classes today.
+- **`hero: board` is not adopted.** The board grammar (one head, one ground, rules between sections)
+  is Auburn's head grammar. This site already has its own heads (the full photo opener, the split
+  and window indigo bands, `SectionHeading`) and its own band cadence, so board would replace the
+  brand's openers with another church's. `src/data/layout.ts` keeps `hero: 'bleed'`.
+- **The photo hero's shade** (`src/styles/photo-hero.css`, PORTABLE): `--photo-scrim` is
+  `--color-accent-dark` (#1c1b3a, the navy dark of the Watchword band). `src/lib/photo-hero.test.ts`
+  holds the contrast promise against `globals.css`: white over a pure white photo under the text
+  strength (72%) stays at 4.5:1 or better.

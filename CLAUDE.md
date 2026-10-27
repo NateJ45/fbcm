@@ -67,6 +67,7 @@ Shared by every site repo in the family, so they live in one PORTABLE file impor
 Repo-specific deltas:
 
 - **Family cards 186 to 188, 197, 198 (2026-10-27):** the one scale and fallback fonts in `globals.css`, the page-weight budget (`tests/page-weight.config.json`), layout slots at defaults. Do not run `apply-brand`. Detail: `docs/agent/design-tokens.md`, last section.
+- **Family cards 188 to 192 (2026-10-27):** shape tokens cut to the lancet; the opt-in photo hero (Page opener Style, off everywhere; Home is Nathan's call, PENDING 0a); the church's wayfinding as code defaults until Site settings is filled (phone menu groups, where-next rows, the Sunday bar on Home and Visit; `src/data/wayfinding-defaults.ts`, `docs/agent/wayfinding.md`); the flow layer installed but `motion` stays `reveal` (PRODUCT.md principle 5, `docs/agent/animation.md`).
 - Foundation vs safe to edit, file by file: `docs/agent/file-map.md`. Tokens, copy, `src/data/*` and assets are safe to edit. `globals.css` beyond the tokens, the schemas, the Studio config, the preview stack, `SectionRenderer.astro`, `BaseLayout.astro`, `src/lib/sanity.ts` and `queries.ts` are foundation and need a planned change.
 - Ask before installing a dependency (rule 8 is why).
 - FBCM is light-only, so UI verification is one theme (rule 3).
@@ -124,7 +125,8 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 - Brand colors + theme system (light/dark discipline): `docs/agent/theme-and-color.md`
 - Brand reskin system (config schema, apply-brand, /reskin skill): `docs/brand/brand-system.md`
 - Polish layer (brand stripe, sticky header, reading progress, print stylesheet): `docs/agent/polish-layer.md`
-- Animation layer (native scroll, reveals, glyph draw, view transitions, script accent): `docs/agent/animation.md`
+- Animation layer (native scroll, reveals, glyph draw, view transitions, script accent, the flow layer and the photo hero clip): `docs/agent/animation.md`
+- Wayfinding (phone menu groups, where-next rows, the Sunday bar): `docs/agent/wayfinding.md`
 - Typography + spacing tokens: `docs/agent/design-tokens.md`
 - Component catalog + long-read layout: `docs/agent/components.md`
 - Component sourcing (shadcn, Starwind, Magic UI, PrimeReact, copy-paste sources, token-remap cheat sheet): `docs/agent/component-sources.md`

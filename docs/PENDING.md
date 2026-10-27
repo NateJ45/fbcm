@@ -16,6 +16,18 @@ sequence).
 
 ## Waiting on a human
 
+### 0a. Nathan: should Home open on the photo hero with a This Sunday card? (2026-10-27)
+
+Starter card 189 is installed: the Page opener has a Style, "Photo with a short-facts card"
+(`PhotoHero.astro`), off on every page (Standard is the default, so nothing moved). Switching Home
+to it is a Studio data write on the live site, so it is Nathan's call: set Home's opener Style to
+the photo style. Left empty on the tall Home opener, the card shows **This Sunday** with the
+service time from Site settings ("Sundays · Worship at 10:45 am") and a Plan your visit link; the
+first of the twelve frames becomes the one photo (the slideshow does not run in this style), and
+an optional silent clip can go behind it. Compare first: `/styleguide/photo-hero/home/` shows the
+shape. Decide with the twelve-frame slideshow and the four-fact row in mind (both go away on Home
+if it switches).
+
 ### 0. Cutover LIVE (2026-10-19): the rest of the list
 
 Update, same day: the zone went active, `fbcm-site` is attached to `www.fbcmuncie.org` and
@@ -459,6 +471,16 @@ writes before comparing, or run the file through Prettier at the end of the rewr
   (`npm run parity:capture` after a build with the CI fixture variables) when a render-neutral change next needs it.
 - **Page-weight budgets** are measured on the CI build; tighten `/beliefs` (a 233 KB opening photo) when that
   picture is compressed.
+
+### 9b. Auburn port run, package B notes (2026-10-27)
+
+- **Starter fix needed: `wayfinding.test.ts` (PORTABLE) is not portable here.** It assumes `/contact/` and
+  `/about/` are reserved site routes; here they are Studio pages, so three cases fail. Not installed; this site's
+  `wayfinding-defaults.test.ts` covers the resolver on its own routes. Install the starter copy once it uses slugs
+  every site reserves (`/styleguide/`). `docs/agent/wayfinding.md`.
+- **The phone menu groups are their own list now.** A page added to the header menu (`navItems`) is not added to
+  the phone groups by itself: add it to Site settings > Phone menu groups, or to `src/data/wayfinding-defaults.ts`.
+- **Flow layer installed, `motion` left at `reveal`** (PRODUCT.md principle 5). Revisit only with Nathan.
 
 ### 10. The scaffold is finished (DONE, 2026-09-18)
 
