@@ -28,6 +28,15 @@ an optional silent clip can go behind it. Compare first: `/styleguide/photo-hero
 shape. Decide with the twelve-frame slideshow and the four-fact row in mind (both go away on Home
 if it switches).
 
+### 0b. The office: the six new blocks are in the menu, on no page yet (2026-10-27)
+
+Starter card 193 added Contact details, Progress toward a goal, Add our calendar, Cards with icons,
+Steps on a path and the "Find your place" hub to "+ Add item" (`docs/agent/builder-blocks-more.md`).
+No live page uses them. Two natural homes, both a Studio edit for the office or Nathan, not code: the
+hub on Ministries (its cards typed from the ministry pages), and Steps on a path on Visit ("Your
+first Sunday"). "Open now" for the office would need typed hours rows first (a planned schema change;
+today's office hours are free text and are shown as typed).
+
 ### 0. Cutover LIVE (2026-10-19): the rest of the list
 
 Update, same day: the zone went active, `fbcm-site` is attached to `www.fbcmuncie.org` and
