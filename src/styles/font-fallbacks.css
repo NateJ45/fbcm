@@ -1,0 +1,22 @@
+/* Safe to edit by hand, but WRITTEN BY `npm run font-fallback` (scripts/font-fallback.mjs,
+   PORTS.md card 188). Metric-matched stand-ins for Castoro Titling while it loads: a local font
+   scaled to its average letter width and given its ascent and descent, so a title drawn in the
+   fallback breaks where the real one will and the page does not jump when the font arrives.
+   Named second in the display stack (brand.config.json fonts.display.familyValue).
+   Source: node_modules/@fontsource/castoro-titling/files/castoro-titling-latin-400-normal.woff (upm 1000, hhea 755 / -245, weighted width 613). */
+@font-face {
+  font-family: 'Castoro Titling Fallback';
+  src: local('Georgia');
+  size-adjust: 137.51%;
+  ascent-override: 54.91%;
+  descent-override: 17.82%;
+  line-gap-override: 24%;
+}
+@font-face {
+  font-family: 'Castoro Titling Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 150.89%;
+  ascent-override: 50.04%;
+  descent-override: 16.24%;
+  line-gap-override: 21.87%;
+}

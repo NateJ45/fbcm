@@ -23,6 +23,8 @@ import Footer from '@/components/Footer.astro';
 import BackToTop from '@/components/BackToTop';
 import Analytics from '@/components/Analytics.astro';
 import SiteEvents from '@/components/SiteEvents.astro';
+import { layout } from '@/data/layout';
+import { layoutAttrs } from '@/lib/site-layout';
 import '@/styles/globals.css';
 // src/styles/starwind.css is deliberately NOT imported (2026-09-23, dead-CSS
 // trim). Nothing on this site uses a Starwind component, and the file has no
@@ -175,7 +177,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
 ---
 
 <!doctype html>
-<html lang={site.lang}>
+<html lang={site.lang} {...layoutAttrs(layout)}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

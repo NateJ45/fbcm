@@ -66,6 +66,7 @@ Shared by every site repo in the family, so they live in one PORTABLE file impor
 
 Repo-specific deltas:
 
+- **Family cards 186 to 188, 197, 198 (2026-10-27):** the one scale and fallback fonts in `globals.css`, the page-weight budget (`tests/page-weight.config.json`), layout slots at defaults. Do not run `apply-brand`. Detail: `docs/agent/design-tokens.md`, last section.
 - Foundation vs safe to edit, file by file: `docs/agent/file-map.md`. Tokens, copy, `src/data/*` and assets are safe to edit. `globals.css` beyond the tokens, the schemas, the Studio config, the preview stack, `SectionRenderer.astro`, `BaseLayout.astro`, `src/lib/sanity.ts` and `queries.ts` are foundation and need a planned change.
 - Ask before installing a dependency (rule 8 is why).
 - FBCM is light-only, so UI verification is one theme (rule 3).

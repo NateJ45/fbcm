@@ -448,6 +448,18 @@ That is harmless until somebody runs the script on a project with a clean tree, 
 confirm it says nothing. To close: normalise hex case and quote style to what Prettier
 writes before comparing, or run the file through Prettier at the end of the rewrite.
 
+### 9a. Auburn port run, package A leftovers (2026-10-27)
+
+- **`apply-brand` is stale, not only non-idempotent.** Run on 2026-10-27 it errored on `generate-og-pages.mjs`
+  (its WORDMARK pattern no longer matches), uppercased every hex in `globals.css`, and reset `site:` in
+  `astro.config.mjs` from `https://www.fbcmuncie.org` to the bare domain. Do not run it; edit by hand.
+- **No fallback face for the body font** (Castoro): `scripts/font-fallback.mjs` writes one display font. Add
+  one only if body text shifts when Castoro loads (measure CLS first).
+- **`scripts/.parity/*.html` is stale** (0 of 175 pass against a CI-style build). Recapture
+  (`npm run parity:capture` after a build with the CI fixture variables) when a render-neutral change next needs it.
+- **Page-weight budgets** are measured on the CI build; tighten `/beliefs` (a 233 KB opening photo) when that
+  picture is compressed.
+
 ### 10. The scaffold is finished (DONE, 2026-09-18)
 
 `faq` and `about` are marked, and so are `testimonials` and `philosophy`, which this item

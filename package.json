@@ -26,6 +26,7 @@
     "studio:import": "node scripts/import-content.mjs",
     "seed": "node scripts/seed-core.mjs",
     "seed-pages": "node scripts/seed-pages.mjs",
+    "font-fallback": "node scripts/font-fallback.mjs",
     "parity": "node scripts/page-parity.mjs",
     "parity:capture": "node scripts/page-parity.mjs capture --exclude \"blog/page/**,blog/tag/**,blog/category/**/page/**\"",
     "parity:compare": "node scripts/page-parity.mjs compare --exclude \"blog/page/**,blog/tag/**,blog/category/**/page/**\"",
