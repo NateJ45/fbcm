@@ -281,7 +281,7 @@
      nav, buttons. */
   --font-display:
     'Castoro Titling', 'Castoro Titling Fallback', 'Castoro Titling Fallback Times', Georgia, serif;
-  --font-body: 'Castoro', Georgia, serif;
+  --font-body: 'Castoro', 'Castoro Fallback', 'Castoro Fallback Times', Georgia, serif;
   --font-ui: 'Sofia Sans Semi Condensed Variable', system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
   --font-script: 'Snell Roundhand', 'Apple Chancery', cursive;

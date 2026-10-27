@@ -20,3 +20,21 @@
   descent-override: 16.24%;
   line-gap-override: 21.87%;
 }
+
+/* Castoro (body face), same method, added for the Lighthouse CLS on /privacy/ in the card 188 roll. */
+@font-face {
+  font-family: 'Castoro Fallback';
+  src: local('Georgia');
+  size-adjust: 137.51%;
+  ascent-override: 54.91%;
+  descent-override: 17.82%;
+  line-gap-override: 24%;
+}
+@font-face {
+  font-family: 'Castoro Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 150.89%;
+  ascent-override: 50.04%;
+  descent-override: 16.24%;
+  line-gap-override: 21.87%;
+}
