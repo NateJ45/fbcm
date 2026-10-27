@@ -20,3 +20,25 @@
   descent-override: 16.24%;
   line-gap-override: 21.87%;
 }
+
+/* Capitals (added by hand in the card 188 roll, fbcm). Castoro Titling draws lowercase and
+   capitals at one width, so the faces above (tuned to lowercase) run about 34% wide on text set
+   in UPPERCASE: an eyebrow wrapped to two lines until the font arrived and the page jumped
+   (Lighthouse CLS 0.14 on /privacy/). These two are scaled to capitals (size-adjust 102.5%) and
+   named in --font-display-caps, which `.font-display.uppercase` uses (globals.css). */
+@font-face {
+  font-family: 'Castoro Titling Caps Fallback';
+  src: local('Georgia');
+  size-adjust: 102.5%;
+  ascent-override: 73.66%;
+  descent-override: 23.9%;
+  line-gap-override: 32.2%;
+}
+@font-face {
+  font-family: 'Castoro Titling Caps Fallback Times';
+  src: local('Times New Roman'), local('Times'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 112%;
+  ascent-override: 67.4%;
+  descent-override: 21.9%;
+  line-gap-override: 29.5%;
+}

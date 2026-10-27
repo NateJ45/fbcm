@@ -281,6 +281,9 @@
      nav, buttons. */
   --font-display:
     'Castoro Titling', 'Castoro Titling Fallback', 'Castoro Titling Fallback Times', Georgia, serif;
+  --font-display-caps:
+    'Castoro Titling', 'Castoro Titling Caps Fallback', 'Castoro Titling Caps Fallback Times',
+    Georgia, serif;
   --font-body: 'Castoro', Georgia, serif;
   --font-ui: 'Sofia Sans Semi Condensed Variable', system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
@@ -3518,4 +3521,11 @@ body::before {
     opacity: 1;
     translate: none;
   }
+}
+
+/* Uppercase display text takes the capitals fallback (font-fallbacks.css, fbcm card 188 roll):
+   Castoro Titling's capitals and lowercase share one width, the lowercase-tuned fallback runs
+   wide on caps and wrapped eyebrows before the font arrived. */
+.font-display.uppercase {
+  font-family: var(--font-display-caps);
 }
