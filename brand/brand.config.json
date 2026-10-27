@@ -84,7 +84,7 @@
       "imports": ["@fontsource/castoro-titling"]
     },
     "body": {
-      "familyValue": "\"Castoro\", \"Castoro Fallback\", \"Castoro Fallback Times\", Georgia, serif",
+      "familyValue": "\"Castoro\", Georgia, serif",
       "ogFontStack": "Castoro, Georgia, serif",
       "imports": ["@fontsource/castoro", "@fontsource/castoro/400-italic.css"]
     },
