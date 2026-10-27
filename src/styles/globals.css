@@ -94,6 +94,9 @@
    the blank line above, outside the run apply-brand rewrites. */
 @import './font-fallbacks.css';
 @import './shapes.css';
+/* The flow layer (src/scripts/flow.ts), PORTABLE, starter card 192. Every rule is keyed on
+   html[data-motion] or a class the script adds, so this site's 'reveal' draws as before. */
+@import './flow.css';
 
 /* shadcn's custom data-state variants, vendored from shadcn/tailwind.css
    (shadcn 4.19.0, lines 28-87), in place of `@import 'shadcn/tailwind.css'`
@@ -714,6 +717,75 @@
   /* Focus: one ring (ring-2, offset 2). */
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
+
+  /* Motion (starter card 192): the flow layer's timings and distances, read by
+     src/styles/flow.css and src/scripts/flow.ts. This site keeps layout.motion at 'reveal'
+     (PRODUCT.md principle 5: motion only where a page opens, nothing moves while you read), so
+     nothing reads them on a real page; the motion wall (/styleguide/motion/) does. The values
+     are the starter's, on this site's own interaction ease. */
+  --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-fade: 200ms;
+  --motion-fade-distance: 8px;
+  --motion-stagger-calm: 40ms;
+  --motion-rise: 600ms;
+  --motion-rise-distance: 16px;
+  --motion-stagger: 60ms;
+  --motion-line: 800ms;
+  --motion-line-stagger: 80ms;
+  --motion-photo: 900ms;
+  --motion-photo-zoom: 1.06;
+  --motion-side: 800ms;
+  --motion-side-distance: 32px;
+  --motion-page-out: 120ms;
+  --motion-page-in: 260ms;
+  --motion-page-distance: 12px;
+
+  /* Shapes (starter card 188, src/styles/shapes.css): a block that uses the shape classes reads
+     as this church, not as the starter. The standalone picture (.shape-gable) is cut to the
+     sanctuary's lancet window, the same pointed arch ArchFrame and the Lancet band draw (two
+     circular arcs, traced from .arch-lancet's mask as a polygon so it scales with the box), with
+     square sides. --gable-pitch is where the arch springs, measured down the box: 40% reads
+     as the window on a portrait box and stays a gentle point on a wide one. The slab is the soft
+     paper (a taupe tint), the empty tile the indigo band the arches fill with, the hover zoom
+     quieter than the starter's. */
+  --gable-pitch: 40%;
+  --shape-gable-polygon: polygon(
+    0 100%,
+    0% var(--gable-pitch),
+    1.6% calc(var(--gable-pitch) * 0.779),
+    6.3% calc(var(--gable-pitch) * 0.568),
+    13.9% calc(var(--gable-pitch) * 0.377),
+    24% calc(var(--gable-pitch) * 0.213),
+    36.2% calc(var(--gable-pitch) * 0.086),
+    50% 0,
+    63.8% calc(var(--gable-pitch) * 0.086),
+    76% calc(var(--gable-pitch) * 0.213),
+    86.1% calc(var(--gable-pitch) * 0.377),
+    93.7% calc(var(--gable-pitch) * 0.568),
+    98.4% calc(var(--gable-pitch) * 0.779),
+    100% var(--gable-pitch),
+    100% 100%
+  );
+  --shape-feature-clip: var(--shape-gable-polygon);
+  --shape-feature-radius: 0;
+  --shape-slab: var(--color-bg-soft);
+  --shape-slab-inset: 34%;
+  --shape-tile: var(--color-band-indigo);
+  --shape-zoom: 1.04;
+}
+
+/* The photo hero (starter card 189, src/styles/photo-hero.css, PORTABLE) on this site's edges and
+   in its furniture face: the words and card sit on the shared gutter the header and every band use,
+   and the eyebrow is the UI face's label (white: gold over the shade would fall under 4.5:1 on a
+   bright photo). `:root` lifts these over the component sheet, which loads after this one. */
+:root .ph-hero {
+  --ph-gutter: var(--spacing-gutter);
+}
+:root .ph-eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
 }
 
 /* ---------- Base resets and defaults ---------------------------------- */
@@ -3186,10 +3258,17 @@ body::before {
     transform: none !important;
     translate: none !important;
   }
-  [data-stagger-grid] > * {
+  [data-stagger-grid] > *,
+  .flow,
+  .flow-line__in {
     opacity: 1 !important;
     transform: none !important;
     translate: none !important;
+  }
+  /* The flow layer's heading masks (starter card 192): nothing is clipped on paper. flow.ts also
+     drops html.motion on beforeprint, which puts every unit on its resting frame. */
+  .flow-line {
+    clip-path: none !important;
   }
   /* Curtain: skip the reveal entirely — image always visible */
   .img-curtain {

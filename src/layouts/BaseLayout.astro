@@ -24,7 +24,8 @@ import BackToTop from '@/components/BackToTop';
 import Analytics from '@/components/Analytics.astro';
 import SiteEvents from '@/components/SiteEvents.astro';
 import { layout } from '@/data/layout';
-import { layoutAttrs } from '@/lib/site-layout';
+import { layoutAttrs, hasFlow, type SiteLayout } from '@/lib/site-layout';
+import FlowMotion from '@/components/FlowMotion.astro';
 import '@/styles/globals.css';
 // src/styles/starwind.css is deliberately NOT imported (2026-09-23, dead-CSS
 // trim). Nothing on this site uses a Starwind component, and the file has no
@@ -61,6 +62,10 @@ interface Props {
    *  archives, the scripture index, the 404 and the Studio carry none, so
    *  scripts/pagefind-index.mjs leaves them out of the index. */
   searchBody?: boolean;
+  /** The flow layer's full level for this page (starter card 192): 'full' marks <main> data-flow-full when the site's motion is 'flow' (Home and the 404 pass it). Ignored under any other motion, so under this site's 'reveal' it does nothing. */
+  flow?: 'full';
+  /** Override layout.motion (src/data/layout.ts) for this page only. For the styleguide's motion wall (/styleguide/motion/), so every motion can be tested from one build. */
+  motion?: SiteLayout['motion'];
 }
 
 const {
@@ -75,7 +80,14 @@ const {
   ogArticle,
   overlayHeader = false,
   searchBody = false,
+  flow,
+  motion,
 } = Astro.props as Props;
+
+// Motion (starter card 192): the site's layout.motion, or this page's override. The flow layer's
+// script is rendered only when it runs (flow or fade), so this site's 'reveal' ships nothing new.
+const pageLayout: SiteLayout = motion ? { ...layout, motion } : layout;
+const flowFull = flow === 'full' && pageLayout.motion === 'flow';
 
 const canonical = new URL(Astro.url.pathname, site.url).toString();
 
@@ -177,7 +189,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
 ---
 
 <!doctype html>
-<html lang={site.lang} {...layoutAttrs(layout)}>
+<html lang={site.lang} {...layoutAttrs(pageLayout)}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -269,6 +281,8 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         is scoped to it, so with JavaScript off the page renders finished.
         Reduced-motion visitors never get the class, so they see the page at
         rest too. The swap resets className, so it rides the same re-apply.
+        A page whose motion is 'none' (html[data-motion=none], starter card 192)
+        never gets it either.
 
         LIGHT ONLY since 2026-09-24 (site.theme === 'light', CLAUDE.md rule 3).
         While lightOnly is true the stored preference and prefers-color-scheme
@@ -281,7 +295,8 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
         function applyTheme() {
           document.documentElement.classList.toggle(
             'motion',
-            !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+            !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+              document.documentElement.getAttribute('data-motion') !== 'none',
           );
           let dark = false;
           if (!lightOnly) {
@@ -517,7 +532,12 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
       })();
     </script>
 
-    <main id="main" class="flex-1" data-pagefind-body={searchBody ? '' : undefined}>
+    <main
+      id="main"
+      class="flex-1"
+      data-pagefind-body={searchBody ? '' : undefined}
+      data-flow-full={flowFull ? '' : undefined}
+    >
       {
         /* The name a search result shows for this page: the page's own
           <title> up to its " | " (a builder page's h1 is its hero line, "Married
@@ -543,6 +563,9 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
       browser settle the main thread first and shifts ~10–20ms of TBT off
       the critical path on mobile.
     */}
+    {/* The flow layer (starter card 192): only when the motion is flow or fade. */}
+    {hasFlow(pageLayout) && <FlowMotion />}
+
     <BackToTop client:idle />
 
     {/*
