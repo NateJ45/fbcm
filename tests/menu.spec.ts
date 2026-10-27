@@ -107,12 +107,17 @@ test('groups start folded, unfold from their label, and open on the current page
       return `${Math.round(r.top)}/${Math.round(r.height)}`;
     });
   const restingWindow = await windowBox();
-  // On Home no group holds the current page, so every group is folded and
-  // its pages are out of the way (and out of the tab order).
+  // On Home no group holds the current page. The phone menu groups (starter card 191) open the
+  // first one there (New here, so Visit is one tap away); every other group is folded and its
+  // pages are out of the way (and out of the tab order).
   for (let i = 0; i < count; i++) {
     const label = labels.nth(i);
-    await expect(label).toHaveAttribute('aria-expanded', 'false');
+    await expect(label).toHaveAttribute('aria-expanded', i === 0 ? 'true' : 'false');
     const list = dialog.locator(`[id="${await label.getAttribute('aria-controls')}"]`);
+    if (i === 0) {
+      await expect(list).toBeVisible();
+      await label.click();
+    }
     await expect(list).toBeHidden();
     await label.click();
     await expect(label).toHaveAttribute('aria-expanded', 'true');

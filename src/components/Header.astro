@@ -52,6 +52,8 @@ import { getImage } from 'astro:assets';
 import { withTrailingSlash } from '@/lib/href';
 import { site } from '@/data/site';
 import MobileNav from './MobileNav';
+import { phoneMenuGroups } from '@/lib/wayfinding';
+import { PHONE_MENU_GROUPS } from '@/data/wayfinding-defaults';
 import GoalsRow from '@/components/church/GoalsRow.astro';
 import { ChevronDown } from 'lucide-react';
 import logoLightAsset from '@/assets/logo-light.svg';
@@ -212,7 +214,21 @@ const NAV_ITEMS = chrome.headerNav;
 // Flatten NAV_ITEMS into the shape MobileNav expects (a list of NavLink[]
 // with optional sub-items for the groups). MobileNav already handles both
 // shapes via its updated interface.
-const NAV_LINKS = NAV_ITEMS;
+// Phone menu groups (starter card 191): Site settings > Phone menu groups, else the church's
+// four built-in groups (src/data/wayfinding-defaults.ts), each drawn by MobileNav as one of its
+// folding groups. The header button's page is not listed again. The desktop menu above is not
+// touched (rule 4): it stays the editor's menu.
+const phoneGroups = phoneMenuGroups(
+  siteSettings?.phoneMenuGroups?.length ? siteSettings.phoneMenuGroups : PHONE_MENU_GROUPS,
+  headerCta.show ? headerCta.href : undefined,
+);
+const NAV_LINKS = phoneGroups.length
+  ? phoneGroups.map((g) => ({
+      kind: 'dropdown' as const,
+      label: g.title,
+      items: g.links.map((l) => ({ label: l.label, href: l.href })),
+    }))
+  : NAV_ITEMS;
 
 // The draft preview renders this header at /preview/...; publicPath() puts the
 // active state back on the live address (starter card 187, P2).
@@ -434,6 +450,7 @@ function isGroupActive(items: { href: string }[]) {
     <MobileNav
       client:idle
       links={NAV_LINKS}
+      grouped={phoneGroups.length > 0}
       siteSettings={mobileNavSettings}
       logoLightUrl={logoLightWebpMobile.src}
       logoDarkUrl={logoDarkWebpMobile.src}

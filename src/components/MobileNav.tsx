@@ -64,6 +64,15 @@
 //      of its pages, so on most pages the menu is its six main rows. The
 //      same day the rows went one type step smaller with less padding, and
 //      Give became sticky to the bottom of the sheet (see the button below).
+//   4b. PHONE MENU GROUPS (2026-10-27, starter card 191). Header.astro passes
+//      Site settings' phone menu groups, else the church's four built-in ones
+//      (src/data/wayfinding-defaults.ts: New here, Get involved, This week,
+//      Reach us), as dropdown items with `grouped` set. Each draws as the
+//      folding group above, with its name as an h2 around the button (the
+//      accordion pattern), so a screen reader can jump group to group. The
+//      group holding the current page starts open; on a page in none of them
+//      the first group ("New here") does, so Visit is never a tap away.
+//      The desktop nav is not touched (rule 4).
 //   5. THE CURRENT PAGE ROW is marked aria-current="page", which locks
 //      .nav-underline drawn (globals.css). It is read from
 //      window.location.pathname at render, which is safe because the sheet's
@@ -120,6 +129,9 @@ interface MobileNavSiteSettings {
 
 interface Props {
   links: NavItem[];
+  /** True when `links` are the phone menu groups (card 191): group names become h2s, and
+   *  the first group starts open when the current page is in none of them. */
+  grouped?: boolean;
   siteSettings?: MobileNavSiteSettings | null;
   /**
    * Optimized logo URLs pre-rendered by Astro's getImage() in the parent
@@ -199,6 +211,8 @@ interface MenuGroupProps {
   startsOpen: boolean;
   isCurrent: (href: string) => boolean;
   onFollow: () => void;
+  /** Wrap the label in an h2 (the phone menu groups, card 191). */
+  asHeading?: boolean;
 }
 
 /**
@@ -216,7 +230,14 @@ interface MenuGroupProps {
  * the tab order and out of the accessibility tree, and the label's
  * aria-expanded says which state the group is in.
  */
-function MenuGroup({ item, start, startsOpen, isCurrent, onFollow }: MenuGroupProps) {
+function MenuGroup({
+  item,
+  start,
+  startsOpen,
+  isCurrent,
+  onFollow,
+  asHeading = false,
+}: MenuGroupProps) {
   const [expanded, setExpanded] = useState(startsOpen);
   // Whether the visitor has pressed the label yet: until then the children
   // keep the sheet's opening stagger; after it they rise straight away.
@@ -224,32 +245,36 @@ function MenuGroup({ item, start, startsOpen, isCurrent, onFollow }: MenuGroupPr
   const id = groupId(item.label);
   const listId = `${id}-pages`;
 
+  const label = (
+    <button
+      type="button"
+      id={id}
+      aria-expanded={expanded}
+      aria-controls={listId}
+      onClick={() => {
+        setTouched(true);
+        setExpanded((v) => !v);
+      }}
+      className={`menu-row flex min-h-[44px] w-full items-center gap-3 py-3 text-left ${ROW_TYPE}`}
+      style={{ '--i': start } as CSSProperties}
+    >
+      {item.label}
+      <span
+        aria-hidden
+        className={`text-[0.55em] text-gold transition-transform duration-200 motion-reduce:transition-none ${expanded ? '' : '-rotate-90'}`}
+      >
+        &#9662;
+      </span>
+    </button>
+  );
+
   return (
     <li className="border-b border-bg/15">
       {/* The label: the rows' own face and size, and the one control that
           folds the group. The caret turns to show which way it will go. It
           names the list below (aria-labelledby), so a screen reader hears
           "Our Church, list, 5 items" once it is open. */}
-      <button
-        type="button"
-        id={id}
-        aria-expanded={expanded}
-        aria-controls={listId}
-        onClick={() => {
-          setTouched(true);
-          setExpanded((v) => !v);
-        }}
-        className={`menu-row flex min-h-[44px] w-full items-center gap-3 py-3 text-left ${ROW_TYPE}`}
-        style={{ '--i': start } as CSSProperties}
-      >
-        {item.label}
-        <span
-          aria-hidden
-          className={`text-[0.55em] text-gold transition-transform duration-200 motion-reduce:transition-none ${expanded ? '' : '-rotate-90'}`}
-        >
-          &#9662;
-        </span>
-      </button>
+      {asHeading ? <h2 className="m-0">{label}</h2> : label}
       <ul
         id={listId}
         aria-labelledby={id}
@@ -319,6 +344,7 @@ export default function MobileNav({
   renderingUrl,
   children,
   social,
+  grouped = false,
 }: Props) {
   const [open, setOpen] = useState(false);
   // Set once React has mounted, so a test (or anything else) can wait for the
@@ -346,7 +372,12 @@ export default function MobileNav({
     here !== undefined && normalizePath(here) === normalizePath(href);
   // A group starts open when the visitor is on one of its pages, so they can
   // see where they are; every other group starts folded.
-  const startsOpen = (item: DropdownNavGroup) => item.items.some((sub) => isCurrent(sub.href));
+  const holdsCurrent = (item: DropdownNavGroup) => item.items.some((sub) => isCurrent(sub.href));
+  // Phone menu groups (card 191): on a page in none of them, the first group starts open.
+  const firstGroup = links.find((l): l is DropdownNavGroup => l.kind === 'dropdown');
+  const noneCurrent = !links.some((l) => l.kind === 'dropdown' && holdsCurrent(l));
+  const startsOpen = (item: DropdownNavGroup) =>
+    holdsCurrent(item) || (grouped && noneCurrent && item === firstGroup);
   const starts = staggerStarts(links, startsOpen);
 
   // An outside address (Site settings' Online giving box, when it is filled)
@@ -501,6 +532,7 @@ export default function MobileNav({
                         startsOpen={startsOpen(item)}
                         isCurrent={isCurrent}
                         onFollow={close}
+                        asHeading={grouped}
                       />
                     ),
                   )}

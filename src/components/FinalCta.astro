@@ -142,7 +142,11 @@ const richSubhead = hasInlineRich(subheadRich);
 ---
 
 {hasBackground ? (
-  <section class="relative overflow-hidden bg-indigo-field text-bg" aria-labelledby={headingId}>
+  <section
+    class="relative overflow-hidden bg-indigo-field text-bg"
+    aria-labelledby={headingId}
+    data-final-cta
+  >
     <div class="absolute inset-0 z-0" aria-hidden="true">
       <SanityImage
         source={backgroundImage}
@@ -198,7 +202,7 @@ const richSubhead = hasInlineRich(subheadRich);
     </div>
   </section>
 ) : (
-  <section class="bg-band-gold text-band-ink" aria-labelledby={headingId}>
+  <section class="bg-band-gold text-band-ink" aria-labelledby={headingId} data-final-cta>
     <div class="cta-grid mx-auto grid max-w-content items-center px-gutter py-[clamp(64px,7vw,110px)]">
       <BuildingGlyph name="door" class="cta-glyph text-band-ink" />
       <div class="min-w-0">
