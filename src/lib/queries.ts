@@ -36,6 +36,22 @@ const SECTION_ARMS = `
     _type == "countdownSection" => { ..., link${CTA_PROJECTION} },
     _type == "noticeSection" => { ..., link${CTA_PROJECTION} },
     _type == "eventDetailsSection" => { ..., image${IMAGE_PROJECTION}, button${CTA_PROJECTION} },
+    // Starter card 193 (2026-10-27): blocks with pictures or buttons inside them. The contact card
+    // and calendar blocks carry plain fields only.
+    _type == "progressSection" => { ..., link${CTA_PROJECTION} },
+    _type == "iconCardsSection" => {
+      ...,
+      cards[]{ ..., image${IMAGE_PROJECTION}, link${CTA_PROJECTION} }
+    },
+    _type == "stepsRailSection" => {
+      ...,
+      steps[]{ ..., link${CTA_PROJECTION} },
+      link${CTA_PROJECTION}
+    },
+    _type == "hubSection" => {
+      ...,
+      groups[]{ ..., cards[]{ ..., image${IMAGE_PROJECTION}, link${CTA_PROJECTION} } }
+    },
     _type == "heroSection" => {
       ...,
       backgroundImage${IMAGE_PROJECTION},

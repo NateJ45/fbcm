@@ -112,6 +112,8 @@ const NON_STEGA_FIELDS = new Set([
   'urgency',
   'startTime',
   'endTime',
+  // Starter card 193: the progress bar's unit picks dollars or a plain count.
+  'unit',
 ]);
 
 /** Whether a field name skips stega encoding in preview (rule 8b). */

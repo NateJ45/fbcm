@@ -22,6 +22,12 @@ const BUILDER_TYPES = [
   'noticeSection',
   'eventDetailsSection',
   'scheduleSection',
+  'contactCardSection',
+  'progressSection',
+  'calendarSubscribeSection',
+  'iconCardsSection',
+  'stepsRailSection',
+  'hubSection',
 ];
 
 test.describe('Builder kit blocks', () => {
@@ -31,7 +37,9 @@ test.describe('Builder kit blocks', () => {
 
   test('every builder block draws on the wall', async ({ page }) => {
     for (const type of BUILDER_TYPES) {
-      await expect(page.locator(`${box(type)} [data-builder-block="${type}"]`)).toHaveCount(1);
+      // The contact card has two fixtures: its own words, and the church facts (card 198).
+      const n = type === 'contactCardSection' ? 2 : 1;
+      await expect(page.locator(`${box(type)} [data-builder-block="${type}"]`)).toHaveCount(n);
     }
   });
 
@@ -88,6 +96,75 @@ test.describe('Builder kit blocks', () => {
       'tel:+17655550100',
     );
   });
+  // ── Starter card 193 (2026-10-27) ─────────────────────────────────────────
+
+  test('contact card: big Call and Email buttons, details and directions', async ({ page }) => {
+    const card = page.locator(box('contactCardSection')).first();
+    const buttons = card.locator('[data-call-buttons] a');
+    await expect(buttons).toHaveCount(2);
+    await expect(buttons.first()).toHaveAttribute('href', 'tel:5555550100');
+    await expect(buttons.nth(1)).toHaveAttribute('href', 'mailto:youth@example.org');
+    expect((await buttons.first().boundingBox())?.height).toBeGreaterThanOrEqual(44);
+    await expect(card.getByRole('link', { name: /Get directions/ })).toHaveAttribute(
+      'href',
+      /^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=/,
+    );
+    await expect(card.getByText('Wednesdays: 6 pm to 8 pm')).toBeVisible();
+  });
+
+  test('contact card with nothing typed fills from the church facts (card 198)', async ({
+    page,
+  }) => {
+    const card = page.locator(box('contactCardSection')).nth(1);
+    await expect(card.getByRole('link', { name: '(555) 555-0142' })).toHaveAttribute(
+      'href',
+      'tel:+15555550142',
+    );
+    await expect(card.getByRole('link', { name: 'office@example.org' })).toBeVisible();
+    await expect(card.getByText('123 Example Street')).toBeVisible();
+    await expect(card.getByText('Springfield, IN 47300')).toBeVisible();
+    await expect(
+      card.getByText('Monday to Thursday: 9 am to 12 pm and 1 pm to 4 pm'),
+    ).toBeVisible();
+    // No "open now" status: this site has no structured hours (church-facts.ts).
+    await expect(card.locator('[data-biz-status], [data-to-confirm]')).toHaveCount(0);
+  });
+
+  test('progress: one progressbar with a spoken value and twenty steps', async ({ page }) => {
+    const bar = page.locator(`${box('progressSection')} [role="progressbar"]`);
+    await expect(bar).toHaveAttribute('aria-valuenow', '65');
+    await expect(bar).toHaveAttribute('aria-valuetext', '$32,500 of $50,000, 65 percent');
+    await expect(bar.locator('.bb-progress__step')).toHaveCount(20);
+  });
+
+  test('calendar buttons subscribe to the typed feed and open safely', async ({ page }) => {
+    const subscribe = page.locator(`${box('calendarSubscribeSection')} [data-bb-subscribe] a`);
+    await expect(subscribe).toHaveCount(3);
+    await expect(subscribe.nth(1)).toHaveAttribute(
+      'href',
+      'webcal://example.org/calendar/events.ics',
+    );
+    await expect(subscribe.first()).toHaveAttribute('rel', /noopener/);
+  });
+
+  test('icon cards and the steps rail: icons, numbered steps, one list each', async ({ page }) => {
+    const cards = page.locator(`${box('iconCardsSection')} .bb-icard`);
+    await expect(cards).toHaveCount(3);
+    await expect(cards.first().locator('svg.bb-icon')).toHaveCount(1);
+    const steps = page.locator(`${box('stepsRailSection')} ol > li`);
+    await expect(steps).toHaveCount(3);
+    await expect(steps.nth(2).locator('.bb-rail__n')).toHaveText('Step 3');
+  });
+
+  test('hub: the index jumps to a group and follows the scroll', async ({ page }) => {
+    const hub = page.locator(box('hubSection'));
+    const jumps = hub.locator('[data-hub-jump]');
+    await expect(jumps).toHaveCount(3);
+    const target = (await jumps.nth(2).getAttribute('href')) ?? '';
+    await jumps.nth(2).click();
+    await expect(page.locator(target)).toBeInViewport();
+    await expect(jumps.nth(2)).toHaveAttribute('aria-current', 'true');
+  });
 });
 
 test.describe('Builder kit blocks on a small phone', () => {
@@ -101,6 +178,9 @@ test.describe('Builder kit blocks on a small phone', () => {
         const el = document.querySelector(`[data-section-type="${type}"]`);
         if (!el) continue;
         for (const node of el.querySelectorAll('*')) {
+          // The hub's phone index is a row of chips that scrolls sideways inside
+          // its own box (overflow-x: auto); the box itself is checked.
+          if (node.closest('.bb-hub__index ol')) continue;
           const r = node.getBoundingClientRect();
           if (r.width > 0 && r.right > window.innerWidth + 0.5)
             out.push(`${type}: ${node.tagName}`);

@@ -1,0 +1,41 @@
+---
+// Safe to edit by hand
+// "Add our calendar to your phone" (starter PORTS.md card 193): the subscribe buttons on their own,
+// with a heading and a line. With no feed typed on the block it is the church's own Church Trac
+// calendar, the same feed What's On reads (codeFor() and feedUrl() in church-calendar-feed.ts,
+// Site settings > Church systems > Events calendar), so a bare block fills itself. A typed feed
+// (an https:// or webcal:// address, or a path on this site such as /visit/sunday.ics) wins; with
+// no usable feed the block draws nothing. The links are derived in builder-blocks.ts.
+import BuilderBand from './BuilderBand.astro';
+import SubscribeButtons from './SubscribeButtons.astro';
+import { subscribeLinks } from '@/lib/builder-blocks';
+import { site } from '@/data/site';
+import { getSiteSettings } from '@/lib/queries';
+import { codeFor, feedUrl } from '@/lib/church-calendar-feed';
+import { plain } from '@/lib/builder-blocks';
+import type { ProjectedCalendarSubscribeSection } from '@/lib/builderBlocks.types';
+
+interface Props {
+  block: ProjectedCalendarSubscribeSection;
+  surface?: 'background' | 'muted';
+  headingId: string;
+}
+const { block, surface, headingId } = Astro.props;
+const code = plain(block.feed) ? null : codeFor(await getSiteSettings());
+const feed = plain(block.feed) || (code ? feedUrl(code) : '');
+const usable = subscribeLinks(feed, site.name, site.url) !== null;
+---
+
+{usable && (
+  <BuilderBand
+    type={block._type}
+    heading={block.heading}
+    intro={block.intro}
+    headingId={headingId}
+    surface={surface}
+    label="Add our calendar"
+  >
+    <SubscribeButtons feed={feed} />
+    <p class="bb-small">New dates then show up on your phone by themselves.</p>
+  </BuilderBand>
+)}

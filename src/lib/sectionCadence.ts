@@ -66,6 +66,13 @@ export const CONTENT_TYPES = new Set([
   'countdownSection',
   'eventDetailsSection',
   'scheduleSection',
+  // Starter card 193 (2026-10-27).
+  'contactCardSection',
+  'progressSection',
+  'calendarSubscribeSection',
+  'iconCardsSection',
+  'stepsRailSection',
+  'hubSection',
   // scaffold: church
   'timelineSection',
   'documentListSection',
