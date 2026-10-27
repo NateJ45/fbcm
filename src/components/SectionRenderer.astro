@@ -441,6 +441,10 @@ const editKeyOf = (block: unknown) => {
           preacher={preacher}
           calendarHref={calendarHref}
           factBands={rows.map(({ block }) => block as LinkableBand)}
+          heroStyle={s.heroStyle}
+          glance={s.glance}
+          backgroundVideo={s.backgroundVideo}
+          backgroundVideoPhone={s.backgroundVideoPhone}
           headingId={headingId}
         />
       ) : s._type === 'ctaBandSection' ? (

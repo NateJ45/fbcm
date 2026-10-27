@@ -15,6 +15,12 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type Glance = {
+  title?: string;
+  lines?: Array<string>;
+  link?: CtaBlock;
+};
+
 export type SanityImageAssetReference = {
   _ref: string;
   _type: 'reference';
@@ -259,6 +265,27 @@ export type BusinessInfo = {
   }>;
 };
 
+export type HomePageReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'homePage';
+};
+
+export type JournalPageReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'journalPage';
+};
+
+export type PageReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'page';
+};
+
 export type SiteSettings = {
   _id: string;
   _type: 'siteSettings';
@@ -362,6 +389,30 @@ export type SiteSettings = {
     _type: 'footerColumn';
     _key: string;
   }>;
+  phoneMenuGroups?: Array<{
+    title?: string;
+    links?: Array<
+      {
+        _key: string;
+      } & NavLink
+    >;
+    _type: 'phoneMenuGroup';
+    _key: string;
+  }>;
+  actionBars?: Array<{
+    everyPage?: boolean;
+    page?: HomePageReference | JournalPageReference | PageReference;
+    text?: string;
+    action?: NavLink;
+    _type: 'actionBar';
+    _key: string;
+  }>;
+  whereNext?: Array<{
+    link?: NavLink;
+    note?: string;
+    _type: 'whereNextRow';
+    _key: string;
+  }>;
   headerCta?: {
     show?: boolean;
     label?: string;
@@ -428,32 +479,11 @@ export type SiteSettings = {
   };
 };
 
-export type HomePageReference = {
-  _ref: string;
-  _type: 'reference';
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: 'homePage';
-};
-
-export type JournalPageReference = {
-  _ref: string;
-  _type: 'reference';
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: 'journalPage';
-};
-
 export type PrivacyPageReference = {
   _ref: string;
   _type: 'reference';
   _weak?: boolean;
   [internalGroqTypeReferenceTo]?: 'privacyPage';
-};
-
-export type PageReference = {
-  _ref: string;
-  _type: 'reference';
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: 'page';
 };
 
 export type NavLink = {
@@ -1693,6 +1723,18 @@ export type HeroSection = {
   primaryCta?: CtaBlock;
   secondaryCta?: CtaBlock;
   size?: 'tall' | 'short';
+  heroStyle?: 'standard' | 'photo';
+  glance?: Glance;
+  backgroundVideo?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: 'file';
+  };
+  backgroundVideoPhone?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: 'file';
+  };
 };
 
 export type PrivacyPage = {
@@ -2539,6 +2581,7 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+  | Glance
   | SanityImageAssetReference
   | TimelineRowImage
   | SanityFileAssetReference
@@ -2556,11 +2599,11 @@ export type AllSanitySchemaTypes =
   | StudioGuide
   | NotFoundPage
   | BusinessInfo
-  | SiteSettings
   | HomePageReference
   | JournalPageReference
-  | PrivacyPageReference
   | PageReference
+  | SiteSettings
+  | PrivacyPageReference
   | NavLink
   | DynamicListSection
   | TeamSection

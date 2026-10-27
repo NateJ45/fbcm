@@ -22,6 +22,13 @@
 //      band; otherwise it stays inside its own band. Two frames draw
 //      two lancets, one draws one; none draws the words alone. The header does
 //      NOT overlay it (heroOverlay.ts): the band is a colour, not a picture.
+//   5) "photo" hero (starter card 189, opt-in): the block's Style set to
+//      "Photo with a short-facts card" and a photo. PhotoHero.astro (PORTABLE)
+//      draws it: white words over the first photo under an indigo shade
+//      (--photo-scrim = --color-accent-dark), a short-facts card beside them and
+//      an optional silent clip. Checked first; without the style or a photo the
+//      shapes above draw exactly as before. A tall one with an empty card shows
+//      This Sunday from Site settings' serviceTime (never typed here).
 //
 // THE HEADER OVERLAYS THIS SECTION (plan 3 task 3). On a page that opens with
 // an image hero the bar is transparent and is pulled down onto the picture by
@@ -38,6 +45,7 @@
 // animations to this section.
 
 import HeroBackground from '@/components/HeroBackground.astro';
+import PhotoHero, { type PhotoHeroGlance, type PhotoHeroVideo } from '@/components/PhotoHero.astro';
 import RiseWords from '@/components/RiseWords.astro';
 import SanityImage from '@/components/SanityImage.astro';
 import CtaLink from '@/components/CtaLink.astro';
@@ -173,6 +181,12 @@ interface Props {
    * label matching, and the facts render exactly as before.
    */
   factBands?: LinkableBand[];
+  /** The block's Style (starter card 189). 'photo' draws PhotoHero.astro when there is a photo. */
+  heroStyle?: string | null;
+  /** The photo hero's short-facts card and silent clips; ignored by every other shape. */
+  glance?: PhotoHeroGlance | null;
+  backgroundVideo?: PhotoHeroVideo | null;
+  backgroundVideoPhone?: PhotoHeroVideo | null;
 }
 
 const {
@@ -195,6 +209,10 @@ const {
   preacher,
   calendarHref,
   factBands = [],
+  heroStyle,
+  glance,
+  backgroundVideo,
+  backgroundVideoPhone,
 } = Astro.props as Props;
 
 const heroFacts = (facts ?? []).filter((f) => f?.label || f?.value).slice(0, 3);
@@ -396,9 +414,41 @@ const windowOrder =
 const middleIndex = windowFrames.length === 3 ? 1 : windowFrames.length === 1 ? 0 : -1;
 // No frames, nothing to drop: the flag only takes effect with a window.
 const windowDrops = dropInto && windowOrder.length > 0;
+
+// The photo hero (starter card 189). Its card, when the editor leaves it empty on a tall opener,
+// is This Sunday: the service time from Site settings (cleaned of stega, never typed here) and a
+// link to the visit page. A short opener with an empty card draws none.
+const isPhotoHero = splitStega(heroStyle ?? '').cleaned === 'photo' && hasImage;
+const glanceEmpty = !(glance?.title?.trim() || glance?.lines?.some((l) => l?.trim()) || glance?.link?.label);
+const photoGlance: PhotoHeroGlance | null | undefined =
+  isPhotoHero && glanceEmpty && size === 'tall' && serviceTimeClean
+    ? {
+        title: 'This Sunday',
+        lines: [staticSunday(serviceTimeClean)],
+        link: {
+          label: 'Plan your visit',
+          linkType: 'internal',
+          internalLink: { _type: 'page', slug: 'visit' },
+        },
+      }
+    : glance;
 ---
 
-{isWindow ? (
+{isPhotoHero ? (
+  <PhotoHero
+    eyebrow={eyebrow}
+    headline={headline}
+    subhead={subhead}
+    image={effectiveImages[0]}
+    primaryCta={primaryCta}
+    secondaryCta={secondaryCta}
+    headingId={headingId}
+    size={size}
+    glance={photoGlance}
+    video={backgroundVideo}
+    videoPhone={backgroundVideoPhone}
+  />
+) : isWindow ? (
   <section
     class:list={[
       'hero-window relative z-[2] overflow-x-clip',

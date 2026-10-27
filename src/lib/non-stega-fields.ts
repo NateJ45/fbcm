@@ -47,6 +47,9 @@ const NON_STEGA_FIELDS = new Set([
   'tone',
   'variant',
   'width',
+  // Starter card 189: the opener's Style. Hero.astro compares it to 'photo'; an encoded value
+  // would draw the standard opener in the preview.
+  'heroStyle',
   // Not in this template yet, but standard enum names across the site family.
   // Carried so a block ported from a sibling repo is not a preview-only bug
   // waiting to be found.
