@@ -26,3 +26,13 @@ test('no hero, or a hero with no image, keeps the paper bar', () => {
   assert.equal(shouldOverlayHeader([{ _type: 'richTextSection' }]), false);
   assert.equal(shouldOverlayHeader([]), false);
 });
+
+test('the photo hero (starter card 189) overlays whatever its layout, but only with a photo', () => {
+  for (const layout of ['full', 'split', 'window']) {
+    assert.equal(
+      shouldOverlayHeader([{ _type: 'heroSection', heroStyle: 'photo', layout, frames: [photo] }]),
+      true,
+    );
+  }
+  assert.equal(shouldOverlayHeader([{ _type: 'heroSection', heroStyle: 'photo' }]), false);
+});

@@ -203,3 +203,40 @@ The shared logic lives in `src/lib/heading-accent.ts` (`splitHeadingAccent(headi
 ---
 
 Cross-reference: `polish-layer.md` covers the non-animation visual layer (brand stripe, card-lift, surface-warm, reading-progress, sticky-header, paper-grain, print stylesheet).
+
+---
+
+## The flow layer: installed, not chosen (starter card 192, 2026-10-27)
+
+The starter's flow layer (from FBC Auburn: headings rising line by line out of a mask, everything
+else fading up as it arrives, photos settling and drifting in their frames, pages lifting between
+clicks) is installed here as the PORTABLE files (`src/scripts/flow.ts`, `src/styles/flow.css`
+imported by `globals.css`, `src/lib/flow-split.ts`, `src/components/FlowMotion.astro`), the motion
+tokens in the one scale (`--motion-*`), the BaseLayout wiring (`flow` and `motion` props,
+`hasFlow()`, `data-flow-full` on `<main>`; Home and the 404 pass `flow="full"`), the print rules,
+and the motion wall (`/styleguide/motion/full/` and `/fade/`, driven by
+`tests/flow-motion.spec.ts`).
+
+**This site's `layout.motion` stays `reveal`** (`src/data/layout.ts`), so no real page loads the
+flow script or carries `data-motion`. The reason is the brief: PRODUCT.md's principle 5 ("Motion
+only where a page opens ... nothing that moves while you read") and DESIGN.md's "Don't add ...
+parallax or scroll-linked text motion". `flow` rises every heading and paragraph as the reader
+scrolls and drifts photos with the scroll; even `fade` fades every unit below the fold as it
+arrives. Both are motion while you read. The church's motion stays what it was: the word rise on
+page openers (`RiseWords.astro`), the one-photo push-in, the slideshow, and `[data-reveal]` only on
+figures, numerals, covers, glyph draws and the Hannaford ink-in.
+
+**If it is ever switched on**, the two do not double-animate: the layer leaves everything on the
+first screen as it is (so the page-opening `h1` and its `RiseWords` are never a unit), skips
+`.hero-entry-stagger`, `.hero-slideshow` and `.img-curtain`, and under `html.flow-armed` shows the
+site's own `[data-reveal]` and `[data-stagger-grid]` at rest so they never play a second motion.
+Measure Home's LCP and CLS before and after (the card's method) and update PRODUCT.md first.
+
+## Photo hero clip (starter card 189, 2026-10-27)
+
+The opener's "Photo with a short-facts card" style (`PhotoHero.astro`) can play a silent clip over
+its photo (`HeroVideo.astro`, `src/lib/hero-video.ts`, both PORTABLE): muted, looping,
+`preload="none"`, started after `load` with the photo's `currentSrc` as poster, under the indigo
+shade, with a remembered Pause button (WCAG 2.2.2), paused off screen. No clip under reduced
+motion, Save-Data, 2G/3G, a measured downlink under 1 Mbps, or print; phones under 768px play the
+phone copy. The photo stays the LCP. No live page uses the style yet (PENDING 9b).

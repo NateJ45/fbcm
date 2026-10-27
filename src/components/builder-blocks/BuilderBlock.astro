@@ -7,6 +7,7 @@
 // dates, an event whose dates have all passed, a schedule with nothing in it)
 // renders nothing.
 import '@/styles/builder-blocks.css';
+import '@/styles/builder-blocks-more.css';
 import type { BuilderPageBlock } from '@/lib/builderBlocks.types';
 import type { SectionSiteSettings } from '@/lib/pageBuilder.types';
 import ColumnsBlock from './ColumnsBlock.astro';
@@ -17,6 +18,12 @@ import CountdownBlock from './CountdownBlock.astro';
 import NoticeBlock from './NoticeBlock.astro';
 import EventDetailsBlock from './EventDetailsBlock.astro';
 import ScheduleBlock from './ScheduleBlock.astro';
+import ContactCardBlock from './ContactCardBlock.astro';
+import ProgressBlock from './ProgressBlock.astro';
+import CalendarSubscribeBlock from './CalendarSubscribeBlock.astro';
+import IconCardsBlock from './IconCardsBlock.astro';
+import StepsRailBlock from './StepsRailBlock.astro';
+import HubBlock from './HubBlock.astro';
 
 interface Props {
   block: BuilderPageBlock;
@@ -49,4 +56,16 @@ const common = { surface, headingId };
   <EventDetailsBlock block={b} {...common} settings={settings} isFirst={isFirst} />
 ) : b._type === 'scheduleSection' ? (
   <ScheduleBlock block={b} {...common} />
+) : b._type === 'contactCardSection' ? (
+  <ContactCardBlock block={b} {...common} />
+) : b._type === 'progressSection' ? (
+  <ProgressBlock block={b} {...common} />
+) : b._type === 'calendarSubscribeSection' ? (
+  <CalendarSubscribeBlock block={b} {...common} />
+) : b._type === 'iconCardsSection' ? (
+  <IconCardsBlock block={b} {...common} isFirst={isFirst} />
+) : b._type === 'stepsRailSection' ? (
+  <StepsRailBlock block={b} {...common} />
+) : b._type === 'hubSection' ? (
+  <HubBlock block={b} {...common} isFirst={isFirst} />
 ) : null}

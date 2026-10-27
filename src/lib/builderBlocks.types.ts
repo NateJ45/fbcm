@@ -6,6 +6,7 @@
 // rather than read from sanity.types.ts so a component can be typed against the
 // projected shape, which typegen does not know.
 import type { ProjectedCtaBlock, ProjectedImage } from './pageBuilder.types';
+import type { ChurchFactsSettings } from './church-facts';
 
 /** Portable text as stored; rendered by PortableText. */
 type Blocks = unknown[];
@@ -94,6 +95,81 @@ export interface ProjectedScheduleSection extends Base {
 }
 
 /** Every builder-kit block, as BuilderBlock.astro receives it. */
+
+// ── Card 193 ────────────────────────────────────────────────────────────────
+
+export interface ProjectedContactCardSection extends Base {
+  _type: 'contactCardSection';
+  callButtons?: boolean;
+  phone?: string;
+  email?: string;
+  address?: string;
+  hours?: string;
+  /** Set only by the styleguide wall's fixture (card 198): Site settings-shaped church facts. */
+  facts?: ChurchFactsSettings | null;
+}
+
+export interface ProjectedProgressSection extends Base {
+  _type: 'progressSection';
+  unit?: string;
+  goal?: number;
+  raised?: number;
+  asOf?: string;
+  link?: ProjectedCtaBlock | null;
+}
+
+export interface ProjectedCalendarSubscribeSection extends Base {
+  _type: 'calendarSubscribeSection';
+  feed?: string;
+}
+
+export interface ProjectedIconCardsSection extends Base {
+  _type: 'iconCardsSection';
+  cards?: {
+    _key: string;
+    icon?: string;
+    image?: ProjectedImage | null;
+    title?: string;
+    body?: string;
+    note?: string;
+    link?: ProjectedCtaBlock | null;
+  }[];
+}
+
+export interface ProjectedStepsRailSection extends Base {
+  _type: 'stepsRailSection';
+  steps?: {
+    _key: string;
+    icon?: string;
+    title?: string;
+    body?: string;
+    link?: ProjectedCtaBlock | null;
+  }[];
+  firstStepCard?: boolean;
+  endHeading?: string;
+  link?: ProjectedCtaBlock | null;
+}
+
+export interface ProjectedHubSection extends Base {
+  _type: 'hubSection';
+  groups?: {
+    _key: string;
+    title?: string;
+    line?: string;
+    cards?: {
+      _key: string;
+      image?: ProjectedImage | null;
+      icon?: string;
+      title?: string;
+      label?: string;
+      when?: string;
+      place?: string;
+      body?: string;
+      link?: ProjectedCtaBlock | null;
+    }[];
+  }[];
+}
+
 export type BuilderPageBlock =
   | ProjectedColumnsSection
   | ProjectedButtonRowSection
@@ -102,7 +178,13 @@ export type BuilderPageBlock =
   | ProjectedCountdownSection
   | ProjectedNoticeSection
   | ProjectedEventDetailsSection
-  | ProjectedScheduleSection;
+  | ProjectedScheduleSection
+  | ProjectedContactCardSection
+  | ProjectedProgressSection
+  | ProjectedCalendarSubscribeSection
+  | ProjectedIconCardsSection
+  | ProjectedStepsRailSection
+  | ProjectedHubSection;
 
 /** The `_type` of every builder-kit block, for SectionRenderer's one branch. */
 export const BUILDER_BLOCK_TYPES: ReadonlySet<string> = new Set<BuilderPageBlock['_type']>([
@@ -114,6 +196,12 @@ export const BUILDER_BLOCK_TYPES: ReadonlySet<string> = new Set<BuilderPageBlock
   'noticeSection',
   'eventDetailsSection',
   'scheduleSection',
+  'contactCardSection',
+  'progressSection',
+  'calendarSubscribeSection',
+  'iconCardsSection',
+  'stepsRailSection',
+  'hubSection',
 ]);
 
 export const isBuilderBlock = (b: { _type: string }): b is BuilderPageBlock =>

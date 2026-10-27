@@ -36,12 +36,32 @@ const SECTION_ARMS = `
     _type == "countdownSection" => { ..., link${CTA_PROJECTION} },
     _type == "noticeSection" => { ..., link${CTA_PROJECTION} },
     _type == "eventDetailsSection" => { ..., image${IMAGE_PROJECTION}, button${CTA_PROJECTION} },
+    // Starter card 193 (2026-10-27): blocks with pictures or buttons inside them. The contact card
+    // and calendar blocks carry plain fields only.
+    _type == "progressSection" => { ..., link${CTA_PROJECTION} },
+    _type == "iconCardsSection" => {
+      ...,
+      cards[]{ ..., image${IMAGE_PROJECTION}, link${CTA_PROJECTION} }
+    },
+    _type == "stepsRailSection" => {
+      ...,
+      steps[]{ ..., link${CTA_PROJECTION} },
+      link${CTA_PROJECTION}
+    },
+    _type == "hubSection" => {
+      ...,
+      groups[]{ ..., cards[]{ ..., image${IMAGE_PROJECTION}, link${CTA_PROJECTION} } }
+    },
     _type == "heroSection" => {
       ...,
       backgroundImage${IMAGE_PROJECTION},
       frames[]${IMAGE_PROJECTION},
       primaryCta${CTA_PROJECTION},
-      secondaryCta${CTA_PROJECTION}
+      secondaryCta${CTA_PROJECTION},
+      // The photo hero (starter card 189): the clips as URL and type, the short-facts card's link resolved.
+      backgroundVideo{ "url": asset->url, "mimeType": asset->mimeType },
+      backgroundVideoPhone{ "url": asset->url, "mimeType": asset->mimeType },
+      glance{ ..., link${CTA_PROJECTION} }
     },
     _type == "ctaBandSection" => {
       ...,
@@ -361,6 +381,17 @@ export const SITE_SETTINGS_PROJECTION = `{
     },
     legalNav[]${NAV_LINK_PROJECTION},
     headerCta{ show, label, link${NAV_LINK_PROJECTION} },
+    // Wayfinding (starter card 191, src/lib/wayfinding.ts). Empty on the live site today, so the
+    // church defaults in src/data/wayfinding-defaults.ts draw until an editor fills them in.
+    phoneMenuGroups[]{ _key, title, links[]${NAV_LINK_PROJECTION} },
+    whereNext[]{ _key, note, link${NAV_LINK_PROJECTION} },
+    actionBars[]{
+      _key,
+      everyPage,
+      text,
+      "page": page->{ "docType": _type, "slug": slug.current, archived },
+      action${NAV_LINK_PROJECTION}
+    },
     showEmail,
     showSocials,
     showFooterSocials,
@@ -716,6 +747,14 @@ export async function getAllPageSlugs(): Promise<string[]> {
     [],
   );
   return list.map((p) => p.slug).filter(Boolean);
+}
+
+// The published page slugs, once per build (starter card 191): the footer's where-next rows
+// check each Studio page they point at against it, and the footer renders on every page.
+let publishedSlugs: Promise<string[]> | null = null;
+export function getPublishedPageSlugsOnce(): Promise<string[]> {
+  publishedSlugs ??= getAllPageSlugs();
+  return publishedSlugs;
 }
 
 // Pages whose "Show in the footer" switch is on (2026-09-24, feat/the-visitor).

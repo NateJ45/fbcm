@@ -89,6 +89,15 @@
    line ends the run and keeps this import out of the rewrite. */
 @import '@fontsource-variable/sofia-sans-semi-condensed';
 
+/* Metric-matched fallback faces for the display font (npm run font-fallback, card 188) and the
+   shape-class contract (card 188; class rules only, no site markup uses them yet). Both sit after
+   the blank line above, outside the run apply-brand rewrites. */
+@import './font-fallbacks.css';
+@import './shapes.css';
+/* The flow layer (src/scripts/flow.ts), PORTABLE, starter card 192. Every rule is keyed on
+   html[data-motion] or a class the script adds, so this site's 'reveal' draws as before. */
+@import './flow.css';
+
 /* shadcn's custom data-state variants, vendored from shadcn/tailwind.css
    (shadcn 4.19.0, lines 28-87), in place of `@import 'shadcn/tailwind.css'`
    (2026-09-23, dead-CSS trim). That import also registers @property rules for
@@ -270,7 +279,11 @@
      relying on the copy. Castoro is the reading face (roman + italic, one
      weight each). Sofia Sans Semi Condensed is the UI face: eyebrows, labels,
      nav, buttons. */
-  --font-display: 'Castoro Titling', Georgia, serif;
+  --font-display:
+    'Castoro Titling', 'Castoro Titling Fallback', 'Castoro Titling Fallback Times', Georgia, serif;
+  --font-display-caps:
+    'Castoro Titling', 'Castoro Titling Caps Fallback', 'Castoro Titling Caps Fallback Times',
+    Georgia, serif;
   --font-body: 'Castoro', Georgia, serif;
   --font-ui: 'Sofia Sans Semi Condensed Variable', system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
@@ -656,6 +669,126 @@
      weights, so a rule keeps its relationship to the text either way. */
   --hair: rgba(241, 236, 227, 0.16);
   --hair-strong: rgba(241, 236, 227, 0.34);
+}
+
+/* ---------- The one scale (starter PORTS.md card 188, named for this site 2026-10-27) ----------
+   Every size, corner, gap, shadow and button measure a component or a stylesheet asks for comes
+   from here, so a new rule picks a token before it invents a number. These NAME what the site
+   already draws (its own type tokens in @theme above, its --radius multiples, its fluid spacing,
+   the 44px button), so adding the block moved nothing. Not theme-dependent. Placed AFTER the
+   palette's :root and .dark blocks because apply-brand rewrites the FIRST of each (and do not run
+   apply-brand here: its patterns are older than this file). Detail: docs/agent/design-tokens.md. */
+:root {
+  /* Text. */
+  --fs-tag: var(--text-ui); /* eyebrows, tags, buttons, captions */
+  --fs-small: 0.875rem; /* meta lines, footnotes */
+  --fs-body: var(--text-body); /* reading text */
+  --fs-lead: var(--text-lede); /* a page or band intro */
+  --fs-button: var(--text-ui);
+  --fs-title: var(--text-h4); /* a card or block title */
+  --fs-title-sm: var(--text-h5); /* a row title in a list */
+  --fs-numeral: var(--text-h3); /* big figures: times, dates */
+  --lh-body: 1.7;
+  --lh-title: 1.2;
+  --lh-heading: 1.1;
+  /* Figures: the face's own. Castoro Titling is capitals only, so nothing sets old-style numerals. */
+  --figures: normal;
+
+  /* Corners, all from --radius (brand.config.json "radius"). */
+  --radius-control: calc(var(--radius) * 0.6); /* rounded-sm: buttons, fields, tabs */
+  --radius-card: calc(var(--radius) * 0.8); /* rounded-md: cards, panels, a standalone picture */
+  --radius-inner: var(--radius-control); /* a picture inside a card or a list row */
+  --radius-tag: var(--radius-control);
+  --radius-pill: 9999px;
+
+  /* Space inside things. The rhythm between bands is --spacing-section-md / -lg. */
+  --pad-card: var(--spacing-l);
+  --pad-panel: var(--spacing-l);
+  --gap-grid: var(--spacing-m);
+  --gap-heading: var(--spacing-l);
+
+  /* Shadows. This site draws none on cards (the card lift is gone, see below); the raised one is
+     Tailwind's shadow-lg for a panel over another layer. */
+  --shadow-card: none;
+  --shadow-raised: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Buttons (CtaLink): the 44px tap-target floor and the eyebrow tracking. */
+  --btn-height: 44px;
+  --tracking-label: var(--tracking-eyebrow);
+  --btn-tracking: var(--tracking-label);
+
+  /* Focus: one ring (ring-2, offset 2). */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Motion (starter card 192): the flow layer's timings and distances, read by
+     src/styles/flow.css and src/scripts/flow.ts. This site keeps layout.motion at 'reveal'
+     (PRODUCT.md principle 5: motion only where a page opens, nothing moves while you read), so
+     nothing reads them on a real page; the motion wall (/styleguide/motion/) does. The values
+     are the starter's, on this site's own interaction ease. */
+  --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-fade: 200ms;
+  --motion-fade-distance: 8px;
+  --motion-stagger-calm: 40ms;
+  --motion-rise: 600ms;
+  --motion-rise-distance: 16px;
+  --motion-stagger: 60ms;
+  --motion-line: 800ms;
+  --motion-line-stagger: 80ms;
+  --motion-photo: 900ms;
+  --motion-photo-zoom: 1.06;
+  --motion-side: 800ms;
+  --motion-side-distance: 32px;
+  --motion-page-out: 120ms;
+  --motion-page-in: 260ms;
+  --motion-page-distance: 12px;
+
+  /* Shapes (starter card 188, src/styles/shapes.css): a block that uses the shape classes reads
+     as this church, not as the starter. The standalone picture (.shape-gable) is cut to the
+     sanctuary's lancet window, the same pointed arch ArchFrame and the Lancet band draw (two
+     circular arcs, traced from .arch-lancet's mask as a polygon so it scales with the box), with
+     square sides. --gable-pitch is where the arch springs, measured down the box: 40% reads
+     as the window on a portrait box and stays a gentle point on a wide one. The slab is the soft
+     paper (a taupe tint), the empty tile the indigo band the arches fill with, the hover zoom
+     quieter than the starter's. */
+  --gable-pitch: 40%;
+  --shape-gable-polygon: polygon(
+    0 100%,
+    0% var(--gable-pitch),
+    1.6% calc(var(--gable-pitch) * 0.779),
+    6.3% calc(var(--gable-pitch) * 0.568),
+    13.9% calc(var(--gable-pitch) * 0.377),
+    24% calc(var(--gable-pitch) * 0.213),
+    36.2% calc(var(--gable-pitch) * 0.086),
+    50% 0,
+    63.8% calc(var(--gable-pitch) * 0.086),
+    76% calc(var(--gable-pitch) * 0.213),
+    86.1% calc(var(--gable-pitch) * 0.377),
+    93.7% calc(var(--gable-pitch) * 0.568),
+    98.4% calc(var(--gable-pitch) * 0.779),
+    100% var(--gable-pitch),
+    100% 100%
+  );
+  --shape-feature-clip: var(--shape-gable-polygon);
+  --shape-feature-radius: 0;
+  --shape-slab: var(--color-bg-soft);
+  --shape-slab-inset: 34%;
+  --shape-tile: var(--color-band-indigo);
+  --shape-zoom: 1.04;
+}
+
+/* The photo hero (starter card 189, src/styles/photo-hero.css, PORTABLE) on this site's edges and
+   in its furniture face: the words and card sit on the shared gutter the header and every band use,
+   and the eyebrow is the UI face's label (white: gold over the shade would fall under 4.5:1 on a
+   bright photo). `:root` lifts these over the component sheet, which loads after this one. */
+:root .ph-hero {
+  --ph-gutter: var(--spacing-gutter);
+}
+:root .ph-eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
 }
 
 /* ---------- Base resets and defaults ---------------------------------- */
@@ -3128,10 +3261,17 @@ body::before {
     transform: none !important;
     translate: none !important;
   }
-  [data-stagger-grid] > * {
+  [data-stagger-grid] > *,
+  .flow,
+  .flow-line__in {
     opacity: 1 !important;
     transform: none !important;
     translate: none !important;
+  }
+  /* The flow layer's heading masks (starter card 192): nothing is clipped on paper. flow.ts also
+     drops html.motion on beforeprint, which puts every unit on its resting frame. */
+  .flow-line {
+    clip-path: none !important;
   }
   /* Curtain: skip the reveal entirely — image always visible */
   .img-curtain {
@@ -3381,4 +3521,11 @@ body::before {
     opacity: 1;
     translate: none;
   }
+}
+
+/* Uppercase display text takes the capitals fallback (font-fallbacks.css, fbcm card 188 roll):
+   Castoro Titling's capitals and lowercase share one width, the lowercase-tuned fallback runs
+   wide on caps and wrapped eyebrows before the font arrived. */
+.font-display.uppercase {
+  font-family: var(--font-display-caps);
 }

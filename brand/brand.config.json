@@ -70,9 +70,16 @@
       "--tint-rgb": "213, 155, 41"
     }
   },
+  "layout": {
+    "header": "inline",
+    "hero": "bleed",
+    "density": "standard",
+    "cards": "standard",
+    "motion": "reveal"
+  },
   "fonts": {
     "display": {
-      "familyValue": "\"Castoro Titling\", Georgia, serif",
+      "familyValue": "\"Castoro Titling\", \"Castoro Titling Fallback\", \"Castoro Titling Fallback Times\", Georgia, serif",
       "ogFontStack": "Castoro Titling, Georgia, serif",
       "imports": ["@fontsource/castoro-titling"]
     },

@@ -407,6 +407,10 @@ export default defineConfig({
       // "*.woff2"`) after any change here.
       assetsInlineLimit: (filePath, content) => {
         if (/\.(woff2?|ttf|otf|eot)$/i.test(filePath)) return false;
+        // The flow layer's loader (starter card 192) stays a file of its own: the PORTABLE
+        // tests/flow-motion.spec.ts proves "the script fails to load, nothing stays hidden" by
+        // blocking it by name, which a data: URL would slip past.
+        if (/FlowMotion/.test(filePath)) return false;
         if (/\.css$/i.test(filePath)) return content.length < CSS_INLINE_LIMIT;
         return content.length < SITE_ASSET_INLINE_LIMIT;
       },

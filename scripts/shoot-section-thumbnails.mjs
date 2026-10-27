@@ -209,9 +209,10 @@ try {
     els.map((el) => el.getAttribute('data-section-type')),
   );
   let shot = 0;
-  for (const type of types) {
+  for (const type of new Set(types)) {
     if (only && !only.has(type)) continue;
-    const box = page.locator(`[data-section-type="${type}"]`);
+    // .first(): a block can have a second fixture on the wall (the contact card has two).
+    const box = page.locator(`[data-section-type="${type}"]`).first();
     await box.scrollIntoViewIfNeeded();
     await page.waitForTimeout(150);
     await hidePinned();
