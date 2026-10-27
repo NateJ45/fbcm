@@ -19,12 +19,22 @@
 //   node --experimental-strip-types scripts/content/seed-section-patterns.mjs
 // PowerShell, with Nathan's OK:
 //   $env:NCS_PRODUCTION_WRITE='yes'; node --experimental-strip-types scripts/content/seed-section-patterns.mjs --apply; Remove-Item Env:NCS_PRODUCTION_WRITE
-// Verify afterwards: Pages > Saved sections lists the eight, each marked as a draft.
+// --only=<id>,<id> seeds just those patterns (the id in sectionPatterns.ts, without "pattern-"), for
+// when Nathan approves some and not others (2026-10-26: closure-notice and event-details only).
+// Verify afterwards: Pages > Saved sections lists them, each marked as a draft.
 
 import { client, apply, done } from '../lib/sanity-lib.mjs';
 import { SECTION_PATTERNS } from '../../src/sanity/sectionPatterns.ts';
 
-const ids = SECTION_PATTERNS.map((p) => `pattern-${p.id}`);
+const onlyArg = process.argv.find((a) => a.startsWith('--only='));
+const only = onlyArg ? new Set(onlyArg.slice('--only='.length).split(',').filter(Boolean)) : null;
+if (only) {
+  const unknown = [...only].filter((id) => !SECTION_PATTERNS.some((p) => p.id === id));
+  if (unknown.length) throw new Error(`--only names no pattern: ${unknown.join(', ')}`);
+}
+const PATTERNS = only ? SECTION_PATTERNS.filter((p) => only.has(p.id)) : SECTION_PATTERNS;
+
+const ids = PATTERNS.map((p) => `pattern-${p.id}`);
 // perspective 'raw': newer API versions read the published view by default, which hides the
 // drafts this script writes, so a rerun would report them as missing.
 const found = await client.withConfig({ perspective: 'raw' }).fetch('*[_id in $ids]._id', {
@@ -33,7 +43,7 @@ const found = await client.withConfig({ perspective: 'raw' }).fetch('*[_id in $i
 const existing = new Set(found.map((id) => id.replace(/^drafts\./, '')));
 
 let changes = 0;
-for (const pattern of SECTION_PATTERNS) {
+for (const pattern of PATTERNS) {
   const id = `pattern-${pattern.id}`;
   if (existing.has(id)) {
     console.log(`SKIP "${pattern.title}": already in the dataset, never overwritten.`);
