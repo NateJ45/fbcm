@@ -80,9 +80,5 @@ test('a non-starter repo with no starter anywhere is an error, not a silent self
   assert.match(allowed.out, /\[self-check\]/);
 });
 
-test('the starter checking itself is still allowed', () => {
-  const root = resolve(dirname(SYNC_CHECK), '..');
-  const { status, out } = run(SYNC_CHECK, root);
-  assert.match(out, /\[self-check\]/);
-  assert.equal(status, 0);
-});
+// The starter's own copy also tests "the starter checking itself is still allowed". It cannot pass in a
+// site (a site is not named ncs-astro-sanity-starter), so this copy leaves it out.

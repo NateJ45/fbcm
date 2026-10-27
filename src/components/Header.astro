@@ -63,6 +63,7 @@ import { resolveSiteSettings, type RawChromeSettings } from '@/lib/siteSettings'
 import { watchLiveHref } from '@/lib/live-service';
 import { socialLinksOf, socialLinkLabel } from '@/lib/social-links';
 import { urlFor } from '@/lib/sanity';
+import { publicPath } from '@/lib/page-path';
 
 // SVG logos are passed through Astro's image pipeline for cache-busted URLs.
 // SVGs are resolution-independent so no 1x/2x variants are needed — one URL
@@ -213,7 +214,9 @@ const NAV_ITEMS = chrome.headerNav;
 // shapes via its updated interface.
 const NAV_LINKS = NAV_ITEMS;
 
-const pathname = Astro.url.pathname;
+// The draft preview renders this header at /preview/...; publicPath() puts the
+// active state back on the live address (starter card 187, P2).
+const pathname = publicPath(Astro.url.pathname);
 function isActive(href: string) {
   if (href === '/') return pathname === '/';
   return pathname.startsWith(href);

@@ -1,0 +1,126 @@
+{
+  "_comment": [
+    "EXPECTED TO DIFFER PER SITE. The budgets tests/page-weight.spec.ts checks (decoded kilobytes).",
+    "Measured 2026-10-27 on the CI build (the pinned content snapshot and the fixtures), each route's own weight plus about 25%.",
+    "Image budgets are the defaults only: lazy images load by timing, so a per-route number flakes. Tighten when a page gets lighter: a budget set far above reality never fails. Scripts are the same 310 KB on every page (the shared bundle).",
+    "jsonLd lists the schema.org types a route must carry."
+  ],
+  "defaults": {
+    "maxHtmlKb": 430,
+    "maxInlineCssKb": 240,
+    "maxScriptKb": 390,
+    "maxImagesKb": 500,
+    "maxImageKb": 120,
+    "maxLcpImageKb": 250,
+    "maxFontPreloads": 2,
+    "maxFontKb": 60
+  },
+  "pages": {
+    "/": {
+      "maxHtmlKb": 465,
+      "maxInlineCssKb": 240,
+      "maxFontPreloads": 2,
+      "maxFontKb": 55
+    },
+    "/architecture": {
+      "maxHtmlKb": 360,
+      "maxInlineCssKb": 225
+    },
+    "/beliefs": {
+      "_why": "Its opening photo is one 1600 px picture of about 233 KB (measured 2026-10-27). Compress it and drop this entry.",
+      "maxHtmlKb": 380,
+      "maxInlineCssKb": 225,
+      "maxImageKb": 290,
+      "maxLcpImageKb": 290
+    },
+    "/blog": {
+      "maxHtmlKb": 405,
+      "maxInlineCssKb": 235
+    },
+    "/blog/category/sermon-preview": {
+      "maxHtmlKb": 340,
+      "maxInlineCssKb": 175
+    },
+    "/blog/category/sermon-preview/page/2": {
+      "maxHtmlKb": 340,
+      "maxInlineCssKb": 175
+    },
+    "/blog/page/2": {
+      "maxHtmlKb": 340,
+      "maxInlineCssKb": 175
+    },
+    "/blog/scripture": {
+      "maxHtmlKb": 345,
+      "maxInlineCssKb": 175
+    },
+    "/blog/tag/advent": {
+      "maxHtmlKb": 325,
+      "maxInlineCssKb": 175
+    },
+    "/contact": {
+      "maxHtmlKb": 365,
+      "maxInlineCssKb": 225
+    },
+    "/give": {
+      "maxHtmlKb": 345,
+      "maxInlineCssKb": 225
+    },
+    "/history": {
+      "maxHtmlKb": 430,
+      "maxInlineCssKb": 235
+    },
+    "/ministers": {
+      "maxHtmlKb": 405,
+      "maxInlineCssKb": 225
+    },
+    "/ministries": {
+      "maxHtmlKb": 400,
+      "maxInlineCssKb": 225
+    },
+    "/privacy": {
+      "maxHtmlKb": 285,
+      "maxInlineCssKb": 170
+    },
+    "/styleguide": {
+      "maxHtmlKb": 630,
+      "maxInlineCssKb": 205
+    },
+    "/styleguide/visitor": {
+      "maxHtmlKb": 395,
+      "maxInlineCssKb": 225
+    },
+    "/visit": {
+      "maxHtmlKb": 420,
+      "maxInlineCssKb": 230
+    },
+    "/wedding": {
+      "maxHtmlKb": 390,
+      "maxInlineCssKb": 225
+    },
+    "/who-we-are": {
+      "maxHtmlKb": 425,
+      "maxInlineCssKb": 225
+    }
+  },
+  "jsonLd": {
+    "/": ["Church", "Organization"],
+    "/architecture": ["Church", "Organization", "BreadcrumbList"],
+    "/beliefs": ["Church", "Organization", "BreadcrumbList"],
+    "/blog": ["Church", "Organization", "BreadcrumbList"],
+    "/blog/category/sermon-preview": ["Church", "Organization", "BreadcrumbList"],
+    "/blog/category/sermon-preview/page/2": ["Church", "Organization", "BreadcrumbList"],
+    "/blog/page/2": ["Church", "Organization", "BreadcrumbList"],
+    "/blog/scripture": ["Church", "Organization", "BreadcrumbList"],
+    "/blog/tag/advent": ["Church", "Organization", "BreadcrumbList"],
+    "/contact": ["Church", "Organization", "BreadcrumbList"],
+    "/give": ["Church", "Organization", "BreadcrumbList"],
+    "/history": ["Church", "Organization", "BreadcrumbList"],
+    "/ministers": ["Church", "Organization", "BreadcrumbList"],
+    "/ministries": ["Church", "Organization", "BreadcrumbList", "FAQPage"],
+    "/privacy": ["Church", "Organization", "BreadcrumbList"],
+    "/styleguide/visitor": ["Church", "Organization"],
+    "/visit": ["Church", "Organization", "BreadcrumbList", "FAQPage"],
+    "/wedding": ["Church", "Organization", "BreadcrumbList"],
+    "/who-we-are": ["Church", "Organization", "BreadcrumbList"]
+  }
+}
