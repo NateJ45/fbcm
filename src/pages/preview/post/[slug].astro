@@ -41,7 +41,13 @@ import { perspectiveCookieName } from '@sanity/preview-url-secret/constants';
 import { isStudioPreview } from '@/lib/preview-auth';
 import PreviewLayout from '@/layouts/PreviewLayout.astro';
 import PostView from '@/components/blog/PostView.astro';
-import { previewFetch, previewConfig, previewUnconfiguredResponse } from '@/lib/cms-preview';
+import {
+  previewFetch,
+  previewFetchPostedDraft,
+  previewConfig,
+  previewUnconfiguredResponse,
+} from '@/lib/cms-preview';
+import { readPostedDraft } from '@/lib/preview-posted-draft';
 import {
   JOURNAL_BODY_PROJECTION,
   JOURNAL_CARD_PROJECTION,
@@ -69,13 +75,41 @@ Astro.response.headers.set('Cache-Control', 'no-store');
 
 const slug = (Astro.params.slug as string | undefined) || '';
 
+// THE STUDIO'S OWN COPY OF THE DRAFT (2026-10-26, PORTS.md card 184). The
+// overlay's soft refresh POSTs the newest draft the Studio holds; the same
+// gate as the page route (draftMode, then readPostedDraft's checks), and it is
+// used only when it is THIS post's own draft (previewFetchPostedDraft returns
+// null otherwise). This route reads the post twice (its fields with stega,
+// its body without), so the posted draft feeds both: the fields through
+// previewFetchPostedDraft, the body through "postedBody" below, which is
+// trusted only once the fields read has proved the match. Everything else
+// (the list, the heads, settings) is read from the dataset as before.
+const postFilter = '*[_type == "journalEntry" && slug.current == $slug]';
+const postFields = `{${JOURNAL_ENTRY_FIELDS}}`;
+const posted = draftMode ? await readPostedDraft(Astro.request, Astro.url.origin) : null;
+
+const storedEntry = () =>
+  previewFetch<SanityResult | null>(draftMode, `${postFilter}[0]${postFields}`, { slug });
+// True once the posted draft proved to be this post's own draft.
+let usedPosted = false;
+
 const [entry, rest] = await Promise.all([
-  // The post's own fields, stega on in draft mode.
-  previewFetch<SanityResult | null>(
-    draftMode,
-    `*[_type == "journalEntry" && slug.current == $slug][0]{${JOURNAL_ENTRY_FIELDS}}`,
-    { slug },
-  ),
+  // The post's own fields, stega on in draft mode: from the posted draft when
+  // it matched, otherwise the stored draft as before.
+  posted
+    ? previewFetchPostedDraft<SanityResult>(
+        postFilter,
+        postFields,
+        { slug },
+        posted,
+        'journalEntry',
+      )
+        .catch(() => null)
+        .then((doc) => {
+          usedPosted = doc !== null;
+          return doc ?? storedEntry();
+        })
+    : storedEntry(),
   // Everything the drawing derives from, stega off (see the header).
   previewFetch<{
     body: unknown[] | null;
@@ -83,6 +117,7 @@ const [entry, rest] = await Promise.all([
     heads: PostHead[] | null;
     settings: SanityResult | null;
     journalPage: { stickyCtaLabel?: string | null } | null;
+    postedBody: unknown[] | null;
   }>(
     draftMode,
     `{
@@ -90,9 +125,10 @@ const [entry, rest] = await Promise.all([
       "all": *[_type == "journalEntry"] | order(publishedAt desc) ${JOURNAL_CARD_PROJECTION},
       "heads": ${JOURNAL_HEADS_QUERY},
       "settings": *[_type == "siteSettings"][0]${SITE_SETTINGS_PROJECTION},
-      "journalPage": *[_type == "journalPage"][0]{ stickyCtaLabel }
+      "journalPage": *[_type == "journalPage"][0]{ stickyCtaLabel },
+      "postedBody": ${posted ? `$postedDraft{${JOURNAL_BODY_PROJECTION}}.body` : 'null'}
     }`,
-    { slug },
+    posted ? { slug, postedDraft: posted } : { slug },
     { stega: false },
   ),
 ]);
@@ -104,7 +140,9 @@ if (!entry) {
   );
 }
 
-const post = { ...entry, body: rest.body ?? [] };
+// The posted body only when the posted fields proved it is this post's draft.
+const body = usedPosted ? rest.postedBody : rest.body;
+const post = { ...entry, body: body ?? [] };
 const all = rest.all ?? [];
 const foot = postFeet(all, rest.heads)(post as BlogEntry);
 
