@@ -43,7 +43,7 @@ import { brandIcon, typeIcon, type BrandIcon } from './brandIcons';
 import { tableListItem } from './workflow';
 import { TABLES } from './tables.config';
 import { kitConfig } from './kit.config';
-import { WEEK_TYPE } from '../lib/studio-kit';
+import { STAFF_TYPE, WEEK_TYPE } from '../lib/studio-kit';
 import { TRASH_TYPE } from '../lib/studio-trash';
 import { trashListItem } from './kit/trash';
 import { STAFF_GROUPS } from '../lib/church-derive'; // scaffold: church
@@ -83,6 +83,8 @@ const HIDDEN_FROM_DEFAULT = new Set<string>([
   TRASH_TYPE, // the Studio kit's Trash, placed explicitly at the bottom
   // The Studio kit's weekly tick document (card 111): Home's bookkeeping, never edited here.
   WEEK_TYPE,
+  // The kit's "Simple view" marks (card 175): written by the People tool only.
+  STAFF_TYPE,
   // Private preview link records (card 117): managed from "Share a preview" only.
   'previewShare',
 ]);

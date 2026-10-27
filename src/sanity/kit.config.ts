@@ -126,9 +126,10 @@ export const kitConfig: KitConfig = {
     email: envVal('PUBLIC_STUDIO_HELP_EMAIL'),
   },
 
-  // Sanity user ids of the people who get the staff view (sanity.io/manage,
-  // Members). Until the list has an entry, anyone who is not a Sanity
-  // administrator gets the staff view.
+  // Sanity user ids of ADMINISTRATORS who should get the staff view too
+  // (sanity.io/manage, Members). Ids, not emails: the repo is public. Everyone
+  // who is not an administrator gets it anyway (card 175), and an administrator
+  // can also be marked "Simple view" from the Studio, with no deploy.
   staff: [],
 
   staffTools: ['home', 'quick-update', 'structure', 'presentation', 'site-guide', 'checkup'],
