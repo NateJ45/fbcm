@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef } from 'react';
 import { SOFT_REFRESH_EVENT, useInstantText } from './overlay/useInstantText.ts';
 import { startTiming } from './overlay/timing.ts';
 import { inCanvasControls } from './overlay/index.ts';
+import { useUnionTypeRetry } from './overlay/useUnionTypeRetry.ts';
+import { installSubmenuWidthFix } from './overlay/submenuWidthFix.ts';
 import {
   createRefreshState,
   onChange as onRefreshChange,
@@ -130,6 +132,12 @@ interface Props {
 }
 
 export default function VisualEditingOverlay({ pageId }: Props) {
+  // Two repairs to the host overlay (2026-10-27, PORTS.md card 201): re-ask the
+  // Studio about a section added since the frame loaded, so its layout card and
+  // instant typing mount; and give the section menu's Move submenu its width
+  // back. See each file.
+  useUnionTypeRetry();
+  useEffect(() => installSubmenuWidthFix(), []);
   // REVEALS SHOW FINISHED (2026-09-26). The site's scroll reveals start hidden
   // and wait for an observer the preview does not run, so every arch photo,
   // drawn glyph and inked picture stayed hidden in the Studio (0 of 27 on
