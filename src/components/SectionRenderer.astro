@@ -54,7 +54,7 @@ import { splitStega } from '@/lib/preview-stega';
 import { assignSpareImages } from '@/lib/spare-images';
 import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
 import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
-import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
+import { SECTION_DRAG_FLOW, sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
 import type { LinkableBand } from '@/lib/hero-fact-links';
 import type { SundaySermon } from '@/lib/live-sunday';
@@ -382,7 +382,7 @@ const findUsExtraAt = Astro.slots.has('findus-extra')
   : -1;
 
 const wrapAttrs = (key: string | undefined) =>
-  editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
+  editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key), ...SECTION_DRAG_FLOW } : {};
 // A section that came out of a synced section is not in the page itself; its
 // in-canvas controls act on the synced block it came from, which is.
 const editKeyOf = (block: unknown) => {
