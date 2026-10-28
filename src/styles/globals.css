@@ -783,6 +783,11 @@
    bright photo). `:root` lifts these over the component sheet, which loads after this one. */
 :root .ph-hero {
   --ph-gutter: var(--spacing-gutter);
+  /* The headline's accent word (starter card 203): the hero's "Accent word in the heading",
+     set in the reading face's italic (Castoro) and kept WHITE over the shade, where the standard
+     hero would colour it. */
+  --ph-accent-font: var(--font-body);
+  --ph-accent-style: italic;
 }
 :root .ph-eyebrow {
   font-family: var(--font-ui);
