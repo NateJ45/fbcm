@@ -16,6 +16,8 @@ sequence).
 
 ## Waiting on a human
 
+- **The `e2e` job is pinned to ubuntu-24.04 (2026-10-30).** `ubuntu-latest` moved to 26.04, where Playwright's WebKit will not launch, so every `[webkit-iphone]` test failed. `ci.yml` now says `runs-on: ubuntu-24.04` on that job only. Unpin it once a Playwright release supports 26.04 (try it on a branch first). Starter PORTS.md card and vault gotcha `playwright-webkit-ubuntu-26-04`.
+
 ### 0a. Nathan: should Home open on the photo hero with a This Sunday card? (2026-10-27)
 
 Starter card 189 is installed: the Page opener has a Style, "Photo with a short-facts card"
