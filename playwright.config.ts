@@ -31,14 +31,6 @@ export default defineConfig({
   // added them. Harmless in a repo with no tests/visual folder, which is why it
   // lives in the canonical copy rather than in each site.
   testIgnore: '**/visual/**',
-  // CHURCH-AUTHORED COPY (2026-10-05). Specs that assert what the church wrote
-  // (a heading, a sentence, a band's name, the exact accounts or anchors) carry
-  // `@content` in their title and run ONLY from playwright.content.config.ts, in
-  // .github/workflows/content-watch.yml, which is never a required check. The
-  // secretary edits the live site whenever he likes and CI builds from live
-  // content, so a required spec that asserted his words turned `test` red on
-  // every open PR each time he did. Rule: .claude/rules/tests-and-gates.md.
-  grepInvert: /@content/,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,

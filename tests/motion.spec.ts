@@ -94,9 +94,7 @@ test.describe('no preference', () => {
     // One rising box per word, and the words ARE the headline: joined with
     // single spaces they are its text, so real spaces sit between them and
     // the heading's accessible name is the whole sentence.
-    // At least one: the church writes the headline, and a one-word headline is
-    // still split and still rises (content independence, 2026-10-05).
-    expect(hero.words.length, 'the headline was not split into words').toBeGreaterThanOrEqual(1);
+    expect(hero.words.length, 'the headline was not split into words').toBeGreaterThan(1);
     expect(hero.words.map((w) => w.text.trim()).join(' ')).toBe(hero.text);
     await expect(headline).toHaveAccessibleName(hero.text);
 
@@ -132,13 +130,6 @@ test.describe('no preference', () => {
 
   test('the slideshow advances, keeps moving, and Pause holds it', async ({ page }) => {
     await page.goto('/', { waitUntil: 'load' });
-    // A slideshow is the church's choice (the number of photos in Home's hero):
-    // with one photo there is nothing to advance, and tests/content-watch.spec.ts
-    // reports that the hero has stopped being a slideshow.
-    test.skip(
-      (await page.locator('[data-hero-pause]').count()) === 0,
-      "Home's hero is not a slideshow right now",
-    );
     const frames = page.locator('[data-hero-fade] .hero-frame');
     const current = page.locator('[data-hero-fade] .hero-frame.is-current');
     const transform = () => current.evaluate((el) => getComputedStyle(el).transform);
@@ -187,10 +178,6 @@ test.describe('slideshow, reduced motion', () => {
 
   test('frame 1 alone, still, and the later frames are never inserted', async ({ page }) => {
     await page.goto('/', { waitUntil: 'load' });
-    test.skip(
-      (await page.locator('[data-hero-fade]').count()) === 0,
-      "Home's hero is not a slideshow right now",
-    );
     await page.waitForTimeout(1000);
     const frames = page.locator('[data-hero-fade] .hero-frame');
     await expect(frames).toHaveCount(1);
@@ -246,7 +233,7 @@ test.describe('page openers, no preference', () => {
 
       expect(rise.h1Anims, 'the h1 itself is animating').toBe(0);
       expect(rise.h1Opacity).toBe('1');
-      expect(rise.words.length, 'the h1 was not split into words').toBeGreaterThanOrEqual(1);
+      expect(rise.words.length, 'the h1 was not split into words').toBeGreaterThan(1);
       // The words ARE the headline, and its accessible name is the sentence.
       expect(rise.words.map((w) => w.text).join(' ')).toBe(rise.text);
       await expect(h1).toHaveAccessibleName(rise.text);
@@ -281,9 +268,6 @@ test.describe('page openers, no preference', () => {
   test('/visit: the closing accent line rises too, continuing the count', async ({ page }) => {
     await page.goto('/visit', { waitUntil: 'domcontentloaded' });
     const close = page.locator('main h1 .hw-close');
-    // The closing accent line is the church's to write (headingAccent): without
-    // one there is nothing to count on, and the @content watch reports it.
-    test.skip((await close.count()) === 0, "/visit's h1 has no closing accent line right now");
     await expect(close).toHaveCount(1);
     const indices = await page.locator('main h1 .hero-word').evaluateAll((els) =>
       els.map((e) => ({
@@ -327,7 +311,7 @@ test.describe('page openers, reduced motion', () => {
             transform: getComputedStyle(w).transform,
           })),
         );
-      expect(words.length).toBeGreaterThanOrEqual(1);
+      expect(words.length).toBeGreaterThan(1);
       for (const w of words) expect(w).toEqual({ anims: 0, transform: 'none' });
     });
   }

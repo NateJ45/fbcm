@@ -1,7 +1,6 @@
 // scaffold-file: journal
 import { test, expect, type Page } from './fixtures';
 import AxeBuilder from '@axe-core/playwright';
-import { searchWordFromBlog } from './content-helpers';
 
 // =============================================================================
 // The site search (2026-09-24, feat/scripture-search)
@@ -13,13 +12,6 @@ import { searchWordFromBlog } from './content-helpers';
 //
 // It also holds the promise the search was built on: nothing of it loads until
 // it is opened (no dialog module, no Pagefind, no stylesheet on a plain load).
-//
-// CONTENT INDEPENDENCE (2026-10-05). The query used to be "Jeremiah", which
-// holds only while the church keeps a post that says it. It is now a word taken
-// from the newest post's title on /blog (searchWordFromBlog), which the index
-// certainly holds, and the first result need only be a built page of the site.
-// That the word "Jeremiah" still finds a post is watched in
-// tests/content-watch.spec.ts (@content).
 // =============================================================================
 
 async function typeQuery(page: Page, q: string) {
@@ -42,22 +34,20 @@ test.describe('desktop', () => {
     await expect(page.locator('#ss-style')).toHaveCount(0);
   });
 
-  test('opens from the header, finds a word from the newest post, and Escape closes it', async ({
-    page,
-  }) => {
-    const word = await searchWordFromBlog(page);
+  test('opens from the header, finds "Jeremiah", and Escape closes it', async ({ page }) => {
+    await page.goto('/blog/', { waitUntil: 'domcontentloaded' });
     const trigger = page.getByRole('button', { name: 'Search the site' });
     await trigger.click();
     const dialog = page.getByRole('dialog', { name: 'Search the site' });
     await expect(dialog).toBeVisible();
-    await typeQuery(page, word);
+    await typeQuery(page, 'Jeremiah');
     const rows = dialog.locator('.ss-row');
     await expect(rows.first()).toBeVisible();
     expect(await rows.count()).toBeGreaterThan(0);
     await expect(dialog.locator('.ss-row mark').first()).toBeVisible();
-    // The first result's link is a page of this site.
+    // The first result is a post with its reading, and its link is a built page.
     const href = await rows.first().locator('a').getAttribute('href');
-    expect(href).toMatch(/^\//);
+    expect(href).toMatch(/^\/post\//);
 
     // Arrow keys move from the box into the results and back.
     await page.keyboard.press('ArrowDown');
@@ -71,23 +61,20 @@ test.describe('desktop', () => {
   });
 
   test('a result opens its post', async ({ page }) => {
-    const word = await searchWordFromBlog(page);
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.getByRole('button', { name: 'Search the site' }).click();
-    await typeQuery(page, word);
+    await typeQuery(page, 'Jeremiah');
     const first = page.locator('.ss-row a').first();
     const href = (await first.getAttribute('href')) ?? '';
     await first.click();
-    // A slug with an accent is percent-encoded in the address bar and raw in the href.
-    await expect(page).toHaveURL((u) => decodeURI(u.pathname).endsWith(decodeURI(href)));
+    await expect(page).toHaveURL(new RegExp(`${href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`));
     await expect(page.locator('dialog[open]')).toHaveCount(0);
   });
 
   test('the open search has no axe violations', async ({ page }) => {
-    const word = await searchWordFromBlog(page);
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.getByRole('button', { name: 'Search the site' }).click();
-    await typeQuery(page, word);
+    await typeQuery(page, 'Jeremiah');
     await expect(page.locator('.ss-row').first()).toBeVisible();
     const results = await new AxeBuilder({ page }).include('#site-search').analyze();
     const report = results.violations
@@ -141,7 +128,6 @@ test.describe('phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
 
   test('opens from the mobile menu and works at 320px', async ({ page }) => {
-    const word = await searchWordFromBlog(page);
     await page.setViewportSize({ width: 320, height: 720 });
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.locator('[data-menu-ready]').waitFor({ state: 'attached' });
@@ -149,7 +135,7 @@ test.describe('phone', () => {
     await page.getByRole('button', { name: 'Search the site' }).click();
     const dialog = page.getByRole('dialog', { name: 'Search the site' });
     await expect(dialog).toBeVisible();
-    await typeQuery(page, word);
+    await typeQuery(page, 'Jeremiah');
     await expect(dialog.locator('.ss-row').first()).toBeVisible();
     // No sideways scroll inside the sheet at 320.
     const overflow = await dialog.evaluate((d) => d.scrollWidth - d.clientWidth);
