@@ -164,6 +164,13 @@ jobs:
       - name: Unit tests
         run: npm run test:unit
 
+      # scripts/lib/*.test.mjs: the seed-script write gates (production-write
+      # second factor, write-gate, field-diff) and the publish watchdog's
+      # decide() tests. About 14s locally. Lives in `static`, so it gates
+      # `build` and runs in parallel with `site`, off the critical path.
+      - name: Script tests
+        run: npm run test:scripts
+
   # Builds the site ONCE and uploads it. Everything downstream reuses the upload.
   site:
     name: Build and links
