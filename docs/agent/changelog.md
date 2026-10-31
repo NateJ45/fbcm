@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-30: the app buttons' labels contain their visible text (`fix/axe-deps-118`)._
+
+The Dependabot group that brought axe-core 4.14 turned on `label-content-name-mismatch`, and the church app buttons (`AppButtons.astro`, Home band and footer, so every page) failed it. The label now starts with the words on the button ("For iPhone, App Store: get the church app (opens in a new tab)"), and a `{' '}` sits between the two spans because the build drops the newline and axe read "For iPhoneApp Store". The button is `inline-flex`, so the space does not render.
+
 _2026-10-30: CI reads Node from `.nvmrc` (starter card 209)._ Every `actions/setup-node` step asked for `node-version: 22` and took whatever 22.x the runner image had cached, and Astro 7.4.4 refuses anything below 22.23.4. A repo-root `.nvmrc` now pins 22.23.4, every workflow reads it with `node-version-file: .nvmrc`, and `engines.node` rises to match. `docs/agent/studio-kit.md` is resynced with the starter in the same change (card 210's Inbox section), so `sync-check` reads SAME.
 
 _2026-10-28: the photo hero keeps the accent word (starter card 203)._ The Page opener's "Accent word in the heading" now shows when its Style is the photo one: set in Castoro italic and kept white over the shade (`--ph-accent-font` and `--ph-accent-style` on `:root .ph-hero` in `globals.css`), where the standard opener would colour it. `Hero.astro` passes it to `PhotoHero`; the photo hero wall sets one. No live page uses the photo style, so nothing visible moved.

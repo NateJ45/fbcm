@@ -47,9 +47,12 @@ const stores = [
         rel="noopener noreferrer"
         class="app-button press-tactile"
         data-store={s.key}
-        aria-label={`Get the church app on ${s.store}, ${s.device.toLowerCase()} (opens in a new tab)`}
+        aria-label={`${s.device}, ${s.store}: get the church app (opens in a new tab)`}
       >
-        <span class="app-button-device">{s.device}</span>
+        {/* The label must contain the visible text (axe label-content-name-mismatch).
+            The build drops the newline between the spans, so without this space axe
+            reads "For iPhoneApp Store". */}
+        <span class="app-button-device">{s.device}</span>{' '}
         <span class="app-button-store">{s.store}</span>
       </a>
     </li>
