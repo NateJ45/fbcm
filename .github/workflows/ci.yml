@@ -164,6 +164,19 @@ jobs:
       - name: Unit tests
         run: npm run test:unit
 
+      # scripts/lib/*.test.mjs: the seed-script write gates (production-write
+      # second factor, write-gate, field-diff) and the publish watchdog's
+      # decide() tests. About 14s locally. Lives in `static`, so it gates
+      # `build` and runs in parallel with `site`, off the critical path.
+      - name: Script tests
+        # page-images.test.mjs imports sanity-lib.mjs, which exits 1 at import
+        # when it finds no token (there is no .env on a runner). A dummy value is
+        # enough: the tests never call Sanity, and the write gate refuses a
+        # production write without NCS_PRODUCTION_WRITE anyway.
+        env:
+          SANITY_API_WRITE_TOKEN: ci-dummy-token-not-a-secret
+        run: npm run test:scripts
+
   # Builds the site ONCE and uploads it. Everything downstream reuses the upload.
   site:
     name: Build and links
@@ -305,7 +318,10 @@ jobs:
   e2e:
     name: e2e (shard ${{ matrix.shard }}/3)
     needs: [site]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    # Pinned 2026-10-30: ubuntu-latest moved to 26.04, where Playwright webkit-iphone
+    # fails with "browserType.launch: Target page, context or browser has been closed".
+    # Unpin when Playwright supports 26.04.
     timeout-minutes: 30
     # Public identifiers, as in the other jobs: the specs read them too.
     env:

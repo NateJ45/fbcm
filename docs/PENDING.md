@@ -234,6 +234,10 @@ Phase B is built (tours, data-only Quick update jobs, guide pictures, four clips
 
 ## Known gaps, deliberately open
 
+### 1h. The e2e job is pinned to ubuntu-24.04 (2026-10-30)
+
+`ubuntu-latest` moved to 26.04 and Playwright webkit-iphone then fails to launch ("Target page, context or browser has been closed"). The `e2e` job in `ci.yml` runs on `ubuntu-24.04` until Playwright supports 26.04; unpin then.
+
 ### 1c. The preview routes check the draft cookie's presence, not its fingerprint (found 2026-09-26)
 
 Found while adding the post preview (`/preview/post/<slug>`). `src/pages/preview/[...slug].astro`,
