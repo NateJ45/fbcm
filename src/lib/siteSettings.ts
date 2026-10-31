@@ -33,6 +33,7 @@
 
 import { navHref, resolveNavLinks, type RawNavLink, type ResolvedNavLink } from '@/lib/nav-href';
 import { getSectionVisibility, type SectionVisibility } from '@/lib/sectionVisibility';
+import type { RawActionBar, RawPhoneMenuGroup, RawWhereNextRow } from '@/lib/wayfinding';
 
 /** One header menu entry: a plain link, or a dropdown group of links. */
 export type NavItem =
@@ -68,6 +69,11 @@ export interface RawChromeSettings {
   /** Optional logo image. When set it replaces the template's own logo files. */
   logo?: { asset?: { _ref?: string; _id?: string } | null; alt?: string | null } | null;
   navItems?: RawNavItem[] | null;
+  /** Starter card 191, wayfinding (src/lib/wayfinding.ts). Empty means the church defaults
+   *  (src/data/wayfinding-defaults.ts). */
+  phoneMenuGroups?: RawPhoneMenuGroup[] | null;
+  whereNext?: RawWhereNextRow[] | null;
+  actionBars?: RawActionBar[] | null;
   footerColumns?: RawFooterColumn[] | null;
   legalNav?: (RawNavLink | null)[] | null;
   headerCta?: { show?: boolean | null; label?: string | null; link?: RawNavLink | null } | null;

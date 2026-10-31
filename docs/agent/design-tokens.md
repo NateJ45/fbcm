@@ -58,3 +58,53 @@ See `theme-and-color.md` for the full palette reference, the `--tint-rgb` token,
 - Borders: `border-border`
 
 Never hardcode hex values in component markup. All palette and semantic tokens are in `globals.css`; change the token, not every usage site.
+
+## The one scale, fallback fonts, shape classes and layout slots (starter cards 186 to 198, 2026-10-27)
+
+- **The one scale.** A `:root` block "The one scale" in `src/styles/globals.css` (after the palette's
+  `:root` and `.dark`) names what the site already drew: `--fs-*` text sizes (read from this
+  site's own `--text-*` tokens), `--lh-*`, `--radius-control/-card/-inner/-tag/-pill` (from
+  `--radius`), `--pad-*` and `--gap-*` (the fluid `--spacing-*`), `--shadow-card` (none: this site
+  draws no card shadow), `--shadow-raised`, `--btn-height` (44px), `--tracking-label`, the focus
+  ring. Nothing reads them yet except the shape contract below; a new rule picks a token before a
+  number. It moved no pixel. `apply-brand` rewrites the FIRST `:root`/`.dark`, so the block stays
+  after them. Do not run `apply-brand` in this repo (PENDING 9, and it also resets `site:` in
+  `astro.config.mjs` to the bare domain); edit `globals.css` and `brand.config.json` together by hand.
+- **Fallback fonts.** `npm run font-fallback` (PORTABLE `scripts/font-fallback.mjs`) reads Castoro
+  Titling's Latin `.woff` and writes `src/styles/font-fallbacks.css`: `Castoro Titling Fallback`
+  (Georgia) and `Castoro Titling Fallback Times`, scaled to the face's width and given its ascent
+  and descent. Both are named second and third in `--font-display` (`globals.css` `@theme` and
+  `brand.config.json` `fonts.display.familyValue`), so a title drawn in the stand-in breaks where
+  Castoro Titling will. The body face (Castoro) has none: the script writes one display font.
+- **Shape contract.** `src/styles/shapes.css` (PORTABLE) is imported after the Sofia import in
+  `globals.css`, outside the `@import` run `apply-brand` rebuilds. Class rules only
+  (`.shape-step`, `.shape-gable`, `.shape-slab`, `.shape-card`, `.shape-tile`); nothing here
+  uses them, and the church's own pictures keep `photo-shapes.css` (`.ph-*`).
+- **Layout slots.** `src/lib/site-layout.ts` (PORTABLE) and `src/data/layout.ts`; `brand.config.json`
+  `layout` is all defaults (`inline`, `bleed`, `standard`, `standard`, `reveal`), so `<html>` gets no
+  `data-*` attribute. `BaseLayout.astro` spreads `layoutAttrs(layout)`. `hero: board` is NOT
+  chosen and its components are not installed; `motion` is installed as a value only (the flow
+  layer, card 192, is a separate piece of work).
+- **Page weight.** `tests/page-weight.spec.ts` (PORTABLE) reads `tests/page-weight.config.json`:
+  per-route HTML and inline CSS budgets, measured on the CI build (snapshot and fixtures) plus
+  25 percent, shared image and font budgets, and the JSON-LD types each route must carry. Image
+  budgets are defaults only (lazy images load by timing). A new route in `tests/routes.ts` needs an
+  entry or it uses the defaults.
+
+## Shapes in this church's grammar, and the photo hero's shade (starter cards 188, 189, 2026-10-27)
+
+- **Shape tokens** (`globals.css`, after the one scale): a block that uses the starter's shape
+  classes reads as this church. `.shape-gable` (a standalone picture) is cut to the sanctuary's
+  lancet: `--shape-gable-polygon` traces `.arch-lancet`'s two circular arcs as a polygon (so it
+  scales with the box), springing at `--gable-pitch: 40%`, square sides, `--shape-feature-radius: 0`.
+  The slab is the soft paper (`--color-bg-soft`), the empty tile the indigo band the arches fill
+  with, the hover zoom 1.04. The church's own pictures still use `ArchFrame.astro` and
+  `photo-shapes.css`; nothing on a live page uses the shape classes today.
+- **`hero: board` is not adopted.** The board grammar (one head, one ground, rules between sections)
+  is Auburn's head grammar. This site already has its own heads (the full photo opener, the split
+  and window indigo bands, `SectionHeading`) and its own band cadence, so board would replace the
+  brand's openers with another church's. `src/data/layout.ts` keeps `hero: 'bleed'`.
+- **The photo hero's shade** (`src/styles/photo-hero.css`, PORTABLE): `--photo-scrim` is
+  `--color-accent-dark` (#1c1b3a, the navy dark of the Watchword band). `src/lib/photo-hero.test.ts`
+  holds the contrast promise against `globals.css`: white over a pure white photo under the text
+  strength (72%) stays at 4.5:1 or better.

@@ -16,6 +16,27 @@ sequence).
 
 ## Waiting on a human
 
+### 0a. Nathan: should Home open on the photo hero with a This Sunday card? (2026-10-27)
+
+Starter card 189 is installed: the Page opener has a Style, "Photo with a short-facts card"
+(`PhotoHero.astro`), off on every page (Standard is the default, so nothing moved). Switching Home
+to it is a Studio data write on the live site, so it is Nathan's call: set Home's opener Style to
+the photo style. Left empty on the tall Home opener, the card shows **This Sunday** with the
+service time from Site settings ("Sundays · Worship at 10:45 am") and a Plan your visit link; the
+first of the twelve frames becomes the one photo (the slideshow does not run in this style), and
+an optional silent clip can go behind it. Compare first: `/styleguide/photo-hero/home/` shows the
+shape. Decide with the twelve-frame slideshow and the four-fact row in mind (both go away on Home
+if it switches).
+
+### 0b. The office: the six new blocks are in the menu, on no page yet (2026-10-27)
+
+Starter card 193 added Contact details, Progress toward a goal, Add our calendar, Cards with icons,
+Steps on a path and the "Find your place" hub to "+ Add item" (`docs/agent/builder-blocks-more.md`).
+No live page uses them. Two natural homes, both a Studio edit for the office or Nathan, not code: the
+hub on Ministries (its cards typed from the ministry pages), and Steps on a path on Visit ("Your
+first Sunday"). "Open now" for the office would need typed hours rows first (a planned schema change;
+today's office hours are free text and are shown as typed).
+
 ### 0. Cutover LIVE (2026-10-19): the rest of the list
 
 Update, same day: the zone went active, `fbcm-site` is attached to `www.fbcmuncie.org` and
@@ -158,7 +179,9 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       uncomment the schedule in `.github/workflows/change-note.yml` and watch the repo.
 - [ ] **Seed the eight church-year saved sections** (authoring kit, 2026-10-18), with Nathan's OK:
       `$env:NCS_PRODUCTION_WRITE='yes'; node --experimental-strip-types scripts/content/seed-section-patterns.mjs --apply; Remove-Item Env:NCS_PRODUCTION_WRITE`
-      (dry run read: 8 new drafts, nothing overwritten). Then Pages > Saved sections lists them as drafts.
+      (dry run 2026-10-26: 8 new drafts, nothing overwritten). Then Pages > Saved sections lists them as drafts.
+      Closed notice and Event details and schedule were seeded on 2026-10-26 with Nathan's OK (backup,
+      dry run, `--only=closure-notice,event-details --apply`, read back as drafts, audit clean).
 - [ ] **The staff view**: add the office's Sanity user id(s) to `kitConfig.staff` once they have
       accepted the invitation (until then every non-administrator gets the staff view).
 - [ ] **Starter cards 125 and the Earlier versions panel came across as PORTABLE resyncs only (2026-10-19).** The Studio installs as a phone app (`/studio/manifest.webmanifest`, `public/studio/sw.js`, the tower icon `public/icon-maskable-512.png`, short name "FBC Muncie"). "Post a photo" stays off (no `postPhoto` in kit.config.ts). Earlier versions and `restore-doc.yml` need `GITHUB_DEPLOY_TOKEN`, `SANITY_API_WRITE_TOKEN` and `BACKUP_PASSPHRASE` as repo secrets before a restore can run; until then the panel says it is not set up. Card 124 (section looks) and 126 (site search) are not adopted here; fbcm keeps its own search.
@@ -188,7 +211,7 @@ says what it waits on; every one of them fails closed or says "not set up yet" u
       "Help for this page" beside a page; Move to Trash and Bring it back on a banner; the staff
       view's missing Delete and perspective menu; the desk's icons and list-row tiles; "Blog posts as
       a table" and "Staff members as a table"; Share a preview's dialog (its
-      `SHARE_PREVIEW_SECRET` Worker secret is set, 2026-10-18); the editor's rich text in Castoro; the wordmark in the top bar; a page made from each template group; "+ Add item" in grid view; Insert a saved section as a copy and as synced (after the seed); the yellow page-rule warnings.
+      `SHARE_PREVIEW_SECRET` Worker secret is set, 2026-10-18); the editor's rich text in Castoro; the wordmark in the top bar; a page made from each template group; "+ Add item" in grid view; Insert a saved section as a copy and as synced (after the seed); the yellow page-rule warnings; the builder kit's eight blocks in "+ Add item" (Basics, Photos and video, Events and notices) and a page made from "Visitors: Weekend or retreat" (2026-10-26, type-checked, built and unit-tested, not yet clicked through logged in).
 
 ### 1g. The Studio complete pass, phase B (2026-10-19, in PR; waits on a signed-in check)
 
@@ -210,6 +233,10 @@ Phase B is built (tours, data-only Quick update jobs, guide pictures, four clips
       signed in that it is fixed.
 
 ## Known gaps, deliberately open
+
+### 1h. The e2e job is pinned to ubuntu-24.04 (2026-10-30)
+
+`ubuntu-latest` moved to 26.04 and Playwright webkit-iphone then fails to launch ("Target page, context or browser has been closed"). The `e2e` job in `ci.yml` runs on `ubuntu-24.04` until Playwright supports 26.04; unpin then.
 
 ### 1c. The preview routes check the draft cookie's presence, not its fingerprint (found 2026-09-26)
 
@@ -445,6 +472,28 @@ That is harmless until somebody runs the script on a project with a clean tree, 
 75-line diff in the most load-bearing file in the repo, and has to read all of it to
 confirm it says nothing. To close: normalise hex case and quote style to what Prettier
 writes before comparing, or run the file through Prettier at the end of the rewrite.
+
+### 9a. Auburn port run, package A leftovers (2026-10-27)
+
+- **`apply-brand` is stale, not only non-idempotent.** Run on 2026-10-27 it errored on `generate-og-pages.mjs`
+  (its WORDMARK pattern no longer matches), uppercased every hex in `globals.css`, and reset `site:` in
+  `astro.config.mjs` from `https://www.fbcmuncie.org` to the bare domain. Do not run it; edit by hand.
+- **No fallback face for the body font** (Castoro): `scripts/font-fallback.mjs` writes one display font. Add
+  one only if body text shifts when Castoro loads (measure CLS first).
+- **`scripts/.parity/*.html` is stale** (0 of 175 pass against a CI-style build). Recapture
+  (`npm run parity:capture` after a build with the CI fixture variables) when a render-neutral change next needs it.
+- **Page-weight budgets** are measured on the CI build; tighten `/beliefs` (a 233 KB opening photo) when that
+  picture is compressed.
+
+### 9b. Auburn port run, package B notes (2026-10-27)
+
+- **Starter fix needed: `wayfinding.test.ts` (PORTABLE) is not portable here.** It assumes `/contact/` and
+  `/about/` are reserved site routes; here they are Studio pages, so three cases fail. Not installed; this site's
+  `wayfinding-defaults.test.ts` covers the resolver on its own routes. Install the starter copy once it uses slugs
+  every site reserves (`/styleguide/`). `docs/agent/wayfinding.md`.
+- **The phone menu groups are their own list now.** A page added to the header menu (`navItems`) is not added to
+  the phone groups by itself: add it to Site settings > Phone menu groups, or to `src/data/wayfinding-defaults.ts`.
+- **Flow layer installed, `motion` left at `reveal`** (PRODUCT.md principle 5). Revisit only with Nathan.
 
 ### 10. The scaffold is finished (DONE, 2026-09-18)
 

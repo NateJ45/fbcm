@@ -284,7 +284,9 @@ export function categoryLabel(title: string | null | undefined): string {
 /** The one-post form of categoryLabel: "Event", "Sermon preview". */
 export function categorySingular(title: string | null | undefined): string {
   const plural = categoryLabel(title);
-  return /[^s]s$/i.test(plural) ? plural.slice(0, -1) : plural;
+  // Ends in a single s ("Events", not "Class"). Written as two plain tests, not [^s]s, which the
+  // regex-backslash scan (starter card 198) cannot tell from a class that lost its backslash.
+  return /.s$/i.test(plural) && !/ss$/i.test(plural) ? plural.slice(0, -1) : plural;
 }
 
 /** One category filter: a built route, and how many posts it holds. */

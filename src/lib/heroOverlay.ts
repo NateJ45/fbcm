@@ -35,6 +35,7 @@ type MaybeBlock =
   | {
       _type?: string;
       layout?: string | null;
+      heroStyle?: string | null;
       backgroundImage?: { asset?: unknown } | null;
       frames?: unknown[] | null;
       backgroundImages?: unknown[] | null;
@@ -65,6 +66,9 @@ export function shouldOverlayHeader(sections: MaybeBlock[] | null | undefined): 
   // 'window' (2026-09-23) is a brand indigo band with arched photos
   // beside the words, not a photograph behind them, so it keeps the paper bar
   // for the same reason 'split' does.
+  // The photo hero (starter card 189) puts the first photo behind the words whatever the
+  // layout says, so it overlays like 'full'.
+  if (first.heroStyle === 'photo') return hasImage(first);
   if (first.layout === 'split' || first.layout === 'window') return false;
   return hasImage(first);
 }

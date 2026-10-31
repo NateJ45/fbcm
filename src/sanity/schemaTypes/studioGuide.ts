@@ -87,7 +87,7 @@ export const studioGuide = defineType({
       name: 'tips',
       title: 'Tips',
       type: 'array',
-      description: 'The coloured boxes at the end of the guide, one tip in each.',
+      description: 'The colored boxes at the end of the guide, one tip in each.',
       of: [
         defineArrayMember({
           type: 'object',

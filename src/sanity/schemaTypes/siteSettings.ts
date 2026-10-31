@@ -240,7 +240,7 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'weddingEnquiryUrl',
-      title: 'Wedding enquiry form',
+      title: 'Wedding inquiry form',
       type: 'url',
       group: 'systems',
       description:
@@ -400,6 +400,152 @@ export const siteSettings = defineType({
               title: title || '(no heading yet)',
               subtitle: `Column with ${Array.isArray(links) ? links.length : 0} link(s)`,
             }),
+          },
+        }),
+      ],
+    }),
+
+    // Wayfinding (starter card 191, from FBC Auburn). Three optional pieces,
+    // resolved by src/lib/wayfinding.ts. Empty, the church defaults in
+    // src/data/wayfinding-defaults.ts draw (groups, rows, the Sunday bar).
+    // There is no footer style switch: this site keeps its one poster footer.
+    defineField({
+      name: 'phoneMenuGroups',
+      title: 'Phone menu groups (optional)',
+      type: 'array',
+      group: 'navigation',
+      description:
+        'Sort the phone menu into a few labelled groups, like "New here" and "Get in touch", each a short list of pages in big type. Leave empty for the built-in groups (New here, Get involved, This week, Reach us).',
+      validation: (Rule) => Rule.max(6),
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'phoneMenuGroup',
+          title: 'Group',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Group name',
+              type: 'string',
+              description: 'A word or three, like "New here".',
+              validation: (Rule) => Rule.required().max(30),
+            }),
+            defineField({
+              name: 'links',
+              title: 'Pages in this group',
+              type: 'array',
+              validation: (Rule) => Rule.max(8),
+              of: [defineArrayMember({ type: 'navLink' })],
+            }),
+          ],
+          preview: {
+            select: { title: 'title', links: 'links' },
+            prepare: ({ title, links }) => ({
+              title: title ?? '(no name)',
+              subtitle: `${Array.isArray(links) ? links.length : 0} page(s)`,
+            }),
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'actionBars',
+      title: 'Phone action bar (optional)',
+      type: 'array',
+      group: 'navigation',
+      description:
+        'A slim bar that sticks to the bottom of a phone screen once the visitor scrolls past the page heading: one short line and one button. Pick the page it belongs to, or tick "Every page". Leave empty for the built-in Sunday bar on Home and Visit, whose line is the service time above.',
+      validation: (Rule) => Rule.max(12),
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'actionBar',
+          title: 'Bar',
+          fields: [
+            defineField({
+              name: 'everyPage',
+              title: 'Every page',
+              type: 'boolean',
+              description:
+                'Show this bar on every page that has no bar of its own. Leave off to pick one page below.',
+              initialValue: false,
+            }),
+            defineField({
+              name: 'page',
+              title: 'Page',
+              type: 'reference',
+              description: 'The page this bar shows on.',
+              to: [
+                { type: 'homePage' },
+                { type: 'journalPage' }, // scaffold: journal
+                { type: 'page' },
+              ],
+              hidden: ({ parent }) => parent?.everyPage === true,
+            }),
+            defineField({
+              name: 'text',
+              title: 'Short line',
+              type: 'string',
+              description:
+                'One short line beside the button, like "Open today until 5". Optional; keep it under about 30 characters so it fits a phone.',
+              validation: (Rule) => Rule.max(48),
+            }),
+            defineField({
+              name: 'action',
+              title: 'Button',
+              type: 'navLink',
+              description: 'The one button. The bar shows only when it has a label and a page.',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              everyPage: 'everyPage',
+              pageTitle: 'page.title',
+              label: 'action.label',
+              text: 'text',
+            },
+            prepare: ({ everyPage, pageTitle, label, text }) => ({
+              title: label || '(no button yet)',
+              subtitle: `${everyPage ? 'Every page' : pageTitle || 'No page picked'}${text ? ` · ${text}` : ''}`,
+            }),
+          },
+        }),
+      ],
+    }),
+
+    // Card 191: the footer's opening rows.
+    defineField({
+      name: 'whereNext',
+      title: 'Where next rows (optional)',
+      type: 'array',
+      group: 'navigation',
+      description:
+        'Big links across the top of the footer so no page ends at a dead end. Add up to five in order of importance: each page shows the first three that are not the page itself. A page that ends on its own closing band shows none. Leave empty for the built-in rows.',
+      validation: (Rule) => Rule.max(5),
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'whereNextRow',
+          title: 'Row',
+          fields: [
+            defineField({
+              name: 'link',
+              title: 'Link',
+              type: 'navLink',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'note',
+              title: 'Small line under it',
+              type: 'string',
+              description: 'Optional, a few words, like "Your first visit".',
+              validation: (Rule) => Rule.max(40),
+            }),
+          ],
+          preview: {
+            select: { title: 'link.label', subtitle: 'note' },
+            prepare: ({ title, subtitle }) => ({ title: title || '(no link yet)', subtitle }),
           },
         }),
       ],
@@ -604,7 +750,7 @@ export const siteSettings = defineType({
       type: 'image',
       group: 'social',
       description:
-        "Normally left blank: every page and post already shares with its own picture, drawn in the church's colours. This is only used for a page that has none. A wide picture, about 1200 by 630 pixels.",
+        "Normally left blank: every page and post already shares with its own picture, drawn in the church's colors. This is only used for a page that has none. A wide picture, about 1200 by 630 pixels.",
       options: { hotspot: true },
       fields: [defineField({ name: 'alt', title: 'Describe the picture', type: 'string' })],
     }),

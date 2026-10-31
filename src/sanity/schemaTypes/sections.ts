@@ -12,7 +12,19 @@
 // blocks a page-builder array accepts. Use it everywhere a pageBuilder array is
 // defined so every builder offers the same library.
 
-import { defineType, defineField, defineArrayMember, type ArrayOptions } from 'sanity';
+import {
+  defineType,
+  defineField,
+  defineArrayMember,
+  type ArrayOptions,
+  type ValidationContext,
+} from 'sanity';
+import {
+  FAST_START_MESSAGE,
+  HERO_VIDEO_ACCEPT,
+  checkFastStart,
+  heroVideoProblem,
+} from '../../lib/hero-video';
 import { BlockElementIcon } from '@sanity/icons/BlockElement';
 import { ImageIcon } from '@sanity/icons/Image';
 import { ImagesIcon } from '@sanity/icons/Images';
@@ -29,6 +41,8 @@ import { columnsField, headingAccentField, hideWhenRich, richTwin } from './_app
 import { anchorField } from './_anchorField';
 import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 import { sideOptions } from '../../lib/layout-variants';
+import { withSiteGroups } from '../../lib/insert-groups.ts';
+import { BUILDER_INSERT_GROUPS, builderSectionSchemas } from './builderSections';
 // scaffold: church
 import { CHURCH_SECTION_TYPES } from './churchSections';
 // scaffold:end
@@ -104,6 +118,34 @@ const proseBody = (name = 'body', title = 'Text') =>
       }),
     ],
   });
+
+// The photo hero's video checks (starter card 189), shared by the main clip and the phone copy:
+// an error for a type the hero cannot play, a warning over the size budget, and a warning when an
+// .mp4 is not saved for fast start (reads the first 64 KB of the upload). Rules: src/lib/hero-video.ts.
+const heroVideoCheck =
+  (kind: 'main' | 'phone') =>
+  async (value: { asset?: { _ref?: string } } | undefined, context: ValidationContext) => {
+    const ref = value?.asset?._ref;
+    if (!ref) return true;
+    const asset = await context
+      .getClient({ apiVersion: '2024-01-01' })
+      .fetch<{ url?: string; mimeType?: string; size?: number } | null>(
+        '*[_id == $id][0]{ url, mimeType, size }',
+        { id: ref },
+      );
+    const problem = heroVideoProblem(asset, kind);
+    if (problem?.level === 'error') return problem.message;
+    const slowStart =
+      asset?.url && asset.mimeType === 'video/mp4'
+        ? (await checkFastStart(asset.url)) === false
+        : false;
+    const warnings = [problem?.message, slowStart ? FAST_START_MESSAGE : undefined].filter(Boolean);
+    return warnings.length ? { message: warnings.join(' '), level: 'warning' as const } : true;
+  };
+
+/** Hidden unless the opener's style is the photo-with-card style (starter card 189). */
+const unlessPhotoStyle = ({ parent }: { parent?: { heroStyle?: string } }) =>
+  parent?.heroStyle !== 'photo';
 
 // ── 1. Hero ──────────────────────────────────────────────────────────────────
 export const heroSection = defineType({
@@ -237,6 +279,70 @@ export const heroSection = defineType({
         ],
         layout: 'radio',
       },
+    }),
+    // The photo hero (starter card 189, from FBC Auburn): the first photo across the whole opener,
+    // the words over it in white under an indigo shade, an optional short-facts card beside them
+    // and an optional silent clip. Standard leaves the opener exactly as the Layout above draws
+    // it, so no stored page moves. PhotoHero.astro draws it. Named apart from the Layout's own
+    // "Photo behind the words" (the full-bleed opener), which has no card and no clip.
+    defineField({
+      name: 'heroStyle',
+      title: 'Style',
+      type: 'string',
+      description:
+        'Standard draws the opener as the Layout above says. "Photo with a short-facts card" puts the first photo across the whole opener with the words over it in white, a small card beside them (for example This Sunday and the service time) and, if you like, a silent background video. It needs a photo; without one the opener shows as standard.',
+      initialValue: 'standard',
+      options: {
+        list: [
+          { title: 'Standard', value: 'standard' },
+          { title: 'Photo with a short-facts card', value: 'photo' },
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'glance',
+      title: 'Short-facts card (optional)',
+      type: 'object',
+      description:
+        'A small card beside the words: a title, up to four short lines and a link. Left empty on a tall opener, it shows This Sunday with the service time from Site settings and a link to the visit page.',
+      hidden: unlessPhotoStyle,
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        defineField({ name: 'title', title: 'Card title', type: 'string' }),
+        defineField({
+          name: 'lines',
+          title: 'Lines',
+          type: 'array',
+          of: [defineArrayMember({ type: 'string' })],
+          validation: (R) => R.max(4),
+          description: 'Short facts, one per line. Four at most.',
+        }),
+        defineField({ name: 'link', title: 'Link (optional)', type: 'ctaBlock' }),
+      ],
+    }),
+    // A short silent clip over the photo (photo style only). The photo is its poster and what
+    // shows when the clip does not play (reduced motion, Save-Data, a slow connection, print).
+    // Sanity does not transcode files, so the phone copy is its own upload.
+    defineField({
+      name: 'backgroundVideo',
+      title: 'Background video (optional)',
+      type: 'file',
+      description:
+        'A short clip that plays silently behind the words. Best: 15 to 30 seconds, landscape, steady, no sound, an .mp4 under 3 MB (720p is plenty), exported with "Fast start" or "Web optimized" turned on so it starts playing straight away. Keep the photo too: it shows first, and it is all some visitors see. Add the phone video below as well, so phones get a small copy.',
+      options: { accept: HERO_VIDEO_ACCEPT },
+      hidden: unlessPhotoStyle,
+      validation: (R) => R.custom(heroVideoCheck('main')),
+    }),
+    defineField({
+      name: 'backgroundVideoPhone',
+      title: 'Phone video (optional)',
+      type: 'file',
+      description:
+        'A small copy of the same clip for phones, so a visitor on a phone signal is not waiting on the big file. Export it again at 640 pixels wide, no sound, 15 to 20 seconds, with "Fast start" or "Web optimized" turned on. It should come out under 1 MB. Phones play the main video if this is empty.',
+      options: { accept: HERO_VIDEO_ACCEPT },
+      hidden: unlessPhotoStyle,
+      validation: (R) => R.custom(heroVideoCheck('phone')),
     }),
   ],
   preview: {
@@ -823,6 +929,9 @@ export const pageSectionSchemas = [
   spacerSection,
   logoStripSection,
   embedSection,
+  // The builder kit (starter PORTS.md card 173): the smaller blocks an editor
+  // builds an event page or a notice from (builderSections.ts).
+  ...builderSectionSchemas,
   // scaffold: church
   ...CHURCH_SECTION_TYPES,
   // scaffold:end
@@ -862,64 +971,70 @@ export const sectionThumbnailUrl = (type: string): string | undefined =>
 // types are all absent from a given array simply does not appear, which is what
 // lets one config serve the curated per-page lists in richSections.ts. Any type
 // not named in a group falls under "All".
+//
+// The builder kit's blocks (card 173) are merged in by withSiteGroups() from
+// BUILDER_INSERT_GROUPS in builderSections.ts: they join Basics and Photos and
+// video, and add an "Events and notices" group. Edit that list, not this one.
+const BASE_INSERT_GROUPS = [
+  {
+    name: 'basics',
+    title: 'Basics',
+    of: ['heroSection', 'richTextSection', 'imageTextSection', 'spacerSection'],
+  },
+  {
+    name: 'proof',
+    title: 'Quotations and numbers',
+    of: ['quoteSection', 'statSection', 'logoStripSection'],
+  },
+  {
+    name: 'media',
+    title: 'Photos and video',
+    of: ['gallerySection', 'videoSection', 'embedSection'],
+  },
+  {
+    name: 'business',
+    title: 'People, posts and invitations',
+    of: ['teamSection', 'dynamicListSection', 'ctaBandSection'],
+  },
+  {
+    // The authoring kit (card 109). A saved section can also be dropped in as
+    // a COPY from the "Insert a saved section" button under the sections list.
+    name: 'saved',
+    title: 'Saved and synced',
+    of: ['syncedSection'],
+  },
+  // scaffold: church
+  {
+    name: 'church',
+    title: 'Church',
+    of: [
+      'sundayTimesSection',
+      'timelineSection',
+      'staffGridSection',
+      'faqSection',
+      'scriptureBandSection',
+      'heritageBandSection',
+      'giveBandSection',
+      'hoursSection',
+      'documentListSection',
+      'linkCardsSection',
+      'ministrySection',
+      'watchwordSection',
+      'goalsSection',
+      'pledgeSection',
+      'letterSection',
+      'churchTracFormSection',
+    ],
+  },
+  // scaffold:end
+];
+
 export const SECTION_INSERT_MENU: ArrayOptions['insertMenu'] = {
   filter: true,
   // Grid first, so the picker opens on pictures; the list view stays one click
   // away and keeps the search box (the authoring kit, card 109).
   views: [{ name: 'grid', previewImageUrl: sectionThumbnailUrl }, { name: 'list' }],
-  groups: [
-    {
-      name: 'basics',
-      title: 'Basics',
-      of: ['heroSection', 'richTextSection', 'imageTextSection', 'spacerSection'],
-    },
-    {
-      name: 'proof',
-      title: 'Quotations and numbers',
-      of: ['quoteSection', 'statSection', 'logoStripSection'],
-    },
-    {
-      name: 'media',
-      title: 'Photos and video',
-      of: ['gallerySection', 'videoSection', 'embedSection'],
-    },
-    {
-      name: 'business',
-      title: 'People, posts and invitations',
-      of: ['teamSection', 'dynamicListSection', 'ctaBandSection'],
-    },
-    {
-      // The authoring kit (card 109). A saved section can also be dropped in as
-      // a COPY from the "Insert a saved section" button under the sections list.
-      name: 'saved',
-      title: 'Saved and synced',
-      of: ['syncedSection'],
-    },
-    // scaffold: church
-    {
-      name: 'church',
-      title: 'Church',
-      of: [
-        'sundayTimesSection',
-        'timelineSection',
-        'staffGridSection',
-        'faqSection',
-        'scriptureBandSection',
-        'heritageBandSection',
-        'giveBandSection',
-        'hoursSection',
-        'documentListSection',
-        'linkCardsSection',
-        'ministrySection',
-        'watchwordSection',
-        'goalsSection',
-        'pledgeSection',
-        'letterSection',
-        'churchTracFormSection',
-      ],
-    },
-    // scaffold:end
-  ],
+  groups: withSiteGroups(BASE_INSERT_GROUPS, BUILDER_INSERT_GROUPS),
 };
 
 /** The `options` block every pageBuilder array should carry. */

@@ -43,6 +43,7 @@ const BLOCK_LIBRARIES = [
   'sections',
   'richSections',
   'churchSections', // scaffold: church
+  'builderSections', // the builder kit, starter PORTS.md card 173
 ] as const;
 
 function readLibrary(name: string): string {

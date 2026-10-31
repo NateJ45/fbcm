@@ -1,0 +1,193 @@
+---
+// Safe to edit by hand
+// Event details: the when and where of one event, so the church office can build
+// a supper, a retreat or a concert page on its own. On the shared split (rule
+// 17): the words on the text track (the small line, the event's name as the
+// band's Titling h2, a few sentences); the details on the narrow track under a
+// gold rule, the register's mark: each date still to come as a big day numeral
+// with its month in the UI face, the weekday, the time and a label; then
+// "Where"; then the main button (the gold plate), "Add to my calendar" and
+// "Directions". With a photo, the photo takes the narrow track (square corners,
+// like every photograph here) and the details sit under the words. On a phone
+// everything stacks.
+//
+// Worked out at build time (rule 15, src/lib/builder-blocks.ts): past dates drop
+// off and the block disappears once they all have, like a dated notice; with no
+// place typed the place is the church, from Site settings (churchPlace); the
+// calendar file covers every date to come and is handed over as the link itself
+// (a data: link), so no file is published; directions are a map search for the
+// place; each date is described to search engines as a schema.org Event.
+import SanityImage from '@/components/SanityImage.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import { H2_DISPLAY, headingFit } from '@/lib/heading-grammar';
+import {
+  churchPlace,
+  dayOfMonth,
+  eventIcs,
+  eventJsonLd,
+  eventPlace,
+  icsFileName,
+  icsHref,
+  monthShort,
+  plain,
+  siteToday,
+  upcomingOccurrences,
+} from '@/lib/builder-blocks';
+import { surfaceClass } from '@/lib/surfaces';
+import { getSiteSettings } from '@/lib/queries';
+import { site } from '@/data/site';
+import type { ProjectedEventDetailsSection } from '@/lib/builderBlocks.types';
+import type { SanityImageObject, SectionSiteSettings } from '@/lib/pageBuilder.types';
+
+interface Props {
+  block: ProjectedEventDetailsSection;
+  surface?: 'background' | 'muted';
+  headingId: string;
+  /** The route's Site settings (the draft copy in the preview); fetched when absent. */
+  settings?: SectionSiteSettings | null;
+  isFirst?: boolean;
+  /** The build moment; tests pass a fixed one. */
+  now?: Date;
+}
+const {
+  block,
+  surface = 'background',
+  headingId,
+  settings: settingsProp,
+  isFirst = false,
+  now = new Date(),
+} = Astro.props;
+
+const rows = upcomingOccurrences(block.occurrences, siteToday(now));
+// Only fetched when a place is needed and the route did not hand settings down.
+const settings =
+  rows.length > 0 && !plain(block.place)
+    ? settingsProp !== undefined
+      ? settingsProp
+      : ((await getSiteSettings()) as SectionSiteSettings | null)
+    : null;
+const place = eventPlace(block.place, churchPlace(settings));
+const title = block.title?.trim() || 'Event';
+const photo = block.image?.asset ? (block.image as SanityImageObject) : null;
+const host = new URL(site.url).host;
+const pageUrl = new URL(Astro.url.pathname, site.url).href;
+const ics =
+  block.showCalendar === false
+    ? ''
+    : eventIcs({
+        title,
+        occurrences: rows,
+        place,
+        note: block.note,
+        url: pageUrl,
+        uidBase: plain(block._key) || title,
+        host,
+        now,
+      });
+const button = block.button?.label ? block.button : null;
+const ld = eventJsonLd({
+  title,
+  occurrences: rows,
+  place,
+  note: block.note,
+  url: pageUrl,
+  organizer: { name: site.name, url: site.url },
+});
+---
+
+{rows.length > 0 && (
+  <section
+    class={surfaceClass(surface)}
+    data-builder-block="eventDetailsSection"
+    aria-labelledby={headingId}
+  >
+    <div
+      class:list={[
+        'split mx-auto max-w-content px-gutter py-section-lg bb-event',
+        photo ? 'bb-event--photo' : 'bb-event--plain',
+      ]}
+    >
+      {photo && (
+        <figure class="bb-event__media" data-reveal>
+          <SanityImage
+            source={photo}
+            width={800}
+            sizes="(min-width: 64rem) 40vw, 100vw"
+            quality={75}
+            loading={isFirst ? 'eager' : 'lazy'}
+            fetchpriority={isFirst ? 'high' : undefined}
+          />
+        </figure>
+      )}
+
+      <div class="bb-event__words min-w-0">
+        {block.eyebrow && <p class="bb-eyebrow">{block.eyebrow}</p>}
+        <h2 id={headingId} class:list={[H2_DISPLAY, 'h-fit text-indigo']} style={headingFit(title)}>
+          <span class="h-fit-in">{title}</span>
+        </h2>
+        {block.note && <p class="bb-intro">{block.note}</p>}
+      </div>
+
+      <div class="bb-event__card min-w-0">
+        <ul class="bb-event__dates" role="list">
+          {/* A second time on the same day sits under the first without repeating the
+                date; the weekday stays for screen readers. */}
+          {rows.map((r, i) => {
+            const same = i > 0 && rows[i - 1].date === r.date;
+            return (
+              <li class:list={['bb-event__date', same && 'bb-event__date--same']}>
+                <span class="bb-event__num" aria-hidden="true">
+                  {!same && <span class="bb-event__day">{dayOfMonth(r.date)}</span>}
+                  {!same && <span class="bb-event__month">{monthShort(r.date)}</span>}
+                </span>
+                <span class="bb-event__when">
+                  <span class:list={['bb-event__weekday', same && 'sr-only']}>{r.day}</span>
+                  <span class="bb-event__time">
+                    {r.time}
+                    {r.label && <span class="bb-event__label">{r.label}</span>}
+                  </span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+
+        {place && (
+          <div class="bb-event__place">
+            <p class="bb-event__place-title">Where</p>
+            <p>
+              {place.lines.map((line) => (
+                <span class="block">{line}</span>
+              ))}
+            </p>
+          </div>
+        )}
+
+        <div class="bb-event__actions">
+          {button && <CtaLink cta={button} variant="gold" />}
+          {(ics || place) && (
+            <p class="bb-event__links">
+              {ics && (
+                <a class="bb-event__link" href={icsHref(ics)} download={icsFileName(title)}>
+                  Add to my calendar
+                </a>
+              )}
+              {place && (
+                <a
+                  class="bb-event__link bb-event__link--out"
+                  href={place.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Directions
+                  <span class="sr-only"> (opens in a new tab)</span>
+                </a>
+              )}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+    {ld && <script is:inline type="application/ld+json" set:html={ld} />}
+  </section>
+)}

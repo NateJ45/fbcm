@@ -47,6 +47,9 @@ const NON_STEGA_FIELDS = new Set([
   'tone',
   'variant',
   'width',
+  // Starter card 189: the opener's Style. Hero.astro compares it to 'photo'; an encoded value
+  // would draw the standard opener in the preview.
+  'heroStyle',
   // Not in this template yet, but standard enum names across the site family.
   // Carried so a block ported from a sibling repo is not a preview-only bug
   // waiting to be found.
@@ -104,6 +107,13 @@ const NON_STEGA_FIELDS = new Set([
   // read back out of a URL fragment, so an encoded copy would produce a
   // wrapper id nobody can link to, in the preview only.
   'current',
+  // The builder kit (starter PORTS.md card 173): the notice's urgency picks its
+  // band, and the picked times are read as times (rule 8b).
+  'urgency',
+  'startTime',
+  'endTime',
+  // Starter card 193: the progress bar's unit picks dollars or a plain count.
+  'unit',
 ]);
 
 /** Whether a field name skips stega encoding in preview (rule 8b). */

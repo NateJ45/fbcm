@@ -52,6 +52,9 @@ const cta = (label: string) => ({
   externalUrl: '#',
 });
 
+/** A calendar day `days` from the build, for the builder kit's dated blocks. */
+const soon = (days: number) => new Date(Date.now() + days * 86_400_000).toISOString().slice(0, 10);
+
 /** The Site settings the church blocks read, fixed so the pictures never move. */
 const SETTINGS = {
   title: 'First Baptist Church Muncie',
@@ -395,6 +398,227 @@ const SECTIONS: Record<string, unknown>[] = [
     },
   },
   // scaffold:end
+  // ── The builder kit (starter PORTS.md card 173) ──────────────────────────
+  // The dated blocks count from the day of the build (soon()), so the wall,
+  // the thumbnails and tests/builder-blocks.spec.ts always see them showing.
+  {
+    _type: 'columnsSection',
+    _key: 'columns',
+    heading: 'Wednesday nights',
+    intro: 'Supper, then something for every age.',
+    textColumns: [
+      {
+        _key: 'c1',
+        heading: 'Supper',
+        body: [para('c1p', 'A home-cooked meal in the fellowship hall at 5:30 pm.')],
+      },
+      {
+        _key: 'c2',
+        heading: 'Bible study',
+        body: [para('c2p', 'Adults read a book of the Bible together, a chapter a week.')],
+      },
+      {
+        _key: 'c3',
+        heading: 'Children and youth',
+        body: [para('c3p', 'Games, songs and a Bible story, from age four up.')],
+      },
+    ],
+  },
+  {
+    _type: 'buttonRowSection',
+    _key: 'buttons',
+    heading: 'Get connected',
+    links: [
+      { _key: 'b1', link: cta('Plan your visit') },
+      { _key: 'b2', link: cta('Watch online') },
+      { _key: 'b3', link: cta('Call the office') },
+    ],
+  },
+  { _type: 'photoSection', _key: 'photo', image: image('The sanctuary on a Sunday morning') },
+  {
+    _type: 'tabsSection',
+    _key: 'tabs',
+    heading: 'For your family',
+    tabs: [
+      {
+        _key: 't1',
+        label: 'Nursery',
+        body: [para('t1p', 'Staffed every Sunday morning for babies and toddlers.')],
+      },
+      {
+        _key: 't2',
+        label: 'Children',
+        body: [para('t2p', 'Sunday school at 9:30 am, then children worship with their families.')],
+      },
+      {
+        _key: 't3',
+        label: 'Youth',
+        body: [para('t3p', 'Sunday evenings for students in sixth through twelfth grade.')],
+      },
+    ],
+  },
+  {
+    _type: 'countdownSection',
+    _key: 'countdown',
+    eventName: 'Vacation Bible School',
+    startDate: soon(12),
+    endDate: soon(16),
+    intro: 'Five mornings of songs, stories and games for children.',
+    duringText: 'It is happening now. Come and join us!',
+    afterText: 'Thank you to everyone who came!',
+    link: cta('Sign up'),
+  },
+  {
+    _type: 'noticeSection',
+    _key: 'notice',
+    message: 'No Wednesday supper this week. Questions? Call (765) 555-0100.',
+    urgency: 'info',
+    startDate: soon(-1),
+    endDate: soon(30),
+  },
+  {
+    _type: 'eventDetailsSection',
+    _key: 'event',
+    eyebrow: 'Save the date',
+    title: 'Thanksgiving dinner',
+    occurrences: [{ _key: 'o1', date: soon(9), startTime: '17:30', endTime: '19:00' }],
+    note: 'Bring a dish to share, or just bring yourself. Everyone is welcome.',
+    button: cta('Let us know you are coming'),
+    showCalendar: true,
+  },
+  {
+    _type: 'scheduleSection',
+    _key: 'schedule',
+    heading: 'The day',
+    days: [
+      {
+        _key: 'd1',
+        items: [
+          { _key: 'i1', startTime: '09:00', title: 'Doors open', note: 'In the fellowship hall' },
+          { _key: 'i2', startTime: '09:30', title: 'Songs and a Bible story' },
+          { _key: 'i3', startTime: '11:45', title: 'Pick-up', note: 'At the Adams Street door' },
+        ],
+      },
+    ],
+  },
+  // ── Starter card 193 (2026-10-27): contact card, progress, calendar buttons, icon cards,
+  // steps on a path, the hub. Made-up words and numbers: the wall is not for visitors.
+  {
+    _type: 'contactCardSection',
+    _key: 'contact',
+    heading: 'Youth ministry',
+    callButtons: true,
+    phone: '(555) 555-0100',
+    email: 'youth@example.org',
+    address: 'The youth room\n123 Example Street, Springfield',
+    hours: 'Sundays: 5 pm to 7 pm\nWednesdays: 6 pm to 8 pm',
+  },
+  // Card 198: the same block with nothing typed, filling itself from Site
+  // settings-shaped church facts (the `facts` key exists only for fixtures).
+  {
+    _type: 'contactCardSection',
+    _key: 'contact-facts',
+    heading: 'Visit or call',
+    facts: {
+      title: 'An example church',
+      address: '123 Example Street\nSpringfield, IN 47300',
+      phone: '(555) 555-0142',
+      email: 'office@example.org',
+      officeHours: [
+        {
+          _type: 'block',
+          _key: 'oh1',
+          children: [{ _type: 'span', text: 'Monday to Thursday: 9 am to 12 pm and 1 pm to 4 pm' }],
+        },
+      ],
+    },
+  },
+  {
+    _type: 'progressSection',
+    _key: 'progress',
+    heading: 'The new roof',
+    intro: 'Every gift goes straight to the roof over the sanctuary.',
+    unit: 'dollars',
+    goal: 50000,
+    raised: 32500,
+    asOf: '2026-10-18',
+    link: cta('Give to the fund'),
+  },
+  {
+    _type: 'calendarSubscribeSection',
+    _key: 'subscribe',
+    heading: 'Never miss a date',
+    intro: 'Add the church calendar once and new dates arrive on their own.',
+    feed: 'https://example.org/calendar/events.ics',
+  },
+  {
+    _type: 'iconCardsSection',
+    _key: 'iconcards',
+    heading: 'What to expect',
+    intro: 'Three things people ask about before their first Sunday.',
+    cards: [
+      [
+        'home',
+        'A warm welcome',
+        'Someone meets you at the door and shows you around.',
+        'Every Sunday',
+      ],
+      ['clock', 'About an hour', 'Songs, prayer and a sermon from the Bible.', ''],
+      [
+        'users',
+        'Kids are welcome',
+        'Children can stay with you or join their own class.',
+        'All ages',
+      ],
+    ].map(([icon, title, body, note], i) => ({
+      _key: `ic${i}`,
+      icon,
+      title,
+      body,
+      note,
+      link: i === 0 ? cta('Read more') : undefined,
+    })),
+  },
+  {
+    _type: 'stepsRailSection',
+    _key: 'steps',
+    heading: 'Your first Sunday',
+    intro: 'Three steps, from the parking lot to your seat.',
+    firstStepCard: true,
+    steps: [
+      ['door', 'Park and come in', 'Use the main doors. Someone will say hello.'],
+      ['users', 'Find a seat', 'Sit anywhere you like. Nobody saves seats.'],
+      ['coffee', 'Stay for coffee', 'Meet a few people after the service.'],
+    ].map(([icon, title, body], i) => ({ _key: `st${i}`, icon, title, body })),
+    endHeading: 'We look forward to meeting you.',
+    link: cta('Plan your visit'),
+  },
+  {
+    _type: 'hubSection',
+    _key: 'hub',
+    heading: 'Find your place',
+    intro: 'Every ministry, by who it is for.',
+    groups: [
+      ['For families', ['Sunday school', 'Children on Wednesdays']],
+      ['For students', ['Youth group', 'Summer camp']],
+      ['For adults', ['Bible study', 'Choir']],
+    ].map(([title, cards], gi) => ({
+      _key: `hg${gi}`,
+      title,
+      line: 'A short line about this group.',
+      cards: (cards as string[]).map((card, ci) => ({
+        _key: `hc${gi}${ci}`,
+        title: card,
+        label: gi === 0 ? 'All ages' : 'Everyone',
+        when: ci === 0 ? 'Sundays, 9:30 am' : undefined,
+        place: ci === 0 ? 'The education wing' : undefined,
+        body: 'A sentence or two about what happens and who it suits.',
+        icon: ['users', 'book', 'home', 'calendar', 'heart', 'star'][gi * 2 + ci],
+        image: gi === 0 && ci === 0 ? image(card) : undefined,
+        link: ci === 0 ? cta('Find out more') : undefined,
+      })),
+    })),
+  },
   {
     _type: 'teamSection',
     _key: 'team',

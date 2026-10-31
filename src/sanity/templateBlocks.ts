@@ -215,3 +215,127 @@ export const give = (heading: string, body: string): Rec => ({
   heading,
   body,
 });
+
+// ── The builder kit (builderSections.ts, starter PORTS.md card 173) ──────────
+
+/**
+ * A calendar day `days` from today, as YYYY-MM-DD. Templates use it so a new
+ * event page opens with dates in the future (an event or countdown whose dates
+ * have passed draws nothing), and the editor changes them to the real ones.
+ */
+export const daysFromNow = (days: number, from = new Date()): string => {
+  const d = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate() + days));
+  return d.toISOString().slice(0, 10);
+};
+
+export const column = (heading: string, ...body: string[]): Rec => ({
+  _type: 'textColumn',
+  heading,
+  body: paras(...body),
+});
+
+export const columns = (heading: string, cols: Rec[], intro?: string): Rec => ({
+  _type: 'columnsSection',
+  ...(heading ? { heading } : {}),
+  ...(intro ? { intro } : {}),
+  textColumns: cols,
+});
+
+export const buttonRow = (heading: string, links: Rec[], intro?: string): Rec => ({
+  _type: 'buttonRowSection',
+  ...(heading ? { heading } : {}),
+  ...(intro ? { intro } : {}),
+  links: links.map((link) => ({ _type: 'quickLink', link })),
+});
+
+export const tab = (label: string, ...body: string[]): Rec => ({
+  _type: 'tabPanel',
+  label,
+  body: paras(...body),
+});
+
+export const tabs = (heading: string, panels: Rec[], intro?: string): Rec => ({
+  _type: 'tabsSection',
+  ...(heading ? { heading } : {}),
+  ...(intro ? { intro } : {}),
+  tabs: panels,
+});
+
+export const countdown = (o: {
+  eventName: string;
+  startDate: string;
+  endDate?: string;
+  intro?: string;
+  link?: Rec;
+}): Rec => ({
+  _type: 'countdownSection',
+  eventName: o.eventName,
+  startDate: o.startDate,
+  ...(o.endDate ? { endDate: o.endDate } : {}),
+  ...(o.intro ? { intro: o.intro } : {}),
+  duringText: 'It is happening now. Come and join us!',
+  afterText: 'Thank you to everyone who came!',
+  ...(o.link ? { link: o.link } : {}),
+});
+
+export const notice = (
+  message: string,
+  o: { urgency?: 'info' | 'urgent'; label?: string; startDate?: string; endDate?: string } = {},
+): Rec => ({
+  _type: 'noticeSection',
+  message,
+  urgency: o.urgency ?? 'info',
+  ...(o.label ? { label: o.label } : {}),
+  ...(o.startDate ? { startDate: o.startDate } : {}),
+  ...(o.endDate ? { endDate: o.endDate } : {}),
+});
+
+export const eventDate = (
+  date: string,
+  o: { startTime?: string; endTime?: string; label?: string } = {},
+): Rec => ({
+  _type: 'eventDate',
+  date,
+  ...(o.startTime ? { startTime: o.startTime } : {}),
+  ...(o.endTime ? { endTime: o.endTime } : {}),
+  ...(o.label ? { label: o.label } : {}),
+});
+
+/** Event details. With no `place` it is at the church (Site settings fills it in). */
+export const eventDetails = (o: {
+  eyebrow?: string;
+  title: string;
+  dates: Rec[];
+  place?: string;
+  note?: string;
+  button?: Rec;
+}): Rec => ({
+  _type: 'eventDetailsSection',
+  ...(o.eyebrow ? { eyebrow: o.eyebrow } : {}),
+  title: o.title,
+  occurrences: o.dates,
+  ...(o.place ? { place: o.place } : {}),
+  ...(o.note ? { note: o.note } : {}),
+  ...(o.button ? { button: o.button } : {}),
+  showCalendar: true,
+});
+
+export const slot = (startTime: string, title: string, note?: string): Rec => ({
+  _type: 'scheduleItem',
+  ...(startTime ? { startTime } : {}),
+  title,
+  ...(note ? { note } : {}),
+});
+
+export const scheduleDay = (title: string, items: Rec[]): Rec => ({
+  _type: 'scheduleDay',
+  ...(title ? { title } : {}),
+  items,
+});
+
+export const schedule = (heading: string, days: Rec[], intro?: string): Rec => ({
+  _type: 'scheduleSection',
+  ...(heading ? { heading } : {}),
+  ...(intro ? { intro } : {}),
+  days,
+});

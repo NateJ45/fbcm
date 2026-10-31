@@ -194,7 +194,7 @@ export const guides: Guide[] = [
       { kind: 'h', text: 'How a page is built' },
       {
         kind: 'p',
-        text: 'Each page is a stack of **sections**, one on top of the next: an opening section, a section of text beside a photo, a section of questions and answers, and so on. You choose what goes in each section. You do not choose colours or spacing: the design sets those from where the section sits on the page, which is why the site looks the same whoever edits it.',
+        text: 'Each page is a stack of **sections**, one on top of the next: an opening section, a section of text beside a photo, a section of questions and answers, and so on. You choose what goes in each section. You do not choose colors or spacing: the design sets those from where the section sits on the page, which is why the site looks the same whoever edits it.',
       },
       { kind: 'h', text: 'The easy way: click the words on the page' },
       {
@@ -490,7 +490,7 @@ export const guides: Guide[] = [
           '`{calendar}` goes to `Events calendar`.',
           '`{prayer}` goes to `Prayer list`.',
           '`{app}` goes to `Church app`.',
-          '`{wedding-enquiry}` goes to `Wedding enquiry form`.',
+          '`{wedding-enquiry}` goes to `Wedding inquiry form`.',
           '`{wedding-booking}` goes to `Building booking form`.',
         ],
       },
@@ -779,7 +779,7 @@ export const guides: Guide[] = [
       { kind: 'h', text: 'Our goals' },
       {
         kind: 'p',
-        text: 'Up to four goals, each with its own colour: green, gold, purple, brown, in the order you list them. Each goal has a `Name` ("Worship"), a `Subtitle` ("Worshiping as the Body of Christ"), and an optional `In brackets` word ("Discipleship"). `Building drawing` picks which of the four goal drawings the goal shows beside its words: window, door, lamp on a stand, or basin and towel. `Opening sentence` introduces the goal, and `Pull quote` is an optional short line shown large, normally on the second goal only.',
+        text: 'Up to four goals, each with its own color: green, gold, purple, brown, in the order you list them. Each goal has a `Name` ("Worship"), a `Subtitle` ("Worshiping as the Body of Christ"), and an optional `In brackets` word ("Discipleship"). `Building drawing` picks which of the four goal drawings the goal shows beside its words: window, door, lamp on a stand, or basin and towel. `Opening sentence` introduces the goal, and `Pull quote` is an optional short line shown large, normally on the second goal only.',
       },
       {
         kind: 'p',
@@ -985,7 +985,7 @@ guides.push(
       {
         kind: 'bullets',
         items: [
-          '**Sunday checklist**: the weekly jobs that keep the website current. Most tick themselves.',
+          '**Sunday checklist**: the weekly jobs that keep the website current. Most check themselves.',
           '**Is it live?**: whether the change you last published is on the website yet.',
           '**Fix-it list**: the things the Checkup found, by name, like a picture with no description. `Edit` opens it at the right spot.',
           '**Visitors**: how many people visited in the last 7 days against the week before, the most-read pages and how people found the website.',
@@ -1140,12 +1140,12 @@ guides.push(
     category: 'Sundays and notices',
     title: 'The Sunday checklist',
     icon: 'check',
-    lead: 'The weekly jobs on Home, and how they get ticked.',
+    lead: 'The weekly jobs on Home, and how they get checked.',
     diy: 'self',
     body: [
       {
         kind: 'p',
-        text: 'Home has a card called **Sunday checklist** with the jobs that keep the website current each week. Three tick themselves when the website can see they are done:',
+        text: 'Home has a card called **Sunday checklist** with the jobs that keep the website current each week. Three check themselves when the website can see they are done:',
       },
       {
         kind: 'bullets',
@@ -1157,7 +1157,7 @@ guides.push(
       },
       {
         kind: 'p',
-        text: "The website cannot see inside YouTube or Church Trac, so **Sunday's livestream** and **this week's events** have a box you tick yourself. Ticks start fresh every Monday.",
+        text: "The website cannot see inside YouTube or Church Trac, so **Sunday's livestream** and **this week's events** have a box you check yourself. Checks start fresh every Monday.",
       },
       { kind: 'shot', key: 'home-checklist' },
       {
@@ -1401,7 +1401,7 @@ guides.push(
         kind: 'callout',
         tone: 'positive',
         title: 'The newest issue goes to the top by itself.',
-        text: 'The website sorts the issues by month and year, shows the newest on the home page and draws each cover from the first page of the PDF. Nothing to tick, nothing to move.',
+        text: 'The website sorts the issues by month and year, shows the newest on the home page and draws each cover from the first page of the PDF. Nothing to check, nothing to move.',
       },
       {
         kind: 'p',
@@ -1484,7 +1484,7 @@ guides.push(
       {
         kind: 'bullets',
         items: [
-          '**Watch live**: the home page’s Watch live link goes to the church’s next scheduled stream. Schedule Sunday’s stream on YouTube during the week, and tick it on the Sunday checklist.',
+          '**Watch live**: the home page’s Watch live link goes to the church’s next scheduled stream. Schedule Sunday’s stream on YouTube during the week, and check it on the Sunday checklist.',
           '**Last Sunday**: after the service, the website finds the recording on the church’s YouTube channel and shows it as last Sunday’s replay. It looks again on Sunday afternoon and Monday morning.',
           '**The YouTube channel**: the address is in Site settings, `Church details`, `YouTube channel`. Change it only if the church moves to a new channel.',
         ],

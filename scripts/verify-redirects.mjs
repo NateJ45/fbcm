@@ -26,6 +26,8 @@
 //      redirects.ts's own comment on why source and destination normalize
 //      differently), so those are compared too; a fragment is not sent by real
 //      browsers and Cloudflare correctly drops it, so it is never compared.
+//      A first hop that only adds the trailing slash (the zone's 301 rule,
+//      OPERATIONS.md "Cloudflare zone rules") is followed once before comparing.
 //   2. fetch(origin + to's path[+query]) must answer 200, following at most one
 //      trailing-slash redirect (Astro serves `/foo/index.html` at `/foo/`, and
 //      a redirect target written without the trailing slash is one hop from
@@ -194,6 +196,19 @@ async function fetchFinalStatus(url) {
   }
 }
 
+/** Where `path` (asked for in its slashed form) redirects to on the live site, or null. */
+async function liveRedirectPath(path) {
+  try {
+    const resp = await fetch(`${ORIGIN}${path}/`.replace(/\/\/$/, '/'), { redirect: 'manual' });
+    const location = resp.headers.get('location');
+    return resp.status >= 300 && resp.status < 400 && location
+      ? locationPath(location, ORIGIN)
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 // --- Main ------------------------------------------------------------------
 async function main() {
   const rules = FROM_DIST ? loadFromDist() : await loadFromSanity();
@@ -209,9 +224,20 @@ async function main() {
     let location = '';
     let ok = false;
     let reason = '';
+    let landedPath = null; // set when the rule lands past a collapsed chain
 
     try {
-      const resp = await fetch(fromUrl, { redirect: 'manual' });
+      let resp = await fetch(fromUrl, { redirect: 'manual' });
+      // The zone rule 301s `/youth` to `/youth/` before _redirects sees it;
+      // follow that one slash hop, then check the real rule as usual.
+      const firstHop = resp.headers.get('location');
+      if (
+        resp.status === 301 &&
+        firstHop &&
+        locationPath(firstHop, ORIGIN) === rule.from.replace(/\/+$/, '')
+      ) {
+        resp = await fetch(new URL(firstHop, fromUrl), { redirect: 'manual' });
+      }
       status = resp.status;
       location = resp.headers.get('location') ?? '';
 
@@ -221,7 +247,13 @@ async function main() {
         const { path: expectedPath, query: expectedQuery } = splitTarget(rule.to);
         const actualPath = locationPath(location, ORIGIN);
         const actualQuery = locationQuery(location, ORIGIN);
-        if (actualPath !== expectedPath) {
+        // finalizeRedirects() (src/lib/redirect-final.ts) collapses a chain like
+        // /team/x -> /staff -> /ministers into one hop, so a target that is
+        // itself redirected on the live site counts when it lands on the same page.
+        if (actualPath !== expectedPath && (await liveRedirectPath(expectedPath)) === actualPath) {
+          ok = true;
+          landedPath = actualPath;
+        } else if (actualPath !== expectedPath) {
           reason = `location path "${actualPath}" != expected "${expectedPath}"`;
         } else if (expectedQuery && actualQuery !== expectedQuery) {
           reason = `location query "${actualQuery}" != expected "${expectedQuery}"`;
@@ -236,7 +268,8 @@ async function main() {
     // Step 2: the target itself must resolve to a real page.
     let targetStatus = -1;
     if (ok) {
-      const { path: targetPath, query: targetQuery } = splitTarget(rule.to);
+      const { path: rawPath, query: targetQuery } = splitTarget(rule.to);
+      const targetPath = landedPath ?? rawPath;
       targetStatus = await fetchFinalStatus(`${ORIGIN}${targetPath}${targetQuery}`);
       if (targetStatus !== 200) {
         ok = false;

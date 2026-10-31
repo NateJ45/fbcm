@@ -4,6 +4,17 @@
 import { defineType, defineField } from 'sanity';
 import { linkRule, LINK_TOKEN_HINT } from './_linkRule.ts';
 
+// A button is in use once any part of it is filled in. Only then are its words
+// and where it goes required: an optional button left empty must never block
+// Publish (starter PORTS.md card 178). Before, a fresh block with an optional
+// button (Event details' main button, a notice's link) stopped Publish with
+// "Type the words on the button" although nobody had touched the button.
+const inUse = (p: Record<string, unknown> | undefined): boolean =>
+  !!(
+    p &&
+    (p.label || p.linkType || p.internalLink || p.externalUrl || p.emailAddress || p.phoneNumber)
+  );
+
 export const ctaBlock = defineType({
   name: 'ctaBlock',
   title: 'Button',
@@ -15,7 +26,11 @@ export const ctaBlock = defineType({
       type: 'string',
       description: 'A few words, like "Plan a visit".',
       validation: (Rule) => [
-        Rule.required().error('Type the words on the button.'),
+        Rule.custom((value, ctx) =>
+          inUse(ctx.parent as Record<string, unknown>) && !value
+            ? 'Type the words on the button, or clear the button to leave it off.'
+            : true,
+        ),
         Rule.max(40).error('Keep the button text to 40 letters or fewer.'),
       ],
     }),
@@ -32,7 +47,12 @@ export const ctaBlock = defineType({
         ],
         layout: 'radio',
       },
-      validation: (Rule) => Rule.required().error('Choose where the button goes.'),
+      validation: (Rule) =>
+        Rule.custom((value, ctx) =>
+          inUse(ctx.parent as Record<string, unknown>) && !value
+            ? 'Choose where the button goes.'
+            : true,
+        ),
     }),
     defineField({
       name: 'internalLink',
@@ -100,7 +120,10 @@ export const ctaBlock = defineType({
       title: 'Open in a new tab',
       type: 'boolean',
       description: 'Usually off. Turn on for a link to another website.',
-      initialValue: false,
+      // No initialValue (card 178): one would make a half-filled button on every
+      // new block that has an optional button, and the button's required words
+      // would then block Publish. Unset reads as off for a link on this site
+      // (CtaLink.astro).
     }),
   ],
   preview: {

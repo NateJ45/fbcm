@@ -15,6 +15,7 @@
 //
 // This file is safe to edit by hand. Do NOT import from it in sanity.types.ts.
 
+import type { BuilderPageBlock } from './builderBlocks.types';
 import type {
   HeroSection as _HeroSection,
   RichTextSection as _RichTextSection,
@@ -137,13 +138,27 @@ export interface AnchoredSection {
 
 export type ProjectedHeroSection = { _key: string } & Omit<
   _HeroSection,
-  'backgroundImage' | 'frames' | 'primaryCta' | 'secondaryCta'
+  | 'backgroundImage'
+  | 'frames'
+  | 'primaryCta'
+  | 'secondaryCta'
+  | 'backgroundVideo'
+  | 'backgroundVideoPhone'
+  | 'glance'
 > & {
     backgroundImage?: ProjectedImage | null;
     /** Up to twelve photos (schema-capped). 2+ render the home hero slideshow. */
     frames?: ProjectedImage[] | null;
     primaryCta?: ProjectedCtaBlock | null;
     secondaryCta?: ProjectedCtaBlock | null;
+    // The photo hero (starter card 189): the clips as URL and type, the short-facts card's link resolved.
+    backgroundVideo?: { url?: string | null; mimeType?: string | null } | null;
+    backgroundVideoPhone?: { url?: string | null; mimeType?: string | null } | null;
+    glance?: {
+      title?: string | null;
+      lines?: (string | null)[] | null;
+      link?: ProjectedCtaBlock | null;
+    } | null;
   };
 
 export type ProjectedRichTextSection = { _key: string } & _RichTextSection & {
@@ -575,6 +590,8 @@ export type PageBuilderBlock =
   | ProjectedEmbedSection
   // Church-reverse-port
   | ProjectedDynamicListSection
+  // The builder kit (starter PORTS.md card 173), src/lib/builderBlocks.types.ts
+  | BuilderPageBlock
   // scaffold: church
   | ProjectedSundayTimesSection
   | ProjectedTimelineSection

@@ -15,11 +15,35 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type Glance = {
+  title?: string;
+  lines?: Array<string>;
+  link?: CtaBlock;
+};
+
 export type SanityImageAssetReference = {
   _ref: string;
   _type: 'reference';
   _weak?: boolean;
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+};
+
+export type IconCardImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "iconCard.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  _type: 'image';
+};
+
+export type HubCardImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "hubCard.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  _type: 'image';
 };
 
 export type TimelineRowImage = {
@@ -259,6 +283,27 @@ export type BusinessInfo = {
   }>;
 };
 
+export type HomePageReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'homePage';
+};
+
+export type JournalPageReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'journalPage';
+};
+
+export type PageReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'page';
+};
+
 export type SiteSettings = {
   _id: string;
   _type: 'siteSettings';
@@ -362,6 +407,30 @@ export type SiteSettings = {
     _type: 'footerColumn';
     _key: string;
   }>;
+  phoneMenuGroups?: Array<{
+    title?: string;
+    links?: Array<
+      {
+        _key: string;
+      } & NavLink
+    >;
+    _type: 'phoneMenuGroup';
+    _key: string;
+  }>;
+  actionBars?: Array<{
+    everyPage?: boolean;
+    page?: HomePageReference | JournalPageReference | PageReference;
+    text?: string;
+    action?: NavLink;
+    _type: 'actionBar';
+    _key: string;
+  }>;
+  whereNext?: Array<{
+    link?: NavLink;
+    note?: string;
+    _type: 'whereNextRow';
+    _key: string;
+  }>;
   headerCta?: {
     show?: boolean;
     label?: string;
@@ -428,32 +497,11 @@ export type SiteSettings = {
   };
 };
 
-export type HomePageReference = {
-  _ref: string;
-  _type: 'reference';
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: 'homePage';
-};
-
-export type JournalPageReference = {
-  _ref: string;
-  _type: 'reference';
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: 'journalPage';
-};
-
 export type PrivacyPageReference = {
   _ref: string;
   _type: 'reference';
   _weak?: boolean;
   [internalGroqTypeReferenceTo]?: 'privacyPage';
-};
-
-export type PageReference = {
-  _ref: string;
-  _type: 'reference';
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: 'page';
 };
 
 export type NavLink = {
@@ -580,6 +628,48 @@ export type SectionPreset = {
     | ({
         _key: string;
       } & EmbedSection)
+    | ({
+        _key: string;
+      } & ColumnsSection)
+    | ({
+        _key: string;
+      } & ButtonRowSection)
+    | ({
+        _key: string;
+      } & PhotoSection)
+    | ({
+        _key: string;
+      } & TabsSection)
+    | ({
+        _key: string;
+      } & CountdownSection)
+    | ({
+        _key: string;
+      } & NoticeSection)
+    | ({
+        _key: string;
+      } & EventDetailsSection)
+    | ({
+        _key: string;
+      } & ScheduleSection)
+    | ({
+        _key: string;
+      } & ContactCardSection)
+    | ({
+        _key: string;
+      } & ProgressSection)
+    | ({
+        _key: string;
+      } & CalendarSubscribeSection)
+    | ({
+        _key: string;
+      } & IconCardsSection)
+    | ({
+        _key: string;
+      } & StepsRailSection)
+    | ({
+        _key: string;
+      } & HubSection)
     | ({
         _key: string;
       } & SundayTimesSection)
@@ -1084,6 +1174,519 @@ export type SundayTimesSection = {
   anchor?: Slug;
 };
 
+export type HubSection = {
+  _type: 'hubSection';
+  heading?: string;
+  intro?: string;
+  groups?: Array<{
+    title?: string;
+    line?: string;
+    cards?: Array<{
+      image?: HubCardImage;
+      icon?:
+        | 'home'
+        | 'heart'
+        | 'star'
+        | 'calendar'
+        | 'clock'
+        | 'map-pin'
+        | 'phone'
+        | 'mail'
+        | 'chat'
+        | 'users'
+        | 'book'
+        | 'coffee'
+        | 'gift'
+        | 'leaf'
+        | 'tool'
+        | 'door'
+        | 'check';
+      title?: string;
+      label?: string;
+      when?: string;
+      place?: string;
+      body?: string;
+      link?: CtaBlock;
+      _type: 'hubCard';
+      _key: string;
+    }>;
+    _type: 'hubGroup';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
+export type StepsRailSection = {
+  _type: 'stepsRailSection';
+  heading?: string;
+  intro?: string;
+  steps?: Array<{
+    icon?:
+      | 'home'
+      | 'heart'
+      | 'star'
+      | 'calendar'
+      | 'clock'
+      | 'map-pin'
+      | 'phone'
+      | 'mail'
+      | 'chat'
+      | 'users'
+      | 'book'
+      | 'coffee'
+      | 'gift'
+      | 'leaf'
+      | 'tool'
+      | 'door'
+      | 'check';
+    title?: string;
+    body?: string;
+    link?: CtaBlock;
+    _type: 'railStep';
+    _key: string;
+  }>;
+  firstStepCard?: boolean;
+  endHeading?: string;
+  link?: CtaBlock;
+  anchor?: Slug;
+};
+
+export type IconCardsSection = {
+  _type: 'iconCardsSection';
+  heading?: string;
+  intro?: string;
+  cards?: Array<{
+    icon?:
+      | 'home'
+      | 'heart'
+      | 'star'
+      | 'calendar'
+      | 'clock'
+      | 'map-pin'
+      | 'phone'
+      | 'mail'
+      | 'chat'
+      | 'users'
+      | 'book'
+      | 'coffee'
+      | 'gift'
+      | 'leaf'
+      | 'tool'
+      | 'door'
+      | 'check';
+    image?: IconCardImage;
+    title?: string;
+    body?: string;
+    note?: string;
+    link?: CtaBlock;
+    _type: 'iconCard';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
+export type CalendarSubscribeSection = {
+  _type: 'calendarSubscribeSection';
+  heading?: string;
+  intro?: string;
+  feed?: string;
+  anchor?: Slug;
+};
+
+export type ProgressSection = {
+  _type: 'progressSection';
+  heading?: string;
+  intro?: string;
+  unit?: 'dollars' | 'number';
+  goal?: number;
+  raised?: number;
+  asOf?: string;
+  link?: CtaBlock;
+  anchor?: Slug;
+};
+
+export type ContactCardSection = {
+  _type: 'contactCardSection';
+  heading?: string;
+  intro?: string;
+  callButtons?: boolean;
+  phone?: string;
+  email?: string;
+  address?: string;
+  hours?: string;
+  anchor?: Slug;
+};
+
+export type ScheduleSection = {
+  _type: 'scheduleSection';
+  heading?: string;
+  intro?: string;
+  days?: Array<{
+    title?: string;
+    items?: Array<{
+      startTime?:
+        | '06:00'
+        | '06:15'
+        | '06:30'
+        | '06:45'
+        | '07:00'
+        | '07:15'
+        | '07:30'
+        | '07:45'
+        | '08:00'
+        | '08:15'
+        | '08:30'
+        | '08:45'
+        | '09:00'
+        | '09:15'
+        | '09:30'
+        | '09:45'
+        | '10:00'
+        | '10:15'
+        | '10:30'
+        | '10:45'
+        | '11:00'
+        | '11:15'
+        | '11:30'
+        | '11:45'
+        | '12:00'
+        | '12:15'
+        | '12:30'
+        | '12:45'
+        | '13:00'
+        | '13:15'
+        | '13:30'
+        | '13:45'
+        | '14:00'
+        | '14:15'
+        | '14:30'
+        | '14:45'
+        | '15:00'
+        | '15:15'
+        | '15:30'
+        | '15:45'
+        | '16:00'
+        | '16:15'
+        | '16:30'
+        | '16:45'
+        | '17:00'
+        | '17:15'
+        | '17:30'
+        | '17:45'
+        | '18:00'
+        | '18:15'
+        | '18:30'
+        | '18:45'
+        | '19:00'
+        | '19:15'
+        | '19:30'
+        | '19:45'
+        | '20:00'
+        | '20:15'
+        | '20:30'
+        | '20:45'
+        | '21:00'
+        | '21:15'
+        | '21:30'
+        | '21:45'
+        | '22:00'
+        | '22:15'
+        | '22:30'
+        | '22:45'
+        | '23:00'
+        | '23:15'
+        | '23:30'
+        | '23:45';
+      title?: string;
+      note?: string;
+      _type: 'scheduleItem';
+      _key: string;
+    }>;
+    _type: 'scheduleDay';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
+export type EventDetailsSection = {
+  _type: 'eventDetailsSection';
+  eyebrow?: string;
+  title?: string;
+  occurrences?: Array<{
+    date?: string;
+    startTime?:
+      | '06:00'
+      | '06:15'
+      | '06:30'
+      | '06:45'
+      | '07:00'
+      | '07:15'
+      | '07:30'
+      | '07:45'
+      | '08:00'
+      | '08:15'
+      | '08:30'
+      | '08:45'
+      | '09:00'
+      | '09:15'
+      | '09:30'
+      | '09:45'
+      | '10:00'
+      | '10:15'
+      | '10:30'
+      | '10:45'
+      | '11:00'
+      | '11:15'
+      | '11:30'
+      | '11:45'
+      | '12:00'
+      | '12:15'
+      | '12:30'
+      | '12:45'
+      | '13:00'
+      | '13:15'
+      | '13:30'
+      | '13:45'
+      | '14:00'
+      | '14:15'
+      | '14:30'
+      | '14:45'
+      | '15:00'
+      | '15:15'
+      | '15:30'
+      | '15:45'
+      | '16:00'
+      | '16:15'
+      | '16:30'
+      | '16:45'
+      | '17:00'
+      | '17:15'
+      | '17:30'
+      | '17:45'
+      | '18:00'
+      | '18:15'
+      | '18:30'
+      | '18:45'
+      | '19:00'
+      | '19:15'
+      | '19:30'
+      | '19:45'
+      | '20:00'
+      | '20:15'
+      | '20:30'
+      | '20:45'
+      | '21:00'
+      | '21:15'
+      | '21:30'
+      | '21:45'
+      | '22:00'
+      | '22:15'
+      | '22:30'
+      | '22:45'
+      | '23:00'
+      | '23:15'
+      | '23:30'
+      | '23:45';
+    endTime?:
+      | '06:00'
+      | '06:15'
+      | '06:30'
+      | '06:45'
+      | '07:00'
+      | '07:15'
+      | '07:30'
+      | '07:45'
+      | '08:00'
+      | '08:15'
+      | '08:30'
+      | '08:45'
+      | '09:00'
+      | '09:15'
+      | '09:30'
+      | '09:45'
+      | '10:00'
+      | '10:15'
+      | '10:30'
+      | '10:45'
+      | '11:00'
+      | '11:15'
+      | '11:30'
+      | '11:45'
+      | '12:00'
+      | '12:15'
+      | '12:30'
+      | '12:45'
+      | '13:00'
+      | '13:15'
+      | '13:30'
+      | '13:45'
+      | '14:00'
+      | '14:15'
+      | '14:30'
+      | '14:45'
+      | '15:00'
+      | '15:15'
+      | '15:30'
+      | '15:45'
+      | '16:00'
+      | '16:15'
+      | '16:30'
+      | '16:45'
+      | '17:00'
+      | '17:15'
+      | '17:30'
+      | '17:45'
+      | '18:00'
+      | '18:15'
+      | '18:30'
+      | '18:45'
+      | '19:00'
+      | '19:15'
+      | '19:30'
+      | '19:45'
+      | '20:00'
+      | '20:15'
+      | '20:30'
+      | '20:45'
+      | '21:00'
+      | '21:15'
+      | '21:30'
+      | '21:45'
+      | '22:00'
+      | '22:15'
+      | '22:30'
+      | '22:45'
+      | '23:00'
+      | '23:15'
+      | '23:30'
+      | '23:45';
+    label?: string;
+    _type: 'eventDate';
+    _key: string;
+  }>;
+  place?: string;
+  note?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  button?: CtaBlock;
+  showCalendar?: boolean;
+  anchor?: Slug;
+};
+
+export type NoticeSection = {
+  _type: 'noticeSection';
+  message?: string;
+  urgency?: 'info' | 'urgent';
+  label?: string;
+  link?: CtaBlock;
+  startDate?: string;
+  endDate?: string;
+  anchor?: Slug;
+};
+
+export type CountdownSection = {
+  _type: 'countdownSection';
+  eventName?: string;
+  startDate?: string;
+  endDate?: string;
+  intro?: string;
+  duringText?: string;
+  afterText?: string;
+  link?: CtaBlock;
+  anchor?: Slug;
+};
+
+export type TabsSection = {
+  _type: 'tabsSection';
+  heading?: string;
+  intro?: string;
+  tabs?: Array<{
+    label?: string;
+    body?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: 'span';
+        _key: string;
+      }>;
+      style?: 'normal';
+      listItem?: 'bullet' | 'number';
+      markDefs?: Array<{
+        href?: string;
+        _type: 'link';
+        _key: string;
+      }>;
+      level?: number;
+      _type: 'block';
+      _key: string;
+    }>;
+    _type: 'tabPanel';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
+export type PhotoSection = {
+  _type: 'photoSection';
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  anchor?: Slug;
+};
+
+export type ButtonRowSection = {
+  _type: 'buttonRowSection';
+  heading?: string;
+  intro?: string;
+  links?: Array<{
+    link?: CtaBlock;
+    _type: 'quickLink';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
+export type ColumnsSection = {
+  _type: 'columnsSection';
+  heading?: string;
+  intro?: string;
+  textColumns?: Array<{
+    heading?: string;
+    body?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: 'span';
+        _key: string;
+      }>;
+      style?: 'normal';
+      listItem?: 'bullet' | 'number';
+      markDefs?: Array<{
+        href?: string;
+        _type: 'link';
+        _key: string;
+      }>;
+      level?: number;
+      _type: 'block';
+      _key: string;
+    }>;
+    _type: 'textColumn';
+    _key: string;
+  }>;
+  anchor?: Slug;
+};
+
 export type EmbedSection = {
   _type: 'embedSection';
   eyebrow?: string;
@@ -1299,6 +1902,18 @@ export type HeroSection = {
   primaryCta?: CtaBlock;
   secondaryCta?: CtaBlock;
   size?: 'tall' | 'short';
+  heroStyle?: 'standard' | 'photo';
+  glance?: Glance;
+  backgroundVideo?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: 'file';
+  };
+  backgroundVideoPhone?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: 'file';
+  };
 };
 
 export type PrivacyPage = {
@@ -1411,6 +2026,48 @@ export type Page = {
     | ({
         _key: string;
       } & EmbedSection)
+    | ({
+        _key: string;
+      } & ColumnsSection)
+    | ({
+        _key: string;
+      } & ButtonRowSection)
+    | ({
+        _key: string;
+      } & PhotoSection)
+    | ({
+        _key: string;
+      } & TabsSection)
+    | ({
+        _key: string;
+      } & CountdownSection)
+    | ({
+        _key: string;
+      } & NoticeSection)
+    | ({
+        _key: string;
+      } & EventDetailsSection)
+    | ({
+        _key: string;
+      } & ScheduleSection)
+    | ({
+        _key: string;
+      } & ContactCardSection)
+    | ({
+        _key: string;
+      } & ProgressSection)
+    | ({
+        _key: string;
+      } & CalendarSubscribeSection)
+    | ({
+        _key: string;
+      } & IconCardsSection)
+    | ({
+        _key: string;
+      } & StepsRailSection)
+    | ({
+        _key: string;
+      } & HubSection)
     | ({
         _key: string;
       } & SundayTimesSection)
@@ -1737,6 +2394,48 @@ export type JournalPage = {
       } & EmbedSection)
     | ({
         _key: string;
+      } & ColumnsSection)
+    | ({
+        _key: string;
+      } & ButtonRowSection)
+    | ({
+        _key: string;
+      } & PhotoSection)
+    | ({
+        _key: string;
+      } & TabsSection)
+    | ({
+        _key: string;
+      } & CountdownSection)
+    | ({
+        _key: string;
+      } & NoticeSection)
+    | ({
+        _key: string;
+      } & EventDetailsSection)
+    | ({
+        _key: string;
+      } & ScheduleSection)
+    | ({
+        _key: string;
+      } & ContactCardSection)
+    | ({
+        _key: string;
+      } & ProgressSection)
+    | ({
+        _key: string;
+      } & CalendarSubscribeSection)
+    | ({
+        _key: string;
+      } & IconCardsSection)
+    | ({
+        _key: string;
+      } & StepsRailSection)
+    | ({
+        _key: string;
+      } & HubSection)
+    | ({
+        _key: string;
       } & SundayTimesSection)
     | ({
         _key: string;
@@ -1831,6 +2530,48 @@ export type HomePage = {
       } & EmbedSection)
     | ({
         _key: string;
+      } & ColumnsSection)
+    | ({
+        _key: string;
+      } & ButtonRowSection)
+    | ({
+        _key: string;
+      } & PhotoSection)
+    | ({
+        _key: string;
+      } & TabsSection)
+    | ({
+        _key: string;
+      } & CountdownSection)
+    | ({
+        _key: string;
+      } & NoticeSection)
+    | ({
+        _key: string;
+      } & EventDetailsSection)
+    | ({
+        _key: string;
+      } & ScheduleSection)
+    | ({
+        _key: string;
+      } & ContactCardSection)
+    | ({
+        _key: string;
+      } & ProgressSection)
+    | ({
+        _key: string;
+      } & CalendarSubscribeSection)
+    | ({
+        _key: string;
+      } & IconCardsSection)
+    | ({
+        _key: string;
+      } & StepsRailSection)
+    | ({
+        _key: string;
+      } & HubSection)
+    | ({
+        _key: string;
       } & SundayTimesSection)
     | ({
         _key: string;
@@ -1897,6 +2638,15 @@ export type HomePage = {
     alt?: string;
     _type: 'image';
   };
+};
+
+export type StudioStaff = {
+  _id: string;
+  _type: 'studioStaff';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  ids?: Array<string>;
 };
 
 export type StudioWeek = {
@@ -2064,7 +2814,10 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+  | Glance
   | SanityImageAssetReference
+  | IconCardImage
+  | HubCardImage
   | TimelineRowImage
   | SanityFileAssetReference
   | ListedDocumentFile
@@ -2081,11 +2834,11 @@ export type AllSanitySchemaTypes =
   | StudioGuide
   | NotFoundPage
   | BusinessInfo
-  | SiteSettings
   | HomePageReference
   | JournalPageReference
-  | PrivacyPageReference
   | PageReference
+  | SiteSettings
+  | PrivacyPageReference
   | NavLink
   | DynamicListSection
   | TeamSection
@@ -2113,6 +2866,20 @@ export type AllSanitySchemaTypes =
   | StaffGridSection
   | TimelineSection
   | SundayTimesSection
+  | HubSection
+  | StepsRailSection
+  | IconCardsSection
+  | CalendarSubscribeSection
+  | ProgressSection
+  | ContactCardSection
+  | ScheduleSection
+  | EventDetailsSection
+  | NoticeSection
+  | CountdownSection
+  | TabsSection
+  | PhotoSection
+  | ButtonRowSection
+  | ColumnsSection
   | EmbedSection
   | LogoStripSection
   | SpacerSection
@@ -2132,6 +2899,7 @@ export type AllSanitySchemaTypes =
   | JournalEntry
   | JournalPage
   | HomePage
+  | StudioStaff
   | StudioWeek
   | TrashedItem
   | PreviewShare

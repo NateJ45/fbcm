@@ -32,6 +32,8 @@ export const SELF_CONTAINED_TYPES = new Set([
   'embedSection',
   // Church-reverse-port: dynamic list section manages its own surface
   'dynamicListSection',
+  // The builder kit's dated notice draws its own slim band (card 173).
+  'noticeSection',
   // scaffold: church
   // The four dark bands. Cream, indigo (x3) and brown are dark BY TYPE, not by
   // a stored colour field, so they self-contain their surface the same way the
@@ -55,6 +57,22 @@ export const CONTENT_TYPES = new Set([
   'gallerySection',
   'quoteSection',
   'videoSection',
+  // The builder kit (starter PORTS.md card 173): content blocks on the
+  // page's paper, in the alternating rhythm.
+  'columnsSection',
+  'buttonRowSection',
+  'photoSection',
+  'tabsSection',
+  'countdownSection',
+  'eventDetailsSection',
+  'scheduleSection',
+  // Starter card 193 (2026-10-27).
+  'contactCardSection',
+  'progressSection',
+  'calendarSubscribeSection',
+  'iconCardsSection',
+  'stepsRailSection',
+  'hubSection',
   // scaffold: church
   'timelineSection',
   'documentListSection',

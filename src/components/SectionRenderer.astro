@@ -23,6 +23,9 @@ import LogoStrip from '@/components/sections/LogoStrip.astro';
 import TeamGrid from '@/components/sections/TeamGrid.astro';
 import EmbedSection from '@/components/sections/EmbedSection.astro';
 import DynamicList from '@/components/sections/DynamicList.astro';
+// The builder kit (starter PORTS.md card 173): one branch for all its blocks.
+import BuilderBlock from '@/components/builder-blocks/BuilderBlock.astro';
+import { isBuilderBlock } from '@/lib/builderBlocks.types';
 // scaffold: church
 import SundayTimes from '@/components/sections/SundayTimes.astro';
 import Timeline from '@/components/sections/Timeline.astro';
@@ -51,7 +54,7 @@ import { splitStega } from '@/lib/preview-stega';
 import { assignSpareImages } from '@/lib/spare-images';
 import { assignPhotoShapes, type PhotoRow } from '@/lib/photo-shape';
 import type { PageBuilderBlock, RenderedBlock, SectionSiteSettings } from '@/lib/pageBuilder.types';
-import { sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
+import { SECTION_DRAG_FLOW, sectionEditAttr, type EditDoc } from '@/lib/preview-edit-attr';
 import { sectionAnchor } from '@/lib/anchor';
 import type { LinkableBand } from '@/lib/hero-fact-links';
 import type { SundaySermon } from '@/lib/live-sunday';
@@ -379,7 +382,7 @@ const findUsExtraAt = Astro.slots.has('findus-extra')
   : -1;
 
 const wrapAttrs = (key: string | undefined) =>
-  editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key) } : {};
+  editDoc && key ? { 'data-sanity': sectionEditAttr(editDoc, key), ...SECTION_DRAG_FLOW } : {};
 // A section that came out of a synced section is not in the page itself; its
 // in-canvas controls act on the synced block it came from, which is.
 const editKeyOf = (block: unknown) => {
@@ -409,7 +412,15 @@ const editKeyOf = (block: unknown) => {
       class="scroll-mt-[var(--header-offset)]"
       {...wrapAttrs(editKeyOf(s))}
     >
-      {s._type === 'heroSection' ? (
+      {isBuilderBlock(s) ? (
+        <BuilderBlock
+          block={s}
+          surface={surface ?? 'background'}
+          headingId={headingId}
+          settings={settings}
+          isFirst={blockIndex === 0}
+        />
+      ) : s._type === 'heroSection' ? (
         <Hero
           eyebrow={s.eyebrow}
           headline={s.headline ?? ''}
@@ -430,6 +441,10 @@ const editKeyOf = (block: unknown) => {
           preacher={preacher}
           calendarHref={calendarHref}
           factBands={rows.map(({ block }) => block as LinkableBand)}
+          heroStyle={s.heroStyle}
+          glance={s.glance}
+          backgroundVideo={s.backgroundVideo}
+          backgroundVideoPhone={s.backgroundVideoPhone}
           headingId={headingId}
         />
       ) : s._type === 'ctaBandSection' ? (

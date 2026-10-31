@@ -48,6 +48,10 @@ const SELF_FILLING_SECTIONS = [
   'logoStripSection',
   'spacerSection',
   'syncedSection',
+  // Starter card 193: the contact card reads Church details and the calendar
+  // buttons default to the church's Church Trac calendar, so a bare one is whole.
+  'contactCardSection',
+  'calendarSubscribeSection',
 ];
 
 export const PAGE_CHECK_CONFIG: PageCheckConfig = {
@@ -62,7 +66,20 @@ export const PAGE_CHECK_CONFIG: PageCheckConfig = {
   // initialValue, so a completely empty section already carries it: counted as
   // content, the "nothing typed here" check would go permanently silent.
   // `columns` and `width` are already built in; these two are not.
-  extraSettingKeys: ['imageSide', 'surface'],
+  // The builder kit's (card 173): the notice arrives with its urgency set, and
+  // the countdown with ready-made lines (during, after), none of which says
+  // what THIS block is about.
+  // Card 193: the progress bar's unit and the two switches arrive set.
+  extraSettingKeys: [
+    'imageSide',
+    'surface',
+    'urgency',
+    'duringText',
+    'afterText',
+    'unit',
+    'callButtons',
+    'firstStepCard',
+  ],
   // Every built-in route, plus the folders the build writes into. RESERVED_SLUGS
   // is the same list the slug validation uses, so a new route is added once.
   codeOwnedPaths: [...RESERVED_SLUGS, 'api', 'preview', 'studio', 'robots.txt'],

@@ -1,0 +1,122 @@
+---
+// Safe to edit by hand
+// Contact details on one card (starter PORTS.md cards 193 and 198, 2026-10-27): phone, email,
+// address (with a directions link) and office hours, a column each on a wide screen. Each one
+// defaults to the church's own facts in Site settings > Church details (read through
+// src/lib/church-facts-data.ts, rule 15: typed once), so a bare block fills itself; a block can
+// type its own for a ministry with its own phone or a second building, and that wins. The hours
+// are the office hours as the office typed them, never parsed into "open now" (church-facts.ts
+// says why). The church's facts are its live, published facts, so no "To confirm" tag is drawn.
+// Lines that are empty are left out, and with none at all the block draws nothing.
+//
+// "Lead with big Call and Email buttons" (callButtons) puts two large buttons above the details,
+// tel: and mailto: links built from the same two values: Call on the gold plate (this site's main
+// action), Email outlined.
+import BuilderBand from './BuilderBand.astro';
+import CtaLink from '@/components/CtaLink.astro';
+import { churchFactsFor } from '@/lib/church-facts-data';
+import { eventPlace, plain } from '@/lib/builder-blocks';
+// This site's tel: rule (a US number gets +1), the one the footer and Visit use.
+import { telHref } from '@/lib/phone';
+import type { ProjectedContactCardSection } from '@/lib/builderBlocks.types';
+
+interface Props {
+  block: ProjectedContactCardSection;
+  surface?: 'background' | 'muted';
+  headingId: string;
+}
+const { block, surface, headingId } = Astro.props;
+
+const { facts, office } = await churchFactsFor(block.facts);
+// Own words win; the facts fill whatever is left empty.
+const ownPhone = plain(block.phone);
+const phone = ownPhone || facts.phone?.display || '';
+const tel = telHref(phone);
+const ownEmail = plain(block.email);
+const email = ownEmail || facts.email?.address || '';
+const ownPlace = eventPlace(block.address);
+const place =
+  ownPlace ??
+  (facts.address ? { lines: facts.address.lines, mapsUrl: facts.address.mapsUrl } : null);
+const hours = plain(block.hours)
+  .split(/\r?\n/)
+  .map((l) => l.trim())
+  .filter(Boolean);
+const lines = hours.length > 0 ? hours : office;
+
+const count = [Boolean(tel), Boolean(email), Boolean(place), lines.length > 0].filter(
+  Boolean,
+).length;
+const big = block.callButtons === true;
+---
+
+{count > 0 && (
+  <BuilderBand
+    type={block._type}
+    heading={block.heading}
+    intro={block.intro}
+    headingId={headingId}
+    surface={surface}
+    label="Contact details"
+  >
+    {big && (tel || email) && (
+      <div class="bb-call" data-call-buttons>
+        {tel && (
+          <CtaLink
+            cta={{ label: `Call ${phone}`, linkType: 'phone', phoneNumber: phone }}
+            variant="gold"
+            class="bb-call__btn"
+          />
+        )}
+        {email && (
+          <CtaLink
+            cta={{ label: 'Email us', linkType: 'email', emailAddress: email }}
+            variant="outline"
+            class="bb-call__btn"
+          />
+        )}
+      </div>
+    )}
+    <dl class="bb-board" data-n={count}>
+      {tel && (
+        <div class="bb-board__cell">
+          <dt>Phone</dt>
+          <dd>
+            <a href={tel}>{phone}</a>
+          </dd>
+        </div>
+      )}
+      {email && (
+        <div class="bb-board__cell">
+          <dt>Email</dt>
+          <dd>
+            <a href={`mailto:${email}`}>{email}</a>
+          </dd>
+        </div>
+      )}
+      {place && (
+        <div class="bb-board__cell">
+          <dt>Address</dt>
+          <dd>
+            {place.lines.map((line) => (
+              <span class="bb-line">{line}</span>
+            ))}
+            <a href={place.mapsUrl} target="_blank" rel="noopener noreferrer">
+              Get directions<span class="sr-only"> (opens in a new tab)</span>
+            </a>
+          </dd>
+        </div>
+      )}
+      {lines.length > 0 && (
+        <div class="bb-board__cell">
+          <dt>Office hours</dt>
+          <dd>
+            {lines.map((line) => (
+              <span class="bb-line">{line}</span>
+            ))}
+          </dd>
+        </div>
+      )}
+    </dl>
+  </BuilderBand>
+)}

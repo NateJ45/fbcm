@@ -28,9 +28,19 @@
 import { freshKeys } from '../lib/authoring.ts';
 import {
   button,
+  buttonRow,
   card,
   cards,
   churchTracForm,
+  countdown,
+  daysFromNow,
+  eventDate,
+  eventDetails,
+  schedule,
+  scheduleDay,
+  slot,
+  tab,
+  tabs,
   ctaBand,
   documents,
   example,
@@ -137,7 +147,8 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
     id: 'page-event',
     group: 'Visitors',
     title: 'Event',
-    description: 'A church event: what, when, a sign-up form and the questions people ask.',
+    description:
+      'A church event: the date, time and place with "Add to my calendar", the schedule, a sign-up form and the questions people ask.',
     sections: () =>
       page(
         hero({
@@ -145,14 +156,20 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           headline: example('The name of the event'),
           subhead: example('What it is, in one sentence.'),
         }),
-        imageText(
-          'The details',
-          [
-            example('When it is, where, who it is for and what to bring.'),
-            example('Anything it costs, or that it is free.'),
-          ],
-          { eyebrow: example('Saturday, May 9') },
-        ),
+        // No place typed: it is at the church, and the address comes from Site settings.
+        eventDetails({
+          eyebrow: example('Save the date'),
+          title: example('The name of the event'),
+          dates: [eventDate(daysFromNow(30), { startTime: '17:30', endTime: '19:00' })],
+          note: example('Who it is for and what to bring. Say if it is free.'),
+        }),
+        schedule('The evening', [
+          scheduleDay('', [
+            slot('17:30', example('Doors open'), example('In the fellowship hall')),
+            slot('18:00', example('Supper')),
+            slot('18:45', example('A closing prayer')),
+          ]),
+        ]),
         churchTracForm('Sign up', 'Fill in the form and the church office will be in touch.'),
         faq('Questions', [
           qa(example('Can I bring a friend?'), example('Yes. Everyone is welcome.')),
@@ -160,6 +177,64 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
             example('Is there childcare?'),
             example('Say what there is for children, or that children come too.'),
           ),
+        ]),
+      ),
+  },
+  {
+    id: 'page-weekend',
+    group: 'Visitors',
+    title: 'Weekend or retreat',
+    description:
+      'Two or more days away: the dates and place, a schedule for each day, and tabs for what to bring and how to get there.',
+    sections: () =>
+      page(
+        hero({
+          eyebrow: example('A weekend away'),
+          headline: example('The name of the retreat'),
+          subhead: example('Who it is for and what it is about, in one sentence.'),
+          primary: systemButton(example('Sign up'), '{connect}'),
+        }),
+        eventDetails({
+          title: example('The name of the retreat'),
+          dates: [
+            eventDate(daysFromNow(45), { startTime: '18:00', label: example('Arrive') }),
+            eventDate(daysFromNow(47), { startTime: '13:00', label: example('Head home') }),
+          ],
+          place: `${example('The camp or retreat center')}\n${example('Its street address')}`,
+          note: example('Two or three sentences: who is going, and what the weekend is for.'),
+        }),
+        schedule('The weekend', [
+          scheduleDay(example('Friday'), [
+            slot('18:00', example('Arrive and settle in')),
+            slot('19:30', example('Evening worship')),
+          ]),
+          scheduleDay(example('Saturday'), [
+            slot('08:00', example('Breakfast')),
+            slot('09:30', example('Morning session')),
+            slot('', example('Free afternoon'), example('Hiking, games or a nap')),
+          ]),
+          scheduleDay(example('Sunday'), [
+            slot('09:00', example('Worship together')),
+            slot('13:00', example('Head home')),
+          ]),
+        ]),
+        tabs('Before you go', [
+          tab(
+            example('What to bring'),
+            example('A Bible, bedding, warm clothes and a flashlight.'),
+          ),
+          tab(
+            example('The cost'),
+            example('What it costs and what that covers, or that it is free.'),
+          ),
+          tab(
+            example('Getting there'),
+            example('Whether there are rides from the church, and when they leave.'),
+          ),
+        ]),
+        buttonRow('', [
+          systemButton(example('Sign up'), '{connect}'),
+          button(example('Ask a question')),
         ]),
       ),
   },
@@ -394,6 +469,12 @@ export const PAGE_TEMPLATES: PageTemplate[] = [
           headline: example('Vacation Bible School'),
           subhead: example('A week of fun and faith for children.'),
           primary: systemButton(example('Sign up'), '{connect}'),
+        }),
+        countdown({
+          eventName: example('Vacation Bible School'),
+          startDate: daysFromNow(60),
+          endDate: daysFromNow(64),
+          intro: example('Five mornings of songs, stories and games for children.'),
         }),
         ...vbsSections(),
       ),
