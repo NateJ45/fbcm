@@ -10,6 +10,10 @@
 > in PORTS.md; something that needs to be _understood in sequence_ belongs here. Entries
 > below may reference a card number.
 
+_2026-10-30: the app buttons' labels contain their visible text (`fix/axe-deps-118`)._
+
+The Dependabot group that brought axe-core 4.14 turned on `label-content-name-mismatch`, and the church app buttons (`AppButtons.astro`, Home band and footer, so every page) failed it. The label now starts with the words on the button ("For iPhone, App Store: get the church app (opens in a new tab)"), and a `{' '}` sits between the two spans because the build drops the newline and axe read "For iPhoneApp Store". The button is `inline-flex`, so the space does not render.
+
 _2026-10-23: bold looks bold and highlight is gold in posts (`fix/post-bold-highlight`)._
 
 Testing #110 on Jonathan's draft showed bold still read as a faint gold band (close to an underline) and Highlight (`bg-accent/60`) was within a shade of the page. `.post-prose strong` is now `font-weight: 700`, synthesised from Castoro's one weight; Highlight renders as `<mark class="pp-hl">`, a 38% gold background cloned across line wraps. On paper the highlight becomes a gold underline (backgrounds do not print) and bold prints as bold. This also makes the imported posts' short bold runs heavier.
