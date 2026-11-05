@@ -86,6 +86,8 @@ _2026-10-19: CI builds from a pinned content snapshot (starter card 138; `ci/sna
 
 The Staff rename turned build, test, the e2e shards and the link check red on a docs-only PR, because CI built from the live dataset. Now `ci.yml`'s site build, `lighthouse.yml` and `visual.yml` run as `node scripts/snapshot.mjs run -- <cmd>` over `ci/sanity-snapshot.ndjson.gz`; `deploy.yml` still builds live; `live-watch.yml` checks the real site daily. Rules: `.claude/rules/tests-and-gates.md`.
 
+_2026-11-05: GA4 events moved onto the shared layer (PORTS card 217, `port/card-217-events`)._ The site's own `SiteEvents.astro` and `track.ts` are replaced by the PORTABLE copies (`src/components/analytics/SiteEvents.astro`, `src/lib/track.ts`, `src/lib/event-kinds.ts`), and what only this site special-cased moved to `src/config/events.ts`. The events and parameters sent are unchanged (`outbound_click` and `download_click`, new in the shared layer, are switched off because Enhanced Measurement already counts them); `src/lib/events-map.test.ts` pins 52 links against what the old script sent. The privacy page's analytics sentence is now derived from the map and names every kind of event the site counts (it had left out app, social, calendar, form, 404 and script-error events).
+
 _2026-10-19: GA4 event tracking level with Theology Matters and FRT (`feat/analytics-parity`)._
 
 New `SiteEvents.astro` (delegated link classification: giving, contact, directions, video, app, calendar, social; form views, frame use, newsletter lead, search, reading depth, 404, JS errors), `src/lib/track.ts`, `tests/site-events.spec.ts`, privacy wording. No PORTABLE file touched. Detail: `docs/agent/analytics.md`.
