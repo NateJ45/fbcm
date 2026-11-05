@@ -12,7 +12,9 @@
 // statement to visitors that nothing in the build would flag. So the cookie
 // and measurement wording is read from src/lib/analytics-config.ts, the same
 // booleans that decide whether each tag renders (src/components/Analytics.astro),
-// and the contact line from Site settings. Nobody retypes any of it.
+// and the contact line from Site settings. Nobody retypes any of it. The kinds
+// of event the site counts (links, forms, reading, search) are derived the same
+// way from src/config/events.ts by src/lib/event-kinds.ts (PORTS.md card 217).
 //
 // Google's Analytics terms require a policy that discloses the use of
 // Analytics and its cookies and says how Google uses data from sites that use
@@ -21,6 +23,8 @@
 // are true only while the property keeps Google signals, ads personalisation
 // and data sharing off (docs/PENDING.md, the go-live GA item).
 import { hasCfAnalytics, hasGa } from '@/lib/analytics-config';
+import { eventsConfig } from '@/config/events';
+import { eventsSentence } from '@/lib/event-kinds';
 
 interface Props {
   email: string;
@@ -64,12 +68,10 @@ const link = 'text-link underline underline-offset-2 hover:text-primary';
           : 'Page visits are measured with Google Analytics.'}{' '}
         Google Analytics sets cookies on your device (named <code>_ga</code> and <code>_ga_</code>{' '}
         followed by a stream id) so returning visits are recognised as the same session. It records
-        which pages are opened and how far down a journal post is read, which links and buttons are
-        used (giving, contact, directions, video and the like), what is typed into the site search,
-        roughly where in the world the visit came from, and what kind of device was used. Names,
-        email addresses and anything typed into a form are never sent. It is not used for
-        advertising, and the data is not sold or shared beyond Google's own processing. These are
-        the only cookies this site sets.
+        which pages are opened, roughly where in the world the visit came from, and what kind of
+        device was used. {eventsSentence(eventsConfig)} Names, email addresses and anything typed
+        into a form are never sent. It is not used for advertising, and the data is not sold or
+        shared beyond Google's own processing. These are the only cookies this site sets.
       </p>
       <p class={pClass}>
         You can block these cookies in your browser settings, with any tracker-blocking extension,

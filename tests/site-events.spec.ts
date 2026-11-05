@@ -4,7 +4,7 @@ import { settle } from './helpers';
 // =============================================================================
 // Visitor actions sent to GA4 (2026-10-19, feat/analytics-parity)
 // =============================================================================
-// src/components/SiteEvents.astro reads a clicked link's address and sends a
+// src/components/analytics/SiteEvents.astro (the PORTABLE listener, PORTS.md card 217) reads a clicked link's address and sends a
 // named event. The real tag never loads under Playwright (navigator.webdriver),
 // so each test stubs window.gtag before the page runs and reads the calls back.
 // Links are clicked with navigation cancelled, so nothing leaves the site.
