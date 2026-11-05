@@ -497,6 +497,8 @@ A box moves the link, not the sentence around it. These still name Church Center
 
 ## Run Lighthouse / performance audits
 
+A home page CLS of 0.5 to 0.67 that comes and goes is the hero's text backing painted before the text block finished parsing. The home page holds its first paint with `rel="expect"` until `#hero-text-end` (BaseLayout's `renderBlockUntil`, set in Hero.astro). If it returns, check that anchor still renders. A one-off run will not show it: at 8x CPU it hit 11 runs in 30 without the fix.
+
 If a regression is suspected:
 
 ```bash

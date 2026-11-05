@@ -56,6 +56,11 @@ interface Props {
    *  until the visitor scrolls 8px. The routes that can know this compute it
    *  from their first pageBuilder block; see src/lib/heroOverlay.ts. */
   overlayHeader?: boolean;
+  /** The id of an element the first paint should wait for (rel="expect"), so a
+   *  slow phone never paints a block half-parsed and then jumps. Chromium only;
+   *  other browsers ignore it. If the id is missing the page only paints when
+   *  the parser finishes, so pass it only when the element is sure to exist. */
+  renderBlockUntil?: string;
   /** True when this page's <main> is what the site search indexes (Pagefind's
    *  data-pagefind-body). Set by the content routes: home, the builder pages
    *  and the privacy page. A post marks its own <article> instead, and the
@@ -79,6 +84,7 @@ const {
   ogType = 'website',
   ogArticle,
   overlayHeader = false,
+  renderBlockUntil,
   searchBody = false,
   flow,
   motion,
@@ -473,6 +479,7 @@ const announcementStyle = ANNOUNCEMENT_STYLES[announcement?.style ?? 'info'] ?? 
     {/* What visitors do (giving, contact, video, forms, search), sent as GA4 events. */}
     <SiteEvents />
 
+    {renderBlockUntil && <link rel="expect" href={`#${renderBlockUntil}`} blocking="render" />}
     <ClientRouter />
   </head>
   <body class="min-h-screen flex flex-col">

@@ -204,6 +204,7 @@ const overlayHeader = shouldOverlayHeader(sections as any);
   {description}
   {siteSettings}
   {overlayHeader}
+  renderBlockUntil={overlayHeader ? 'hero-text-end' : undefined}
   seoImage={page?.seoImage}
   searchBody
   flow="full"
