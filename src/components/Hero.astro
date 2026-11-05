@@ -435,20 +435,23 @@ const photoGlance: PhotoHeroGlance | null | undefined =
 ---
 
 {isPhotoHero ? (
-  <PhotoHero
-    eyebrow={eyebrow}
-    headline={headline}
-    accent={scriptAccent || headingAccent}
-    subhead={subhead}
-    image={effectiveImages[0]}
-    primaryCta={primaryCta}
-    secondaryCta={secondaryCta}
-    headingId={headingId}
-    size={size}
-    glance={photoGlance}
-    video={backgroundVideo}
-    videoPhone={backgroundVideoPhone}
-  />
+  <>
+    <PhotoHero
+      eyebrow={eyebrow}
+      headline={headline}
+      accent={scriptAccent || headingAccent}
+      subhead={subhead}
+      image={effectiveImages[0]}
+      primaryCta={primaryCta}
+      secondaryCta={secondaryCta}
+      headingId={headingId}
+      size={size}
+      glance={photoGlance}
+      video={backgroundVideo}
+      videoPhone={backgroundVideoPhone}
+    />
+    <span id="hero-text-end" hidden></span>
+  </>
 ) : isWindow ? (
   <section
     class:list={[
@@ -742,6 +745,13 @@ const photoGlance: PhotoHeroGlance | null | undefined =
         run in four, read from the run's trace. Out here the whole block is
         parsed before the pause. Not a child of .hero-entry-stagger, so it
         takes no nth-child slot in the entrance stagger. */}
+    {/* The end of the text block, for the home page's rel="expect" (BaseLayout's
+        renderBlockUntil). The 2026-09-30 move above removed one place the parser
+        paused, but it can still stop anywhere for its own reasons, and on a busy
+        phone the first paint then caught the block part-built: the wash jumped
+        again (CLS 0.50 and 0.62 on CI, 2026-11-03 and 11-04; 5 runs in 30 at 8x
+        CPU on the live site, 0 in 30 with this). */}
+    <span id="hero-text-end" hidden></span>
     {(showLiveSunday || sundayPreacher) && (
       <script is:inline>if (window.__liveSunday) window.__liveSunday();</script>
     )}
