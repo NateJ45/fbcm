@@ -83,3 +83,8 @@ src/components/RiseWords.astro
 # Church Trac pages saved as served (2026-09-25), read by the newsletter
 # reader's tests. Byte snapshots of another site's HTML: never reformatted.
 tests/fixtures/churchtrac-*.html
+
+# The chart kit (PORTS.md card 218): the same bytes the WordPress themes carry,
+# pinned by a hash in src/lib/studio-board.test.ts. Prettier must never rewrite them.
+src/sanity/kit/board/ncs-charts.js
+src/sanity/kit/board/ncs-charts.css
