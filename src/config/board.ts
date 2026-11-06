@@ -32,6 +32,8 @@ const WATCH =
   'Clicks on a link to a service or video on YouTube or Vimeo. It counts the click, not how long someone watched.';
 const FORMS =
   'Each time someone sent a form on the website, such as Plan a Visit or Contact. A form in a Church Trac frame cannot always tell the website it was sent, so this can run low.';
+const FORMS_SEEN =
+  'Each time a form such as Plan a Visit or Contact came into view. The church uses Church Trac forms, which sit in a frame and often cannot tell the website they were sent, so this counts interest. Church Trac has the true count of forms sent.';
 const GOOGLE =
   'Times someone chose the church in a Google search. From Google Search Console, which runs about three days behind.';
 const DIRECTIONS =
@@ -54,9 +56,9 @@ export const boardConfig: BoardConfig = {
           'People who came to the website. Someone who comes back in the same period is counted once.',
       },
       {
-        measure: 'event:generate_lead',
-        label: 'Plan a visit and contact forms sent',
-        explain: FORMS,
+        measure: 'event:form_view',
+        label: 'Plan a visit and contact forms seen',
+        explain: FORMS_SEEN,
       },
       { measure: 'event:watch_click', label: 'Watch clicks', explain: WATCH },
       { measure: 'event:give_click', label: 'Give clicks', explain: CLICK_NOT_GIFT },
