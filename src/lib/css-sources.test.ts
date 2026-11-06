@@ -69,6 +69,8 @@ function resolveFile(abs: string): string {
 const NO_TAILWIND = new Set([
   path.join(SRC, 'sanity', 'StudioSplashMotif.astro'),
   path.join(SRC, 'sanity', 'kit', 'harness', 'Harness.tsx'),
+  // The Report bench (card 218): its screen has its own CSS and no Tailwind classes.
+  path.join(SRC, 'sanity', 'kit', 'board', 'BoardBench.tsx'),
 ]);
 
 const rendersClasses = (file: string) =>

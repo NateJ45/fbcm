@@ -22,6 +22,7 @@ import { genericRules, itemsOf, plural, type CheckupRule } from '../lib/studio-c
 import { guides, GUIDE_CATEGORIES, GUIDE_FOR_FIELD, GUIDES_FOR_TYPE } from './guides/content';
 import { makeGuideView } from './components/GuideView';
 import { envVal } from './urls';
+import { boardConfig } from '../config/board';
 import { BellIcon } from '@sanity/icons/Bell';
 import { CalendarIcon } from '@sanity/icons/Calendar';
 import { ClockIcon } from '@sanity/icons/Clock';
@@ -119,6 +120,8 @@ const staffWithoutPhoto: CheckupRule = {
 };
 
 export const kitConfig: KitConfig = {
+  // The Report tool's parts and words (card 218).
+  board: boardConfig,
   siteName: 'the church website',
 
   helper: {
@@ -132,11 +135,14 @@ export const kitConfig: KitConfig = {
   // can also be marked "Simple view" from the Studio, with no deploy.
   staff: [],
 
+  // The Report is left off so only administrators see it; add 'report' here
+  // when the client should have it (PORTS.md card 218).
   staffTools: ['home', 'quick-update', 'structure', 'presentation', 'site-guide', 'checkup'],
   // Messages is registered by the workflow plugin (card 117) but left off the
   // list: the church's forms are Church Trac's, so the site keeps no inbox.
   toolOrder: [
     'home',
+    'report',
     'quick-update',
     'structure',
     'presentation',
@@ -631,6 +637,9 @@ export const kitConfig: KitConfig = {
     // route says "not set up yet" until the Worker has CF_ANALYTICS_TOKEN,
     // CF_ACCOUNT_ID and CF_WEB_ANALYTICS_SITE_TAG (OPERATIONS.md).
     visitors: true,
+    // The Report tool (card 218): on when the build has PUBLIC_BOARD_REPORT=true
+    // (deploy.yml passes the repository variable). Its parts are src/config/board.ts.
+    report: envVal('PUBLIC_BOARD_REPORT') === 'true',
     // Off until scheduled publishing works (the SANITY_API_WRITE_TOKEN repo
     // secret, docs/PENDING.md): a card listing drafts that never publish
     // themselves would mislead. Switch on with the secret.

@@ -118,6 +118,7 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 - Open loops registry (read early each session): `docs/PENDING.md`
 - GA4 events (what is tracked, the settings, how to verify): `docs/agent/analytics.md`
 - Live draft preview, full reference: `docs/agent/preview.md`
+- The Report tool in the Studio (card 218; the church's parts and words are `src/config/board.ts`, switch `PUBLIC_BOARD_REPORT`, bench `/styleguide/report/`): `docs/agent/studio-kit.md`, "The Report".
 - The Studio kit (Home, Site Guide, Checkup, Trash, Quick update, the look, the edges; PORTABLE): `docs/agent/studio-kit.md`
 - What is safe to edit vs foundation, file by file: `docs/agent/file-map.md`
 - Stack detail + astro.config landmines: `docs/agent/stack-and-config.md`

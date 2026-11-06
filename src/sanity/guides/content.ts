@@ -1530,6 +1530,43 @@ guides.push(
     ],
   },
   {
+    slug: 'reading-your-report',
+    category: 'Once in a while',
+    title: 'Reading your Report',
+    icon: 'info',
+    lead: 'How many people came to the website and what they did, set against the same time a year before.',
+    diy: 'self',
+    body: [
+      { kind: 'h', text: 'Choosing a period' },
+      {
+        kind: 'p',
+        text: 'Open `Report` in the bar at the top of the Studio. Pick **Month**, **Quarter** or **Year**, then choose which one from the list beside it.',
+      },
+      {
+        kind: 'p',
+        text: 'A period that is not over yet says **so far**. It counts through yesterday and is set against the same days a year before, so a half-finished month is never measured against a whole one.',
+      },
+      { kind: 'h', text: 'What the words mean' },
+      {
+        kind: 'bullets',
+        items: [
+          '**Up 13%** compares this period with the same period a year before.',
+          '**Not tracked yet** means the website was not counting this then. The new website began counting on October 19, 2026, so there is nothing to compare with until late 2027.',
+          'The small **i** beside a number says how it is counted.',
+        ],
+      },
+      { kind: 'h', text: 'Using a chart' },
+      {
+        kind: 'p',
+        text: 'Each chart can change shape with the buttons above it. **More** holds **Enlarge**, **Table**, **Save picture** and **Copy numbers**, which is handy for a deacons meeting or the newsletter.',
+      },
+      {
+        kind: 'p',
+        text: '**Give clicks are clicks, not gifts.** The website sees someone press Give. It cannot see whether a gift was made or how much it was, so your giving records are still the true count.',
+      },
+    ],
+  },
+  {
     slug: 'menus',
     category: 'Once in a while',
     title: 'Change the top menu or the footer',

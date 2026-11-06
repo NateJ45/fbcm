@@ -86,3 +86,10 @@ and checks each classification; `src/lib/events-map.test.ts` (unit) pins the map
 
 - A page-context parameter (content group) on every hit needs the tag's config call, which is PORTABLE: a starter port card first.
 - A completed-gift count needs a thank-you URL from Church Center.
+
+## The Report in the Studio (card 218)
+
+The events above come back to the office in the Studio's `Report` tool: every number by Month, Quarter or Year against
+the same period a year before. `src/config/board.ts` (NOT portable) names the parts and words; a measure
+`event:<name>` needs the event sent here AND listed for `fbcm` in studio-status (`src/site-series-config.ts`). Full
+detail: `docs/agent/studio-kit.md`, "The Report".
