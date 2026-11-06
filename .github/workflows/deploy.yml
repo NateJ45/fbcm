@@ -139,7 +139,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       # The scripture chapters scripts/fetch-scripture.mjs fetches at the start
       # of `npm run build` (feat/scripture-text). Restored AFTER npm ci, which
