@@ -44,7 +44,18 @@ export const boardConfig: BoardConfig = {
   siteName: site.name,
   firstMonth: '2026-10',
   timeZone: 'America/Indiana/Indianapolis',
-  since: { all: '2026-10-19' },
+  // Google Analytics counted visits from October 6, on the old Wix site until the move on
+  // October 19. Clicks and the like began with the new site. Google's search numbers go further
+  // back than the report does.
+  since: {
+    all: '2026-10-19',
+    visitors: '2026-10-06',
+    visits: '2026-10-06',
+    pageViews: '2026-10-06',
+    newVisitors: '2026-10-06',
+    searchClicks: '2026-10-01',
+    searchAppearances: '2026-10-01',
+  },
   gaps: [],
 
   overview: {
@@ -53,7 +64,7 @@ export const boardConfig: BoardConfig = {
         measure: 'visitors',
         label: 'Visitors',
         explain:
-          'People who came to the website. Someone who comes back in the same period is counted once.',
+          'People who came to the website. Someone who comes back in the same period is counted once. Counting began on October 6, 2026, on the old website; the new one started on October 19.',
       },
       {
         measure: 'event:form_view',
