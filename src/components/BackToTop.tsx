@@ -69,7 +69,7 @@ export default function BackToTop() {
       // none and auto in one class string, because the sort order lets none win.
       className={[
         'fixed right-6 bottom-6 z-40 inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-[opacity,background-color] duration-300 hover:bg-primary-dark focus-visible:opacity-100 motion-reduce:transition-none',
-        shown ? 'opacity-100' : 'pointer-events-none opacity-0',
+        shown ? 'opacity-100' : 'pointer-events-none opacity-0 focus-visible:pointer-events-auto',
       ].join(' ')}
     >
       <ArrowUp size={18} />

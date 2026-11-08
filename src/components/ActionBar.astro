@@ -50,12 +50,15 @@ const { bar } = Astro.props;
     resize?.disconnect();
     const root = document.documentElement;
     root.removeAttribute('data-action-bar-on');
+    root.removeAttribute('data-action-bar-ready');
     const bar = document.querySelector<HTMLElement>('[data-action-bar]');
     const anchor =
       document.querySelector<HTMLElement>('main [data-action-bar-anchor]') ??
       document.querySelector<HTMLElement>('main h1');
     const footer = document.querySelector<HTMLElement>('#site-footer');
     if (!bar || !anchor || !('IntersectionObserver' in window)) return;
+    // The bar can show on this page, so the bottom scroll-padding is on from the start (below).
+    root.setAttribute('data-action-bar-ready', '');
     let pastAnchor = false;
     let footerIn = false;
     const sync = () => {
@@ -162,7 +165,11 @@ const { bar } = Astro.props;
     }
     /* While the bar shows: a focused element is never hidden under it, and the floating buttons
        (BackToTop.tsx, StickyCTAChip.tsx) ride above it. */
-    :global(html[data-action-bar-on]) {
+    /* data-action-bar-ready, not only -on (2026-11-08, WCAG 2.4.11): the bar shows a beat AFTER the
+       focus scroll that crosses its anchor, so padding that waited for -on let that scroll end
+       with the link at the screen edge and the bar then slid over it. */
+    :global(html[data-action-bar-on]),
+    :global(html[data-action-bar-ready]) {
       scroll-padding-bottom: calc(var(--action-bar-h, 4.5rem) + 12px);
     }
     :global(html[data-action-bar-on] .fixed.bottom-6),

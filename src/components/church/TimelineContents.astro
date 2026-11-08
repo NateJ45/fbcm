@@ -114,6 +114,12 @@ const { top, entries } = contents;
     #main:has(> .hc-bar) [id] {
       scroll-margin-top: var(--hc-land, calc(var(--header-offset) + var(--hc-h)));
     }
+    /* Keyboard focus clears the bar as well as the header (WCAG 2.4.11, 2026-11-08): the bar rides
+       stuck under the header, so Shift+Tab used to park a link beneath it. Same scoping as the
+       header's own scroll-padding in globals.css, and it beats it on specificity. */
+    html:has(:focus-visible):has(.hc-bar:not([data-past])) {
+      scroll-padding-top: calc(var(--header-offset) + var(--hc-h));
+    }
     .hc-bar {
       position: sticky;
       top: 0;
