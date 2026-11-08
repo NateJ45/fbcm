@@ -157,7 +157,10 @@ const resolved =
 // out of sync with a rounded corner.
 const variantClasses = (() => {
   if (resolved === 'gold') {
-    return 'bg-gold text-indigo-field shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-field)] hover:-translate-y-px';
+    // Ink is indigo-deep (6.81:1 on gold), not indigo-field (4.90:1): the button rises in with the
+    // flow layer's fade, and a sweep that lands mid-fade measured 4.21:1 on the field ink. The
+    // deeper ink keeps the same mid-fade frame above 4.5:1 (WCAG 1.4.3, 2026-11-08).
+    return 'bg-gold text-indigo-deep shadow-[inset_0_0_0_3px_var(--color-gold),inset_0_0_0_4px_var(--color-indigo-deep)] hover:-translate-y-px';
   }
   // outline. text-bg, not text-cream: --color-cream FLIPS to ink in dark mode
   // (see globals.css .dark), while --color-bg stays paper-white in both, which
