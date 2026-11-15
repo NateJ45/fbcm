@@ -1,9 +1,13 @@
+<a href="https://nixoncreativestudio.com/work/first-baptist-muncie/"><img src="https://raw.githubusercontent.com/NateJ45/NateJ45/main/assets/cards/fbcm.png" alt="First Baptist Church Muncie, case study by Nixon Creative Studio" width="100%"></a>
+
+<p align="center"><a href="https://nixoncreativestudio.com/work/first-baptist-muncie/">Read the case study</a> · <a href="https://www.fbcmuncie.org">Visit fbcmuncie.org</a></p>
+
 # First Baptist Church Muncie
 
 A fast, editable, content-rich website for a historic Indiana church, replacing its Wix site with Astro, Sanity and Cloudflare Workers.
 
 [![CI](https://github.com/NateJ45/fbcm/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/NateJ45/fbcm/actions/workflows/ci.yml)
-[![Preview](https://img.shields.io/badge/preview-fbcm--site.workers.dev-F6821F?logo=cloudflare&logoColor=white)](https://fbcm-site.nathanjnixon86.workers.dev)
+[![Live site](https://img.shields.io/badge/live-fbcmuncie.org-292854)](https://www.fbcmuncie.org)
 ![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white)
 ![Sanity](https://img.shields.io/badge/Sanity-F03E2F?logo=sanity&logoColor=white)
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare%20Workers-F6821F?logo=cloudflare&logoColor=white)
@@ -21,7 +25,7 @@ A fast, editable, content-rich website for a historic Indiana church, replacing 
 
 ## What it is
 
-The church's current site lives on Wix. This is the redesign: a static-first Astro site whose content lives in Sanity, so staff can edit pages on the page itself instead of fighting a site builder. It is built and deployed to a preview Worker at [fbcm-site.nathanjnixon86.workers.dev](https://fbcm-site.nathanjnixon86.workers.dev), with the cutover to the church's own domain pending the church. Until then, [www.fbcmuncie.org](https://www.fbcmuncie.org) is still the Wix site.
+The church's old site was on Wix. This redesign has been live on [fbcmuncie.org](https://www.fbcmuncie.org) since October 2026: a static-first Astro site whose content lives in Sanity, so staff can edit pages on the page itself instead of fighting a site builder.
 
 ## Highlights
 
