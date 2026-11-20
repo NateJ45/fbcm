@@ -46,3 +46,11 @@ After any schema change, run `npm run typegen` first, then `npm run build`. The 
 ### Sitemap `/404` filter
 
 `astro.config.mjs` passes a `filter` function to `@astrojs/sitemap` that excludes `/404` from the generated sitemap. Without the filter, Astro includes the 404 page in `sitemap-index.xml`, which tells crawlers to index a page that should never appear in search results. The filter is one line and should stay.
+
+## Stack essentials, rest (moved from CLAUDE.md)
+
+- **No form of the site's own**: visitors use the church's forms, linked through Site settings' Church systems boxes, or embedded from Church Trac by a "Church Trac form" band (only a churchtrac.com address from the pasted code reaches the page, `src/lib/church-trac-form.ts`). **Cloudflare Web Analytics** (cookieless, no banner).
+
+- **Page builder:** `src/components/SectionRenderer.astro` maps each block `_type` to a component and owns the alternating-surface cadence (logic in `src/lib/sectionCadence.ts`, unit-tested). Blocks carry no color field; the cadence is automatic.
+- **Default sections fallback:** `src/data/defaultSections.ts` holds code-defined default content arrays for each core page. When a page's `pageBuilder` array is absent (fresh clone, no Sanity project), the route uses the defaults, so the site always renders non-blank content.
+- **Brand reskin:** `brand/brand.config.json` is the single source of truth for identity + palette + fonts + logo paths. Running `npm run apply-brand` deterministically rewrites `globals.css` tokens, `src/data/site.ts`, the Studio theme's font stacks in `sanity.config.ts`, and the OG image. For a full rebrand orchestration (interview, font install, apply, contrast check, copy retone) use the `/reskin` skill at `.claude/skills/reskin/SKILL.md`.
