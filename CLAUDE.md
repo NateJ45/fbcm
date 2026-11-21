@@ -40,7 +40,7 @@ Full stack notes and the `astro.config.mjs` landmines are in `docs/agent/stack-a
 - **React 19 islands** for interactivity; Astro components for everything static.
 - **Cloudflare Workers** for hosting, not Pages (Pages is in maintenance mode). Deploy with `npm run deploy`, which is `wrangler deploy -c dist/server/wrangler.json`. A bare `wrangler deploy` reads the root `wrangler.jsonc`, which knows nothing about the SSR entrypoint, and every sub-route 404s.
 - **`sanityFetch(query, params, fallback)`** in `src/lib/sanity.ts` is the single chokepoint for all Sanity reads. When `PUBLIC_SANITY_PROJECT_ID` is absent or set to the placeholder value, it returns the fallback without any network call, so `npm run build` succeeds with no Sanity project configured -- pages render their default-sections content (see below).
-- More stack notes (Studio admin, authoring kit, no site forms, page builder, default sections, brand reskin): `docs/agent/studio-kit.md`, `docs/agent/sanity.md`, `docs/agent/stack-and-config.md`.
+- More stack notes (Studio admin, authoring kit, no site forms, page builder, default sections, brand reskin): `docs/agent/sanity.md`, `docs/agent/stack-and-config.md`.
 
 ## Family conventions
 
