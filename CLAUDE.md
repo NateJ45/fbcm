@@ -1,10 +1,6 @@
 # First Baptist Church Muncie: CLAUDE.md
 
-**What this repo is.** The First Baptist Church Muncie website (309 East Adams Street, Muncie, IN 47305), replacing the church's Wix site. Forked from `ncs-astro-sanity-starter` on 2026-09-18, so a lot of the machinery here is the starter's; this file describes FBCM as it is now. The binding spec is `docs/superpowers/specs/2026-09-18-fbcm-rebuild-design.md`, and the art-direction spec is `docs/superpowers/specs/2026-09-20-fbcm-art-direction-design.md`. Read the relevant one before making a judgement call about what the site should do.
-
-**Where it stands (short).** Thirteen page-builder pages (`/`, `/visit`, `/who-we-are`, `/beliefs`, `/ministries`, `/staff`, `/history`, `/wedding`, `/give`, `/contact`, `/blog`, `/visitor`, `/architecture`), each seeded by a module under `scripts/pages/`. 142 imported posts at their original `/post/<slug>` URLs, 17 staff, 5 ministries, 47 retired-URL redirects. No form of the site's own. Deployed at https://fbcm-site.nathanjnixon86.workers.dev; live www.fbcmuncie.org is still the Wix site. **Next is plan 3, the cutover** of `fbcmuncie.org` (`docs/superpowers/notes/2026-09-20-cutover-plan.md`), which waits on Nathan's decisions listed in `docs/PENDING.md`. The full pass-by-pass history of what was built, with branches and dates, is in `docs/claude/status-history.md`.
-
-**Design context.** `PRODUCT.md` (audience, purpose, tone, anti-references; its four former `TODO(Nathan)` answers are proposed by Claude and unconfirmed, tagged in the file) and `DESIGN.md` (the visual system as built) sit at the repo root; read them before any design work and update them in the same change when the system moves.
+**What this repo is.** The First Baptist Church Muncie website, replacing the church's Wix site. Forked from `ncs-astro-sanity-starter` on 2026-09-18. The binding spec is `docs/superpowers/specs/2026-09-18-fbcm-rebuild-design.md` and the art-direction spec is `docs/superpowers/specs/2026-09-20-fbcm-art-direction-design.md`; read the relevant one before a judgement call. Where it stands, pass history and design context: `docs/claude/status-history.md`, `docs/agent/changelog.md`, `PRODUCT.md`, `DESIGN.md`.
 
 **Read `docs/PENDING.md` early in a session.** It is the live registry of open loops. If you finish or discover one, update it in the same commit. Change history is in `docs/agent/changelog.md`, and the tactical runbook is `OPERATIONS.md`.
 
@@ -24,19 +20,12 @@ Gates (what CI runs, see below):
 - `npm run check` (`astro check && npm run lint`), `npm run format:check`, `npm run check:links` (after a build), `npm run test:unit` (node --test, `src/lib/*.test.ts`), `npm run test:scripts` (`scripts/lib/*.test.mjs`), `npm test` (Playwright; `npm run test:ui` opens its UI; `PLAYWRIGHT_PORT` moves it off 4321). `npm run check:full` is `typegen`, build, `test:unit`, `test:scripts`.
 - `npm run parity:capture` / `npm run parity:compare` (and `npm run parity list | capture | compare [page]`): rendered-HTML parity, run after a build on any change meant to be render-neutral. It never builds. `npm run parity compare` is 176/176 PASS (the baseline was recaptured 2026-10-03; it said 170 before the content grew).
 - `npm run sync-check` diffs PORTABLE-marked files against the starter.
-- `MSYS_NO_PATHCONV=1 node scripts/measure-columns.mjs <url> --paths /,/visit/` reports each section's left edge and each text/picture band's seam at 1280 (the shared `.split`, starter PORTS card 91). Not a CI gate.
-- `node scripts/measure-tap-targets.mjs <url> --width 390` counts links and buttons under 44px (PRODUCT.md promises none on Home, Visit and Staff); `impeccable detect --json src` is the design-system drift check, with its ignores in `.impeccable/config.json`. Neither is a CI gate.
-
-Data and tooling scripts (all dry by default, backup-first; detail in `docs/claude/build-and-scripts.md`): `npm run seed-pages`, `npm run scaffold` (flags after `--`), `npm run audit:studio`, `npm run audit:data` (read-only: live data against the compiled schema), `npm run apply-brand`, `npm run og:pages`, `npm run og`, `npm run check:jsonld`. Do not run `npm run seed` against this dataset. A production Sanity write needs the write flag AND `NCS_PRODUCTION_WRITE=yes` in the same command (`.claude/rules/schema-and-data.md`, starter card 86).
-
-**Internal links end in a slash** (2026-10-25, starter PORTS.md card 89). `trailingSlash: 'always'` is set in `astro.config.mjs`; a slashless link is a 307 and Search Console reports it as "Page with redirect". Write hand-typed hrefs with the slash (`/visit/`, `/visit/#connect`, `/blog/?category=x`) and pass anything built or read from Sanity at render time through `withTrailingSlash()` (`src/lib/href.ts`, PORTABLE). Links inside page and post text go through `bodyHref()` (`src/lib/body-link.ts`): own-domain absolute links become root-relative and old Wix paths go straight to their final address. Redirect targets are finalized in `astro.config.mjs` by `finalizeRedirects()` (`src/lib/redirect-final.ts`): slashed, and chains collapsed, so an old URL is one 301 to a 200 (the build also appends the bare no-slash form of each `_redirects` rule, `withBareRedirectRules()`, because Cloudflare 301s the bare form to the slashed one before any rule runs). Render-time only, nothing is written to Sanity. Proof: no `href="/..."` in the built HTML lacks a trailing slash unless it has a file extension (or is `/studio` or `/api`).
+- More gates and script detail (measure-columns, measure-tap-targets, data and tooling scripts, internal-link rule 2026-10-25, starter card 89): `docs/claude/build-and-scripts.md`. Internal links end in a slash (`trailingSlash: 'always'`); data-built hrefs go through `withTrailingSlash()`.
 
 ## Branches, CI and deploy
 
 - `main` is the only long-lived branch and is production (staging was abandoned 2026-10-03). Work on short-lived branches, PR into `main`, CI must be green (checks `build` and `test`), and the merge is the production deploy: a push to `main` deploys (`.github/workflows/deploy.yml`). Prose-only pushes (`docs/**`, root Markdown, `.github/**/*.md`, `.claude/**/*.md`) skip the deploy.
-- CI (`ci.yml`, restructured by PORTS.md card 70) runs on every push and PR, with no path filter, as parallel jobs: `static` (typegen, stale-types guard, `astro check`, lint, format, unit tests, script tests), `site` (ONE `npm run build`, then uploads `dist/client`), `links` (the link check, run on that artifact in parallel with `e2e` so it is off the critical path) and `e2e` (Playwright in 3 shards that download that artifact and set `PLAYWRIGHT_SKIP_BUILD=1`, browsers cached by Playwright version; the shards are WEIGHTED blocks, `PWTEST_SHARD_WEIGHTS` in the step's `env`, because Playwright's default equal-count split put the 160 reflow tests in two shards and ran 109s / 185s / 251s: re-measure and edit the three weights when tests are added in bulk). `build` (needs `static` + `site` + `links`) and `test` (needs `e2e`) are aggregator jobs that keep the two required-check names; they fail unless everything behind them succeeded. The `site` build carries the fixture env that `playwright.config.ts` puts on its webServer (`LAST_SUNDAY_*`, `VISITOR_FIXTURE`, `CHURCH_*`): keep the two lists in step, or the shards assert against live feeds. `lighthouse.yml` (`npx lhci autorun`) is path-filtered, audits one URL per template on a PR (full list on the weekly schedule and dispatch, never on a push to `main`); `visual.yml` is path-filtered on PR as well as push. Parity is deliberately a local gate. The family test standard is PORTS.md card 35 and card 70.
-- **CI never reads live content** (2026-10-19, starter card 138): `ci.yml`'s `site` build, `lighthouse.yml` and `visual.yml` run as `node scripts/snapshot.mjs run -- <cmd>` over the committed `ci/sanity-snapshot.ndjson.gz`, so a church edit (a renamed slug) cannot turn a check red. Refresh on purpose with `node scripts/snapshot.mjs export` and update whatever names the page in the same PR. `deploy.yml` still builds live. `live-watch.yml` (daily, not required) checks the real site. Detail: `.claude/rules/tests-and-gates.md`.
-- `deploy.yml` also runs on the Sanity publish webhook (rule 6) and on a schedule: Sunday afternoon, Monday, Thursday and Saturday mornings, for the Last Sunday replay and the coming Sunday's broadcast. Details in `docs/agent/deployment.md`.
+- CI shape, snapshot rule (CI never reads live content: `scripts/snapshot.mjs`), deploy schedule: `docs/agent/deployment.md`.
 - Do not bump any pinned dependency in isolation, and never run `npm audit fix --force` (rule 8).
 - Before reporting any UI change done: look at it rendered at ~375px and ~1280px, light only, hover and keyboard focus, with a real scrollbar. Gates prove correctness, not appearance (`.claude/rules/layout-and-css.md`).
 
@@ -50,34 +39,20 @@ Full stack notes and the `astro.config.mjs` landmines are in `docs/agent/stack-a
 - **Tailwind 4 via `@tailwindcss/vite`.** There is no `tailwind.config.mjs`. Brand tokens live in `@theme` blocks in `src/styles/globals.css`.
 - **React 19 islands** for interactivity; Astro components for everything static.
 - **Cloudflare Workers** for hosting, not Pages (Pages is in maintenance mode). Deploy with `npm run deploy`, which is `wrangler deploy -c dist/server/wrangler.json`. A bare `wrangler deploy` reads the root `wrangler.jsonc`, which knows nothing about the SSR entrypoint, and every sub-route 404s.
-- **No form of the site's own**: visitors use the church's forms, linked through Site settings' Church systems boxes, or embedded from Church Trac by a "Church Trac form" band (only a churchtrac.com address from the pasted code reaches the page, `src/lib/church-trac-form.ts`). **Cloudflare Web Analytics** (cookieless, no banner).
-- **The Studio is the church's own admin** (starter cards 106 to 120, 2026-10-18): Home (banner, Sunday checklist, Is it live?, Fix-it list, Visitors, Your pages), Quick update, Site Guide, Checkup, Trash, the staff view, Help for this page, Share a preview, table views, the owned `/studio/` boot page, and the church's colours, fonts, wordmark and goal-glyph icons. The kit files are PORTABLE (`src/sanity/kit/`, `src/sanity/workflow/`, `src/lib/studio-*.ts`); everything about this church is in `src/sanity/kit.config.ts`, `studioEdges.config.ts`, `brandIconArt.tsx`, `tables.config.ts` and `brand.config.json` `studio`. The `/studio` splash and offline page are the shared `StudioSplash.astro` partial (card 132); the church's dark title-card look sits in `src/sanity/StudioSplashMotif.astro`, styled against the partial's `.ncs-sp__*` classes (re-check it after any resync). Guide pictures (card 130) go through `src/sanity/guides/shots.ts` (two captures so far, the rest wireframes; `docs/PENDING.md` 1g). Who edits and which Studio surface serves each weekly job: `docs/agent/studio-plan.md`. Guide: `docs/agent/studio-kit.md`; what waits on Nathan: `docs/PENDING.md` 1f. The Studio's art is drawn from the site (2026-10-19): the /studio splash is set like the home hero (gold-hairline eyebrow, the name in Castoro Titling at display scale, the Hannaford rendering in gold; `StudioSplashMotif.astro`), and the banner foot, the bare tower, the italic "Muncie" face and `public/studio-art/` (motifs kept for starter card 128) come from `node scripts/gen-studio-art.mjs`; edit the script, not its outputs. The Site Guide and Help panel are drawn in the church's design language (starter card 128, `brand.config.json` `studio.look`); Home's banner is re-set in the hero's grammar by `homeBanner.style` in `kit.config.ts` (starter card 135; `src/sanity/studioHomeBanner.css` keeps only the Sofia Sans font import); the Studio signs in by token (card 129). The Studio has its own character (2026-10-20, `studio.look`): a lancet-arch section marker, square stones, a dashed gold connector (courses of stone), an ashlar-tile texture on featured panels, banner titles in Castoro Titling, and stones that are laid in turn (`motion: lay`); all three new files come from `gen-studio-art.mjs`, and `npm run check:look` stays quiet. Bench: `/kit-harness/guide/`, dev only.
-- **The office builds its own pages** (the authoring kit, starter card 109): 21 page templates in six groups (`src/sanity/pageTemplates.ts`, builders in `templateBlocks.ts`), ten saved sections (`src/sanity/sectionPatterns.ts`, seeded DRAFT by `scripts/content/seed-section-patterns.mjs`, dry by default, not yet run), the builder kit (starter card 173, 2026-10-26: eight smaller blocks in `builderSections.ts`, drawn by `src/components/builder-blocks/` in the church's grammar, logic in `src/lib/builder-blocks.ts`: text in columns, a row of buttons, one wide photo, tabs, a countdown, a dated notice, event details with "Add to my calendar", directions and Event JSON-LD, placed at the church from Site settings when no place is typed, and a schedule; the starter's accordion, timeline, letter and photo cards were skipped as duplicates of `faqSection`, `timelineSection`, `letterSection` and `linkCardsSection`; menu groups merged by `withSiteGroups()`; starter card 193, 2026-10-27, six more: Contact details, which fills itself from Church details through `src/lib/church-facts-data.ts` (cards 196 and 198, no second facts store, no structured hours), progress toward a goal, Add our calendar, which defaults to the Church Trac feed, cards with icons and steps on a path on the neutral `block-icons.ts` set, and the "Find your place" hub; `docs/agent/builder-blocks-more.md`), synced sections (`syncedSection`, resolved in `sectionsProjection()` and expanded by `SectionRenderer` before the cadence), a picture grid in "+ Add item" (`npm run thumbnails` after a build, from `/styleguide/sections/`), and page-builder WARNINGS (`pageRules` in `kit.config.ts`). A new block needs a fixture on `/styleguide/sections/` and a thumbnail, or `authoring.test.ts` fails.
 - **`sanityFetch(query, params, fallback)`** in `src/lib/sanity.ts` is the single chokepoint for all Sanity reads. When `PUBLIC_SANITY_PROJECT_ID` is absent or set to the placeholder value, it returns the fallback without any network call, so `npm run build` succeeds with no Sanity project configured -- pages render their default-sections content (see below).
-- **Page builder:** `src/components/SectionRenderer.astro` maps each block `_type` to a component and owns the alternating-surface cadence (logic in `src/lib/sectionCadence.ts`, unit-tested). Blocks carry no color field; the cadence is automatic.
-- **Default sections fallback:** `src/data/defaultSections.ts` holds code-defined default content arrays for each core page. When a page's `pageBuilder` array is absent (fresh clone, no Sanity project), the route uses the defaults, so the site always renders non-blank content.
-- **Brand reskin:** `brand/brand.config.json` is the single source of truth for identity + palette + fonts + logo paths. Running `npm run apply-brand` deterministically rewrites `globals.css` tokens, `src/data/site.ts`, the Studio theme's font stacks in `sanity.config.ts`, and the OG image. For a full rebrand orchestration (interview, font install, apply, contrast check, copy retone) use the `/reskin` skill at `.claude/skills/reskin/SKILL.md`.
+- More stack notes (Studio admin, authoring kit, no site forms, page builder, default sections, brand reskin): `docs/agent/sanity.md`, `docs/agent/stack-and-config.md`.
 
 ## Family conventions
 
-Shared by every site repo in the family, so they live in one PORTABLE file imported here (it is expanded into context at launch, so this saves lines in this file, not tokens): the code conventions (strict TypeScript, header comments, Astro and React islands, images, Tailwind) and the working-with-Claude habits (desktop app, Plan Mode, confirm before installing, describe design in plain language, verify in a real browser).
+Shared by every site repo in the family (one PORTABLE file, imported here; notes in `docs/claude/ports-and-portable.md`).
 
 @docs/claude/family-conventions.md
 
-Repo-specific deltas:
-
-- **Family cards 186 to 188, 197, 198 (2026-10-27):** the one scale and fallback fonts in `globals.css`, the page-weight budget (`tests/page-weight.config.json`), layout slots at defaults. Do not run `apply-brand`. Detail: `docs/agent/design-tokens.md`, last section.
-- **Family cards 188 to 192 (2026-10-27):** shape tokens cut to the lancet; the opt-in photo hero (Page opener Style, off everywhere; Home is Nathan's call, PENDING 0a); the church's wayfinding as code defaults until Site settings is filled (phone menu groups, where-next rows, the Sunday bar on Home and Visit; `src/data/wayfinding-defaults.ts`, `docs/agent/wayfinding.md`); the flow layer installed but `motion` stays `reveal` (PRODUCT.md principle 5, `docs/agent/animation.md`).
-- Foundation vs safe to edit, file by file: `docs/agent/file-map.md`. Tokens, copy, `src/data/*` and assets are safe to edit. `globals.css` beyond the tokens, the schemas, the Studio config, the preview stack, `SectionRenderer.astro`, `BaseLayout.astro`, `src/lib/sanity.ts` and `queries.ts` are foundation and need a planned change.
-- Ask before installing a dependency (rule 8 is why).
-- FBCM is light-only, so UI verification is one theme (rule 3).
+Repo-specific deltas: family cards 186 to 192, 197, 198 and foundation-vs-safe-to-edit (`docs/agent/file-map.md`) are in `docs/claude/ports-and-portable.md`. Ask before installing a dependency (rule 8). FBCM is light-only, so UI verification is one theme (rule 3).
 
 ## Preview rules (stega) in short
 
-Full text and the other preview rules: `.claude/rules/preview.md` (loads when you touch the preview stack); reference `docs/agent/preview.md`. The ones that bite without warning:
-
-- **Never compare a stega-encoded string in logic, and never measure one.** Display strings go through `splitStega().cleaned` before any split, length, slice or count; enums that drive rendering go in `NON_STEGA_FIELDS` (`src/lib/cms-preview.ts`) the day the field is added (rule 8b).
-- **`/preview/live` is an event-driven SSE proxy: never an interval poll.** `/preview/**` must send `Cache-Control: no-store`. The section-edit wrapper is preview-only and a real block box, never `display: contents`.
+Never compare or measure a stega-encoded string (use `splitStega().cleaned`); `/preview/live` is an event-driven SSE proxy, never an interval poll; `/preview/**` must send `Cache-Control: no-store`. Full text: `.claude/rules/preview.md`, `docs/agent/preview.md`.
 
 ## The rules that bite if you forget them
 
@@ -109,50 +84,7 @@ Files named above live in `.claude/rules/`.
 
 ## Docs map
 
-Read these on demand. They are NOT auto-loaded, and they are referenced as plain paths so they stay lazy. Open with the Read tool when a task touches the area.
-
-**Note:** the `docs/agent/` deep-dives are being genericized in a later pass. Some may still contain client-specific examples until that pass completes. Trust the patterns; ignore client-specific nouns.
-
-`docs/bootstrap/NEW-PROJECT.md` is the setup entry point for adapting this starter to a new project, and `docs/bootstrap/setup-checklist.md` is the pre-launch sign-off that goes with it.
-
-- Open loops registry (read early each session): `docs/PENDING.md`
-- GA4 events (what is tracked, the settings, how to verify): `docs/agent/analytics.md`
-- Live draft preview, full reference: `docs/agent/preview.md`
-- The Report tool in the Studio (card 218; the church's parts and words are `src/config/board.ts`, switch `PUBLIC_BOARD_REPORT`, bench `/styleguide/report/`): `docs/agent/studio-kit.md`, "The Report".
-- The Studio kit (Home, Site Guide, Checkup, Trash, Quick update, the look, the edges; PORTABLE): `docs/agent/studio-kit.md`
-- What is safe to edit vs foundation, file by file: `docs/agent/file-map.md`
-- Stack detail + astro.config landmines: `docs/agent/stack-and-config.md`
-- Page + section architecture, nav, visibility toggles: `docs/agent/page-architecture.md`
-- Brand colors + theme system (light/dark discipline): `docs/agent/theme-and-color.md`
-- Brand reskin system (config schema, apply-brand, /reskin skill): `docs/brand/brand-system.md`
-- Polish layer (brand stripe, sticky header, reading progress, print stylesheet): `docs/agent/polish-layer.md`
-- Animation layer (native scroll, reveals, glyph draw, view transitions, script accent, the flow layer and the photo hero clip): `docs/agent/animation.md`
-- Wayfinding (phone menu groups, where-next rows, the Sunday bar): `docs/agent/wayfinding.md`
-- Typography + spacing tokens: `docs/agent/design-tokens.md`
-- Component catalog + long-read layout: `docs/agent/components.md`
-- Component sourcing (shadcn, Starwind, Magic UI, PrimeReact, copy-paste sources, token-remap cheat sheet): `docs/agent/component-sources.md`
-- Error + empty states: `docs/agent/error-states.md`
-- Image handling: `docs/agent/images.md`
-- Accessibility: `docs/agent/accessibility.md`
-- SEO + JSON-LD: `docs/agent/seo.md`
-- Performance budgets + Lighthouse: `docs/agent/performance.md`
-- Content data + Sanity integration: `docs/agent/sanity.md`
-- Deployment + env vars + rebuild model: `docs/agent/deployment.md`
-- Editor-driven vs hardcoded: `docs/agent/editor-vs-hardcoded.md`
-- Shared code conventions and Working-with-Claude habits (PORTABLE, imported above): `docs/claude/family-conventions.md`. Tracked deny rules for force-push and hard reset: `.claude/settings.json` (also PORTABLE; personal allow-lists go in `.claude/settings.local.json`).
-- Cross-repo shared improvements (port cards + applied-to matrix + drift check): `PORTS.md`
-- Change history (prose ledger; the checkable matrix lives in PORTS.md): `docs/agent/changelog.md`
-- New-project setup runbook + pre-launch checklist: `docs/bootstrap/NEW-PROJECT.md`, `docs/bootstrap/setup-checklist.md`
-- Per-module enable guides (`events`, `resources`): `docs/modules/<module-name>.md`
-- The eleven archived modules: what they are and how to bring one back: `archive/README.md`
-- Full numbered rules 1 to 20, verbatim (the source for the condensed list above): `docs/claude/rules-full.md`
-- Pass-by-pass history of what was built (branches, dates, files): `docs/claude/status-history.md`. Read when you need to know why or when something was built.
-- Build pipeline and every standalone script, verbatim: `docs/claude/build-and-scripts.md`. Read before changing the build chain or running a seed or migration.
-- Unit-suite and Playwright inventories: `docs/claude/test-inventory.md`. Read before changing what a suite watches; add a line when you add a suite.
-- PORTABLE files and the starter, full notes: `docs/claude/ports-and-portable.md`. Read before editing a file whose first line says `PORTABLE: canonical copy`.
-- Path-scoped rules (load automatically when matching files are touched): `.claude/rules/*.md`. Routes summary table and rule 10: `.claude/rules/routes.md`. Copy and prose rules: `.claude/rules/copy-and-prose.md`. Parity harness and CI gates: `.claude/rules/tests-and-gates.md`.
-- Live writes (Sanity dataset, Cloudflare, deploys) are pre-approved (2026-10-03): run them yourself, backup first. Hand Nathan a run list only if the auto-mode classifier actually refuses; never route around a refusal. `.claude/rules/live-writes-and-handoff.md`.
-- Slash commands in `.claude/commands/` (`rebuild`, `sanity-audit`, `visual-verify`) and the `/reskin` skill in `.claude/skills/reskin/SKILL.md`.
+Read on demand, not auto-loaded. Open loops: `docs/PENDING.md`. The full one-line-per-file map (every `docs/agent/` deep-dive, bootstrap, modules, archive, PORTS, rules-full, status-history, test-inventory, live-writes note, slash commands): `docs/claude/docs-map.md`. Live writes (Sanity dataset, Cloudflare, deploys) are pre-approved: run them yourself, backup first.
 
 ## Vault (business context and decisions)
 
@@ -160,8 +92,6 @@ Read these on demand. They are NOT auto-loaded, and they are referenced as plain
 - Update the repo docs (this file, `.claude/rules/`, `docs/claude/`, README, OPERATIONS, `docs/PENDING.md`) in the same piece of work as any change to code, behaviour, setup or a decision, before calling it done.
 - Record decisions at the top of the note's Decision log, and tick or add `- [ ] #nathan` items. Work log: the note keeps a `## Work log`, so append a row (`- YYYY-MM-DD | ~Xh | summary`) at the end of each real-work session and commit and push `_vault/` (`_vault/README.md` rule 6); append a row at session end, then commit and push the vault.
 
-## Ports (the starter and the family)
+## Ports
 
-- `internal/ncs-astro-sanity-starter/PORTS.md` is the registry of improvements shared across the site family; this repo has its own `PORTS.md` (its applied-to matrix and cards).
-- Files whose first line says `PORTABLE: canonical copy` are canonical in the starter and checked by `node scripts/sync-check.mjs`. Do not make site-specific changes in them (full notes: `docs/claude/ports-and-portable.md`).
-- A fix that generalises gets a port card in the SAME commit. A lesson that bites two or more repos goes in `_vault/gotchas/` with an "applies-to" list and a "Ported to" checklist.
+The starter owns `PORTS.md` and the files whose first line says `PORTABLE: canonical copy` (checked by `node scripts/sync-check.mjs`; change the starter first). A fix that generalises gets a port card in the same commit; a lesson that bites two or more repos goes in `_vault/gotchas/`. Full notes: `docs/claude/ports-and-portable.md`.
